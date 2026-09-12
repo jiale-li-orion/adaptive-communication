@@ -51,6 +51,11 @@ except ImportError:                                         # flat import via sy
                           VERDICT_TRUE, VERDICT_UNKNOWN, build_baseline, profile_command)
     from task_generator import PROFILE_LOW_POWER, PROFILE_NORMAL, PROFILE_RISK  # type: ignore
 
+
+def profile_of(payload: dict) -> str:
+    """The value a command carries, ignoring the transport fields that ride with it."""
+    return payload["profile"]
+
 FAIL: list[str] = []
 
 # The documented interface a policy may touch, exactly as the task states it and as `WorldView`
@@ -148,14 +153,14 @@ def test_issues_correct_profile() -> None:
         plan = pol.plan(view(3600, demanded=demanded_for(PROFILE_RISK)))
         check(f"{pol.name}: 升到 risk 时对每个节点发一条 risk 命令",
               sorted(nid for nid, _ in plan) == sorted(NODES)
-              and all(p == profile_command(PROFILE_RISK) for _, p in plan),
+              and all(profile_of(p) == PROFILE_RISK for _, p in plan),
               f"plan={plan}")
         check(f"{pol.name}: 每节点每 tick 至多一条命令",
               len({nid for nid, _ in plan}) == len(plan), f"plan={plan}")
         # recovery half of the workflow: the demanded value comes back to normal
         plan = pol.plan(view(3600 + 1800, demanded=demanded_for(PROFILE_NORMAL)))
         check(f"{pol.name}: 风险窗结束后把节点带回 normal",
-              plan and all(p == profile_command(PROFILE_NORMAL) for _, p in plan),
+              plan and all(profile_of(p) == PROFILE_NORMAL for _, p in plan),
               f"plan={plan}")
 
 
@@ -416,7 +421,7 @@ def test_interface_boundary() -> None:
                for nid in NODES}
         plan = pol.plan(view(1000, demanded=demanded_for(PROFILE_RISK), status=odd))
         check(f"{pol.name}: 未知 profile 的报告不会让策略崩溃或误判为一致",
-              all(p == profile_command(PROFILE_RISK) for _, p in plan) or plan == [],
+              all(profile_of(p) == PROFILE_RISK for _, p in plan) or plan == [],
               f"plan={plan}")
 
 
@@ -430,6 +435,14 @@ def test_registry_and_independence() -> None:
     check("命令载荷的 op 是 runtime 唯一支持的那一种",
           profile_command(PROFILE_RISK) == {"op": OP_SET_PROFILE, "profile": PROFILE_RISK},
           f"{profile_command(PROFILE_RISK)}")
+    # Sending nothing but the value leaves the remote with nothing to fence on, so a policy that
+    # holds versions must be able to put them on the wire. Both halves are checked here.
+    check("profile_command: 带版本与逻辑身份时两者都在载荷里",
+          profile_command(PROFILE_RISK, version=7, logical="r00:7")
+          == {"op": OP_SET_PROFILE, "profile": PROFILE_RISK, "version": 7, "logical": "r00:7"},
+          f"{profile_command(PROFILE_RISK, version=7, logical='r00:7')}")
+    check("profile_command: 不传版本时载荷不含该字段",
+          "version" not in profile_command(PROFILE_RISK), f"{profile_command(PROFILE_RISK)}")
     # The baselines are compared against the runtime, so they must not have grown a dependency on
     # the module that runs them: a baseline that imported the runner could follow its internals
     # instead of the interface, and the arm would stop being an independent implementation.

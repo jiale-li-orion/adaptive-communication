@@ -97,9 +97,22 @@ def _field(payload: dict | None, key: str, default=None):
     return default
 
 
-def profile_command(profile: str) -> dict:
-    """The single payload shape a policy may return to the runtime."""
-    return {"op": OP_SET_PROFILE, "profile": profile}
+def profile_command(profile: str, version: int | None = None,
+                    logical: str | None = None) -> dict:
+    """The single payload shape a policy may return to the runtime.
+
+    `version` and `logical` are optional and travel on the wire when a policy chooses to send them.
+    A device shadow that keeps its versioning in the center's head while sending a bare value has
+    handed the remote nothing to fence on, and the remote cannot reject an ordering it cannot see.
+    Sending them is what makes the remote contract reachable, so a baseline that holds versions is
+    given the same chance to send them as the runtime is.
+    """
+    command = {"op": OP_SET_PROFILE, "profile": profile}
+    if version is not None:
+        command["version"] = int(version)
+    if logical is not None:
+        command["logical"] = str(logical)
+    return command
 
 
 class VersionedConfigPolicy:
@@ -267,12 +280,14 @@ class VersionedConfigPolicy:
 
             if supersedes:
                 record.update(action="write", reason="newer_desired_value", version=version)
-                out.append((node_id, profile_command(wanted)))
+                out.append((node_id, profile_command(
+                    wanted, version=version, logical=f"{node_id}:{self.identity_of(node_id)}")))
                 continue
 
             if issued_version == 0:
                 record.update(action="write", reason="first_write", version=version)
-                out.append((node_id, profile_command(wanted)))
+                out.append((node_id, profile_command(
+                    wanted, version=version, logical=f"{node_id}:{self.identity_of(node_id)}")))
                 continue
 
             since = now - self.issued_at.get(node_id, now)
@@ -292,7 +307,8 @@ class VersionedConfigPolicy:
 
             record.update(action="write", reason="reported_differs_after_dwell", version=version,
                           since_s=since)
-            out.append((node_id, profile_command(wanted)))
+            out.append((node_id, profile_command(
+                wanted, version=version, logical=f"{node_id}:{self.identity_of(node_id)}")))
 
         for node_id, payload in out:
             self.issued_version[node_id] = self.desired_version[node_id]
@@ -568,3 +584,179 @@ if __name__ == "__main__":          # a small self-check; the regression test is
         pol = cls()
         print(cls.name, "empty demand ->", pol.plan(_View(0, {})))
         print(cls.name, "risk demand  ->", pol.plan(_View(0, {"r00": "risk"})))
+
+
+class RuntimePolicy:
+    """本文 runtime：稳定逻辑身份、单调 epoch、证据晚于写入才允许结算。
+
+    与版本化配置臂的三点差别，每一点都对应一个已测出的失效：
+
+    一、同一逻辑命令的多次尝试携带**同一个** `logical`，因此远端能把重发认成同一件事而不是
+        新指令；配置值不变时 `logical` 不动，配置值变了才动。
+    二、每次写入带**单调递增**的 `version`，远端可以据此拒绝比当前生效值更旧的写入。
+    三、一个与期望相符的上报**只有在它晚于最后一次写入时才算证据**。版本化臂把值相符当成
+        调和的终点，于是一份写入之前产生的陈旧上报也能结束一次尚未生效的写入，中心据此
+        宣告成功——这正是 `stale_command` 下那条臂留下 2 次误报成功的原因。
+    """
+
+    name = "ours"
+
+    def __init__(self, dwell_s: int = DWELL_S, ttl_s: int = COMMAND_TTL_S) -> None:
+        if dwell_s < 0:
+            raise ValueError("dwell_s must not be negative")
+        if ttl_s <= 0:
+            raise ValueError("ttl_s must be positive")
+        self.dwell_s = dwell_s
+        self.ttl_s = ttl_s
+
+        self.desired: dict[str, str] = {}
+        self.logical: dict[str, int] = {}       # moves only when the desired value moves
+        self.version: dict[str, int] = {}       # monotonic per node, never reused
+        self.issued_at: dict[str, int] = {}
+        self.issued_version: dict[str, int] = {}
+        self.deadline: dict[str, int] = {}
+
+        self.reported: dict[str, str] = {}
+        self.reported_at: dict[str, int] = {}   # when the node produced the report, not when it arrived
+        self.settled_version: dict[str, int] = {}   # newest version whose effect has been evidenced
+
+        self.writes = 0
+        self.settled = 0
+        self.reconciles = 0                     # writes refused because the evidence was too old
+        self.last_decision: dict[str, dict] = {}
+
+    def identity_of(self, node_id: str) -> str:
+        return f"{node_id}:{self.logical.get(node_id, 0)}"
+
+    def plan(self, view) -> list[tuple[str, dict]]:
+        now = view.t_s
+        status = view.status
+        in_flight = view.in_flight
+        demanded = view.demanded_profile
+        out: list[tuple[str, dict]] = []
+
+        # A report is evidence about the moment the node produced it, not the moment it arrived.
+        # The backhaul can hold it for hours, and treating arrival as the evidence time is how a
+        # center ends up declaring a write successful on the strength of a reading taken before
+        # the write was even sent.
+        for node_id, payload in sorted(status.items()):
+            reported = _field(payload, F_PROFILE)
+            if reported is None:
+                continue
+            self.reported[node_id] = reported
+            self.reported_at[node_id] = max(self.reported_at.get(node_id, 0),
+                                            _field(payload, F_READ_AT, now))
+
+        for node_id in list(self.desired):
+            if node_id not in demanded:
+                self.desired.pop(node_id, None)
+                self.deadline.pop(node_id, None)
+
+        for node_id, wanted in sorted(demanded.items()):
+            record = {"node_id": node_id, "t_s": now}
+            self.last_decision[node_id] = record
+
+            if self.desired.get(node_id) != wanted:
+                # A new instruction: the logical identity moves with it, so a retry of the old one
+                # is a different operation from this one and the remote can tell them apart.
+                self.desired[node_id] = wanted
+                self.logical[node_id] = self.logical.get(node_id, 0) + 1
+                self.version[node_id] = self.version.get(node_id, 0) + 1
+                self.deadline[node_id] = now + self.ttl_s
+                record.update(fresh_intent=True, logical=self.identity_of(node_id))
+            else:
+                record.update(fresh_intent=False, logical=self.identity_of(node_id))
+
+            version = self.version[node_id]
+            issued_version = self.issued_version.get(node_id, 0)
+            reported = self.reported.get(node_id)
+            reported_at = self.reported_at.get(node_id, 0)
+            record.update(reported=reported, reported_at=reported_at)
+
+            issued_at = self.issued_at.get(node_id, 0)
+            # A report is information about the write only if the node produced it after the write
+            # went out. Reports from before that describe a state the write has already replaced,
+            # and both of the moves below would be wrong if taken on them: settling on one declares
+            # a success nothing supports, and re-asserting on one spends an opportunity because the
+            # node held still before being asked.
+            fresh_evidence = reported_at > issued_at
+
+            if reported == wanted and fresh_evidence:
+                # The node reported the wanted value from a moment after the newest write went out.
+                # The effect is evidenced, and only now may the center settle it.
+                self.settled_version[node_id] = issued_version
+                self.settled += 1
+                record.update(action="settle", reason="report_postdates_write",
+                              evidenced_version=issued_version)
+                continue
+
+            if reported == wanted and issued_version:
+                # The value matches but the report predates the write it would be used to confirm.
+                # It is evidence of an older state, so it settles nothing and the write stays open.
+                self.reconciles += 1
+                record.update(action="reconcile", reason="report_predates_write",
+                              issued_version=issued_version, reported_at=reported_at,
+                              issued_at=issued_at)
+
+            if node_id in in_flight:
+                record.update(action="skip", reason="in_flight")
+                continue
+
+            if issued_version and not fresh_evidence:
+                # Nothing has reported since the newest write. There is no information yet, so a
+                # second write spends an opportunity on a guess; the deadline is what ends this.
+                if now <= self.deadline.get(node_id, now):
+                    record.update(action="wait", reason="no_evidence_since_write")
+                    continue
+
+            if issued_version and fresh_evidence:
+                since = now - issued_at
+                if since < self.dwell_s:
+                    # A report that disagrees can have been produced moments after the write and
+                    # still be describing the state before it. The dwell is what keeps a mismatch
+                    # from being read as a failure it does not yet evidence.
+                    record.update(action="wait", reason="dwell", since_s=since)
+                    continue
+
+            # Assert, carrying both the logical identity and a version strictly above anything this
+            # node has accepted. A retry of an unresolved operation reuses the identity and only
+            # the version moves, which is what lets the remote dedup without losing the retry.
+            if issued_version >= version:
+                self.version[node_id] = issued_version + 1
+                version = self.version[node_id]
+            record.update(action="write", version=version, reason="assert")
+            out.append((node_id, profile_command(wanted, version=version,
+                                                 logical=self.identity_of(node_id))))
+
+        for node_id, payload in out:
+            self.issued_version[node_id] = payload["version"]
+            self.issued_at[node_id] = now
+            self.writes += 1
+            self.last_decision[node_id].update(issued=True, issued_version=payload["version"])
+
+        return out
+# Every arm the business layer compares, in the order the result tables report them. The runtime
+# is listed with the baselines because a comparison that omits it cannot say anything about it,
+# which is what the first P1 round did.
+BUSINESS_ARMS: dict[str, str] = {
+    "local_rules": "runner:LocalRulesPolicy",
+    VersionedConfigPolicy.name: "policies:VersionedConfigPolicy",
+    VTCPolicy.name: "policies:VTCPolicy",
+    RuntimePolicy.name: "policies:RuntimePolicy",
+    "oracle": "runner:OraclePolicy",
+}
+
+
+def build_arm(name: str, **kwargs) -> object:
+    """Instantiate one business-layer arm by name, without importing the runner eagerly.
+
+    `runner` imports this module, so naming the two policies that live there has to be a late
+    lookup rather than a top-level import.
+    """
+    try:
+        target = BUSINESS_ARMS[name]
+    except KeyError:
+        raise ValueError(f"unknown arm {name!r}; have {sorted(BUSINESS_ARMS)}") from None
+    module_name, _, class_name = target.partition(":")
+    module = __import__(module_name)
+    return getattr(module, class_name)(**kwargs)

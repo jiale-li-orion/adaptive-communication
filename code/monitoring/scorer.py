@@ -76,6 +76,12 @@ class RunRecord:
     profile_timeline: list = field(default_factory=list)   # (node_id, second, profile) on change
     action_records: list = field(default_factory=list)     # ActionRecord.as_dict() at end of run
     hours: float = 0.0
+    reaccepted: int = 0     # C1: an operation the remote refused to apply a second time
+    fenced: int = 0         # C2: a write the remote refused because it was older than the one in force
+    stale_overwrites: int = 0   # an older write that replaced a newer one already in force
+    stale_held: int = 0         # commands the network held back for the ordering fault
+    stale_released: int = 0     # held commands that were later released
+    stale_trace: list = field(default_factory=list)
 
 
 @dataclass
@@ -188,9 +194,14 @@ def business_metrics(record: RunRecord) -> dict:
 
     # -- knowledge latency and false success, both from the action records ----------------------
     latencies, false_success, declared_bare, settled = [], 0, 0, 0
+    overwritten = 0
     for row in record.action_records:
         if row.get("declared_without_evidence"):
             declared_bare += 1
+        if row.get("overwritten_after_settle"):
+            # Settled while true, then replaced by a superseded write. Both halves of 7.6.
+            overwritten += 1
+            false_success += 1
         applied_at, observed_at = row.get("applied_at"), row.get("observed_at")
         if applied_at is not None and observed_at is not None:
             latencies.append(observed_at - applied_at)
@@ -212,6 +223,11 @@ def business_metrics(record: RunRecord) -> dict:
         "observation_gap_ratio": (gap / expected) if expected else float("nan"),
         "actions_settled": settled,
         "false_successes": false_success,
+        "false_successes_instant": false_success - overwritten,
+        "false_successes_overwritten": overwritten,
+        "stale_overwrites": record.stale_overwrites,
+        "fenced": record.fenced,
+        "reaccepted": record.reaccepted,
         "declared_without_evidence": declared_bare,
         "knowledge_latency_s": (sum(latencies) / len(latencies)) if latencies else float("nan"),
         "knowledge_latency_max_s": max(latencies) if latencies else float("nan"),

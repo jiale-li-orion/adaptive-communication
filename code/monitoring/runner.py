@@ -229,6 +229,42 @@ def run_episode(policy: Policy, hours: int = 72, seed: int = 0,
             return True, entry[2]
         return False, 0
 
+    def mark_applied_at(node_id: str, payload: dict, t_s: int) -> None:
+        """Remember when a logical operation actually took effect, for later dedups to quote."""
+        logical = payload.get("logical")
+        if logical is not None:
+            applied_logical_at.setdefault((node_id, logical), t_s)
+
+    def observed_at_for(node_id: str, payload: dict, now_s: int) -> int:
+        """When the centre may date its knowledge of this operation."""
+        logical = payload.get("logical")
+        if logical is None:
+            return now_s
+        return applied_logical_at.get((node_id, logical), now_s)
+
+    def remote_apply(node_id: str, payload: dict) -> str:
+        """The remote's decision for one delivered operation: `applied`, `duplicate`, or `fenced`.
+
+        Both ways a command can reach a node -- the ordinary window and the release of one the
+        network held -- go through here. Having a second path that wrote the profile directly is
+        what let a stale command overwrite a newer one even when the sender had put a version on
+        the wire, which is the exact hazard the ordering fault is supposed to create.
+        """
+        nonlocal reaccepted, fenced
+        logical = payload.get("logical")
+        version = payload.get("version")
+        if logical is not None and logical in applied_logicals.get(node_id, ()):
+            reaccepted += 1
+            return "duplicate"
+        if version is not None and version < applied_version.get(node_id, 0):
+            fenced += 1
+            return "fenced"
+        if logical is not None:
+            applied_logicals.setdefault(node_id, set()).add(logical)
+        if version is not None:
+            applied_version[node_id] = version
+        return "applied"
+
     def node_suspended(node_id: str, t_s: int) -> bool:
         """Whether a node is inside an outage an injected restart put it in."""
         for start, end in node_down.get(node_id, ()):
@@ -261,6 +297,32 @@ def run_episode(policy: Policy, hours: int = 72, seed: int = 0,
     # Records the center has applied but not yet learned about, per node. `ack_lost` removes the
     # fast confirmation, so the center has to wait for the node's next ordinary telemetry report.
     awaiting_observation: dict[str, list[str]] = {}
+    # Remote-side contract state: what each node has already applied, and the newest version it
+    # has accepted. Reset by a restart of the node, not of the center.
+    # When each logical operation actually took effect. A retry that the remote dedups was not
+    # applied now -- the operation it repeats was applied then, and saying otherwise would date the
+    # centre's knowledge to the retry and make the knowledge-latency metric measure the wrong pair.
+    applied_logicals: dict[str, set[str]] = {}
+    applied_logical_at: dict[tuple[str, str], int] = {}
+    applied_version: dict[str, int] = {}
+    reaccepted = 0
+    fenced = 0
+    stale_overwrites = 0
+    stale_held = 0
+    stale_released = 0
+    # One row per released held command: what it was, when it landed, and what had landed before.
+    # The ordering fault is only meaningful if a newer intent got in first, so that has to be
+    # legible rather than inferred from a counter that could be zero for either reason.
+    stale_trace: list[dict] = []
+    # A command the network is holding is no longer pending at the center. Keeping it in `in_flight`
+    # told every policy that the node still had a command outstanding, so none of them issued the
+    # newer write that the held one is supposed to arrive after -- and the ordering hazard silently
+    # required no ordering. The command object is kept here instead.
+    held_commands: dict[str, object] = {}
+    # The newest intent each node has actually applied, by issue time. A release from the network
+    # that lands after this is an older write replacing a newer one: the hazard itself, as opposed
+    # to `fenced`, which counts the hazard being refused.
+    newest_applied: dict[str, tuple[int, str]] = {}
 
     for t_s in range(0, hours * 3600, TICK_S):
         hour = t_s / 3600.0
@@ -323,13 +385,35 @@ def run_episode(policy: Policy, hours: int = 72, seed: int = 0,
             if release_at > t_s:
                 still_held.append((release_at, identity, node_id))
                 continue
-            command = in_flight.pop(identity, None)
+            command = held_commands.pop(identity, None)
             if command is None:
                 continue
+            stale_released += 1
+            _prior = newest_applied.get(node_id)
+            stale_trace.append({"node": node_id, "released_at": t_s,
+                                "issued_at": command.issued_at,
+                                "prior_issued_at": _prior[0] if _prior else None,
+                                "prior_identity": _prior[1] if _prior else None})
+            verdict = remote_apply(node_id, command.payload)
+            if verdict == "fenced":
+                iface.note_rejected(identity, t_s, "stale write fenced by applied version")
+                continue
+            if verdict == "duplicate":
+                iface.note_observed(identity, observed_at_for(node_id, command.payload, t_s))
+                continue
+            prior = newest_applied.get(node_id)
+            if prior is not None and prior[0] > command.issued_at:
+                # A newer intent had already been applied and this older one has just replaced it.
+                stale_overwrites += 1
+                iface.note_overwritten(prior[1], t_s, command.issued_at)
             if "profile" in command.payload:
                 runtimes[node_id].set_profile(command.payload["profile"], t_s)
-            iface.note_delivered(identity, at_s=t_s, applied_at=t_s)
+                profile_timeline.append((node_id, t_s, command.payload["profile"]))
+            mark_applied_at(node_id, command.payload, t_s)
+            iface.note_applied(identity, t_s)
+            iface.note_observed(identity, t_s)
             command.confirmed = True
+            newest_applied[node_id] = (command.issued_at, identity)
         stale_hold = still_held
 
         # The backhaul hands whatever the gateway has been holding to the center. Until this runs
@@ -401,12 +485,41 @@ def run_episode(policy: Policy, hours: int = 72, seed: int = 0,
                         # instant the fault names, after newer commands have had their chance,
                         # which is the ordering hazard the fault exists to make.
                         stale_hold.append((stale_arm.pop(identity), identity, node_id))
+                        held_commands[identity] = in_flight.pop(identity, None)
+                        stale_held += 1
                         continue
                     command = in_flight.pop(identity, None)
                     if command is None:
                         continue
+
+                    # ---- the remote contract -------------------------------------------------
+                    # The node applies an operation once and refuses one that is older than what it
+                    # already has. Both halves are keyed on fields the sender chose to put on the
+                    # wire, so a sender that leaves them out gets the unguarded behaviour and one
+                    # that includes them is protected. This is the contract, not a policy.
+                    verdict = remote_apply(node_id, command.payload)
+                    if verdict == "duplicate":
+                        # C1: this logical operation already took effect. Applying it again would be
+                        # a second effect from one intent, which is the receipt exists to stop. The
+                        # center is told it landed so it can settle rather than re-assert forever --
+                        # dated to when it landed, not to this retry.
+                        iface.note_observed(identity, observed_at_for(node_id, command.payload, t_s))
+                        continue
+                    if verdict == "fenced":
+                        # C2: an older write than the one in force. The center is told it was
+                        # refused, so it stops re-asserting instead of waiting out a timeout.
+                        iface.note_rejected(identity, t_s, "stale write fenced by applied version")
+                        continue
+                    # --------------------------------------------------------------------------
+
+                    prior = newest_applied.get(node_id)
+                    if prior is not None and prior[0] > command.issued_at:
+                        stale_overwrites += 1
+                        iface.note_overwritten(prior[1], t_s, command.issued_at)
+                    newest_applied[node_id] = (command.issued_at, identity)
                     rt.set_profile(command.payload["profile"], t_s) if "profile" in command.payload \
                         else None
+                    mark_applied_at(node_id, command.payload, t_s)
                     command.confirmed = True
                     # Applied at the moment the node applied it, observed at the moment the center
                     # learned that it had. The two are the same only because this model has no
@@ -443,6 +556,8 @@ def run_episode(policy: Policy, hours: int = 72, seed: int = 0,
         log_entries=len(iface.records),
         profile_timeline=profile_timeline,
         action_records=[r.as_dict() for r in iface.records.values()],
+        reaccepted=reaccepted, fenced=fenced, stale_overwrites=stale_overwrites,
+        stale_held=stale_held, stale_released=stale_released, stale_trace=stale_trace,
     )
     record.audit_trail = iface.audit_trail()
     if supply is not None:

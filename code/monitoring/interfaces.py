@@ -73,6 +73,7 @@ class ActionRecord:
     observed_at: int | None = None
     declared_at: int | None = None
     declared_without_evidence: bool = False
+    overwritten_after_settle: bool = False
     currently_active: bool | None = None
     outcome: str = UNKNOWN
     opportunities_spent: int = 0
@@ -93,6 +94,7 @@ class ActionRecord:
                 "applied_at": self.applied_at, "observed_at": self.observed_at,
                 "declared_at": self.declared_at,
                 "declared_without_evidence": self.declared_without_evidence,
+                "overwritten_after_settle": self.overwritten_after_settle,
                 "currently_active": self.currently_active, "outcome": self.outcome,
                 "opportunities_spent": self.opportunities_spent, "attempts": self.attempts}
 
@@ -186,6 +188,32 @@ class AgentInterface:
         record.outcome = APPLIED
         if reply:
             record.detail = reply.get("detail", record.detail)
+
+    def note_rejected(self, identity: str, at_s: int, reason: str) -> None:
+        """The remote refused the operation and told the center so.
+
+        A rejection the center never hears is indistinguishable from a loss, and the two call for
+        opposite responses: one means stop re-asserting, the other means assert again.
+        """
+        record = self.pending.pop(identity, None) or self.records.get(identity)
+        if record is None:
+            return
+        record.observed_at = at_s
+        record.outcome = REJECTED
+        record.detail = reason
+
+    def note_overwritten(self, identity: str, at_s: int, by_issued_at: int) -> None:
+        """A record the center had settled was replaced by an older intent.
+
+        This is the second half of the 7.6 definition of a false success: the value was in force
+        when the center settled it, and was then overwritten by a write that had been superseded.
+        The operators were told something true that stopped being true for a reason they never saw.
+        """
+        record = self.records.get(identity)
+        if record is None:
+            return
+        record.overwritten_after_settle = True
+        record.detail = f"overwritten at {at_s} by a write issued at {by_issued_at}"
 
     def note_delivered(self, identity: str, at_s: int, applied_at: int | None,
                        reply: dict | None = None) -> None:
