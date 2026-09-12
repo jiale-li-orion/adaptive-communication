@@ -174,14 +174,42 @@ def run_episode(policy: Policy, hours: int = 72, seed: int = 0,
     iface = AgentInterface(plane, runtimes)
     drained_wh = {nid: 0.0 for nid in runtimes}
     stale_hold: list[tuple[int, str, str]] = []      # (release_at_s, identity, node_id)
+    stale_arm: dict[str, int] = {}                   # identity -> the instant it may arrive
 
     def faulted(kind: str, at_s: int, node_id: str | None = None) -> bool:
         return fault is not None and fault.active(kind, at_s, node_id)
 
+    # Discrete faults are handled at their own instants rather than through `active()`. A restart
+    # covers a window, and treating every tick inside it as a fresh restart would fire the recovery
+    # hook ten times for one crash; a delayed command is defined by when it was issued, not by when
+    # it lands, and `active()` is true only for the one-minute arrival slot.
+    restart_at: set[int] = set()
+    node_down: dict[str, list[tuple[int, int]]] = {}
+    stale_plan: dict[tuple[str, int], int] = {}
     if fault is not None:
+        for event in fault.events():
+            detail = event.detail
+            if event.kind == "coordinator_restart":
+                restart_at.add(event.at_s)
+            elif event.kind == "node_restart":
+                start = event.at_s
+                end = int(detail.get("recovered_at_s", start))
+                node_down.setdefault(event.node_id, []).append((start, end))
+                restart_at.add(start)
+            elif event.kind == "stale_command":
+                issued = int(detail["issued_at_s"])
+                arrives = int(detail["arrives_at_s"])
+                stale_plan[(event.node_id, issued)] = arrives
         # Only the backhaul fault reaches into the channel's own draw. It can take the backhaul
         # down and never bring it up, so it cannot advantage any arm.
         plane.backhaul_gate = lambda hour: not faulted("backhaul_only", int(hour) * 3600)
+
+    def node_suspended(node_id: str, t_s: int) -> bool:
+        """Whether a node is inside an outage an injected restart put it in."""
+        for start, end in node_down.get(node_id, ()):
+            if start <= t_s < end:
+                return True
+        return False
 
     def charge_radio(node_id: str) -> None:
         """Move the radio energy a node has spent into its own battery."""
@@ -206,19 +234,17 @@ def run_episode(policy: Policy, hours: int = 72, seed: int = 0,
         hour = t_s / 3600.0
         if supply is not None:
             supply.step_to(t_s)
-        if fault is not None:
+        if t_s in restart_at:
             # A node that loses power reboots: its volatile configuration is gone and it comes back
             # on the default profile. Its flash-resident record buffer survives, which is why the
             # archive can still be recovered afterwards. A-layer: which state is volatile is a
             # property of the device, not of this model.
-            for node_id in runtimes:
-                if faulted("node_restart", t_s, node_id):
+            for node_id in node_down:
+                if any(start == t_s for start, _ in node_down[node_id]):
                     runtimes[node_id].set_profile(PROFILE_NORMAL, t_s)
                     in_flight = {k: v for k, v in in_flight.items() if v.node_id != node_id}
-
-        if fault is not None:
-            restarted = fault.active("coordinator_restart", t_s)
-            if restarted:
+            if fault is not None and any(e.at_s == t_s and e.kind == "coordinator_restart"
+                                         for e in fault.events()):
                 # The center forgot what it only knew from memory. Whatever a runtime keeps
                 # durably is its own business; the run only guarantees the amnesia is real.
                 policy = _after_coordinator_restart(policy)
@@ -247,6 +273,8 @@ def run_episode(policy: Policy, hours: int = 72, seed: int = 0,
                                                   now_s=t_s)
             command_seq += 1
             if record.attempts:
+                if (node_id, t_s) in stale_plan:
+                    stale_arm[record.identity] = stale_plan[(node_id, t_s)]
                 in_flight[record.identity] = PendingCommand(
                     identity=record.identity, node_id=node_id, payload=payload, issued_at=t_s,
                     expires_at=record.deadline)
@@ -272,7 +300,7 @@ def run_episode(policy: Policy, hours: int = 72, seed: int = 0,
         for node_id, rt in runtimes.items():
             # A node without power does nothing at all: no sample, no window, no opportunity.
             # This is the coupling that makes a blackout a monitoring gap rather than a footnote.
-            if not powered(node_id, t_s):
+            if not powered(node_id, t_s) or node_suspended(node_id, t_s):
                 continue
             rt.maybe_sample(t_s)
 
@@ -315,10 +343,11 @@ def run_episode(policy: Policy, hours: int = 72, seed: int = 0,
                         # The command was carried into the window and did not reach the node. The
                         # center learns nothing, which is what the fault is for.
                         continue
-                    if faulted("stale_command", t_s, node_id):
-                        # Held by the network. It is released later, after newer commands have
-                        # had their chance, which is the ordering hazard the fault exists to make.
-                        stale_hold.append((t_s + 1800, identity, node_id))
+                    if identity in stale_arm:
+                        # Held by the network from the moment it was issued. It is released at the
+                        # instant the fault names, after newer commands have had their chance,
+                        # which is the ordering hazard the fault exists to make.
+                        stale_hold.append((stale_arm.pop(identity), identity, node_id))
                         continue
                     command = in_flight.pop(identity, None)
                     if command is None:
