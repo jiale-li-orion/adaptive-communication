@@ -160,7 +160,11 @@ class AgentInterface:
                                   payload_bytes=payload_bytes, enqueued_at=record.issued_at,
                                   expires_at=(record.deadline if record.deadline is not None
                                               else record.issued_at + ttl_s))
-        accepted = self.plane.center_send(record.node_id, message, record.issued_at // 3600)
+        # The path is the sender's choice and it is carried on the message. A policy that knows
+        # about a second path can name it; one that does not keeps using the primary, which is the
+        # comparison the independent-management-path control exists to make.
+        accepted = self.plane.center_send(record.node_id, message, record.issued_at // 3600,
+                                          path=int(record.parameters.get("path", 0)))
         if not accepted:
             # The center could not even hand it to the gateway. The action has not been dispatched,
             # so it is not `unknown` in the sense of "may have taken effect" -- nothing left the
@@ -305,7 +309,8 @@ class AgentInterface:
                             record=record)
 
     def set_monitoring_profile(self, node_id: str, profile: str, generation: int,
-                               expires_at: int | None, now_s: int) -> ActionRecord:
+                               expires_at: int | None, now_s: int,
+                               path: int = 0) -> ActionRecord:
         """Assign a monitoring profile. A versioned assignment in the profile conflict domain.
 
         Re-sending the same value costs an opportunity and is not harmful: applying a profile twice
@@ -313,7 +318,8 @@ class AgentInterface:
         """
         identity = self._next_identity(node_id, f"profile:{profile}:g{generation}")
         record = ActionRecord(identity=identity, kind="set_monitoring_profile", node_id=node_id,
-                              parameters={"profile": profile, "generation": generation},
+                              parameters={"profile": profile, "generation": generation,
+                                          "path": path},
                               conflict_domain=DOMAIN_PROFILE, issued_at=now_s,
                               deadline=expires_at)
         return self._enqueue(record, payload_bytes=16, ttl_s=6 * 3600)

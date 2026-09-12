@@ -149,7 +149,7 @@ def _after_coordinator_restart(policy, lost=(), unresolved=()):
 def run_episode(policy: Policy, hours: int = 72, seed: int = 0,
                 profile: LoRaProfile | None = None, downlink_per_uplink: int = 1,
                 grant_announcement: bool = True, supply=None,
-                fault=None) -> tuple[RunRecord, dict, ControlPlane]:
+                fault=None, paths=None) -> tuple[RunRecord, dict, ControlPlane]:
     """Run one episode and return the ground-truth record, per-node state and the channel.
 
     Profile changes reach a node only through the channel: the center enqueues a command, the
@@ -181,6 +181,9 @@ def run_episode(policy: Policy, hours: int = 72, seed: int = 0,
     # Durable storage is a capability of the center. `journal` is the only thing that differs
     # between the two kinds of coordinator on a restart, which is what makes the restart comparison
     # about the runtime rather than about the fault.
+    from opportunity import PathSpec as _PathSpec
+    if paths:
+        plane.paths = [_PathSpec(str(name), float(p_good)) for name, p_good in paths]
     from operations import Journal as _Journal
     journal = _Journal() if getattr(policy, "durable_storage", False) else None
     iface = AgentInterface(plane, runtimes, journal=journal)
@@ -446,7 +449,8 @@ def run_episode(policy: Policy, hours: int = 72, seed: int = 0,
             if op == OP_SET_PROFILE:
                 record = iface.set_monitoring_profile(
                     node_id, payload["profile"], generation=command_seq,
-                    expires_at=t_s + 6 * 3600, now_s=t_s)
+                    expires_at=t_s + 6 * 3600, now_s=t_s,
+                    path=int(payload.get("path", 0)))
             elif op == OP_REQUEST_MEASUREMENT:
                 record = iface.request_measurement(
                     node_id, payload["request_id"], payload["deadline"], now_s=t_s)

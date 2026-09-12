@@ -140,6 +140,21 @@ class Delivery:
     opportunity_index: int         # which uplink of this node carried it
 
 
+@dataclass(frozen=True)
+class PathSpec:
+    """One candidate way for the center to reach the gateway.
+
+    The first-round architecture has exactly one (the intermittent cellular backhaul). Adding a
+    second is how the "there is always an out-of-band channel" objection is answered honestly rather
+    than by assertion: a supplementary path shares the gateway, the power and the last hop with the
+    primary one, so it can improve whether a **command** arrives and cannot improve whether its
+    **effect** is observed. The evidence still comes back on the node's own uplink, which is shared.
+    """
+
+    name: str
+    p_good: float
+
+
 @dataclass
 class GatewayItem:
     """One thing the gateway has heard and not yet handed to the center.
@@ -199,6 +214,11 @@ class ControlPlane:
         # Store-and-forward latency on the gateway-to-center hop. Zero means the gateway forwards
         # as soon as the link is up; a positive value models a batch that leaves on a schedule.
         self.backhaul_delay_s = int(backhaul_delay_s)
+        # Candidate paths, primary first. One path is the first-round architecture; a second is the
+        # independent-management-path control, and it is never offered as a health channel.
+        self.paths: list[PathSpec] = [PathSpec("backhaul", backhaul_p_good)]
+        self.path_accepted: dict[int, int] = {}
+        self.path_refused: dict[int, int] = {}
 
         self.queued: dict[str, list[DownlinkMessage]] = {}
         # Store-and-forward at the gateway. Nothing here is visible to the center yet.
@@ -224,27 +244,50 @@ class ControlPlane:
         self.airtime_downlink_ms = 0.0
 
     # ------------------------------------------------------------- center side
-    def backhaul_available(self, hour: int) -> bool:
-        """Whether the gateway's backhaul is up this hour. Exogenous, shared by all methods.
+    def path_available(self, hour: int, path: int = 0) -> bool:
+        """Whether candidate path `path` is up this hour. Exogenous, shared by all methods.
 
-        `backhaul_gate` is an optional additional condition the run may install, used by the
-        fault trajectories to take the backhaul down for a window. It can only ever make the
-        backhaul less available, never more, so a fault cannot hand an arm an advantage.
+        Each path draws independently, so a supplementary link fails on its own schedule rather than
+        with the primary. What does not vary is everything downstream of the gateway: a path that is
+        up still delivers nothing to a node with no power, no RX window, or a dead radio, and it
+        still carries no evidence back, because the evidence rides the node's uplink.
+
+        `backhaul_gate` is an optional additional condition the run may install, used by the fault
+        trajectories to take the primary path down for a window. It can only ever make it less
+        available, never more, so a fault cannot hand an arm an advantage.
         """
-        if self.backhaul_gate is not None and not self.backhaul_gate(hour):
-            return False
-        return stable_uniform(self.seed, "backhaul", hour) < self.backhaul_p_good
+        spec = self.paths[path]
+        if path == 0:
+            # The primary path keeps the key it has always had. Changing it would redraw every hour
+            # of the exogenous trace and silently invalidate every reading taken before the second
+            # path existed -- the numbers would move and nothing would say why.
+            if self.backhaul_gate is not None and not self.backhaul_gate(hour):
+                return False
+            return stable_uniform(self.seed, "backhaul", hour) < spec.p_good
+        # A supplementary path draws on its own key, so it fails on its own schedule rather than
+        # with the primary. It shares everything downstream of the gateway, which is what keeps it
+        # from being an out-of-band health channel.
+        return stable_uniform(self.seed, "path", spec.name, hour) < spec.p_good
 
-    def center_send(self, node_id: str, message: DownlinkMessage, hour: int) -> bool:
-        """Center -> gateway. Returns whether the gateway accepted it.
+    def backhaul_available(self, hour: int) -> bool:
+        """Whether the primary path is up. Kept as the name the rest of the model already uses."""
+        return self.path_available(hour, 0)
+
+    def center_send(self, node_id: str, message: DownlinkMessage, hour: int,
+                    path: int = 0) -> bool:
+        """Center -> gateway over one candidate path. Returns whether the gateway accepted it.
 
         Acceptance is not delivery. The message joins the node's queue at the gateway and waits
-        for an opportunity, which is exactly the interval the center cannot observe.
+        for an opportunity, which is exactly the interval the center cannot observe. A refusal on
+        one path says nothing about the others, and -- this is the part that matters -- a path that
+        carried the command says nothing about whether the node acted on it.
         """
-        if not self.backhaul_available(hour):
+        if not self.path_available(hour, path):
             self.backhaul_refused += 1
+            self.path_refused[path] = self.path_refused.get(path, 0) + 1
             return False
         self.queued.setdefault(node_id, []).append(message)
+        self.path_accepted[path] = self.path_accepted.get(path, 0) + 1
         self.backhaul_accepted += 1
         return True
 
@@ -424,6 +467,8 @@ class ControlPlane:
             "backhaul_forwarded": self.backhaul_forwarded,
             "backhaul_backlog_peak": self.backhaul_backlog_peak,
             "backhaul_backlog_now": len(self.gateway_pending),
+            "path_accepted": dict(self.path_accepted),
+            "path_refused": dict(self.path_refused),
             "opportunities_used": dict(self.opportunities_used),
             "airtime_uplink_ms": self.airtime_uplink_ms,
             "airtime_downlink_ms": self.airtime_downlink_ms,

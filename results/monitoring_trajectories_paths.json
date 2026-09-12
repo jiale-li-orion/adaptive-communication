@@ -1,0 +1,90 @@
+{
+  "config": {
+    "days": 3.0,
+    "seeds": 2,
+    "arms": "rule__contract",
+    "composed": false,
+    "trajectories": "none",
+    "energy": true,
+    "tag": "paths",
+    "paths": "backhaul:0.62,backup:0.55",
+    "runtime_paths": "0,1"
+  },
+  "columns": [
+    "coverage",
+    "observation_gap",
+    "false_success",
+    "time_to_know_s",
+    "downlink_attempts",
+    "airtime_h",
+    "stale_reorders",
+    "stale_overwrites",
+    "duplicate_applications",
+    "fenced",
+    "deduplicated"
+  ],
+  "results": [
+    {
+      "arm": "rule__contract",
+      "trajectory": "none",
+      "workload": "none",
+      "per_seed": {
+        "coverage": [
+          56.51162790697675,
+          75.81395348837209
+        ],
+        "observation_gap": [
+          0.0,
+          0.0
+        ],
+        "false_success": [
+          0.0,
+          0.0
+        ],
+        "time_to_know_s": [
+          0.0,
+          0.0
+        ],
+        "downlink_attempts": [
+          431.0,
+          643.0
+        ],
+        "airtime_h": [
+          3.5824122311115447,
+          4.662819982223732
+        ],
+        "stale_reorders": [
+          0.0,
+          0.0
+        ],
+        "stale_overwrites": [
+          0.0,
+          0.0
+        ],
+        "duplicate_applications": [
+          9.0,
+          4.0
+        ],
+        "fenced": [
+          0.0,
+          0.0
+        ],
+        "deduplicated": [
+          9.0,
+          4.0
+        ]
+      },
+      "coverage": 66.16279069767442,
+      "observation_gap": 0.0,
+      "false_success": 0.0,
+      "time_to_know_s": 0.0,
+      "downlink_attempts": 537.0,
+      "airtime_h": 4.122616106667639,
+      "stale_reorders": 0.0,
+      "stale_overwrites": 0.0,
+      "duplicate_applications": 6.5,
+      "fenced": 0.0,
+      "deduplicated": 6.5
+    }
+  ]
+}

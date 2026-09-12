@@ -286,9 +286,15 @@ class NaiveRuntime:
 
     name = "naive"
 
-    def __init__(self) -> None:
+    def __init__(self, paths: tuple[int, ...] = (0,)) -> None:
         self.sent: set[str] = set()
         self.dispatched = 0
+        # Which candidate paths this runtime will try, in order. One path is the first-round
+        # architecture. With more, the runtime has to discover which one works, because there is no
+        # out-of-band signal that would tell it: a path that is down and a reply that was lost look
+        # exactly alike from the center. Every probe of a dead path spends an opportunity.
+        self.paths = tuple(paths)
+        self.path_uses = [0] * max(1, len(self.paths))
 
     def dispatch(self, intents, view) -> list[tuple[str, dict]]:
         out = []
@@ -301,8 +307,16 @@ class NaiveRuntime:
                 continue
             self.sent.add(key)
             self.dispatched += 1
-            out.append((intent.node_id, intent.payload()))
+            payload = intent.payload()
+            used = self._pick_path(key)
+            payload["path"] = used
+            self.path_uses[used] = self.path_uses[used] + 1
+            out.append((intent.node_id, payload))
         return out
+
+    def _pick_path(self, key: str) -> int:
+        """Which candidate to try. Blind: nothing here can see whether a path is up."""
+        return self.paths[0] if self.paths else 0
 
 
 class ContractRuntime:
@@ -320,7 +334,8 @@ class ContractRuntime:
         self.restart_unresolved += len(unresolved)
         self.awaiting_reconcile.update(op.split(":")[0] for op in unresolved)
 
-    def __init__(self, ttl_s: int = 6 * 3600, dwell_s: int = 300, retry_budget: int = 3) -> None:
+    def __init__(self, ttl_s: int = 6 * 3600, dwell_s: int = 300, retry_budget: int = 3,
+                 paths: tuple[int, ...] = (0,)) -> None:
         self.ttl_s = ttl_s
         self.dwell_s = dwell_s
         self.retry_budget = retry_budget
@@ -331,6 +346,8 @@ class ContractRuntime:
         self.restarts = 0
         self.restart_unresolved = 0
         self.awaiting_reconcile: set[str] = set()
+        self.paths = tuple(paths)
+        self.path_uses = [0] * max(1, len(self.paths))
         self.settled: set[str] = set()
         self.writes = 0
         self.retries = 0
@@ -412,6 +429,12 @@ class ContractRuntime:
             payload = intent.payload()
             payload["logical"] = identity
             payload["version"] = self.epoch[node_id]
+            # The attempt number selects the path, so a runtime with more than one candidate finds
+            # out which works by spending a second attempt rather than by asking anything. There is
+            # nothing to ask: a down path returns no reply at all, and so does a lost one.
+            used = self.paths[min(book["attempts"] - 1, len(self.paths) - 1)] if self.paths else 0
+            payload["path"] = used
+            self.path_uses[used] = self.path_uses[used] + 1
             out.append((node_id, payload))
         return out
 
@@ -558,7 +581,7 @@ class ScriptedWorldBackend:
 
 
 # --------------------------------------------------------------------------- the 2x2
-def build_composed(name: str):
+def build_composed(name: str, paths=(0,)):
     """Instantiate one cell of the 2x2 by name.
 
     `llm` cells build their planner around whatever backend the caller supplies, defaulting to the
@@ -572,9 +595,9 @@ def build_composed(name: str):
     else:
         raise ValueError(f"unknown planner {planner_name!r}")
     if runtime_name == "naive":
-        runtime = NaiveRuntime()
+        runtime = NaiveRuntime(paths=tuple(paths))
     elif runtime_name == "contract":
-        runtime = ContractRuntime()
+        runtime = ContractRuntime(paths=tuple(paths))
     else:
         raise ValueError(f"unknown runtime {runtime_name!r}")
     return ComposedPolicy(planner=planner, runtime=runtime, name=name)

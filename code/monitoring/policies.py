@@ -970,7 +970,7 @@ def build_composed_arm(name: str, **kwargs) -> object:
     """Instantiate one cell of the 2x2. Kept separate from `build_arm` so that adding cells cannot
     change what the frozen business arms resolve to."""
     import compose as _compose
-    return _compose.build_composed(name)
+    return _compose.build_composed(name, **kwargs)
 
 
 def build_arm(name: str, **kwargs) -> object:

@@ -60,7 +60,8 @@ COLUMNS = (
 )
 
 
-def one_run(arm: str, trajectory: str, days: float, seed: int, use_energy: bool) -> dict:
+def one_run(arm: str, trajectory: str, days: float, seed: int, use_energy: bool,
+            paths=None, runtime_paths=(0,)) -> dict:
     hours = int(round(days * 24))
     fault = None if trajectory == "none" else FaultInjector(
         FaultSpec(kind=trajectory, seed=seed, hours=hours))
@@ -68,9 +69,13 @@ def one_run(arm: str, trajectory: str, days: float, seed: int, use_energy: bool)
     # One supply fleet per run, seeded from the same seed as the deployment, so the energy arm of
     # an arm comparison is not a second source of variation between arms.
     supply = SupplyFleet(deployment.nodes, seed) if use_energy else None
-    policy = build_arm(arm)
+    # A cell of the 2x2 may be told which candidate paths its runtime will try. The business arms
+    # have no such parameter: their path choice is fixed, which is what makes them the first-round
+    # architecture rather than a variant of it.
+    policy = (build_arm(arm, paths=tuple(runtime_paths))
+              if arm in COMPOSED_ARMS else build_arm(arm))
     record, _state, plane = run_episode(policy, hours=hours, seed=seed, fault=fault,
-                                        supply=supply)
+                                        supply=supply, paths=paths)
     plane.check_opportunity_bound()
     result = score(record)
     row = {"arm": arm, "trajectory": trajectory, "seed": seed, "hours": hours}
@@ -92,8 +97,15 @@ def main() -> None:
     ap.add_argument("--trajectories", default=",".join(TRAJECTORIES))
     ap.add_argument("--no-energy", dest="energy", action="store_false")
     ap.add_argument("--tag", default="")
+    ap.add_argument("--paths", default="backhaul:0.62",
+                    help="candidate center->gateway paths as name:p_good, primary first")
+    ap.add_argument("--runtime-paths", default="0",
+                    help="which path indices the 2x2 runtimes will try, in order")
     args = ap.parse_args()
 
+    paths = [tuple(part.rsplit(":", 1)) for part in args.paths.split(",") if part]
+    paths = [(name, float(p_good)) for name, p_good in paths]
+    runtime_paths = tuple(int(x) for x in args.runtime_paths.split(",") if x != "")
     arms = [a for a in args.arms.split(",") if a]
     trajectories = [t for t in args.trajectories.split(",") if t]
     known = set(BUSINESS_ARMS) | set(COMPOSED_ARMS)
@@ -111,7 +123,8 @@ def main() -> None:
         for arm in arms:
             for seed in range(args.seeds):
                 per_arm.setdefault(arm, []).append(
-                    one_run(arm, trajectory, args.days, seed, args.energy))
+                    one_run(arm, trajectory, args.days, seed, args.energy,
+                            paths=paths, runtime_paths=runtime_paths))
         print(f"\n===== {trajectory} =====")
         hdr = (f"{'arm':18s}" + "".join(f"{n:>16s}" for n, _ in COLUMNS))
         print(hdr)

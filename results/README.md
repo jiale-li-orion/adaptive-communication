@@ -51,6 +51,8 @@ python3 code/experiments/monitoring_trajectories.py --days 3 --seeds 20 \
 |---|---|---|
 | `monitoring_trajectories_business.json` | 3 天 / 20 种子 / 5 条业务臂 / 七条轨迹 | 业务臂在七条轨迹上的覆盖、关键观测空窗、误报成功、知晓时延、机会账目与远端契约计数 |
 | `monitoring_trajectories_2x2.json` | 3 天 / 20 种子 / 2×2 四格 / 七条轨迹 | planner 因子与 runtime 因子的分解（README §7.23 第四节） |
+| `monitoring_trajectories_paths.json` | 3 天 / 2 种子 / `rule__contract` / 无故障；`--paths backhaul:0.62,backup:0.55 --runtime-paths 0,1` | 独立管理路径对照组：runtime 会发现并使用备用回传（README §7.24） |
+| `monitoring_trajectories_paths_primary_only.json` | 同上，但 `--runtime-paths 0` | 同一部署下只用主路径的对照 |
 
 结果文件的 `per_seed` 保存逐种子值，`workload` 字段即轨迹名，因此可按轨迹分组做配对比较与
 零值检查：
