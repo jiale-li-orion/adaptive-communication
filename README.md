@@ -113,7 +113,7 @@ CRITIC 与 AgentSpec 不进主实验。前者处理验证器本身的质量，�
 
 **LLM supplement。** 主表固定决策轨迹，因为本文的自变量是执行语义，模型采样噪声会毁掉这条因果。补充实验再让**同一个 LLM** 接四种执行层，检验闭环情形下结论是否保持；[WirelessAgent](https://arxiv.org/abs/2409.07964) 与 [WirelessOpsAgent](https://arxiv.org/abs/2608.08277) 按各自论文的方法在那一层实现，与本文的对照挂在 agent 级而非 runtime 级。
 
-该实验有一条硬约束：**所有 arm 必须共享同一套 action 与 tool surface**——相同的 observation 格式、相同的动作集合、相同的工具 schema、相同的预算、相同的副作用语义。若让本文的 arm 拥有 wait / reconcile / relay 而对照只有 retry / hold，比较的就不是谁的决策更好，而是谁被给了更多动作。执行层的差异应当体现在**同一动作集合下的处置语义**，而不是动作集合本身。
+该实验有一条硬约束：**所有 arm 必须共享同一套 action 与 tool surface**——相同的 observation 格式、相同的动作集合、相同的工具 schema、相同的预算、相同的副作用语义。若让本文的 arm 拥有 wait / reconcile / relay 而对照只有 retry / hold，得到的差异衡量的是谁被给了更多动作，与决策质量无关。执行层的差异应当体现在**同一动作集合下的处置语义**，而不是动作集合本身。
 
 这条约束与 `2608.02645` 的实验设计一致：该文用同一个模型驱动所有方法，理由正是让差异反映工具交互层而非模型能力。接口留在这里，实现待做。
 
