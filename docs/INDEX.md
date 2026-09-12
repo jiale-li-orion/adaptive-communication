@@ -53,6 +53,12 @@
 |---|---|
 | `s6-model/system-model.md` | 论文 Section II 初稿，含参数表与证据层标注、指标定义、待补清单 |
 
+## 方法
+
+| 文件 | 内容 |
+|---|---|
+| `s7-method/execution-runtime.md` | 论文 Section III 初稿：执行歧义模型、三维状态、操作生命周期、三条性质与主图 |
+
 ## 运行
 
 ```bash
