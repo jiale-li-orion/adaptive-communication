@@ -94,7 +94,7 @@ SENS = {7: -123.0, 8: -126.0, 9: -129.0, 10: -132.0, 11: -134.5, 12: -137.0}
 TX_DBM, G_TX, G_RX, FEEDER = 14.0, 2.0, 2.0, 1.0
 
 ARMS = ("one_shot", "retry_uncertainty", "verified_tool_calls", "verified_tool_calls_c1",
-        "ours", "ours_plain_sink",
+        "ours", "ours_plain_sink", "exact_version_cas",
         "ablate_identity", "ablate_fencing", "ablate_receipts", "ablate_scope")
 RELAY_ARMS = ("relay_retry_uncertainty", "relay_ours")
 
@@ -116,6 +116,11 @@ ARM_SPEC = {
     "ablate_fencing":        ((True,  False), True),    # C2 removed, C1 kept
     "ablate_receipts":       ((False, True),  True),    # C1 removed, C2 kept
     "ablate_scope":          ((True,  True),  True),    # reconciliation predicate not scoped
+    # 7.9.2's stricter contract: optimistic concurrency rather than monotonic fencing. It needs
+    # both the receipt and a stable identity, and it additionally reads the version before every
+    # write. Listed here rather than among the ablations because it is a different contract, not a
+    # removed ingredient.
+    "exact_version_cas":     ((True,  True),  True),
 }
 
 STATE_SCHEDULE = ("1h", "10min", "5min", "1h")
@@ -213,10 +218,15 @@ def make_nodes(n_reach, n_blocked, rng, use_energy, heated_fraction=HEATED_FRACT
 class FarSide:
     """The entity at the far end. Nothing here is reachable without crossing the link."""
 
-    def __init__(self, nid, receipts: bool, fencing: bool):
+    def __init__(self, nid, receipts: bool, fencing: bool, strict_fencing: bool = False):
         self.nid = nid
         self.keeps_receipts = receipts
         self.fenced = fencing
+        # Optimistic concurrency rather than monotonic fencing: the writer must present the version
+        # it believes is in force, and a writer that presents anything else -- including one whose
+        # version is unknown -- is refused. Strictly stronger than C2, and it costs a read before
+        # every write, so it is a correctness baseline as much as a performance one.
+        self.strict_fencing = strict_fencing
         self.last_accepted_epoch = 0
         # the highest epoch whose write actually took effect here, tracked whether or not this
         # sink fences, so a stale reorder is an objective event and not an arm-specific artefact
@@ -240,6 +250,11 @@ class FarSide:
         """Returns (outcome, did_apply). A deduplicated repeat is APPLIED but did NOT apply."""
         if self.keeps_receipts and op_id in self.receipts:
             return Outcome.APPLIED, False
+        if self.strict_fencing and epoch != self.last_accepted_epoch + 1:
+            # Compare-and-swap: the write must carry exactly the successor of the version in force.
+            # An interleaved write moves that version, so a writer holding a stale reading fails
+            # here instead of landing and being ordered away.
+            return Outcome.SUPERSEDED, False
         if self.fenced and epoch <= self.last_accepted_epoch and self.last_accepted_epoch > 0:
             return Outcome.SUPERSEDED, False
         if self.fenced:
@@ -277,7 +292,10 @@ class FarSide:
         return Outcome.APPLIED, True
 
     def read_state(self):
-        return dict(self.state) | {"alarms": sorted(self.state["alarms"])}
+        # `fence_version` is what the far side will accept a write against. A compare-and-swap
+        # writer has to read it first, which is where that arm's second opportunity goes.
+        return dict(self.state) | {"alarms": sorted(self.state["alarms"]),
+                                   "fence_version": self.last_accepted_epoch}
 
     def read_receipt(self, op_id):
         return self.receipts.get(op_id)
@@ -412,7 +430,8 @@ def run_arm(arm, nodes, hours, cmd_period, seed, use_energy, workload,
         stable_id = (arm == "relay_ours")
         receipts, fencing = ((True, True) if arm == "relay_ours" else (False, False))
 
-    sinks = {n["nid"]: FarSide(n["nid"], receipts, fencing) for n in nodes}
+    sinks = {n["nid"]: FarSide(n["nid"], receipts, fencing,
+                               strict_fencing=(base_arm == "exact_version_cas")) for n in nodes}
     link = Link(seed, read_cost_ratio=read_cost_ratio)
     reg = OperationRegistry()
 
@@ -431,6 +450,8 @@ def run_arm(arm, nodes, hours, cmd_period, seed, use_energy, workload,
         return sinks[n["nid"]].read_state(), "reply"
 
     late_applied = 0
+    cas_reads = 0
+    cas_read_failures = 0
 
     for t in range(hours):
         # ---- writes the network finally releases, possibly long after a newer one landed ----
@@ -536,6 +557,18 @@ def run_arm(arm, nodes, hours, cmd_period, seed, use_energy, workload,
                 if arrived:
                     relay_buf[n["nid"]].append((op_id, epoch, item))
                 continue
+
+            if base_arm == "exact_version_cas":
+                # The read that buys the right to write. It is a separate crossing, so it costs an
+                # opportunity and airtime of its own; when it draws no reply the writer does not
+                # hold a version it can write against, so the operation waits rather than writing
+                # blind. That is the honest cost of the stricter contract.
+                seen, verdict = channel_read(n, t, "read_version", item["attempts"], item["intent"])
+                if verdict != "reply":
+                    cas_read_failures += 1
+                    continue
+                epoch = int(seen.get("fence_version", 0)) + 1
+                cas_reads += 1
 
             arrived = link.request(n, t, "data_write", item["attempts"], intent=item["intent"])
             if not arrived:
@@ -643,6 +676,7 @@ def run_arm(arm, nodes, hours, cmd_period, seed, use_energy, workload,
         "dup_rate": many / total, "state_satisfied_rate": state_rate,
         "rounds_created": rounds_created,
         "data_writes": m["data_write"], "verify_reads": m["verify_read"],
+        "cas_reads": cas_reads, "cas_read_failures": cas_read_failures,
         "reconcile_reads": m["reconcile_read"], "replies": m["replies"],
         "reply_lost": m["reply_lost"],
         "protocol_messages": m["data_write"] + m["verify_read"] + m["reconcile_read"] + m["replies"],
@@ -704,8 +738,8 @@ def main() -> None:
     for wl in workloads:
         print(f"===== workload: {wl} =====")
         hdr = (f"{'runtime':22s} {'恰好一次':>8s} {'零次':>7s} {'多余':>7s} {'重复':>8s} "
-               f"{'写入':>7s} {'验证读':>7s} {'调和读':>7s} {'回复':>8s} {'空口h':>7s} "
-               f"{'乱序':>6s} {'覆盖':>6s} {'归一代价':>9s}")
+               f"{'写入':>7s} {'验证读':>7s} {'调和读':>7s} {'CAS读':>6s} {'CAS失败':>7s} "
+               f"{'回复':>8s} {'空口h':>7s} {'乱序':>6s} {'覆盖':>6s} {'归一代价':>9s}")
         print(hdr); print("-" * len(hdr))
         for arm in arms:
             acc = []
@@ -726,7 +760,9 @@ def main() -> None:
             print(f"{arm:22s} {100*agg['exactly_once_rate']:7.1f}% {100*agg['zero_rate']:6.1f}% "
                   f"{100*agg['dup_rate']:6.1f}% {agg['duplicate_applications']:8.1f} "
                   f"{agg['data_writes']:7.0f} {agg['verify_reads']:7.0f} "
-                  f"{agg['reconcile_reads']:7.0f} {agg['replies']:8.0f} {agg['airtime_s']/3600:7.1f} "
+                  f"{agg['reconcile_reads']:7.0f} {agg.get('cas_reads',0):6.0f} "
+                  f"{agg.get('cas_read_failures',0):7.0f} "
+                  f"{agg['replies']:8.0f} {agg['airtime_s']/3600:7.1f} "
                   f"{agg['stale_reorders']:6.0f} {agg['stale_overwrites']:6.0f} "
                   f"{agg['normalized_cost']:9.0f}"
                   + (f"  {100*agg['state_satisfied_rate']:6.1f}%" if wl == "state_setting" else ""))

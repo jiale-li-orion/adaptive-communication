@@ -163,8 +163,17 @@ def audit_restart_durable_context() -> None:
           "durable_draws" not in src and "live_draws" not in src)
     check("adhoc 身份与 payload 同源",
           'store.recall(key)' in src and 'store.commit(key, draw)' in src)
-    check("非日志 arm 明确没有决策存储",
-          'DurableDecisionStore(journal)\n                                          if arm == "journal" else None' in src)
+    # The three durable arms hold the decision context; the arms with no storage hold none.
+    # Asserted against the one tuple the script uses, so adding a durable arm cannot leave the
+    # store behind on some paths and present on others without this failing.
+    check("持久化 arm 由一个元组统一声明",
+          'durable_arms = ("journal", "journal_cursor", "journal_reauthorize")' in src)
+    check("决策存储只对持久化 arm 创建",
+          'if arm in durable_arms else None' in src)
+    check("日志也只对持久化 arm 创建",
+          'if arm in durable_arms else None' in src and 'journal = Journal()' in src)
+    check("无存储 arm 明确没有决策存储",
+          'OperationRegistry(None, incarnation=' in src)
 
 
 def audit_relay_bypasses_screen() -> None:

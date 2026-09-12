@@ -207,6 +207,23 @@ class Journal:
     def __init__(self) -> None:
         self.entries: list[dict] = []
 
+    def up_to(self, cursor: int) -> "Journal":
+        """A view of this log as it stood at `cursor`, for recovery that trusts a checkpoint.
+
+        The cursor marks how much of the log is known to have reached durable storage. Everything
+        appended after it is gone, and that is the whole difference between replaying the log and
+        replaying from a checkpoint: the entries past the cursor name operations the recovering
+        coordinator will not know it ever had, so it cannot reconcile them, and whatever they were
+        going to accomplish either happens again under a re-derived identity or never happens.
+        """
+        if cursor < 0:
+            raise ValueError("cursor must not be negative")
+        if cursor > len(self.entries):
+            raise ValueError(f"cursor {cursor} is past the end of a {len(self.entries)}-entry log")
+        trimmed = Journal()
+        trimmed.entries = list(self.entries[:cursor])
+        return trimmed
+
     def record(self, kind: str, **fields) -> None:
         spec = JOURNAL_SCHEMA.get(kind)
         if spec is None:

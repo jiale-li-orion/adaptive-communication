@@ -1,0 +1,414 @@
+{
+  "config": {
+    "days": 30,
+    "cmd_period": 6,
+    "reach": 12,
+    "blocked": 4,
+    "seeds": 1,
+    "no_energy": false,
+    "heated": null,
+    "retry_budget": 3,
+    "workload": "operation",
+    "relay": false,
+    "relay_availability": 1.0,
+    "arms": "one_shot,verified_tool_calls,ours,exact_version_cas",
+    "stale_p": 0.0,
+    "read_cost_ratio": 1.0,
+    "stale_max": 6,
+    "tag": ""
+  },
+  "results": [
+    {
+      "intents": 1920.0,
+      "exactly_once": 545.0,
+      "zero_times": 1375.0,
+      "more_than_once": 0.0,
+      "duplicate_applications": 0.0,
+      "late_applications": 0.0,
+      "stale_reorders": 0.0,
+      "stale_overwrites": 0.0,
+      "exactly_once_rate": 0.2838541666666667,
+      "zero_rate": 0.7161458333333334,
+      "dup_rate": 0.0,
+      "state_satisfied_rate": NaN,
+      "rounds_created": 1920.0,
+      "data_writes": 1920.0,
+      "verify_reads": 0.0,
+      "cas_reads": 0.0,
+      "cas_read_failures": 0.0,
+      "reconcile_reads": 0.0,
+      "replies": 334.0,
+      "reply_lost": 211.0,
+      "protocol_messages": 2254.0,
+      "airtime_s": 856.9732146371673,
+      "normalized_cost": 2254.0,
+      "per_seed": {
+        "intents": [
+          1920.0
+        ],
+        "exactly_once": [
+          545.0
+        ],
+        "zero_times": [
+          1375.0
+        ],
+        "more_than_once": [
+          0.0
+        ],
+        "duplicate_applications": [
+          0.0
+        ],
+        "late_applications": [
+          0.0
+        ],
+        "stale_reorders": [
+          0.0
+        ],
+        "stale_overwrites": [
+          0.0
+        ],
+        "exactly_once_rate": [
+          0.2838541666666667
+        ],
+        "zero_rate": [
+          0.7161458333333334
+        ],
+        "dup_rate": [
+          0.0
+        ],
+        "state_satisfied_rate": [
+          NaN
+        ],
+        "rounds_created": [
+          1920.0
+        ],
+        "data_writes": [
+          1920.0
+        ],
+        "verify_reads": [
+          0.0
+        ],
+        "cas_reads": [
+          0.0
+        ],
+        "cas_read_failures": [
+          0.0
+        ],
+        "reconcile_reads": [
+          0.0
+        ],
+        "replies": [
+          334.0
+        ],
+        "reply_lost": [
+          211.0
+        ],
+        "protocol_messages": [
+          2254.0
+        ],
+        "airtime_s": [
+          856.9732146371673
+        ],
+        "normalized_cost": [
+          2254.0
+        ]
+      },
+      "arm": "one_shot",
+      "workload": "operation"
+    },
+    {
+      "intents": 1920.0,
+      "exactly_once": 619.0,
+      "zero_times": 1301.0,
+      "more_than_once": 0.0,
+      "duplicate_applications": 0.0,
+      "late_applications": 0.0,
+      "stale_reorders": 0.0,
+      "stale_overwrites": 0.0,
+      "exactly_once_rate": 0.3223958333333333,
+      "zero_rate": 0.6776041666666667,
+      "dup_rate": 0.0,
+      "state_satisfied_rate": NaN,
+      "rounds_created": 1920.0,
+      "data_writes": 2023.0,
+      "verify_reads": 1586.0,
+      "cas_reads": 0.0,
+      "cas_read_failures": 0.0,
+      "reconcile_reads": 0.0,
+      "replies": 601.0,
+      "reply_lost": 349.0,
+      "protocol_messages": 4210.0,
+      "airtime_s": 1667.9811969851535,
+      "normalized_cost": 4210.0,
+      "per_seed": {
+        "intents": [
+          1920.0
+        ],
+        "exactly_once": [
+          619.0
+        ],
+        "zero_times": [
+          1301.0
+        ],
+        "more_than_once": [
+          0.0
+        ],
+        "duplicate_applications": [
+          0.0
+        ],
+        "late_applications": [
+          0.0
+        ],
+        "stale_reorders": [
+          0.0
+        ],
+        "stale_overwrites": [
+          0.0
+        ],
+        "exactly_once_rate": [
+          0.3223958333333333
+        ],
+        "zero_rate": [
+          0.6776041666666667
+        ],
+        "dup_rate": [
+          0.0
+        ],
+        "state_satisfied_rate": [
+          NaN
+        ],
+        "rounds_created": [
+          1920.0
+        ],
+        "data_writes": [
+          2023.0
+        ],
+        "verify_reads": [
+          1586.0
+        ],
+        "cas_reads": [
+          0.0
+        ],
+        "cas_read_failures": [
+          0.0
+        ],
+        "reconcile_reads": [
+          0.0
+        ],
+        "replies": [
+          601.0
+        ],
+        "reply_lost": [
+          349.0
+        ],
+        "protocol_messages": [
+          4210.0
+        ],
+        "airtime_s": [
+          1667.9811969851535
+        ],
+        "normalized_cost": [
+          4210.0
+        ]
+      },
+      "arm": "verified_tool_calls",
+      "workload": "operation"
+    },
+    {
+      "intents": 1920.0,
+      "exactly_once": 769.0,
+      "zero_times": 1151.0,
+      "more_than_once": 0.0,
+      "duplicate_applications": 0.0,
+      "late_applications": 0.0,
+      "stale_reorders": 0.0,
+      "stale_overwrites": 0.0,
+      "exactly_once_rate": 0.4005208333333333,
+      "zero_rate": 0.5994791666666667,
+      "dup_rate": 0.0,
+      "state_satisfied_rate": NaN,
+      "rounds_created": 1920.0,
+      "data_writes": 4689.0,
+      "verify_reads": 0.0,
+      "cas_reads": 0.0,
+      "cas_read_failures": 0.0,
+      "reconcile_reads": 322.0,
+      "replies": 717.0,
+      "reply_lost": 407.0,
+      "protocol_messages": 5728.0,
+      "airtime_s": 2392.1509804979137,
+      "normalized_cost": 5728.0,
+      "per_seed": {
+        "intents": [
+          1920.0
+        ],
+        "exactly_once": [
+          769.0
+        ],
+        "zero_times": [
+          1151.0
+        ],
+        "more_than_once": [
+          0.0
+        ],
+        "duplicate_applications": [
+          0.0
+        ],
+        "late_applications": [
+          0.0
+        ],
+        "stale_reorders": [
+          0.0
+        ],
+        "stale_overwrites": [
+          0.0
+        ],
+        "exactly_once_rate": [
+          0.4005208333333333
+        ],
+        "zero_rate": [
+          0.5994791666666667
+        ],
+        "dup_rate": [
+          0.0
+        ],
+        "state_satisfied_rate": [
+          NaN
+        ],
+        "rounds_created": [
+          1920.0
+        ],
+        "data_writes": [
+          4689.0
+        ],
+        "verify_reads": [
+          0.0
+        ],
+        "cas_reads": [
+          0.0
+        ],
+        "cas_read_failures": [
+          0.0
+        ],
+        "reconcile_reads": [
+          322.0
+        ],
+        "replies": [
+          717.0
+        ],
+        "reply_lost": [
+          407.0
+        ],
+        "protocol_messages": [
+          5728.0
+        ],
+        "airtime_s": [
+          2392.1509804979137
+        ],
+        "normalized_cost": [
+          5728.0
+        ]
+      },
+      "arm": "ours",
+      "workload": "operation"
+    },
+    {
+      "intents": 1920.0,
+      "exactly_once": 529.0,
+      "zero_times": 1391.0,
+      "more_than_once": 0.0,
+      "duplicate_applications": 0.0,
+      "late_applications": 0.0,
+      "stale_reorders": 0.0,
+      "stale_overwrites": 0.0,
+      "exactly_once_rate": 0.2755208333333333,
+      "zero_rate": 0.7244791666666667,
+      "dup_rate": 0.0,
+      "state_satisfied_rate": NaN,
+      "rounds_created": 1920.0,
+      "data_writes": 817.0,
+      "verify_reads": 0.0,
+      "cas_reads": 817.0,
+      "cas_read_failures": 4506.0,
+      "reconcile_reads": 0.0,
+      "replies": 1204.0,
+      "reply_lost": 708.0,
+      "protocol_messages": 2021.0,
+      "airtime_s": 2697.6098257142608,
+      "normalized_cost": 1204.0,
+      "per_seed": {
+        "intents": [
+          1920.0
+        ],
+        "exactly_once": [
+          529.0
+        ],
+        "zero_times": [
+          1391.0
+        ],
+        "more_than_once": [
+          0.0
+        ],
+        "duplicate_applications": [
+          0.0
+        ],
+        "late_applications": [
+          0.0
+        ],
+        "stale_reorders": [
+          0.0
+        ],
+        "stale_overwrites": [
+          0.0
+        ],
+        "exactly_once_rate": [
+          0.2755208333333333
+        ],
+        "zero_rate": [
+          0.7244791666666667
+        ],
+        "dup_rate": [
+          0.0
+        ],
+        "state_satisfied_rate": [
+          NaN
+        ],
+        "rounds_created": [
+          1920.0
+        ],
+        "data_writes": [
+          817.0
+        ],
+        "verify_reads": [
+          0.0
+        ],
+        "cas_reads": [
+          817.0
+        ],
+        "cas_read_failures": [
+          4506.0
+        ],
+        "reconcile_reads": [
+          0.0
+        ],
+        "replies": [
+          1204.0
+        ],
+        "reply_lost": [
+          708.0
+        ],
+        "protocol_messages": [
+          2021.0
+        ],
+        "airtime_s": [
+          2697.6098257142608
+        ],
+        "normalized_cost": [
+          1204.0
+        ]
+      },
+      "arm": "exact_version_cas",
+      "workload": "operation"
+    }
+  ]
+}

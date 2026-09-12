@@ -74,7 +74,15 @@ from method_comparison import (Link, FarSide, make_nodes, EnvironmentTrace,   # 
 
 OUT = os.path.join(ROOT, "results", "restart_experiment.json")
 
-ARMS = ("fresh_id", "reconstructed_id", "journal")
+ARMS = ("fresh_id", "reconstructed_id", "journal", "journal_cursor", "journal_reauthorize")
+# How often the log is forced to durable storage. The cursor only advances on a flush, so a crash
+# loses everything appended since the last one. This is an A-layer parameter of the checkpointing
+# scheme, not a property of the protocol, and it is the whole reason the two recovery arms differ.
+FLUSH_PERIOD_H = 4
+# How long a successful crossing keeps an entity's reconciliation channel considered open. The
+# admission question is not "is this entity in the deployment" but "is there a way to find out what
+# happened to it", and a channel nobody has crossed recently does not answer that.
+CHANNEL_MEMORY_H = 6
 KINDS = ("scheduled", "adhoc")
 
 
@@ -85,18 +93,25 @@ def run_arm(arm: str, kind: str, nodes, hours: int, cmd_period: int, crash_perio
     sinks = {n["nid"]: FarSide(n["nid"], receipts=True, fencing=True) for n in nodes}
     link = Link(seed)
 
-    journal = Journal() if arm == "journal" else None
+    durable_arms = ("journal", "journal_cursor", "journal_reauthorize")
+    journal = Journal() if arm in durable_arms else None
+    # Where durable storage last caught up with the log. A crash is measured against this, not
+    # against the end of the log.
+    flushed = 0
     # The durable decision context, and it is durable in the only sense that counts: it lives in
     # the same append-only journal the operations do. Without it a recovered coordinator can
     # rebuild an ad-hoc action's identity but not the payload that identity names.
     store: DurableDecisionStore | None = (DurableDecisionStore(journal)
-                                          if arm == "journal" else None)
+                                          if arm in durable_arms else None)
     reg = OperationRegistry(journal, incarnation="i0-")
     inc = 0
     applied: dict[str, int] = {}          # identity -> executions at the far side
     intended: dict[tuple[str, int], str] = {}   # (node, slot) -> the identity the mission wanted
     done: set[str] = set()                # logical intents the coordinator is finished with
     crashes = 0
+    # When each entity's reconciliation channel was last known to be open.
+    channel_open_at: dict[str, int] = {}
+    blocked_no_channel = 0
     # The missions's outstanding window. A coordinator that loses its state cannot tell which of
     # these already landed, so it re-asserts them; that re-assertion is what a restart costs.
     recent: list[tuple[int, dict]] = []
@@ -104,6 +119,12 @@ def run_arm(arm: str, kind: str, nodes, hours: int, cmd_period: int, crash_perio
 
     for t in range(hours):
         trace.apply(nodes, t)
+        if arm == "journal_cursor" and t % FLUSH_PERIOD_H == 0 and journal is not None:
+            # A flush is the only thing that moves the cursor, and it moves it to the end of what
+            # has been appended so far. It deliberately does not wait for remote confirmation:
+            # a cursor that only advanced on confirmation would be a second, unreliable receipt
+            # channel, which is the thing the cursor exists to avoid needing.
+            flushed = len(journal.entries)
         epoch_seq = 0
 
         def next_epoch():
@@ -118,7 +139,16 @@ def run_arm(arm: str, kind: str, nodes, hours: int, cmd_period: int, crash_perio
         if crash_period and t > 0 and t % crash_period == 0:
             crashes += 1
             inc += 1
-            if arm == "journal":
+            if arm == "journal_cursor":
+                # Replay from the last checkpoint and nothing more. The operations the crash
+                # caught between the cursor and the end are not in the recovered registry, so the
+                # coordinator cannot reconcile them: it will re-derive what the mission's schedule
+                # lets it re-derive, and the rest it will never miss because it never knew.
+                reg = recover(journal.up_to(flushed))
+                store = DurableDecisionStore.replay(journal.up_to(flushed))
+                done = {o.logical_intent for o in reg.ops.values()
+                        if o.outcome is Outcome.APPLIED}
+            elif arm in ("journal", "journal_reauthorize"):
                 reg = recover(journal)
                 store = DurableDecisionStore.replay(journal)
                 done = {o.logical_intent for o in reg.ops.values()
@@ -155,12 +185,28 @@ def run_arm(arm: str, kind: str, nodes, hours: int, cmd_period: int, crash_perio
             # re-assert the entire window on every arm.
             to_reassert = [(r, nd) for (r, nd) in recent
                            if intended.get((nd["nid"], r)) not in done]
+            if arm == "journal_reauthorize":
+                # Recovery restores knowledge, not the right to act. An operation that came back
+                # from the log is known but not dispatchable until a reconciliation channel to its
+                # entity has been re-established: without one the coordinator cannot find out what
+                # happened to the last attempt, so re-sending is an unauthorised action rather than
+                # a retry. Entities with no recently crossed channel are refused and reported.
+                admitted = []
+                for r, nd in to_reassert:
+                    last = channel_open_at.get(nd["nid"])
+                    if last is None or t - last > CHANNEL_MEMORY_H:
+                        blocked_no_channel += 1
+                        continue
+                    admitted.append((r, nd))
+                to_reassert = admitted
             for r, nd in to_reassert:
                 ident, payload = _identity_for(kind, nd, r, store, seed, inc)
                 op = reg.register(nd["nid"], payload["op"], payload, ident, t, True)
                 sent_id = op.operation_id if arm == "fresh_id" else ident
                 reg.dispatched(op, t)
                 arrived, replied = link.exchange(nd, t, "data_write", r, intent=ident)
+                if arrived:
+                    channel_open_at[nd["nid"]] = t
                 if not arrived:
                     continue
                 ep = next_epoch()
@@ -219,7 +265,8 @@ def run_arm(arm: str, kind: str, nodes, hours: int, cmd_period: int, crash_perio
             "data_writes": link.msg["data_write"], "reconcile_reads": link.msg["reconcile_read"],
             "airtime_s": link.airtime_ms_total / 1000.0,
             "journal_entries": len(journal) if journal is not None else 0,
-            "decisions_durable": len(store) if store is not None else 0}
+            "decisions_durable": len(store) if store is not None else 0,
+            "blocked_no_channel": blocked_no_channel}
 
 
 def _slot_of(logical_intent: str):
@@ -287,7 +334,8 @@ def main() -> None:
     for kind in KINDS:
         print(f"===== 命令类型: {kind} =====")
         hdr = (f"{'arm':18s} {'操作数':>7s} {'恰好一次':>9s} {'零次':>6s} {'多次':>6s} "
-               f"{'多余应用':>9s} {'非请求':>7s} {'写入':>8s} {'调和读':>7s} {'日志条目':>9s}")
+               f"{'多余应用':>9s} {'非请求':>7s} {'写入':>8s} {'调和读':>7s} {'拒发':>5s} "
+               f"{'日志条目':>9s}")
         print(hdr); print("-" * len(hdr))
         for arm in ARMS:
             acc = []
@@ -303,6 +351,7 @@ def main() -> None:
                   f"{agg['zero']:6.0f} {agg['many']:6.0f} {agg['duplicates']:9.1f} "
                   f"{agg['spurious']:7.0f} "
                   f"{agg['data_writes']:8.0f} {agg['reconcile_reads']:7.0f} "
+                  f"{agg.get('blocked_no_channel', 0):5.0f} "
                   f"{agg['journal_entries']:9.0f}")
         print()
 
