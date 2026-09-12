@@ -1,0 +1,41 @@
+{
+  "config": {
+    "days": 180,
+    "cmd_period": 6,
+    "reach": 12,
+    "blocked": 4,
+    "seeds": 5,
+    "no_energy": false,
+    "heated": null,
+    "relay": true,
+    "arms": "",
+    "relay_availability": 1.0,
+    "tag": "ra10"
+  },
+  "results": [
+    {
+      "logical_writes": 11520.0,
+      "exactly_once": 3330.2,
+      "zero_times": 6690.6,
+      "more_than_once": 1499.2,
+      "duplicate_applications": 1885.6,
+      "attempts": 29159.6,
+      "exactly_once_rate": 0.28907986111111106,
+      "zero_rate": 0.58078125,
+      "dup_rate": 0.1301388888888889,
+      "arm": "relay_retry_uncertainty"
+    },
+    {
+      "logical_writes": 11520.0,
+      "exactly_once": 4860.0,
+      "zero_times": 6660.0,
+      "more_than_once": 0.0,
+      "duplicate_applications": 0.0,
+      "attempts": 27148.4,
+      "exactly_once_rate": 0.421875,
+      "zero_rate": 0.578125,
+      "dup_rate": 0.0,
+      "arm": "relay_ours"
+    }
+  ]
+}
