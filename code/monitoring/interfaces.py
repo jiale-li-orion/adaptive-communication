@@ -71,6 +71,8 @@ class ActionRecord:
     deadline: int | None = None
     applied_at: int | None = None
     observed_at: int | None = None
+    declared_at: int | None = None
+    declared_without_evidence: bool = False
     currently_active: bool | None = None
     outcome: str = UNKNOWN
     opportunities_spent: int = 0
@@ -89,6 +91,8 @@ class ActionRecord:
                 "parameters": self.parameters, "conflict_domain": self.conflict_domain,
                 "issued_at": self.issued_at, "deadline": self.deadline,
                 "applied_at": self.applied_at, "observed_at": self.observed_at,
+                "declared_at": self.declared_at,
+                "declared_without_evidence": self.declared_without_evidence,
                 "currently_active": self.currently_active, "outcome": self.outcome,
                 "opportunities_spent": self.opportunities_spent, "attempts": self.attempts}
 
@@ -156,18 +160,58 @@ class AgentInterface:
         self.records[record.identity] = record
         return record
 
-    def note_delivered(self, identity: str, at_s: int, applied_at: int | None,
-                       reply: dict | None = None) -> None:
-        """The gateway delivered a command inside an opportunity and the node answered."""
-        record = self.pending.pop(identity, None)
+    def note_applied(self, identity: str, applied_at: int) -> None:
+        """The node applied the command. This is the node's truth, not the center's knowledge.
+
+        Kept separate from `note_observed` because the whole point of the observation dimension is
+        that a thing can be true at the node while the center does not yet know it. Writing both
+        timestamps in one call was what made the knowledge delay structurally zero.
+        """
+        record = self.records.get(identity)
         if record is None:
             return
         record.opportunities_spent += 1
-        record.applied_at = applied_at if applied_at is not None else at_s
-        record.observed_at = at_s
+        if record.applied_at is None:
+            record.applied_at = applied_at
+
+    def note_observed(self, identity: str, observed_at: int,
+                      reply: dict | None = None) -> None:
+        """The center learned the effect was in force, by whatever path reached it."""
+        record = self.pending.pop(identity, None)
+        if record is None:
+            record = self.records.get(identity)
+            if record is None:
+                return
+        record.observed_at = observed_at
         record.outcome = APPLIED
         if reply:
             record.detail = reply.get("detail", record.detail)
+
+    def note_delivered(self, identity: str, at_s: int, applied_at: int | None,
+                       reply: dict | None = None) -> None:
+        """Apply and observe at the same instant, for callers with no separate knowledge path."""
+        self.note_applied(identity, applied_at if applied_at is not None else at_s)
+        self.note_observed(identity, at_s, reply=reply)
+
+    def declare(self, identity: str, at_s: int) -> None:
+        """The center told its operators the effect was in force, without evidence of it.
+
+        This is the move 7.7.1 forbids. It exists as a call so that the false-success metric can
+        count what it costs rather than argue about it: the count is zero for a runtime that
+        settles after evidence and positive for one that settles at dispatch.
+        """
+        record = self.records.get(identity)
+        if record is None:
+            return
+        record.declared_at = at_s
+        record.declared_without_evidence = record.observed_at is None
+
+    def knowledge_latency(self, identity: str) -> int | None:
+        """How long the center took to learn an effect the node had already applied."""
+        record = self.records.get(identity)
+        if record is None or record.applied_at is None or record.observed_at is None:
+            return None
+        return record.observed_at - record.applied_at
 
     def expire(self, now_s: int) -> list[ActionRecord]:
         """Actions whose deadline passed without evidence. Their outcome stays unknown.

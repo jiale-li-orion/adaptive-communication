@@ -186,6 +186,13 @@ def run_episode(policy: Policy, hours: int = 72, seed: int = 0,
     restart_at: set[int] = set()
     node_down: dict[str, list[tuple[int, int]]] = {}
     stale_plan: dict[tuple[str, int], int] = {}
+    # Faults that are properties of one action -- a lost request, a lost confirmation, a command
+    # held back until a newer one has landed -- cannot be scheduled on the clock. A clock instant
+    # lands on whatever the deployment happens to be doing at that minute, and for a node that
+    # receives a command six times in 72 hours that is usually nothing. The event table then reads
+    # non-empty while no action was ever touched. These are armed by nominal instant and consumed
+    # by the next real action on the scoped node, which keeps them deterministic and effective.
+    armed: dict[str, list[tuple[int, str]]] = {}      # kind -> [(nominal_at_s, node_id), ...]
     if fault is not None:
         for event in fault.events():
             detail = event.detail
@@ -200,9 +207,27 @@ def run_episode(policy: Policy, hours: int = 72, seed: int = 0,
                 issued = int(detail["issued_at_s"])
                 arrives = int(detail["arrives_at_s"])
                 stale_plan[(event.node_id, issued)] = arrives
+                armed.setdefault("stale_command", []).append((issued, event.node_id, arrives - issued))
+            elif event.kind in ("request_lost", "ack_lost"):
+                armed.setdefault(event.kind, []).append((event.at_s, event.node_id, 0))
         # Only the backhaul fault reaches into the channel's own draw. It can take the backhaul
         # down and never bring it up, so it cannot advantage any arm.
         plane.backhaul_gate = lambda hour: not faulted("backhaul_only", int(hour) * 3600)
+
+    def take_armed(kind: str, at_s: int, node_id: str) -> tuple[bool, int]:
+        """Consume the earliest armed hit of `kind` once a real action for `node_id` arrives.
+
+        Returns whether the fault applies, plus the delay the fault carries (zero for the faults
+        that only need to destroy something). The nominal instant is a lower bound: the fault waits
+        for the node to actually do something rather than expiring unused.
+        """
+        for index, entry in enumerate(armed.get(kind, ())):
+            nominal_at, node = entry[0], entry[1]
+            if node != node_id or at_s < nominal_at:
+                continue
+            armed[kind].pop(index)
+            return True, entry[2]
+        return False, 0
 
     def node_suspended(node_id: str, t_s: int) -> bool:
         """Whether a node is inside an outage an injected restart put it in."""
@@ -229,6 +254,13 @@ def run_episode(policy: Policy, hours: int = 72, seed: int = 0,
     command_seq = 0
     uplink_attempt = 0
     config_mismatch_s = 0.0
+    # The node's own profile history. The false-success metric needs to ask what was actually in
+    # force at the instant the center settled a record, so the history has to exist.
+    profile_timeline: list[tuple[str, int, str]] = [
+        (nid, 0, rt.profile) for nid, rt in runtimes.items()]
+    # Records the center has applied but not yet learned about, per node. `ack_lost` removes the
+    # fast confirmation, so the center has to wait for the node's next ordinary telemetry report.
+    awaiting_observation: dict[str, list[str]] = {}
 
     for t_s in range(0, hours * 3600, TICK_S):
         hour = t_s / 3600.0
@@ -275,6 +307,12 @@ def run_episode(policy: Policy, hours: int = 72, seed: int = 0,
             if record.attempts:
                 if (node_id, t_s) in stale_plan:
                     stale_arm[record.identity] = stale_plan[(node_id, t_s)]
+                else:
+                    held, delay = take_armed("stale_command", t_s, node_id)
+                    if held:
+                        # Re-anchored to the dispatch that really happened, keeping the fault's own
+                        # delay. The hazard is the same -- an old command landing after a newer one.
+                        stale_arm[record.identity] = t_s + delay
                 in_flight[record.identity] = PendingCommand(
                     identity=record.identity, node_id=node_id, payload=payload, issued_at=t_s,
                     expires_at=record.deadline)
@@ -293,6 +331,22 @@ def run_episode(policy: Policy, hours: int = 72, seed: int = 0,
             iface.note_delivered(identity, at_s=t_s, applied_at=t_s)
             command.confirmed = True
         stale_hold = still_held
+
+        # The backhaul hands whatever the gateway has been holding to the center. Until this runs
+        # for an item, no part of the center -- its status, its records, its interface -- has seen
+        # it. A backhaul outage therefore delays telemetry by its own duration.
+        for item in plane.backhaul_forward(t_s, delay_s=plane.backhaul_delay_s):
+            rt = runtimes[item.node_id]
+            records = item.payload or []
+            rt.upload_result(records, heard=True, arrival_s=t_s)
+            rt.confirm(item.sample_ids)
+            status[item.node_id] = item.snapshot
+            iface.note_telemetry(item.node_id, t_s, item.snapshot)
+            # Now that the node's report is in front of the center, any effect the center had
+            # applied but not confirmed is observed -- at this instant, not at the instant the
+            # node applied it. The gap between the two is the knowledge latency.
+            for identity in awaiting_observation.pop(item.node_id, ()):
+                iface.note_observed(identity, t_s)
 
         view_in_flight = frozenset(c.node_id for c in in_flight.values())
 
@@ -328,18 +382,17 @@ def run_episode(policy: Policy, hours: int = 72, seed: int = 0,
                 charge_radio(node_id)
                 rt.upload_result(packet, heard=rec.arrived, arrival_s=t_s)
                 if rec.arrived:
+                    # The gateway heard it. The center has not: the records and the status the
+                    # packet carried sit at the gateway until the backhaul carries them, which is
+                    # the hop that makes a backhaul outage a monitoring gap.
                     heard_uplinks.append((node_id, t_s))
-                    # The packet carries the node's status and acknowledges what arrived.
-                    rt.confirm([s.sample_id for s in packet])
-                    snapshot = rt.snapshot(t_s)
-                    status[node_id] = snapshot
-                    # The status the interface may read later for free is exactly what the node
-                    # piggybacked on its own uplink.
-                    iface.note_telemetry(node_id, t_s, snapshot)
+                    plane.gateway_ingest(node_id, t_s, [s.sample_id for s in packet],
+                                         rt.snapshot(t_s), payload=list(packet))
 
                 for delivery in rec.delivered:
                     identity = delivery.message.identity
-                    if faulted("request_lost", t_s, node_id):
+                    lost_request, _ = take_armed("request_lost", t_s, node_id)
+                    if lost_request:
                         # The command was carried into the window and did not reach the node. The
                         # center learns nothing, which is what the fault is for.
                         continue
@@ -358,17 +411,26 @@ def run_episode(policy: Policy, hours: int = 72, seed: int = 0,
                     # Applied at the moment the node applied it, observed at the moment the center
                     # learned that it had. The two are the same only because this model has no
                     # separate acknowledgement hop on top of the delivery.
-                    if faulted("ack_lost", t_s, node_id):
-                        # Applied at the node and never acknowledged. The effect is in force while
-                        # the center's record stays unresolved -- the exact ambiguity the runtime
-                        # has to survive.
+                    # The node applied it. That is true whether or not any confirmation survives,
+                    # so the node-side fact is recorded unconditionally.
+                    iface.note_applied(identity, t_s)
+                    if "profile" in command.payload:
+                        profile_timeline.append((node_id, t_s, command.payload["profile"]))
+                    lost_ack, _ = take_armed("ack_lost", t_s, node_id)
+                    if lost_ack:
+                        # The confirmation did not survive. The effect is in force at the node while
+                        # the center's record stays unresolved, and the center will only learn it
+                        # from the node's next ordinary telemetry report -- which is late enough to
+                        # matter, and is what gives this fault a consequence at all.
                         iface.pending.pop(identity, None)
+                        awaiting_observation.setdefault(node_id, []).append(identity)
                         continue
-                    iface.note_delivered(identity, at_s=t_s, applied_at=t_s)
+                    iface.note_observed(identity, t_s)
                     if isinstance(policy, OraclePolicy) and "profile" in command.payload:
                         policy.note_confirmed(node_id, command.payload["profile"])
 
     record = RunRecord(
+        hours=float(hours),
         demands=build_demand(deployment, hours=hours, seed=seed),
         taken=[s for rt in runtimes.values() for s in rt.taken],
         arrived=[(s, arrival) for rt in runtimes.values() for s, arrival in rt.received],
@@ -379,6 +441,8 @@ def run_episode(policy: Policy, hours: int = 72, seed: int = 0,
         config_mismatch_s=config_mismatch_s,
         spurious_measurements=0,
         log_entries=len(iface.records),
+        profile_timeline=profile_timeline,
+        action_records=[r.as_dict() for r in iface.records.values()],
     )
     record.audit_trail = iface.audit_trail()
     if supply is not None:

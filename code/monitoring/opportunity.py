@@ -141,6 +141,25 @@ class Delivery:
 
 
 @dataclass
+class GatewayItem:
+    """One thing the gateway has heard and not yet handed to the center.
+
+    An uplink that reached the gateway is not yet visible to the center. The gateway buffers it
+    and forwards when the backhaul is up, so the observation path is node to gateway to center
+    rather than node to center. Collapsing the gateway into the center made every fault that
+    targets the return path inert, which is why this exists.
+    """
+
+    node_id: str
+    heard_at_s: int
+    sample_ids: tuple[str, ...]
+    snapshot: dict
+    identity: str | None = None       # set when the item is an acknowledgement rather than telemetry
+    kind: str = "telemetry"
+    payload: object = None            # opaque to this module; the runner pairs it with its records
+
+
+@dataclass
 class UplinkRecord:
     node_id: str
     hour: int
@@ -167,7 +186,7 @@ class ControlPlane:
 
     def __init__(self, profile: LoRaProfile, seed: int, downlink_per_uplink: int = 1,
                  rx_window_ms: float = 2000.0, backhaul_p_good: float = 0.62,
-                 uplink_p_arrive: float = 0.74):
+                 uplink_p_arrive: float = 0.74, backhaul_delay_s: int = 0):
         if downlink_per_uplink < 1:
             raise ValueError("downlink_per_uplink must be at least 1")
         self.profile = profile
@@ -177,8 +196,15 @@ class ControlPlane:
         self.backhaul_p_good = backhaul_p_good
         self.uplink_p_arrive = uplink_p_arrive
         self.backhaul_gate = None
+        # Store-and-forward latency on the gateway-to-center hop. Zero means the gateway forwards
+        # as soon as the link is up; a positive value models a batch that leaves on a schedule.
+        self.backhaul_delay_s = int(backhaul_delay_s)
 
         self.queued: dict[str, list[DownlinkMessage]] = {}
+        # Store-and-forward at the gateway. Nothing here is visible to the center yet.
+        self.gateway_pending: list[GatewayItem] = []
+        self.backhaul_forwarded = 0
+        self.backhaul_backlog_peak = 0
         self.energy: dict[str, RadioEnergy] = {}
 
         # Counters. The opportunity bound is asserted on these, so they are not diagnostics.
@@ -245,6 +271,33 @@ class ControlPlane:
         else:
             self.queued.pop(node_id, None)
         return dropped
+
+    # --------------------------------------------------------------- gateway side
+    def gateway_ingest(self, node_id: str, heard_at_s: int, sample_ids, snapshot: dict,
+                       identity: str | None = None, kind: str = "telemetry",
+                       payload: object = None) -> GatewayItem:
+        """Buffer what the gateway heard. Not visible to the center until the backhaul carries it."""
+        item = GatewayItem(node_id=node_id, heard_at_s=heard_at_s,
+                           sample_ids=tuple(sample_ids), snapshot=dict(snapshot),
+                           identity=identity, kind=kind, payload=payload)
+        self.gateway_pending.append(item)
+        self.backhaul_backlog_peak = max(self.backhaul_backlog_peak, len(self.gateway_pending))
+        return item
+
+    def backhaul_forward(self, t_s: int, delay_s: int = 0) -> list[GatewayItem]:
+        """Hand buffered items to the center, if the backhaul is up at this instant.
+
+        A store-and-forward gateway holds everything it has heard until the link is back, so a
+        backhaul outage delays telemetry by its own duration rather than dropping it. That is why
+        a backhaul fault now reaches the metric: the records are late, and a late record can miss
+        a delivery deadline it would otherwise have met.
+        """
+        if not self.backhaul_available(int(t_s // 3600)):
+            return []
+        forwarded = [i for i in self.gateway_pending if t_s - i.heard_at_s >= delay_s]
+        self.gateway_pending = [i for i in self.gateway_pending if t_s - i.heard_at_s < delay_s]
+        self.backhaul_forwarded += len(forwarded)
+        return forwarded
 
     def uplink(self, node_id: str, hour: int, sf: int, payload_bytes: int,
                attempt_index: int = 0) -> UplinkRecord:
@@ -368,6 +421,9 @@ class ControlPlane:
             "downlink_delivered": self.downlink_delivered,
             "downlink_lost": self.downlink_lost,
             "downlink_expired": self.downlink_expired,
+            "backhaul_forwarded": self.backhaul_forwarded,
+            "backhaul_backlog_peak": self.backhaul_backlog_peak,
+            "backhaul_backlog_now": len(self.gateway_pending),
             "opportunities_used": dict(self.opportunities_used),
             "airtime_uplink_ms": self.airtime_uplink_ms,
             "airtime_downlink_ms": self.airtime_downlink_ms,

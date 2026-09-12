@@ -47,7 +47,9 @@ for _p in (_HERE, *(_os.path.join(_CODE, d) for d in ("physics", "runtime",
 
 from dataclasses import dataclass, field
 
-from task_generator import Task, PRIORITY_NORMAL, PRIORITY_RISK
+from interfaces import APPLIED
+from task_generator import (Task, PRIORITY_NORMAL, PRIORITY_RISK, MONITORING_PROFILES,
+                            profile_for_hour)
 
 # Weights are fixed before any run and sweepable. Equal weights are the nominal choice: a demand
 # is a demand, and letting priority double as a weight would let a method that serves only risk
@@ -71,6 +73,9 @@ class RunRecord:
     spurious_measurements: int = 0
     unknown_s: float = 0.0
     log_entries: int = 0
+    profile_timeline: list = field(default_factory=list)   # (node_id, second, profile) on change
+    action_records: list = field(default_factory=list)     # ActionRecord.as_dict() at end of run
+    hours: float = 0.0
 
 
 @dataclass
@@ -131,6 +136,86 @@ def _physically_servable(demand: Task, heard_by_node: dict) -> bool:
             if demand.release_time <= second <= demand.delivery_deadline:
                 return True
     return False
+
+
+def _demanded_segments(hours: float) -> list[tuple[int, int, str]]:
+    """The profile the scenario demands over the run, as piecewise-constant intervals.
+
+    The demanded profile is what the deployment is supposed to be running, so it is also the
+    yardstick for whether the nodes sampled enough. Reading it from the same function the
+    scenarios use keeps the metric from inventing a second definition of "demanded".
+    """
+    segments: list[tuple[int, int, str]] = []
+    for hour in range(int(hours)):
+        profile = profile_for_hour(hour)
+        start, end = hour * 3600, (hour + 1) * 3600
+        if segments and segments[-1][2] == profile:
+            segments[-1] = (segments[-1][0], end, profile)
+        else:
+            segments.append((start, end, profile))
+    return segments
+
+
+def _actual_profile_at(record: RunRecord, node_id: str, at_s: int) -> str | None:
+    """What the node was really running at `at_s`, from its own history."""
+    best_at, best_profile = None, None
+    for nid, when, profile in record.profile_timeline:
+        if nid != node_id or when > at_s:
+            continue
+        if best_at is None or when >= best_at:
+            best_at, best_profile = when, profile
+    return best_profile
+
+
+def business_metrics(record: RunRecord) -> dict:
+    """The 7.6 metrics that turn counts into harm.
+
+    Four of them, all derived from state the run already has. They answer questions a duplicate
+    count cannot: how long a wrong configuration was in force, how much observation the risk window
+    lost, whether the center told its operators something untrue, and how far the center's picture
+    lagged the node's reality.
+    """
+    # -- observation gap: demanded samples minus samples actually taken -------------------------
+    expected = 0.0
+    for start, end, profile in _demanded_segments(record.hours):
+        interval = MONITORING_PROFILES[profile]["sample_s"]
+        expected += ((end - start) / interval) * len(record.node_ids)
+    taken_by_node: dict[str, int] = {}
+    for sample in record.taken:
+        taken_by_node[sample.node_id] = taken_by_node.get(sample.node_id, 0) + 1
+    actual = sum(taken_by_node.values())
+    gap = max(0.0, expected - actual)
+
+    # -- knowledge latency and false success, both from the action records ----------------------
+    latencies, false_success, declared_bare, settled = [], 0, 0, 0
+    for row in record.action_records:
+        if row.get("declared_without_evidence"):
+            declared_bare += 1
+        applied_at, observed_at = row.get("applied_at"), row.get("observed_at")
+        if applied_at is not None and observed_at is not None:
+            latencies.append(observed_at - applied_at)
+        if row.get("outcome") != APPLIED or observed_at is None:
+            continue
+        settled += 1
+        commanded = (row.get("parameters") or {}).get("profile")
+        if commanded is None:
+            continue
+        # The center settled this as in force. If the node was not in fact running it at the
+        # instant the center settled, the operators were told something untrue.
+        if _actual_profile_at(record, row["node_id"], observed_at) != commanded:
+            false_success += 1
+
+    return {
+        "expected_samples": expected,
+        "taken_samples": actual,
+        "observation_gap_samples": gap,
+        "observation_gap_ratio": (gap / expected) if expected else float("nan"),
+        "actions_settled": settled,
+        "false_successes": false_success,
+        "declared_without_evidence": declared_bare,
+        "knowledge_latency_s": (sum(latencies) / len(latencies)) if latencies else float("nan"),
+        "knowledge_latency_max_s": max(latencies) if latencies else float("nan"),
+    }
 
 
 def score(record: RunRecord, weights: dict | None = None) -> ScoreResult:
@@ -197,6 +282,7 @@ def score(record: RunRecord, weights: dict | None = None) -> ScoreResult:
         "records_taken": len(record.taken),
         "records_arrived": len(arrived_index),
     }
+    aux.update(business_metrics(record))
 
     return ScoreResult(
         coverage=(hit_w / total_w) if total_w else float("nan"),
