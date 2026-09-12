@@ -49,26 +49,24 @@ python3 code/experiments/monitoring_trajectories.py --days 3 --seeds 20 \
 
 | 文件 | 配置 | 说明什么 |
 |---|---|---|
-| `monitoring_trajectories_business.json` | 3 天 / 20 种子 / 5 条业务臂 / 七条轨迹 | 业务臂在七条轨迹上的覆盖、关键观测空窗、误报成功、知晓时延、机会账目与远端契约计数（§六 业务层五臂表） |
+| `monitoring_trajectories_business2.json` | 3 天 / 20 种子 / 5 条业务臂 / 七条轨迹 | **业务层定稿读数**（§六 五臂表、§7.30、§7.32） |
+| `monitoring_trajectories_2x2v3.json` | 3 天 / 20 种子 / 2×2 四格 / 七条轨迹 | **2×2 定稿读数**（§六 2×2 表）。用 `scripted` 后端，管道证据 |
+| `monitoring_trajectories_restart20v4.json` | 3 天 / 20 种子 / 6 条臂 / `coordinator_restart` | **重启定稿读数**（§7.30） |
 | `monitoring_trajectories_ablate20.json` | 3 天 / 20 种子 / 5 条臂 / 三条轨迹 | 两条只改一处的消融与两条强基线的同批对照（§7.26） |
-| `monitoring_trajectories_restart20v3.json` | 3 天 / 20 种子 / 6 条臂 / `coordinator_restart` | 协调者重启的定稿读数（§7.30）。**v1 与 v2 已被 v3 取代** |
-| `monitoring_trajectories_2x2v2.json` | 3 天 / 20 种子 / 2×2 四格 / 七条轨迹 | planner 因子与 runtime 因子的分解。**`llm__*` 两格仍带 §7.29 的缺陷，须用 v3 重跑后才可引用** |
-| `monitoring_trajectories_2x2.json` | 同上，修复前 | **已作废**：组合格带 §7.29 的逻辑身份缺陷 |
-| `sensitivity_full.json` | 3 天 / 3 种子 / 4 条臂；机会额度 1/2/4、中断 0/2/6/12 小时 | (F)② 通信机会与断连敏感性（§7.28） |
-| `monitoring_trajectories_paths.json` | 3 天 / 2 种子 / `rule__contract` / 无故障；`--paths backhaul:0.62,backup:0.55 --runtime-paths 0,1` | 独立管理路径对照组：runtime 会发现并使用备用回传（README §7.24） |
-| `monitoring_trajectories_paths_primary_only.json` | 同上，但 `--runtime-paths 0` | 同一部署下只用主路径的对照 |
+| `sensitivity_full.json` | 3 天 / 3 种子 / 4 条臂；机会额度 1/2/4、中断 0/2/6/12 小时 | (F)② 通信机会与断连敏感性（§7.28）。**3 种子** |
+| `method_comparison_main20.json` | 180 天 / 20 种子 / 11 条臂 / `operation` 负载 | 机制层主表（§六）。不经过评分器的到达索引，因而不受 §7.32 影响 |
+| `monitoring_trajectories_paths.json`、`_paths_primary_only.json` | 3 天 / 2 种子 / `rule__contract` / 无故障 | 独立管理路径对照组（§7.24 之前）。**2 种子** |
 
-结果文件的 `per_seed` 保存逐种子值，`workload` 字段即轨迹名，因此可按轨迹分组做配对比较与
-零值检查：
+**已作废或已被取代的：**
 
-```bash
-python3 code/analysis/paired_ci.py results/monitoring_trajectories_2x2.json \
-  --arm-a rule__contract --arm-b rule__naive --workload stale_command --zero-check
-```
+| 文件 | 状态 |
+|---|---|
+| `monitoring_trajectories_business.json` | **已作废**：用 §7.32 修正前的评分器 |
+| `monitoring_trajectories_2x2.json` | **已作废**：组合格带 §7.29 的逻辑身份缺陷 |
+| `monitoring_trajectories_2x2v2.json` | **已作废**：`llm__*` 两格仍带 §7.29 缺陷 |
+| `monitoring_trajectories_restart20.json`、`_v2.json`、`_v3.json` | **已被 `restart20v4` 取代**（v4 用定稿评分器） |
 
-**口径提醒。** 这两个文件的 `--days 3` 是 72 小时，与契约 §10 P1 的参考负载一致。`llm__*`
-两格用的是 `scripted` 后端（`compose.ScriptedWorldBackend`），它是管道证据，不是模型证据。
-真实端点当前返回 401、缺 `OPENAI_API_KEY`，接上之后这两格才能改名为模型结果。
+**判据（D29）。** 上表第一部分的文件才可引用，且引用时须带 `--seeds`；标 `scripted` 的不得当模型证据；种子数不足 20 的须注明。
 
 ## 三、物理层：地形、传播、信道与能量
 
