@@ -132,7 +132,7 @@ class OraclePolicy(Policy):
         return out
 
 
-def _after_coordinator_restart(policy):
+def _after_coordinator_restart(policy, lost=(), unresolved=()):
     """Give a policy the chance to forget what it kept only in memory.
 
     The run does not decide what a runtime loses on restart; it only guarantees the restart
@@ -142,7 +142,7 @@ def _after_coordinator_restart(policy):
     """
     hook = getattr(policy, "on_restart", None)
     if callable(hook):
-        hook()
+        hook(lost=list(lost), unresolved=list(unresolved))
     return policy
 
 
@@ -178,7 +178,12 @@ def run_episode(policy: Policy, hours: int = 72, seed: int = 0,
     view_in_flight: frozenset = frozenset()
     # Every command the center issues goes through the interface layer, so the run leaves an
     # auditable trail of what was asked, what was observed, and what is in force.
-    iface = AgentInterface(plane, runtimes)
+    # Durable storage is a capability of the center. `journal` is the only thing that differs
+    # between the two kinds of coordinator on a restart, which is what makes the restart comparison
+    # about the runtime rather than about the fault.
+    from operations import Journal as _Journal
+    journal = _Journal() if getattr(policy, "durable_storage", False) else None
+    iface = AgentInterface(plane, runtimes, journal=journal)
     drained_wh = {nid: 0.0 for nid in runtimes}
     stale_hold: list[tuple[int, str, str]] = []      # (release_at_s, identity, node_id)
     stale_arm: dict[str, int] = {}                   # identity -> the instant it may arrive
@@ -365,6 +370,9 @@ def run_episode(policy: Policy, hours: int = 72, seed: int = 0,
     unknown_s = 0.0
     llm_calls = 0
     llm_illegal = 0
+    restart_events = 0
+    restart_unresolved = 0     # operations a journaled center knew were outstanding after a restart
+    restart_lost = 0           # operations a volatile center could not say anything about
     # A command the network is holding is no longer pending at the center. Keeping it in `in_flight`
     # told every policy that the node still had a command outstanding, so none of them issued the
     # newer write that the held one is supposed to arrive after -- and the ordering hazard silently
@@ -392,7 +400,14 @@ def run_episode(policy: Policy, hours: int = 72, seed: int = 0,
                                          for e in fault.events()):
                 # The center forgot what it only knew from memory. Whatever a runtime keeps
                 # durably is its own business; the run only guarantees the amnesia is real.
-                policy = _after_coordinator_restart(policy)
+                lost = iface.forget_volatile_state()
+                restart_events += 1
+                if journal is not None:
+                    restart_unresolved += len(iface.recovered_unresolved)
+                else:
+                    restart_lost += len(lost)
+                policy = _after_coordinator_restart(policy, lost=lost,
+                                                    unresolved=iface.recovered_unresolved)
 
         # ---- what the scenario demands, disclosed to the policy only if it is granted ----
         # The center knows the whole schedule once it holds the announcement, including when the
@@ -655,6 +670,8 @@ def run_episode(policy: Policy, hours: int = 72, seed: int = 0,
         reaccepted=reaccepted, fenced=fenced, stale_overwrites=stale_overwrites,
         refused_actions=refused_actions, expired_commands=expired_commands,
         unknown_s=unknown_s, llm_calls=llm_calls, llm_illegal=llm_illegal,
+        restart_events=restart_events, restart_unresolved=restart_unresolved,
+        restart_lost=restart_lost,
         stale_reorders=stale_reorders,
         stale_held=stale_held, stale_released=stale_released, stale_trace=stale_trace,
     )

@@ -312,6 +312,13 @@ class ContractRuntime:
     """
 
     name = "contract"
+    durable_storage = True
+
+    def on_restart(self, lost=(), unresolved=()) -> None:
+        """Same rule as the monolithic runtime: knowledge comes back, authority does not."""
+        self.restarts += 1
+        self.restart_unresolved += len(unresolved)
+        self.awaiting_reconcile.update(op.split(":")[0] for op in unresolved)
 
     def __init__(self, ttl_s: int = 6 * 3600, dwell_s: int = 300, retry_budget: int = 3) -> None:
         self.ttl_s = ttl_s
@@ -321,6 +328,9 @@ class ContractRuntime:
         self.logical_seq: dict[str, int] = {}
         self.issued: dict[str, dict] = {}      # logical_key -> bookkeeping
         self.settled_count = 0
+        self.restarts = 0
+        self.restart_unresolved = 0
+        self.awaiting_reconcile: set[str] = set()
         self.settled: set[str] = set()
         self.writes = 0
         self.retries = 0
@@ -413,6 +423,21 @@ class ComposedPolicy:
     planner: object
     runtime: object
     name: str = "composed"
+
+    @property
+    def durable_storage(self) -> bool:
+        """The cell's durability is its runtime's, not the composition's.
+
+        Without this the runner would ask the wrapper and always hear "no", and every 2x2 cell would
+        run as a volatile center -- which would quietly erase the factor the restart trajectory
+        exists to measure while leaving every number looking normal.
+        """
+        return bool(getattr(self.runtime, "durable_storage", False))
+
+    def on_restart(self, lost=(), unresolved=()) -> None:
+        hook = getattr(self.runtime, "on_restart", None)
+        if callable(hook):
+            hook(lost=lost, unresolved=unresolved)
 
     def plan(self, view) -> list[tuple[str, dict]]:
         return self.runtime.dispatch(self.planner.decide(view), view)

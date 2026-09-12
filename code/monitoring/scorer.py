@@ -83,6 +83,9 @@ class RunRecord:
     stale_overwrites: int = 0   # that violation put a value back the node had already moved past
     stale_held: int = 0         # commands the network held back for the ordering fault
     stale_released: int = 0     # held commands that were later released
+    restart_events: int = 0     # coordinator restarts
+    restart_unresolved: int = 0  # outstanding operations a journaled center could still name
+    restart_lost: int = 0       # outstanding operations a volatile center could say nothing about
     llm_calls: int = 0          # model invocations, when the planner is a model planner
     llm_illegal: int = 0        # decisions the model produced that the action set does not admit
     refused_actions: int = 0    # policy asked for something outside the four interfaces
@@ -333,6 +336,9 @@ def business_metrics(record: RunRecord) -> dict:
         **_age_of_information(record),
         **_harmful_executions(record),
         "unknown_s": record.unknown_s,
+        "restart_events": record.restart_events,
+        "restart_unresolved": record.restart_unresolved,
+        "restart_lost": record.restart_lost,
         "llm_calls": record.llm_calls,
         "llm_illegal": record.llm_illegal,
     }

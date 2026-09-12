@@ -638,8 +638,13 @@ def recover(journal: Journal) -> OperationRegistry:  # noqa: D401
                 logical_intent=e["logical_intent"], epoch=e["epoch"],
                 side_effect=e["side_effect"], created_at=e["at"])
             reg.ops[op.operation_id] = op
-            n = int(op.operation_id.rsplit("op", 1)[1])
-            reg._n = max(reg._n, n)
+            # The counter is recovered from the id only when the id carries one. Identities minted
+            # elsewhere -- a node-scoped name, an intent key -- have no `op<N>` suffix, and parsing
+            # it out of them would either raise or invent a number. Recovery is about reconstructing
+            # the set of operations and their outcomes, and that does not depend on this counter.
+            _, _, suffix = op.operation_id.rpartition("op")
+            if suffix.isdigit():
+                reg._n = max(reg._n, int(suffix))
             reg._epoch = max(reg._epoch, op.epoch)
         elif k == "dispatched":
             op = reg.ops.get(e["operation_id"])

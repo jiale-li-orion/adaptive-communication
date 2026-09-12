@@ -128,13 +128,19 @@ class AgentInterface:
     piggybacked on telemetry or not at all.
     """
 
-    def __init__(self, plane, runtime_by_node: dict):
+    def __init__(self, plane, runtime_by_node: dict, journal=None):
         self.plane = plane
         self.runtime = runtime_by_node
         self.records: dict[str, ActionRecord] = {}
         self.pending: dict[str, ActionRecord] = {}       # identity -> record awaiting delivery
         self.passive_status: dict[str, tuple[int, dict]] = {}   # node -> (reported_at, payload)
         self._seq = 0
+        # Durable storage is a capability of the center, not of the far side. An arm that has it can
+        # say what it had in flight when the process died; one that does not can only re-issue and
+        # hope the far side recognises the repeats. `journal` is the only difference between the two
+        # on a restart, which is what makes the restart comparison about the runtime.
+        self.journal = journal
+        self.recovered_unresolved: list[str] = []
 
     # ------------------------------------------------------------------ helpers
     def _next_identity(self, node_id: str, kind: str) -> str:
@@ -164,6 +170,16 @@ class AgentInterface:
         record.attempts += 1
         self.pending[record.identity] = record
         self.records[record.identity] = record
+        if self.journal is not None:
+            # Registered before it is sent, and sent means dispatched. The order matters: an
+            # operation written after its dispatch is one a crash can lose while its effect stands.
+            self.journal.record("register", incarnation="c0", operation_id=record.identity,
+                                entity_id=record.node_id, capability=record.kind,
+                                arguments_hash=str(sorted(record.parameters.items())),
+                                logical_intent=record.identity, epoch=record.attempts,
+                                side_effect=True, at=record.issued_at)
+            self.journal.record("dispatched", operation_id=record.identity,
+                                attempts=record.attempts, at=record.issued_at)
         return record
 
     def note_applied(self, identity: str, applied_at: int) -> None:
@@ -192,6 +208,9 @@ class AgentInterface:
         record.outcome = APPLIED
         if reply:
             record.detail = reply.get("detail", record.detail)
+        if self.journal is not None:
+            self.journal.record("settle", operation_id=identity, outcome=APPLIED,
+                                detail=record.detail, at=observed_at)
 
     def note_rejected(self, identity: str, at_s: int, reason: str) -> None:
         """The remote refused the operation and told the center so.
@@ -333,6 +352,25 @@ class AgentInterface:
         return self._enqueue(record, payload_bytes=16, ttl_s=max(1, deadline - now_s))
 
     # ------------------------------------------------------------------ reading
+    def forget_volatile_state(self) -> list[str]:
+        """What a coordinator loses when the process dies and keeps when it has a journal.
+
+        Without durable storage the center cannot say which of its outstanding operations the far
+        side has already carried out, so it re-issues them; the far side sees repeats and, if it has
+        receipts, refuses them. With storage the unresolved set is reconstructed and the run can
+        require it to be reconciled before anything new is dispatched. The returned list is what the
+        volatile center believed was in flight, kept so the recovery arm can be told what it lost.
+        """
+        lost = list(self.pending)
+        self.pending = {}
+        self.recovered_unresolved = []
+        if self.journal is not None:
+            from operations import recover
+            registry = recover(self.journal)
+            self.recovered_unresolved = [op.operation_id for op in registry.ops.values()
+                                         if op.unresolved]
+        return lost
+
     def audit_trail(self) -> list[dict]:
         """Every action this interface took, in issue order, as plain records."""
         return [r.as_dict() for r in sorted(self.records.values(), key=lambda x: x.issued_at)]

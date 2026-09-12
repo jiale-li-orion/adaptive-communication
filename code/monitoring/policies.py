@@ -631,6 +631,25 @@ class RuntimePolicy:
 
     name = "ours"
 
+    # A capability of the center, not of the far side: this runtime writes its operations to durable
+    # storage before it sends them, so a restart leaves it able to say what was outstanding. The
+    # baselines do not, and that difference is what the restart trajectory measures. It is not a
+    # change to the far-side contract, which stays identical for every arm.
+    durable_storage = True
+
+    def on_restart(self, lost=(), unresolved=()) -> None:
+        """A restarted coordinator keeps knowledge and loses the right to act on it immediately.
+
+        Recovery restores what was in flight; it does not restore the authority to re-send it. Until
+        a reconciliation channel to an entity is re-established, the coordinator cannot find out
+        what happened to the last attempt, so re-dispatching is an unauthorised action rather than a
+        retry. The unresolved set is recorded so the profile loop can require evidence first.
+        """
+        self.restarts += 1
+        self.restart_unresolved += len(unresolved)
+        self.awaiting_reconcile.update(op.split(":")[0] for op in unresolved)
+        self.restart_lost += len(lost)
+
     def __init__(self, dwell_s: int = DWELL_S, ttl_s: int = COMMAND_TTL_S) -> None:
         if dwell_s < 0:
             raise ValueError("dwell_s must not be negative")
@@ -664,6 +683,12 @@ class RuntimePolicy:
         self.measure_window_mult = 2
         self.backfills_ordered = 0
         self.measurements_asked = 0
+        # Restart bookkeeping: what came back from durable storage, and which nodes therefore need
+        # a reconciled channel before anything new is asserted for them.
+        self.restarts = 0
+        self.restart_unresolved = 0
+        self.restart_lost = 0
+        self.awaiting_reconcile: set[str] = set()
 
         self.writes = 0
         self.settled = 0
