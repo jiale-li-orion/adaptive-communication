@@ -26,7 +26,7 @@ import os
 import numpy as np
 
 HERE = os.path.dirname(os.path.abspath(__file__))
-ROOT = os.path.normpath(os.path.join(HERE, ".."))
+ROOT = os.path.normpath(os.path.join(HERE, "..", ".."))
 HGT = os.path.join(ROOT, "data", "dem", "hgt", "N30E094.hgt")
 GRID = os.path.join(ROOT, "results", "coverage_grid.csv")
 OUT = os.path.join(ROOT, "results")

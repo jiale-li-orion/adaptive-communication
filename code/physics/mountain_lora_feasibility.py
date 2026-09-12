@@ -24,7 +24,7 @@ import os
 import numpy as np
 
 HERE = os.path.dirname(os.path.abspath(__file__))
-HGT_DIR = os.path.normpath(os.path.join(HERE, "..", "data", "dem", "hgt"))
+HGT_DIR = os.path.normpath(os.path.join(HERE, "..", "..", "data", "dem", "hgt"))
 S3 = "https://s3.amazonaws.com/elevation-tiles-prod/skadi"
 
 

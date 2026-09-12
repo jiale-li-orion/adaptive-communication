@@ -34,8 +34,8 @@ import os
 import numpy as np
 
 HERE = os.path.dirname(os.path.abspath(__file__))
-CSV_PATH = os.path.normpath(os.path.join(HERE, "..", "data", "downloads", "chirpbox.csv"))
-OUT = os.path.normpath(os.path.join(HERE, "..", "results", "outage_distribution.json"))
+CSV_PATH = os.path.normpath(os.path.join(HERE, "..", "..", "data", "downloads", "chirpbox.csv"))
+OUT = os.path.normpath(os.path.join(HERE, "..", "..", "results", "outage_distribution.json"))
 
 csv.field_size_limit(10 ** 9)
 

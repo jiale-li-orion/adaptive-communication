@@ -1,6 +1,18 @@
 import math, numpy as np, sys
-sys.path.insert(0,'/home/orion/Communications/code')
 from mountain_lora_feasibility import itm_point_to_point, read_hgt, profile, haversine_km, elev_at
+
+# --- module resolution -------------------------------------------------------
+# Scripts live in code/{physics,runtime,experiments,analysis}; any of them may import from
+# another group, so the code root and every group directory go on the path.
+import os as _os, sys as _sys
+_HERE = _os.path.dirname(_os.path.abspath(__file__))
+_CODE = _os.path.dirname(_HERE)
+for _p in (_HERE, *(_os.path.join(_CODE, d) for d in ("physics", "runtime",
+                                                     "experiments", "analysis"))):
+    if _p not in _sys.path:
+        _sys.path.insert(0, _p)
+# -----------------------------------------------------------------------------
+
 
 fs=lambda d,f=868.0: 20*math.log10(d)+20*math.log10(f)+32.44
 

@@ -30,10 +30,21 @@ import os
 
 import numpy as np
 
-from dem_to_mitsuba import (BOX, DEG_LAT_M, GW_LAT, GW_LON, TILE, elev_at, load_tile)
+# --- module resolution -------------------------------------------------------
+# Scripts live in code/{physics,runtime,experiments,analysis}; any of them may import from
+# another group, so the code root and every group directory go on the path.
+import os as _os, sys as _sys
+_HERE = _os.path.dirname(_os.path.abspath(__file__))
+_CODE = _os.path.dirname(_HERE)
+for _p in (_HERE, *(_os.path.join(_CODE, d) for d in ("physics", "runtime",
+                                                     "experiments", "analysis"))):
+    if _p not in _sys.path:
+        _sys.path.insert(0, _p)
+# -----------------------------------------------------------------------------
 
+from dem_to_mitsuba import (BOX, DEG_LAT_M, GW_LAT, GW_LON, TILE, elev_at, load_tile)
 HERE = os.path.dirname(os.path.abspath(__file__))
-ROOT = os.path.normpath(os.path.join(HERE, ".."))
+ROOT = os.path.normpath(os.path.join(HERE, "..", ".."))
 GRID = os.path.join(ROOT, "results", "coverage_grid.csv")
 OUT = os.path.join(ROOT, "results")
 

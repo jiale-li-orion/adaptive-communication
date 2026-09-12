@@ -21,19 +21,30 @@ Deps: numpy, itmlogic  (+ matplotlib optional, for the figure)
 """
 from __future__ import annotations
 
+# --- module resolution -------------------------------------------------------
+# Scripts live in code/{physics,runtime,experiments,analysis}; any of them may import from
+# another group, so the code root and every group directory go on the path.
+import os as _os, sys as _sys
+_HERE = _os.path.dirname(_os.path.abspath(__file__))
+_CODE = _os.path.dirname(_HERE)
+for _p in (_HERE, *(_os.path.join(_CODE, d) for d in ("physics", "runtime",
+                                                     "experiments", "analysis"))):
+    if _p not in _sys.path:
+        _sys.path.insert(0, _p)
+# -----------------------------------------------------------------------------
+
+
 import math
 import os
 import sys
 import time
 
 import numpy as np
-
 HERE = os.path.dirname(os.path.abspath(__file__))
-sys.path.insert(0, HERE)
 from mountain_lora_link import (read_hgt, itm_loss, terrain_profile,  # noqa: E402
                                 best_sf, SENS_125KHZ)
 
-OUT = os.path.normpath(os.path.join(HERE, "..", "results"))
+OUT = os.path.normpath(os.path.join(HERE, "..", "..", "results"))
 
 TILE = "N30E094"
 FREQ_MHZ = 868.0

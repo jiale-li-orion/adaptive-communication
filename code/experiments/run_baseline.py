@@ -19,15 +19,25 @@ CPU only. No LLM needed to demonstrate the mechanism.
 """
 from __future__ import annotations
 
+# --- module resolution -------------------------------------------------------
+# Scripts live in code/{physics,runtime,experiments,analysis}; any of them may import from
+# another group, so the code root and every group directory go on the path.
+import os as _os, sys as _sys
+_HERE = _os.path.dirname(_os.path.abspath(__file__))
+_CODE = _os.path.dirname(_HERE)
+for _p in (_HERE, *(_os.path.join(_CODE, d) for d in ("physics", "runtime",
+                                                     "experiments", "analysis"))):
+    if _p not in _sys.path:
+        _sys.path.insert(0, _p)
+# -----------------------------------------------------------------------------
+
+
 import os
 import sys
 from collections import defaultdict
 
 import numpy as np
-
-sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 from disruption_env import DisruptionEnv, TOOLS  # noqa: E402
-
 THRESHOLD = 11.0          # anomaly threshold on the sensor value
 FRESHNESS_TICKS = 3       # an observation older than this is stale
 MAX_RETRY = 3

@@ -157,7 +157,7 @@ CRITIC 与 AgentSpec 不进主实验。前者处理验证器本身的质量，�
 
 **最接近的既有工作。** INFOCOM 2026 的 *Rollback Is Not Undo: Path-Dependent Failures in LLM-Arbitrated Network Control*（Weici Pan, Zhenhua Liu，DOI `10.1109/INFOCOM59046.2026.11571400`）在同类会议与同类问题空间证明，LLM 仲裁的网络控制回路中回滚无法恢复行为，且恢复效果路径相关。该文提出 `recovery gap` 指标，故障模式含 observation corruption、delay-reordering 与 agent dropout。它闭源且无公开 artifact。未覆盖的是灾害与应急场景、真实轨迹驱动与实体生命周期。本文需引用并显式对比。
 
-**动作保证这一层。** WirelessOpsAgent（arXiv `2608.08277`，CC BY 4.0）把研究层次定为 **Action Assurance**，判据是动作在下发前是否被正确授权，其表述为 *repairs recoverable support failures before execution*，问题被限定在可修复范围内。本文场景中 88.5% 的点位永久不可达、断电可持续数周，大量失败不可修复。该文中心是分发前的 repair，本文中心是分发后任务在实体变动下的存续。其发布物是数据与工具契约，不含运行时与评分谓词，核验见 `docs/s5-benchmark/README.md`。
+**动作保证这一层。** WirelessOpsAgent（[arXiv:2608.08277](https://arxiv.org/abs/2608.08277)，CC BY 4.0）把研究层次定为 **Action Assurance**，判据是动作在下发前是否被正确授权，其表述为 *repairs recoverable support failures before execution*，问题被限定在可修复范围内。本文场景中 88.5% 的点位永久不可达、断电可持续数周，大量失败不可修复。该文中心是分发前的 repair，本文中心是分发后任务在实体变动下的存续。其发布物是数据与工具契约，不含运行时与评分谓词。
 
 **已被占据的机制。**
 
@@ -269,7 +269,7 @@ ChirpBox 采自上海城区。借用的是时间相关结构，不是绝对水�
 
 这把无线链路中断变成了一个**远端执行歧义**问题：通信故障开始影响控制操作的语义，而不只是影响分组投递概率。关键的新对象是
 
-$$\text{physical execution state} \neq \text{runtime knowledge state}$$
+$$\text{physical execution state} \;\neq\; \text{runtime knowledge state}$$
 
 ### 三个正交维度
 
@@ -297,7 +297,7 @@ agent 只产生一个逻辑动作，例如 `set_sampling_rate(node_17, 5min)`。
 
 通用 agent 框架把 timeout 暴露成一个 tool error，由模型下一轮自己决定要不要重试。这个语义把"我方停止等待"和"远端没有执行"混为一谈。本文规定
 
-$$\text{wait\_timeout} \neq \text{execution\_failure}$$
+$$\text{wait timeout} \;\neq\; \text{execution failure}$$
 
 回执没回来时 `lifecycle = running`、`outcome = unknown`，操作继续留在 registry。timeout 只是协调者的一个本地观测事件，之后策略才能决定继续等、查询、重试、调和、放弃或补偿。
 
@@ -417,7 +417,7 @@ store-and-forward 中继回答的是另一个问题，因此单独一张表。�
 ```
 agentic communication/
 ├── README.md
-├── code/          22 个可运行脚本
+├── code/          physics / runtime / experiments / analysis 四组，21 个脚本
 ├── docs/          25 份支撑材料
 ├── results/       仿真输出
 ├── data/          666 MB，未纳入版本控制
@@ -426,23 +426,32 @@ agentic communication/
 ```
 
 ```bash
-export PYTHONPATH="$PWD/libs/pylibs:$PWD/libs/simlibs"
+export PYTHONPATH="$PWD/libs/pylibs"
 
-# 物理与几何
-python3 code/mountain_lora_link.py              # 单点链路预算
-python3 code/coverage_map.py                    # 区域覆盖图，约 2 min
-python3 code/los_vs_itm.py                      # 几何视线判定与 ITM 交叉验证
-python3 code/fit_outage_distribution.py         # 中断时长分布拟合
-python3 code/dem_to_mitsuba.py --render         # SRTM 转 Mitsuba 地形网格
+# 物理层：地形、传播、信道与能量
+python3 code/physics/mountain_lora_link.py            # 单点链路预算
+python3 code/physics/coverage_map.py                  # 区域覆盖与中继选址，约 2 min
+python3 code/physics/los_vs_itm.py                    # 几何视线与 ITM 交叉验证
+python3 code/physics/energy_model.py                  # 供电可行性年扫描
+python3 code/physics/dem_to_mitsuba.py --render       # SRTM 转地形网格
 
-# 执行语义与主实验
-python3 code/operations.py                      # 三维状态与五条性质的自检
-python3 code/test_failure_model.py              # 11 类故障确定性验证
-python3 code/method_comparison.py --days 180 --seeds 5    # 主表
-python3 code/mission_sim.py --days 365 --seeds 5          # 到报率任务级指标
-python3 code/restart_experiment.py --days 180 --seeds 5   # 协调者重启
-python3 code/run_baseline.py                    # 执行层基线复现
+# 执行层：自检与故障验证
+python3 code/runtime/operations.py                    # 三维语义与五条性质
+python3 code/experiments/test_failure_model.py        # 11 类故障，11/11
+
+# 实验
+python3 code/experiments/method_comparison.py --days 180 --seeds 5            # 主表与消融
+python3 code/experiments/method_comparison.py --days 180 --seeds 5 --relay    # 架构与协议 2x2
+python3 code/experiments/restart_experiment.py --days 180 --seeds 5           # 协调者重启
+python3 code/experiments/mission_sim.py --days 365 --seeds 5                  # 任务级到报率
+python3 code/experiments/run_baseline.py                                      # 执行层基线复现
+
+# 参数拟合
+python3 code/analysis/fit_loss_model.py               # Gilbert-Elliott 拟合
+python3 code/analysis/fit_outage_distribution.py      # 中断时长分布拟合
 ```
+
+各脚本的职责、依赖与输出见 `code/README.md`。所有脚本均可从仓库任意位置以绝对或相对路径运行。
 
 仓库之外另有两处。`../ns3/` 为 ns-3.48 加 FLoRa（3.2 GB）；`/home/orion/Communications/recon/` 存放文献侦察的原始抽取。
 
