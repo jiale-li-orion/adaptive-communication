@@ -819,6 +819,9 @@ class RuntimePolicy:
 
         # ---- W2: recover what the archive is missing, with a bounded slice of the channel ----
         for node_id in sorted(demanded):
+            if node_id in blocked:
+                self.blocked_until_reconciled += 1
+                continue
             gap = self._w2_gap(view, node_id)
             if gap is None:
                 continue
@@ -831,14 +834,13 @@ class RuntimePolicy:
             out.append((node_id, upload_command(cursor, end_s, cursor, budget)))
 
         # ---- W1: ask for a measurement the node would not otherwise take in time ----
+        # A node whose last attempt is unaccounted for, and whose reconciliation channel is not yet
+        # back, gets nothing from this runtime -- not a profile write, not a measurement request,
+        # not a backfill order. The rule §7.7.2 states is about the authority to act at all, and
+        # applying it to one loop while leaving the others free would enforce nothing.
         for node_id, want in sorted(demanded.items()):
             if node_id in blocked:
-                # The last attempt to this node is unaccounted for and there is no channel yet to
-                # ask about it. Acting now is guessing, so the profile loop is skipped for this node
-                # until it reports something produced after the restart.
-                self.blocked_until_reconciled += 1
                 continue
-        for node_id, want in sorted(demanded.items()):
             if not self._w1_needs_fresh_measurement(view, node_id, want):
                 continue
             window = MONITORING_PROFILES[PROFILE_NORMAL]["upload_s"] * self.measure_window_mult
@@ -865,6 +867,12 @@ class RuntimePolicy:
                 self.deadline.pop(node_id, None)
 
         for node_id, wanted in sorted(demanded.items()):
+            if node_id in blocked:
+                # The same refusal as the two loops above, applied to the loop that actually writes
+                # the profile. Putting it only in a counting loop of its own is what made an earlier
+                # version of this rule count 447 blocked dispatches and prevent none of them.
+                self.blocked_until_reconciled += 1
+                continue
             record = {"node_id": node_id, "t_s": now}
             self.last_decision[node_id] = record
 
