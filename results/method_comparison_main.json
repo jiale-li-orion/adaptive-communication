@@ -1,0 +1,73 @@
+{
+  "config": {
+    "days": 180,
+    "cmd_period": 6,
+    "reach": 12,
+    "blocked": 4,
+    "seeds": 5,
+    "no_energy": false,
+    "tag": "main"
+  },
+  "results": [
+    {
+      "logical_writes": 11520.0,
+      "exactly_once": 3005.8,
+      "zero_times": 8514.2,
+      "more_than_once": 0.0,
+      "duplicate_applications": 0.0,
+      "attempts": 11520.0,
+      "exactly_once_rate": 0.26092013888888893,
+      "zero_rate": 0.7390798611111111,
+      "dup_rate": 0.0,
+      "arm": "b1_wirelessagent"
+    },
+    {
+      "logical_writes": 11520.0,
+      "exactly_once": 2929.4,
+      "zero_times": 7553.8,
+      "more_than_once": 1036.8,
+      "duplicate_applications": 1277.6,
+      "attempts": 29664.6,
+      "exactly_once_rate": 0.2542881944444445,
+      "zero_rate": 0.6557118055555555,
+      "dup_rate": 0.09000000000000001,
+      "arm": "b2_wirelessops"
+    },
+    {
+      "logical_writes": 11520.0,
+      "exactly_once": 2990.2,
+      "zero_times": 8529.8,
+      "more_than_once": 0.0,
+      "duplicate_applications": 0.0,
+      "attempts": 17286.0,
+      "exactly_once_rate": 0.2595659722222222,
+      "zero_rate": 0.7404340277777778,
+      "dup_rate": 0.0,
+      "arm": "b3_verified"
+    },
+    {
+      "logical_writes": 11520.0,
+      "exactly_once": 3964.4,
+      "zero_times": 7555.6,
+      "more_than_once": 0.0,
+      "duplicate_applications": 0.0,
+      "attempts": 27918.8,
+      "exactly_once_rate": 0.34413194444444445,
+      "zero_rate": 0.6558680555555555,
+      "dup_rate": 0.0,
+      "arm": "ours"
+    },
+    {
+      "logical_writes": 11520.0,
+      "exactly_once": 2929.4,
+      "zero_times": 7553.8,
+      "more_than_once": 1036.8,
+      "duplicate_applications": 1277.6,
+      "attempts": 29664.6,
+      "exactly_once_rate": 0.2542881944444445,
+      "zero_rate": 0.6557118055555555,
+      "dup_rate": 0.09000000000000001,
+      "arm": "ours_plain_sink"
+    }
+  ]
+}
