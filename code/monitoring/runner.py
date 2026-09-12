@@ -358,6 +358,13 @@ def run_episode(policy: Policy, hours: int = 72, seed: int = 0,
     stale_trace: list[dict] = []
     refused_actions = 0
     expired_commands = 0
+    # Time during which the center was waiting on at least one operation whose effect it could not
+    # establish. This is the duration of the ambiguity itself, not of any one command's timeout: a
+    # tick with three unresolved operations counts once, because the harm is the interval in which
+    # the center did not know, not how many things it did not know about.
+    unknown_s = 0.0
+    llm_calls = 0
+    llm_illegal = 0
     # A command the network is holding is no longer pending at the center. Keeping it in `in_flight`
     # told every policy that the node still had a command outstanding, so none of them issued the
     # newer write that the held one is supposed to arrive after -- and the ordering hazard silently
@@ -402,6 +409,9 @@ def run_episode(policy: Policy, hours: int = 72, seed: int = 0,
             newest = max((s.taken_at for s, _arr in rt_.received), default=None)
             if newest is not None:
                 archive_newest[nid] = newest
+        if iface.pending:
+            unknown_s += TICK_S
+
         view = WorldView(t_s=t_s, node_ids=tuple(runtimes), status=status,
                          demanded_profile=demanded,
                          center_has_announcement=bool(demanded),
@@ -622,6 +632,12 @@ def run_episode(policy: Policy, hours: int = 72, seed: int = 0,
                     if isinstance(policy, OraclePolicy) and "profile" in command.payload:
                         policy.note_confirmed(node_id, command.payload["profile"])
 
+    # A model planner keeps its own call accounting; it is read here rather than pushed from the
+    # planner so that a policy cannot report a number the run did not produce.
+    _planner = getattr(policy, "planner", policy)
+    llm_calls = int(getattr(_planner, "calls", 0) or 0)
+    llm_illegal = int(getattr(_planner, "illegal", 0) or 0)
+
     record = RunRecord(
         hours=float(hours),
         demands=build_demand(deployment, hours=hours, seed=seed),
@@ -638,6 +654,7 @@ def run_episode(policy: Policy, hours: int = 72, seed: int = 0,
         action_records=[r.as_dict() for r in iface.records.values()],
         reaccepted=reaccepted, fenced=fenced, stale_overwrites=stale_overwrites,
         refused_actions=refused_actions, expired_commands=expired_commands,
+        unknown_s=unknown_s, llm_calls=llm_calls, llm_illegal=llm_illegal,
         stale_reorders=stale_reorders,
         stale_held=stale_held, stale_released=stale_released, stale_trace=stale_trace,
     )

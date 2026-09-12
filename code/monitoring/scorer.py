@@ -48,6 +48,7 @@ for _p in (_HERE, *(_os.path.join(_CODE, d) for d in ("physics", "runtime",
 from dataclasses import dataclass, field
 
 from interfaces import APPLIED
+from node_model import TICK_S
 from task_generator import (Task, PRIORITY_NORMAL, PRIORITY_RISK, MONITORING_PROFILES,
                             profile_for_hour)
 
@@ -82,6 +83,8 @@ class RunRecord:
     stale_overwrites: int = 0   # that violation put a value back the node had already moved past
     stale_held: int = 0         # commands the network held back for the ordering fault
     stale_released: int = 0     # held commands that were later released
+    llm_calls: int = 0          # model invocations, when the planner is a model planner
+    llm_illegal: int = 0        # decisions the model produced that the action set does not admit
     refused_actions: int = 0    # policy asked for something outside the four interfaces
     expired_commands: int = 0   # a command that reached the node after its own deadline
     stale_trace: list = field(default_factory=list)
@@ -176,6 +179,97 @@ def _actual_profile_at(record: RunRecord, node_id: str, at_s: int) -> str | None
     return best_profile
 
 
+def _age_of_information(record: RunRecord) -> dict:
+    """中心 AoI 与最长空窗，按节点聚合。
+
+    AoI(t) = t − 最新一条**已到达中心的**记录的产生时刻。空窗是两次到达之间的间隔，含开头到
+    首次到达、末次到达到运行结束。两者都由中心自己的档案算出，不读节点侧的任何状态。
+    """
+    ticks = int(record.hours * 3600 // TICK_S)
+    by_node: dict[str, list[tuple[int, int]]] = {}
+    for sample, arrival in record.arrived:
+        by_node.setdefault(sample.node_id, []).append((int(arrival), int(sample.taken_at)))
+    aoi_series: list[float] = []
+    gaps: list[float] = []
+    per_node: dict[str, dict] = {}
+    for node_id in record.node_ids:
+        arrivals = sorted(by_node.get(node_id, ()))
+        # gaps: start of run to the first arrival, between arrivals, and the last to the end
+        edges = [0] + [a for a, _ in arrivals] + [ticks * TICK_S]
+        node_gaps = [edges[i + 1] - edges[i] for i in range(len(edges) - 1)]
+        # aoi walk: slide a pointer over arrivals, carrying the newest generation time
+        newest_gen = None
+        pointer = 0
+        node_aoi: list[float] = []
+        for k in range(ticks + 1):
+            t = k * TICK_S
+            while pointer < len(arrivals) and arrivals[pointer][0] <= t:
+                gen = arrivals[pointer][1]
+                newest_gen = gen if newest_gen is None else max(newest_gen, gen)
+                pointer += 1
+            if newest_gen is not None:
+                node_aoi.append(t - newest_gen)
+        if node_aoi:
+            aoi_series.extend(node_aoi)
+        gaps.extend(node_gaps)
+        per_node[node_id] = {
+            "aoi_mean_s": (sum(node_aoi) / len(node_aoi)) if node_aoi else float("nan"),
+            "aoi_max_s": max(node_aoi) if node_aoi else float("nan"),
+            "longest_gap_s": max(node_gaps) if node_gaps else float("nan"),
+            "arrivals": len(arrivals),
+        }
+
+    def _q(values: list[float], q: float) -> float:
+        if not values:
+            return float("nan")
+        ordered = sorted(values)
+        return ordered[min(len(ordered) - 1, int(q * len(ordered)))]
+
+    return {
+        "aoi_mean_s": (sum(aoi_series) / len(aoi_series)) if aoi_series else float("nan"),
+        "aoi_p99_s": _q(aoi_series, 0.99),
+        "aoi_max_s": max(aoi_series) if aoi_series else float("nan"),
+        "longest_gap_s": max(gaps) if gaps else float("nan"),
+        "longest_gap_p99_s": _q(gaps, 0.99),
+        "per_node_aoi": per_node,
+    }
+
+
+def _harmful_executions(record: RunRecord) -> dict:
+    """额外物理采集等有害执行。
+
+    两类，都由已有状态导出：请求采集时窗口里**已经有**一条中心手上的样本（问了已知的事），
+    以及被请求的样本与同一节点的计划采样落在同一时刻（同一瞬间采了两次）。后者是真正多花的
+    物理采集，前者是多花的机会。
+    """
+    arrivals_by_node: dict[str, list[int]] = {}
+    for sample, _arrival in record.arrived:
+        arrivals_by_node.setdefault(sample.node_id, []).append(int(sample.taken_at))
+    scheduled_at: dict[str, set[int]] = {}
+    requested_at: dict[str, set[int]] = {}
+    for sample in record.taken:
+        target = requested_at if sample.request_id else scheduled_at
+        target.setdefault(sample.node_id, set()).add(int(sample.taken_at))
+
+    wasteful = 0
+    for row in record.action_records:
+        if row["kind"] != "request_measurement":
+            continue
+        window_start = (row.get("parameters") or {}).get("window_start")
+        deadline = row.get("deadline")
+        if window_start is None or deadline is None:
+            continue
+        known = arrivals_by_node.get(row["node_id"], ())
+        if any(int(window_start) <= taken <= int(deadline) for taken in known):
+            wasteful += 1
+
+    duplicate_physical = 0
+    for node_id, times in requested_at.items():
+        duplicate_physical += len(times & scheduled_at.get(node_id, set()))
+    return {"wasteful_measurement_requests": wasteful,
+            "duplicate_physical_samples": duplicate_physical}
+
+
 def business_metrics(record: RunRecord) -> dict:
     """The 7.6 metrics that turn counts into harm.
 
@@ -236,6 +330,11 @@ def business_metrics(record: RunRecord) -> dict:
         "declared_without_evidence": declared_bare,
         "knowledge_latency_s": (sum(latencies) / len(latencies)) if latencies else float("nan"),
         "knowledge_latency_max_s": max(latencies) if latencies else float("nan"),
+        **_age_of_information(record),
+        **_harmful_executions(record),
+        "unknown_s": record.unknown_s,
+        "llm_calls": record.llm_calls,
+        "llm_illegal": record.llm_illegal,
     }
 
 
