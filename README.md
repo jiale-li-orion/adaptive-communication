@@ -22,7 +22,7 @@
 
 **灾害中的实体退服记录。** 第二周汇报第 30 至 34 页整理了四起事件，其中的实体损失为：2026 年西藏吉隆口岸泥石流造成 5 个基站退服，同期投入卫星电话 36 部、便携卫星设备 10 套、发电油机 18 台；2024 年四川康定姑咱泥石流造成 22 km 光缆受损与 7 个基站退服，投入 1 架大型无人机基站、6 辆应急通信车、9 台高通量卫星便携基站；2024 年日本奥能登土砂灾害一度中断 88 个基站，靠移动基站车与可搬型基站恢复；2023 年新西兰 Gabrielle 滑坡破坏主干光纤，峰值约 20% 基站离线，Gisborne 一度有 90% 基站在两天内离线，临时回传改走卫星与微波，容量低于原光纤。
 
-**物理约束，来自本项目实测。** 西藏波密与易贡的 SRTM 地形海拔跨度为 2025 至 6690 m，单网关地形死区占 121×121 网格的 27.7%，这些点位在 SF12 下仍无法闭合。决定连通性的是遮挡而非距离：8.4 km 处有 1169 m 遮挡的点位连不通，12.6 km 处只有 1102 m 遮挡的点位反而能通。SF 从 7 提到 12 只增加 14 dB 灵敏度，而地形遮挡造成的额外损耗在 30 至 50 dB 量级，因此链路自适应无法救回被地形挡住的节点。ChirpBox 真实轨迹（20,913 快照、420 条链路）拟合出的丢失率为 7.44%，平均中断突发 3.30 h，而同丢失率下 i.i.d. 模型只预测 1.08 h，两者相差 3.1 倍。供电侧，LiFePO4 在 −20 °C 下容量约为标称值的 50%，且低于 +5 °C 无法充电，高海拔站点因此在冬季长时间静默。
+**物理约束，来自本项目实测。** 西藏波密与易贡的 SRTM 地形海拔跨度为 2025 至 6690 m。单网关在 121×121 网格上的可达点仅 1689 个，占 11.5%；连不通的点 12952 个，占 88.5%，这些点在 SF12 下仍不闭合。决定连通性的是遮挡而非距离：8.37 km 处有 1169 m 遮挡的点位损耗 217.0 dB，12.61 km 处只有 1102 m 遮挡的点位损耗 201.2 dB，近 4.2 km 反而差 15.8 dB。地形遮挡造成的超额损耗在 71 至 107 dB 量级，而 SF 从 7 提到 12 只增加 14 dB 灵敏度，因此链路自适应无法救回被地形挡住的节点。ChirpBox 真实轨迹（20,913 快照、420 条链路）拟合出的丢失率为 7.44%，平均中断突发 3.30 h，而同丢失率下 i.i.d. 模型只预测 1.08 h，两者相差 3.1 倍。供电侧，LiFePO4 在 −20 °C 下容量约为标称值的 50%，且低于 +5 °C 无法充电，高海拔站点因此在冬季长时间静默。
 
 **一处数据空白。** 中国地灾监测网络的实测可靠性数据在公开文献中不存在，到报率、在线率、掉线次数、断链时长均无数值，可查到的只有合同条款（广东验收 ≥70%，昆明 ≥95%，河南 ≥95%）。本研究给出的是估计值，不是实测值。
 
@@ -140,7 +140,7 @@
 
 **最危险的邻居。** INFOCOM 2026 的 "Rollback Is Not Undo: Path-Dependent Failures in LLM-Arbitrated Network Control"（Weici Pan, Zhenhua Liu，DOI `10.1109/INFOCOM59046.2026.11571400`，DBLP `conf/infocom/PanL26`）已在同类会议与同类问题空间证明，LLM 仲裁的网络控制回路中回滚无法恢复行为，且恢复效果路径相关；该文提出 `recovery gap` 指标，故障模式包含 observation corruption、delay-reordering 与 agent dropout。该文为闭源，`open_access` 字段为 `CLOSED`，无公开 artifact。它未覆盖的是灾害与应急场景、真实轨迹驱动、实体生命周期与公开 artifact，本文需要引用它并显式对比。
 
-**同组先前工作。** WirelessOpsAgent 论文（Zijian Lu, Yiping Zuo, Hao Xu, Weicong Chen, Xin He, Jiajia Guo, Shi Jin，arXiv `2608.08277`，2026-08-08，CC BY 4.0）发布 WirelessOpsBench。论文标题把研究层次定为 **Action Assurance**：判据是动作在下发前是否被正确授权。其表述为 *"repairs recoverable support failures before execution"*，问题被限定在可修复范围内；本文场景中 27.7% 的点位永久不可达、断电可持续数周，大量失败不可修复。该文中心是分发前的 repair，本文中心是分发后任务在实体变动下的存续，因此只作引用与边界参照。
+**同组先前工作。** WirelessOpsAgent 论文（Zijian Lu, Yiping Zuo, Hao Xu, Weicong Chen, Xin He, Jiajia Guo, Shi Jin，arXiv `2608.08277`，2026-08-08，CC BY 4.0）发布 WirelessOpsBench。论文标题把研究层次定为 **Action Assurance**：判据是动作在下发前是否被正确授权。其表述为 *"repairs recoverable support failures before execution"*，问题被限定在可修复范围内；本文场景中 88.5% 的点位永久不可达、断电可持续数周，大量失败不可修复。该文中心是分发前的 repair，本文中心是分发后任务在实体变动下的存续，因此只作引用与边界参照。
 
 公开 artifact 已逐字核验（本地 SHA-256 `df832540beae8cdfe776ea0ffbe294be1355421c1279e69479e0b0655428940d`，与 README 相符）。三族任务为 WCHW（教科书无线计算）、WCNS（5G 切片，含射线追踪 CQI）、WCMSA（移动性保障，含 Kalman 预测加射线追踪 CQI）。开发集 300 base、2400 case、180 repair；完整冻结集 900 base、6300 孪生 case、540 归因与修复记录，final 分片扣在尚未上线的评测服务器后。artifact 只含数据，不含 runner、scoring 谓词与 fault schedule；同一 base 的八个 case 的 `public_task` 逐字节相同，仅 `case_id` 不同，故障由评测端运行时注入。公布的工具面为 `get_primary_evidence`、`get_secondary_evidence`、`get_entity`、`get_schema`、`stage_policy`、`validate_policy`、`commit_policy`、`post_check`、`rollback_policy`，其中三者标注 `mutates_state: True`，`commit_policy` 已带 `expected_version` 乐观并发，预算为 `max_steps` 24、`max_tool_calls` 12、`wall_time_ms` 60000。
 
@@ -168,7 +168,7 @@
 | 分发后的执行语义 | WirelessOpsBench 的 7 类条件全部刻画证据账本的可信度，无一描述分发后的传输语义 |
 | 实体生命周期作为一等对象 | 六个 benchmark 全文检索 agent 通道相关构造零命中，网络一律是控制对象 |
 | 结果不可知作为一等故障类 | 六者的故障全为注入、合成或不存在，且注入类的发生都可观测 |
-| 不可修复失败 | WirelessOpsAgent 自述限定 recoverable support failures；本文有 27.7% 永久不可达与数周断电 |
+| 不可修复失败 | WirelessOpsAgent 自述限定 recoverable support failures；本文有 88.5% 永久不可达与数周断电 |
 | verifier 自身不可用 | CRITIC 与 `2608.02645` 均假定 verifier 会响应；分区下验证本身也会超时且结果不可知 |
 | 能量与供电维度 | 六个 benchmark 全部缺失 |
 | 地形与传播维度 | 六个中只有 WirelessBench 涉及，且仅是 agent 可调用的 CQI 工具 |

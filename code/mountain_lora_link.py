@@ -99,9 +99,11 @@ def itm_loss(fmhz: float, d_km: float, hg, elevs, qr_pct=(50.0,),
     prop = lrprop(d_km, prop)
     aref_median = float(prop["aref"])
 
-    # Free-space loss, dB. Computed directly in km: prop['dist'] is in metres internally
-    # (pfl[1] is metres), so the driver's own fs expression is not reusable here.
-    fs = 20.0 * math.log10(d_km) + 20.0 * math.log10(fmhz) - 27.55
+    # Free-space loss, dB, with d in km and f in MHz: 20log10(d) + 20log10(f) + 32.44.
+    # The constant was -27.55, which is 60 dB too small. On flat terrain that made the total
+    # land 60 dB below two-ray ground-reflection theory; with +32.44 it matches two-ray to
+    # within 0.3-3.8 dB over 0.5-10 km. See results/itm_constant_check.txt.
+    fs = 20.0 * math.log10(d_km) + 20.0 * math.log10(fmhz) + 32.44
 
     # qerfi takes the levels as fractions, exactly as the ITM driver passes them (qr/100)
     zr = qerfi([q / 100.0 for q in qr_pct])

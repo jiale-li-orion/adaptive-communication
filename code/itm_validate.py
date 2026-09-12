@@ -2,7 +2,7 @@ import math, numpy as np, sys
 sys.path.insert(0,'/home/orion/Communications/code')
 from mountain_lora_feasibility import itm_point_to_point, read_hgt, profile, haversine_km, elev_at
 
-fs=lambda d,f=868.0: 20*math.log10(d)+20*math.log10(f)-27.55
+fs=lambda d,f=868.0: 20*math.log10(d)+20*math.log10(f)+32.44
 
 print("=== A. sensitivity to the TERRAIN PROFILE (same distance, diff terrain) ===")
 n=200; d=10.0

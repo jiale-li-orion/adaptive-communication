@@ -1,3 +1,13 @@
+gateway (30.33, 94.78) @ 2317 m (SRTM)
+gridding 121x121 = 14641 points over [30.22,30.44]x[94.67,94.89] at 868 MHz, 90% reliability
+
+  row 1/121  (0s elapsed)
+  row 21/121  (10s elapsed)
+  row 41/121  (16s elapsed)
+  row 61/121  (21s elapsed)
+  row 81/121  (26s elapsed)
+  row 101/121  (32s elapsed)
+  row 121/121  (39s elapsed)
 ==========================================================================
 SINGLE-GATEWAY COVERAGE, REAL TERRAIN (Bome/Yigong, Tibet), 868 MHz, 90% reliability
 ==========================================================================
@@ -23,6 +33,17 @@ GREEDY RELAY PLACEMENT (relay also on the ridge; same radio assumptions)
 unreachable points to serve: 12952
 candidate relay sites      : 225
 target points evaluated    : 405
+  candidate 1/225  (1s)
+  candidate 26/225  (26s)
+  candidate 51/225  (40s)
+  candidate 76/225  (54s)
+  candidate 101/225  (66s)
+  candidate 126/225  (76s)
+  candidate 151/225  (88s)
+  candidate 176/225  (99s)
+  candidate 201/225  (111s)
+/home/orion/.config/matplotlib is not a writable directory
+Matplotlib created a temporary cache directory at /tmp/matplotlib-mzc8ssky because there was an issue with the default path (/home/orion/.config/matplotlib); it is highly recommended to set the MPLCONFIGDIR environment variable to a writable directory, in particular to speed up the import of Matplotlib and to better support multiprocessing.
 
 rank    relay lat  relay lon   unreachable served
 1          30.227     94.824                   99
@@ -37,3 +58,6 @@ cumulative coverage if the top-k relays are deployed (upper bound, sites reused)
   k=3   newly served ~ 20.7% of unreachable  ->  overall coverage ~ 29.9%
   k=5   newly served ~ 19.5% of unreachable  ->  overall coverage ~ 28.8%
   k=10  newly served ~ 17.8% of unreachable  ->  overall coverage ~ 27.3%
+
+wrote /home/orion/Communications/应急通信/project1/agentic communication/results/coverage_grid.csv and coverage_summary.txt
+wrote /home/orion/Communications/应急通信/project1/agentic communication/results/coverage_map.png

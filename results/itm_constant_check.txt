@@ -1,0 +1,14 @@
+FSPL constant regression: flat terrain must reproduce two-ray ground reflection
+868 MHz, 2 m antennas both ends, eps=15, sigma=0.005 S/m, mdvarx=11
+
+  d_km   two-ray    +32.44    -27.55  ITM total    diff
+--------------------------------------------------------
+   0.5      95.9      85.2      25.2       95.9    -0.0
+   1.0     108.0      91.2      31.2      107.5    -0.4
+   2.0     120.0      97.2      37.2      119.5    -0.5
+   5.0     135.9     105.2      45.2      136.7     0.8
+  10.0     148.0     111.2      51.2      151.8     3.8
+
+avar returns the quantile of the TOTAL attenuation (it already contains aref):
+  at (30.44,94.765), 12.3 km, aref=116.19 and avar(90%)=116.28.
+So the combination is fs + avar, and only the fs constant was wrong.

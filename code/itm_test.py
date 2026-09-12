@@ -14,7 +14,7 @@ def run(freq_mhz, dist_km, elevs, hg=(2.0,2.0)):
     return aref
 
 if __name__=='__main__':
-    fs=lambda d,f=868.0: 20*math.log10(max(d,1e-3))+20*math.log10(f)-27.55
+    fs=lambda d,f=868.0: 20*math.log10(max(d,1e-3))+20*math.log10(f)+32.44
     for d in (1.0,5.0,20.0):
         a=run(868.0,d,[100.0]*80)
         print(f'flat {d:5.1f}km 868MHz: ITM={a:6.1f} dB | free-space={fs(d):6.1f} dB | excess={a-fs(d):6.1f} dB')
