@@ -156,6 +156,30 @@ class WaitEvent:
     at: int
 
 
+class Journal:
+    """Append-only record of registry events.
+
+    The protocol's first rule is that an operation is registered BEFORE it is sent. That rule
+    only buys anything if the registration outlives the process that made it: without a journal,
+    a coordinator that restarts has no record of what it had in flight, so it re-issues those
+    actions under fresh identities. The far side sees new operations, its epoch fencing has
+    nothing to fence, and the retries land as second effects.
+
+    Appending is the whole interface. Replay is deliberately separate, because a journal that
+    cannot be replayed is just a log, and a log nobody reads is how a "durable" runtime turns out
+    not to be one.
+    """
+
+    def __init__(self) -> None:
+        self.entries: list[dict] = []
+
+    def record(self, kind: str, **fields) -> None:
+        self.entries.append({"kind": kind, **fields})
+
+    def __len__(self) -> int:
+        return len(self.entries)
+
+
 class RemoteSink:
     """The far side. It owns a durable epoch and, optionally, per-operation receipts.
 
@@ -212,15 +236,22 @@ class RemoteSink:
 class OperationRegistry:
     """The runtime. Owns identity and lifecycle; the entity owns the execution resource."""
 
-    def __init__(self) -> None:
+    def __init__(self, journal: Journal | None = None, incarnation: str = "") -> None:
         self.ops: dict[str, Operation] = {}
         self._n = 0
         self._epoch = 0
         self.counts: dict[str, int] = {}
+        self.journal = journal
+        # A restarted coordinator must not reuse operation ids. Real systems issue UUIDs or
+        # prefix them with a boot id; a bare counter that restarts at zero would otherwise
+        # produce ids the far side has already seen, and its receipt table would then silently
+        # suppress a write that was meant to be new.
+        self.incarnation = incarnation
 
     # ------------------------------------------------------------------ identity
     def register(self, entity_id: str, capability: str, arguments: dict,
-                 logical_intent: str, tick: int, side_effect: bool) -> Operation:
+                 logical_intent: str, tick: int, side_effect: bool,
+                 epoch: int | None = None) -> Operation:
         """Durably record the operation BEFORE anything is sent.
 
         Sending first and recording second leaves a window where the coordinator can crash
@@ -228,9 +259,9 @@ class OperationRegistry:
         have run, and can never be reconciled. There is no such window here.
         """
         self._n += 1
-        self._epoch += 1
+        self._epoch = self._epoch + 1 if epoch is None else max(epoch, self._epoch + 1)
         op = Operation(
-            operation_id=f"op{self._n:05d}",
+            operation_id=f"{self.incarnation}op{self._n:05d}",
             entity_id=entity_id,
             capability=capability,
             arguments_hash=hashlib.sha256(
@@ -242,6 +273,13 @@ class OperationRegistry:
         )
         self.ops[op.operation_id] = op
         self.bump("registered")
+        if self.journal is not None:
+            self.journal.record("register", incarnation=self.incarnation,
+                                operation_id=op.operation_id,
+                                entity_id=entity_id, capability=capability,
+                                arguments_hash=op.arguments_hash,
+                                logical_intent=logical_intent, epoch=op.epoch,
+                                side_effect=side_effect, at=tick)
         return op
 
     def bump(self, key: str, n: int = 1) -> None:
@@ -273,6 +311,9 @@ class OperationRegistry:
         op.attempts += 1
         op.lifecycle = Lifecycle.RUNNING
         self.bump("dispatched")
+        if self.journal is not None:
+            self.journal.record("dispatched", operation_id=op.operation_id,
+                                attempts=op.attempts, at=tick)
 
     def assert_retry_reuses_identity(self, original: Operation, retry: Operation) -> None:
         """A retry must be the same logical write, not a new one.
@@ -306,11 +347,17 @@ class OperationRegistry:
         if detail:
             op.detail = detail
         self.bump("settled")
+        if self.journal is not None:
+            self.journal.record("settle", operation_id=op.operation_id,
+                                outcome=outcome.value, detail=detail, at=tick)
         return True
 
     # ------------------------------------------------------------------ observation
     def observe(self, op: Operation, observation: Observation) -> None:
         op.observation = observation
+        if self.journal is not None:
+            self.journal.record("observe", operation_id=op.operation_id,
+                                observation=observation.value)
 
     def wait(self, op: Operation, deadline: int, tick: int) -> WaitEvent:
         """Wait for settlement OR the deadline. A timeout is a WAIT EVENT, not a state.
@@ -435,6 +482,58 @@ class OperationRegistry:
             "unresolved": sum(1 for o in self.ops.values() if o.unresolved),
             "failure_counts": dict(sorted(self.counts.items())),
         }
+
+
+def recover(journal: Journal) -> OperationRegistry:  # noqa: D401
+    """Rebuild a registry from its journal, as a restarted coordinator would.
+
+    Replay is order-preserving and idempotent in the same sense the live registry is: the last
+    settle for an operation wins nothing, because settle is first-wins on replay too.
+    """
+    reg = OperationRegistry(journal, incarnation=journal.entries[0]["incarnation"]
+                            if journal.entries else "")
+    for e in journal.entries:
+        k = e["kind"]
+        if k == "register":
+            op = Operation(
+                operation_id=e["operation_id"], entity_id=e["entity_id"],
+                capability=e["capability"], arguments_hash=e["arguments_hash"],
+                logical_intent=e["logical_intent"], epoch=e["epoch"],
+                side_effect=e["side_effect"], created_at=e["at"])
+            reg.ops[op.operation_id] = op
+            n = int(op.operation_id.rsplit("op", 1)[1])
+            reg._n = max(reg._n, n)
+            reg._epoch = max(reg._epoch, op.epoch)
+        elif k == "dispatched":
+            op = reg.ops.get(e["operation_id"])
+            if op is not None:
+                op.attempts = e["attempts"]
+                op.lifecycle = Lifecycle.RUNNING
+                op.first_dispatch_at = op.first_dispatch_at or e["at"]
+        elif k == "observe":
+            op = reg.ops.get(e["operation_id"])
+            if op is not None:
+                op.observation = Observation(e["observation"])
+        elif k == "settle":
+            op = reg.ops.get(e["operation_id"])
+            if op is not None and op.lifecycle is not Lifecycle.SETTLED:
+                op.lifecycle = Lifecycle.SETTLED
+                op.outcome = Outcome(e["outcome"])
+                op.settled_at = e["at"]
+                op.detail = e.get("detail", "")
+    return reg
+
+
+def unresolved_intents(reg: OperationRegistry) -> dict[str, Operation]:
+    """The operations a restarted coordinator must reconcile, keyed by logical intent.
+
+    This mapping is the thing whose absence causes duplicates after a restart: without it the
+    coordinator cannot tell that the action it is about to re-issue is one it already sent.
+    """
+    out: dict[str, Operation] = {}
+    for op in reg.ops.values():
+        out.setdefault(op.logical_intent, op)
+    return out
 
 
 # ----------------------------------------------------------------------- properties
