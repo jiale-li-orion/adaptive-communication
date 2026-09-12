@@ -18,6 +18,17 @@ buffering and delivery belong to the simulator and to the methods that are compa
 compares the demands below against what actually arrived; it does not ask this module whether
 anything arrived.
 
+THE TWO DEMAND GRIDS ARE STACKED. Normal demand runs over all 16 nodes for every hour of the run,
+and it is not interrupted by a risk window. Risk demand adds one window per 5 min for the critical
+nodes inside the risk windows. An instant inside a risk window therefore carries both a normal and
+a risk task, on different node sets; raising the risk level adds measurement rather than switching
+normal monitoring off. The two grids are independent and each keeps its own spacing, and because
+risk windows start and end on the hour, a risk instant always coincides with an hour instant.
+
+A DEMAND THE RUN CANNOT SATISFY IS NOT IN D. A window whose deadline falls after the end of the run
+cannot be reached by any method, so keeping it would debit every arm a guaranteed failure. Such
+windows are dropped, and the number dropped is reported and asserted.
+
 EVIDENCE LAYER. Every coordinate, elevation, offset, interval, deadline and critical-set
 membership in this file is **A: a research reference assumption** (README D16). None of it is a
 surveyed site, a customer SLA, an acceptance figure from a monitoring contract, or a geohazard
@@ -645,14 +656,14 @@ def expected_counts(hours: int = DEFAULT_HOURS) -> dict:
 
 def _assert_reference_counts(tasks: list[Task], hours: int) -> None:
     """The realised load must equal what the contract §5 table implies."""
-    want_normal, want_risk = expected_instants(hours)
-    quantities = 2                                     # displacement and rainfall
+    want = expected_counts(hours)
     got_normal = sum(1 for t in tasks if t.priority == PRIORITY_NORMAL)
     got_risk = sum(1 for t in tasks if t.priority == PRIORITY_RISK)
-    assert got_normal == want_normal * quantities, (
-        f"normal demands {got_normal}, the table implies {want_normal * quantities}")
-    assert got_risk == want_risk * quantities, (
-        f"risk demands {got_risk}, the table implies {want_risk * quantities}")
+    assert got_normal == want["normal_tasks"], (
+        f"normal demands {got_normal}, the table implies {want['normal_tasks']}")
+    assert got_risk == want["risk_tasks"], (
+        f"risk demands {got_risk}, the table implies {want['risk_tasks']}")
+    assert len(tasks) == want["total_tasks"]
 
 
 def canonical_demand_bytes(tasks: list[Task]) -> bytes:
