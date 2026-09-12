@@ -452,6 +452,9 @@ def run_arm(arm, nodes, hours, cmd_period, seed, use_energy, workload,
     late_applied = 0
     cas_reads = 0
     cas_read_failures = 0
+    cas_conflicts = 0
+    cas_version: dict[str, int] = {}
+    cas_known: set[str] = set()
 
     for t in range(hours):
         # ---- writes the network finally releases, possibly long after a newer one landed ----
@@ -559,16 +562,26 @@ def run_arm(arm, nodes, hours, cmd_period, seed, use_energy, workload,
                 continue
 
             if base_arm == "exact_version_cas":
-                # The read that buys the right to write. It is a separate crossing, so it costs an
-                # opportunity and airtime of its own; when it draws no reply the writer does not
-                # hold a version it can write against, so the operation waits rather than writing
-                # blind. That is the honest cost of the stricter contract.
-                seen, verdict = channel_read(n, t, "read_version", item["attempts"], item["intent"])
-                if verdict != "reply":
-                    cas_read_failures += 1
-                    continue
-                epoch = int(seen.get("fence_version", 0)) + 1
-                cas_reads += 1
+                # Optimistic concurrency as it is actually deployed: the writer holds the version it
+                # believes is in force and only goes back to the link when it does not have one or
+                # when a write was refused. The version advances on the writer's own confirmed
+                # writes, so a single read serves a node for as long as nobody else writes.
+                #
+                # Contract §7 makes this explicit -- "可缓存或从报告获得版本，不强制每次写前额外
+                # 远程读" -- and the earlier version of this arm read before every write, which made
+                # the strict contract look far costlier than it is and produced a conclusion that
+                # has been withdrawn.
+                node_key = n["nid"]
+                if node_key not in cas_known:
+                    seen, verdict = channel_read(n, t, "read_version", item["attempts"],
+                                                 item["intent"])
+                    if verdict != "reply":
+                        cas_read_failures += 1
+                        continue
+                    cas_version[node_key] = int(seen.get("fence_version", 0))
+                    cas_known.add(node_key)
+                    cas_reads += 1
+                epoch = cas_version[node_key] + 1
 
             arrived = link.request(n, t, "data_write", item["attempts"], intent=item["intent"])
             if not arrived:
@@ -590,6 +603,15 @@ def run_arm(arm, nodes, hours, cmd_period, seed, use_energy, workload,
                                                      true_epoch=item["op"].epoch)
                 if did:
                     outcomes[item["intent"]] = outcomes.get(item["intent"], 0) + 1
+                    if base_arm == "exact_version_cas":
+                        # Its own write is what moved the version, so the cached value stays right
+                        # without another crossing. Advancing only on a confirmed write is what
+                        # keeps a lost attempt from leaving the cache ahead of the far side.
+                        cas_version[n["nid"]] = epoch
+                elif outcome is Outcome.SUPERSEDED and base_arm == "exact_version_cas":
+                    # Someone moved it. The cached version is stale, so the next attempt re-reads.
+                    cas_known.discard(n["nid"])
+                    cas_conflicts += 1
             if replied:
                 reg.settle(op, outcome, t, "replied")
                 item["done"] = True
@@ -677,6 +699,7 @@ def run_arm(arm, nodes, hours, cmd_period, seed, use_energy, workload,
         "rounds_created": rounds_created,
         "data_writes": m["data_write"], "verify_reads": m["verify_read"],
         "cas_reads": cas_reads, "cas_read_failures": cas_read_failures,
+        "cas_conflicts": cas_conflicts,
         "reconcile_reads": m["reconcile_read"], "replies": m["replies"],
         "reply_lost": m["reply_lost"],
         "protocol_messages": m["data_write"] + m["verify_read"] + m["reconcile_read"] + m["replies"],
