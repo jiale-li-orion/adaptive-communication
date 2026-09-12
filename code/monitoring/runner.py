@@ -438,11 +438,8 @@ def run_episode(policy: Policy, hours: int = 72, seed: int = 0,
             wanted = profile_for_hour(hour, RISK_WINDOWS_H)
             demanded = {nid: wanted for nid in runtimes}
 
-        archive_newest = {}
-        for nid, rt_ in runtimes.items():
-            newest = max((s.taken_at for s, _arr in rt_.received), default=None)
-            if newest is not None:
-                archive_newest[nid] = newest
+        archive_newest = {nid: rt_.newest_received_at for nid, rt_ in runtimes.items()
+                          if rt_.newest_received_at is not None}
         if iface.pending:
             unknown_s += TICK_S
 

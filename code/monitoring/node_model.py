@@ -118,6 +118,10 @@ class NodeRuntime:
 
     # --- local state ---
     records: list[Sample] = field(default_factory=list)      # taken, not yet acknowledged
+    # The newest instant the center holds for this node, carried as records arrive. Recomputing it
+    # by scanning `received` was O(ticks x records): a per-tick pass over a list that grows for the
+    # whole run, which cost more than the simulation it was measuring.
+    newest_received_at: int | None = None
     taken: list[Sample] = field(default_factory=list)        # ground truth: everything sampled
     received: list[tuple[Sample, int]] = field(default_factory=list)   # sample, arrival second
     profile_history: list[tuple[int, str]] = field(default_factory=list)
@@ -302,6 +306,8 @@ class NodeRuntime:
             self.uploads_heard += 1
             for sample in batch:
                 self.received.append((sample, arrival_s))
+                if self.newest_received_at is None or sample.taken_at > self.newest_received_at:
+                    self.newest_received_at = sample.taken_at
 
     def confirm(self, sample_ids) -> int:
         """The center acknowledged these sample ids. They leave the local history."""

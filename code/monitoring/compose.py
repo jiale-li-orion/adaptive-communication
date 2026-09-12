@@ -219,11 +219,18 @@ class LLMPlanner(RulePlanner):
         self.backend = backend
         self.calls = 0
         self.illegal = 0
+        self.considered = 0
         self.last_raw: list[dict] = []
 
     def decide(self, view) -> list[Intent]:
-        # The model is asked about the same decision the rule planner makes, from the same
-        # observation. It sees only the interface fields: no simulator truth, no demand set.
+        # The model is consulted when the world presents something to decide, not once per tick.
+        # A clock tick with every node already reporting what the scenario demands is not a decision
+        # point, and calling a model on it is neither what a deployed planner would do nor a
+        # measurement of anything: it would multiply the call count by the tick count and make LLM
+        # cost a function of the run length rather than of the work.
+        self.considered += 1
+        if not self._has_decision(view):
+            return []
         proposed = self.backend.decide(world=self._world(view))
         self.calls += 1
         self.last_raw = proposed
@@ -238,6 +245,25 @@ class LLMPlanner(RulePlanner):
                 self.illegal += 1
         floor = super().decide(view)
         return intents if intents else floor
+
+    def _has_decision(self, view) -> bool:
+        """Whether anything in the world calls for a decision at all.
+
+        A node whose report already matches the demand needs nothing. A node whose report is missing
+        or differs does. Asking the model about a world where nothing is due is what makes an LLM
+        arm's cost scale with the clock.
+        """
+        # The profile is the decision this planner asks a model about. A node that reports the
+        # demanded profile needs nothing; one that reports nothing or something else does. Sample
+        # freshness is deliberately not part of this: that is what the measurement-request loop
+        # decides, and folding it in here made the model the answer to every stale sample in a
+        # deployment where most samples are stale, which turns an LLM arm's cost into a function of
+        # the channel rather than of the work.
+        for node_id, want in view.demanded_profile.items():
+            payload = view.status.get(node_id)
+            if payload is None or payload.get("profile") != want:
+                return True
+        return False
 
     def _world(self, view) -> dict:
         """The model's observation, built from interfaces only."""
@@ -341,7 +367,12 @@ class ContractRuntime:
         self.retry_budget = retry_budget
         self.epoch: dict[str, int] = {}
         self.logical_seq: dict[str, int] = {}
-        self.issued: dict[str, dict] = {}      # logical_key -> bookkeeping
+        self.issued: dict[str, dict] = {}      # logical_key -> bookkeeping, history kept for audit
+        # Only the operations still awaiting evidence. Settling walks this, not the history: a
+        # per-tick pass over every operation the run has ever issued is O(run length x operations),
+        # which made a contract cell 24x slower than a naive one and had nothing to do with either
+        # the protocol or the workload.
+        self.open_books: dict[str, dict] = {}
         self.settled_count = 0
         self.restarts = 0
         self.restart_unresolved = 0
@@ -369,14 +400,15 @@ class ContractRuntime:
         again after the dwell. Without this the runtime retries until its budget runs out on
         operations that landed on the first try, which is what makes a baseline look careful.
         """
-        for key, book in self.issued.items():
-            if key in self.settled or book["attempts"] == 0:
+        for key, book in list(self.open_books.items()):
+            if book["attempts"] == 0:
                 continue
             if book["kind"] != KIND_SET_PROFILE:
                 continue
             payload = view.status.get(book["node_id"]) or {}
             if payload.get("profile") == book["profile"]:
                 self.settled.add(key)
+                self.open_books.pop(key, None)
                 self.settled_count += 1
 
     def dispatch(self, intents, view) -> list[tuple[str, dict]]:
@@ -392,6 +424,7 @@ class ContractRuntime:
                         "node_id": intent.node_id, "kind": intent.kind,
                         "profile": intent.args.get("profile"), "last_at": None}
                 self.issued[key] = book
+                self.open_books[key] = book
             if book["attempts"] >= 1 and view.t_s - book["first_at"] < self.dwell_s:
                 continue
             if book["attempts"] >= 1 and not self._fresh_evidence(view, book):

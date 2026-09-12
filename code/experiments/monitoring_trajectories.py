@@ -127,15 +127,15 @@ def main() -> None:
                             paths=paths, runtime_paths=runtime_paths))
         print(f"\n===== {trajectory} =====")
         hdr = (f"{'arm':18s}" + "".join(f"{n:>16s}" for n, _ in COLUMNS))
-        print(hdr)
-        print("-" * len(hdr))
+        print(hdr, flush=True)
+        print("-" * len(hdr), flush=True)
         for arm in arms:
             runs = per_arm[arm]
             mean = {n: float(np.mean([r[n] for r in runs])) for n, _ in COLUMNS}
             row = {"arm": arm, "trajectory": trajectory, "workload": trajectory,
                    "per_seed": {n: [r[n] for r in runs] for n, _ in COLUMNS}, **mean}
             rows.append(row)
-            print(f"{arm:18s}" + "".join(f"{mean[n]:16.1f}" for n, _ in COLUMNS))
+            print(f"{arm:18s}" + "".join(f"{mean[n]:16.1f}" for n, _ in COLUMNS), flush=True)
 
     tag = f"_{args.tag}" if args.tag else ""
     path = OUT.replace(".json", f"{tag}.json")
