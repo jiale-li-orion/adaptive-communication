@@ -59,7 +59,24 @@ HEATED_FRACTION = 0.5        # sites whose battery box removes the cold charge g
 SENS = {7: -123.0, 8: -126.0, 9: -129.0, 10: -132.0, 11: -134.5, 12: -137.0}
 TX_DBM, G_TX, G_RX, FEEDER = 14.0, 2.0, 2.0, 1.0
 
-ARMS = ("b1_wirelessagent", "b2_wirelessops", "b3_verified", "ours", "ours_plain_sink")
+ARMS = ("b1_wirelessagent", "b2_wirelessops", "b3_verified", "ours", "ours_plain_sink",
+        "ablate_identity", "ablate_fencing", "ablate_receipts", "ablate_scope")
+
+# What the far side can do, and what the runtime does with it. The three ablations remove one
+# ingredient of the protocol at a time, because a contribution that cannot be decomposed reads
+# as a monolith.
+ARM_SPEC = {
+    #                        far side: (receipts, fencing)   stable id   scoped reconcile
+    "b1_wirelessagent":      ((False, False),                False,      False),
+    "b2_wirelessops":        ((False, False),                False,      False),
+    "b3_verified":           ((False, False),                False,      False),
+    "ours":                  ((True,  True),                 True,       True),
+    "ours_plain_sink":       ((False, False),                True,       True),
+    "ablate_identity":       ((True,  True),                 False,      True),
+    "ablate_fencing":        ((True,  False),                True,       True),
+    "ablate_receipts":       ((False, True),                 True,       False),
+    "ablate_scope":          ((True,  True),                 True,       False),
+}
 
 
 def load_terrain() -> tuple[list, list]:
@@ -87,23 +104,26 @@ class FarSide:
     deployment to provide.
     """
 
-    def __init__(self, nid: str, fenced: bool):
+    def __init__(self, nid: str, fenced: bool, receipts: bool = True):
         self.nid = nid
         self.fenced = fenced
+        self.keeps_receipts = receipts
         self.last_accepted_epoch = 0
         self.receipts: dict[str, Outcome] = {}
         self.applied: list[tuple[int, str]] = []      # (hour, operation_id) actually applied
 
     def receive(self, op_id: str, epoch: int, t: int) -> tuple[str, bool]:
         """Returns (what the caller learns, did_apply)."""
-        if self.fenced:
+        if self.keeps_receipts:
             prev = self.receipts.get(op_id)
             if prev is not None:
                 return prev.value, False
+        if self.fenced:
             if epoch <= self.last_accepted_epoch and self.last_accepted_epoch > 0:
                 return (Outcome.SUPERSEDED.value if epoch < self.last_accepted_epoch
                         else Outcome.REJECTED.value), False
             self.last_accepted_epoch = epoch
+        if self.keeps_receipts:
             self.receipts[op_id] = Outcome.APPLIED
         self.applied.append((t, op_id))
         return Outcome.APPLIED.value, True
@@ -159,8 +179,8 @@ def link_attempt(node: dict, rng) -> bool:
 def run_arm(arm: str, nodes: list, hours: int, cmd_period: int, seed: int,
             use_energy: bool) -> dict:
     rng = np.random.default_rng(seed)
-    fenced = arm in ("ours", "ours_plain_sink") and arm != "ours_plain_sink"
-    sinks = {n["nid"]: FarSide(n["nid"], fenced) for n in nodes}
+    (receipts, fencing), stable_id, scoped = ARM_SPEC[arm]
+    sinks = {n["nid"]: FarSide(n["nid"], fencing, receipts) for n in nodes}
     reg = OperationRegistry()
 
     # ground truth per logical write
@@ -223,7 +243,7 @@ def run_arm(arm: str, nodes: list, hours: int, cmd_period: int, seed: int,
                     # verifying the operation, and it is the axis this arm exists to expose.
                     state_ok = bool(sinks[n["nid"]].applied)
                     want = not state_ok
-            else:                                            # ours / ours_plain_sink
+            else:                                            # ours and the ablations
                 want = item["attempts"] < RETRY_BUDGET
             if not want:
                 item["done"] = True
@@ -238,8 +258,10 @@ def run_arm(arm: str, nodes: list, hours: int, cmd_period: int, seed: int,
             # ---- send, under the runtime's identity discipline ----
             item["attempts"] += 1
             attempts_total += 1
-            op_id = op.operation_id if arm in ("ours",) else f"{item['intent']}#{item['attempts']}"
-            epoch = item["epoch"] if arm == "ours" else 0
+            # a runtime without stable identity invents a new request identity per attempt,
+            # which is exactly what makes every retry look like a fresh write to the far side
+            op_id = op.operation_id if stable_id else f"{item['intent']}#{item['attempts']}"
+            epoch = item["epoch"] if fencing else 0
             reg.dispatched(op, t)
 
             if not link_attempt(n, rng):
@@ -254,8 +276,10 @@ def run_arm(arm: str, nodes: list, hours: int, cmd_period: int, seed: int,
             # ---- acknowledgment ----
             if did_apply and rng.random() >= ACK_LOSS_P:
                 # a clean acknowledgment: the runtime may settle
-                if arm == "ours":
-                    reg.settle(op, Outcome(did_apply and learned or "applied"), t, "acked")
+                if stable_id:
+                    reg.settle(op, Outcome(learned) if learned in
+                               ("applied", "rejected", "superseded", "failed") else Outcome.APPLIED,
+                               t, "acked")
                     reg.observe(op, Observation.FRESH)
                 item["done"] = True
                 settled_intents += 1
@@ -264,10 +288,15 @@ def run_arm(arm: str, nodes: list, hours: int, cmd_period: int, seed: int,
                 if arm in ("b1_wirelessagent",):
                     item["done"] = True
                     settled_intents += 1
-                elif arm == "ours":
-                    # reconciliation, SCOPED to this operation
-                    if learned == "applied" and sinks[n["nid"]].receipt(op.operation_id) is not None:
-                        reg.settle(op, Outcome.APPLIED, t, "scoped reconcile")
+                elif stable_id:
+                    if scoped:
+                        # reconciliation SCOPED to this operation: ask about THIS write
+                        hit = sinks[n["nid"]].receipt(op.operation_id) is not None
+                    else:
+                        # the unscoped question, answered yes by any earlier round
+                        hit = bool(sinks[n["nid"]].applied)
+                    if hit:
+                        reg.settle(op, Outcome.APPLIED, t, "reconciled")
                         reg.observe(op, Observation.FRESH)
                         item["done"] = True
                         settled_intents += 1
@@ -347,6 +376,15 @@ def main() -> None:
               f"{100*r['exactly_once_rate']:.1f}%   多余应用 {base['duplicate_applications']:.0f} -> "
               f"{r['duplicate_applications']:.0f}   零次 {base['zero_times']:.0f} -> "
               f"{r['zero_times']:.0f}")
+
+    print()
+    ours = next(r for r in rows if r["arm"] == "ours")
+    for r in rows:
+        if not r["arm"].startswith("ablate") and r["arm"] != "ours_plain_sink":
+            continue
+        print(f"  消融 {r['arm']:20s} 恰好一次 {100*r['exactly_once_rate']:5.1f}% "
+              f"(ours {100*ours['exactly_once_rate']:.1f}%)  多余应用 {r['duplicate_applications']:7.1f} "
+              f"(ours {ours['duplicate_applications']:.0f})")
 
     tag = f"_{args.tag}" if args.tag else ""
     path = OUT.replace(".json", f"{tag}.json")

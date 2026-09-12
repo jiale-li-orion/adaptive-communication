@@ -1,0 +1,121 @@
+{
+  "config": {
+    "days": 60,
+    "cmd_period": 6,
+    "reach": 12,
+    "blocked": 4,
+    "seeds": 3,
+    "no_energy": false,
+    "tag": "abl"
+  },
+  "results": [
+    {
+      "logical_writes": 3840.0,
+      "exactly_once": 1227.6666666666667,
+      "zero_times": 2612.3333333333335,
+      "more_than_once": 0.0,
+      "duplicate_applications": 0.0,
+      "attempts": 3840.0,
+      "exactly_once_rate": 0.31970486111111107,
+      "zero_rate": 0.6802951388888889,
+      "dup_rate": 0.0,
+      "arm": "b1_wirelessagent"
+    },
+    {
+      "logical_writes": 3840.0,
+      "exactly_once": 1282.0,
+      "zero_times": 2122.6666666666665,
+      "more_than_once": 435.3333333333333,
+      "duplicate_applications": 539.0,
+      "attempts": 9479.333333333334,
+      "exactly_once_rate": 0.3338541666666666,
+      "zero_rate": 0.5527777777777777,
+      "dup_rate": 0.11336805555555556,
+      "arm": "b2_wirelessops"
+    },
+    {
+      "logical_writes": 3840.0,
+      "exactly_once": 1252.0,
+      "zero_times": 2588.0,
+      "more_than_once": 0.0,
+      "duplicate_applications": 0.0,
+      "attempts": 5767.0,
+      "exactly_once_rate": 0.3260416666666666,
+      "zero_rate": 0.6739583333333333,
+      "dup_rate": 0.0,
+      "arm": "b3_verified"
+    },
+    {
+      "logical_writes": 3840.0,
+      "exactly_once": 1704.3333333333333,
+      "zero_times": 2135.6666666666665,
+      "more_than_once": 0.0,
+      "duplicate_applications": 0.0,
+      "attempts": 8712.0,
+      "exactly_once_rate": 0.44383680555555555,
+      "zero_rate": 0.5561631944444444,
+      "dup_rate": 0.0,
+      "arm": "ours"
+    },
+    {
+      "logical_writes": 3840.0,
+      "exactly_once": 1282.0,
+      "zero_times": 2122.6666666666665,
+      "more_than_once": 435.3333333333333,
+      "duplicate_applications": 539.0,
+      "attempts": 9479.333333333334,
+      "exactly_once_rate": 0.3338541666666666,
+      "zero_rate": 0.5527777777777777,
+      "dup_rate": 0.11336805555555556,
+      "arm": "ours_plain_sink"
+    },
+    {
+      "logical_writes": 3840.0,
+      "exactly_once": 1688.0,
+      "zero_times": 2152.0,
+      "more_than_once": 0.0,
+      "duplicate_applications": 0.0,
+      "attempts": 9721.0,
+      "exactly_once_rate": 0.4395833333333334,
+      "zero_rate": 0.5604166666666667,
+      "dup_rate": 0.0,
+      "arm": "ablate_identity"
+    },
+    {
+      "logical_writes": 3840.0,
+      "exactly_once": 1704.3333333333333,
+      "zero_times": 2135.6666666666665,
+      "more_than_once": 0.0,
+      "duplicate_applications": 0.0,
+      "attempts": 8712.0,
+      "exactly_once_rate": 0.44383680555555555,
+      "zero_rate": 0.5561631944444444,
+      "dup_rate": 0.0,
+      "arm": "ablate_fencing"
+    },
+    {
+      "logical_writes": 3840.0,
+      "exactly_once": 1704.3333333333333,
+      "zero_times": 2135.6666666666665,
+      "more_than_once": 0.0,
+      "duplicate_applications": 0.0,
+      "attempts": 8712.0,
+      "exactly_once_rate": 0.44383680555555555,
+      "zero_rate": 0.5561631944444444,
+      "dup_rate": 0.0,
+      "arm": "ablate_receipts"
+    },
+    {
+      "logical_writes": 3840.0,
+      "exactly_once": 1704.3333333333333,
+      "zero_times": 2135.6666666666665,
+      "more_than_once": 0.0,
+      "duplicate_applications": 0.0,
+      "attempts": 8712.0,
+      "exactly_once_rate": 0.44383680555555555,
+      "zero_rate": 0.5561631944444444,
+      "dup_rate": 0.0,
+      "arm": "ablate_scope"
+    }
+  ]
+}
