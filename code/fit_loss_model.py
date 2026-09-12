@@ -45,7 +45,13 @@ def stream_links(path: str):
         r = csv.reader(f)
         header = next(r)
         i_utc = header.index("utc")
-        i_adj = header.index("node_link_matrix")
+        # The adjacency list is the column NAMED node_degree_list. The similarly named
+        # node_link_matrix is a 21x21 matrix of link-quality PERCENTAGES (0,5,...,100), not a
+        # 0/1 adjacency. Reading the latter as `[set(a) for a in adj]` silently builds a series
+        # of "does row i happen to contain the integer j", which yields a 7.44% "availability"
+        # that is pure artifact. The two columns agree 100% once both are read correctly and
+        # give 62.74% availability.
+        i_adj = header.index("node_degree_list")
         for row in r:
             try:
                 adj = ast.literal_eval(row[i_adj])
@@ -93,8 +99,9 @@ def main() -> None:
     T = np.array(list(trans.values()), dtype=float)          # columns: 00,01,10,11
     tot = T.sum(axis=0)
     n00, n01, n10, n11 = tot
-    p_gb = n01 / max(n01 + n00, 1)          # up -> down
-    p_bg = n10 / max(n10 + n11, 1)          # down -> up
+    # column index a*2+b, with a=1 meaning the link existed. So n01 counts 0->1.
+    p_bg = n01 / max(n01 + n00, 1)          # bad -> good
+    p_gb = n10 / max(n10 + n11, 1)          # good -> bad
 
     # stationary distribution of the 2-state chain
     pi_bad = p_gb / max(p_gb + p_bg, 1e-12)

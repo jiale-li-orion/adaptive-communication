@@ -1,0 +1,36 @@
+reading /home/orion/Communications/应急通信/project1/agentic communication/data/downloads/chirpbox.csv ...
+links 420, snapshots 20913 (1619999223 .. 1631718242)
+mean link availability 68.75 %
+uncensored down-runs 429925, up-runs 429836
+
+============================================================================
+DOWN (outage) DURATION DISTRIBUTION  (n = 429925, hourly resolution)
+============================================================================
+empirical quantiles (h): p10=1.00  p25=1.00  p50=2.00  p75=4.00  p90=5.00  p95=10.00  p99=42.00  p100=13741.00
+mean 5.13 h   std 57.76 h   max 13741 h
+share of runs <= 1 h: 27.9 %    share >= 24 h: 1.8 %
+
+model         params                                          KS D        p        AIC
+----------------------------------------------------------------------------
+exponential   scale_hours=5.1325                            0.3092   0.0000  2266212.6
+lognormal     mu_log_hours=0.9187  sigma_log=0.8068         0.1512   0.0000  1825449.4
+weibull       shape_k=0.7913  scale_hours=3.8909            0.2891   0.0000  2150379.3
+
+best by AIC: lognormal   (exponential is rejected as a model of the tail if its p is small)
+
+============================================================================
+UP (connected) DURATION DISTRIBUTION  (n = 429836, hourly resolution)
+============================================================================
+empirical quantiles (h): p10=1.00  p25=2.00  p50=3.00  p75=5.00  p90=5.00  p95=17.00  p99=89.00  p100=13495.00
+mean 10.93 h   std 141.51 h   max 13495 h
+share of runs <= 1 h: 18.1 %    share >= 24 h: 3.2 %
+
+model         params                                          KS D        p        AIC
+----------------------------------------------------------------------------
+exponential   scale_hours=10.9345                           0.5338   0.0000  2915939.7
+lognormal     mu_log_hours=1.1769  sigma_log=0.9092         0.2180   0.0000  2149771.4
+weibull       shape_k=0.6689  scale_hours=5.4272            0.2889   0.0000  2513010.6
+
+best by AIC: lognormal   (exponential is rejected as a model of the tail if its p is small)
+
+wrote /home/orion/Communications/应急通信/project1/agentic communication/results/outage_distribution.json
