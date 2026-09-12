@@ -155,6 +155,37 @@ class WaitEvent:
     at: int
 
 
+class JournalError(RuntimeError):
+    """A durable log that cannot be replayed faithfully.
+
+    Raised rather than skipped. A replay that guesses is worse than one that refuses, because
+    every judgement the recovered runtime makes afterwards rests on it: a wrong state produced
+    silently is indistinguishable from a correct one until something unrelated fails later, and
+    by then the log has usually been rotated away.
+    """
+
+
+# Schema of the durable log, per entry kind. Each kind carries its own version because the kinds
+# evolve independently: changing how operations are recorded gives no reason to bump the version
+# of how decisions are recorded, and one shared version would force the two to move together.
+# The field set is declared exactly, in both directions, so that a field added on the write side
+# and unknown on the read side fails at startup instead of producing a plausible wrong operation.
+JOURNAL_SCHEMA: dict[str, tuple[int, frozenset[str]]] = {
+    "register": (1, frozenset({"incarnation", "operation_id", "entity_id", "capability",
+                               "arguments_hash", "logical_intent", "epoch", "side_effect",
+                               "at"})),
+    "dispatched": (1, frozenset({"operation_id", "attempts", "at"})),
+    "observe": (1, frozenset({"operation_id", "observation"})),
+    "settle": (1, frozenset({"operation_id", "outcome", "detail", "at"})),
+    # Decision-context entries share the log with registry entries but not their schema family.
+    "decision": (1, frozenset({"key", "value"})),
+}
+
+# The two families, named so that a change to one can be reasoned about without the other.
+REGISTRY_KINDS = ("register", "dispatched", "observe", "settle")
+DECISION_KINDS = ("decision",)
+
+
 class Journal:
     """Append-only record of registry events.
 
@@ -167,13 +198,49 @@ class Journal:
     Appending is the whole interface. Replay is deliberately separate, because a journal that
     cannot be replayed is just a log, and a log nobody reads is how a "durable" runtime turns out
     not to be one.
+
+    Every entry is stamped with the version of its own kind and checked against the declared
+    field set on the way in. Replay validates the whole log first, so a log this build cannot
+    read faithfully is rejected before it can produce a state.
     """
 
     def __init__(self) -> None:
         self.entries: list[dict] = []
 
     def record(self, kind: str, **fields) -> None:
-        self.entries.append({"kind": kind, **fields})
+        spec = JOURNAL_SCHEMA.get(kind)
+        if spec is None:
+            raise JournalError(f"unknown journal entry kind {kind!r}")
+        version, allowed = spec
+        self._check_fields(kind, set(fields), allowed, where="append")
+        self.entries.append({"kind": kind, "v": version, **fields})
+
+    @staticmethod
+    def _check_fields(kind: str, present: set[str], allowed: frozenset[str], where: str) -> None:
+        extra = present - allowed
+        missing = allowed - present
+        if extra or missing:
+            raise JournalError(
+                f"{kind} entry has the wrong field set on {where}: "
+                f"extra={sorted(extra)} missing={sorted(missing)}")
+
+    def validate(self) -> None:
+        """Refuse the whole log if any entry cannot be read faithfully.
+
+        Called before replay. The failure is loud on purpose: the alternative is a recovered
+        runtime that is wrong in a way nothing downstream can detect.
+        """
+        for i, entry in enumerate(self.entries):
+            kind = entry.get("kind")
+            spec = JOURNAL_SCHEMA.get(kind)
+            if spec is None:
+                raise JournalError(f"entry {i}: unknown journal entry kind {kind!r}")
+            version, allowed = spec
+            if entry.get("v") != version:
+                raise JournalError(
+                    f"entry {i} ({kind}): unsupported version {entry.get('v')!r}; "
+                    f"this build replays version {version}")
+            self._check_fields(kind, set(entry) - {"kind", "v"}, allowed, where=f"entry {i}")
 
     def __len__(self) -> int:
         return len(self.entries)
@@ -221,6 +288,7 @@ class DurableDecisionStore:
     @classmethod
     def replay(cls, journal: Journal) -> "DurableDecisionStore":
         """Rebuild the store from the journal, the way a restarted process rebuilds anything."""
+        journal.validate()
         store = cls(journal)
         for entry in journal.entries:
             if entry.get("kind") == cls.KIND:
@@ -541,6 +609,7 @@ def recover(journal: Journal) -> OperationRegistry:  # noqa: D401
     # The journal may hold entries other than registry events -- a decision store writes its own.
     # Take the incarnation from the first entry that actually carries one rather than assuming the
     # registry wrote first.
+    journal.validate()
     reg = OperationRegistry(journal, incarnation=next(
         (e["incarnation"] for e in journal.entries if "incarnation" in e), ""))
     for e in journal.entries:

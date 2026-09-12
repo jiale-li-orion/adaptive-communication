@@ -684,7 +684,7 @@ agent 只负责选择 capability 与逻辑动作，runtime 在动作之外包住
 | # | 事项 | 性质 | 代价 |
 |---|---|---|---|
 | 6 | 宣告顺序、恢复与授权分离、准入控制、消费语义、身份可猜测性 | 表述补强 | 只改文档 |
-| 7 | 持久日志的版本号与字段集校验 | 健壮性缺陷 | 小改代码 |
+| 7 | ~~持久日志的版本号与字段集校验~~ **已完成** | 健壮性缺陷 | 小改代码 |
 | 8 | 游标恢复臂 `journal_cursor` | 新对照 | 一个 arm |
 | 9 | 精确版本 fencing 基线 | 新对照 | 一个 arm |
 
@@ -820,9 +820,9 @@ self.bat_wh = min(self.bat_wh + hourly_gen - self.load_wh_per_tick, self.usable_
 
 `fresh_id` 使用可预测的世代前缀构造身份。若被质疑身份可被伪造，回答是：**边界是授权，不是不可猜测性。** 远端按操作身份去重的同时校验该身份是否属于调用方；身份可猜与身份可冒用是两件事。这一条应与 §五 的远端契约一节合并说明，因为它决定了契约要求部署方提供的是"授权的身份空间"而非"随机不可猜的身份"。
 
-### 7.8 持久日志的健壮性（小改代码，不需要重跑）
+### 7.8 持久日志的健壮性（已完成）
 
-复查 `Journal` 与 `recover()` 时发现三处缺口。它们不影响任何现有数字，但如果日志要承担"跨进程生命周期保存执行连续性"这个角色，三处都必须补。
+复查 `Journal` 与 `recover()` 时发现三处缺口。它们不影响任何现有数字，但如果日志要承担"跨进程生命周期保存执行连续性"这个角色，三处都必须补。**三条均已实现，回归测试 `code/experiments/test_journal_schema.py`（18 项）通过。**
 
 #### 7.8.1 条目缺 schema 版本号
 
@@ -836,7 +836,13 @@ self.bat_wh = min(self.bat_wh + hourly_gen - self.load_wh_per_tick, self.usable_
 
 #### 7.8.3 两类条目共用一条日志
 
-决策存储与操作日志写在同一个 `Journal` 里，条目交织。`recover()` 已改为容忍非注册表条目，但两类条目的 schema 版本应分别管理——决策条目的演化节奏与操作条目的演化节奏无关，共用一个版本号会迫使两者同步升级。
+决策存储与操作日志写在同一个 `Journal` 里，条目交织。两类条目的 schema 版本分别管理：`register` / `dispatched` / `observe` / `settle` 属注册表族，`decision` 属决策族，各自带版本号。决策条目的演化节奏与操作条目无关，共用一个版本号会迫使两者同步升级。
+
+#### 7.8.4 实现后的行为
+
+写入侧在追加时即校验 kind 与字段集，不合法的条目根本进不了日志。重放侧在校验整条日志之后才构造状态，任何一条不符即拒绝恢复。两者都抛 `JournalError`。
+
+测试覆盖四类拒收：未知 kind、版本不符、多字段（写入侧新增而读取侧不认识）、缺字段。第四类是实践中最要紧的一类——写入侧加一个字段会产生一个看起来完全正常的操作，事后无从察觉。
 
 ### 7.9 待补的对照臂（需要跑）
 
@@ -928,6 +934,7 @@ python3 code/experiments/run_baseline.py                                      # 
 
 # 回归与审计
 python3 code/experiments/test_draw_keys.py                                    # 报文级随机契约
+python3 code/experiments/test_journal_schema.py                               # 持久日志 schema
 python3 code/experiments/audit_consistency.py                                 # 一致性审计
 python3 code/analysis/paired_ci.py results/method_comparison_main.json \      # 配对 95% 区间
     --arm-a ours --arm-b verified_tool_calls --workload operation --zero-check
