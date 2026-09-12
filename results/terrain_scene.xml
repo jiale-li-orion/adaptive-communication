@@ -1,0 +1,39 @@
+
+<scene version="3.0.0">
+    <integrator type="path">
+        <integer name="max_depth" value="4"/>
+    </integrator>
+
+    <shape type="obj">
+        <string name="filename" value="terrain_mesh.obj"/>
+        <bsdf type="diffuse">
+            <rgb name="reflectance" value="0.35 0.32 0.28"/>
+        </bsdf>
+    </shape>
+
+    <emitter type="constant">
+        <rgb name="radiance" value="1.2 1.3 1.5"/>
+    </emitter>
+
+    <emitter type="directional">
+        <transform name="to_world">
+            <rotate x="1" angle="35"/>
+            <rotate y="1" angle="20"/>
+        </transform>
+        <rgb name="irradiance" value="2.5 2.5 2.5"/>
+    </emitter>
+
+    <sensor type="perspective">
+        <transform name="to_world">
+            <lookat origin="-9000, -14000, 11000" target="0, 0, 0" up="0, 0, 1"/>
+        </transform>
+        <float name="fov" value="45"/>
+        <float name="near_clip" value="1.0"/>
+        <float name="far_clip" value="200000"/>
+        <film type="hdrfilm">
+            <integer name="width" value="800"/>
+            <integer name="height" value="600"/>
+            <rfilter type="box"/>
+        </film>
+    </sensor>
+</scene>
