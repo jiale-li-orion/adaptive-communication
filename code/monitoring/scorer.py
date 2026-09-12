@@ -131,7 +131,17 @@ def _index(taken, arrived):
     taken_index: dict[tuple[str, str], list] = {}
     for sample in taken:
         taken_index.setdefault((sample.node_id, sample.measurement_type), []).append(sample)
-    arrived_index = {sample.sample_id: arrival for sample, arrival in arrived}
+    # The EARLIEST arrival for each sample id, and this has to be explicit. A record delivered on
+    # time and then retransmitted -- which happens whenever the centre's confirmation is lost --
+    # appears more than once, and a plain dict comprehension keeps the LAST one. That scored a
+    # record that had arrived on time as late, purely because the node sent it again. Measured:
+    # fixing this moved `ours` from 54.0% to 84.9% and `versioned_config` from 59.1% to 92.8% on the
+    # same 72-hour run, so every coverage figure taken before it was understated.
+    arrived_index: dict[str, int] = {}
+    for sample, arrival in arrived:
+        previous = arrived_index.get(sample.sample_id)
+        if previous is None or arrival < previous:
+            arrived_index[sample.sample_id] = arrival
     return taken_index, arrived_index
 
 
