@@ -176,6 +176,25 @@ def audit_restart_durable_context() -> None:
           'OperationRegistry(None, incarnation=' in src)
 
 
+def audit_analysis_inputs() -> None:
+    """分析脚本要读的列必须真的被轨迹脚本写出。
+
+    `paired_ci.py` 按 `workload` 分组，并对 `duplicate_applications`、`stale_overwrites`、
+    `stale_reorders` 做逐种子零值检查。这些名字是两套代码之间的契约，改一处而另一处不知道，
+    后果是分析**静默少报一栏**而不是报错——一份声称"逐种子检查过"的结果里其实没有这一项。
+    """
+    import re as _re
+    src = open(os.path.join(HERE, "monitoring_trajectories.py"), encoding="utf-8").read()
+    columns = set(_re.findall(r'\("([a-z_]+)", lambda', src))
+    for needed in ("duplicate_applications", "stale_overwrites", "stale_reorders",
+                   "coverage", "observation_gap", "false_success"):
+        check(f"轨迹脚本输出 {needed}（分析脚本要读它）", needed in columns,
+              f"columns={sorted(columns)[:8]}...")
+    check("轨迹脚本按 workload 分组写出（paired_ci 的分组键）",
+          '"workload": trajectory' in src)
+    check("轨迹脚本保存 per_seed（配对区间的前提）", '"per_seed":' in src)
+
+
 def audit_relay_bypasses_screen() -> None:
     print("\n[6] 中继不复用被永久遮挡的直连路径")
     lk = Link(21)
@@ -396,6 +415,7 @@ def main() -> int:
     audit_delayed_request_accounting()
     audit_readme_matches_results()
     audit_cost_weight_is_separate_from_radio()
+    audit_analysis_inputs()
     print("\n" + "-" * 74)
     if FAIL:
         print(f"  {len(FAIL)} 项失败：")
