@@ -14,7 +14,9 @@ happen, and they are NOT the same method:
                      schedule, so it recomputes the SAME identity and the far side recognises the
                      repeat. No durable storage was needed for this.
 
-  journal            it recovers the operation, its identity and its epoch from durable storage.
+  journal            it recovers the operation, its identity and its epoch from durable storage,
+                     and settles a recovered operation once its receipt is confirmed, so the same
+                     operation is not reconciled again at every later restart.
 
 The middle arm decides how the paper's claim may be stated. If a coordinator can rebuild the
 identity, durable storage is not a correctness requirement — it is one implementation of identity
@@ -26,13 +28,17 @@ continuity. So both command kinds are run, because they differ exactly there:
               re-measure, which alarm to acknowledge. That choice is gone when the process dies,
               and no recomputation brings it back.
 
-Durable journaling is therefore not the only way to keep identity; it is the only way to keep an
-identity that cannot be recomputed. That is the honest form of the claim, and it is also where
-the word "agent" starts to earn its place: a fixed schedule is recomputable, an action an LLM
-improvised from what it happened to observe is not.
+What the three arms show is narrower than "journalling is necessary". It is: among these three
+mechanisms, journalling is the one that covers both command kinds. The general statement is that
+an action whose identity cannot be recomputed needs SOME durable source for its identity and its
+decision context; a durable queue, an upstream event log or a persisted task id would do the same
+job. The journal is this paper's implementation of that continuity, not the only possible one.
 
-Every protocol message crosses Link.exchange(); nothing reads the far side directly, and the
-channel is sampled exactly once per message.
+Every protocol message crosses Link.request()/reply(); nothing reads the far side directly. The
+uplink and the downlink are drawn separately, so a request that never arrived or that the network
+is still holding draws no reply. The environment (per-node channel state and power) is a fixed
+trace shared by all three arms, so an arm that sends more queries does not change the weather that
+the next arm meets.
 
 Deps: numpy only.
 """
@@ -62,7 +68,8 @@ ROOT = os.path.normpath(os.path.join(HERE, "..", ".."))
 sys.path.insert(0, HERE)
 
 from operations import OperationRegistry, Journal, recover, Outcome, Observation  # noqa: E402
-from method_comparison import Link, FarSide, make_nodes                           # noqa: E402
+from method_comparison import (Link, FarSide, make_nodes, EnvironmentTrace,   # noqa: E402
+                               _u)
 
 OUT = os.path.join(ROOT, "results", "restart_experiment.json")
 
@@ -71,125 +78,135 @@ KINDS = ("scheduled", "adhoc")
 
 
 def run_arm(arm: str, kind: str, nodes, hours: int, cmd_period: int, crash_period: int,
-            seed: int, use_energy: bool) -> dict:
-    rng = np.random.default_rng(seed)
+            seed: int, use_energy: bool, trace=None) -> dict:
+    if trace is None:
+        trace = EnvironmentTrace(nodes, hours, seed)
     sinks = {n["nid"]: FarSide(n["nid"], receipts=True, fencing=True) for n in nodes}
-    link = Link(rng)
+    link = Link(seed)
 
     journal = Journal() if arm == "journal" else None
     reg = OperationRegistry(journal, incarnation="i0-")
     inc = 0
-    applied: dict[str, int] = {}      # identity -> executions at the far side
-    attempted: set[str] = set()       # every identity the coordinator ever sent
-    intended: dict[str, str] = {}     # mission slot -> the identity the mission actually wanted
-    spurious = 0                      # applications of an identity the mission never asked for
-    done_keys: set[str] = set()       # identities the coordinator believes are satisfied
+    applied: dict[str, int] = {}          # identity -> executions at the far side
+    intended: dict[tuple[str, int], str] = {}   # (node, slot) -> the identity the mission wanted
+    done: set[str] = set()                # logical intents the coordinator is finished with
     crashes = 0
-    # The window of commands the mission still cares about. A coordinator that loses its state
-    # cannot tell which of these already landed, so it re-asserts them; that re-assertion is
-    # what a restart actually costs.
+    # What this incarnation remembers of the ad-hoc choices it made. For the journal arm it is
+    # backed by durable storage and survives the restart; for the others it dies with the process,
+    # which is the whole point of the experiment.
+    live_draws: dict[tuple[str, int], int] = {}
+    durable_draws: dict[tuple[str, int], int] = {}
+    # The missions's outstanding window. A coordinator that loses its state cannot tell which of
+    # these already landed, so it re-asserts them; that re-assertion is what a restart costs.
     recent: list[tuple[int, dict]] = []
     REASSERT_WINDOW = 4
 
     for t in range(hours):
-        doy = t // 24
-        for n in nodes:
-            if n["energy"] is not None:
-                n["energy"].step(doy)
-                n["alive"] = n["energy"].alive
-            if not n["permanent"]:
-                if n["good"]:
-                    if rng.random() < 0.071211:
-                        n["good"] = False
-                elif rng.random() < 0.156721:
-                    n["good"] = True
+        trace.apply(nodes, t)
+        epoch_seq = 0
+
+        def next_epoch():
+            """A logical clock, not a process counter. Monotone across restarts because it is
+            derived from the hour, which is why fencing cannot reject a legitimate re-assert by
+            accident and hide the failure this experiment exists to measure."""
+            nonlocal epoch_seq
+            epoch_seq += 1
+            return t * 100 + epoch_seq
 
         # ------------------------------------------------ the coordinator dies and restarts
         if crash_period and t > 0 and t % crash_period == 0:
             crashes += 1
             inc += 1
-            to_reassert: list = []
             if arm == "journal":
                 reg = recover(journal)
-                done_keys = {o.logical_intent for o in reg.ops.values()
-                             if o.outcome is Outcome.APPLIED}
+                done = {o.logical_intent for o in reg.ops.values()
+                        if o.outcome is Outcome.APPLIED}
+                window = {(nd["nid"], r) for (r, nd) in recent}
                 for op in list(reg.ops.values()):
                     if not op.unresolved:
                         continue
+                    # Retention applies here too: an operation outside the mission's outstanding
+                    # window is abandoned rather than reconciled forever. Without this the journal
+                    # arm pays a per-restart reconciliation for every command ever sent to a node
+                    # that is permanently screened, which is a cost that grows with the run length
+                    # and belongs to no real deployment.
+                    if (op.entity_id, _slot_of(op.logical_intent)) not in window:
+                        continue
                     node = next(x for x in nodes if x["nid"] == op.entity_id)
-                    arrived, replied = link.exchange(node, "reconcile_read")
+                    arrived, replied = link.exchange(node, t, "reconcile_read", op.epoch)
                     if not (arrived and replied):
                         continue          # the receipt may exist and still be unreachable
                     if sinks[op.entity_id].read_receipt(op.operation_id) is Outcome.APPLIED:
-                        done_keys.add(op.logical_intent)
-                to_reassert = [it for it in recent
-                               if it[0] not in {k for k in done_keys}]
+                        # Settle it back into the recovered registry. Without this the operation
+                        # stays unresolved and is reconciled again at every later restart, which
+                        # inflates the cost of the journal arm without bound.
+                        reg.settle(op, Outcome.APPLIED, t, "reconciled")
+                        done.add(op.logical_intent)
             else:
                 # no storage. What survives is whatever the mission can recompute.
                 reg = OperationRegistry(None, incarnation=f"i{inc}-")
-                done_keys = set()
-                to_reassert = list(recent)
-            # re-assert the outstanding window. The identity used here is what decides whether
-            # the far side recognises the repeat.
-            for r_, nd in to_reassert:
-                if not nd["alive"]:
-                    continue
-                ident, payload, draw = _identity_for(arm, kind, nd, r_, journal_draws, rng, inc)
-                attempted.add(ident)
+                done = set()
+                live_draws = {}          # the choices this process made are gone
+            # Re-assert the outstanding window, keyed on the identity the mission wanted. Comparing
+            # the slot index against a set of identity strings would match nothing and silently
+            # re-assert the entire window on every arm.
+            to_reassert = [(r, nd) for (r, nd) in recent
+                           if intended.get((nd["nid"], r)) not in done]
+            for r, nd in to_reassert:
+                ident, payload = _identity_for(arm, kind, nd, r,
+                                               durable_draws if arm == "journal" else live_draws,
+                                               seed, inc)
                 op = reg.register(nd["nid"], payload["op"], payload, ident, t, True)
                 sent_id = op.operation_id if arm == "fresh_id" else ident
                 reg.dispatched(op, t)
-                arrived, replied = link.exchange(nd, "data_write")
+                arrived, replied = link.exchange(nd, t, "data_write", r)
                 if not arrived:
                     continue
-                _o, did = sinks[nd["nid"]].apply(sent_id, t + 1, payload, t)
+                ep = next_epoch()
+                _o, did = sinks[nd["nid"]].apply(sent_id, ep, payload, t, true_epoch=ep)
                 if did:
                     applied[ident] = applied.get(ident, 0) + 1
                 if replied:
                     reg.settle(op, Outcome.APPLIED, t, "reasserted")
-                    done_keys.add(ident)
+                    done.add(ident)
 
         if t % cmd_period != 0:
             continue
         r = t // cmd_period
         for n in nodes:
-            if not n["alive"]:
-                continue
-
-            ident, payload, _d = _identity_for(arm, kind, n, r, journal_draws, rng, inc)
-            attempted.add(ident)
-            intended.setdefault(f"{n['nid']}:{r}", ident)
+            # The mission issues its command whether or not the node is reachable. There is no
+            # out-of-band health signal here: liveness is discovered by trying, and an oracle that
+            # skips dead nodes would understate both the pending work and the restart burden.
+            ident, payload = _identity_for(arm, kind, n, r,
+                                           durable_draws if arm == "journal" else live_draws,
+                                           seed, inc)
+            intended.setdefault((n["nid"], r), ident)
             recent.append((r, n))
             if len(recent) > REASSERT_WINDOW * max(len(nodes), 1):
                 del recent[:len(nodes)]
 
-            if ident in done_keys:
+            if ident in done:
                 continue
 
             op = reg.register(n["nid"], payload["op"], payload, ident, t, True)
-            # the identity sent to the far side IS the logical identity for the arms that can
-            # reconstruct it; only fresh_id is forced to invent a new one
             sent_id = (op.operation_id if arm == "fresh_id" else ident)
             reg.dispatched(op, t)
-            arrived, replied = link.exchange(n, "data_write")
+            arrived, replied = link.exchange(n, t, "data_write", r)
             if not arrived:
                 reg.observe(op, Observation.UNKNOWN)
                 continue
-            # The epoch must be monotone ACROSS restarts, as a clock-derived or durably
-            # persisted counter is. A per-process counter that restarts at 1 would let the far
-            # side's fencing reject every re-assert by accident, which would hide the very
-            # failure this experiment exists to measure.
-            _outcome, did = sinks[n["nid"]].apply(sent_id, t + 1, payload, t)
+            ep = next_epoch()
+            _outcome, did = sinks[n["nid"]].apply(sent_id, ep, payload, t, true_epoch=ep)
             if did:
                 applied[ident] = applied.get(ident, 0) + 1
             if replied:
                 reg.settle(op, Outcome.APPLIED, t, "replied")
-                done_keys.add(ident)
+                done.add(ident)
 
-    # score the identities the MISSION asked for; an unrequested re-issue is counted separately
-    # The mission delivers an operation only if the identity it chose is the one that lands.
-    # A re-assert under a fresh draw is a different, unrequested action, so its applications are
-    # counted as spurious side effects rather than as deliveries (or as duplicates) of the intent.
+    # ---------------------------------------------------------------- scoring
+    # The mission delivers an operation only if the identity IT chose is the one that lands. A
+    # re-assert under a fresh draw is a different, unrequested action, so its applications are
+    # counted as spurious side effects rather than as deliveries or duplicates of the intent.
     keys = set(intended.values())
     spurious = sum(c for k, c in applied.items() if k not in keys)
     once = sum(1 for k in keys if applied.get(k, 0) == 1)
@@ -205,22 +222,36 @@ def run_arm(arm: str, kind: str, nodes, hours: int, cmd_period: int, crash_perio
             "journal_entries": len(journal) if journal is not None else 0}
 
 
-def _identity_for(arm, kind, n, r, draws, rng, inc):
-    """The identity this coordinator would use for slot r, and the payload that goes with it."""
+def _slot_of(logical_intent: str):
+    """The slot a logical intent belongs to. The intent encodes it: `<nid>:<kind>:<slot>[:draw]`."""
+    parts = logical_intent.split(":")
+    try:
+        return int(parts[2])
+    except (IndexError, ValueError):
+        return None
+
+
+def _identity_for(arm, kind, n, r, memory, seed, inc):
+    """The identity this coordinator would use for slot r, and the payload that goes with it.
+
+    `memory` is what the current incarnation can still recall of its ad-hoc choices. The journal
+    arm is handed storage that outlives the process; the others are handed a dict that is emptied
+    at every restart.
+    """
     if kind == "scheduled":
         # fully determined by the mission, so any incarnation recomputes the same one
-        return f"{n['nid']}:measure:{r}", {"op": "trigger_measurement", "slot": r}, None
-    # an ad-hoc decision: which alarm to acknowledge was chosen when the coordinator acted.
-    # Only durable storage can reproduce that choice; without it the coordinator makes a new
-    # one, and a new choice is genuinely a new operation.
-    if arm == "journal" and r in draws:
-        draw = draws[r]
+        return f"{n['nid']}:measure:{r}", {"op": "trigger_measurement", "slot": r}
+    key = (n["nid"], r)
+    if key in memory:
+        draw = memory[key]
     else:
-        draw = int(rng.integers(1 << 30))
-        if arm == "journal":
-            draws[r] = draw
+        # An ad-hoc decision: which alarm to acknowledge was chosen when the coordinator acted.
+        # `inc` enters the draw so that a coordinator which has forgotten still makes a NEW choice,
+        # rather than recomputing the old one by accident and looking better than it is.
+        draw = int(_u(seed, "adhoc_draw", n["nid"], r, inc) * (1 << 30))
+        memory[key] = draw
     return (f"{n['nid']}:adhoc:{r}:{draw}",
-            {"op": "ack_alarm", "slot": r, "alarm": f"a{draw}"}, draw)
+            {"op": "ack_alarm", "slot": r, "alarm": f"a{draw}"})
 
 
 def main() -> None:
@@ -244,6 +275,14 @@ def main() -> None:
     print("far side 支持 operation 回执与 epoch fencing，即 C1 + C2 都在")
     print()
 
+    # One node set and one environment trace per seed, built before any arm runs, so that every
+    # arm meets the same weather and no arm can shift it by sending a different number of messages.
+    env = []
+    for s in range(args.seeds):
+        rng = np.random.default_rng(1000 + s)
+        nodes = make_nodes(args.reach, args.blocked, rng, use_energy)
+        env.append((nodes, EnvironmentTrace(nodes, hours, 2000 + s)))
+
     rows = []
     for kind in KINDS:
         print(f"===== 命令类型: {kind} =====")
@@ -253,12 +292,9 @@ def main() -> None:
         for arm in ARMS:
             acc = []
             for s in range(args.seeds):
-                rng = np.random.default_rng(1000 + s)
-                nodes = make_nodes(args.reach, args.blocked, rng, use_energy)
-                global journal_draws
-                journal_draws = {}
+                nodes, trace = env[s]
                 acc.append(run_arm(arm, kind, nodes, hours, args.cmd_period,
-                                   args.crash_period, 2000 + s, use_energy))
+                                   args.crash_period, 2000 + s, use_energy, trace=trace))
             agg = {k: float(np.mean([a[k] for a in acc])) for k in acc[0]
                    if isinstance(acc[0][k], (int, float))}
             agg["arm"] = arm; agg["kind"] = kind
@@ -275,9 +311,6 @@ def main() -> None:
     with open(path, "w") as f:
         json.dump({"config": vars(args), "results": rows}, f, indent=2, ensure_ascii=False)
     print(f"wrote {path}")
-
-
-journal_draws: dict[int, int] = {}
 
 
 if __name__ == "__main__":
