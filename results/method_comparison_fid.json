@@ -1,0 +1,65 @@
+{
+  "config": {
+    "days": 60,
+    "cmd_period": 6,
+    "reach": 12,
+    "blocked": 4,
+    "seeds": 2,
+    "no_energy": false,
+    "heated": null,
+    "relay": false,
+    "arms": "one_shot,verified_tool_calls,retry_uncertainty,ours",
+    "relay_availability": 1.0,
+    "tag": "fid"
+  },
+  "results": [
+    {
+      "logical_writes": 3840.0,
+      "exactly_once": 1163.0,
+      "zero_times": 2677.0,
+      "more_than_once": 0.0,
+      "duplicate_applications": 0.0,
+      "attempts": 3840.0,
+      "exactly_once_rate": 0.3028645833333333,
+      "zero_rate": 0.6971354166666667,
+      "dup_rate": 0.0,
+      "arm": "one_shot"
+    },
+    {
+      "logical_writes": 3840.0,
+      "exactly_once": 1303.5,
+      "zero_times": 2121.5,
+      "more_than_once": 415.0,
+      "duplicate_applications": 499.5,
+      "attempts": 9585.5,
+      "exactly_once_rate": 0.339453125,
+      "zero_rate": 0.5524739583333333,
+      "dup_rate": 0.10807291666666666,
+      "arm": "retry_uncertainty"
+    },
+    {
+      "logical_writes": 3840.0,
+      "exactly_once": 1422.5,
+      "zero_times": 2417.5,
+      "more_than_once": 0.0,
+      "duplicate_applications": 0.0,
+      "attempts": 6021.0,
+      "exactly_once_rate": 0.37044270833333337,
+      "zero_rate": 0.6295572916666667,
+      "dup_rate": 0.0,
+      "arm": "verified_tool_calls"
+    },
+    {
+      "logical_writes": 3840.0,
+      "exactly_once": 1723.0,
+      "zero_times": 2117.0,
+      "more_than_once": 0.0,
+      "duplicate_applications": 0.0,
+      "attempts": 8802.5,
+      "exactly_once_rate": 0.4486979166666667,
+      "zero_rate": 0.5513020833333333,
+      "dup_rate": 0.0,
+      "arm": "ours"
+    }
+  ]
+}

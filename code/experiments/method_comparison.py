@@ -83,6 +83,7 @@ ARMS = ("one_shot", "retry_uncertainty", "verified_tool_calls", "ours", "ours_pl
 # whether the relay's own retries collapse at the far side or land as second effects.
 RELAY_ARMS = ("relay_retry_uncertainty", "relay_ours")
 RELAY_DELIVERY = 0.85
+VERIFIER_UNKNOWN_P = 0.15      # the published verifier's UNKNOWN branch: state inconclusive
 # The relay is NOT a 38 B periodic-reporting end node. Its panel, battery, duty cycle and heating
 # are a different equipment class, so running it through the node energy model would invent
 # numbers we do not have. Relay availability is therefore an architectural parameter, and the
@@ -98,7 +99,12 @@ ARM_SPEC = {
     #                        far side: (receipts, fencing)   stable id   scoped reconcile
     "one_shot":              ((False, False),                False,      False),
     "retry_uncertainty":     ((False, False),                False,      False),
-    "verified_tool_calls":   ((False, False),                False,      False),
+    # The published wrapper passes a deterministic idempotency key with EVERY attempt of the
+    # same logical operation (k = hash(agent_id, action_type, payload, timestamp_bucket)), so it
+    # does use a stable identity. Running it with fresh identities would be a weaker method than
+    # the one it names. The far side here does not honour keys, which the paper anticipates:
+    # "when the underlying API does not support idempotency keys, the verifier still protects".
+    "verified_tool_calls":   ((False, False),                True,       False),
     "ours":                  ((True,  True),                 True,       True),
     "ours_plain_sink":       ((False, False),                True,       True),
     "ablate_identity":       ((True,  True),                 False,      True),
@@ -271,12 +277,18 @@ def run_arm(arm: str, nodes: list, hours: int, cmd_period: int, seed: int,
                 # on an uncertain result, retry under a FRESH request up to a budget
                 want = item["attempts"] < RETRY_BUDGET
             elif arm == "verified_tool_calls":
-                # on no-ACK, verify the postcondition, then retry if it says "not applied"
+                # Verify-before-retry, transcribed from the published wrapper. Its verifier is
+                # a POSTCONDITION STATE predicate returning True / False / Unknown, and the
+                # three-valued result matters: Unknown means the state is inconclusive (the
+                # paper's "delayed visibility"), and the algorithm then waits rather than
+                # re-executing. Collapsing Unknown into False would retry more than the
+                # published method does.
                 if item["attempts"] == 0:
                     want = True
                 elif item["attempts"] >= RETRY_BUDGET:
                     want = False
-                else:
+                elif rng.random() < VERIFIER_UNKNOWN_P:
+                    want = "wait"          # inconclusive: back off, stay pending, do not resend
                     # The published wrapper verifies the POSTCONDITION STATE, not the operation:
                     # "is the effect in place?" On a commodity entity that is the only question
                     # it can ask, because there are no per-operation receipts to ask about. When
@@ -289,6 +301,8 @@ def run_arm(arm: str, nodes: list, hours: int, cmd_period: int, seed: int,
                     want = not state_ok
             else:                                            # ours and the ablations
                 want = item["attempts"] < RETRY_BUDGET
+            if want == "wait":
+                continue                    # still pending; no attempt and no settlement this hour
             if not want:
                 item["done"] = True
                 settled_intents += 1
