@@ -1,0 +1,122 @@
+{
+  "config": {
+    "days": 30,
+    "cmd_period": 6,
+    "reach": 12,
+    "blocked": 4,
+    "seeds": 2,
+    "no_energy": false,
+    "relay": false,
+    "tag": "chk"
+  },
+  "results": [
+    {
+      "logical_writes": 1920.0,
+      "exactly_once": 680.5,
+      "zero_times": 1239.5,
+      "more_than_once": 0.0,
+      "duplicate_applications": 0.0,
+      "attempts": 1920.0,
+      "exactly_once_rate": 0.35442708333333334,
+      "zero_rate": 0.6455729166666666,
+      "dup_rate": 0.0,
+      "arm": "b1_wirelessagent"
+    },
+    {
+      "logical_writes": 1920.0,
+      "exactly_once": 770.0,
+      "zero_times": 931.5,
+      "more_than_once": 218.5,
+      "duplicate_applications": 265.0,
+      "attempts": 4627.5,
+      "exactly_once_rate": 0.40104166666666663,
+      "zero_rate": 0.48515625,
+      "dup_rate": 0.11380208333333333,
+      "arm": "b2_wirelessops"
+    },
+    {
+      "logical_writes": 1920.0,
+      "exactly_once": 673.5,
+      "zero_times": 1246.5,
+      "more_than_once": 0.0,
+      "duplicate_applications": 0.0,
+      "attempts": 2886.5,
+      "exactly_once_rate": 0.35078125,
+      "zero_rate": 0.64921875,
+      "dup_rate": 0.0,
+      "arm": "b3_verified"
+    },
+    {
+      "logical_writes": 1920.0,
+      "exactly_once": 989.5,
+      "zero_times": 930.5,
+      "more_than_once": 0.0,
+      "duplicate_applications": 0.0,
+      "attempts": 4187.5,
+      "exactly_once_rate": 0.5153645833333333,
+      "zero_rate": 0.48463541666666665,
+      "dup_rate": 0.0,
+      "arm": "ours"
+    },
+    {
+      "logical_writes": 1920.0,
+      "exactly_once": 770.0,
+      "zero_times": 931.5,
+      "more_than_once": 218.5,
+      "duplicate_applications": 265.0,
+      "attempts": 4627.5,
+      "exactly_once_rate": 0.40104166666666663,
+      "zero_rate": 0.48515625,
+      "dup_rate": 0.11380208333333333,
+      "arm": "ours_plain_sink"
+    },
+    {
+      "logical_writes": 1920.0,
+      "exactly_once": 960.5,
+      "zero_times": 959.5,
+      "more_than_once": 0.0,
+      "duplicate_applications": 0.0,
+      "attempts": 4792.0,
+      "exactly_once_rate": 0.5002604166666667,
+      "zero_rate": 0.49973958333333335,
+      "dup_rate": 0.0,
+      "arm": "ablate_identity"
+    },
+    {
+      "logical_writes": 1920.0,
+      "exactly_once": 989.5,
+      "zero_times": 930.5,
+      "more_than_once": 0.0,
+      "duplicate_applications": 0.0,
+      "attempts": 4187.5,
+      "exactly_once_rate": 0.5153645833333333,
+      "zero_rate": 0.48463541666666665,
+      "dup_rate": 0.0,
+      "arm": "ablate_fencing"
+    },
+    {
+      "logical_writes": 1920.0,
+      "exactly_once": 989.5,
+      "zero_times": 930.5,
+      "more_than_once": 0.0,
+      "duplicate_applications": 0.0,
+      "attempts": 4187.5,
+      "exactly_once_rate": 0.5153645833333333,
+      "zero_rate": 0.48463541666666665,
+      "dup_rate": 0.0,
+      "arm": "ablate_receipts"
+    },
+    {
+      "logical_writes": 1920.0,
+      "exactly_once": 989.5,
+      "zero_times": 930.5,
+      "more_than_once": 0.0,
+      "duplicate_applications": 0.0,
+      "attempts": 4187.5,
+      "exactly_once_rate": 0.5153645833333333,
+      "zero_rate": 0.48463541666666665,
+      "dup_rate": 0.0,
+      "arm": "ablate_scope"
+    }
+  ]
+}

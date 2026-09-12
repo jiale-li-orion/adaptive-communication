@@ -1,0 +1,38 @@
+{
+  "config": {
+    "days": 30,
+    "cmd_period": 6,
+    "reach": 12,
+    "blocked": 4,
+    "seeds": 2,
+    "no_energy": false,
+    "relay": true,
+    "tag": "chkrelay"
+  },
+  "results": [
+    {
+      "logical_writes": 1920.0,
+      "exactly_once": 784.0,
+      "zero_times": 824.0,
+      "more_than_once": 312.0,
+      "duplicate_applications": 381.0,
+      "attempts": 4614.0,
+      "exactly_once_rate": 0.4083333333333333,
+      "zero_rate": 0.4291666666666667,
+      "dup_rate": 0.1625,
+      "arm": "relay_b2_wirelessops"
+    },
+    {
+      "logical_writes": 1920.0,
+      "exactly_once": 1112.0,
+      "zero_times": 808.0,
+      "more_than_once": 0.0,
+      "duplicate_applications": 0.0,
+      "attempts": 4161.5,
+      "exactly_once_rate": 0.5791666666666666,
+      "zero_rate": 0.42083333333333334,
+      "dup_rate": 0.0,
+      "arm": "relay_ours"
+    }
+  ]
+}

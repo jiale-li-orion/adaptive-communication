@@ -1,0 +1,38 @@
+{
+  "config": {
+    "days": 180,
+    "cmd_period": 6,
+    "reach": 12,
+    "blocked": 4,
+    "seeds": 5,
+    "no_energy": false,
+    "relay": true,
+    "tag": "relay"
+  },
+  "results": [
+    {
+      "logical_writes": 11520.0,
+      "exactly_once": 3352.4,
+      "zero_times": 6676.4,
+      "more_than_once": 1491.2,
+      "duplicate_applications": 1891.2,
+      "attempts": 29111.0,
+      "exactly_once_rate": 0.2910069444444444,
+      "zero_rate": 0.5795486111111112,
+      "dup_rate": 0.12944444444444442,
+      "arm": "relay_b2_wirelessops"
+    },
+    {
+      "logical_writes": 11520.0,
+      "exactly_once": 4823.8,
+      "zero_times": 6696.2,
+      "more_than_once": 0.0,
+      "duplicate_applications": 0.0,
+      "attempts": 27184.8,
+      "exactly_once_rate": 0.4187326388888889,
+      "zero_rate": 0.5812673611111112,
+      "dup_rate": 0.0,
+      "arm": "relay_ours"
+    }
+  ]
+}

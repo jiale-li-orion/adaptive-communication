@@ -1,0 +1,11 @@
+对照实验：180 天，16 个节点，每 6 h 一条配置命令
+同一决策轨迹跑 2 个 runtime，加 store-and-forward 中继，远端：基线为普通 sink，ours 为 fenced sink
+ack 丢失率 0.35，重试预算 3，能量模型 开
+
+runtime                  逻辑写入      恰好一次      零次      多次      多余应用      尝试
+-------------------------------------------------------------------------
+relay_b2_wirelessops    11520     29.1%   58.0%   12.9%    1891.2   29111
+relay_ours              11520     41.9%   58.1%    0.0%       0.0   27185
+
+
+wrote /home/orion/Communications/应急通信/project1/agentic communication/results/method_comparison_relay.json

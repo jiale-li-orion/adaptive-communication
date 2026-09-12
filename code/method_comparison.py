@@ -62,6 +62,13 @@ TX_DBM, G_TX, G_RX, FEEDER = 14.0, 2.0, 2.0, 1.0
 ARMS = ("b1_wirelessagent", "b2_wirelessops", "b3_verified", "ours", "ours_plain_sink",
         "ablate_identity", "ablate_fencing", "ablate_receipts", "ablate_scope")
 
+# The architecture axis: a store-and-forward relay that can reach a permanently-blocked node.
+# It answers a different question from the runtime axis, so it gets its own 2x2 rather than a
+# row in the main table. Whether the operation's identity propagates to the relay decides
+# whether the relay's own retries collapse at the far side or land as second effects.
+RELAY_ARMS = ("relay_b2_wirelessops", "relay_ours")
+RELAY_DELIVERY = 0.85
+
 # What the far side can do, and what the runtime does with it. The three ablations remove one
 # ingredient of the protocol at a time, because a contribution that cannot be decomposed reads
 # as a monolith.
@@ -160,7 +167,10 @@ def make_nodes(n_reach: int, n_blocked: int, rng, use_energy: bool):
     for k, (r, permanent) in enumerate(picks):
         nd = {"nid": f"{'b' if permanent else 'r'}{k:02d}",
               "sf": 12 if permanent else r["sf"], "loss_db": r["loss_db"],
-              "permanent": permanent, "good": not permanent, "alive": True, "energy": None}
+              "permanent": permanent, "good": not permanent, "alive": True, "energy": None,
+              # whether a relay CAN serve this point is terrain-determined; only 24.4% of
+              # blocked points are servable at all, from the greedy relay siting run
+              "servable": bool(rng.random() < 0.244)}
         if use_energy:
             from energy import NodeEnergy
             nd["energy"] = NodeEnergy(elev_m=elv(dem, r["lat"], r["lon"]), rng=rng,
@@ -177,9 +187,17 @@ def link_attempt(node: dict, rng) -> bool:
 
 
 def run_arm(arm: str, nodes: list, hours: int, cmd_period: int, seed: int,
-            use_energy: bool) -> dict:
+            use_energy: bool, relay: bool = False) -> dict:
     rng = np.random.default_rng(seed)
-    (receipts, fencing), stable_id, scoped = ARM_SPEC[arm]
+    base_arm = arm[6:] if arm.startswith("relay_") else arm
+    (receipts, fencing), stable_id, scoped = ARM_SPEC[base_arm]
+    if arm.startswith("relay_"):
+        # a relay that carries identity forward is the protocol applied across two hops; one
+        # that does not is the architecture alone
+        stable_id = (arm == "relay_ours")
+        receipts, fencing = ((True, True) if arm == "relay_ours" else (False, False))
+    # relay buffers: nid -> list of (op_id, epoch, intent, arrived_at)
+    relay_buf: dict[str, list] = {n["nid"]: [] for n in nodes}
     sinks = {n["nid"]: FarSide(n["nid"], fencing, receipts) for n in nodes}
     reg = OperationRegistry()
 
@@ -264,6 +282,21 @@ def run_arm(arm: str, nodes: list, hours: int, cmd_period: int, seed: int,
             epoch = item["epoch"] if fencing else 0
             reg.dispatched(op, t)
 
+            # ---- the relay hop, when the architecture provides one ----
+            if arm.startswith("relay_") and n["permanent"] and n["servable"]:
+                # the coordinator reaches the relay (a ridge site) even though it cannot reach
+                # the node. The ACK on this hop is what tells it the relay took custody.
+                if rng.random() < ACK_LOSS_P:
+                    reg.observe(op, Observation.UNKNOWN)
+                else:
+                    relay_buf[n["nid"]].append((op.operation_id, item["epoch"],
+                                                item["intent"], t)
+                                               if stable_id else
+                                               (f"{item['intent']}#r{item['attempts']}",
+                                                0, item["intent"], t))
+                    reg.observe(op, Observation.FRESH)
+                continue
+
             if not link_attempt(n, rng):
                 if arm == "ours":
                     reg.observe(op, Observation.UNKNOWN)
@@ -301,6 +334,26 @@ def run_arm(arm: str, nodes: list, hours: int, cmd_period: int, seed: int,
                         item["done"] = True
                         settled_intents += 1
 
+        # ---- the relay's own delivery attempts ----
+        if arm.startswith("relay_"):
+            for n in nodes:
+                if not relay_buf[n["nid"]]:
+                    continue
+                hold = relay_buf[n["nid"]][0]
+                if rng.random() >= RELAY_DELIVERY:
+                    continue
+                rop, repoch, rintent, rt = hold
+                learned, did = sinks[n["nid"]].receive(rop, repoch, t)
+                if did:
+                    applied_count[rintent] = applied_count.get(rintent, 0) + 1
+                if not did and learned in ("superseded", "rejected"):
+                    relay_buf[n["nid"]].pop(0)      # the far side already holds it
+                    continue
+                if rng.random() >= ACK_LOSS_P:
+                    relay_buf[n["nid"]].pop(0)
+                else:
+                    relay_buf[n["nid"]].pop(0)      # delivered, ack lost; custody ends anyway
+
         # a write whose budget ran out without resolution stays unresolved
         if t % 24 == 0:
             for item in pending:
@@ -337,6 +390,8 @@ def main() -> None:
     ap.add_argument("--blocked", type=int, default=4)
     ap.add_argument("--seeds", type=int, default=5)
     ap.add_argument("--no-energy", action="store_true")
+    ap.add_argument("--relay", action="store_true",
+                    help="give permanently-blocked servable nodes a store-and-forward relay")
     ap.add_argument("--tag", default="")
     args = ap.parse_args()
 
@@ -344,7 +399,10 @@ def main() -> None:
     use_energy = not args.no_energy
     n = args.reach + args.blocked
     print(f"对照实验：{args.days} 天，{n} 个节点，每 {args.cmd_period} h 一条配置命令")
-    print(f"同一决策轨迹跑 {len(ARMS)} 个 runtime，远端：基线为普通 sink，ours 为 fenced sink")
+    arms = RELAY_ARMS if args.relay else ARMS
+    print(f"同一决策轨迹跑 {len(arms)} 个 runtime，"
+          f"{'加 store-and-forward 中继' if args.relay else '无中继'}，"
+          f"远端：基线为普通 sink，ours 为 fenced sink")
     print(f"ack 丢失率 {ACK_LOSS_P}，重试预算 {RETRY_BUDGET}，能量模型 {'开' if use_energy else '关'}")
     print()
 
@@ -353,7 +411,8 @@ def main() -> None:
     print(hdr)
     print("-" * len(hdr))
     rows = []
-    for arm in ARMS:
+    arms = RELAY_ARMS if args.relay else ARMS
+    for arm in arms:
         acc = []
         for s in range(args.seeds):
             rng = np.random.default_rng(1000 + s)
@@ -368,6 +427,14 @@ def main() -> None:
               f"{agg['duplicate_applications']:9.1f} {agg['attempts']:7.0f}")
 
     print()
+    if args.relay:
+        tag = f"_{args.tag}" if args.tag else ""
+        path = OUT.replace(".json", f"{tag}.json")
+        with open(path, "w") as f:
+            json.dump({"config": vars(args), "results": rows}, f, indent=2, ensure_ascii=False)
+        print(f"\nwrote {path}")
+        return
+
     base = next(r for r in rows if r["arm"] == "b1_wirelessagent")
     for r in rows:
         if r["arm"] == "b1_wirelessagent":
