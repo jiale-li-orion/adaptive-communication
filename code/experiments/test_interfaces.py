@@ -269,6 +269,33 @@ def test_restart_keeps_knowledge_not_authority() -> None:
           f"lost={lost_v} unresolved={volatile.recovered_unresolved}")
 
 
+def test_receiver_dedup_and_gap() -> None:
+    """接收端按 ID 去重、并能核验缺口。
+
+    契约 §4 对 `upload_records` 的要求是"接收端按 ID 去重并核验缺口"。去重不是可选的：
+    节点在确认丢失时会反复重传同一批记录，实测 24 小时内单个节点就有五千余次重复投递。
+    没有去重时 `received` 列表比实际多十倍——指标走的是 set 与 dict 因而不受影响，但这个
+    列表本身作为"投递记录"是错的，而任何按它计数的新指标都会继承这个错误。
+    """
+    from node_model import NodeRuntime, Sample
+
+    rt = NodeRuntime(node_id="n00", role="deformation")
+    batch = [Sample.make("n00", t, "displacement") for t in (0, 300, 600)]
+    rt.upload_result(batch, heard=True, arrival_s=100)
+    check("首次投递全部入档", len(rt.received) == 3 and rt.duplicate_deliveries == 0,
+          f"received={len(rt.received)}")
+    rt.upload_result(batch, heard=True, arrival_s=200)
+    check("重传同一批不重复入档",
+          len(rt.received) == 3 and rt.duplicate_deliveries == 3,
+          f"received={len(rt.received)} dup={rt.duplicate_deliveries}")
+
+    gap = rt.archive_gap(reported_newest=3600, sample_interval_s=300)
+    check("能核验出缺口区间的两端",
+          gap is not None and gap[0] > 600 and gap[1] <= 3600, f"gap={gap}")
+    check("没有缺口时返回 None",
+          rt.archive_gap(reported_newest=600, sample_interval_s=300) is None)
+
+
 def main() -> int:
     print("四接口与可审计证据回归测试")
     test_applied_is_not_current()
@@ -279,6 +306,7 @@ def main() -> int:
     test_audit_trail_and_evidence_age()
     test_effect_is_real_not_merely_acknowledged()
     test_restart_keeps_knowledge_not_authority()
+    test_receiver_dedup_and_gap()
     print("\n" + "-" * 74)
     if FAIL:
         print(f"  {len(FAIL)} 项失败：")

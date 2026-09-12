@@ -122,6 +122,11 @@ class NodeRuntime:
     # by scanning `received` was O(ticks x records): a per-tick pass over a list that grows for the
     # whole run, which cost more than the simulation it was measuring.
     newest_received_at: int | None = None
+    # Every sample id the centre holds. This is the receiver's dedup set, and it is also what makes
+    # a gap nameable: the gap is the ids between the acknowledged cursor and the node's report that
+    # are not in here.
+    received_ids: set[str] = field(default_factory=set)
+    duplicate_deliveries: int = 0
     taken: list[Sample] = field(default_factory=list)        # ground truth: everything sampled
     received: list[tuple[Sample, int]] = field(default_factory=list)   # sample, arrival second
     profile_history: list[tuple[int, str]] = field(default_factory=list)
@@ -305,6 +310,14 @@ class NodeRuntime:
         if heard:
             self.uploads_heard += 1
             for sample in batch:
+                # The receiver deduplicates by sample id. A record the node retransmits because the
+                # centre's confirmation was lost must not enter the archive a second time: the
+                # archive is what the platform reports from, and a record counted twice inflates it
+                # while telling the operator nothing new. Contract §4 requires this explicitly.
+                if sample.sample_id in self.received_ids:
+                    self.duplicate_deliveries += 1
+                    continue
+                self.received_ids.add(sample.sample_id)
                 self.received.append((sample, arrival_s))
                 if self.newest_received_at is None or sample.taken_at > self.newest_received_at:
                     self.newest_received_at = sample.taken_at
@@ -328,6 +341,25 @@ class NodeRuntime:
 
     def unacknowledged_ids(self) -> list[str]:
         return [s.sample_id for s in self.records]
+
+    def archive_gap(self, reported_newest: int, sample_interval_s: int) -> tuple[int, int] | None:
+        """核验缺口：中心自报最新点与它实际持有的记录之间，缺了哪个区间。
+
+        The centre can only name a gap it can bound. The node's report gives the newest instant it
+        holds; the archive gives what actually arrived. A span wider than one sampling interval with
+        nothing in the archive over it is a gap, and reporting it is what lets an operator see that
+        the platform is missing data rather than merely idle.
+        """
+        if not self.received:
+            return None
+        expected_newest = int(reported_newest)
+        held = {sample.taken_at for sample, _arrival in self.received}
+        missing = [t for t in range(int(self.newest_received_at) + sample_interval_s,
+                                    expected_newest + 1, sample_interval_s)
+                   if t not in held]
+        if not missing:
+            return None
+        return missing[0], missing[-1]
 
     # ------------------------------------------------------------------ reading
     def snapshot(self, t_s: int) -> dict:
