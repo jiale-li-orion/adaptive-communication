@@ -43,6 +43,10 @@ CHECKS = {
         ("experiments/test_task_generator.py", "外生需求生成器"),
         ("experiments/test_scorer.py", "评分器与真值边界"),
         ("experiments/test_interfaces.py", "四接口与可审计证据"),
+        ("experiments/test_llm_planner.py", "LLM 规划器、决策校验与调用账目"),
+        ("experiments/test_supply.py", "供电模型与可达性耦合"),
+        ("experiments/test_faults.py", "六类诊断故障注入"),
+        ("experiments/test_policies.py", "强基线：版本化配置与 VTC 风格恢复"),
         ("experiments/audit_fairness.py", "业务层公平性审计"),
     ],
 }
