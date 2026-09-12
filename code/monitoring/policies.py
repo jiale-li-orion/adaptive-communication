@@ -993,8 +993,16 @@ class RuntimeNoContractPolicy(RuntimePolicy):
     name = "ours_no_contract"
 
     def plan(self, view) -> list[tuple[str, dict]]:
+        """Send every command without the contract fields, whatever interface it belongs to.
+
+        Stripping only `profile` commands was right when this runtime issued nothing else. Once it
+        also asks for measurements and orders backfills, a rule that assumed a `profile` key fails
+        on the first of those -- and it fails loudly, which is the only reason it was not a silent
+        change in what the ablation measures.
+        """
         out = super().plan(view)
-        return [(node_id, {"op": payload["op"], "profile": payload["profile"]})
+        return [(node_id, {k: v for k, v in payload.items()
+                           if k not in ("version", "logical")})
                 for node_id, payload in out]
 
 # Every arm the business layer compares, in the order the result tables report them. The runtime
