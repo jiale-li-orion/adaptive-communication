@@ -8,6 +8,8 @@
 
 场景取灾前山区滑坡与泥石流监测，供电受限且链路频繁中断。底层资源是通感算一体化的多实体集合，包含 LoRa、NB-IoT、CPE、UAV、HAPS、卫星与微波。
 
+**关键结构假设：agent 的观测通道与它的控制通道是同一条。** 它没有带外信道，没有独立的健康监测接口，没有预示实体将要掉线的先知信息。它判断某实体是否可用，只能向该实体发一次调用并观察结果，而这次调用本身穿过它试图评估的那条链路。因此"实体已静默"与"我的查询在回程丢了"在观测上不可区分，只能靠后续调用的时序模式逐步排除。既有工作多在"状态可观测"或"故障发生可被检出"的前提下讨论恢复策略，本文的自变量正是这道观测投影带来的不确定性。
+
 ## 一、定位
 
 |  | 现有应急通信 | 本文 |
@@ -23,6 +25,10 @@
 **灾害中的实体退服记录。** 第二周汇报第 30 至 34 页整理了四起事件，其中的实体损失为：2026 年西藏吉隆口岸泥石流造成 5 个基站退服，同期投入卫星电话 36 部、便携卫星设备 10 套、发电油机 18 台；2024 年四川康定姑咱泥石流造成 22 km 光缆受损与 7 个基站退服，投入 1 架大型无人机基站、6 辆应急通信车、9 台高通量卫星便携基站；2024 年日本奥能登土砂灾害一度中断 88 个基站，靠移动基站车与可搬型基站恢复；2023 年新西兰 Gabrielle 滑坡破坏主干光纤，峰值约 20% 基站离线，Gisborne 一度有 90% 基站在两天内离线，临时回传改走卫星与微波，容量低于原光纤。
 
 **物理约束，来自本项目实测。** 西藏波密与易贡的 SRTM 地形海拔跨度为 2025 至 6690 m。单网关在 121×121 网格上的可达点仅 1689 个，占 11.5%；连不通的点 12952 个，占 88.5%，这些点在 SF12 下仍不闭合。决定连通性的是遮挡而非距离：8.37 km 处有 1169 m 遮挡的点位损耗 217.0 dB，12.61 km 处只有 1102 m 遮挡的点位损耗 201.2 dB，近 4.2 km 反而差 15.8 dB。地形遮挡造成的超额损耗在 71 至 107 dB 量级，而 SF 从 7 提到 12 只增加 14 dB 灵敏度，因此链路自适应无法救回被地形挡住的节点。ChirpBox 真实轨迹（20,913 快照、420 条链路）拟合出的丢失率为 7.44%，平均中断突发 3.30 h，而同丢失率下 i.i.d. 模型只预测 1.08 h，两者相差 3.1 倍。供电侧，LiFePO4 在 −20 °C 下容量约为标称值的 50%，且低于 +5 °C 无法充电，高海拔站点因此在冬季长时间静默。
+
+**同类论文的结构性空白。** 对 9 篇近期 JSAC / TCOM / TWC / TMC / TVT 同域论文的通读给出四个计数。用 DEM、地形数据库或实测信道 trace 论证仿真真实性的为 **0 篇**，地形最多作为几何抽象出现（一个环形部署廊道），多数完全缺席；3GPP TR 38.901 参数表的使用为 0 篇。设立失效与中断模型小节的为 **0 篇**，中断在多数工作中是参数扫描的一个维度而非被建模的过程。运行第三方公开实现作对照的为 **0 篇**，其中 6 篇以重实现或自建方式构造对照。用外部 benchmark 或公开数据集作评测基底的为 **2/9**，且无一采用"公共 benchmark 加统一协议"的形式。这四条同时说明本文的差异化位置与对照方案的构造惯例。
+
+**任务级可靠性没有公认指标名。** 同域论文中的可靠性一律写作链路级的 coverage / outage probability，或服务级的 availability / feasibility rate；"reporting rate"、"mission completion" 这类任务级说法在通读的 9 篇中一次未出现。本文使用的到报率与零执行周期属任务级指标，须在首次出现处给出定义式并论证其必要性。
 
 **一处数据空白。** 中国地灾监测网络的实测可靠性数据在公开文献中不存在，到报率、在线率、掉线次数、断链时长均无数值，可查到的只有合同条款（广东验收 ≥70%，昆明 ≥95%，河南 ≥95%）。本研究给出的是估计值，不是实测值。
 
@@ -87,6 +93,19 @@
 
 第二层是 agent 侧对照：ReAct（Yao et al., ICLR 2023, arXiv `2210.03629`）；blind retry 与指数退避（工程惯例，见 AWS Builders' Library 与 Google SRE Book）；verified wrapper（Mansoor, Phadke, Rana, arXiv `2608.02645`）；默认工具超时语义（MCP 规范 2026-07-28 的 Cancellation 章）。
 
+第三层是场景对照，即已发表的 LoRa 滑坡与落石监测系统。它们同时是本文参数的实测来源和自然对照集：读者会问"你的设置与真实部署差多远"，这一层就是回答。
+
+| 系统 | 规模与组网 | 采样与载荷 | 发射功率 | 能耗实测 | 地形处理 |
+|---|---|---|---|---|---|
+| 贵州水城滑坡监测（Wang et al., *Frontiers in Earth Science* 10:899509, 2022） | 5 套设备，星形单网关，回传走 4G，连续运行 9 个月 | 定时 1 h；触发时 5 min×3 包；阈值雨量 0.2 mm、位移 20 mm | 30 dBm（1 W） | 12 V/10 Ah LiFePO4 加太阳能，板功率未报告 | 未建模；作者称现场有效范围 <3 km 故不设中继 |
+| Pantelleria（Ragnoli et al., *JLPEA* 12(3):47, 2022） | 12 节点、2 网关，LoRaWAN Class A 加 ADR，回传走 LTE | 60 min，载荷 38 B，单次活跃窗口约 15 s | 13 dBm | 活跃 35.7 mA、待机 16 µA、周期 0.148 mAh、日均 3.56 mAh、无光照约 2.8 年（INA229 实测） | 未建模；观测到部分节点丢包 |
+| Hochvogel 高山岩土监测（Leinauer & Krautblatter, EGU25-11121, 2025） | 10 至 12 个传感器，单一网关，自 2019-10 连续运行超过 5 年 | 10 min | 未报告 | 未报告 | 多数传感器处于射频量程边缘，水平 2800 m、垂直 1500 m，且大多无直接视距 |
+| FresSim 验证场景（Torres-Sanz et al., *Internet of Things* 38:102012, 2026） | 6 端节点加 1 网关，另有 5 网关覆盖图场景 | 未报告 | 14 dBm | 睡眠电流 3.5 µA | **显式建模**：DEM 剖面逐点判第一菲涅尔区净空，60% 判据；12 场景与实测连通性 100% 一致，不含地形的基线仅 50% |
+
+上表的用法有三处。参数直接采用，见系统模型；FresSim 的判据作为本文地形模块的方法依据与验证靶子；贵州水城与 Pantelleria 的实测间隔（1 h 与 60 min）与 Hochvogel 的 10 min 共同界定本文采样间隔的取值范围。
+
+对照构造的惯例需要声明：通读的 9 篇同类论文中，运行第三方公开实现作对照的为 0 篇，6 篇以重实现或自建方式构造对照。本文沿用该惯例，并公开代码。
+
 ### Benchmark
 
 六个现有 agent-network benchmark 全部不适用于本文场景，判断基于对六篇论文 arXiv HTML 全文的阅读与仓库检查，逐条记录见 `docs/s5-benchmark/s6-9-benchmark-comparison.md`。
@@ -105,6 +124,24 @@
 三个维度上的核验结果如下。agent 自身的操作通道是否退化：六篇全文检索 agent 通道相关构造（agent 自身流量与连接、带外控制面、边缘部署 agent、agent 之间的连通性）零命中，网络在这六个基准中始终是控制的对象，不承载 agent 自身的遥测。故障是否由真实地形与供电导出：六者的故障全部为注入、合成或不存在，词汇层面最接近真实的是 WirelessOptBench（其分类引用 TeleLogs、AIOps2025、RCA100），但该论文承认 oracle 是 benchmark 自定义的；NetOpsBench 用的是手设常数。任务是否为长时监测 mission：NIKA 与 NetOpsBench 最接近，但都是单事件式，一次事件完成检测、定位与根因后即结束；NIKA 报告的 7 至 15 小时是 150 个事件的累计墙钟时间，NetOpsBench 的 efficiency 统计的是 tool call 数与 token 数。二者都不惩罚中途漏掉事件、不惩罚信道随时间衰减、不要求跨小时维持态势。
 
 能量与功率建模在六个基准中全部缺失，地形与传播建模只出现在 WirelessBench，且仅作为 agent 可调用的 CQI 工具，不是其流量所穿越的信道。这属于结构差异而非参数差异：六个基准都把网络固定为控制对象，因此自建 benchmark 不必要也无收益。
+
+### 仿真平台
+
+上表六个都是 LLM-agent 的任务套件，属另一物种。通信领域的惯例不是任务套件而是**仿真器加标准信道模型加可复现场景**：通读的 9 篇同类论文中用外部 benchmark 作评测基底的仅 2 篇，且无一采用"公共 benchmark 加统一协议"的形式，其余全部为作者自建仿真。因此本文不寻找 benchmark，而是选定仿真器栈并公开场景定义。
+
+候选与其状态如下，均为本次逐一核验。
+
+| 平台 | 覆盖 | 状态 | 与本文的关系 |
+|---|---|---|---|
+| ns-3.48 + FLoRa | LoRaWAN 的 MAC/PHY | 活跃；FLoRa v0.3.7 要求 ns-3.48 | 标准 LoRaWAN 平台，自带 `LoraRadioEnergyModel`、干扰模型与 ADR 组件。本文的协议与能耗层 |
+| Sionna RT | 可微射线追踪 | 活跃 | 课题组既有平台（Sionna 0.19.1 的 RayTracing，OSM 加 Blender 场景，基站-RIS-UAV，3.5 GHz）。RT 接受 Mitsuba 场景，因此可把 OSM 楼房换成 DEM 地形网格，在同一工具链上落到本文场景 |
+| Longley-Rice ITM | 不规则地形传播 | 稳定 | 本文地形维的物理模型，非射线追踪。与 RT 互为交叉验证 |
+| The ONE | DTN 与机会网络 | 半死（master 最后提交 2023-04）；Helsinki 地图另有许可限制 | 仅作方法学参考。其基线多数依赖节点移动相遇，在固定节点加间歇链路中退化 |
+| SNS3 | 卫星 DVB-S2/RCS2 载荷 | 活跃 | 卫星回传若需载荷级细节时使用。ns-3 已内置 LEO 移动模型与 3GPP TR 38.811 NTN 信道，起步不必依赖它 |
+
+平台选择同时承担一项验证义务。FresSim 的实测场景给出可复核的靶子：6 个端节点距网关 190、250、500、620、2200、3200 m，网关海拔 1295 m、节点 1285–1385 m，需复现三个定性结论——2200 与 3200 m 的山区链路不通、平坦地形通、超长距 28 km 场景可通。本文的地形模块以复现这三条为验收标准。
+
+传播模型按**三档递增真实度**组织并逐档量化增益：自由空间 → 加 DEM 视线遮挡 → 加刃峰绕射。该叙事结构取自同类文献的既有做法，本文沿用并把"只按距离"作为最低档对照，用于量化地形建模本身带来的差异。
 
 ### 采用方案
 
@@ -178,22 +215,30 @@
 ```
 agentic communication/
 ├── README.md
-├── code/          16 个可运行脚本
-├── docs/          INDEX.md 与 s1–s5 支撑材料
+├── code/          18 个可运行脚本
+├── docs/          24 份支撑材料，s1-input 至 s6-model 六个目录
 ├── results/       仿真输出
 ├── data/          666 MB，未纳入版本控制
-├── libs/          71 MB，未纳入版本控制
+├── libs/          71 MB 加 simlibs，未纳入版本控制
 └── other_repo/    WirelessOpsBench 公开 artifact，未纳入版本控制
 ```
 
 ```bash
-export PYTHONPATH="$PWD/libs/pylibs"
+export PYTHONPATH="$PWD/libs/pylibs:$PWD/libs/simlibs"
+
+# 物理与几何
 python3 code/mountain_lora_link.py        # 单点链路预算
-python3 code/coverage_map.py              # 区域覆盖图，约 30 s
-python3 code/test_failure_model.py        # 11 类故障验证
+python3 code/coverage_map.py              # 区域覆盖图，约 2 min
+python3 code/los_vs_itm.py                # 几何视线判定与 ITM 交叉验证
+python3 code/dem_to_mitsuba.py --render   # SRTM 转 Mitsuba 地形网格并渲染
+
+# 执行层
+python3 code/test_failure_model.py        # 11 类故障确定性验证，11/11
 python3 code/wirelessops_adapter.py --limit 120 --ticks 1200 --rounds 1,2,4,8,16,32,64
 ```
 
 `wirelessops_adapter.py` 在 WirelessOpsBench 的公开任务契约上驱动执行层，artifact 路径可用环境变量 `WIRELESSOPS_ARTIFACT` 覆盖。
 
-未纳入版本控制的文件及获取方式：`data/` 含 SRTM 高程瓦片与下载的真实轨迹，SRTM 的下载路径见 `code/mountain_lora_link.py` 头部注释，轨迹数据集见上表 Zenodo DOI；`libs/` 为本地 pip 依赖，可用 `pip install numpy itmlogic` 重建；`docs/s1-input/week2-deck.md` 由课题组汇报 PPT 提取，与 `*.pptx` 一并留在仓库之外。
+仓库之外另有两处。`../ns3/` 为 ns-3.48 加 FLoRa（3.2 GB），构建后 `./ns3 run` 使用；`/home/orion/Communications/recon/` 存放文献侦察的原始抽取（全文、DOI 核验、抽取脚本）。
+
+未纳入版本控制的文件及获取方式：`data/` 含 SRTM 高程瓦片与下载的真实轨迹，SRTM 的下载路径见 `code/mountain_lora_link.py` 头部注释，轨迹数据集见上表 Zenodo DOI；`libs/` 为本地 pip 依赖，`pylibs` 可用 `pip install numpy itmlogic` 重建，`simlibs` 用 `pip install mitsuba`；`docs/s1-input/week2-deck.md` 由课题组汇报 PPT 提取，与 `*.pptx` 一并留在仓库之外。
