@@ -1,0 +1,2123 @@
+{
+  "config": {
+    "days": 3.0,
+    "seeds": 3,
+    "arms": "local_rules,versioned_config,vtc_style,ours,oracle",
+    "trajectories": "none,request_lost,ack_lost,stale_command,coordinator_restart,node_restart,backhaul_only",
+    "energy": true,
+    "tag": ""
+  },
+  "columns": [
+    "coverage",
+    "observation_gap",
+    "false_success",
+    "time_to_know_s",
+    "downlink_attempts",
+    "airtime_h",
+    "stale_overwrites",
+    "fenced",
+    "deduplicated"
+  ],
+  "results": [
+    {
+      "arm": "local_rules",
+      "trajectory": "none",
+      "per_seed": {
+        "coverage": [
+          32.79069767441861,
+          32.325581395348834,
+          35.81395348837209
+        ],
+        "observation_gap": [
+          40.0,
+          40.0,
+          40.0
+        ],
+        "false_success": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "time_to_know_s": [
+          NaN,
+          NaN,
+          NaN
+        ],
+        "downlink_attempts": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "airtime_h": [
+          0.20047559111111166,
+          0.21128803555555778,
+          0.20371911111111315
+        ],
+        "stale_overwrites": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "fenced": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "deduplicated": [
+          0.0,
+          0.0,
+          0.0
+        ]
+      },
+      "coverage": 33.64341085271318,
+      "observation_gap": 40.0,
+      "false_success": 0.0,
+      "time_to_know_s": NaN,
+      "downlink_attempts": 0.0,
+      "airtime_h": 0.2051609125925942,
+      "stale_overwrites": 0.0,
+      "fenced": 0.0,
+      "deduplicated": 0.0
+    },
+    {
+      "arm": "versioned_config",
+      "trajectory": "none",
+      "per_seed": {
+        "coverage": [
+          59.06976744186046,
+          76.27906976744187,
+          80.93023255813954
+        ],
+        "observation_gap": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "false_success": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "time_to_know_s": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "downlink_attempts": [
+          387.0,
+          299.0,
+          349.0
+        ],
+        "airtime_h": [
+          2.0131177244441996,
+          1.3912617244444674,
+          0.58816085333332
+        ],
+        "stale_overwrites": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "fenced": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "deduplicated": [
+          37.0,
+          47.0,
+          51.0
+        ]
+      },
+      "coverage": 72.09302325581395,
+      "observation_gap": 0.0,
+      "false_success": 0.0,
+      "time_to_know_s": 0.0,
+      "downlink_attempts": 345.0,
+      "airtime_h": 1.330846767407329,
+      "stale_overwrites": 0.0,
+      "fenced": 0.0,
+      "deduplicated": 45.0
+    },
+    {
+      "arm": "vtc_style",
+      "trajectory": "none",
+      "per_seed": {
+        "coverage": [
+          57.44186046511628,
+          70.69767441860465,
+          78.6046511627907
+        ],
+        "observation_gap": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "false_success": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "time_to_know_s": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "downlink_attempts": [
+          215.0,
+          235.0,
+          279.0
+        ],
+        "airtime_h": [
+          1.9717896533330808,
+          1.3715343644444655,
+          0.6110859377777628
+        ],
+        "stale_overwrites": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "fenced": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "deduplicated": [
+          0.0,
+          0.0,
+          0.0
+        ]
+      },
+      "coverage": 68.91472868217055,
+      "observation_gap": 0.0,
+      "false_success": 0.0,
+      "time_to_know_s": 0.0,
+      "downlink_attempts": 243.0,
+      "airtime_h": 1.3181366518517696,
+      "stale_overwrites": 0.0,
+      "fenced": 0.0,
+      "deduplicated": 0.0
+    },
+    {
+      "arm": "ours",
+      "trajectory": "none",
+      "per_seed": {
+        "coverage": [
+          57.20930232558139,
+          73.95348837209302,
+          78.6046511627907
+        ],
+        "observation_gap": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "false_success": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "time_to_know_s": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "downlink_attempts": [
+          293.0,
+          339.0,
+          252.0
+        ],
+        "airtime_h": [
+          1.9469744355553436,
+          1.3999603200000188,
+          0.5795281066666548
+        ],
+        "stale_overwrites": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "fenced": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "deduplicated": [
+          41.0,
+          40.0,
+          31.0
+        ]
+      },
+      "coverage": 69.92248062015504,
+      "observation_gap": 0.0,
+      "false_success": 0.0,
+      "time_to_know_s": 0.0,
+      "downlink_attempts": 294.6666666666667,
+      "airtime_h": 1.3088209540740057,
+      "stale_overwrites": 0.0,
+      "fenced": 0.0,
+      "deduplicated": 37.333333333333336
+    },
+    {
+      "arm": "oracle",
+      "trajectory": "none",
+      "per_seed": {
+        "coverage": [
+          62.32558139534884,
+          76.27906976744187,
+          78.83720930232559
+        ],
+        "observation_gap": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "false_success": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "time_to_know_s": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "downlink_attempts": [
+          165.0,
+          221.0,
+          215.0
+        ],
+        "airtime_h": [
+          1.9899194311108745,
+          1.4023102577777897,
+          0.5691677866666552
+        ],
+        "stale_overwrites": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "fenced": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "deduplicated": [
+          0.0,
+          0.0,
+          0.0
+        ]
+      },
+      "coverage": 72.48062015503876,
+      "observation_gap": 0.0,
+      "false_success": 0.0,
+      "time_to_know_s": 0.0,
+      "downlink_attempts": 200.33333333333334,
+      "airtime_h": 1.3204658251851065,
+      "stale_overwrites": 0.0,
+      "fenced": 0.0,
+      "deduplicated": 0.0
+    },
+    {
+      "arm": "local_rules",
+      "trajectory": "request_lost",
+      "per_seed": {
+        "coverage": [
+          32.79069767441861,
+          32.325581395348834,
+          35.81395348837209
+        ],
+        "observation_gap": [
+          40.0,
+          40.0,
+          40.0
+        ],
+        "false_success": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "time_to_know_s": [
+          NaN,
+          NaN,
+          NaN
+        ],
+        "downlink_attempts": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "airtime_h": [
+          0.20047559111111166,
+          0.21128803555555778,
+          0.20371911111111315
+        ],
+        "stale_overwrites": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "fenced": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "deduplicated": [
+          0.0,
+          0.0,
+          0.0
+        ]
+      },
+      "coverage": 33.64341085271318,
+      "observation_gap": 40.0,
+      "false_success": 0.0,
+      "time_to_know_s": NaN,
+      "downlink_attempts": 0.0,
+      "airtime_h": 0.2051609125925942,
+      "stale_overwrites": 0.0,
+      "fenced": 0.0,
+      "deduplicated": 0.0
+    },
+    {
+      "arm": "versioned_config",
+      "trajectory": "request_lost",
+      "per_seed": {
+        "coverage": [
+          62.32558139534884,
+          74.18604651162791,
+          80.69767441860465
+        ],
+        "observation_gap": [
+          0.3211805555555555,
+          0.0,
+          0.0
+        ],
+        "false_success": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "time_to_know_s": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "downlink_attempts": [
+          282.0,
+          349.0,
+          266.0
+        ],
+        "airtime_h": [
+          1.6089403733332766,
+          1.8387656533331527,
+          0.566311537777769
+        ],
+        "stale_overwrites": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "fenced": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "deduplicated": [
+          34.0,
+          38.0,
+          40.0
+        ]
+      },
+      "coverage": 72.4031007751938,
+      "observation_gap": 0.10706018518518517,
+      "false_success": 0.0,
+      "time_to_know_s": 0.0,
+      "downlink_attempts": 299.0,
+      "airtime_h": 1.3380058548147327,
+      "stale_overwrites": 0.0,
+      "fenced": 0.0,
+      "deduplicated": 37.333333333333336
+    },
+    {
+      "arm": "vtc_style",
+      "trajectory": "request_lost",
+      "per_seed": {
+        "coverage": [
+          55.58139534883721,
+          73.25581395348837,
+          74.18604651162791
+        ],
+        "observation_gap": [
+          0.0,
+          0.0,
+          7.873263888888888
+        ],
+        "false_success": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "time_to_know_s": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "downlink_attempts": [
+          167.0,
+          200.0,
+          151.0
+        ],
+        "airtime_h": [
+          1.6225918577777005,
+          1.5508175644443867,
+          0.48069603555554635
+        ],
+        "stale_overwrites": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "fenced": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "deduplicated": [
+          0.0,
+          0.0,
+          0.0
+        ]
+      },
+      "coverage": 67.67441860465117,
+      "observation_gap": 2.6244212962962963,
+      "false_success": 0.0,
+      "time_to_know_s": 0.0,
+      "downlink_attempts": 172.66666666666666,
+      "airtime_h": 1.2180351525925446,
+      "stale_overwrites": 0.0,
+      "fenced": 0.0,
+      "deduplicated": 0.0
+    },
+    {
+      "arm": "ours",
+      "trajectory": "request_lost",
+      "per_seed": {
+        "coverage": [
+          56.51162790697675,
+          76.04651162790698,
+          78.83720930232559
+        ],
+        "observation_gap": [
+          4.140625,
+          0.0,
+          7.682291666666667
+        ],
+        "false_success": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "time_to_know_s": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "downlink_attempts": [
+          240.0,
+          216.0,
+          180.0
+        ],
+        "airtime_h": [
+          1.5664463644444138,
+          1.4718540799999937,
+          0.4866632533333237
+        ],
+        "stale_overwrites": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "fenced": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "deduplicated": [
+          36.0,
+          31.0,
+          22.0
+        ]
+      },
+      "coverage": 70.46511627906978,
+      "observation_gap": 3.9409722222222228,
+      "false_success": 0.0,
+      "time_to_know_s": 0.0,
+      "downlink_attempts": 212.0,
+      "airtime_h": 1.1749878992592437,
+      "stale_overwrites": 0.0,
+      "fenced": 0.0,
+      "deduplicated": 29.666666666666668
+    },
+    {
+      "arm": "oracle",
+      "trajectory": "request_lost",
+      "per_seed": {
+        "coverage": [
+          60.0,
+          74.88372093023256,
+          74.18604651162791
+        ],
+        "observation_gap": [
+          0.0,
+          0.0,
+          2.868923611111111
+        ],
+        "false_success": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "time_to_know_s": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "downlink_attempts": [
+          236.0,
+          141.0,
+          171.0
+        ],
+        "airtime_h": [
+          1.729208319999879,
+          1.4802629688888835,
+          0.5292182755555447
+        ],
+        "stale_overwrites": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "fenced": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "deduplicated": [
+          0.0,
+          0.0,
+          0.0
+        ]
+      },
+      "coverage": 69.68992248062015,
+      "observation_gap": 0.9563078703703703,
+      "false_success": 0.0,
+      "time_to_know_s": 0.0,
+      "downlink_attempts": 182.66666666666666,
+      "airtime_h": 1.246229854814769,
+      "stale_overwrites": 0.0,
+      "fenced": 0.0,
+      "deduplicated": 0.0
+    },
+    {
+      "arm": "local_rules",
+      "trajectory": "ack_lost",
+      "per_seed": {
+        "coverage": [
+          32.79069767441861,
+          32.325581395348834,
+          35.81395348837209
+        ],
+        "observation_gap": [
+          40.0,
+          40.0,
+          40.0
+        ],
+        "false_success": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "time_to_know_s": [
+          NaN,
+          NaN,
+          NaN
+        ],
+        "downlink_attempts": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "airtime_h": [
+          0.20047559111111166,
+          0.21128803555555778,
+          0.20371911111111315
+        ],
+        "stale_overwrites": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "fenced": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "deduplicated": [
+          0.0,
+          0.0,
+          0.0
+        ]
+      },
+      "coverage": 33.64341085271318,
+      "observation_gap": 40.0,
+      "false_success": 0.0,
+      "time_to_know_s": NaN,
+      "downlink_attempts": 0.0,
+      "airtime_h": 0.2051609125925942,
+      "stale_overwrites": 0.0,
+      "fenced": 0.0,
+      "deduplicated": 0.0
+    },
+    {
+      "arm": "versioned_config",
+      "trajectory": "ack_lost",
+      "per_seed": {
+        "coverage": [
+          59.06976744186046,
+          76.27906976744187,
+          80.93023255813954
+        ],
+        "observation_gap": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "false_success": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "time_to_know_s": [
+          1.5,
+          180.75,
+          90.75
+        ],
+        "downlink_attempts": [
+          387.0,
+          299.0,
+          349.0
+        ],
+        "airtime_h": [
+          2.0131177244441996,
+          1.3912617244444674,
+          0.58816085333332
+        ],
+        "stale_overwrites": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "fenced": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "deduplicated": [
+          37.0,
+          47.0,
+          51.0
+        ]
+      },
+      "coverage": 72.09302325581395,
+      "observation_gap": 0.0,
+      "false_success": 0.0,
+      "time_to_know_s": 91.0,
+      "downlink_attempts": 345.0,
+      "airtime_h": 1.330846767407329,
+      "stale_overwrites": 0.0,
+      "fenced": 0.0,
+      "deduplicated": 45.0
+    },
+    {
+      "arm": "vtc_style",
+      "trajectory": "ack_lost",
+      "per_seed": {
+        "coverage": [
+          57.44186046511628,
+          70.69767441860465,
+          78.6046511627907
+        ],
+        "observation_gap": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "false_success": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "time_to_know_s": [
+          141.03896103896105,
+          1.2121212121212122,
+          1.0810810810810811
+        ],
+        "downlink_attempts": [
+          215.0,
+          235.0,
+          279.0
+        ],
+        "airtime_h": [
+          1.9717896533330808,
+          1.3715343644444655,
+          0.6110859377777628
+        ],
+        "stale_overwrites": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "fenced": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "deduplicated": [
+          0.0,
+          0.0,
+          0.0
+        ]
+      },
+      "coverage": 68.91472868217055,
+      "observation_gap": 0.0,
+      "false_success": 0.0,
+      "time_to_know_s": 47.77738777738779,
+      "downlink_attempts": 243.0,
+      "airtime_h": 1.3181366518517696,
+      "stale_overwrites": 0.0,
+      "fenced": 0.0,
+      "deduplicated": 0.0
+    },
+    {
+      "arm": "ours",
+      "trajectory": "ack_lost",
+      "per_seed": {
+        "coverage": [
+          57.20930232558139,
+          73.95348837209302,
+          78.6046511627907
+        ],
+        "observation_gap": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "false_success": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "time_to_know_s": [
+          113.4375,
+          1.5,
+          1.5
+        ],
+        "downlink_attempts": [
+          293.0,
+          339.0,
+          252.0
+        ],
+        "airtime_h": [
+          1.9469744355553436,
+          1.3999603200000188,
+          0.5795281066666548
+        ],
+        "stale_overwrites": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "fenced": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "deduplicated": [
+          41.0,
+          40.0,
+          31.0
+        ]
+      },
+      "coverage": 69.92248062015504,
+      "observation_gap": 0.0,
+      "false_success": 0.0,
+      "time_to_know_s": 38.8125,
+      "downlink_attempts": 294.6666666666667,
+      "airtime_h": 1.3088209540740057,
+      "stale_overwrites": 0.0,
+      "fenced": 0.0,
+      "deduplicated": 37.333333333333336
+    },
+    {
+      "arm": "oracle",
+      "trajectory": "ack_lost",
+      "per_seed": {
+        "coverage": [
+          62.32558139534884,
+          75.81395348837209,
+          75.5813953488372
+        ],
+        "observation_gap": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "false_success": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "time_to_know_s": [
+          225.75,
+          1.4634146341463414,
+          88.53658536585365
+        ],
+        "downlink_attempts": [
+          187.0,
+          210.0,
+          201.0
+        ],
+        "airtime_h": [
+          2.0248044088886292,
+          1.3679051377778086,
+          0.5902274844444321
+        ],
+        "stale_overwrites": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "fenced": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "deduplicated": [
+          0.0,
+          0.0,
+          0.0
+        ]
+      },
+      "coverage": 71.24031007751938,
+      "observation_gap": 0.0,
+      "false_success": 0.0,
+      "time_to_know_s": 105.25,
+      "downlink_attempts": 199.33333333333334,
+      "airtime_h": 1.3276456770369567,
+      "stale_overwrites": 0.0,
+      "fenced": 0.0,
+      "deduplicated": 0.0
+    },
+    {
+      "arm": "local_rules",
+      "trajectory": "stale_command",
+      "per_seed": {
+        "coverage": [
+          32.79069767441861,
+          32.325581395348834,
+          35.81395348837209
+        ],
+        "observation_gap": [
+          40.0,
+          40.0,
+          40.0
+        ],
+        "false_success": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "time_to_know_s": [
+          NaN,
+          NaN,
+          NaN
+        ],
+        "downlink_attempts": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "airtime_h": [
+          0.20047559111111166,
+          0.21128803555555778,
+          0.20371911111111315
+        ],
+        "stale_overwrites": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "fenced": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "deduplicated": [
+          0.0,
+          0.0,
+          0.0
+        ]
+      },
+      "coverage": 33.64341085271318,
+      "observation_gap": 40.0,
+      "false_success": 0.0,
+      "time_to_know_s": NaN,
+      "downlink_attempts": 0.0,
+      "airtime_h": 0.2051609125925942,
+      "stale_overwrites": 0.0,
+      "fenced": 0.0,
+      "deduplicated": 0.0
+    },
+    {
+      "arm": "versioned_config",
+      "trajectory": "stale_command",
+      "per_seed": {
+        "coverage": [
+          58.372093023255815,
+          76.04651162790698,
+          80.23255813953489
+        ],
+        "observation_gap": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "false_success": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "time_to_know_s": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "downlink_attempts": [
+          375.0,
+          401.0,
+          393.0
+        ],
+        "airtime_h": [
+          1.9277664711108926,
+          1.370167466666698,
+          0.6062495288888753
+        ],
+        "stale_overwrites": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "fenced": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "deduplicated": [
+          41.0,
+          50.0,
+          57.0
+        ]
+      },
+      "coverage": 71.55038759689923,
+      "observation_gap": 0.0,
+      "false_success": 0.0,
+      "time_to_know_s": 0.0,
+      "downlink_attempts": 389.6666666666667,
+      "airtime_h": 1.301394488888822,
+      "stale_overwrites": 0.0,
+      "fenced": 0.0,
+      "deduplicated": 49.333333333333336
+    },
+    {
+      "arm": "vtc_style",
+      "trajectory": "stale_command",
+      "per_seed": {
+        "coverage": [
+          53.48837209302325,
+          72.79069767441861,
+          79.06976744186046
+        ],
+        "observation_gap": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "false_success": [
+          4.0,
+          4.0,
+          4.0
+        ],
+        "time_to_know_s": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "downlink_attempts": [
+          198.0,
+          217.0,
+          284.0
+        ],
+        "airtime_h": [
+          1.996761457777514,
+          1.3907592533333488,
+          0.6214381511110976
+        ],
+        "stale_overwrites": [
+          4.0,
+          4.0,
+          4.0
+        ],
+        "fenced": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "deduplicated": [
+          0.0,
+          0.0,
+          0.0
+        ]
+      },
+      "coverage": 68.44961240310077,
+      "observation_gap": 0.0,
+      "false_success": 4.0,
+      "time_to_know_s": 0.0,
+      "downlink_attempts": 233.0,
+      "airtime_h": 1.3363196207406534,
+      "stale_overwrites": 4.0,
+      "fenced": 0.0,
+      "deduplicated": 0.0
+    },
+    {
+      "arm": "ours",
+      "trajectory": "stale_command",
+      "per_seed": {
+        "coverage": [
+          51.3953488372093,
+          76.04651162790698,
+          80.69767441860465
+        ],
+        "observation_gap": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "false_success": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "time_to_know_s": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "downlink_attempts": [
+          232.0,
+          434.0,
+          238.0
+        ],
+        "airtime_h": [
+          1.914452906666487,
+          1.3877021866666854,
+          0.5914514488888761
+        ],
+        "stale_overwrites": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "fenced": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "deduplicated": [
+          44.0,
+          44.0,
+          31.0
+        ]
+      },
+      "coverage": 69.37984496124031,
+      "observation_gap": 0.0,
+      "false_success": 0.0,
+      "time_to_know_s": 0.0,
+      "downlink_attempts": 301.3333333333333,
+      "airtime_h": 1.2978688474073494,
+      "stale_overwrites": 0.0,
+      "fenced": 0.0,
+      "deduplicated": 39.666666666666664
+    },
+    {
+      "arm": "oracle",
+      "trajectory": "stale_command",
+      "per_seed": {
+        "coverage": [
+          60.46511627906976,
+          73.0232558139535,
+          81.3953488372093
+        ],
+        "observation_gap": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "false_success": [
+          4.0,
+          4.0,
+          4.0
+        ],
+        "time_to_know_s": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "downlink_attempts": [
+          239.0,
+          218.0,
+          133.0
+        ],
+        "airtime_h": [
+          2.022964764444189,
+          1.5404915199999538,
+          0.6288661333333243
+        ],
+        "stale_overwrites": [
+          4.0,
+          4.0,
+          4.0
+        ],
+        "fenced": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "deduplicated": [
+          0.0,
+          0.0,
+          0.0
+        ]
+      },
+      "coverage": 71.62790697674419,
+      "observation_gap": 0.0,
+      "false_success": 4.0,
+      "time_to_know_s": 0.0,
+      "downlink_attempts": 196.66666666666666,
+      "airtime_h": 1.3974408059258223,
+      "stale_overwrites": 4.0,
+      "fenced": 0.0,
+      "deduplicated": 0.0
+    },
+    {
+      "arm": "local_rules",
+      "trajectory": "coordinator_restart",
+      "per_seed": {
+        "coverage": [
+          32.79069767441861,
+          32.325581395348834,
+          35.81395348837209
+        ],
+        "observation_gap": [
+          40.0,
+          40.0,
+          40.0
+        ],
+        "false_success": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "time_to_know_s": [
+          NaN,
+          NaN,
+          NaN
+        ],
+        "downlink_attempts": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "airtime_h": [
+          0.20047559111111166,
+          0.21128803555555778,
+          0.20371911111111315
+        ],
+        "stale_overwrites": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "fenced": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "deduplicated": [
+          0.0,
+          0.0,
+          0.0
+        ]
+      },
+      "coverage": 33.64341085271318,
+      "observation_gap": 40.0,
+      "false_success": 0.0,
+      "time_to_know_s": NaN,
+      "downlink_attempts": 0.0,
+      "airtime_h": 0.2051609125925942,
+      "stale_overwrites": 0.0,
+      "fenced": 0.0,
+      "deduplicated": 0.0
+    },
+    {
+      "arm": "versioned_config",
+      "trajectory": "coordinator_restart",
+      "per_seed": {
+        "coverage": [
+          59.06976744186046,
+          76.27906976744187,
+          80.93023255813954
+        ],
+        "observation_gap": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "false_success": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "time_to_know_s": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "downlink_attempts": [
+          387.0,
+          299.0,
+          349.0
+        ],
+        "airtime_h": [
+          2.0131177244441996,
+          1.3912617244444674,
+          0.58816085333332
+        ],
+        "stale_overwrites": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "fenced": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "deduplicated": [
+          37.0,
+          47.0,
+          51.0
+        ]
+      },
+      "coverage": 72.09302325581395,
+      "observation_gap": 0.0,
+      "false_success": 0.0,
+      "time_to_know_s": 0.0,
+      "downlink_attempts": 345.0,
+      "airtime_h": 1.330846767407329,
+      "stale_overwrites": 0.0,
+      "fenced": 0.0,
+      "deduplicated": 45.0
+    },
+    {
+      "arm": "vtc_style",
+      "trajectory": "coordinator_restart",
+      "per_seed": {
+        "coverage": [
+          57.44186046511628,
+          70.69767441860465,
+          78.6046511627907
+        ],
+        "observation_gap": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "false_success": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "time_to_know_s": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "downlink_attempts": [
+          215.0,
+          235.0,
+          279.0
+        ],
+        "airtime_h": [
+          1.9717896533330808,
+          1.3715343644444655,
+          0.6110859377777628
+        ],
+        "stale_overwrites": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "fenced": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "deduplicated": [
+          0.0,
+          0.0,
+          0.0
+        ]
+      },
+      "coverage": 68.91472868217055,
+      "observation_gap": 0.0,
+      "false_success": 0.0,
+      "time_to_know_s": 0.0,
+      "downlink_attempts": 243.0,
+      "airtime_h": 1.3181366518517696,
+      "stale_overwrites": 0.0,
+      "fenced": 0.0,
+      "deduplicated": 0.0
+    },
+    {
+      "arm": "ours",
+      "trajectory": "coordinator_restart",
+      "per_seed": {
+        "coverage": [
+          57.20930232558139,
+          73.95348837209302,
+          78.6046511627907
+        ],
+        "observation_gap": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "false_success": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "time_to_know_s": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "downlink_attempts": [
+          293.0,
+          339.0,
+          252.0
+        ],
+        "airtime_h": [
+          1.9469744355553436,
+          1.3999603200000188,
+          0.5795281066666548
+        ],
+        "stale_overwrites": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "fenced": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "deduplicated": [
+          41.0,
+          40.0,
+          31.0
+        ]
+      },
+      "coverage": 69.92248062015504,
+      "observation_gap": 0.0,
+      "false_success": 0.0,
+      "time_to_know_s": 0.0,
+      "downlink_attempts": 294.6666666666667,
+      "airtime_h": 1.3088209540740057,
+      "stale_overwrites": 0.0,
+      "fenced": 0.0,
+      "deduplicated": 37.333333333333336
+    },
+    {
+      "arm": "oracle",
+      "trajectory": "coordinator_restart",
+      "per_seed": {
+        "coverage": [
+          62.32558139534884,
+          76.27906976744187,
+          78.83720930232559
+        ],
+        "observation_gap": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "false_success": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "time_to_know_s": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "downlink_attempts": [
+          165.0,
+          221.0,
+          215.0
+        ],
+        "airtime_h": [
+          1.9899194311108745,
+          1.4023102577777897,
+          0.5691677866666552
+        ],
+        "stale_overwrites": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "fenced": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "deduplicated": [
+          0.0,
+          0.0,
+          0.0
+        ]
+      },
+      "coverage": 72.48062015503876,
+      "observation_gap": 0.0,
+      "false_success": 0.0,
+      "time_to_know_s": 0.0,
+      "downlink_attempts": 200.33333333333334,
+      "airtime_h": 1.3204658251851065,
+      "stale_overwrites": 0.0,
+      "fenced": 0.0,
+      "deduplicated": 0.0
+    },
+    {
+      "arm": "local_rules",
+      "trajectory": "node_restart",
+      "per_seed": {
+        "coverage": [
+          32.79069767441861,
+          32.325581395348834,
+          35.81395348837209
+        ],
+        "observation_gap": [
+          40.0,
+          40.0,
+          40.0
+        ],
+        "false_success": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "time_to_know_s": [
+          NaN,
+          NaN,
+          NaN
+        ],
+        "downlink_attempts": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "airtime_h": [
+          0.20047559111111166,
+          0.21128803555555778,
+          0.20371911111111315
+        ],
+        "stale_overwrites": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "fenced": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "deduplicated": [
+          0.0,
+          0.0,
+          0.0
+        ]
+      },
+      "coverage": 33.64341085271318,
+      "observation_gap": 40.0,
+      "false_success": 0.0,
+      "time_to_know_s": NaN,
+      "downlink_attempts": 0.0,
+      "airtime_h": 0.2051609125925942,
+      "stale_overwrites": 0.0,
+      "fenced": 0.0,
+      "deduplicated": 0.0
+    },
+    {
+      "arm": "versioned_config",
+      "trajectory": "node_restart",
+      "per_seed": {
+        "coverage": [
+          59.06976744186046,
+          74.18604651162791,
+          80.93023255813954
+        ],
+        "observation_gap": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "false_success": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "time_to_know_s": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "downlink_attempts": [
+          387.0,
+          395.0,
+          349.0
+        ],
+        "airtime_h": [
+          2.0131177244441996,
+          1.3581979022222546,
+          0.58816085333332
+        ],
+        "stale_overwrites": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "fenced": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "deduplicated": [
+          37.0,
+          50.0,
+          51.0
+        ]
+      },
+      "coverage": 71.39534883720931,
+      "observation_gap": 0.0,
+      "false_success": 0.0,
+      "time_to_know_s": 0.0,
+      "downlink_attempts": 377.0,
+      "airtime_h": 1.3198254933332578,
+      "stale_overwrites": 0.0,
+      "fenced": 0.0,
+      "deduplicated": 46.0
+    },
+    {
+      "arm": "vtc_style",
+      "trajectory": "node_restart",
+      "per_seed": {
+        "coverage": [
+          55.81395348837209,
+          73.0232558139535,
+          78.6046511627907
+        ],
+        "observation_gap": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "false_success": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "time_to_know_s": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "downlink_attempts": [
+          202.0,
+          215.0,
+          311.0
+        ],
+        "airtime_h": [
+          1.919132302222,
+          1.3685833955555773,
+          0.5927987199999886
+        ],
+        "stale_overwrites": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "fenced": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "deduplicated": [
+          0.0,
+          0.0,
+          0.0
+        ]
+      },
+      "coverage": 69.14728682170544,
+      "observation_gap": 0.0,
+      "false_success": 0.0,
+      "time_to_know_s": 0.0,
+      "downlink_attempts": 242.66666666666666,
+      "airtime_h": 1.2935048059258554,
+      "stale_overwrites": 0.0,
+      "fenced": 0.0,
+      "deduplicated": 0.0
+    },
+    {
+      "arm": "ours",
+      "trajectory": "node_restart",
+      "per_seed": {
+        "coverage": [
+          56.51162790697675,
+          75.81395348837209,
+          78.6046511627907
+        ],
+        "observation_gap": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "false_success": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "time_to_know_s": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "downlink_attempts": [
+          235.0,
+          377.0,
+          252.0
+        ],
+        "airtime_h": [
+          1.9459787377775661,
+          1.3904315733333572,
+          0.5795281066666548
+        ],
+        "stale_overwrites": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "fenced": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "deduplicated": [
+          38.0,
+          41.0,
+          30.0
+        ]
+      },
+      "coverage": 70.31007751937985,
+      "observation_gap": 0.0,
+      "false_success": 0.0,
+      "time_to_know_s": 0.0,
+      "downlink_attempts": 288.0,
+      "airtime_h": 1.3053128059258594,
+      "stale_overwrites": 0.0,
+      "fenced": 0.0,
+      "deduplicated": 36.333333333333336
+    },
+    {
+      "arm": "oracle",
+      "trajectory": "node_restart",
+      "per_seed": {
+        "coverage": [
+          62.7906976744186,
+          76.27906976744187,
+          78.83720930232559
+        ],
+        "observation_gap": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "false_success": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "time_to_know_s": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "downlink_attempts": [
+          221.0,
+          227.0,
+          215.0
+        ],
+        "airtime_h": [
+          2.0199894755553056,
+          1.3813468444444676,
+          0.5691677866666552
+        ],
+        "stale_overwrites": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "fenced": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "deduplicated": [
+          0.0,
+          0.0,
+          0.0
+        ]
+      },
+      "coverage": 72.6356589147287,
+      "observation_gap": 0.0,
+      "false_success": 0.0,
+      "time_to_know_s": 0.0,
+      "downlink_attempts": 221.0,
+      "airtime_h": 1.3235013688888093,
+      "stale_overwrites": 0.0,
+      "fenced": 0.0,
+      "deduplicated": 0.0
+    },
+    {
+      "arm": "local_rules",
+      "trajectory": "backhaul_only",
+      "per_seed": {
+        "coverage": [
+          32.093023255813954,
+          32.325581395348834,
+          34.18604651162791
+        ],
+        "observation_gap": [
+          40.0,
+          40.0,
+          40.0
+        ],
+        "false_success": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "time_to_know_s": [
+          NaN,
+          NaN,
+          NaN
+        ],
+        "downlink_attempts": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "airtime_h": [
+          0.20882247111111127,
+          0.21128803555555778,
+          0.23481671111111313
+        ],
+        "stale_overwrites": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "fenced": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "deduplicated": [
+          0.0,
+          0.0,
+          0.0
+        ]
+      },
+      "coverage": 32.86821705426356,
+      "observation_gap": 40.0,
+      "false_success": 0.0,
+      "time_to_know_s": NaN,
+      "downlink_attempts": 0.0,
+      "airtime_h": 0.21830907259259405,
+      "stale_overwrites": 0.0,
+      "fenced": 0.0,
+      "deduplicated": 0.0
+    },
+    {
+      "arm": "versioned_config",
+      "trajectory": "backhaul_only",
+      "per_seed": {
+        "coverage": [
+          59.06976744186046,
+          76.27906976744187,
+          77.44186046511628
+        ],
+        "observation_gap": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "false_success": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "time_to_know_s": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "downlink_attempts": [
+          335.0,
+          299.0,
+          414.0
+        ],
+        "airtime_h": [
+          2.007515875555319,
+          1.3912617244444674,
+          0.6443185777777598
+        ],
+        "stale_overwrites": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "fenced": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "deduplicated": [
+          32.0,
+          47.0,
+          53.0
+        ]
+      },
+      "coverage": 70.93023255813954,
+      "observation_gap": 0.0,
+      "false_success": 0.0,
+      "time_to_know_s": 0.0,
+      "downlink_attempts": 349.3333333333333,
+      "airtime_h": 1.3476987259258488,
+      "stale_overwrites": 0.0,
+      "fenced": 0.0,
+      "deduplicated": 44.0
+    },
+    {
+      "arm": "vtc_style",
+      "trajectory": "backhaul_only",
+      "per_seed": {
+        "coverage": [
+          54.18604651162791,
+          70.69767441860465,
+          77.20930232558139
+        ],
+        "observation_gap": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "false_success": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "time_to_know_s": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "downlink_attempts": [
+          227.0,
+          235.0,
+          280.0
+        ],
+        "airtime_h": [
+          1.9799749688886292,
+          1.3715343644444655,
+          0.634733368888872
+        ],
+        "stale_overwrites": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "fenced": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "deduplicated": [
+          0.0,
+          0.0,
+          0.0
+        ]
+      },
+      "coverage": 67.3643410852713,
+      "observation_gap": 0.0,
+      "false_success": 0.0,
+      "time_to_know_s": 0.0,
+      "downlink_attempts": 247.33333333333334,
+      "airtime_h": 1.3287475674073221,
+      "stale_overwrites": 0.0,
+      "fenced": 0.0,
+      "deduplicated": 0.0
+    },
+    {
+      "arm": "ours",
+      "trajectory": "backhaul_only",
+      "per_seed": {
+        "coverage": [
+          54.18604651162791,
+          73.95348837209302,
+          79.30232558139535
+        ],
+        "observation_gap": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "false_success": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "time_to_know_s": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "downlink_attempts": [
+          347.0,
+          339.0,
+          258.0
+        ],
+        "airtime_h": [
+          1.9845566577775549,
+          1.3999603200000188,
+          0.5864593066666538
+        ],
+        "stale_overwrites": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "fenced": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "deduplicated": [
+          44.0,
+          40.0,
+          31.0
+        ]
+      },
+      "coverage": 69.14728682170544,
+      "observation_gap": 0.0,
+      "false_success": 0.0,
+      "time_to_know_s": 0.0,
+      "downlink_attempts": 314.6666666666667,
+      "airtime_h": 1.3236587614814093,
+      "stale_overwrites": 0.0,
+      "fenced": 0.0,
+      "deduplicated": 38.333333333333336
+    },
+    {
+      "arm": "oracle",
+      "trajectory": "backhaul_only",
+      "per_seed": {
+        "coverage": [
+          60.93023255813953,
+          76.27906976744187,
+          77.44186046511628
+        ],
+        "observation_gap": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "false_success": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "time_to_know_s": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "downlink_attempts": [
+          164.0,
+          221.0,
+          184.0
+        ],
+        "airtime_h": [
+          2.0094290488886477,
+          1.4023102577777897,
+          0.62460600888887
+        ],
+        "stale_overwrites": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "fenced": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "deduplicated": [
+          0.0,
+          0.0,
+          0.0
+        ]
+      },
+      "coverage": 71.55038759689923,
+      "observation_gap": 0.0,
+      "false_success": 0.0,
+      "time_to_know_s": 0.0,
+      "downlink_attempts": 189.66666666666666,
+      "airtime_h": 1.3454484385184358,
+      "stale_overwrites": 0.0,
+      "fenced": 0.0,
+      "deduplicated": 0.0
+    }
+  ]
+}
