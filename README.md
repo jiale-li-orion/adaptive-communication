@@ -929,11 +929,13 @@ self.bat_wh = min(self.bat_wh + hourly_gen - self.load_wh_per_tick, self.usable_
 
 **一处跨模块命名漂移被端到端运行抓出。** 需求侧写 `displacement`、节点侧写 `deformation`，评分器匹配不到任何样本，覆盖率恒为 0 且不报错。已加规范映射，并在公平性审计中断言该映射对两套词表都是满射。
 
-### 7.12 P0 未完成项（按阻塞程度排序）
+### 7.12 P1 前置项（不阻塞 P0，阻塞能耗与续航主张）
+
+以下两项不属 P0 判据：72 小时参考负载在节点全程有电的前提下即可跑通，因此 P0 定义闭合不受影响。它们阻塞的是契约 §9 分析③"动作驱动能耗"以及任何续航、节能类主张。
 
 **业务层的节点存活尚未由能量模型驱动。** 当前 `code/monitoring/runner.py` 用常数上行接收率 `uplink_p_arrive` 表示接入跳的成功，没有接 `energy.py` 的供电状态。契约 §6 要求各方法的电量分别演化并驱动可达性，这是 P0 剩下的最后一处结构性缺口。在补上之前，业务层的结果不能用于任何续航或节能主张。
 
-**`alive` 会 latch。** `energy.py` 的 `step()` 只在 `bat_wh <= 0` 时置 `False`、只在 `bat_wh > 0.05 × usable_wh` 时置 `True`，中间区间两个分支都不执行。因此节点一旦活着就保持活着，只有在恰好归零的那一刻才会翻转。文档串 "Returns whether the node is alive (powered)" 比代码强。补业务层耦合前需先修，否则"断电导致不可达"这条通路永远不会触发。
+**`alive` 会 latch，且这是补耦合的前置。** `energy.py` 的 `step()` 只在 `bat_wh <= 0` 时置 `False`、只在 `bat_wh > 0.05 × usable_wh` 时置 `True`，中间区间两个分支都不执行。因此节点一旦活着就保持活着，只有在恰好归零的那一刻才会翻转。文档串 "Returns whether the node is alive (powered)" 比代码强。补业务层耦合前需先修，否则"断电导致不可达"这条通路永远不会触发。
 
 **另有两处待整理**：新节点以 `usable_wh` 初始化，而冷环境下的实际上界是 `capacity_Wh(T)`，首次 step 会静默丢掉差额；`disruption_env.py:271` 用能量状态直接覆盖节点的 `alive`，使任何其它失效类标记的死亡都会被电池恢复抹掉。
 
