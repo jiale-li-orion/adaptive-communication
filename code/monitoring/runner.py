@@ -173,6 +173,15 @@ def run_episode(policy: Policy, hours: int = 72, seed: int = 0,
     # auditable trail of what was asked, what was observed, and what is in force.
     iface = AgentInterface(plane, runtimes)
     drained_wh = {nid: 0.0 for nid in runtimes}
+    stale_hold: list[tuple[int, str, str]] = []      # (release_at_s, identity, node_id)
+
+    def faulted(kind: str, at_s: int, node_id: str | None = None) -> bool:
+        return fault is not None and fault.active(kind, at_s, node_id)
+
+    if fault is not None:
+        # Only the backhaul fault reaches into the channel's own draw. It can take the backhaul
+        # down and never bring it up, so it cannot advantage any arm.
+        plane.backhaul_gate = lambda hour: not faulted("backhaul_only", int(hour) * 3600)
 
     def charge_radio(node_id: str) -> None:
         """Move the radio energy a node has spent into its own battery."""
@@ -197,6 +206,16 @@ def run_episode(policy: Policy, hours: int = 72, seed: int = 0,
         hour = t_s / 3600.0
         if supply is not None:
             supply.step_to(t_s)
+        if fault is not None:
+            # A node that loses power reboots: its volatile configuration is gone and it comes back
+            # on the default profile. Its flash-resident record buffer survives, which is why the
+            # archive can still be recovered afterwards. A-layer: which state is volatile is a
+            # property of the device, not of this model.
+            for node_id in runtimes:
+                if faulted("node_restart", t_s, node_id):
+                    runtimes[node_id].set_profile(PROFILE_NORMAL, t_s)
+                    in_flight = {k: v for k, v in in_flight.items() if v.node_id != node_id}
+
         if fault is not None:
             restarted = fault.active("coordinator_restart", t_s)
             if restarted:
@@ -231,6 +250,21 @@ def run_episode(policy: Policy, hours: int = 72, seed: int = 0,
                 in_flight[record.identity] = PendingCommand(
                     identity=record.identity, node_id=node_id, payload=payload, issued_at=t_s,
                     expires_at=record.deadline)
+
+        # Commands the network held are released here, possibly long after a newer one landed.
+        still_held = []
+        for release_at, identity, node_id in stale_hold:
+            if release_at > t_s:
+                still_held.append((release_at, identity, node_id))
+                continue
+            command = in_flight.pop(identity, None)
+            if command is None:
+                continue
+            if "profile" in command.payload:
+                runtimes[node_id].set_profile(command.payload["profile"], t_s)
+            iface.note_delivered(identity, at_s=t_s, applied_at=t_s)
+            command.confirmed = True
+        stale_hold = still_held
 
         view_in_flight = frozenset(c.node_id for c in in_flight.values())
 
@@ -276,7 +310,17 @@ def run_episode(policy: Policy, hours: int = 72, seed: int = 0,
                     iface.note_telemetry(node_id, t_s, snapshot)
 
                 for delivery in rec.delivered:
-                    command = in_flight.pop(delivery.message.identity, None)
+                    identity = delivery.message.identity
+                    if faulted("request_lost", t_s, node_id):
+                        # The command was carried into the window and did not reach the node. The
+                        # center learns nothing, which is what the fault is for.
+                        continue
+                    if faulted("stale_command", t_s, node_id):
+                        # Held by the network. It is released later, after newer commands have
+                        # had their chance, which is the ordering hazard the fault exists to make.
+                        stale_hold.append((t_s + 1800, identity, node_id))
+                        continue
+                    command = in_flight.pop(identity, None)
                     if command is None:
                         continue
                     rt.set_profile(command.payload["profile"], t_s) if "profile" in command.payload \
@@ -285,7 +329,13 @@ def run_episode(policy: Policy, hours: int = 72, seed: int = 0,
                     # Applied at the moment the node applied it, observed at the moment the center
                     # learned that it had. The two are the same only because this model has no
                     # separate acknowledgement hop on top of the delivery.
-                    iface.note_delivered(delivery.message.identity, at_s=t_s, applied_at=t_s)
+                    if faulted("ack_lost", t_s, node_id):
+                        # Applied at the node and never acknowledged. The effect is in force while
+                        # the center's record stays unresolved -- the exact ambiguity the runtime
+                        # has to survive.
+                        iface.pending.pop(identity, None)
+                        continue
+                    iface.note_delivered(identity, at_s=t_s, applied_at=t_s)
                     if isinstance(policy, OraclePolicy) and "profile" in command.payload:
                         policy.note_confirmed(node_id, command.payload["profile"])
 

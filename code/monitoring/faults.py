@@ -171,11 +171,10 @@ def _frozen(**kw) -> MappingProxyType:
 # =============================================================== A-layer defaults
 # Each entry is the default for one kind. `count=None` means the schedule fills the run;
 # `delay_s=None` means the holdout is drawn from the band documented below. The fixed counts
-# belong to the 72 h reference load: a diagnostic trajectory is meant to be read event by event,
-# so it shows the shape
-# of its fault rather than accumulating instances of it. A longer run needs an explicit count and
-# period; the periodic classes already fill whatever run they are given. EVERY NUMBER IS A: a
-# diagnostic parameter of this study, not a measured rate (README D16, contract §5).
+# belong to the 72 h reference load: a diagnostic trajectory is meant to be read event by event, so
+# it shows the shape of its fault rather than accumulating instances of it. A longer run needs an
+# explicit count and period; the periodic classes already fill whatever run they are given. EVERY
+# NUMBER IS A: a diagnostic parameter of this study, not a measured rate (README D16, contract §5).
 KIND_DEFAULTS = MappingProxyType({
     # A request lost before it reaches a node. The window is 5 min, one dense-cadence upload
     # interval: at the risk cadence (one upload every 5 min) it removes exactly one opportunity, and
@@ -274,10 +273,18 @@ class FaultSpec:
 
     def __post_init__(self) -> None:
         _check_kind(self.kind)
+        if not isinstance(self.seed, int) or isinstance(self.seed, bool):
+            raise ValueError(f"seed {self.seed!r} is not an integer")
         if self.seed < 0:
             raise ValueError(f"seed {self.seed} is negative; the split scheme starts at 0")
+        if not isinstance(self.hours, int) or isinstance(self.hours, bool):
+            raise ValueError(f"hours {self.hours!r} is not a whole number of hours")
         if self.hours < 1:
             raise ValueError(f"hours {self.hours} is not a positive number of hours")
+        if isinstance(self.nodes, str):
+            raise ValueError(f"nodes={self.nodes!r} is a single id, not a sequence of them")
+        if not isinstance(self.nodes, tuple):
+            object.__setattr__(self, "nodes", tuple(self.nodes))
         if KIND_SCOPE[self.kind] == "network" and self.nodes:
             raise ValueError(f"{self.kind} is network-wide and names no station; "
                              f"drop nodes={self.nodes!r}")
@@ -300,6 +307,18 @@ class FaultSpec:
                              f"the runner cannot observe is not an injection")
         if self.count is not None and self.count < 1:
             raise ValueError(f"count={self.count} is not a positive number of injections")
+        if self.kind == "stale_command":
+            # The released command has to have been issued inside the run. A first arrival shorter
+            # than the holdout would date the issue instant before the run started, which is not a
+            # fact any trajectory can carry, so the spec is rejected instead of recording it.
+            longest = self.delay_s if self.delay_s is not None else 4 * MIN_PROFILE_GAP_S
+            first = (self.first_at_s if self.first_at_s is not None
+                     else KIND_DEFAULTS["stale_command"]["first_at_s"])
+            if first < longest:
+                raise ValueError(
+                    f"stale_command: first_at_s={first} is shorter than the longest holdout "
+                    f"{longest}; the held command would have been issued before the run started. "
+                    f"Raise first_at_s or lower delay_s.")
         for name, kinds in _KIND_SPECIFIC_KNOBS.items():
             if getattr(self, name) is not None and self.kind not in kinds:
                 raise ValueError(f"{name} means nothing for {self.kind}; it applies to {kinds}")
@@ -443,10 +462,10 @@ class FaultInjector:
         """(slot, node_id, at_s) for every injection this spec produces.
 
         A slot is the kind's scheduled instant; `at_s` is the slot after jitter. An injection whose
-        covered window would leave the run is not scheduled at all, and the test uses the largest
-        jitter the spec allows so that the count of injections does not depend on the seed: a
-        truncated window would misreport its own length, and a count that moved with the seed would
-        make the trajectory's shape unreadable.
+        covered window would leave the run is not scheduled at all, and the schedule is bounded by
+        the largest jitter the spec allows so that the count of injections does not depend on the
+        seed: a truncated window would misreport its own length, and a count that moved with the seed
+        would make the trajectory's shape unreadable.
         """
         total_s = self.spec.hours * 3600
         network_scope = KIND_SCOPE[self.spec.kind] == "network"

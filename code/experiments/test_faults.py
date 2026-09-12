@@ -399,14 +399,20 @@ def test_knobs_and_rejections() -> None:
 
     rejects("未知类名抛错", kind="no_such_fault")
     rejects("hours=0 抛错", kind="request_lost", hours=0)
+    rejects("非整数 hours 抛错", kind="request_lost", hours=72.0)
     rejects("负 seed 抛错", kind="request_lost", seed=-1)
     rejects("count=0 抛错", kind="request_lost", count=0)
     rejects("离开 60 s 时钟的时长抛错", kind="node_restart", duration_s=90)
     rejects("短于一个 tick 的窗口抛错", kind="request_lost", duration_s=30)
     rejects("网络范围故障指定节点抛错", kind="backhaul_only", nodes=("n00",))
     rejects("重复节点抛错", kind="node_restart", nodes=("n05", "n05"))
+    rejects("把单个节点当序列传入抛错", kind="node_restart", nodes="n05")
     rejects("与本类无关的旋钮抛错", kind="request_lost", delay_s=3600)
     rejects("与本类无关的旋钮抛错（in_force）", kind="node_restart", in_force_s=3600)
+    rejects("扣留长于首次到达时点抛错（命令会被写在下发之前）",
+            kind="stale_command", first_at_s=3600)
+    rejects("显式扣留长于 first_at_s 时抛错", kind="stale_command", first_at_s=6 * 3600,
+            delay_s=12 * 3600)
 
     try:
         FaultInjector(FaultSpec(kind="request_lost")).active("no_such_fault", 0)

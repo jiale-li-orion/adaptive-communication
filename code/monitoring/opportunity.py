@@ -176,6 +176,7 @@ class ControlPlane:
         self.rx_window_ms = rx_window_ms
         self.backhaul_p_good = backhaul_p_good
         self.uplink_p_arrive = uplink_p_arrive
+        self.backhaul_gate = None
 
         self.queued: dict[str, list[DownlinkMessage]] = {}
         self.energy: dict[str, RadioEnergy] = {}
@@ -198,7 +199,14 @@ class ControlPlane:
 
     # ------------------------------------------------------------- center side
     def backhaul_available(self, hour: int) -> bool:
-        """Whether the gateway's backhaul is up this hour. Exogenous, shared by all methods."""
+        """Whether the gateway's backhaul is up this hour. Exogenous, shared by all methods.
+
+        `backhaul_gate` is an optional additional condition the run may install, used by the
+        fault trajectories to take the backhaul down for a window. It can only ever make the
+        backhaul less available, never more, so a fault cannot hand an arm an advantage.
+        """
+        if self.backhaul_gate is not None and not self.backhaul_gate(hour):
+            return False
         return stable_uniform(self.seed, "backhaul", hour) < self.backhaul_p_good
 
     def center_send(self, node_id: str, message: DownlinkMessage, hour: int) -> bool:
