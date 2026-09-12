@@ -154,13 +154,17 @@ class FarSide:
         self.keeps_receipts = receipts
         self.fenced = fencing
         self.last_accepted_epoch = 0
+        # the highest epoch whose write actually took effect here, tracked whether or not this
+        # sink fences, so a stale reorder is an objective event and not an arm-specific artefact
+        self.max_epoch_in_force = 0
         self.receipts: dict[str, Outcome] = {}
         self.applied_writes: list[tuple[int, str]] = []
+        self.stale_reorders = 0
         self.state = {"rate": "1h", "version": 0, "alarms": set(), "last_watchdog": None}
         # when the rate changed, so a round boundary can ask what was in force at that time
         self.rate_timeline: list[tuple[int, str]] = [(0, "1h")]
 
-    def apply(self, op_id, epoch, payload, t):
+    def apply(self, op_id, epoch, payload, t, true_epoch=None):
         """Returns (outcome, did_apply). A deduplicated repeat is APPLIED but did NOT apply."""
         if self.keeps_receipts and op_id in self.receipts:
             return Outcome.APPLIED, False
@@ -168,6 +172,15 @@ class FarSide:
             return Outcome.SUPERSEDED, False
         if self.fenced:
             self.last_accepted_epoch = epoch
+        # Ordering is judged on the harness's own record of when each operation was created, not
+        # on the epoch this arm happens to transmit: an arm that does not fence still has a
+        # definite creation order, and a write from an older operation taking effect after a
+        # newer one is a reorder regardless of whether the sink was told to care.
+        label = epoch if true_epoch is None else true_epoch
+        stale = label > 0 and label < self.max_epoch_in_force
+        self.max_epoch_in_force = max(self.max_epoch_in_force, label)
+        if stale:
+            self.stale_reorders += 1
         if self.keeps_receipts:
             self.receipts[op_id] = Outcome.APPLIED
         self.applied_writes.append((t, op_id))
@@ -235,7 +248,11 @@ def postcondition_holds(state, target, workload) -> bool:
 
 
 def run_arm(arm, nodes, hours, cmd_period, seed, use_energy, workload,
-            retry_budget=RETRY_BUDGET, relay=False, relay_availability=RELAY_AVAILABILITY):
+            retry_budget=RETRY_BUDGET, relay=False, relay_availability=RELAY_AVAILABILITY,
+            stale_p=0.0, stale_max=1):
+    """stale_p/stale_max model a network that holds a write after it has crossed the link and
+    releases it hours later. The hold applies to every arm identically: it is a transport
+    property, not an arm-specific handicap."""
     rng = np.random.default_rng(seed)
     base_arm = arm[6:] if arm.startswith("relay_") else arm
     (receipts, fencing), stable_id = ARM_SPEC[base_arm]
@@ -250,6 +267,8 @@ def run_arm(arm, nodes, hours, cmd_period, seed, use_energy, workload,
     outcomes: dict[str, int] = {}
     pending: list[dict] = []
     relay_buf: dict[str, list] = {n["nid"]: [] for n in nodes}
+    # writes that crossed the link but are still sitting in the network, keyed by due hour
+    late_buf: dict[str, list] = {n["nid"]: [] for n in nodes}
     rounds_created = 0
 
     def channel_read(n, kind):
@@ -259,7 +278,22 @@ def run_arm(arm, nodes, hours, cmd_period, seed, use_energy, workload,
             return None, "unknown"
         return sinks[n["nid"]].read_state(), "reply"
 
+    late_applied = 0
+
     for t in range(hours):
+        # ---- writes the network finally releases, possibly long after a newer one landed ----
+        for n in nodes:
+            keep = []
+            for due, lop, lepoch, lpayload, lintent, lintent_epoch in late_buf[n["nid"]]:
+                if due > t:
+                    keep.append((due, lop, lepoch, lpayload, lintent, lintent_epoch))
+                    continue
+                _o, did = sinks[n["nid"]].apply(lop, lepoch, lpayload, t, true_epoch=lintent_epoch)
+                if did:
+                    late_applied += 1
+                    outcomes[lintent] = outcomes.get(lintent, 0) + 1
+            late_buf[n["nid"]] = keep
+
         doy = t // 24
         for n in nodes:
             if n["energy"] is not None:
@@ -354,9 +388,19 @@ def run_arm(arm, nodes, hours, cmd_period, seed, use_energy, workload,
             arrived, replied = link.exchange(n, "data_write")
             if not arrived:
                 continue
-            outcome, did = sinks[n["nid"]].apply(op_id, epoch, item["payload"], t)
-            if did:
-                outcomes[item["intent"]] = outcomes.get(item["intent"], 0) + 1
+            if stale_p > 0.0 and rng.random() < stale_p:
+                # The write crossed the link but the network is still holding it. Nothing is in
+                # force at the far side yet, so no reply can come back: the coordinator sees
+                # Unknown even though its message was not lost.
+                late_buf[n["nid"]].append(
+                    (t + int(rng.integers(1, stale_max + 1)), op_id, epoch,
+                     item["payload"], item["intent"], item["op"].epoch))
+                replied = False
+            else:
+                outcome, did = sinks[n["nid"]].apply(op_id, epoch, item["payload"], t,
+                                                     true_epoch=item["op"].epoch)
+                if did:
+                    outcomes[item["intent"]] = outcomes.get(item["intent"], 0) + 1
             if replied:
                 reg.settle(op, outcome, t, "replied")
                 item["done"] = True
@@ -432,6 +476,8 @@ def run_arm(arm, nodes, hours, cmd_period, seed, use_energy, workload,
         "arm": arm, "workload": workload, "intents": total,
         "exactly_once": once, "zero_times": zero, "more_than_once": many,
         "duplicate_applications": extra,
+        "late_applications": late_applied,
+        "stale_reorders": sum(sk.stale_reorders for sk in sinks.values()),
         "exactly_once_rate": once / total, "zero_rate": zero / total,
         "dup_rate": many / total, "state_satisfied_rate": state_rate,
         "rounds_created": rounds_created,
@@ -458,6 +504,10 @@ def main() -> None:
     ap.add_argument("--relay", action="store_true")
     ap.add_argument("--relay-availability", type=float, default=RELAY_AVAILABILITY)
     ap.add_argument("--arms", default="")
+    ap.add_argument("--stale-p", type=float, default=0.0,
+                    help="probability that a write is held by the network after crossing the link")
+    ap.add_argument("--stale-max", type=int, default=6,
+                    help="upper bound, in hours, on how long the network holds a write")
     ap.add_argument("--tag", default="")
     args = ap.parse_args()
 
@@ -490,7 +540,8 @@ def main() -> None:
                 nodes = make_nodes(args.reach, args.blocked, rng, use_energy, hf)
                 acc.append(run_arm(arm, nodes, hours, args.cmd_period, 2000 + s, use_energy,
                                    wl, retry_budget=args.retry_budget, relay=args.relay,
-                                   relay_availability=args.relay_availability))
+                                   relay_availability=args.relay_availability,
+                                   stale_p=args.stale_p, stale_max=args.stale_max))
             agg = {k: float(np.mean([a[k] for a in acc])) for k in acc[0]
                    if isinstance(acc[0][k], (int, float))}
             agg["arm"] = arm; agg["workload"] = wl

@@ -42,9 +42,9 @@ code/
 
 | 脚本 | 回答什么问题 | 输出 |
 |---|---|---|
-| `method_comparison.py` | **主实验**。固定决策轨迹下比较四种执行运行时，并含协议消融；`--relay` 切换到架构与协议的 2×2；`--heated` 与 `--relay-availability` 用于敏感性扫描 | `results/method_comparison*.txt/json` |
+| `method_comparison.py` | **主实验**。固定决策轨迹下比较四种执行运行时，并含协议消融；`--relay` 切换到架构与协议的 2×2；`--heated` 与 `--relay-availability` 用于敏感性扫描；`--stale-p`/`--stale-max` 打开传输层延迟投递，写入跨过链路后被网络扣留若干小时再释放，用于时间乱序与陈旧覆盖 | `results/method_comparison*.txt/json` |
 | `mission_sim.py` | 任务级指标：到报率、到达时延分位数、能量、存活节点数。遥测间隔与控制面变更速率是两个独立参数 | `results/mission_sim*.txt/json` |
-| `restart_experiment.py` | 协调者重启后 durable lifecycle 是否存续：有日志与无日志两组跑在同一 fenced sink 上 | `results/restart_experiment.*` |
+| `restart_experiment.py` | 协调者重启后 durable lifecycle 是否存续。三种身份来源（每次重发新身份 / 重算同一身份 / 持久日志）× 两类命令（身份可重算的周期测量、身份不可重算的临时处置），全部跑在同一 C1 + C2 远端上。记分按任务原本想执行的那一条身份计，另计『非请求副作用』：重发时换了身份，落地的是任务没要求的动作 | `results/restart_experiment.*` |
 | `test_failure_model.py` | 11 类故障的确定性验证，每类一个定向用例，退出码 0 表示全部可复现 | 终端输出 |
 | `run_baseline.py` | 执行层故障的复现与机制确认：重复副作用、丢失、过期读取 | `results/baseline_experiment.txt` |
 
