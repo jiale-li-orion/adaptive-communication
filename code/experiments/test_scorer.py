@@ -36,7 +36,7 @@ HERE = os.path.dirname(os.path.abspath(__file__))
 sys.path.insert(0, HERE)
 
 from node_model import NodeRuntime, Sample                       # noqa: E402
-from scorer import RunRecord, score                              # noqa: E402
+from scorer import RunRecord, residual_failures, score           # noqa: E402
 from runner import run_episode, LocalRulesPolicy, OraclePolicy    # noqa: E402
 from task_generator import Task, PRIORITY_NORMAL, PRIORITY_RISK   # noqa: E402
 from opportunity import ControlPlane, LoRaProfile, DownlinkMessage  # noqa: E402
@@ -175,6 +175,48 @@ def test_end_to_end_runs() -> None:
           f"{orc.coverage:.3f} vs {base.coverage:.3f}")
 
 
+def test_residual_failure_taxonomy() -> None:
+    """残余失败必须按可区分的原因分开，且每条原因都要能被触发。
+
+    A classifier whose branches cannot be exercised is not a classifier. Each of the three
+    outcomes is produced here from a hand-built record, so a later change that collapses them into
+    one bucket fails this test rather than silently making "we could not measure it" look like
+    "we could not deliver it" -- two failures with opposite remedies.
+    """
+    from node_model import Sample
+    from task_generator import PRIORITY_NORMAL, Task
+
+    def record(samples, arrivals):
+        demand = Task(id="d1", node_set=("n00",), measurement_type="displacement",
+                      release_time=0, sample_window=(100, 200), delivery_deadline=300,
+                      priority=PRIORITY_NORMAL, policy_generation=1)
+        return RunRecord(demands=[demand], taken=list(samples), arrived=list(arrivals),
+                         heard_uplinks=[], node_ids=("n00",))
+
+    missing = residual_failures(record([], []))
+    check("窗口内没有采样时归为采样侧失败",
+          missing["residual_no_sample_in_window"] == 1
+          and missing["residual_late_delivery"] == 0, f"{missing}")
+
+    sample = Sample.make("n00", 150, "displacement")
+    late = residual_failures(record([sample], [(sample, 400)]))
+    check("窗口内采到但截止后才到，归为投递失败",
+          late["residual_late_delivery"] == 1
+          and late["residual_no_sample_in_window"] == 0, f"{late}")
+
+    on_time = residual_failures(record([sample], [(sample, 250)]))
+    check("窗口内采到且按期到达算满足",
+          on_time["residual_met"] == 1 and on_time["residual_unmet"] == 0, f"{on_time}")
+
+    # A reading taken before the window that arrived in time is not a cause of failure; it is what
+    # the platform was serving at the deadline, and it is counted separately on purpose.
+    stale = Sample.make("n00", 50, "displacement")
+    served = residual_failures(record([stale], [(stale, 200)]))
+    check("窗口前采到的记录按期到达时，记为平台顶着陈旧读数而不是失败成因",
+          served["residual_served_stale_reading"] == 1
+          and served["residual_no_sample_in_window"] == 1, f"{served}")
+
+
 def main() -> int:
     print("评分器与真值边界回归测试")
     test_both_halves_required()
@@ -183,6 +225,7 @@ def main() -> int:
     test_archive_completeness()
     test_no_ground_truth_leak()
     test_end_to_end_runs()
+    test_residual_failure_taxonomy()
     print("\n" + "-" * 74)
     if FAIL:
         print(f"  {len(FAIL)} 项失败：")

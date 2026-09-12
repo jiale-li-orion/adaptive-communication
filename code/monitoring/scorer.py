@@ -274,6 +274,62 @@ def _harmful_executions(record: RunRecord) -> dict:
             "duplicate_physical_samples": duplicate_physical}
 
 
+def residual_failures(record: RunRecord) -> dict:
+    """未满足需求按原因分类，回答契约 §9 第⑥项"故障类型和残余失败"。
+
+    一条需求要成立，需要两半同时满足：窗口内**采到**，且**按期到达中心**。未满足因此只有
+    三种成因，分开数：
+
+    - `no_sample_in_window`：窗口内根本没有该测点的该测量类型。节点没电、没切到密档、或
+      采样周期不对。
+    - `late_delivery`：窗口内有样本，但它没有在截止前到中心。这是投递失败，也是本文关心的
+      那种失败。
+    另单独记一项 `served_stale_reading`：截止时中心手上确实有这个测点的读数，但它产生在窗口
+    打开之前。这不是需求失败的原因，而是平台当时拿什么在顶替（§7.6 的"误报成功"读的是同一
+    件事的另一面），两者是不同的陈述，不能混进未满足的计数。
+
+    三种混在一个未满足计数里，会让"通信没送到"与"根本没采"看起来一样，而它们的修法相反。
+    """
+    taken_index, arrived_index = _index(record.taken, record.arrived)
+    counts = {"met": 0, "no_sample_in_window": 0, "late_delivery": 0,
+              "served_stale_reading": 0}
+    for demand in record.demands:
+        if _covered_by(demand, taken_index, arrived_index):
+            counts["met"] += 1
+            continue
+        window_start, window_end = demand.sample_window
+        in_window = any(
+            window_start <= sample.taken_at <= window_end
+            for node_id in demand.node_set
+            for sample in taken_index.get((node_id, demand.measurement_type), ()))
+        # Counted first and separately, because it is not a cause of failure: by the deadline the
+        # center may hold a reading for this node that was taken before the window opened. That is
+        # what the platform was serving instead, and it is a different statement from why the
+        # demand failed. It has to be evaluated before the branch below, since a demand with no
+        # sample inside its window is exactly the case where a stale reading is what is being
+        # served -- evaluating it only in the other branch made it unreachable where it matters.
+        served_stale = any(
+            0 < sample.taken_at < window_start
+            and arrived_index.get(sample.sample_id, demand.delivery_deadline + 1)
+            <= demand.delivery_deadline
+            for node_id in demand.node_set
+            for sample in taken_index.get((node_id, demand.measurement_type), ()))
+        if served_stale:
+            counts["served_stale_reading"] += 1
+
+        if not in_window:
+            counts["no_sample_in_window"] += 1
+            continue
+        # A measurable sample existed inside the window and the demand is still unmet, so that
+        # sample reached the center after the deadline. Classifying this by asking whether *any*
+        # sample of the node arrived in time gets it wrong on any arm that uploads regularly: the
+        # answer is always yes and every failure lands in the same bucket, which is the same as not
+        # classifying at all.
+        counts["late_delivery"] += 1
+    counts["unmet"] = counts["no_sample_in_window"] + counts["late_delivery"]
+    return {f"residual_{k}": float(v) for k, v in counts.items()}
+
+
 def _action_energy(record: RunRecord, covered: int = 0) -> dict:
     """动作驱动能耗：空口能量与每需求能耗。
 
@@ -354,6 +410,7 @@ def business_metrics(record: RunRecord, covered: int = 0) -> dict:
         "knowledge_latency_max_s": max(latencies) if latencies else float("nan"),
         **_age_of_information(record),
         **_action_energy(record, covered),
+        **residual_failures(record),
         **_harmful_executions(record),
         "unknown_s": record.unknown_s,
         "restart_events": record.restart_events,
