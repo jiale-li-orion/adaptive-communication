@@ -929,6 +929,24 @@ BUSINESS_ARMS: dict[str, str] = {
     "oracle": "runner:OraclePolicy",
 }
 
+# The 2x2 the contract asks for: planner factor x runtime factor, with the 2x2 arms named so a
+# result table cannot silently mix a cell of one with a cell of the other. Every cell speaks the
+# same intent vocabulary, so a difference between two cells is never a difference in what was
+# expressible.
+COMPOSED_ARMS: dict[str, str] = {
+    "rule__naive": "compose:rule__naive",
+    "rule__contract": "compose:rule__contract",
+    "llm__naive": "compose:llm__naive",
+    "llm__contract": "compose:llm__contract",
+}
+
+
+def build_composed_arm(name: str, **kwargs) -> object:
+    """Instantiate one cell of the 2x2. Kept separate from `build_arm` so that adding cells cannot
+    change what the frozen business arms resolve to."""
+    import compose as _compose
+    return _compose.build_composed(name)
+
 
 def build_arm(name: str, **kwargs) -> object:
     """Instantiate one business-layer arm by name, without importing the runner eagerly.
@@ -936,6 +954,8 @@ def build_arm(name: str, **kwargs) -> object:
     `runner` imports this module, so naming the two policies that live there has to be a late
     lookup rather than a top-level import.
     """
+    if name in COMPOSED_ARMS:
+        return build_composed_arm(name, **kwargs)
     try:
         target = BUSINESS_ARMS[name]
     except KeyError:
