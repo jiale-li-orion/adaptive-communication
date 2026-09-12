@@ -91,7 +91,32 @@
 | 单链路 / 静态选择 | 退化参照，无单一出处 | 无多链路 |
 | Oracle | 已知未来链路状态的上界 | 全知 |
 
-第二层是 agent 侧对照：ReAct（Yao et al., ICLR 2023, arXiv `2210.03629`）；blind retry 与指数退避（工程惯例，见 AWS Builders' Library 与 Google SRE Book）；verified wrapper（Mansoor, Phadke, Rana, arXiv `2608.02645`）；默认工具超时语义（MCP 规范 2026-07-28 的 Cancellation 章）。
+第二层是 agent 侧方法对照。四个方法与一条控制组，每一步对应一层缺口，且每层对应一篇明确文章。
+
+| 方法 | 对应文章 | 在本实验中的角色 |
+|---|---|---|
+| B1 WirelessAgent-style | Tong et al., *WirelessAgent: Large Language Model Agents for Intelligent Wireless Networks*, China Communications 23(3):265–285, 2026, DOI `10.23919/jcc.fa.2025-0163.202603`（另有 arXiv `2409.07964`、`2505.01074` 两个版本） | 通信领域现有的 LLM agent：perception / memory / planning / action。代表"agent 会选工具、会决策，但默认工具执行是可靠的" |
+| B2 WirelessOpsAgent-style | Lu et al., *WirelessOpsAgent: A Benchmark and Agent Design for Action Assurance in Wireless Networks*, arXiv `2608.08277` | 强通信 agent 对照：执行前检查 evidence 与 contract，决定 APPLY / HOLD / RETRY / ESCALATE。它解决的是 pre-execution assurance，本实验测它在 post-dispatch 中断下会怎样。它自己的对照就含 Direct、WirelessAgent++ 加 contract、CRITIC 式三类 |
+| B3 Verified Tool Calls | Mansoor, Phadke, Rana, *Verified Tool Calls Improve LLM Agent Reliability Under Non-Atomic Failures*, arXiv `2608.02645` | 最直接的 execution-reliability 对照：postcondition verification、verify-before-retry、idempotency key。与本文的差别正在于它没有 durable lifecycle、没有远端 epoch、没有重连调和 |
+| Ours | 本文 | stable operation identity + persistent lifecycle + remote epoch / fencing + scoped reconciliation + first-wins settlement |
+| Direct / one-shot | 最低控制组 | 不重试、不记账。只作下界，**不占正式对照名额**，以免主表膨胀 |
+
+逻辑链是干净的：B1 会做通信决策；B2 在执行前检查该不该执行；B3 在执行后超时会先验证再重试；本文把一次远端操作当成跨断连持续存在的 durable operation，直到调和完成才结算。四个方法各自停在前一层。
+
+CRITIC 与 AgentSpec **不进主实验**。它们会把坐标轴搞散：CRITIC 处理的是验证器本身的质量，AgentSpec 处理的是动作允不允许执行，而本文处理的是动作已经释放之后在不可靠远端链路上到底有没有执行。三者不是同一层的对照。
+
+### 必引但不作为对照
+
+以下四篇必须引用，但不跑实验。
+
+| 文章 | 为什么引 | 为什么不跑 |
+|---|---|---|
+| Yao et al., *ReAct: Synergizing Reasoning and Acting in Language Models*, ICLR 2023, arXiv `2210.03629` | 通信 agent 的 agent-loop 源头之一 | 通用背景，不构成执行语义上的对照 |
+| *WirelessAgent++: Automated Agentic Workflow Design and Benchmarking for Wireless Networks*, arXiv `2603.00501` | WirelessAgent 的直接后续，说明通信 agent 已在做 workflow search 与 WirelessBench | 它优化的是 agent workflow，不是 execution semantics |
+| Ma et al., *TopoLLM: LLM-driven adaptive tool learning for real-time emergency network topology planning*, Digital Communications and Networks 12(2):273–282, 2026, DOI `10.1016/j.dcan.2025.10.002` | 目前与"应急通信 + LLM + tool use"最贴的正式发表工作，负责把本文场景接进应急通信 agent 文献 | 同为场景接入，非执行语义对照。注意其全文尚未核实（ScienceDirect 反爬），工具目录与失败语义未验证 |
+| Wang, Poskitt et al., *AgentSpec: Customizable Runtime Enforcement for Safe and Reliable LLM Agents*, arXiv `2503.18666`, 2025 | 界定另一条邻近的 runtime 方向：runtime enforcement 决定"动作允不允许执行" | 本文处理"动作已经释放后，在不可靠远端链路上到底有没有执行"，层级不同 |
+
+另保留最小工程惯例对照：blind retry 与指数退避（AWS Builders' Library 与 Google SRE Book），以及默认工具超时语义（MCP 规范 2026-07-28 的 Cancellation 章）。二者用于说明"业界默认做法"的位置，不作为方法对照。
 
 第三层是场景对照，即已发表的 LoRa 滑坡与落石监测系统。它们同时是本文参数的实测来源和自然对照集：读者会问"你的设置与真实部署差多远"，这一层就是回答。
 
