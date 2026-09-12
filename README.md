@@ -100,20 +100,20 @@
 
 | 方法 | 语义 | 出处 |
 |---|---|---|
-| One-shot execution | 假定工具执行可靠：每个决策只发一次，失败即上报并丢弃。这是 WirelessAgent 的**假设**，不是 WirelessAgent 系统 | 最低控制组，无单一出处 |
+| One-shot execution | 假定工具执行可靠：每个决策只发一次，失败即上报并丢弃。这是 WirelessAgent 的**假设**，不是 WirelessAgent 系统 | Tong et al., *WirelessAgent: Large Language Model Agents for Intelligent Wireless Networks*, China Communications 23(3):265–285, 2026, DOI [`10.23919/jcc.fa.2025-0163.202603`](https://doi.org/10.23919/jcc.fa.2025-0163.202603)，亦见 [arXiv:2409.07964](https://arxiv.org/abs/2409.07964) |
 | Retry-on-uncertainty | 结果不确定时以**新的请求身份**重发，带重试预算 | 工程惯例，见 AWS Builders' Library 与 Google SRE Book |
 | Verified Tool Calls | 超时后验证后置条件，再决定是否重发 | Mansoor, Phadke, Rana, arXiv `2608.02645` |
 | **Ours** | 稳定操作身份 + 持久生命周期 + 远端 epoch fencing + 限定范围调和 + first-wins 结算 | 本文 |
 
 逻辑链是干净的：one-shot 假定执行可靠；retry-on-uncertainty 承认不确定但用新身份重发；verified tool calls 承认不确定且先验证再重发；本文把一次远端操作当成跨断连持续存在的 durable operation，直到调和完成才结算。四条各自停在前一层。
 
-一条口径声明：`retry-on-uncertainty` **不等同于** WirelessOpsAgent 的方法。该文的 RETRY 是动作保证阶段的一个决策，而不是分发后的盲目重试。把它当论文名使用会被正确地质疑；作为语义对照则没有问题。
+一条口径声明：`retry-on-uncertainty` **不等同于** WirelessOpsAgent（[arXiv:2608.08277](https://arxiv.org/abs/2608.08277)）的方法。该文的 RETRY 是动作保证阶段的一个决策，分发后的盲目重试只是其骨架。把它当论文名使用会被正确地质疑；作为语义对照则没有问题。
 
 CRITIC 与 AgentSpec 不进主实验。前者处理验证器本身的质量，后者处理动作允不允许执行，与本文所在的层不同，混入会把坐标轴搞散。
 
-**LLM supplement。** 主表固定决策轨迹，因为本文的自变量是执行语义，模型采样噪声会毁掉这条因果。补充实验再让**同一个 LLM** 接四种执行层，检验闭环情形下结论是否保持；WirelessAgent 与 WirelessOpsAgent 按各自论文的方法在那一层实现，与本文的对照挂在 agent 级而非 runtime 级。接口留在这里，实现待做。
+**LLM supplement。** 主表固定决策轨迹，因为本文的自变量是执行语义，模型采样噪声会毁掉这条因果。补充实验再让**同一个 LLM** 接四种执行层，检验闭环情形下结论是否保持；[WirelessAgent](https://arxiv.org/abs/2409.07964) 与 [WirelessOpsAgent](https://arxiv.org/abs/2608.08277) 按各自论文的方法在那一层实现，与本文的对照挂在 agent 级而非 runtime 级。接口留在这里，实现待做。
 
-**必引但不跑。** Yao et al., *ReAct*, ICLR 2023, arXiv `2210.03629`（agent-loop 源头，通用背景）；*WirelessAgent++*, arXiv `2603.00501`（通信 agent 已在做 workflow search，但优化的是 workflow 而非执行语义）；Ma et al., *TopoLLM: LLM-driven adaptive tool learning for real-time emergency network topology planning*, Digital Communications and Networks 12(2):273–282, 2026, DOI `10.1016/j.dcan.2025.10.002`（与"应急通信 + LLM + tool use"最贴的正式发表工作，负责把本文场景接进应急通信 agent 文献；其全文尚未核实，工具目录与失败语义未验证）；Wang, Poskitt et al., *AgentSpec: Customizable Runtime Enforcement for Safe and Reliable LLM Agents*, arXiv `2503.18666`, 2025（界定邻近的 runtime enforcement 方向，即动作允不允许执行）。
+**必引但不跑。** Yao et al., *ReAct: Synergizing Reasoning and Acting in Language Models*, ICLR 2023, [arXiv:2210.03629](https://arxiv.org/abs/2210.03629)（agent-loop 源头，通用背景）；Tong et al., *WirelessAgent++: Automated Agentic Workflow Design and Benchmarking for Wireless Networks*, [arXiv:2603.00501](https://arxiv.org/abs/2603.00501)（通信 agent 已在做 workflow search，但优化的是 workflow 而非执行语义）；Ma et al., *TopoLLM: LLM-driven adaptive tool learning for real-time emergency network topology planning*, Digital Communications and Networks 12(2):273–282, 2026, DOI [`10.1016/j.dcan.2025.10.002`](https://doi.org/10.1016/j.dcan.2025.10.002)（与"应急通信 + LLM + tool use"最贴的正式发表工作，负责把本文场景接进应急通信 agent 文献；其全文尚未核实，工具目录与失败语义未验证）；Wang, Poskitt et al., *AgentSpec: Customizable Runtime Enforcement for Safe and Reliable LLM Agents*, [arXiv:2503.18666](https://arxiv.org/abs/2503.18666), 2025（界定邻近的 runtime enforcement 方向，即动作允不允许执行）。
 
 另保留最小工程惯例参照：blind retry 与指数退避，以及默认工具超时语义（MCP 规范 2026-07-28 的 Cancellation 章）。
 
@@ -157,7 +157,7 @@ CRITIC 与 AgentSpec 不进主实验。前者处理验证器本身的质量，�
 
 **最接近的既有工作。** INFOCOM 2026 的 *Rollback Is Not Undo: Path-Dependent Failures in LLM-Arbitrated Network Control*（Weici Pan, Zhenhua Liu，DOI `10.1109/INFOCOM59046.2026.11571400`）在同类会议与同类问题空间证明，LLM 仲裁的网络控制回路中回滚无法恢复行为，且恢复效果路径相关。该文提出 `recovery gap` 指标，故障模式含 observation corruption、delay-reordering 与 agent dropout。它闭源且无公开 artifact。未覆盖的是灾害与应急场景、真实轨迹驱动与实体生命周期。本文需引用并显式对比。
 
-**动作保证这一层。** WirelessOpsAgent（[arXiv:2608.08277](https://arxiv.org/abs/2608.08277)，CC BY 4.0）把研究层次定为 **Action Assurance**，判据是动作在下发前是否被正确授权，其表述为 *repairs recoverable support failures before execution*，问题被限定在可修复范围内。本文场景中 88.5% 的点位永久不可达、断电可持续数周，大量失败不可修复。该文中心是分发前的 repair，本文中心是分发后任务在实体变动下的存续。其发布物是数据与工具契约，不含运行时与评分谓词。
+**动作保证这一层。** Lu et al., *WirelessOpsAgent: A Benchmark and Agent Design for Action Assurance in Wireless Networks*（[arXiv:2608.08277](https://arxiv.org/abs/2608.08277)，CC BY 4.0）把研究层次定为 **Action Assurance**，判据是动作在下发前是否被正确授权，其表述为 *repairs recoverable support failures before execution*，问题被限定在可修复范围内。本文场景中 88.5% 的点位永久不可达、断电可持续数周，大量失败不可修复。该文中心是分发前的 repair，本文中心是分发后任务在实体变动下的存续。其发布物是数据与工具契约，不含运行时与评分谓词。
 
 **已被占据的机制。**
 
@@ -184,7 +184,7 @@ CRITIC 与 AgentSpec 不进主实验。前者处理验证器本身的质量，�
 | 协调者重启后的操作存续 | 进程内的操作 registry 依赖 producer 的 `done` 最终返回，没有跨重启的操作存续语义；本文实测无日志时 60 次重启产生 689.4 次重复效果 |
 | 实体生命周期作为一等对象 | 通读的同域论文中，网络一律是控制的对象，不承载 agent 自身的遥测 |
 | 结果不可知作为一等故障类 | 既有工作把超时当作失败处理，或假定故障发生可被检出 |
-| 不可修复失败 | WirelessOpsAgent 自述限定 recoverable support failures；本文有 88.5% 永久不可达与数周断电 |
+| 不可修复失败 | WirelessOpsAgent（[arXiv:2608.08277](https://arxiv.org/abs/2608.08277)）自述限定 recoverable support failures；本文有 88.5% 永久不可达与数周断电 |
 | 验证者自身不可用 | CRITIC 与 `2608.02645` 均假定 verifier 会响应；分区下验证本身也会超时且结果不可知 |
 | 能量与供电维度 | 通读的 9 篇同类论文中无一建模 |
 | 地形与传播维度 | 同类论文中地形最多是几何抽象，无一使用 DEM 或实测 trace |
