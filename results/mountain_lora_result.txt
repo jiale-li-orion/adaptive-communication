@@ -1,0 +1,23 @@
+SRTM1 N30E094: (3601, 3601), elevation 2025-6690 m
+gateway on ridge (30.33, 94.78) @ 2317 m
+
+node       dist_km  node_m  obstr_m   FS_dB  L50_dB  L90_dB  L99_dB  SF@L50  SF@L90  SF@L99
+-------------------------------------------------------------------------------------------
+valley A      8.37    3874     1169    49.7   157.0   157.0   157.0    none    none    none
+valley B     11.99    3346      375    52.8   148.9   149.0   149.1    SF10    SF11    SF11
+valley C      6.94    2287      150    48.1   119.2   119.4   119.5     SF7     SF7     SF7
+far D        20.41    2882      918    57.4   159.4   160.0   160.5    none    none    none
+far E        12.61    4925     1102    53.2   141.2   141.4   141.6     SF8     SF8     SF8
+
+Energy per uplink (20 B payload) at the reliability-90% spreading factor:
+node         SF  airtime_ms  I_tx_mA   charge_uC  mAh/yr@1/h
+valley A     12         546       44     24027.3       58.47
+valley B     11         298       44     13109.9       31.90
+valley C      7          29       44      1287.3        3.13
+far D        12         546       44     24027.3       58.47
+far E         8          51       44      2252.8        5.48
+
+For scale: a 3.6 V 3600 mAh LiSOCl2 cell delivers ~3600 mAh once.
+Assumes 868 MHz, TX 14 dBm, 2 dBi both ends, 1 dB feeder, BW 125 kHz, 2 m antennas,
+ground eps=15 / sigma=0.005 S/m, continental temperate climate, mdvarx=11.
+Airtime is payload-only (preamble/header/CRC excluded) -> treat as a lower bound.

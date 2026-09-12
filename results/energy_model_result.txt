@@ -1,0 +1,55 @@
+==============================================================================
+SOLAR + BATTERY VIABILITY FOR A HIGH-ALTITUDE SITE
+==============================================================================
+site            : lat 30.33 N, altitude 3925 m (mean Jan temp -19.5 C)
+panel           : 100 W, system derate 0.75
+battery         : 100 Ah / 12 V (1200 Wh), DoD 0.7
+charge gate     : LiFePO4 cannot charge below 5 C
+
+--- preset: relay_only  ->  1.19 Wh/day  (0.050 W avg) ---
+chemistry     usable Wh  autonomy d  blackout d/yr       %
+LiFePO4             420         352             65    17.8
+NMC622               92          78            299    81.9
+VRLA                546         458              0     0.0
+
+--- preset: monitoring_station  ->  16.11 Wh/day  (0.671 W avg) ---
+chemistry     usable Wh  autonomy d  blackout d/yr       %
+LiFePO4             420          26            342    93.7
+NMC622               92           6            360    98.6
+VRLA                546          34              0     0.0
+
+Blackout months, monitoring_station + LiFePO4 (1=Jan):
+  1:8  2:31  3:31  4:31  5:31  6:31  7:31  8:31  9:31  10:31  11:31  12:24
+
+Sensitivity: monitoring_station + LiFePO4, panel size
+  panel W  blackout d/yr       %
+       30            342    93.7
+       60            342    93.7
+      100            342    93.7
+      150            342    93.7
+      200            342    93.7
+
+Sensitivity: monitoring_station + LiFePO4 @100 W, snow-burial probability
+ p(snow)/day  blackout d/yr       %
+        0.00            342    93.7
+        0.05            342    93.7
+        0.10            342    93.7
+        0.20            342    93.7
+
+CLIMATE SENSITIVITY — the absolute result depends on the temperature baseline,
+which has NOT been verified against station data. Swinging the baseline:
+  offset C   Jan mean C   Jul mean C  blackout station  blackout relay
+        -6        -25.5        -13.5               342              65
+        -3        -22.5        -10.5               342              65
+         0        -19.5         -7.5               342              65
+         3        -16.5         -4.5               342              65
+         6        -13.5         -1.5               342              65
+         9        -10.5          1.5               260               0
+        12         -7.5          4.5               217               0
+
+The charge gate binds whenever the daytime temperature stays below 5 C:
+in that regime no amount of PV can refill the pack, so panel sizing stops mattering
+and the only levers are battery chemistry, a heated enclosure, or a lower site.
+
+NOTE: snow days force generation to exactly 0 (buried panel). At this altitude the
+LiFePO4 charge gate also zeroes generation for most of the winter regardless of snow.

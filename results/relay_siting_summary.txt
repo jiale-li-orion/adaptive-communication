@@ -1,0 +1,14 @@
+Siting-constrained greedy relay placement
+constraints: elevation 2500-4000 m, slope <= 15 deg
+feasible sites: 360; targets: 258 (from 4060 unreachable)
+
+relay 1: lat 30.3208 lon 94.7287 elev 3925 m
+relay 2: lat 30.2658 lon 94.7030 elev 3796 m
+
+CAVEATS
+- Targets thinned 1/15.74 (258 of 4060 unreachable points), so "100%" is on a subsample.
+- Sites at 3925 m / 3796 m are plausible but demanding: no energy model yet (solar + battery +
+  winter survival at altitude), and no access/road proxy beyond slope and elevation band.
+- Same radio assumptions as the gateway (14 dBm, 2 dBi, 90% reliability).
+- Earlier UNCONSTRAINED run picked a 4510 m mountaintop and claimed 97% from one relay -- that
+  number is invalid and superseded by this run.

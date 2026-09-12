@@ -1,0 +1,15 @@
+unreachable-from-gateway points: 4060 / 14641 (27.7 %)
+target points after thinning : 258 (scale factor 15.74)
+feasible relay sites         : 720 (elev 2500-4000 m, slope <= 15 deg)
+  candidate elevation: min 2500  median 3172  max 4000 m
+
+ITM evaluations: 92880 — running with 12 workers
+done in 68s
+
+greedy relay placement (real union at each step):
+step         lat       lon   elev_m  new_pts  %of_unreach  cum_%unreach
+1         30.321    94.729     3925      229         88.8          88.8   (overall ~96.9%)
+2         30.266    94.703     3796       29         11.2         100.0   (overall ~100.0%)
+  no further gain — stopping
+
+wrote /home/orion/Communications/pre_work/raw/relay_siting_summary.txt

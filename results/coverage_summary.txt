@@ -1,0 +1,57 @@
+==========================================================================
+SINGLE-GATEWAY COVERAGE, REAL TERRAIN (Bome/Yigong, Tibet), 868 MHz, 90% reliability
+==========================================================================
+grid                  : 121x121 = 14641 points (~200 m spacing)
+gateway               : 30.330N 94.780E
+reachable (some SF)   : 10581  ( 72.3 %)
+UNREACHABLE (even SF12):  4060  ( 27.7 %)
+
+breakdown by lowest SF that closes:
+  SF7 :  6250  ( 42.7 %)
+  SF8 :   885  (  6.0 %)
+  SF9 :   853  (  5.8 %)
+  SF10:   903  (  6.2 %)
+  SF11:   798  (  5.5 %)
+  SF12:   892  (  6.1 %)
+
+loss over reachable points: min 0.0  median 135.9  max 154.0 dB
+loss over UNREACHABLE pts : min 154.0  median 159.7  max 174.5 dB
+
+--------------------------------------------------------------------------
+GREEDY RELAY PLACEMENT (relay also on the ridge; same radio assumptions)
+--------------------------------------------------------------------------
+unreachable points to serve: 4060
+candidate relay sites      : 225
+target points evaluated    : 406
+
+rank    relay lat  relay lon   unreachable served
+1          30.418     94.839                  395
+2          30.271     94.707                  382
+3          30.315     94.736                  382
+4          30.389     94.765                  374
+5          30.374     94.795                  369
+
+cumulative coverage if the top-k relays are deployed (upper bound, sites reused):
+  k=1   newly served ~ 97.3% of unreachable  ->  overall coverage ~ 99.2%
+  k=2   newly served ~ 94.1% of unreachable  ->  overall coverage ~ 98.4%
+  k=3   newly served ~ 94.1% of unreachable  ->  overall coverage ~ 98.4%
+  k=5   newly served ~ 90.9% of unreachable  ->  overall coverage ~ 97.5%
+  k=10  newly served ~ 87.9% of unreachable  ->  overall coverage ~ 96.7%
+
+======================================================================
+CAVEATS — read before quoting the relay numbers above
+======================================================================
+1. The top-ranked "relay" site (30.418, 94.839) sits at 4510 m elevation — a mountaintop 2193 m
+   ABOVE the gateway. From a 5000 m peak almost every valley point has line of sight, which is
+   why one relay "serves 97% of the unreachable points".
+   => The relay figures are an UPPER BOUND under an unrealistic siting assumption. Real relay
+   sites need road/access, installability, and solar exposure. A siting-constrained version
+   (elevation caps, slope limits, access proxies) would give much lower numbers and is the
+   correct next step.
+2. One sampled point returned 42.7 dB total loss at 3.75 km, BELOW the 48.6 dB free-space value.
+   ITM's reference attenuation can go negative (LoS/super-refractive gain), so this is not
+   necessarily a bug — but it should be checked before publication.
+3. "Loss over reachable points: min 0.0 dB" is an artifact of co-located grid points
+   (distance clamped at 0.05 km) and should be excluded from any reported range.
+4. Unreachable share (27.7%) IS the robust headline: it is a single-gateway, terrain-only figure
+   and does not depend on the relay assumptions.
