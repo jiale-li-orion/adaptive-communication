@@ -144,9 +144,10 @@ class Delivery:
 class UplinkRecord:
     node_id: str
     hour: int
-    opportunity_index: int
+    opportunity_index: int          # -1 when the gateway did not hear the uplink
     payload_bytes: int
     airtime_ms: float
+    arrived: bool = True
     delivered: list[Delivery] = field(default_factory=list)
 
 
@@ -165,7 +166,8 @@ class ControlPlane:
     """
 
     def __init__(self, profile: LoRaProfile, seed: int, downlink_per_uplink: int = 1,
-                 rx_window_ms: float = 2000.0, backhaul_p_good: float = 0.62):
+                 rx_window_ms: float = 2000.0, backhaul_p_good: float = 0.62,
+                 uplink_p_arrive: float = 0.74):
         if downlink_per_uplink < 1:
             raise ValueError("downlink_per_uplink must be at least 1")
         self.profile = profile
@@ -173,12 +175,14 @@ class ControlPlane:
         self.downlink_per_uplink = downlink_per_uplink
         self.rx_window_ms = rx_window_ms
         self.backhaul_p_good = backhaul_p_good
+        self.uplink_p_arrive = uplink_p_arrive
 
         self.queued: dict[str, list[DownlinkMessage]] = {}
         self.energy: dict[str, RadioEnergy] = {}
 
         # Counters. The opportunity bound is asserted on these, so they are not diagnostics.
         self.uplinks = 0
+        self.uplinks_heard = 0
         self.opportunities_created: dict[str, int] = {}
         # Attempts, not successes. An attempt spends the opportunity whether or not it lands,
         # so bounding only the deliveries would let a model retry without limit and still pass.
@@ -214,17 +218,40 @@ class ControlPlane:
         return len(self.queued.get(node_id, ()))
 
     # -------------------------------------------------------------- node side
+    def prune(self, node_id: str, hour: int) -> int:
+        """Drop queued messages whose validity has passed. Returns how many were dropped.
+
+        Expiry is a property of time, not of a window opening. Pruning only inside the delivery
+        path would let a node that never gets heard accumulate expired commands without bound,
+        and would make the queue's contents depend on the node's uplink luck rather than on the
+        deadlines the center set.
+        """
+        queue = self.queued.get(node_id)
+        if not queue:
+            return 0
+        live = [m for m in queue if m.expires_at is None or m.expires_at >= hour]
+        dropped = len(queue) - len(live)
+        self.downlink_expired += dropped
+        if live:
+            self.queued[node_id] = live
+        else:
+            self.queued.pop(node_id, None)
+        return dropped
+
     def uplink(self, node_id: str, hour: int, sf: int, payload_bytes: int,
                attempt_index: int = 0) -> UplinkRecord:
-        """The node transmits. This creates one opportunity and immediately uses it.
+        """The node transmits. An opportunity exists only if the gateway heard it.
 
-        The uplink carries application payload (telemetry, or an acknowledgement piggybacked on
-        the node's own report). Whatever the payload, the transmit costs its full time on air.
+        The node opens RX1/RX2 after every transmission regardless, but the gateway can only use
+        a window it knows about, and it knows about one only by having received the uplink that
+        preceded it. Counting opportunities per transmission rather than per received uplink
+        would overstate the control channel's capacity and, worse, would give the coordinator
+        windows that no real gateway could have scheduled into.
+
+        The transmit costs its full time on air either way, and the node pays for the receive
+        window either way: both are spent before the node can learn whether anyone heard it.
         """
         self.uplinks += 1
-        index = self.opportunities_created.get(node_id, 0)
-        self.opportunities_created[node_id] = index + 1
-
         airtime = self.profile.time_on_air_ms(sf, payload_bytes)
         self.airtime_uplink_ms += airtime
         energy = self.energy.setdefault(node_id, RadioEnergy())
@@ -234,8 +261,19 @@ class ControlPlane:
         # to poll, which is the opposite of the constraint this module models.
         energy.add_rx(self.rx_window_ms)
 
+        self.prune(node_id, hour)
+        heard = stable_uniform(self.seed, "ul", node_id, hour,
+                               attempt_index) < self.uplink_p_arrive
+        if not heard:
+            self.uplinks_unheard = getattr(self, "uplinks_unheard", 0) + 1
+            return UplinkRecord(node_id=node_id, hour=hour, opportunity_index=-1,
+                                payload_bytes=payload_bytes, airtime_ms=airtime, arrived=False)
+
+        self.uplinks_heard += 1
+        index = self.opportunities_created.get(node_id, 0)
+        self.opportunities_created[node_id] = index + 1
         record = UplinkRecord(node_id=node_id, hour=hour, opportunity_index=index,
-                              payload_bytes=payload_bytes, airtime_ms=airtime)
+                              payload_bytes=payload_bytes, airtime_ms=airtime, arrived=True)
         record.delivered = self._deliver(node_id, hour, index, sf)
         return record
 
@@ -248,10 +286,8 @@ class ControlPlane:
 
         delivered: list[Delivery] = []
         for slot in range(self.downlink_per_uplink):
-            # Drop anything whose validity has passed before spending an opportunity on it.
-            while queue and queue[0].expires_at is not None and queue[0].expires_at < hour:
-                queue.pop(0)
-                self.downlink_expired += 1
+            self.prune(node_id, hour)
+            queue = self.queued.get(node_id)
             if not queue:
                 break
 
@@ -306,15 +342,18 @@ class ControlPlane:
                     f"({self.opportunities_created.get(node_id, 0)} uplinks x "
                     f"{self.downlink_per_uplink})")
         total_attempts = self.downlink_attempts
-        total_opportunity = self.uplinks * self.downlink_per_uplink
+        total_opportunity = self.uplinks_heard * self.downlink_per_uplink
         if total_attempts > total_opportunity:
             raise AssertionError(
-                f"{total_attempts} downlink attempts against {total_opportunity} opportunities")
+                f"{total_attempts} downlink attempts against {total_opportunity} opportunities "
+                f"({self.uplinks_heard} heard uplinks x {self.downlink_per_uplink}; "
+                f"{self.uplinks} transmitted)")
 
     def summary(self) -> dict:
         return {
             "uplinks": self.uplinks,
-            "opportunities": self.uplinks * self.downlink_per_uplink,
+            "uplinks_heard": self.uplinks_heard,
+            "opportunities": self.uplinks_heard * self.downlink_per_uplink,
             "backhaul_accepted": self.backhaul_accepted,
             "backhaul_refused": self.backhaul_refused,
             "downlink_attempts": self.downlink_attempts,

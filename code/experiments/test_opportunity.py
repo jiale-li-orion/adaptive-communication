@@ -115,11 +115,18 @@ def test_opportunity_bound() -> None:
                                                 payload_bytes=38, enqueued_at=0), hour=0)
     check("十条命令都进了网关队列", plane.queued_count(node) == 10)
 
-    for uplink_index in range(3):
-        plane.uplink(node, hour=uplink_index, sf=9, payload_bytes=20)
+    heard = 0
+    for uplink_index in range(20):
+        rec = plane.uplink(node, hour=uplink_index, sf=9, payload_bytes=20,
+                           attempt_index=uplink_index)
+        heard += int(rec.arrived)
+        if heard == 3:
+            break
     plane.check_opportunity_bound()
-    check("三次上行只产生三次下行尝试", plane.downlink_attempts == 3,
-          f"attempts={plane.downlink_attempts}, uplinks={plane.uplinks}")
+    check("三次被听到的上行只产生三次下行尝试",
+          plane.downlink_attempts == 3 and plane.uplinks_heard == 3,
+          f"attempts={plane.downlink_attempts}, heard={plane.uplinks_heard}, "
+          f"transmitted={plane.uplinks}")
 
     # A retry budget cannot manufacture opportunities.
     for extra in range(50):
@@ -146,8 +153,50 @@ def test_no_uplink_no_downlink() -> None:
     check("命令仍留在网关队列里", plane.queued_count("r01") == 1)
 
     rec = plane.uplink("r01", hour=1, sf=9, payload_bytes=20)
-    check("第一次上行才产生投递机会", plane.downlink_attempts == 1)
-    check("上行记录里绑定的是该次机会", rec.opportunity_index == 0)
+    if rec.arrived:
+        check("第一次被听到的上行才产生投递机会", plane.downlink_attempts == 1)
+        check("上行记录里绑定的是该次机会", rec.opportunity_index == 0)
+    else:
+        check("未被听到时既不投递也不产生机会",
+              plane.downlink_attempts == 0 and rec.opportunity_index == -1)
+        check("命令仍留在队列里等待下一次机会", plane.queued_count("r01") == 1)
+
+
+def test_unheard_uplink_creates_no_opportunity() -> None:
+    print("\n[3b] 网关没听到的上行不产生机会")
+    # A model that counts opportunities per transmission gives the coordinator windows that no
+    # gateway could have scheduled into. Find a node/hour where the uplink is not heard.
+    seed = 31
+    unheard = heard = 0
+    opp_given = opp_none = 0
+    for attempt in range(300):
+        plane = ControlPlane(LoRaProfile(), seed=seed, downlink_per_uplink=1)
+        # Seed a queued command at an hour with a live backhaul so the queue is never the reason
+        # for zero attempts.
+        hour = next(h for h in range(400) if plane.backhaul_available(h))
+        plane.center_send("r01", DownlinkMessage(identity=f"op:{attempt}", kind="command",
+                                                 payload_bytes=38, enqueued_at=hour), hour=hour)
+        rec = plane.uplink("r01", hour=hour, sf=9, payload_bytes=20, attempt_index=attempt)
+        if rec.arrived:
+            heard += 1
+            check_ok = plane.opportunities_created.get("r01", 0) == 1
+            opp_given += int(check_ok)
+        else:
+            unheard += 1
+            opp_none += int(plane.downlink_attempts == 0
+                            and plane.opportunities_created.get("r01", 0) == 0)
+    check("样本里两种上行都出现", heard > 20 and unheard > 20, f"heard={heard} unheard={unheard}")
+    check("被听到的上行恰好产生一个机会", opp_given == heard, f"{opp_given}/{heard}")
+    check("未被听到的上行不产生机会也不投递", opp_none == unheard, f"{opp_none}/{unheard}")
+
+    plane = ControlPlane(LoRaProfile(), seed=seed)
+    for attempt in range(50):
+        plane.uplink("r01", hour=attempt, sf=9, payload_bytes=20, attempt_index=attempt)
+    plane.check_opportunity_bound()
+    check("全量上行后上界仍成立",
+          plane.downlink_attempts <= plane.uplinks_heard * plane.downlink_per_uplink,
+          f"attempts={plane.downlink_attempts} heard={plane.uplinks_heard} "
+          f"transmitted={plane.uplinks}")
 
 
 def test_downlink_per_uplink() -> None:
@@ -162,9 +211,16 @@ def test_downlink_per_uplink() -> None:
                                                      kind="command", payload_bytes=38,
                                                      enqueued_at=hour), hour=hour)
         assert plane.queued_count("r01") == 8, "队列必须非空，否则本项平凡通过"
-        plane.uplink("r01", hour=hour, sf=9, payload_bytes=20)
+        # Retry until an uplink is actually heard, so the check is about the allowance rather
+        # than about uplink loss.
+        for attempt in range(50):
+            rec = plane.uplink("r01", hour=hour + attempt, sf=9, payload_bytes=20,
+                               attempt_index=attempt)
+            if rec.arrived:
+                break
+        assert rec.arrived, "未能取得一次被听到的上行"
         plane.check_opportunity_bound()
-        check(f"额度 {budget} 时一次上行最多尝试 {budget} 次",
+        check(f"额度 {budget} 时一次被听到的上行最多尝试 {budget} 次",
               plane.downlink_attempts == budget,
               f"attempts={plane.downlink_attempts}, 队列剩 {plane.queued_count('r01')}")
 
@@ -222,6 +278,18 @@ def test_backhaul_and_expiry() -> None:
     plane2.uplink("r01", hour=99, sf=9, payload_bytes=20)
     check("过期命令不占用机会", plane2.downlink_attempts == 0 and plane2.downlink_expired == 1,
           f"attempts={plane2.downlink_attempts} expired={plane2.downlink_expired}")
+
+    # Expiry is time-driven: a node that is never heard must not accumulate expired commands.
+    plane3 = ControlPlane(LoRaProfile(), seed=12)
+    for i in range(5):
+        plane3.center_send("r01", DownlinkMessage(identity=f"op:{i}", kind="command",
+                                                  payload_bytes=38, enqueued_at=0, expires_at=2),
+                           hour=0)
+    check("五条命令入队", plane3.queued_count("r01") == 5)
+    plane3.prune("r01", hour=10)
+    check("过期由时间驱动，无需等待窗口",
+          plane3.queued_count("r01") == 0 and plane3.downlink_expired == 5,
+          f"queue={plane3.queued_count('r01')} expired={plane3.downlink_expired}")
     plane2.check_opportunity_bound()
 
 
@@ -254,6 +322,7 @@ def main() -> int:
     test_airtime()
     test_opportunity_bound()
     test_no_uplink_no_downlink()
+    test_unheard_uplink_creates_no_opportunity()
     test_downlink_per_uplink()
     test_identity_separates_draws()
     test_backhaul_and_expiry()
