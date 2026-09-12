@@ -31,7 +31,7 @@ import sys
 import numpy as np
 
 from faults import KIND_DEFAULTS, FaultInjector, FaultSpec, KINDS
-from policies import BUSINESS_ARMS, build_arm
+from policies import BUSINESS_ARMS, COMPOSED_ARMS, build_arm
 from runner import build_deployment, run_episode
 from scorer import score
 from supply import SupplyFleet
@@ -52,7 +52,9 @@ COLUMNS = (
     ("time_to_know_s", lambda r, a, p: float(a["knowledge_latency_s"])),
     ("downlink_attempts", lambda r, a, p: float(p.downlink_attempts)),
     ("airtime_h", lambda r, a, p: a["airtime_ms"] / 3.6e6),
+    ("stale_reorders", lambda r, a, p: float(a["stale_reorders"])),
     ("stale_overwrites", lambda r, a, p: float(a["stale_overwrites"])),
+    ("duplicate_applications", lambda r, a, p: float(a["duplicate_applications"])),
     ("fenced", lambda r, a, p: float(a["fenced"])),
     ("deduplicated", lambda r, a, p: float(a["reaccepted"])),
 )
@@ -85,6 +87,8 @@ def main() -> None:
     ap.add_argument("--seeds", type=int, default=1,
                     help="seeds are drawn from the development split, 0..999")
     ap.add_argument("--arms", default=",".join(BUSINESS_ARMS))
+    ap.add_argument("--composed", action="store_true",
+                    help="compare cells of the planner x runtime 2x2 instead of the business arms")
     ap.add_argument("--trajectories", default=",".join(TRAJECTORIES))
     ap.add_argument("--no-energy", dest="energy", action="store_false")
     ap.add_argument("--tag", default="")
@@ -92,9 +96,10 @@ def main() -> None:
 
     arms = [a for a in args.arms.split(",") if a]
     trajectories = [t for t in args.trajectories.split(",") if t]
-    unknown = [a for a in arms if a not in BUSINESS_ARMS]
+    known = set(BUSINESS_ARMS) | set(COMPOSED_ARMS)
+    unknown = [a for a in arms if a not in known]
     if unknown:
-        raise SystemExit(f"unknown arms {unknown}; have {sorted(BUSINESS_ARMS)}")
+        raise SystemExit(f"unknown arms {unknown}; have {sorted(known)}")
 
     print(f"业务层七条诊断轨迹：{args.days:g} 天 × {args.seeds} 个种子，"
           f"能量模型 {'开' if args.energy else '关'}")
@@ -114,7 +119,7 @@ def main() -> None:
         for arm in arms:
             runs = per_arm[arm]
             mean = {n: float(np.mean([r[n] for r in runs])) for n, _ in COLUMNS}
-            row = {"arm": arm, "trajectory": trajectory,
+            row = {"arm": arm, "trajectory": trajectory, "workload": trajectory,
                    "per_seed": {n: [r[n] for r in runs] for n, _ in COLUMNS}, **mean}
             rows.append(row)
             print(f"{arm:18s}" + "".join(f"{mean[n]:16.1f}" for n, _ in COLUMNS))

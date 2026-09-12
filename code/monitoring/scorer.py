@@ -78,7 +78,8 @@ class RunRecord:
     hours: float = 0.0
     reaccepted: int = 0     # C1: an operation the remote refused to apply a second time
     fenced: int = 0         # C2: a write the remote refused because it was older than the one in force
-    stale_overwrites: int = 0   # an older write that replaced a newer one already in force
+    stale_reorders: int = 0     # a write issued earlier took effect after one issued later
+    stale_overwrites: int = 0   # that violation put a value back the node had already moved past
     stale_held: int = 0         # commands the network held back for the ordering fault
     stale_released: int = 0     # held commands that were later released
     refused_actions: int = 0    # policy asked for something outside the four interfaces
@@ -227,7 +228,9 @@ def business_metrics(record: RunRecord) -> dict:
         "false_successes": false_success,
         "false_successes_instant": false_success - overwritten,
         "false_successes_overwritten": overwritten,
+        "stale_reorders": record.stale_reorders,
         "stale_overwrites": record.stale_overwrites,
+        "duplicate_applications": record.reaccepted,
         "fenced": record.fenced,
         "reaccepted": record.reaccepted,
         "declared_without_evidence": declared_bare,

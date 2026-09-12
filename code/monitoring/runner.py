@@ -343,6 +343,12 @@ def run_episode(policy: Policy, hours: int = 72, seed: int = 0,
     applied_version: dict[str, int] = {}
     reaccepted = 0
     fenced = 0
+    # Two different events, kept apart because they have different owners. `stale_reorders` is a
+    # protocol-level ordering violation: a write issued earlier took effect after one issued later.
+    # `stale_overwrites` is the domain harm: that violation actually put a value back which the
+    # node had already moved past. A reorder that writes the same value is not an overwrite, and
+    # conflating them would credit the ordering metric with harm that did not happen.
+    stale_reorders = 0
     stale_overwrites = 0
     stale_held = 0
     stale_released = 0
@@ -360,7 +366,7 @@ def run_episode(policy: Policy, hours: int = 72, seed: int = 0,
     # The newest intent each node has actually applied, by issue time. A release from the network
     # that lands after this is an older write replacing a newer one: the hazard itself, as opposed
     # to `fenced`, which counts the hazard being refused.
-    newest_applied: dict[str, tuple[int, str]] = {}
+    newest_applied: dict[str, tuple[int, str, str | None]] = {}
 
     for t_s in range(0, hours * 3600, TICK_S):
         hour = t_s / 3600.0
@@ -470,15 +476,18 @@ def run_episode(policy: Policy, hours: int = 72, seed: int = 0,
                 continue
             prior = newest_applied.get(node_id)
             if prior is not None and prior[0] > command.issued_at:
-                # A newer intent had already been applied and this older one has just replaced it.
-                stale_overwrites += 1
-                iface.note_overwritten(prior[1], t_s, command.issued_at)
+                # A newer intent had already been applied and this older one has just landed.
+                stale_reorders += 1
+                if prior[2] is not None and command.payload.get("profile") != prior[2]:
+                    stale_overwrites += 1
+                    iface.note_overwritten(prior[1], t_s, command.issued_at)
             apply_command_effect(runtimes[node_id], node_id, command.payload, t_s)
             mark_applied_at(node_id, command.payload, t_s)
             iface.note_applied(identity, t_s)
             iface.note_observed(identity, t_s)
             command.confirmed = True
-            newest_applied[node_id] = (command.issued_at, identity)
+            newest_applied[node_id] = (command.issued_at, identity,
+                                       command.payload.get("profile"))
         stale_hold = still_held
 
         # The backhaul hands whatever the gateway has been holding to the center. Until this runs
@@ -583,9 +592,12 @@ def run_episode(policy: Policy, hours: int = 72, seed: int = 0,
 
                     prior = newest_applied.get(node_id)
                     if prior is not None and prior[0] > command.issued_at:
-                        stale_overwrites += 1
-                        iface.note_overwritten(prior[1], t_s, command.issued_at)
-                    newest_applied[node_id] = (command.issued_at, identity)
+                        stale_reorders += 1
+                        if prior[2] is not None and command.payload.get("profile") != prior[2]:
+                            stale_overwrites += 1
+                            iface.note_overwritten(prior[1], t_s, command.issued_at)
+                    newest_applied[node_id] = (command.issued_at, identity,
+                                               command.payload.get("profile"))
                     apply_command_effect(rt, node_id, command.payload, t_s)
                     mark_applied_at(node_id, command.payload, t_s)
                     command.confirmed = True
@@ -626,6 +638,7 @@ def run_episode(policy: Policy, hours: int = 72, seed: int = 0,
         action_records=[r.as_dict() for r in iface.records.values()],
         reaccepted=reaccepted, fenced=fenced, stale_overwrites=stale_overwrites,
         refused_actions=refused_actions, expired_commands=expired_commands,
+        stale_reorders=stale_reorders,
         stale_held=stale_held, stale_released=stale_released, stale_trace=stale_trace,
     )
     record.audit_trail = iface.audit_trail()

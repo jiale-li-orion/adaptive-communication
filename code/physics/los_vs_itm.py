@@ -146,6 +146,53 @@ def visibility(dem: np.ndarray, lat: np.ndarray, lon: np.ndarray,
     }
 
 
+# --------------------------------------------------------------------- obstruction vs distance
+def _load_loss_db() -> np.ndarray | None:
+    """Per-point loss from the coverage grid, so this comparison uses the published numbers."""
+    if not os.path.exists(GRID):
+        return None
+    values = []
+    with open(GRID) as f:
+        for row in csv.DictReader(f):
+            values.append(float(row["loss_dB"]))
+    return np.array(values)
+
+
+def _obstruction_m(got: dict) -> np.ndarray:
+    """Terrain height above the line of sight, in metres, positive where it blocks.
+
+    Read off the same clearance `visibility` already computes rather than recomputed from its own
+    profile pass: two computations of "how much rock is in the way" would eventually disagree, and
+    the one in the results file would be the one nobody checked.
+    """
+    return np.maximum(0.0, -got["min_clearance_m"])
+
+
+def _obstruction_example(d_km: np.ndarray, obstruction: np.ndarray, loss_db: np.ndarray,
+                         sf: np.ndarray) -> dict | None:
+    """The nearest heavily obstructed point against the farthest lightly obstructed one.
+
+    Chosen by a rule rather than by hand: the near point is the closest point whose obstruction is
+    at least 1000 m, the far point is the most distant point whose obstruction is under 100 m. A
+    hand-picked pair would be a story; a rule is a measurement.
+    """
+    ok = np.isfinite(obstruction)
+    heavy = np.where(ok & (obstruction >= 1000.0))[0]
+    light = np.where(ok & (obstruction < 100.0))[0]
+    if heavy.size == 0 or light.size == 0:
+        return None
+    near = heavy[np.argmin(d_km[heavy])]
+    far = light[np.argmax(d_km[light])]
+
+    def point(i: int) -> dict:
+        return {"d_km": float(d_km[i]), "obstruction_m": float(obstruction[i]),
+                "loss_db": float(loss_db[i]), "sf": int(sf[i])}
+
+    return {"near": point(int(near)), "far": point(int(far)),
+            "penalty_db": float(loss_db[near] - loss_db[far]),
+            "rule": "near = closest point with obstruction >= 1000 m; "
+                    "far = furthest point with obstruction < 100 m"}
+
 def confusion(geom_los: np.ndarray, itm_reachable: np.ndarray) -> dict:
     """Agreement between a geometric verdict and ITM's reachability verdict."""
     tp = int(np.sum(geom_los & itm_reachable))          # LoS and ITM says reachable
@@ -208,9 +255,38 @@ def main() -> None:
                       f"{d_km[idx].min():.1f}..{d_km[idx].max():.1f} km, "
                       f"最小余隙 {got['min_clearance_m'][idx].min():.1f} m")
 
+    # ---- obstruction against distance, as a reproducible comparison -------------------------
+    # The claim "connectivity is decided by obstruction, not by distance" needs a pair of points to
+    # be checked against, and until this block existed no committed script produced one: the
+    # numbers in the README had no producer. Loss comes from the same grid the coverage map writes,
+    # so the comparison is against the published per-point loss rather than a second computation
+    # of it that could disagree.
+    loss_db = _load_loss_db()
+    obstruction = None
+    pair = None
+    if loss_db is not None:
+        got1 = visibility(dems[1], lat, lon, args.samples, px=1)
+        # How far the terrain rises above the straight line from the gateway antenna. This is the
+        # obstruction the finding is about, and it is not the same as reachability: a link can be
+        # geometrically blocked and still close by diffraction, which is what the next line says.
+        obstruction = _obstruction_m(got1)
+        pair = _obstruction_example(d_km, obstruction, loss_db, sf)
+        if pair is not None:
+            print()
+            print("--- 遮挡与距离：一组可复现的对照 ---")
+            print(f"  近而遮挡：{pair['near']['d_km']:.2f} km，地形高出视线 "
+                  f"{pair['near']['obstruction_m']:.0f} m，损耗 {pair['near']['loss_db']:.1f} dB"
+                  f"（SF {pair['near']['sf']}）")
+            print(f"  远而开阔：{pair['far']['d_km']:.2f} km，地形高出视线 "
+                  f"{pair['far']['obstruction_m']:.0f} m，损耗 {pair['far']['loss_db']:.1f} dB"
+                  f"（SF {pair['far']['sf']}）")
+            print(f"  更近的点反而差 {pair['penalty_db']:.1f} dB，"
+                  f"距离比 {pair['far']['d_km'] / pair['near']['d_km']:.2f}×")
+
     with open(os.path.join(OUT, "los_vs_itm.json"), "w") as f:
         json.dump({"gateway_elev_m": gw_elev, "antenna_h_m": ANT_H,
                    "freq_mhz": FREQ_HZ / 1e6, "points": int(len(lat)),
+                   "obstruction_example": pair if loss_db is not None else None,
                    "itm_reachable": int(itm_reach.sum()), "rows": rows},
                   f, indent=2, ensure_ascii=False)
     print(f"\n已写 results/los_vs_itm.json")

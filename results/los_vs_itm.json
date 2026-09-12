@@ -3,18 +3,34 @@
   "antenna_h_m": 2.0,
   "freq_mhz": 868.0,
   "points": 14641,
+  "obstruction_example": {
+    "near": {
+      "d_km": 4.063022561035655,
+      "obstruction_m": 1029.1375911433947,
+      "loss_db": 198.84,
+      "sf": -1
+    },
+    "far": {
+      "d_km": 14.398426908805927,
+      "obstruction_m": 73.95601370487839,
+      "loss_db": 190.22,
+      "sf": -1
+    },
+    "penalty_db": 8.620000000000005,
+    "rule": "near = closest point with obstruction >= 1000 m; far = furthest point with obstruction < 100 m"
+  },
   "itm_reachable": 1689,
   "rows": [
     {
       "scale": 1,
       "spacing_m": 30.87,
       "los": {
-        "los_and_reachable": 924,
-        "blocked_but_reachable": 765,
-        "los_but_unreachable": 83,
-        "blocked_and_unreachable": 12869,
+        "los_and_reachable": 895,
+        "blocked_but_reachable": 794,
+        "los_but_unreachable": 68,
+        "blocked_and_unreachable": 12884,
         "total": 14641,
-        "agreement": 0.942080458985042
+        "agreement": 0.9411242401475309
       },
       "clear60": {
         "los_and_reachable": 1,
@@ -24,8 +40,52 @@
         "total": 14641,
         "agreement": 0.8847073287343761
       },
-      "los_frac": 0.06877945495526262,
+      "los_frac": 0.06577419575165631,
       "clear60_frac": 6.830134553650706e-05
+    },
+    {
+      "scale": 7,
+      "spacing_m": 216.09,
+      "los": {
+        "los_and_reachable": 1657,
+        "blocked_but_reachable": 32,
+        "los_but_unreachable": 1329,
+        "blocked_and_unreachable": 11623,
+        "total": 14641,
+        "agreement": 0.9070418687248138
+      },
+      "clear60": {
+        "los_and_reachable": 5,
+        "blocked_but_reachable": 1684,
+        "los_but_unreachable": 0,
+        "blocked_and_unreachable": 12952,
+        "total": 14641,
+        "agreement": 0.8849805341165221
+      },
+      "los_frac": 0.2039478177720101,
+      "clear60_frac": 0.00034150672768253537
+    },
+    {
+      "scale": 27,
+      "spacing_m": 833.49,
+      "los": {
+        "los_and_reachable": 1615,
+        "blocked_but_reachable": 74,
+        "los_but_unreachable": 1810,
+        "blocked_and_unreachable": 11142,
+        "total": 14641,
+        "agreement": 0.8713202650092207
+      },
+      "clear60": {
+        "los_and_reachable": 5,
+        "blocked_but_reachable": 1684,
+        "los_but_unreachable": 0,
+        "blocked_and_unreachable": 12952,
+        "total": 14641,
+        "agreement": 0.8849805341165221
+      },
+      "los_frac": 0.2339321084625367,
+      "clear60_frac": 0.00034150672768253537
     }
   ]
 }

@@ -276,8 +276,17 @@ def audit_readme_matches_results() -> None:
                 return r
         return None
 
+    # The batches below were withdrawn with the implementations that produced them. They are named
+    # here rather than silently skipped, so a reader of the audit sees that these tables have no
+    # backing result file instead of seeing a shorter list of checks and assuming nothing is
+    # missing. The evidence for the withdrawal is in results/_withdrawn/MANIFEST.md.
+    WITHDRAWN = (
+        "method_comparison_main.json", "method_comparison_p2.json",
+        "method_comparison_budget3.json", "method_comparison_budget8.json",
+        "method_comparison_budget20.json", "restart_experiment_main.json",
+    )
     main = load("method_comparison_main.json")
-    check("主表结果文件存在", main is not None)
+    check("主表结果文件已撤销（读数建立在缺失本文臂的实现上）", main is None)
     if main:
         for name, label in (("one_shot", "One-shot execution"),
                             ("retry_uncertainty", "Retry-on-uncertainty"),
@@ -296,7 +305,7 @@ def audit_readme_matches_results() -> None:
                         (8, "method_comparison_budget8.json"),
                         (20, "method_comparison_budget20.json")):
         doc = load(tag)
-        check(f"{tag} 存在", doc is not None)
+        check(f"{tag} 已撤销（等预算对照因固定重试预算而失效）", doc is None)
         if not doc:
             continue
         for name, label in (("verified_tool_calls", "Verified Tool Calls"), ("ours", "本文")):
@@ -308,7 +317,7 @@ def audit_readme_matches_results() -> None:
                   f"once={100*r['exactly_once_rate']:.1f}% reorder={r['stale_reorders']:.0f}")
 
     p2 = load("method_comparison_p2.json")
-    check("P2 结果文件存在", p2 is not None)
+    check("P2 结果文件已撤销（与主表同一批代码）", p2 is None)
     if p2:
         for name, label in (("ours", "本文"), ("ablate_fencing", "只留 C1（回执）"),
                             ("ablate_receipts", "只留 C2（fencing）"),
@@ -326,7 +335,7 @@ def audit_readme_matches_results() -> None:
                   f"overwrite={r['stale_overwrites']:.0f}")
 
     rs = load("restart_experiment_main.json")
-    check("重启结果文件存在", rs is not None)
+    check("重启结果文件已撤销（产生于按动作武装故障的修复之前）", rs is None)
     if rs:
         check("重启实验为 20 seed", rs["config"]["seeds"] == 20)
         src = {"fresh_id": "每次重发新身份", "reconstructed_id": "重算同一身份",
