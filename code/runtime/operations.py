@@ -179,6 +179,55 @@ class Journal:
         return len(self.entries)
 
 
+class DurableDecisionStore:
+    """The decision context a recovered coordinator needs in order to replay an action.
+
+    Identity continuity is not enough on its own. An ad-hoc action's identity is derived from a
+    choice made at the moment of acting -- which alarm to acknowledge, which site to re-measure --
+    and the payload carries that choice. Recomputing the identity without the choice produces a
+    name for an action the coordinator can no longer describe, so what comes back is either a
+    different action under a new name or no action at all.
+
+    This store keeps (key -> decision) in the same append-only journal the operations use, so a
+    recovered coordinator rebuilds the payload and not only the name. It is a declared component
+    rather than a dictionary in the calling script on purpose: a side map that happens to survive a
+    restart models nothing, and a runtime that depended on one would not be reproducible from its
+    durable state.
+
+    Keys are the address of the decision -- here `<entity>:<action>:<slot>` -- and values are the
+    choice itself.
+    """
+
+    KIND = "decision"
+
+    def __init__(self, journal: Journal) -> None:
+        self.journal = journal
+        self._decisions: dict[str, object] = {}
+
+    def recall(self, key: str):
+        """The decision this coordinator made for `key`, or None if it never made one."""
+        return self._decisions.get(key)
+
+    def commit(self, key: str, value) -> None:
+        """Record a decision. Writing is what makes it survive the process."""
+        if key in self._decisions:
+            return
+        self._decisions[key] = value
+        self.journal.record(self.KIND, key=key, value=value)
+
+    def __len__(self) -> int:
+        return len(self._decisions)
+
+    @classmethod
+    def replay(cls, journal: Journal) -> "DurableDecisionStore":
+        """Rebuild the store from the journal, the way a restarted process rebuilds anything."""
+        store = cls(journal)
+        for entry in journal.entries:
+            if entry.get("kind") == cls.KIND:
+                store._decisions[entry["key"]] = entry["value"]
+        return store
+
+
 class RemoteSink:
     """The far side. It owns a durable epoch and, optionally, per-operation receipts.
 
@@ -489,8 +538,11 @@ def recover(journal: Journal) -> OperationRegistry:  # noqa: D401
     Replay is order-preserving and idempotent in the same sense the live registry is: the last
     settle for an operation wins nothing, because settle is first-wins on replay too.
     """
-    reg = OperationRegistry(journal, incarnation=journal.entries[0]["incarnation"]
-                            if journal.entries else "")
+    # The journal may hold entries other than registry events -- a decision store writes its own.
+    # Take the incarnation from the first entry that actually carries one rather than assuming the
+    # registry wrote first.
+    reg = OperationRegistry(journal, incarnation=next(
+        (e["incarnation"] for e in journal.entries if "incarnation" in e), ""))
     for e in journal.entries:
         k = e["kind"]
         if k == "register":

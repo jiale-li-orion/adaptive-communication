@@ -67,7 +67,8 @@ HERE = os.path.dirname(os.path.abspath(__file__))
 ROOT = os.path.normpath(os.path.join(HERE, "..", ".."))
 sys.path.insert(0, HERE)
 
-from operations import OperationRegistry, Journal, recover, Outcome, Observation  # noqa: E402
+from operations import (OperationRegistry, Journal, recover, Outcome, Observation,  # noqa: E402
+                       DurableDecisionStore)
 from method_comparison import (Link, FarSide, make_nodes, EnvironmentTrace,   # noqa: E402
                                _u)
 
@@ -85,17 +86,17 @@ def run_arm(arm: str, kind: str, nodes, hours: int, cmd_period: int, crash_perio
     link = Link(seed)
 
     journal = Journal() if arm == "journal" else None
+    # The durable decision context, and it is durable in the only sense that counts: it lives in
+    # the same append-only journal the operations do. Without it a recovered coordinator can
+    # rebuild an ad-hoc action's identity but not the payload that identity names.
+    store: DurableDecisionStore | None = (DurableDecisionStore(journal)
+                                          if arm == "journal" else None)
     reg = OperationRegistry(journal, incarnation="i0-")
     inc = 0
     applied: dict[str, int] = {}          # identity -> executions at the far side
     intended: dict[tuple[str, int], str] = {}   # (node, slot) -> the identity the mission wanted
     done: set[str] = set()                # logical intents the coordinator is finished with
     crashes = 0
-    # What this incarnation remembers of the ad-hoc choices it made. For the journal arm it is
-    # backed by durable storage and survives the restart; for the others it dies with the process,
-    # which is the whole point of the experiment.
-    live_draws: dict[tuple[str, int], int] = {}
-    durable_draws: dict[tuple[str, int], int] = {}
     # The missions's outstanding window. A coordinator that loses its state cannot tell which of
     # these already landed, so it re-asserts them; that re-assertion is what a restart costs.
     recent: list[tuple[int, dict]] = []
@@ -119,6 +120,7 @@ def run_arm(arm: str, kind: str, nodes, hours: int, cmd_period: int, crash_perio
             inc += 1
             if arm == "journal":
                 reg = recover(journal)
+                store = DurableDecisionStore.replay(journal)
                 done = {o.logical_intent for o in reg.ops.values()
                         if o.outcome is Outcome.APPLIED}
                 window = {(nd["nid"], r) for (r, nd) in recent}
@@ -133,7 +135,8 @@ def run_arm(arm: str, kind: str, nodes, hours: int, cmd_period: int, crash_perio
                     if (op.entity_id, _slot_of(op.logical_intent)) not in window:
                         continue
                     node = next(x for x in nodes if x["nid"] == op.entity_id)
-                    arrived, replied = link.exchange(node, t, "reconcile_read", op.epoch)
+                    arrived, replied = link.exchange(node, t, "reconcile_read", op.epoch,
+                                                     intent=op.logical_intent)
                     if not (arrived and replied):
                         continue          # the receipt may exist and still be unreachable
                     if sinks[op.entity_id].read_receipt(op.operation_id) is Outcome.APPLIED:
@@ -146,20 +149,18 @@ def run_arm(arm: str, kind: str, nodes, hours: int, cmd_period: int, crash_perio
                 # no storage. What survives is whatever the mission can recompute.
                 reg = OperationRegistry(None, incarnation=f"i{inc}-")
                 done = set()
-                live_draws = {}          # the choices this process made are gone
+                # the choices this process made are gone with it, and nothing durable holds them
             # Re-assert the outstanding window, keyed on the identity the mission wanted. Comparing
             # the slot index against a set of identity strings would match nothing and silently
             # re-assert the entire window on every arm.
             to_reassert = [(r, nd) for (r, nd) in recent
                            if intended.get((nd["nid"], r)) not in done]
             for r, nd in to_reassert:
-                ident, payload = _identity_for(arm, kind, nd, r,
-                                               durable_draws if arm == "journal" else live_draws,
-                                               seed, inc)
+                ident, payload = _identity_for(kind, nd, r, store, seed, inc)
                 op = reg.register(nd["nid"], payload["op"], payload, ident, t, True)
                 sent_id = op.operation_id if arm == "fresh_id" else ident
                 reg.dispatched(op, t)
-                arrived, replied = link.exchange(nd, t, "data_write", r)
+                arrived, replied = link.exchange(nd, t, "data_write", r, intent=ident)
                 if not arrived:
                     continue
                 ep = next_epoch()
@@ -177,9 +178,7 @@ def run_arm(arm: str, kind: str, nodes, hours: int, cmd_period: int, crash_perio
             # The mission issues its command whether or not the node is reachable. There is no
             # out-of-band health signal here: liveness is discovered by trying, and an oracle that
             # skips dead nodes would understate both the pending work and the restart burden.
-            ident, payload = _identity_for(arm, kind, n, r,
-                                           durable_draws if arm == "journal" else live_draws,
-                                           seed, inc)
+            ident, payload = _identity_for(kind, n, r, store, seed, inc)
             intended.setdefault((n["nid"], r), ident)
             recent.append((r, n))
             if len(recent) > REASSERT_WINDOW * max(len(nodes), 1):
@@ -191,7 +190,7 @@ def run_arm(arm: str, kind: str, nodes, hours: int, cmd_period: int, crash_perio
             op = reg.register(n["nid"], payload["op"], payload, ident, t, True)
             sent_id = (op.operation_id if arm == "fresh_id" else ident)
             reg.dispatched(op, t)
-            arrived, replied = link.exchange(n, t, "data_write", r)
+            arrived, replied = link.exchange(n, t, "data_write", r, intent=ident)
             if not arrived:
                 reg.observe(op, Observation.UNKNOWN)
                 continue
@@ -219,7 +218,8 @@ def run_arm(arm: str, kind: str, nodes, hours: int, cmd_period: int, crash_perio
             "once_rate": once / total, "crashes": crashes,
             "data_writes": link.msg["data_write"], "reconcile_reads": link.msg["reconcile_read"],
             "airtime_s": link.airtime_ms_total / 1000.0,
-            "journal_entries": len(journal) if journal is not None else 0}
+            "journal_entries": len(journal) if journal is not None else 0,
+            "decisions_durable": len(store) if store is not None else 0}
 
 
 def _slot_of(logical_intent: str):
@@ -231,25 +231,25 @@ def _slot_of(logical_intent: str):
         return None
 
 
-def _identity_for(arm, kind, n, r, memory, seed, inc):
+def _identity_for(kind, n, r, store, seed, inc):
     """The identity this coordinator would use for slot r, and the payload that goes with it.
 
-    `memory` is what the current incarnation can still recall of its ad-hoc choices. The journal
-    arm is handed storage that outlives the process; the others are handed a dict that is emptied
-    at every restart.
+    `store` is the durable decision context, or None for a coordinator that has none. The ad-hoc
+    branch needs it for BOTH halves of the action: the identity names the choice, and the payload
+    carries it. Rebuilding one without the other produces either a new action under the old name
+    or a name with nothing behind it.
     """
     if kind == "scheduled":
         # fully determined by the mission, so any incarnation recomputes the same one
         return f"{n['nid']}:measure:{r}", {"op": "trigger_measurement", "slot": r}
-    key = (n["nid"], r)
-    if key in memory:
-        draw = memory[key]
-    else:
-        # An ad-hoc decision: which alarm to acknowledge was chosen when the coordinator acted.
-        # `inc` enters the draw so that a coordinator which has forgotten still makes a NEW choice,
-        # rather than recomputing the old one by accident and looking better than it is.
+    key = f"{n['nid']}:adhoc:{r}"
+    draw = store.recall(key) if store is not None else None
+    if draw is None:
+        # The coordinator makes a fresh choice. `inc` enters the draw so that a coordinator which
+        # has forgotten does NOT recompute the old choice by accident and look better than it is.
         draw = int(_u(seed, "adhoc_draw", n["nid"], r, inc) * (1 << 30))
-        memory[key] = draw
+        if store is not None:
+            store.commit(key, draw)
     return (f"{n['nid']}:adhoc:{r}:{draw}",
             {"op": "ack_alarm", "slot": r, "alarm": f"a{draw}"})
 

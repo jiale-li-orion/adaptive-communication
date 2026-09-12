@@ -289,13 +289,30 @@ class Link:
     over-price loss and let a held write claim a reply it cannot have had.
     """
 
-    def __init__(self, seed: int):
+    READ_KINDS = ("verify_read", "reconcile_read")
+
+    def __init__(self, seed: int, read_cost_ratio: float = 1.0):
         self.seed = seed
+        # What one read costs relative to one write, in the same units as airtime. The packet
+        # format is unchanged: 38 B either way. The ratio asks what happens to the comparison if
+        # the far side's answer has to carry state rather than just an acknowledgement.
+        self.read_cost_ratio = read_cost_ratio
         self.msg = {"data_write": 0, "verify_read": 0, "reconcile_read": 0,
                     "replies": 0, "reply_lost": 0, "request_lost": 0}
+        self.reply_by_kind = {"data_write": 0, "verify_read": 0, "reconcile_read": 0}
         self.airtime_ms_total = 0.0
 
-    def request(self, node, t, kind, attempt=0, via_relay=False):
+    def _cost(self, kind: str) -> float:
+        return self.read_cost_ratio if kind in self.READ_KINDS else 1.0
+
+    def normalized_cost(self) -> float:
+        """Communication cost in write-equivalents, counting both legs of every message."""
+        total = 0.0
+        for k in ("data_write", "verify_read", "reconcile_read"):
+            total += self._cost(k) * (self.msg[k] + self.reply_by_kind[k])
+        return total
+
+    def request(self, node, t, kind, attempt=0, via_relay=False, intent=""):
         """Uplink. True if the request reached the far side.
 
         `via_relay` marks a hop that a relay carries on the node's behalf. The screened node's own
@@ -303,8 +320,12 @@ class Link:
         placing. Without this the relay leg was still tested against the blocked node's channel and
         never delivered anything, making the architecture comparison two copies of the same number.
         """
+        if not intent:
+            raise AssertionError(
+                f"{kind} draw carries no logical intent: two different logical operations at "
+                f"the same node, hour, kind and attempt would share one random outcome")
         self.msg[kind] = self.msg.get(kind, 0) + 1
-        self.airtime_ms_total += airtime_ms(node["sf"])
+        self.airtime_ms_total += self._cost(kind) * airtime_ms(node["sf"])
         if via_relay:
             # A hop the relay carries. The node's far-side obstruction and the far-side channel
             # state do not describe this hop: the relay is on the same mountain, and the screening
@@ -317,24 +338,27 @@ class Link:
         if node["permanent"] or not node["alive"] or not node["good"]:
             self.msg["request_lost"] += 1
             return False
-        if _u(self.seed, "rx", node["nid"], t, kind, attempt) >= p_given_good(node["loss_db"],
-                                                                             node["sf"]):
+        if _u(self.seed, "rx", node["nid"], t, kind, attempt, intent) \
+                >= p_given_good(node["loss_db"], node["sf"]):
             self.msg["request_lost"] += 1
             return False
         return True
 
-    def reply(self, node, t, kind, attempt=0):
+    def reply(self, node, t, kind, attempt=0, intent=""):
         """Downlink, for a request that arrived. True if the reply got back."""
-        self.airtime_ms_total += airtime_ms(node["sf"])
-        if _u(self.seed, "ack", node["nid"], t, kind, attempt) < ACK_LOSS_P:
+        if not intent:
+            raise AssertionError(f"{kind} reply draw carries no logical intent")
+        self.airtime_ms_total += self._cost(kind) * airtime_ms(node["sf"])
+        if _u(self.seed, "ack", node["nid"], t, kind, attempt, intent) < ACK_LOSS_P:
             self.msg["reply_lost"] += 1
             return False
         self.msg["replies"] += 1
+        self.reply_by_kind[kind] = self.reply_by_kind.get(kind, 0) + 1
         return True
 
-    def exchange(self, node, t, kind, attempt=0, via_relay=False):
-        arrived = self.request(node, t, kind, attempt, via_relay=via_relay)
-        return arrived, (self.reply(node, t, kind, attempt) if arrived else False)
+    def exchange(self, node, t, kind, attempt=0, via_relay=False, intent=""):
+        arrived = self.request(node, t, kind, attempt, via_relay=via_relay, intent=intent)
+        return arrived, (self.reply(node, t, kind, attempt, intent=intent) if arrived else False)
 
 
 def postcondition_holds(state, target, workload) -> bool:
@@ -347,6 +371,8 @@ def postcondition_holds(state, target, workload) -> bool:
     """
     if "rate" in target:
         return state.get("rate") == target["rate"]
+    if "threshold" in target:
+        return state.get("threshold") == target["threshold"]
     if "alarm" in target:
         return target["alarm"] in state.get("alarms", ())
     if target.get("watchdog"):
@@ -358,7 +384,7 @@ def postcondition_holds(state, target, workload) -> bool:
 
 def run_arm(arm, nodes, hours, cmd_period, seed, use_energy, workload,
             retry_budget=RETRY_BUDGET, relay=False, relay_availability=RELAY_AVAILABILITY,
-            stale_p=0.0, stale_max=1, trace=None):
+            stale_p=0.0, stale_max=1, trace=None, read_cost_ratio=1.0):
     """stale_p/stale_max model a network that holds a write after it has crossed the link and
     releases it hours later. The hold applies to every arm identically: it is a transport
     property, not an arm-specific handicap.
@@ -374,7 +400,7 @@ def run_arm(arm, nodes, hours, cmd_period, seed, use_energy, workload,
         receipts, fencing = ((True, True) if arm == "relay_ours" else (False, False))
 
     sinks = {n["nid"]: FarSide(n["nid"], receipts, fencing) for n in nodes}
-    link = Link(seed)
+    link = Link(seed, read_cost_ratio=read_cost_ratio)
     reg = OperationRegistry()
 
     outcomes: dict[str, int] = {}
@@ -384,9 +410,9 @@ def run_arm(arm, nodes, hours, cmd_period, seed, use_energy, workload,
     late_buf: dict[str, list] = {n["nid"]: [] for n in nodes}
     rounds_created = 0
 
-    def channel_read(n, t, kind, attempt=0):
+    def channel_read(n, t, kind, attempt=0, intent=""):
         """A read behind the channel. Returns (state_or_None, 'reply' | 'unknown')."""
-        arrived, replied = link.exchange(n, t, kind, attempt)
+        arrived, replied = link.exchange(n, t, kind, attempt, intent=intent)
         if not (arrived and replied):
             return None, "unknown"
         return sinks[n["nid"]].read_state(), "reply"
@@ -417,10 +443,17 @@ def run_arm(arm, nodes, hours, cmd_period, seed, use_energy, workload,
                     target = STATE_SCHEDULE[r % len(STATE_SCHEDULE)]
                     payload = {"rate": target}
                     intent = f"{n['nid']}:rate:{r}"
+                elif workload == "mutable_state":
+                    # One continuous set-point command whose field is a plain assignment.
+                    # Nothing accumulates and nothing is a set, so an older command that arrives
+                    # late really does put the old value back. That is the only way a stale write
+                    # can be shown to damage domain state rather than merely to violate ordering.
+                    target = 30 + 10 * (r % 4)
+                    payload = {"op": "threshold_update", "threshold": target, "version": r + 1}
+                    intent = f"{n['nid']}:threshold:{r}"
                 else:
                     kind = OP_KINDS[r % len(OP_KINDS)]
                     payload = {"version": r + 1, "op": kind, "alarm": f"a{r}",
-                               "threshold": 30 + 10 * (r % 3),
                                "watchdog": kind == "watchdog_refresh"}
                     intent = f"{n['nid']}:{kind}:{r}"
                 rounds_created += 1
@@ -455,7 +488,8 @@ def run_arm(arm, nodes, hours, cmd_period, seed, use_energy, workload,
                     if item["attempts"] + item["verify_rounds"] >= retry_budget:
                         want = False
                     else:
-                        state, verdict = channel_read(n, t, "verify_read", item["attempts"])
+                        state, verdict = channel_read(n, t, "verify_read", item["attempts"],
+                                                      item["intent"])
                         if verdict != "reply":
                             want = "wait"      # UNKNOWN: inconclusive, back off, do not resend
                         elif postcondition_holds(state, item["payload"], workload):
@@ -484,25 +518,28 @@ def run_arm(arm, nodes, hours, cmd_period, seed, use_energy, workload,
 
             if arm.startswith("relay_") and n["permanent"] and n["servable"] \
                     and _u(seed, "relay_avail", n["nid"], t) < relay_availability:
-                arrived, _ = link.exchange(n, t, "data_write", item["attempts"], via_relay=True)
+                arrived, _ = link.exchange(n, t, "data_write", item["attempts"],
+                                           via_relay=True, intent=item["intent"])
                 if arrived:
                     relay_buf[n["nid"]].append((op_id, epoch, item))
                 continue
 
-            arrived = link.request(n, t, "data_write", item["attempts"])
+            arrived = link.request(n, t, "data_write", item["attempts"], intent=item["intent"])
             if not arrived:
                 continue
-            if stale_p > 0.0 and _u(seed, "hold", n["nid"], t, item["attempts"]) < stale_p:
+            if stale_p > 0.0 and \
+                    _u(seed, "hold", n["nid"], t, item["attempts"], item["intent"]) < stale_p:
                 # The write crossed the link but the network is still holding it. The far side has
                 # not received it, so it draws no reply and no downlink airtime: the coordinator
                 # sees Unknown even though its message was not lost.
-                hold_h = 1 + int(_u(seed, "hold_len", n["nid"], t, item["attempts"]) * stale_max)
+                hold_h = 1 + int(_u(seed, "hold_len", n["nid"], t, item["attempts"],
+                                    item["intent"]) * stale_max)
                 late_buf[n["nid"]].append(
                     (t + hold_h, op_id, epoch,
                      item["payload"], item["intent"], item["op"].epoch))
                 replied = False
             else:
-                replied = link.reply(n, t, "data_write", item["attempts"])
+                replied = link.reply(n, t, "data_write", item["attempts"], intent=item["intent"])
                 outcome, did = sinks[n["nid"]].apply(op_id, epoch, item["payload"], t,
                                                      true_epoch=item["op"].epoch)
                 if did:
@@ -515,7 +552,8 @@ def run_arm(arm, nodes, hours, cmd_period, seed, use_energy, workload,
                 if arm in ("ours", "ours_plain_sink", "ablate_identity", "ablate_fencing",
                            "ablate_receipts", "ablate_scope"):
                     # reconciliation is itself a communication operation
-                    state, verdict = channel_read(n, t, "reconcile_read", item["attempts"])
+                    state, verdict = channel_read(n, t, "reconcile_read", item["attempts"],
+                                                  item["intent"])
                     if verdict == "reply":
                         if arm == "ablate_scope":
                             # the unscoped question: "has anything ever landed here?", which an
@@ -531,11 +569,12 @@ def run_arm(arm, nodes, hours, cmd_period, seed, use_energy, workload,
         if arm.startswith("relay_"):
             for n in nodes:
                 if not relay_buf[n["nid"]] or \
-                        _u(seed, "relay_deliver", n["nid"], t) >= RELAY_DELIVERY:
+                        _u(seed, "relay_deliver", n["nid"], t,
+                           relay_buf[n["nid"]][0][2]["intent"]) >= RELAY_DELIVERY:
                     continue
                 rop, repoch, item = relay_buf[n["nid"]][0]
                 arrived, replied = link.exchange(n, t, "data_write", item["attempts"],
-                                                 via_relay=True)
+                                                 via_relay=True, intent=item["intent"])
                 if not arrived:
                     continue
                 _o, did = sinks[n["nid"]].apply(rop, repoch, item["payload"], t)
@@ -595,6 +634,7 @@ def run_arm(arm, nodes, hours, cmd_period, seed, use_energy, workload,
         "reply_lost": m["reply_lost"],
         "protocol_messages": m["data_write"] + m["verify_read"] + m["reconcile_read"] + m["replies"],
         "airtime_s": link.airtime_ms_total / 1000.0,
+        "normalized_cost": link.normalized_cost(),
     }
 
 
@@ -609,12 +649,14 @@ def main() -> None:
     ap.add_argument("--heated", type=float, default=None)
     ap.add_argument("--retry-budget", type=int, default=RETRY_BUDGET)
     ap.add_argument("--workload", default="operation",
-                    choices=["operation", "state_setting", "both"])
+                    choices=["operation", "state_setting", "mutable_state", "both"])
     ap.add_argument("--relay", action="store_true")
     ap.add_argument("--relay-availability", type=float, default=RELAY_AVAILABILITY)
     ap.add_argument("--arms", default="")
     ap.add_argument("--stale-p", type=float, default=0.0,
                     help="probability that a write is held by the network after crossing the link")
+    ap.add_argument("--read-cost-ratio", type=float, default=1.0,
+                    help="cost of one read relative to one write, in airtime units")
     ap.add_argument("--stale-max", type=int, default=6,
                     help="upper bound, in hours, on how long the network holds a write")
     ap.add_argument("--tag", default="")
@@ -648,7 +690,8 @@ def main() -> None:
     for wl in workloads:
         print(f"===== workload: {wl} =====")
         hdr = (f"{'runtime':22s} {'恰好一次':>8s} {'零次':>7s} {'多余':>7s} {'重复':>8s} "
-               f"{'写入':>7s} {'验证读':>7s} {'调和读':>7s} {'回复':>8s} {'空口h':>7s}")
+               f"{'写入':>7s} {'验证读':>7s} {'调和读':>7s} {'回复':>8s} {'空口h':>7s} "
+               f"{'乱序':>6s} {'覆盖':>6s} {'归一代价':>9s}")
         print(hdr); print("-" * len(hdr))
         for arm in arms:
             acc = []
@@ -657,16 +700,21 @@ def main() -> None:
                                    wl, retry_budget=args.retry_budget, relay=args.relay,
                                    relay_availability=args.relay_availability,
                                    stale_p=args.stale_p, stale_max=args.stale_max,
-                                   trace=trace))
+                                   trace=trace, read_cost_ratio=args.read_cost_ratio))
             agg = {k: float(np.mean([a[k] for a in acc])) for k in acc[0]
                    if isinstance(acc[0][k], (int, float))}
+            # per-seed values, so a paired comparison can be tested on the paired differences
+            # instead of on two independent means
+            agg["per_seed"] = {k: [float(a[k]) for a in acc] for k in acc[0]
+                               if isinstance(acc[0][k], (int, float))}
             agg["arm"] = arm; agg["workload"] = wl
             rows.append(agg)
             print(f"{arm:22s} {100*agg['exactly_once_rate']:7.1f}% {100*agg['zero_rate']:6.1f}% "
                   f"{100*agg['dup_rate']:6.1f}% {agg['duplicate_applications']:8.1f} "
                   f"{agg['data_writes']:7.0f} {agg['verify_reads']:7.0f} "
                   f"{agg['reconcile_reads']:7.0f} {agg['replies']:8.0f} {agg['airtime_s']/3600:7.1f} "
-                  f"{agg['stale_reorders']:6.0f} {agg['stale_overwrites']:6.0f}"
+                  f"{agg['stale_reorders']:6.0f} {agg['stale_overwrites']:6.0f} "
+                  f"{agg['normalized_cost']:9.0f}"
                   + (f"  {100*agg['state_satisfied_rate']:6.1f}%" if wl == "state_setting" else ""))
         print()
 

@@ -42,10 +42,12 @@ code/
 
 | 脚本 | 回答什么问题 | 输出 |
 |---|---|---|
-| `method_comparison.py` | **主实验**。固定决策轨迹下比较四种执行运行时，并含协议消融；`--relay` 切换到架构与协议的 2×2；`--heated` 与 `--relay-availability` 用于敏感性扫描；`--stale-p`/`--stale-max` 打开传输层延迟投递，写入跨过链路后被网络扣留若干小时再释放，用于时间乱序与陈旧覆盖 | `results/method_comparison*.txt/json` |
+| `method_comparison.py` | **主实验**。固定决策轨迹下比较执行运行时，并含协议消融；`--workload mutable_state` 切换到陈旧覆盖专用的可覆盖字段负载；`--relay` 切换到架构与协议的 2×2；`--heated` 与 `--relay-availability` 用于敏感性扫描；`--stale-p`/`--stale-max` 打开传输层延迟投递；`--read-cost-ratio` 给读消息一个相对写入的成本系数，用于消息大小敏感性 | `results/method_comparison*.json` |
 | `mission_sim.py` | 任务级指标：到报率、到达时延分位数、能量、存活节点数。遥测间隔与控制面变更速率是两个独立参数 | `results/mission_sim*.txt/json` |
 | `restart_experiment.py` | 协调者重启后 durable lifecycle 是否存续。三种身份来源（每次重发新身份 / 重算同一身份 / 持久日志）× 两类命令（身份可重算的周期测量、身份不可重算的临时处置），全部跑在同一 C1 + C2 远端上。记分按任务原本想执行的那一条身份计，另计『非请求副作用』：重发时换了身份，落地的是任务没要求的动作 | `results/restart_experiment.*` |
 | `test_failure_model.py` | 11 类故障的确定性验证，每类一个定向用例，退出码 0 表示全部可复现 | 终端输出 |
+| `test_draw_keys.py` | 报文级随机契约的回归测试：同一逻辑操作在不同 runtime 间配对、不同逻辑操作不共用抽样、抽样不受其它操作数量影响，且到达/应答/扣留/扣留时长/中继投递五类随机量都带逻辑操作身份 | 退出码 |
+| `audit_consistency.py` | 一致性审计：远端观测是否全部经链路、环境轨迹是否对所有 arm 一致、覆盖是否为真实领域状态覆盖、重启恢复是否只依赖持久状态、中继是否绕开遮挡路径、延迟请求是否不计下行、README 各表是否与结果文件逐行对齐 | 退出码 |
 | `run_baseline.py` | 执行层故障的复现与机制确认：重复副作用、丢失、过期读取 | `results/baseline_experiment.txt` |
 
 ## analysis/ — 数据处理
@@ -54,6 +56,7 @@ code/
 
 | 脚本 | 职责 | 输出 |
 |---|---|---|
+| `paired_ci.py` | 配对比较：把同一 seed 下两两 runtime 的差值取 95% t 区间，并逐 seed 检查重复/乱序/覆盖这类计数指标是否真的每个 seed 都为 0。结果文件保存 per-seed 值以便此步 | 终端输出 |
 | `fit_loss_model.py` | 从 ChirpBox 逐小时快照重构每条有向链路的通断序列，拟合 Gilbert-Elliott 两态链，并与同丢失率的 i.i.d. 模型对照 | `results/loss_model.json` |
 | `fit_outage_distribution.py` | 中断时长的**分布**拟合：指数、对数正态、Weibull 三种的 MLE、KS 距离与 AIC，连同类未删失段的经验分位数 | `results/outage_distribution.json` |
 | `trace_to_episode.py` | 把 IODA 的真实断网轨迹转成 episode 的早期概念验证 | 终端输出 |
