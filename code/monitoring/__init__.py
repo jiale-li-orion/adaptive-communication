@@ -43,10 +43,13 @@ from .task_generator import (
     critical_nodes,
     demand_seed_range,
     dev_demand,
+    dropped_start_instants,
+    expected_counts,
     normal_nodes,
     profile_for_hour,
     risk_window_hours,
     test_demand,
+    window_len_s,
 )
 
 __all__ = [
@@ -79,8 +82,11 @@ __all__ = [
     "critical_nodes",
     "demand_seed_range",
     "dev_demand",
+    "dropped_start_instants",
+    "expected_counts",
     "normal_nodes",
     "profile_for_hour",
     "risk_window_hours",
     "test_demand",
+    "window_len_s",
 ]

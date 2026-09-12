@@ -20,10 +20,11 @@ anything arrived.
 
 THE TWO DEMAND GRIDS ARE STACKED. Normal demand runs over all 16 nodes for every hour of the run,
 and it is not interrupted by a risk window. Risk demand adds one window per 5 min for the critical
-nodes inside the risk windows. An instant inside a risk window therefore carries both a normal and
-a risk task, on different node sets; raising the risk level adds measurement rather than switching
-normal monitoring off. The two grids are independent and each keeps its own spacing, and because
-risk windows start and end on the hour, a risk instant always coincides with an hour instant.
+nodes inside the risk windows. Inside a risk window every instant therefore carries both a normal
+and a risk task: the 5 min instants add the critical-node demand to the hourly one, and on the hour
+itself the two tasks sit side by side. Raising the risk level adds measurement rather than switching
+normal monitoring off. The two grids are independent, each keeps its own spacing, and because the
+risk windows start and end on the hour, every risk instant falls on the hour grid too.
 
 A DEMAND THE RUN CANNOT SATISFY IS NOT IN D. A window whose deadline falls after the end of the run
 cannot be reached by any method, so keeping it would debit every arm a guaranteed failure. Such
@@ -37,10 +38,15 @@ that the chain demand -> sampling -> delivery -> scoring can be exercised end to
 sensitivity is part of the plan (contract §5, D16).
 
 DEV / TEST ISOLATION. Seeds are split into two disjoint ranges (contract §5, README §8):
-development seeds 0-999, test seeds 10000 and above. The seed fixes a bounded, documented shift of
-the normal demand cadence (see `_seed_offset_s`), so seeds of one split give different normal demand
-sets while the two splits stay genuinely disjoint; the risk windows are never shifted. Tune a method
-on the development split only; the test split is for the frozen protocol. See `demand_seed_split`.
+development seeds 0-999, test seeds 10000 and above. Tune a method on the development split only;
+the test split is for the frozen protocol. See `demand_seed_split`.
+
+THE REFERENCE LOAD CONTAINS NO DRAW. The contract §5 table fully determines D, so every seed gives
+the same D and two seeds of different splits give the same D as well. That is the strongest form of
+README D4 (no method, and no seed, can move the denominator) and it is asserted, but it also means
+the split cannot be made disjoint at the level of D: what separates development from test has to be
+chosen in the factors that do vary per run, such as the fault trajectory or the channel trace. Do
+not tune on the test seed range on the assumption that its D differs from a development one.
 
 Deps: standard library only (numpy is not needed to produce demands).
 """
@@ -106,22 +112,6 @@ TEST_SEED_MIN = 10_000                     # test: frozen protocol only, never t
 SEED_RANGE_DEV = (DEV_SEED_MIN, DEV_SEED_MAX)
 SEED_RANGE_TEST = (TEST_SEED_MIN, None)    # open-ended upper bound
 
-# A: how far the per-seed shift of the normal demand cadence may go, in seconds. Bounded at one
-# risk-window step (5 min) so that a normal window can never creep into a risk window and so that
-# nobody can mistake the shift for a modelling parameter. The reference reading of the contract
-# table is the zero-shift cadence; this exists only to make a seed mean something.
-SEED_OFFSET_MAX_S = RISK_INTERVAL_S
-
-# A: the shift values each split may use, in seconds, as multiples of the run clock. The pools are
-# disjoint, so no development seed can reproduce a test cadence. Zero is in the development pool so
-# that at least one development seed reproduces the contract table's cadence literally: normal
-# windows exactly on the hour. A shift of 60-240 s is what makes two seeds of the same split differ.
-SEED_OFFSETS_DEV = (0, 60, 120, 180)
-SEED_OFFSETS_TEST = (240, SEED_OFFSET_MAX_S)
-assert not (set(SEED_OFFSETS_DEV) & set(SEED_OFFSETS_TEST))
-assert all(0 <= o <= SEED_OFFSET_MAX_S and o % NODE_DT_S == 0
-           for o in SEED_OFFSETS_DEV + SEED_OFFSETS_TEST)
-assert 0 in SEED_OFFSETS_DEV, "no seed reproduces the table's cadence literally"
 
 
 def demand_seed_range(split: str) -> tuple[int, int | None]:
@@ -363,27 +353,6 @@ def critical_nodes(deployment: Deployment) -> tuple[str, ...]:
     return deployment.critical_nids
 
 
-def _seed_offset_s(seed: int) -> int:
-    """Deterministic per-seed offset of the normal demand cadence, in seconds.
-
-    A-layer research assumption. The offset is drawn from a hash of the seed, so it is fully
-    reproducible, it does not consume any random stream, and it cannot be influenced by a method.
-    It makes the seed a real input: distinct seeds give distinct normal demand sets, which is what
-    lets the development and test splits stay disjoint.
-
-    The offset is drawn only from that split's own pool (see SEED_OFFSETS_DEV and
-    SEED_OFFSETS_TEST); the pools are disjoint, so a development seed and a test seed can never
-    produce the same normal cadence, and one development seed keeps the table's exact zero-shift
-    cadence. Risk-window demand instants are NOT offset, so the risk windows stay exactly where the
-    contract puts them, and the shift is bounded by one risk step, so a normal window can never
-    leave its own hour and can never land inside a risk window.
-    """
-    split = demand_seed_split(seed)
-    pool = SEED_OFFSETS_DEV if split == "dev" else SEED_OFFSETS_TEST
-    digest = hashlib.sha256(f"p0.4-normal-offset|{split}|{seed}".encode()).digest()
-    return pool[int.from_bytes(digest[:4], "big") % len(pool)]
-
-
 def _keep_until_reachable(releases: list[int], total_s: int, deadline_s: int
                           ) -> tuple[list[int], list[int]]:
     """Split a grid into the windows the run can satisfy and the ones it cannot.
@@ -402,22 +371,20 @@ def _keep_until_reachable(releases: list[int], total_s: int, deadline_s: int
     return kept, dropped
 
 
-def _normal_release_grid(total_s: int, seed: int = 0) -> tuple[list[int], list[int]]:
-    """Normal demand-window start instants: one per whole hour, over all 16 nodes.
+def _normal_release_grid(total_s: int) -> tuple[list[int], list[int]]:
+    """Normal demand-window start instants: t = 0, 3600, 7200, ... for the whole run, all 16 nodes.
 
     Normal demand runs throughout the run and is NOT interrupted by a risk window. A risk window
     demands denser monitoring for the critical nodes ON TOP of the normal demand, rather than
     replacing it: an operator raising the risk level adds measurements, and does not switch the
     normal monitoring off. The two cadences are therefore independent grids (this one and
-    `_risk_release_grid`), and at an instant that belongs to both, one normal task and one risk task
-    exist side by side with different node sets.
+    `_risk_release_grid`). Because the risk windows start and end on the hour, a risk instant always
+    coincides with a normal instant, and at such an instant one normal task and one risk task exist
+    side by side with disjoint node sets.
 
-    The seed shifts every normal window by one documented, common offset (see `_seed_offset_s`), so
-    the grid stays exactly one hour apart; risk instants are never shifted.
+    Nothing here depends on the seed: the table fixes the cadence.
     """
-    offset = _seed_offset_s(seed)
-    assert 0 <= offset <= SEED_OFFSET_MAX_S and offset % NODE_DT_S == 0
-    releases = [t + offset for t in range(0, total_s, NORMAL_INTERVAL_S)]
+    releases = [t for t in range(0, total_s, NORMAL_INTERVAL_S)]
     kept, dropped = _keep_until_reachable(releases, total_s, DEADLINE_S["normal"])
     assert kept == sorted(kept) and dropped == sorted(dropped)
     assert len(kept) + len(dropped) == len(releases)
@@ -455,17 +422,39 @@ def dropped_start_instants(total_s: int) -> tuple[int, int]:
     Both grids lose exactly the windows whose deadline would land after the run end. Reported
     separately so a test can assert the count instead of accepting whatever the generator produced.
     """
-    return (len(_normal_release_grid(total_s, 0)[1]), len(_risk_release_grid(total_s)[1]))
+    return (len(_normal_release_grid(total_s)[1]), len(_risk_release_grid(total_s)[1]))
 
 
-def _release_grid(total_s: int, seed: int = 0) -> list[int]:
-    """Every demand-window start instant of the run: the normal grid stacked with the risk grid."""
-    normal, _ = _normal_release_grid(total_s, seed)
+def _release_grid(total_s: int) -> list[tuple[int, bool]]:
+    """Every demand-window start instant of the run, as (release_s, carries_risk_demand).
+
+    The run is driven by the hour grid, which owns every instant and every normal demand. An instant
+    additionally carries risk demand when it falls inside a risk window, which is where the risk
+    grid's 5 min cadence applies; those extra instants are the risk grid's contribution and are
+    merged in here. `carries_risk_demand` is therefore just "is this hour inside a risk window",
+    which is what keeps the demanded profile constant for a whole risk window instead of flipping
+    between instants.
+
+    Both grids are clipped against their own deadlines, so the kept hour grid and the kept risk grid
+    need not be nested and neither assertion below assumes that they are.
+    """
+    normal, _ = _normal_release_grid(total_s)
     risk, _ = _risk_release_grid(total_s)
-    grid = sorted(set(normal) | set(risk))
-    assert len(grid) >= max(len(normal), len(risk)), "stacking the grids lost an instant"
-    assert all(t + DEADLINE_S["risk" if profile_for_hour(t / 3600.0) == PROFILE_RISK
-                               else "normal"] <= total_s for t in grid), \
+    assert all(profile_for_hour(t / 3600.0) == PROFILE_RISK for t in risk), \
+        "a risk instant lies outside the risk windows"
+    assert all(t % NORMAL_INTERVAL_S == 0 for t in normal), \
+        "a normal instant is not on the whole-hour grid"
+    assert all(t % RISK_INTERVAL_S == 0 for t in normal), \
+        "an hour instant is not on the 5 min grid, so risk and normal instants could diverge"
+
+    instants = {t: (profile_for_hour(t / 3600.0) == PROFILE_RISK) for t in normal}
+    in_windows_kept = {t for t in risk if profile_for_hour(t / 3600.0) == PROFILE_RISK}
+    for t in in_windows_kept:
+        instants[t] = True
+    grid = sorted(instants.items())
+
+    assert {t for t, _ in grid} >= in_windows_kept, "stacking the grids lost a risk instant"
+    assert all(t + DEADLINE_S["risk" if r else "normal"] <= total_s for t, r in grid), \
         "a demand was kept that no method could satisfy inside the run"
     return grid
 
@@ -553,23 +542,23 @@ def build_demand(deployment: Deployment, hours: int = DEFAULT_HOURS, seed: int =
     The two demand kinds are stacked, not interleaved: normal demand keeps running over all 16
     nodes in every hour of the run, and risk demand adds one window per 5 min for the critical nodes
     inside the risk windows. An instant inside a risk window therefore carries both a normal and a
-    risk task, on different node sets.
+    risk task, on disjoint node sets.
 
     One demand window yields one task per measured quantity, because the contract's task carries a
-    single measurement_type. For the 72 h reference load that is 71 normal windows (one per hour)
-    and 120 risk windows (one per 5 min inside the two risk windows), so 142 normal tasks and 96
-    risk tasks; the windows that the run could not satisfy are dropped, see `expected_counts`.
+    single measurement_type. For the 72 h reference load that is 71 normal windows (one per hour,
+    minus the one the run cannot satisfy) and 144 risk windows (one per 5 min inside the two risk
+    windows, all of them reachable), so 142 normal tasks and 288 risk tasks. See `expected_counts`.
 
-    `seed` is validated against the dev/test split and it fixes the per-seed shift of the normal
-    cadence (see `_seed_offset_s`). D is pure in (deployment, hours, seed): the same three inputs
-    always give byte-identical D, no random stream is consumed, no module state is kept, and no
-    argument of this function can be reached by a method. That is what README D4 asks for, and the
-    permutation check in test_task_generator.py enforces it.
+    `seed` is validated against the dev/test split. The contract table fixes D completely, so no
+    seed draws anything and every seed gives byte-identical D. D is pure in (deployment, hours,
+    seed): the same three inputs always give byte-identical D, no random stream is consumed, no
+    module state is kept, and no argument of this function can be reached by a method. That is what
+    README D4 asks for, and the checks in test_task_generator.py enforce it.
 
     Args:
         deployment: the fixed 16-node / 2-group / 1-gateway deployment.
         hours: run length in hours; defaults to the 72 h reference workload.
-        seed: selects the dev or test split and the normal-cadence shift.
+        seed: selects the dev or test split; it draws nothing.
 
     Returns:
         Tasks ordered by (release_time, measurement_type).
@@ -585,42 +574,72 @@ def build_demand(deployment: Deployment, hours: int = DEFAULT_HOURS, seed: int =
         raise ValueError("the deployment must define a risk-window critical set")
     assert deployment.nids, "the deployment must have nodes"
 
-    normal_releases = set(_normal_release_grid(total_s, seed)[0])
+    normal_instants = set(_normal_release_grid(total_s)[0])
     tasks: list[Task] = []
     generation = 0
     previous_profile: str | None = None
 
-    for index, release in enumerate(_release_grid(total_s, seed)):
-        hour = release / 3600.0
-        in_risk = release not in normal_releases
-        profile = PROFILE_RISK if in_risk else PROFILE_NORMAL
+    for index, (release, in_risk_instant) in enumerate(_release_grid(total_s)):
+        # The normal demand is present at every instant of the hour grid and the risk demand at every
+        # instant inside a risk window, so the two are checked independently instead of being a
+        # choice between them. Inside a risk window an instant carries both, on different node sets.
+        demanded: list[tuple[bool, str]] = []
+        if release in normal_instants:
+            demanded.append((False, PROFILE_NORMAL))
+        if in_risk_instant:
+            demanded.append((True, PROFILE_RISK))
+
+        # policy_generation counts changes of the demanded monitoring profile. The profile in force
+        # at an instant is the one its hour demands: risk inside a risk window, normal outside it.
+        # The generation therefore advances when a risk window opens and when it closes, and not at
+        # every hourly instant inside it, where risk demand is stacked on top of an unchanged normal
+        # profile. All tasks of one instant carry that instant's generation. This is a property of
+        # the demand timeline, not of any arm's configuration events, so a method cannot advance it.
+        profile = PROFILE_RISK if in_risk_instant else PROFILE_NORMAL
         if profile != previous_profile:
-            # policy_generation advances when the demanded monitoring profile changes. It is a
-            # property of the demand timeline, not of any arm's configuration events, so a method
-            # cannot make it advance.
             generation += 1
             previous_profile = profile
 
-        window = (release, release + window_len_s(profile))
-        deadline = release + DEADLINE_S["risk" if in_risk else "normal"]
-        for node_set, measurement_type in _demands_for_instant(deployment, in_risk):
-            if in_risk:
-                assert set(node_set) <= critical
-            tasks.append(Task(
-                id=f"{'risk' if in_risk else 'norm'}-{measurement_type[:4]}-"
-                   f"{index:04d}-t{release}",
-                node_set=node_set,
-                measurement_type=measurement_type,
-                release_time=release,
-                sample_window=window,
-                delivery_deadline=deadline,
-                priority=PRIORITY_RISK if in_risk else PRIORITY_NORMAL,
-                policy_generation=generation,
-            ))
+        for in_risk, _ in demanded:
+            # The window belongs to the demand's own kind, not to the instant's profile. An instant
+            # on a whole hour inside a risk window carries both kinds, and giving the normal demand
+            # the risk window's length would ask it to be satisfied within five minutes.
+            kind_profile = PROFILE_RISK if in_risk else PROFILE_NORMAL
+            window = (release, release + window_len_s(kind_profile))
+            deadline = release + DEADLINE_S["risk" if in_risk else "normal"]
+            for node_set, measurement_type in _demands_for_instant(deployment, in_risk):
+                if in_risk:
+                    assert set(node_set) <= critical
+                else:
+                    assert set(node_set) <= set(deployment.nids)
+                tasks.append(Task(
+                    id=f"{'risk' if in_risk else 'norm'}-{measurement_type[:4]}-"
+                       f"{index:04d}-t{release}",
+                    node_set=node_set,
+                    measurement_type=measurement_type,
+                    release_time=release,
+                    sample_window=window,
+                    delivery_deadline=deadline,
+                    priority=PRIORITY_RISK if in_risk else PRIORITY_NORMAL,
+                    policy_generation=generation,
+                ))
 
     tasks.sort(key=lambda t: (t.release_time, t.measurement_type))
     _assert_reference_counts(tasks, hours)
     return tasks
+
+
+def expected_instants(hours: int = DEFAULT_HOURS) -> tuple[int, int]:
+    """(normal instants, risk instants) implied by the contract table for a run of `hours`.
+
+    A thin view over the two grid functions. The regression test recomputes the same counts from
+    the table's constants rather than calling this, so agreement between the two is a real check
+    rather than a tautology.
+    """
+    if hours <= 0:
+        raise ValueError(f"hours must be positive, got {hours}")
+    total_s = int(round(hours * 3600.0))
+    return len(_normal_release_grid(total_s)[0]), len(_risk_release_grid(total_s)[0])
 
 
 def expected_counts(hours: int = DEFAULT_HOURS) -> dict:
@@ -640,7 +659,7 @@ def expected_counts(hours: int = DEFAULT_HOURS) -> dict:
     if hours <= 0:
         raise ValueError(f"hours must be positive, got {hours}")
     total_s = int(round(hours * 3600.0))
-    normal_kept, normal_dropped = _normal_release_grid(total_s, 0)
+    normal_kept, normal_dropped = _normal_release_grid(total_s)
     risk_kept, risk_dropped = _risk_release_grid(total_s)
     quantities = 2                                     # displacement and rainfall
     return {
@@ -725,7 +744,11 @@ def _main(argv: list[str]) -> int:
     print(f"risk windows (h) {risk_window_hours()}")
     normal = [t for t in tasks if t.priority == PRIORITY_NORMAL]
     risk = [t for t in tasks if t.priority == PRIORITY_RISK]
+    want = expected_counts(args.hours)
+    dropped = dropped_start_instants(int(round(args.hours * 3600.0)))
     print(f"tasks {len(tasks)}  normal {len(normal)}  risk {len(risk)}")
+    print(f"windows normal {want['normal_windows']}  risk {want['risk_windows']}"
+          f"  dropped normal {dropped[0]}  risk {dropped[1]}")
     print(f"demand digest sha256 {demand_digest(tasks)}")
     if args.list_tasks:
         for t in tasks:
