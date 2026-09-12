@@ -175,12 +175,19 @@ class WirelessOpsAdapter:
     """Drives one task contract over a link that loses, duplicates and forgets operations."""
 
     def __init__(self, task: BenchTask, seed: int = 0, policy: str = "lifecycle",
-                 channel: str = "ge", ticks: int = 240, rounds: int = 1):
+                 channel: str = "ge", ticks: int = 240, rounds: int = 1,
+                 sink_idempotent: bool = True, enforce_version: bool = False):
         self.task = task
         self.policy = policy
         self.rounds_requested = max(1, rounds)
         # entities become nodes on real terrain; three roles are enough to express the contract
-        self.env = DisruptionEnv(seed=seed, n_nodes=3, ticks=ticks, channel=channel)
+        self.env = DisruptionEnv(seed=seed, n_nodes=3, ticks=ticks, channel=channel,
+                                 sink_idempotent=sink_idempotent,
+                                 enforce_version=enforce_version)
+        self.sink_idempotent = sink_idempotent
+        self.enforce_version = enforce_version
+        self.conflicts = 0
+        self._epoch = 0
         self.roles = ["target", "protected", "gateway"]
         self.node_of = {r: self.env.nodes[i] for i, r in enumerate(self.roles) if i < len(self.env.nodes)}
         self.cqi = CQIProvider(seed).cqi(task.case_id)
@@ -244,7 +251,8 @@ class WirelessOpsAdapter:
         # a fresh identity per attempt -> every retry is a NEW write at the sink
         return f"anon-{self._anon}"
 
-    def dispatch_mutation(self, tool: str, intent: str, **args) -> str:
+    def dispatch_mutation(self, tool: str, intent: str, version: int | None = None,
+                          **args) -> str:
         if tool not in MUTATING:
             raise ValueError(tool)
         if tool == "commit_policy":
@@ -252,7 +260,7 @@ class WirelessOpsAdapter:
                 self.violations.append("commit_before_validate")
             self.committed_version = args.get("expected_version")
         node = self.node_of.get("target", self.env.nodes[0])
-        self._last_op = self.env.dispatch(node, tool, intent=intent)
+        self._last_op = self.env.dispatch(node, tool, intent=intent, version=version)
         self.log.append((self.env.t, "dispatch", tool, self._last_op))
         return self._last_op
 
@@ -330,12 +338,17 @@ class WirelessOpsAdapter:
         self.post_check()
         return self._metrics()
 
+    def _next_version(self) -> int:
+        """The epoch this cycle's write carries to the far side."""
+        self._epoch = max(self._epoch + 1, self.cycle + 1)
+        return self._epoch
+
     def _drive_commit(self, stage: str) -> str:
         """Push one cycle's commit to a settled outcome, retrying per the policy."""
-        version = 1 + self.cycle
+        version = self._next_version()
         # one logical write per cycle: every attempt inside the cycle reuses this identity
         self._cycle_intent = self._intent("commit_policy")
-        op = self.dispatch_mutation("commit_policy", self._cycle_intent,
+        op = self.dispatch_mutation("commit_policy", self._cycle_intent, version=version,
                                     stage_id=stage, expected_version=version)
         budget = 3
         attempts = 0
@@ -344,6 +357,20 @@ class WirelessOpsAdapter:
             state, _ = self.poll(op)
             if state == "committed":
                 return "committed"
+            if state == "version_conflict":
+                # The far side refused this epoch, so EITHER our earlier attempt landed and
+                # consumed it, OR someone else advanced past it. The epoch alone cannot say
+                # which; only reading the entity can, and that read is itself lossy.
+                self.conflicts += 1
+                st, seen = self.env.read_version(self.node_of["target"])
+                if st == "ok" and seen >= version:
+                    return "fenced"
+                if st == "unknown":
+                    return "unresolved"
+                version = self._next_version()
+                op = self.dispatch_mutation("commit_policy", self._cycle_intent, version=version,
+                                            stage_id=stage, expected_version=version)
+                continue
             if state in ("outcome_unknown", "timeout"):
                 attempts += 1
                 if attempts >= budget:
@@ -356,10 +383,12 @@ class WirelessOpsAdapter:
                     # unscoped question, fresh key: the published wrapper's combination
                     if self.post_check_unscoped() == "applied":
                         return "verified_done"
-                # anything unresolved -> retry. Under a stable key the sink dedups it, so a
-                # retry that turns out to be unnecessary is harmless; under a fresh key it is
-                # a second write.
-                op = self.dispatch_mutation("commit_policy", self._cycle_intent,
+                # What is left is a plain retry. Re-sending the SAME epoch is safe whatever
+                # the truth is, because an epoch-aware far side accepts it only when the first
+                # attempt never landed; a rejection comes back as version_conflict above.
+                # Under a stable key the sink dedups the repeat; under a fresh key it is a
+                # second write.
+                op = self.dispatch_mutation("commit_policy", self._cycle_intent, version=version,
                                             stage_id=stage, expected_version=version)
             elif state == "running":
                 first = self.env.registry.ops[op].first_dispatch or 0
@@ -383,6 +412,7 @@ class WirelessOpsAdapter:
             "lost_cycles": lost,
             "deduped_at_sink": getattr(truth, "deduped", 0),
             "verify_unknown": self.verify_unknown,
+            "conflicts": self.conflicts,
             "unresolved_ops": len([o for o in self.env.registry.ops.values()
                                    if o.open and o.side_effect]),
             "may_have_effect": len([o for o in self.env.registry.ops.values()
@@ -400,6 +430,11 @@ def main() -> None:
     ap.add_argument("--ticks", type=int, default=600)
     ap.add_argument("--rounds", default="1,8,32", help="operational horizon(s) to sweep")
     ap.add_argument("--families", default="WCNS,WCMSA")
+    ap.add_argument("--sink", default="idem", choices=["idem", "plain"],
+                    help="idem: the far side collapses a repeat of the same key. "
+                         "plain: it does not, as a re-issued reconfiguration does not.")
+    ap.add_argument("--version", action="store_true",
+                    help="the far side enforces monotonic epochs")
     args = ap.parse_args()
 
     fams = tuple(args.families.split(","))
@@ -408,10 +443,13 @@ def main() -> None:
 
     print(f"artifact : {ARTIFACT}")
     print(f"tasks    : {len(tasks)}  families={fams}  channel={args.channel}  ticks={args.ticks}")
+    print(f"far side : sink={'idempotent' if args.sink == 'idem' else 'NOT idempotent'}"
+          f"  version_enforced={args.version}")
     print()
 
     hdr = (f"{'rounds':>6s} {'policy':10s} {'cycles':>7s} {'dup':>7s} {'dup/1k':>8s} "
-           f"{'lost':>6s} {'lost/1k':>8s} {'dedup':>7s} {'vunk':>6s} {'unres':>6s} {'viol':>5s}")
+           f"{'lost':>6s} {'lost/1k':>8s} {'dedup':>7s} {'vunk':>6s} {'unres':>6s} {'viol':>5s}"
+           f" {'confl':>6s}")
     print(hdr)
     print("-" * len(hdr))
 
@@ -421,17 +459,21 @@ def main() -> None:
             sub = []
             for i, t in enumerate(tasks):
                 ad = WirelessOpsAdapter(t, seed=1000 + i, policy=pol, channel=args.channel,
-                                        ticks=args.ticks, rounds=R)
+                                        ticks=args.ticks, rounds=R,
+                                        sink_idempotent=(args.sink == "idem"),
+                                        enforce_version=args.version)
                 sub.append(ad.run())
             cyc = sum(r["cycles"] for r in sub)
             dup = sum(r["duplicates"] for r in sub)
             lost = sum(r["lost_cycles"] for r in sub)
             dedup = sum(r["deduped_at_sink"] for r in sub)
             vunk = sum(r["verify_unknown"] for r in sub)
+            conf = sum(r["conflicts"] for r in sub)
             unres = sum(r["unresolved_ops"] for r in sub)
             vio = sum(1 for r in sub if r["violations"])
             print(f"{R:6d} {pol:10s} {cyc:7d} {dup:7d} {1000*dup/max(1,cyc):8.1f} "
-                  f"{lost:6d} {1000*lost/max(1,cyc):8.1f} {dedup:7d} {vunk:6d} {unres:6d} {vio:5d}")
+                  f"{lost:6d} {1000*lost/max(1,cyc):8.1f} {dedup:7d} {vunk:6d} {unres:6d} {vio:5d}"
+                  f" {conf:6d}")
             rows.append({"rounds": R, "policy": pol, "cycles": cyc, "dup": dup,
                          "lost": lost, "dedup": dedup, "vunk": vunk, "unres": unres, "viol": vio,
                          "settled": _merge_settled(sub)})

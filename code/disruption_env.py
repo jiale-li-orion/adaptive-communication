@@ -98,6 +98,8 @@ class Node:
     is_gateway: bool = False
     flap: int = 0             # README §9: gateway/relay flapping counter
     buffered: list = field(default_factory=list)   # results queued while silent
+    state_version: int = 0    # monotonic epoch of accepted writes, enforced when configured
+    applied_count: int = 0    # accepted writes, counted regardless of intent identity
 
     @property
     def reachable(self) -> bool:
@@ -120,7 +122,8 @@ class DisruptionEnv:
                  temp_offset_c: float = 0.0, heated_fraction: float = 0.0,
                  enable_partition: bool = True, enable_flapping: bool = True,
                  enable_replay: bool = True, enable_coordinator_restart: bool = True,
-                 coordinator_restart_p: float = 0.0015, frozen_episode: dict | None = None):
+                 coordinator_restart_p: float = 0.0015, frozen_episode: dict | None = None,
+                 sink_idempotent: bool = True, enforce_version: bool = False):
         self.rng = np.random.default_rng(seed)
         self.channel = channel
         self.energy_model = energy_model
@@ -133,6 +136,9 @@ class DisruptionEnv:
         self.partitioned = False
         self.partition_until = 0
         self.coordinator_restarts = 0
+        # the far side of the link: whether it dedups repeats, and whether it enforces epochs
+        self.sink_idempotent = sink_idempotent
+        self.enforce_version = enforce_version
         self.frozen_episode = frozen_episode or {}
         ge = load_ge() if channel == "ge" else None
         self.p_gb, self.p_bg = ge if ge else (0.0, 1.0)
@@ -339,12 +345,17 @@ class DisruptionEnv:
 
     # ---------------------------------------------------- asynchronous dispatch
     def dispatch(self, node: Node, tool: str, intent: str | None = None,
-                 latency: int = 2) -> str:
+                 latency: int = 2, version: int | None = None) -> str:
         """Send a call and return its operation id WITHOUT resolving it.
 
         Asynchrony is what makes the failure model real: an operation can be in flight when
         its node dies (README §9 F01), and a pending operation can be abandoned while the
         capability is gone (F04). A synchronous call cannot express either.
+
+        `version` rides with the call to the far side, where it is enforced if the sink is
+        configured to enforce it. That is what makes a lost ACK expensive: the retry carries
+        the same epoch, and an epoch-aware sink rejects it as stale even though the first
+        attempt already took effect.
         """
         if intent is None:
             self._anon += 1
@@ -352,7 +363,8 @@ class DisruptionEnv:
         op = self.registry.new(node.nid, tool, intent, self.t, TOOLS[tool]["side_effect"])
         op.transition("running", self.t)
         op.first_dispatch = self.t
-        self._inflight[op.op_id] = {"resolve_at": self.t + latency, "intent": intent}
+        self._inflight[op.op_id] = {"resolve_at": self.t + latency, "intent": intent,
+                                    "version": version}
         self._by_intent[intent] = op
         return op.op_id
 
@@ -383,15 +395,40 @@ class DisruptionEnv:
         if self.channel == "ge":
             p = p * 0.95 if node.link_good else p * 0.05
         if self.rng.random() < p:
-            self._maybe_apply(node, op.tool, rec["intent"])
+            outcome = self._attempt_apply(node, op.tool, rec["intent"], rec.get("version"))
+            if outcome == "stale":
+                # the far side refused the epoch: the write it would have made is already there
+                op.transition("failed", self.t, note="version_conflict")
+                self.registry.bump("version_conflict")
+                return "version_conflict", None
             op.transition("committed", self.t)
             return "committed", self._result(node, op.tool)
         if op.side_effect and self.rng.random() < 0.6:
-            self._maybe_apply(node, op.tool, rec["intent"])   # ran, ACK lost -> F02
+            # ran, ACK lost -> F02. The write is attempted even though the reply never arrives.
+            self._attempt_apply(node, op.tool, rec["intent"], rec.get("version"))
             self.registry.f02_ack_lost_after_execution(op, self.t)
             return "outcome_unknown", None
         op.transition("timeout", self.t)
         return "timeout", None
+
+    def _attempt_apply(self, node: Node, tool: str, intent: str,
+                       version: int | None = None) -> str:
+        """One write attempt at the far side. Returns "applied", "stale" or "none".
+
+        With `sink_idempotent` the sink collapses a repeat of the same intent; without it every
+        attempt takes effect, which is what a re-issued reconfiguration actually does. With
+        `enforce_version` the sink additionally refuses any epoch that is not strictly newer
+        than what it has already accepted.
+        """
+        if not TOOLS[tool]["side_effect"]:
+            return "none"
+        if self.enforce_version and version is not None and version <= node.state_version:
+            return "stale"
+        self._maybe_apply(node, tool, intent)
+        node.applied_count += 1
+        if version is not None:
+            node.state_version = max(node.state_version, version)
+        return "applied"
 
     def on_restart(self) -> None:
         """Hook for the coordinator losing in-memory state. Subclasses may override."""
@@ -491,7 +528,7 @@ class DisruptionEnv:
             return
         logical = self.logical_key(node)
         # an idempotent sink drops a repeat of a key it has already accepted
-        if intent.startswith("key:") and intent in self._applied_keys:
+        if self.sink_idempotent and intent.startswith("key:") and intent in self._applied_keys:
             self.truth.deduped = getattr(self.truth, "deduped", 0) + 1
             return
         if intent.startswith("key:"):
@@ -542,6 +579,23 @@ class DisruptionEnv:
         if self.rng.random() > p:
             return "unknown"                       # verification query lost
         return "applied" if intent in self._applied_keys else "not_applied"
+
+    def read_version(self, node: Node) -> tuple[str, int]:
+        """Read the entity's accepted epoch, over the SAME lossy channel.
+
+        This is the primitive a fencing policy needs: without it the coordinator cannot tell a
+        write that landed from one that never arrived once the ACK is gone, and no amount of
+        idempotency-key discipline helps, because the key is only honoured by a sink that
+        chose to honour it.
+        """
+        if not node.alive or not node.reachable:
+            return "unknown", -1
+        p = self._link_success_p(node)
+        if self.channel == "ge":
+            p = p * 0.95 if node.link_good else p * 0.05
+        if self.rng.random() > p:
+            return "unknown", -1
+        return "ok", node.state_version
 
     def duplicate_side_effects(self) -> int:
         """Side effects that the SINK accepted more than once for the same intent.
