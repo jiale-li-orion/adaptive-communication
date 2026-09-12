@@ -904,9 +904,20 @@ self.bat_wh = min(self.bat_wh + hourly_gen - self.load_wh_per_tick, self.usable_
 | P0.4 任务生成器 | `code/monitoring/task_generator.py` | 430 条，跨种子逐字节相同（D18） |
 | P0.6 评分器 | `code/monitoring/scorer.py` | 真值边界通过 |
 | P0.7 公平性审计 | `code/experiments/audit_fairness.py` | 六组检查全部通过 |
-| P0.5 四个接口 | 未开工 | — |
+| P0.5 四个接口 | `code/monitoring/interfaces.py` | 审计链与证据语义通过 |
+| P0.7 入口 | `code/run_checks.py` | 12/12 通过 |
 
-**72 小时参考负载端到端已跑通。** 430 条需求（常态 142、风险 288）。本地规则基线 48.6%（常态 100%、风险 23.3%），oracle 上界 93.3%（常态 100%、风险 89.9%）。执行层有 44.7 个百分点的空间，**全部落在风险窗**——常态需求两边都做到 100%，因为 90 分钟的期限相对每小时一次的上传节奏是宽的。这不是结论，是上界——它说明这条链上确实有值得做的东西，也说明论文的收益上限在哪里。
+**P0 定义闭合完成。** 八项判据全部达成，`python3 code/run_checks.py` 一条命令跑完全部 12 项检查。仓库没有 CI 配置，该入口是 CI 会调用的形式；分组为 mechanism（执行语义与冻结的机制隔离层）与 monitoring（业务闭环仿真）。
+
+**72 小时参考负载端到端已跑通。** 430 条需求（常态 142、风险 288）。本地规则基线 48.6%（常态 100%、风险 23.3%），oracle 上界 95.6%（常态 100%、风险 93.4%）。执行层有 47.0 个百分点的空间，**全部落在风险窗**——常态需求两边都做到 100%，因为 90 分钟的期限相对每小时一次的上传节奏是宽的。
+
+**四个接口按契约 §4 落地，端到端走这条路。** 每个动作留下审计记录：稳定身份、参数、冲突域、期限，以及分开记录的 `applied_at` / `observed_at` / `currently_active`。三条语义值得单列：
+
+- **`read_status` 优先用被动证据。** 节点自己的遥测已经带着状态，只要它足够新就直接回答，不消耗任何报文；只有证据超出调用方的 `max_age` 才真的下发查询。这正是"问远端"与"用远端已经告诉过你的"之间的差别，也是整份机会预算的支点。
+- **超时既不是失败也不是成功。** 期限已过而无证据的动作保持 `outcome = unknown`、`applied_at = None`。记成 rejected 会声称中心并不掌握的知识，记成 applied 会声称可能不存在的效果。
+- **曾生效与当前生效分开。** 一个配置被应用、随后被合法的更新取代时，`applied_at` 保留而 `currently_active` 变为假——后来的成功不倒算先前的成功声明。
+
+接口层接入后 oracle 从 93.3% 升到 95.6%，配置错配从 7225 降到 6159 分钟，因为稳定身份改变了重发的去重方式。这不是结论，是上界——它说明这条链上确实有值得做的东西，也说明论文的收益上限在哪里。
 
 **三条在实现中发现的机制，值得进入正文。**
 
@@ -992,7 +1003,10 @@ python3 code/experiments/restart_experiment.py --days 180 --seeds 20          # 
 python3 code/experiments/mission_sim.py --days 365 --seeds 5                  # 任务级到报率
 python3 code/experiments/run_baseline.py                                      # 执行层基线复现
 
-# 回归与审计
+# 回归与审计：仓库没有 CI 配置，这条命令是 CI 会调用的入口
+python3 code/run_checks.py                                                    # 全部 12 项，分组 mechanism / monitoring
+python3 code/run_checks.py --group monitoring                                  # 只跑业务闭环仿真这一组
+
 python3 code/experiments/test_draw_keys.py                                    # 报文级随机契约
 python3 code/experiments/test_journal_schema.py                               # 持久日志 schema
 python3 code/experiments/test_opportunity.py                                  # 控制面机会模型
@@ -1000,6 +1014,7 @@ python3 code/experiments/test_node_model.py                                   # 
 python3 code/experiments/test_scorer.py                                       # 评分器与真值边界
 python3 code/experiments/test_task_generator.py                               # 外生需求生成器
 python3 code/experiments/test_energy_model.py                                 # 能量模型手工核算
+python3 code/experiments/test_interfaces.py                                   # 四接口与审计链
 python3 code/experiments/audit_fairness.py                                    # 业务层公平性审计
 python3 code/experiments/audit_consistency.py                                 # 一致性审计
 python3 code/analysis/paired_ci.py results/method_comparison_main.json \      # 配对 95% 区间

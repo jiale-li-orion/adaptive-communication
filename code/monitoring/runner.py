@@ -41,6 +41,7 @@ from task_generator import (build_deployment, build_demand, profile_for_hour,
 from node_model import NodeRuntime, TICK_S
 from opportunity import ControlPlane, LoRaProfile, DownlinkMessage
 from scorer import RunRecord
+from interfaces import AgentInterface
 
 SF_BY_ROLE = {"deformation": 9, "rainfall": 8}     # A: a denser site uses a lower spreading factor
 UPLINK_PAYLOAD_BYTES = 20                          # A: header plus a batch of record ids
@@ -144,6 +145,9 @@ def run_episode(policy: Policy, hours: int = 72, seed: int = 0,
 
     in_flight: dict[str, PendingCommand] = {}
     view_in_flight: frozenset = frozenset()
+    # Every command the center issues goes through the interface layer, so the run leaves an
+    # auditable trail of what was asked, what was observed, and what is in force.
+    iface = AgentInterface(plane, runtimes)
     heard_uplinks: list[tuple[str, int]] = []
     command_seq = 0
     uplink_attempt = 0
@@ -169,15 +173,16 @@ def run_episode(policy: Policy, hours: int = 72, seed: int = 0,
 
         # ---- the center tries to send ----
         for node_id, payload in policy.plan(view):
+            if "profile" not in payload:
+                continue
+            record = iface.set_monitoring_profile(node_id, payload["profile"],
+                                                  generation=command_seq, expires_at=t_s + 6 * 3600,
+                                                  now_s=t_s)
             command_seq += 1
-            identity = f"{node_id}:profile:{payload['profile']}:{command_seq}"
-            message = DownlinkMessage(identity=identity, kind="command",
-                                      payload_bytes=38, enqueued_at=t_s,
-                                      expires_at=t_s + 6 * 3600)
-            if plane.center_send(node_id, message, int(hour)):
-                in_flight[identity] = PendingCommand(identity=identity, node_id=node_id,
-                                                     payload=payload, issued_at=t_s,
-                                                     expires_at=message.expires_at)
+            if record.attempts:
+                in_flight[record.identity] = PendingCommand(
+                    identity=record.identity, node_id=node_id, payload=payload, issued_at=t_s,
+                    expires_at=record.deadline)
 
         view_in_flight = frozenset(c.node_id for c in in_flight.values())
 
@@ -211,15 +216,25 @@ def run_episode(policy: Policy, hours: int = 72, seed: int = 0,
                     heard_uplinks.append((node_id, t_s))
                     # The packet carries the node's status and acknowledges what arrived.
                     rt.confirm([s.sample_id for s in packet])
-                    status[node_id] = rt.snapshot(t_s)
+                    snapshot = rt.snapshot(t_s)
+                    status[node_id] = snapshot
+                    # The status the interface may read later for free is exactly what the node
+                    # piggybacked on its own uplink.
+                    iface.note_telemetry(node_id, t_s, snapshot)
 
                 for delivery in rec.delivered:
                     command = in_flight.pop(delivery.message.identity, None)
-                    if command is not None and "profile" in command.payload:
-                        rt.set_profile(command.payload["profile"], t_s)
-                        command.confirmed = True
-                        if isinstance(policy, OraclePolicy):
-                            policy.note_confirmed(node_id, command.payload["profile"])
+                    if command is None:
+                        continue
+                    rt.set_profile(command.payload["profile"], t_s) if "profile" in command.payload \
+                        else None
+                    command.confirmed = True
+                    # Applied at the moment the node applied it, observed at the moment the center
+                    # learned that it had. The two are the same only because this model has no
+                    # separate acknowledgement hop on top of the delivery.
+                    iface.note_delivered(delivery.message.identity, at_s=t_s, applied_at=t_s)
+                    if isinstance(policy, OraclePolicy) and "profile" in command.payload:
+                        policy.note_confirmed(node_id, command.payload["profile"])
 
     record = RunRecord(
         demands=build_demand(deployment, hours=hours, seed=seed),
@@ -231,7 +246,8 @@ def run_episode(policy: Policy, hours: int = 72, seed: int = 0,
         airtime_ms=plane.airtime_uplink_ms + plane.airtime_downlink_ms,
         config_mismatch_s=config_mismatch_s,
         spurious_measurements=0,
-        log_entries=0,
+        log_entries=len(iface.records),
     )
+    record.audit_trail = iface.audit_trail()
     state = {nid: rt for nid, rt in runtimes.items()}
     return record, state, plane
