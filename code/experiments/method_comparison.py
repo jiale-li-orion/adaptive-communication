@@ -36,7 +36,11 @@ transmits, the downlink only when the far side actually received the request and
 
 THE ENVIRONMENT IS FIXED BEFORE ANY ARM RUNS. One EnvironmentTrace per seed holds the per-(node,
 hour) channel state and power state, and every arm indexes that same table. Message-level draws
-are addressed by (seed, node, hour, kind, attempt) rather than taken from a running stream. This
+are addressed by (seed, node, hour, kind, attempt, logical operation identity) rather than taken
+from a running stream. The logical operation identity is part of the key because two different
+operations at the same node, hour, kind and attempt would otherwise share one draw and be bound
+together; with it, different operations are independent while the same operation stays paired
+across arms. Link refuses a draw without it. This
 matters because the runtimes send very different numbers of messages: with a shared stream, the
 arm that asks two more questions consumes two more draws and meets different weather in every
 later hour, and the comparison silently becomes a comparison of three different channels.
@@ -293,9 +297,15 @@ class Link:
 
     def __init__(self, seed: int, read_cost_ratio: float = 1.0):
         self.seed = seed
-        # What one read costs relative to one write, in the same units as airtime. The packet
-        # format is unchanged: 38 B either way. The ratio asks what happens to the comparison if
-        # the far side's answer has to carry state rather than just an acknowledgement.
+        # What one read costs relative to one write. The packet format is unchanged: 38 B either
+        # way. The ratio asks what happens to the comparison if the far side's answer has to carry
+        # state rather than just an acknowledgement.
+        #
+        # It weights COMMUNICATION COST and nothing else. Physical airtime below is exactly the
+        # time-on-air of the messages actually sent, and no abstract ratio can change it: a fixed
+        # 38 B frame at a fixed spreading factor occupies the channel for the same time whatever
+        # the experimenter decides a read is "worth". Keeping the two separate is what stops a
+        # weighted-cost table from looking like a claim about the radio.
         self.read_cost_ratio = read_cost_ratio
         self.msg = {"data_write": 0, "verify_read": 0, "reconcile_read": 0,
                     "replies": 0, "reply_lost": 0, "request_lost": 0}
@@ -306,7 +316,10 @@ class Link:
         return self.read_cost_ratio if kind in self.READ_KINDS else 1.0
 
     def normalized_cost(self) -> float:
-        """Communication cost in write-equivalents, counting both legs of every message."""
+        """Weighted communication cost in write-equivalents, both legs of every message counted.
+
+        This is the quantity `read_cost_ratio` acts on. `airtime_ms_total` does not move with it.
+        """
         total = 0.0
         for k in ("data_write", "verify_read", "reconcile_read"):
             total += self._cost(k) * (self.msg[k] + self.reply_by_kind[k])
@@ -325,7 +338,7 @@ class Link:
                 f"{kind} draw carries no logical intent: two different logical operations at "
                 f"the same node, hour, kind and attempt would share one random outcome")
         self.msg[kind] = self.msg.get(kind, 0) + 1
-        self.airtime_ms_total += self._cost(kind) * airtime_ms(node["sf"])
+        self.airtime_ms_total += airtime_ms(node["sf"])
         if via_relay:
             # A hop the relay carries. The node's far-side obstruction and the far-side channel
             # state do not describe this hop: the relay is on the same mountain, and the screening
@@ -348,7 +361,7 @@ class Link:
         """Downlink, for a request that arrived. True if the reply got back."""
         if not intent:
             raise AssertionError(f"{kind} reply draw carries no logical intent")
-        self.airtime_ms_total += self._cost(kind) * airtime_ms(node["sf"])
+        self.airtime_ms_total += airtime_ms(node["sf"])
         if _u(self.seed, "ack", node["nid"], t, kind, attempt, intent) < ACK_LOSS_P:
             self.msg["reply_lost"] += 1
             return False
@@ -656,7 +669,8 @@ def main() -> None:
     ap.add_argument("--stale-p", type=float, default=0.0,
                     help="probability that a write is held by the network after crossing the link")
     ap.add_argument("--read-cost-ratio", type=float, default=1.0,
-                    help="cost of one read relative to one write, in airtime units")
+                    help="weight of one read relative to one write in the communication-cost "
+                         "metric; packet length and physical airtime are unaffected")
     ap.add_argument("--stale-max", type=int, default=6,
                     help="upper bound, in hours, on how long the network holds a write")
     ap.add_argument("--tag", default="")

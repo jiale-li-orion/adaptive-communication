@@ -42,7 +42,7 @@ code/
 
 | 脚本 | 回答什么问题 | 输出 |
 |---|---|---|
-| `method_comparison.py` | **主实验**。固定决策轨迹下比较执行运行时，并含协议消融；`--workload mutable_state` 切换到陈旧覆盖专用的可覆盖字段负载；`--relay` 切换到架构与协议的 2×2；`--heated` 与 `--relay-availability` 用于敏感性扫描；`--stale-p`/`--stale-max` 打开传输层延迟投递；`--read-cost-ratio` 给读消息一个相对写入的成本系数，用于消息大小敏感性 | `results/method_comparison*.json` |
+| `method_comparison.py` | **主实验**。固定决策轨迹下比较执行运行时，并含协议消融；`--workload mutable_state` 切换到陈旧覆盖专用的可覆盖字段负载；`--relay` 切换到架构与协议的 2×2；`--heated` 与 `--relay-availability` 用于敏感性扫描；`--stale-p`/`--stale-max` 打开传输层延迟投递；`--read-cost-ratio` 给读消息一个相对写入的权重，只作用于加权通信代价、不改变物理空口，用于读写通信成本敏感性 | `results/method_comparison*.json` |
 | `mission_sim.py` | 任务级指标：到报率、到达时延分位数、能量、存活节点数。遥测间隔与控制面变更速率是两个独立参数 | `results/mission_sim*.txt/json` |
 | `restart_experiment.py` | 协调者重启后 durable lifecycle 是否存续。三种身份来源（每次重发新身份 / 重算同一身份 / 持久日志）× 两类命令（身份可重算的周期测量、身份不可重算的临时处置），全部跑在同一 C1 + C2 远端上。记分按任务原本想执行的那一条身份计，另计『非请求副作用』：重发时换了身份，落地的是任务没要求的动作 | `results/restart_experiment.*` |
 | `test_failure_model.py` | 11 类故障的确定性验证，每类一个定向用例，退出码 0 表示全部可复现 | 终端输出 |

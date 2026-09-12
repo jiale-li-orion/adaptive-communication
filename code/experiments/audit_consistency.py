@@ -332,6 +332,41 @@ def audit_readme_matches_results() -> None:
                   f"spurious={r['spurious']:.0f}")
 
 
+def audit_cost_weight_is_separate_from_radio() -> None:
+    print("\n[9] 读写权重只作用于加权代价，不作用于物理空口")
+    # at the radio level the same frames are sent either way, so time-on-air cannot move
+    nodes = [dict(NODE)]
+    airtimes, costs = [], []
+    for ratio in (0.25, 1.0, 4.0):
+        lk = Link(17, read_cost_ratio=ratio)
+        for i in range(200):
+            lk.exchange(nodes[0], 40, "verify_read", 0, intent=f"r03:verify:{i}")
+            lk.exchange(nodes[0], 40, "data_write", 0, intent=f"r03:threshold:{i}")
+        airtimes.append(lk.airtime_ms_total)
+        costs.append(lk.normalized_cost())
+    check("物理空口在三档权重下逐位相同", len(set(airtimes)) == 1,
+          f"{airtimes[0]:.1f} ms")
+    check("加权代价随权重变化", len(set(costs)) == 3, f"{costs}")
+
+    # and the same must hold in the stored results
+    base = os.path.join(ROOT, "results")
+    got = {}
+    for ratio in ("0.25", "0.5", "1.0"):
+        p = os.path.join(base, f"method_comparison_msr{ratio}_b20.json")
+        if not os.path.exists(p):
+            continue
+        doc = json.load(open(p, encoding="utf-8"))
+        for r in doc["results"]:
+            got.setdefault(r["arm"], []).append((r["airtime_s"], r["normalized_cost"]))
+    for arm_, vals in got.items():
+        check(f"结果文件：{arm_} 的物理空口跨权重不变",
+              len({round(a, 3) for a, _ in vals}) == 1,
+              f"{[round(a/3600, 2) for a, _ in vals]} h")
+        check(f"结果文件：{arm_} 的加权代价跨权重变化",
+              len({round(c, 1) for _, c in vals}) == len(vals),
+              f"{[round(c) for _, c in vals]}")
+
+
 def main() -> int:
     print("一致性审计")
     audit_far_side_only_through_link()
@@ -342,6 +377,7 @@ def main() -> int:
     audit_relay_bypasses_screen()
     audit_delayed_request_accounting()
     audit_readme_matches_results()
+    audit_cost_weight_is_separate_from_radio()
     print("\n" + "-" * 74)
     if FAIL:
         print(f"  {len(FAIL)} 项失败：")
