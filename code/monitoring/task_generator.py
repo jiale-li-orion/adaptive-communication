@@ -410,10 +410,10 @@ def _normal_release_grid(total_s: int, seed: int = 0) -> tuple[list[int], list[i
     kept, dropped = _keep_until_reachable(releases, total_s, DEADLINE_S["normal"])
     assert kept == sorted(kept) and dropped == sorted(dropped)
     assert len(kept) + len(dropped) == len(releases)
-    # equidistant: kept windows are exactly one hour apart, and so is the whole grid before clipping
-    assert len({b - a for a, b in zip(kept, kept[1:])}) <= 1 and (
-        not kept or {b - a for a, b in zip(kept, kept[1:])} <= {NORMAL_INTERVAL_S})
+    # equidistant: the whole grid is one hour apart, and so is the kept part, because clipping only
+    # removes a contiguous tail
     assert all(b - a == NORMAL_INTERVAL_S for a, b in zip(releases, releases[1:]))
+    assert all(b - a == NORMAL_INTERVAL_S for a, b in zip(kept, kept[1:]))
     return kept, dropped
 
 
@@ -539,10 +539,15 @@ def _check_reference_load() -> None:
 def build_demand(deployment: Deployment, hours: int = DEFAULT_HOURS, seed: int = 0) -> list[Task]:
     """The reference demand sequence D for one run. Pure in (deployment, hours, seed).
 
+    The two demand kinds are stacked, not interleaved: normal demand keeps running over all 16
+    nodes in every hour of the run, and risk demand adds one window per 5 min for the critical nodes
+    inside the risk windows. An instant inside a risk window therefore carries both a normal and a
+    risk task, on different node sets.
+
     One demand window yields one task per measured quantity, because the contract's task carries a
-    single measurement_type. Counts for the 72 h reference load: 60 normal windows (one per hour
-    outside the two 6 h risk windows) times two quantities, and 72 risk windows (one per 5 min
-    inside them) times two quantities.
+    single measurement_type. For the 72 h reference load that is 71 normal windows (one per hour)
+    and 120 risk windows (one per 5 min inside the two risk windows), so 142 normal tasks and 96
+    risk tasks; the windows that the run could not satisfy are dropped, see `expected_counts`.
 
     `seed` is validated against the dev/test split and it fixes the per-seed shift of the normal
     cadence (see `_seed_offset_s`). D is pure in (deployment, hours, seed): the same three inputs
@@ -567,17 +572,17 @@ def build_demand(deployment: Deployment, hours: int = DEFAULT_HOURS, seed: int =
     critical = set(deployment.critical_nids)
     if not critical:
         raise ValueError("the deployment must define a risk-window critical set")
-    normal_set = tuple(deployment.nids)
-    assert normal_set, "the deployment must have nodes"
+    assert deployment.nids, "the deployment must have nodes"
 
+    normal_releases = set(_normal_release_grid(total_s, seed)[0])
     tasks: list[Task] = []
     generation = 0
     previous_profile: str | None = None
 
     for index, release in enumerate(_release_grid(total_s, seed)):
         hour = release / 3600.0
-        profile = profile_for_hour(hour)
-        in_risk = profile == PROFILE_RISK
+        in_risk = release not in normal_releases
+        profile = PROFILE_RISK if in_risk else PROFILE_NORMAL
         if profile != previous_profile:
             # policy_generation advances when the demanded monitoring profile changes. It is a
             # property of the demand timeline, not of any arm's configuration events, so a method
@@ -607,22 +612,35 @@ def build_demand(deployment: Deployment, hours: int = DEFAULT_HOURS, seed: int =
     return tasks
 
 
-def expected_instants(hours: int = DEFAULT_HOURS) -> tuple[int, int]:
-    """(normal start instants, risk start instants) the contract §5 table implies for `hours`.
+def expected_counts(hours: int = DEFAULT_HOURS) -> dict:
+    """What the contract §5 table implies for a run of `hours`: windows, tasks and dropped windows.
 
-    Derived from the table and the risk windows, not from the generator's own output, so a test can
-    compare the two independently. A start instant counts when it lies inside the run, matching the
-    generator's rule; for the 72 h reference load this gives 60 normal instants (one per hour
-    outside the two 6 h risk windows) and 144 risk instants (one per 5 min, so 12/h inside the
-    12 h covered by risk windows). One instant carries one task per measured quantity, so the task
-    count is twice these numbers.
+    A convenience view for callers and run logs. It is deliberately thin: the numbers come from the
+    two grid functions, which encode the table's cadences and its deadline rule directly. The
+    regression test does not rely on this function; it recomputes the same counts on its own from
+    the table's constants and holds both D and this view to them.
+
+    For the 72 h reference load: 71 normal windows, 120 risk windows, 142 + 240 = 382 tasks, and 25
+    windows dropped because the run could not satisfy them (1 normal, 24 risk).
+
+    Keys: "normal_windows", "risk_windows", "normal_tasks", "risk_tasks", "total_tasks",
+    "dropped_normal_windows", "dropped_risk_windows".
     """
+    if hours <= 0:
+        raise ValueError(f"hours must be positive, got {hours}")
     total_s = int(round(hours * 3600.0))
-    risk = [t for t in range(0, total_s, RISK_INTERVAL_S)
-            if profile_for_hour(t / 3600.0) == PROFILE_RISK]
-    normal = [t for t in range(0, total_s, NORMAL_INTERVAL_S)
-              if profile_for_hour(t / 3600.0) == PROFILE_NORMAL]
-    return len(normal), len(risk)
+    normal_kept, normal_dropped = _normal_release_grid(total_s, 0)
+    risk_kept, risk_dropped = _risk_release_grid(total_s)
+    quantities = 2                                     # displacement and rainfall
+    return {
+        "normal_windows": len(normal_kept),
+        "risk_windows": len(risk_kept),
+        "normal_tasks": len(normal_kept) * quantities,
+        "risk_tasks": len(risk_kept) * quantities,
+        "total_tasks": (len(normal_kept) + len(risk_kept)) * quantities,
+        "dropped_normal_windows": len(normal_dropped),
+        "dropped_risk_windows": len(risk_dropped),
+    }
 
 
 def _assert_reference_counts(tasks: list[Task], hours: int) -> None:
