@@ -44,6 +44,7 @@ from scorer import RunRecord
 from interfaces import AgentInterface
 # `policies` resolves the two policies that live here by name rather than importing them, so this
 # direction of the dependency is the one that stays acyclic.
+from faults import PROFILE_CHANGE_INSTANTS_S
 from policies import OP_REQUEST_MEASUREMENT, OP_SET_PROFILE, OP_UPLOAD_RECORDS, OPS
 
 SF_BY_ROLE = {"deformation": 9, "rainfall": 8}     # A: a denser site uses a lower spreading factor
@@ -229,6 +230,20 @@ def run_episode(policy: Policy, hours: int = 72, seed: int = 0,
         # down and never bring it up, so it cannot advantage any arm.
         plane.backhaul_gate = lambda hour: not faulted("backhaul_only", int(hour) * 3600)
 
+    def spans_a_change(at_s: int, delay: int) -> bool:
+        """Whether a command issued at `at_s` and released `delay` later straddles a profile change.
+
+        This is what makes an ordering fault able to do domain harm. A command whose value nothing
+        supersedes before it lands writes the value already in force, so it reorders the protocol
+        and changes nothing at the node. Observed: with the holdout inside the command's validity
+        window but shorter than the interval between demand changes, every injection produced a
+        reorder and no overwrite.
+        """
+        for change in PROFILE_CHANGE_INSTANTS_S:
+            if at_s < change <= at_s + delay:
+                return True
+        return False
+
     def take_armed(kind: str, at_s: int, node_id: str) -> tuple[bool, int]:
         """Consume the earliest armed hit of `kind` once a real action for `node_id` arrives.
 
@@ -358,6 +373,7 @@ def run_episode(policy: Policy, hours: int = 72, seed: int = 0,
     # conflating them would credit the ordering metric with harm that did not happen.
     stale_reorders = 0
     stale_overwrites = 0
+    stale_armed_real = 0
     stale_held = 0
     stale_released = 0
     # One row per released held command: what it was, when it landed, and what had landed before.
@@ -469,10 +485,19 @@ def run_episode(policy: Policy, hours: int = 72, seed: int = 0,
                     stale_arm[record.identity] = stale_plan[(node_id, t_s)]
                 else:
                     held, delay = take_armed("stale_command", t_s, node_id)
-                    if held:
+                    if held and spans_a_change(t_s, delay):
                         # Re-anchored to the dispatch that really happened, keeping the fault's own
                         # delay. The hazard is the same -- an old command landing after a newer one.
                         stale_arm[record.identity] = t_s + delay
+                        stale_armed_real += 1
+                    elif held:
+                        # Armed, but this dispatch is not one the holdout can make stale. Holding a
+                        # command whose value nothing supersedes produces a reorder that writes the
+                        # value already in force: a protocol-level ordering violation and no domain
+                        # harm. Keeping the fault armed until a dispatch it can actually make stale
+                        # come along is what separates the two. The entry is put back, so the
+                        # injection is delayed rather than spent.
+                        armed.setdefault("stale_command", []).append((t_s, node_id, delay))
                 in_flight[record.identity] = PendingCommand(
                     identity=record.identity, node_id=node_id, payload=payload, issued_at=t_s,
                     expires_at=record.deadline)

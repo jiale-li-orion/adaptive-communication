@@ -47,7 +47,8 @@ for _p in (_HERE, *(_os.path.join(_CODE, d) for d in ("physics", "runtime",
 import json
 
 from deterministic import stable_uniform
-from faults import (KIND_DEFAULTS, KINDS, KIND_SCOPE, MIN_PROFILE_GAP_S, FaultFree, FaultInjector,
+from faults import (KIND_DEFAULTS, KINDS, KIND_SCOPE, MIN_PROFILE_GAP_S,
+                    PROFILE_COMMAND_VALIDITY_S, FaultFree, FaultInjector,
                     FaultSpec, reference_node_ids)
 from node_model import TICK_S
 
@@ -312,11 +313,23 @@ def test_stale_command_carries_both_instants() -> None:
             break
     check("过期命令带迟到时刻、原始下发时刻与两者之差", ok,
           f"example {events[0].detail['issued_at_s']} -> {events[0].at_s}")
-    check("默认扣留跨过至少一个档位间隙",
-          all(e.detail["delay_s"] >= 2 * MIN_PROFILE_GAP_S for e in events),
-          f"min delay {min(e.detail['delay_s'] for e in events)} s, gap {MIN_PROFILE_GAP_S} s")
-    check("默认扣留有界", all(e.detail["delay_s"] <= 4 * MIN_PROFILE_GAP_S for e in events),
-          f"max delay {max(e.detail['delay_s'] for e in events)} s")
+    # The holdout has to sit inside the command's own validity window. A hold longer than that
+    # produces a command that is expired when it lands, and an expired command must not be carried
+    # out -- so an injection with such a holdout describes an ordering hazard the deployment cannot
+    # have. The earlier default was 2-4 profile gaps (12-24 h) against a 6 h validity window, and
+    # the overwrites it appeared to produce were expired commands being applied at the node.
+    check("默认扣留短于命令有效期",
+          all(e.detail["delay_s"] < PROFILE_COMMAND_VALIDITY_S for e in events),
+          f"max delay {max(e.detail['delay_s'] for e in events)} s, "
+          f"validity {PROFILE_COMMAND_VALIDITY_S} s")
+    check("默认扣留有下界，不会退化成瞬时投递",
+          all(e.detail["delay_s"] >= TICK_S for e in events),
+          f"min delay {min(e.detail['delay_s'] for e in events)} s")
+    check("默认扣留落在有效期的中后段",
+          all(0.45 * PROFILE_COMMAND_VALIDITY_S <= e.detail["delay_s"]
+              <= PROFILE_COMMAND_VALIDITY_S for e in events),
+          f"delay range [{min(e.detail['delay_s'] for e in events)}, "
+          f"{max(e.detail['delay_s'] for e in events)}] s")
 
     fixed = FaultInjector(FaultSpec(kind="stale_command", delay_s=3 * TICK_S)).events()
     check("显式扣留被采用", fixed and all(e.detail["delay_s"] == 3 * TICK_S for e in fixed))

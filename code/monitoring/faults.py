@@ -311,7 +311,8 @@ class FaultSpec:
             # The released command has to have been issued inside the run. A first arrival shorter
             # than the holdout would date the issue instant before the run started, which is not a
             # fact any trajectory can carry, so the spec is rejected instead of recording it.
-            longest = self.delay_s if self.delay_s is not None else 4 * MIN_PROFILE_GAP_S
+            longest = (self.delay_s if self.delay_s is not None
+                       else int(0.95 * PROFILE_COMMAND_VALIDITY_S))
             first = (self.first_at_s if self.first_at_s is not None
                      else KIND_DEFAULTS["stale_command"]["first_at_s"])
             if first < longest:
@@ -319,6 +320,14 @@ class FaultSpec:
                     f"stale_command: first_at_s={first} is shorter than the longest holdout "
                     f"{longest}; the held command would have been issued before the run started. "
                     f"Raise first_at_s or lower delay_s.")
+        if self.kind == "stale_command" and self.delay_s is not None \
+                and self.delay_s >= PROFILE_COMMAND_VALIDITY_S:
+            # A holdout this long cannot produce the ordering hazard it is named for: the command
+            # is expired on arrival and the node is right to ignore it.
+            raise ValueError(
+                f"stale_command: delay_s={self.delay_s} is not shorter than the command validity "
+                f"{PROFILE_COMMAND_VALIDITY_S}; the held command would expire before it lands, so "
+                f"no ordering hazard is possible.")
         for name, kinds in _KIND_SPECIFIC_KNOBS.items():
             if getattr(self, name) is not None and self.kind not in kinds:
                 raise ValueError(f"{name} means nothing for {self.kind}; it applies to {kinds}")
@@ -432,10 +441,19 @@ class FaultInjector:
         return int(self._draw(node_id, slot_s, "jitter") * ticks) * TICK_S
 
     def _pick_delay(self, node_id: str | None, slot_s: int, delay_s: int | None) -> int:
-        """The holdout of a delayed command: the knob when given, otherwise the documented band."""
+        """The holdout of a delayed command: the knob when given, otherwise the documented band.
+
+        The band is a fraction of the command's own validity window, and that is a correctness
+        requirement rather than a tuning choice. A command the network holds longer than it is valid
+        is expired by the time it lands, and an expired command must not be carried out -- so a
+        holdout above the validity window describes an ordering hazard the deployment cannot have.
+        An earlier default of 2-4x the profile gap (12-24 h against a 6 h window) did exactly that,
+        and the overwrites it appeared to produce were expired commands being applied.
+        """
         if delay_s is not None:
             return delay_s
-        low, high = 2 * MIN_PROFILE_GAP_S, 4 * MIN_PROFILE_GAP_S
+        low = int(0.50 * PROFILE_COMMAND_VALIDITY_S)
+        high = int(0.95 * PROFILE_COMMAND_VALIDITY_S)
         ticks = (high - low) // TICK_S
         return low + int(self._draw(node_id, slot_s, "delay") * ticks) * TICK_S
 
