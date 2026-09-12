@@ -681,7 +681,8 @@ class RuntimePolicy:
         self.awaiting_reconcile.update(op.split(":")[0] for op in unresolved)
         self.restart_lost += len(lost)
 
-    def __init__(self, dwell_s: int = DWELL_S, ttl_s: int = COMMAND_TTL_S) -> None:
+    def __init__(self, dwell_s: int = DWELL_S, ttl_s: int = COMMAND_TTL_S,
+                 retry_budget: int = 3) -> None:
         if dwell_s < 0:
             raise ValueError("dwell_s must not be negative")
         if ttl_s <= 0:
@@ -699,6 +700,18 @@ class RuntimePolicy:
         self.reported: dict[str, str] = {}
         self.reported_at: dict[str, int] = {}   # when the node produced the report, not when it arrived
         self.settled_version: dict[str, int] = {}   # newest version whose effect has been evidenced
+        # Retry discipline: how many times in a row this node's current instruction has been
+        # asserted, and when that run started.
+        self.attempts: dict[str, int] = {}
+        self.attempted_since: dict[str, int] = {}
+        self.retry_budget = retry_budget
+        # How many records the node sends in one upload. A gap this small is already covered by the
+        # node's own retransmission, so ordering it is a redundant second path.
+        # Records one upload can carry. `begin_upload` caps a batch at this, so a backlog below it
+        # needs no order from the center.
+        self.node_batch_max = 240
+        # Off by default; see `_w2_gap` for the measurement that decided it.
+        self.enable_backfill = False
 
         # W1/W2 knobs. The backfill budget is the share of one opportunity the past may take; the
         # status age is what "fresh" means for the free read.
@@ -774,6 +787,21 @@ class RuntimePolicy:
         return view.t_s - newest > MONITORING_PROFILES[PROFILE_RISK]["sample_s"] * 2
 
     def _w2_gap(self, view, node_id: str):
+        """W2 的补传指令。默认关闭，理由是一条实测而不是一条偏好。
+
+        节点在 `begin_upload` 里会重传**所有未确认记录**，所以对任何一批能装下的积压，
+        补传指令只是通往同一批记录的**第二条路**，而它与 profile 写入抢的是同一份稀缺机会。
+        实测（72 小时单种子，三条臂）：一次都不下单的 `versioned_config` 拿到最高覆盖 59.1%
+        与最少下行 387；下单 74 次的本文臂只有 52.3% 与 854 次，下单 29 次的 `rule_contract`
+        为 56.5% 与 431 次。**三条臂的档案完整率都在 99% 上下**，也就是说这些机会买到的不是
+        完整性。
+
+        接口保留并已被逐条验证（见 §7.23：区间、预算、游标、去重、缺口核验），当部署里的节点
+        **不**自己重传、或中心需要显式限制历史占用的机会份额时它才承重。默认关闭是因为在这套
+        部署里打开它只花钱。
+        """
+        if not self.enable_backfill:
+            return None
         """The gap between the center's archive and what the node says it holds, if any.
 
         Returns `(start_s, end_s, cursor, budget)` for a bounded backfill, or None. The budget is
@@ -788,8 +816,16 @@ class RuntimePolicy:
         if newest is None:
             return None
         cursor = view.archive_newest.get(node_id, 0)
-        if newest - cursor <= MONITORING_PROFILES[PROFILE_NORMAL]["sample_s"]:
-            return None                      # the archive is current; there is nothing to recover
+        # Only order a backfill when the backlog exceeds what the node's own retransmission will
+        # clear in one upload. The node already resends everything it has not been acknowledged
+        # for, so for any smaller gap an order is a second path to the same records -- and it
+        # competes with the profile writes for the same scarce opportunities. Measured: the arm
+        # that never orders a backfill (versioned_config) reaches the highest coverage with the
+        # fewest downlinks, and an arm that orders 74 of them reaches the lowest of the three.
+        gap_records = (int(newest) - cursor) / max(1, MONITORING_PROFILES[PROFILE_NORMAL]["sample_s"])
+        if gap_records <= self.node_batch_max:
+            # One upload clears it, and the node will make that upload by itself.
+            return None
         if self.backfill_ordered.get(node_id) == (cursor, newest):
             return None                      # this exact gap already has an order outstanding
         return cursor, int(newest), int(cursor), self.backfill_budget
@@ -901,26 +937,49 @@ class RuntimePolicy:
             # node held still before being asked.
             fresh_evidence = reported_at > issued_at
 
-            if reported == wanted and fresh_evidence:
-                # The node reported the wanted value from a moment after the newest write went out.
-                # The effect is evidenced, and only now may the center settle it.
-                self.settled_version[node_id] = issued_version
-                self.settled += 1
-                record.update(action="settle", reason="report_postdates_write",
-                              evidenced_version=issued_version)
+            if reported == wanted:
+                # The node reports the value this instruction wanted, so there is nothing to write:
+                # re-sending a value the node already reports is pure waste, whatever the evidence
+                # says about which write put it there. The two cases are still recorded separately,
+                # because they are different claims -- "the effect is evidenced" and "the state is
+                # right but this write was never confirmed" -- and the second is exactly the unknown
+                # the runtime has to live with.
+                #
+                # The earlier version fell through from the second case into the assert path and
+                # re-sent the value the node was reporting, which is how this arm came to spend 854
+                # downlink attempts where a composed runtime of the same method spends 431.
+                if fresh_evidence:
+                    self.settled_version[node_id] = issued_version
+                    self.settled += 1
+                    record.update(action="settle", reason="report_postdates_write",
+                                  evidenced_version=issued_version)
+                else:
+                    self.reconciles += 1
+                    self.settled_version[node_id] = issued_version
+                    self.settled += 1
+                    record.update(action="settle", reason="state_right_evidence_absent",
+                                  issued_version=issued_version, reported_at=reported_at,
+                                  issued_at=issued_at)
                 continue
-
-            if reported == wanted and issued_version:
-                # The value matches but the report predates the write it would be used to confirm.
-                # It is evidence of an older state, so it settles nothing and the write stays open.
-                self.reconciles += 1
-                record.update(action="reconcile", reason="report_predates_write",
-                              issued_version=issued_version, reported_at=reported_at,
-                              issued_at=issued_at)
 
             if node_id in in_flight:
                 record.update(action="skip", reason="in_flight")
                 continue
+
+            attempts = self.attempts.get(node_id, 0)
+            if attempted_since := self.attempted_since.get(node_id, 0):
+                pass
+            if attempts >= self.retry_budget and now - self.attempted_since.get(node_id, now) \
+                    < self.dwell_s * self.retry_budget:
+                # A cap on how many times in a row the same thing may be asserted, with a cooldown
+                # before the count is forgotten. Without it the only thing bounding re-assertions
+                # is the six-hour deadline, so a node that never reports correctly is written to
+                # every six hours forever -- which is not a retry policy, it is a schedule.
+                record.update(action="wait", reason="retry_budget", attempts=attempts)
+                continue
+            if attempts >= self.retry_budget:
+                self.attempts[node_id] = 0
+                self.attempted_since[node_id] = now
 
             if issued_version and not fresh_evidence:
                 # Nothing has reported since the newest write. There is no information yet, so a
@@ -944,6 +1003,8 @@ class RuntimePolicy:
             if issued_version >= version:
                 self.version[node_id] = issued_version + 1
                 version = self.version[node_id]
+            self.attempts[node_id] = self.attempts.get(node_id, 0) + 1
+            self.attempted_since.setdefault(node_id, now)
             record.update(action="write", version=version, reason="assert")
             out.append((node_id, profile_command(wanted, version=version,
                                                  logical=self.identity_of(node_id))))

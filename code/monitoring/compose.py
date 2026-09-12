@@ -100,6 +100,8 @@ class RulePlanner:
     def __init__(self, backfill_budget: int = 8, status_max_age_s: int = 3600,
                  measure_window_mult: int = 2, dwell_s: int = 300) -> None:
         self.backfill_budget = backfill_budget
+        self.node_batch_max = 240
+        self.enable_backfill = False
         self.status_max_age_s = status_max_age_s
         self.measure_window_mult = measure_window_mult
         self.dwell_s = dwell_s
@@ -181,7 +183,14 @@ class RulePlanner:
         return out
 
     def _w2_intents(self, view) -> list[Intent]:
-        """Order a bounded slice of the gap between the center's archive and the node's report."""
+        """W2 的补传指令。与单体 runtime 同一条判据，同一条实测依据。
+
+        默认关闭：节点自己重传所有未确认记录，因此对一批装得下的积压，下单只是第二条路，
+        而它与 profile 写入抢同一份机会。实测三条臂的档案完整率都在 99% 上下，机会买到的
+        不是完整性。接口保留，见 `RuntimePolicy._w2_gap` 的说明。
+        """
+        if not self.enable_backfill:
+            return []
         out = []
         for node_id in sorted(view.demanded_profile):
             payload, _age = self.read_status(view, node_id)
@@ -191,8 +200,14 @@ class RulePlanner:
             if newest is None:
                 continue
             cursor = view.archive_newest.get(node_id, 0)
-            if newest - cursor <= MONITORING_PROFILES[PROFILE_NORMAL]["sample_s"]:
-                continue
+            # Same rule as the monolithic runtime: an order is only worth an opportunity when the
+            # node cannot clear the gap by itself. See the note there for the measurement that
+            # forced this -- the arm that never orders one does best.
+            gap_records = ((int(newest) - cursor)
+                           / max(1, MONITORING_PROFILES[PROFILE_NORMAL]["sample_s"]))
+            if gap_records <= self.node_batch_max:
+                continue                # one upload clears it, and the node makes that upload
+
             if self.backfill_ordered.get(node_id) == (cursor, int(newest)):
                 continue
             self.backfill_ordered[node_id] = (cursor, int(newest))
