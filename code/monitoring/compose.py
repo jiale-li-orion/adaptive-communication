@@ -325,7 +325,16 @@ class LLMPlanner(RulePlanner):
             profile = item["profile"]
             if profile not in MONITORING_PROFILES:
                 raise ValueError(f"unknown profile {profile!r}")
-            return Intent(kind, node_id, {"profile": profile}, reason="llm")
+            # The epoch has to be attached here too. Leaving it at its default of 0 gives every
+            # instruction for a node the same key for the whole run, so the runtime settles the
+            # first one it sees and never dispatches that instruction again -- the same defect
+            # §7.29 records for the rule planner, which is why this cell's numbers did not move
+            # when the rule planner was fixed.
+            if self.profile_demand.get(node_id) != profile:
+                self.profile_demand[node_id] = profile
+                self.profile_epoch[node_id] = self.profile_epoch.get(node_id, 0) + 1
+            return Intent(kind, node_id, {"profile": profile},
+                          epoch=self.profile_epoch.get(node_id, 0), reason="llm")
         if kind == KIND_REQUEST_MEASUREMENT:
             window = int(item.get("window_s", 7200))
             return Intent(kind, node_id,
