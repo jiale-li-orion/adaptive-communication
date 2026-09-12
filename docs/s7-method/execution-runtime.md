@@ -135,7 +135,7 @@ $$\text{same agent} + \text{same action} + \text{same channel} + \text{different
 
 **二、面向中断通信的版本化操作生命周期。** 基于稳定操作身份、runtime 拥有的生命周期、持久 epoch fencing、first-wins 结算与 operation 级限定调和，构造一个中断容忍的执行协议。
 
-定位必须写准。runtime 拥有的操作生命周期并非本文首创：DeepSeek Harness 的本地 job registry 已经实现了一套，其原则（runtime 拥有 identity 与 lifecycle、producer 拥有执行资源、wait 超时不取消、first-wins 结算、快照投影）本文直接沿用并明确引用。但那是**进程内**运行时，它依赖 producer 的 `done` 最终返回，因此没有处理"远端已执行而完成证据永远丢失"这种网络语义。
+定位必须写准。运行时应拥有身份与生命周期、超时不应取消工作、终态一次写成，这些是通用的运行时设计原则，本文不据此声称贡献。进程内执行与远端执行的区别在于前者依赖执行方最终返回完成信号，因此不存在"已执行而完成证据永远丢失"这种状态；本文补的正是这一种状态及其处置协议。
 
 本文的增量应表述为：
 

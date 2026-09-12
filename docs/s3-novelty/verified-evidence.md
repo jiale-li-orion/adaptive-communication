@@ -172,28 +172,9 @@ rather than raw level thresholds.
 
 ---
 
-## 6. DSH "existing primitives" claim — partially unverified
 
-The context doc §3 lists `CapabilityDescriptor`, `ToolInvocation` with `idempotency_key`, etc. as
-existing transferable primitives.
 
-- `grep -ril "CapabilityDescriptor"` across `/home/orion/agent-system-learning/dsh-community-suite`
-  → **no matches**. No `idempotencyKey` either (1 file mentions "idempotency").
-- DSH core *does* contain related machinery: `replay` (348 files), `capability` (357), `lease` (315),
-  `deadline` (106), `provenance` (69), `reconcile` (65), `freshness` (29), `heartbeat` (5),
-  `sideEffect` (2).
-- The referenced design doc《DeepSeek Harness 多设备 Agent 与 Mobile / Physical Capability 架构》was
-  **not located** in this checkout. The only similar-named artifact found is an unrelated audit note,
-  `/home/orion/agent-system-learning/community-audit/notes/dsh-mobile.md` (a plugin audit, not the
-  capability architecture).
-
-⇒ **Action item:** locate/confirm that design doc before the paper leans on "we already have these
-primitives". The safest framing is: the *design* exists in our own architecture notes; the paper
-contributes the communication-specific failure model + benchmark + validation, not the primitives.
-
----
-
-## 7. Working PoC: trace → benchmark episode  **VERIFIED (runs end-to-end)**
+## 6. Working PoC: trace → benchmark episode  **VERIFIED (runs end-to-end)**
 
 `pre_work/poc/trace_to_episode.py` — resolves IODA region entities, pulls 5-min signals, builds a
 baseline + hysteresis/dwell state machine, and emits an episode JSON with per-tick node availability
@@ -243,7 +224,7 @@ Artifacts: `poc/trace_to_episode.py`, `poc/episode_helene_meritnt.json`,
 
 ---
 
-## 8. α³-Bench artifact reality check  **VERIFIED**
+## 7. α³-Bench artifact reality check  **VERIFIED**
 
 - Repo `maferrag/AlphaBench` (GitHub API): description matches, ~13.5 MB, 1105 tracked files,
   last push 2026-01-08, **10 stars**, **license: none declared** (GitHub returns `license: null`).
@@ -261,7 +242,7 @@ redistribution; fine for internal experimentation.
 
 ---
 
-## 9. IODA coverage of recent events  **VERIFIED**
+## 8. IODA coverage of recent events  **VERIFIED**
 
 Query for 2024-09-20 → 2024-11-10 (`entityType=country`, limit 50) returned 50 events, e.g.
 `country/YT` merit-nt start 2024-09-16 dur 1294.6 h (score 7.77e6), `country/SL` bgp dur 948.8 h,
@@ -273,7 +254,7 @@ modestly.
 
 ---
 
-## 10. NOVELTY THREAT — direct prior art for the proposed runtime  **VERIFIED**
+## 9. NOVELTY THREAT — direct prior art for the proposed runtime  **VERIFIED**
 
 Found while checking novelty. These are **published** and overlap the context doc's §9/§10 method.
 
@@ -319,7 +300,7 @@ other groups in 2026. The defensible contribution is now narrower and must be ex
 
 ---
 
-## 11. THE DECISIVE COLLISION — INFOCOM 2026  **VERIFIED (Crossref + Semantic Scholar)**
+## 10. THE DECISIVE COLLISION — INFOCOM 2026  **VERIFIED (Crossref + Semantic Scholar)**
 
 **"Rollback Is Not Undo: Path-Dependent Failures in LLM-Arbitrated Network Control"**
 **Weici Pan, Zhenhua Liu** — **IEEE INFOCOM 2026**, 2026-05-18.

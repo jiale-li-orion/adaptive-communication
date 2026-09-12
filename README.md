@@ -154,7 +154,7 @@ CRITIC 与 AgentSpec 不进主实验。前者处理验证器本身的质量，�
 
 **最危险的邻居。** INFOCOM 2026 的 *Rollback Is Not Undo: Path-Dependent Failures in LLM-Arbitrated Network Control*（Weici Pan, Zhenhua Liu，DOI `10.1109/INFOCOM59046.2026.11571400`）在同类会议与同类问题空间证明，LLM 仲裁的网络控制回路中回滚无法恢复行为，且恢复效果路径相关。该文提出 `recovery gap` 指标，故障模式含 observation corruption、delay-reordering 与 agent dropout。它闭源且无公开 artifact。未覆盖的是灾害与应急场景、真实轨迹驱动与实体生命周期。本文需引用并显式对比。
 
-**同组先前工作。** WirelessOpsAgent（Zijian Lu, Yiping Zuo, Hao Xu, Weicong Chen, Xin He, Jiajia Guo, Shi Jin，arXiv `2608.08277`，CC BY 4.0）把研究层次定为 **Action Assurance**，判据是动作在下发前是否被正确授权，其表述为 *repairs recoverable support failures before execution*，问题被限定在可修复范围内。本文场景中 88.5% 的点位永久不可达、断电可持续数周，大量失败不可修复。该文中心是分发前的 repair，本文中心是分发后任务在实体变动下的存续。其发布物是数据与工具契约，不含运行时与评分谓词，核验见 `docs/s5-benchmark/README.md`。
+**动作保证这一层。** WirelessOpsAgent（arXiv `2608.08277`，CC BY 4.0）把研究层次定为 **Action Assurance**，判据是动作在下发前是否被正确授权，其表述为 *repairs recoverable support failures before execution*，问题被限定在可修复范围内。本文场景中 88.5% 的点位永久不可达、断电可持续数周，大量失败不可修复。该文中心是分发前的 repair，本文中心是分发后任务在实体变动下的存续。其发布物是数据与工具契约，不含运行时与评分谓词，核验见 `docs/s5-benchmark/README.md`。
 
 **已被占据的机制，不可声称。**
 
@@ -166,13 +166,12 @@ CRITIC 与 AgentSpec 不进主实验。前者处理验证器本身的质量，�
 | authority 与恢复语义绑定 | arXiv `2608.01710` "CapLease"，semantic replay 加 Issue–Prepare–Commit |
 | 只读与改状态工具分类 | arXiv `2603.29656` "6GAgentGym"，42 个 effect-typed 工具 |
 | retry budget、stale context、恢复预算 | arXiv `2606.01416` "Self-Healing Agentic Orchestrators" |
-| runtime-owned 操作生命周期与 first-wins 结算 | DeepSeek Harness `packages/jobs`，进程内运行时，见第五节 |
 | 公平排队 | Demers, Keshav, Shenker, SIGCOMM 1989, DOI `10.1145/75247.75248` |
 | lease 与 heartbeat | Gray, Cheriton, SOSP 1989, DOI `10.1145/74850.74870` |
 | LLM agent serving 中的队头阻塞 | Autellix, arXiv `2502.13965` |
 | 验证者永不失败的隐含假设 | CRITIC, arXiv `2305.11738` |
 
-三句不能写。"我们是第一个把 X 用于 LLM agent"（X 取上表任一机制）可由上表直接反驳。"没有工作注入网络故障"应改为 *we are not aware of a workload that overlays a communication-channel fault model onto remote agent actuation*。第三条是"我们提出了 runtime-owned 的操作生命周期"——上表末段的 DeepSeek Harness 已经实现了一套，本文的增量在于把它从进程内执行扩展到中断链路上的非原子远端执行。
+三句不能写。"我们是第一个把 X 用于 LLM agent"（X 取上表任一机制）可由上表直接反驳。"没有工作注入网络故障"应改为 *we are not aware of a workload that overlays a communication-channel fault model onto remote agent actuation*。第三条是"我们提出了 runtime 拥有的操作生命周期"：运行时应拥有身份与生命周期、超时不应取消工作、终态记录一次写成，这些都是通用的运行时设计原则，本文不据此声称贡献。本文的增量在于把这套语义从进程内执行扩展到中断链路上的非原子远端执行，那里存在"远端已执行而完成证据永远丢失"这一进程内执行不会遇到的状态。
 
 ### 尚未覆盖的部分
 

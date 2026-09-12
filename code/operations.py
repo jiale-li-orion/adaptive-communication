@@ -8,12 +8,11 @@ reachability of the entity — and it contradicted itself outright: `outcome_unk
 TERMINAL yet was also returned by `unresolved()`, so "open" and "unresolved" disagreed about the
 same state.
 
-The split below follows the design of a local job registry in a production agent harness
-(DeepSeek Harness, `packages/jobs/jobs/src/types.ts` and `jobs-local/src/index.ts`), whose
-governing rules are worth stating because they transfer directly:
+The split below follows a small set of runtime design principles that a well-built execution
+runtime tends to converge on, and which are worth stating because they decide the whole shape of
+the state model:
 
-  * the runtime owns identity and lifecycle; the producer (here, the remote entity) owns the
-    execution resource;
+  * the runtime owns identity and lifecycle; the executor owns the execution resource;
   * the lifecycle vocabulary is small, and everything kind-specific goes into `detail` rather
     than into a new state;
   * `wait()` returning on timeout means the CALLER stopped waiting. It does not cancel the work

@@ -52,27 +52,7 @@
 
 ---
 
-## 3. 当前 DSH 架构中已经存在的可迁移 primitive
-
-现有《DeepSeek Harness 多设备 Agent 与 Mobile / Physical Capability 架构》已经包含一批可以直接迁到通信研究里的 runtime primitive：
-
-- `CapabilityDescriptor` 中包含 `availability`、`latency_hint`、`bandwidth_hint`、`energy_hint`、`privacy_class`、`authority`、`side_effect_class` 等元数据；
-- device 上线后动态注册 capability manifest；
-- capability 会因为网络恶化、OS permission、硬件不可用、设备锁定等原因改变；
-- heartbeat / lease 维护在线状态；
-- `ToolInvocation` 中已有 `deadline`、`idempotency_key`、target node、approval policy；
-- sensor observation 带 `timestamp`、`freshness`、`provenance`；
-- 网络状态、battery、latency、bandwidth、packet loss 可以影响 placement；
-- 掉线重连后不盲目重放未知副作用；
-- canonical session / context / event history 用于恢复与审计；
-- node 与 capability 分离，device 是 node，capability 才投影成 tool；
-- execution placement 与 data movement 可以显式决策。
-
-这些都比“LLM 看到一张通信图然后选工具”更接近真正可运行的 agent system。
-
----
-
-## 4. 当前最强论文命题
+## 3. 当前最强论文命题
 
 推荐先用下面这个版本作为工作标题：
 
@@ -90,7 +70,7 @@
 
 ---
 
-## 5. 最值得做的 Task
+## 4. 最值得做的 Task
 
 ### Task A：Disruption-Tolerant Tool Execution
 
@@ -127,7 +107,7 @@ agent 通过已有 tool 对局部通信系统进行 reconfiguration，例如 rou
 
 ---
 
-## 6. 可直接 follow 的 Mother Papers / Benchmark
+## 5. 可直接 follow 的 Mother Papers / Benchmark
 
 ### TopoLLM
 
@@ -158,7 +138,7 @@ ICG-Restore、ComAgent、自愈 RAN、agentic wireless survey 等可以用于证
 
 ---
 
-## 7. 现成数据集 / Trace 候选
+## 6. 现成数据集 / Trace 候选
 
 当前优先级最高的是能直接产生 **degradation → outage → recovery** 生命周期的数据。
 
@@ -204,7 +184,7 @@ ICG-Restore、ComAgent、自愈 RAN、agentic wireless survey 等可以用于证
 
 ---
 
-## 8. Benchmark 的最小设计
+## 7. Benchmark 的最小设计
 
 每个 episode 由以下内容组成：
 
@@ -238,7 +218,7 @@ tool 不需要很多，第一版十几个就够。可以从下面这些开始：
 
 ---
 
-## 9. Runtime Failure Model
+## 8. Runtime Failure Model
 
 建议显式定义 operation lifecycle，而不是只返回 success / fail。
 
@@ -272,7 +252,7 @@ tool 不需要很多，第一版十几个就够。可以从下面这些开始：
 
 ---
 
-## 10. Method 最小集合
+## 9. Method 最小集合
 
 不要一上来做一个巨大 runtime。第一版可以只做四到六个机制：
 
@@ -287,7 +267,7 @@ tool 不需要很多，第一版十几个就够。可以从下面这些开始：
 
 ---
 
-## 11. Baseline
+## 10. Baseline
 
 至少需要：
 
@@ -312,7 +292,7 @@ tool 不需要很多，第一版十几个就够。可以从下面这些开始：
 
 ---
 
-## 12. Metrics
+## 11. Metrics
 
 Agent / runtime 侧优先：
 
@@ -340,7 +320,7 @@ Agent / runtime 侧优先：
 
 ---
 
-## 13. Novelty Boundary
+## 12. Novelty Boundary
 
 不能把这些单独写成新贡献：
 
@@ -366,7 +346,7 @@ paper 的话术要避免“我们首次给 agent 加 retry”，而应该是“�
 
 ---
 
-## 14. 与通信研究的关系
+## 13. 与通信研究的关系
 
 这篇工作不需要 LLM 直接接管高速 PHY 控制。PHY / MAC 的毫秒级或更快闭环仍然由传统算法承担。
 
@@ -385,7 +365,7 @@ Agent 更适合较慢时间尺度：
 
 ---
 
-## 15. 投稿方向
+## 14. 投稿方向
 
 当前最匹配的 venue 方向：
 
@@ -400,7 +380,7 @@ Agent 更适合较慢时间尺度：
 
 ---
 
-## 16. 当前 paper pipeline
+## 15. 当前 paper pipeline
 
 下一步按这个顺序推进：
 
@@ -424,7 +404,7 @@ Agent 更适合较慢时间尺度：
 
 ---
 
-## 17. 通信学习上下文
+## 16. 通信学习上下文
 
 用户当前按通信零基础学习，但学校正在上 signal processing。通信学习目标不是考试，而是能够：
 
@@ -453,7 +433,7 @@ y_k=\sum_l h_{l,k}x_{k-l}+w_k+i_k.
 
 ---
 
-## 18. 研究边界与长期偏好
+## 17. 研究边界与长期偏好
 
 - FutureComm Lab / 金石老师课题组长期 follow，但不限制选题边界；
 - 重点仍然聚焦通信方向；
