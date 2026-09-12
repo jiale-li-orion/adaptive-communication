@@ -1,6 +1,6 @@
 # Agent runtime for maintaining task execution over churning emergency-communication entities
 
-状态：调研与设计阶段。性质：通信论文，目标venue为 JSAC / TCOM / TWC / TMC / INFOCOM。
+状态：方法与主实验已成，LLM 接入待做。性质：通信论文，目标 venue 为 JSAC / TCOM / TWC / TMC / INFOCOM。
 
 ## 命题
 
@@ -17,6 +17,7 @@
 | 通信实体 | 给定的选项池，在其间组合与恢复 | 动态集合，随时间上线、掉线、退化、恢复 |
 | 研究对象 | 组合策略、切换时机、恢复路径 | 任务执行在集合变动下的存续 |
 | agent 角色 | 选择器 | 运行时 |
+| 失败位置 | 选错实体 | 不知道自己面对的是哪一种失效 |
 
 ### 支撑命题的证据
 
@@ -24,11 +25,9 @@
 
 **灾害中的实体退服记录。** 第二周汇报第 30 至 34 页整理了四起事件，其中的实体损失为：2026 年西藏吉隆口岸泥石流造成 5 个基站退服，同期投入卫星电话 36 部、便携卫星设备 10 套、发电油机 18 台；2024 年四川康定姑咱泥石流造成 22 km 光缆受损与 7 个基站退服，投入 1 架大型无人机基站、6 辆应急通信车、9 台高通量卫星便携基站；2024 年日本奥能登土砂灾害一度中断 88 个基站，靠移动基站车与可搬型基站恢复；2023 年新西兰 Gabrielle 滑坡破坏主干光纤，峰值约 20% 基站离线，Gisborne 一度有 90% 基站在两天内离线，临时回传改走卫星与微波，容量低于原光纤。
 
-**物理约束，来自本项目实测。** 西藏波密与易贡的 SRTM 地形海拔跨度为 2025 至 6690 m。单网关在 121×121 网格上的可达点仅 1689 个，占 11.5%；连不通的点 12952 个，占 88.5%，这些点在 SF12 下仍不闭合。决定连通性的是遮挡而非距离：8.37 km 处有 1169 m 遮挡的点位损耗 217.0 dB，12.61 km 处只有 1102 m 遮挡的点位损耗 201.2 dB，近 4.2 km 反而差 15.8 dB。地形遮挡造成的超额损耗在 71 至 107 dB 量级，而 SF 从 7 提到 12 只增加 14 dB 灵敏度，因此链路自适应无法救回被地形挡住的节点。ChirpBox 真实轨迹（20,913 个逐小时快照、21 节点、420 条有向链路）拟合出的链路可用率为 68.75%，Gilbert-Elliott 参数 `p(g→b)=0.0712`、`p(b→g)=0.1567`。中断时长分布严重右偏：中位 2 h，p90 5 h，p95 10 h，p99 42 h，1.8% 超过 24 h；最优参数拟合为对数正态（$\mu=0.919$、$\sigma=0.807$），指数分布被拒绝。平均中断突发 6.38 h，而同丢失率下 i.i.d. 模型只预测 1.45 h，相差 4.4 倍。供电侧，LiFePO4 在 −20 °C 下容量约为标称值的 50%，且低于 +5 °C 无法充电，高海拔站点因此在冬季长时间静默。
+**物理约束，来自本项目实测。** 西藏波密与易贡的 SRTM 地形海拔跨度为 2025 至 6690 m。单网关在 121×121 网格上的可达点仅 1689 个，占 11.5%；连不通的点 12952 个，占 88.5%，这些点在 SF12 下仍不闭合。决定连通性的是遮挡而非距离：8.37 km 处有 1169 m 遮挡的点位损耗 217.0 dB，12.61 km 处只有 1102 m 遮挡的点位损耗 201.2 dB，近 4.2 km 反而差 15.8 dB。地形遮挡造成的超额损耗在 71 至 107 dB 量级，而 SF 从 7 提到 12 只增加 14 dB 灵敏度，因此链路自适应无法救回被地形挡住的节点。ChirpBox 真实轨迹（20,913 个逐小时快照、21 节点、420 条有向链路）拟合出的链路可用率为 68.75%，中断时长中位 2 h、p99 42 h，平均中断突发 6.38 h，而同丢失率下 i.i.d. 模型只预测 1.45 h，相差 4.4 倍。供电侧，LiFePO4 在 −20 °C 下容量约为标称值的 50%，且低于 +5 °C 无法充电，高海拔站点因此在冬季长时间静默。
 
-**同类论文的结构性空白。** 对 9 篇近期 JSAC / TCOM / TWC / TMC / TVT 同域论文的通读给出四个计数。分母 9 是本次侦察中读到方法与评测层的篇数，非普查；论文中只能表述为 *in the nine papers we surveyed*，不能写成 *no work does X*。方向上有更强的旁证：2025 年一篇 COMST 综述统计 130 篇基于机器学习的资源分配论文，详审的 27 篇中绝大多数不共享源码，78.46% 未给可用的数据来源信息（见 `docs/s5-benchmark/s6-7-experimental-norms.md`）。用 DEM、地形数据库或实测信道 trace 论证仿真真实性的为 **0 篇**，地形最多作为几何抽象出现（一个环形部署廊道），多数完全缺席；3GPP TR 38.901 参数表的使用为 0 篇。设立失效与中断模型小节的为 **0 篇**，中断在多数工作中是参数扫描的一个维度而非被建模的过程。运行第三方公开实现作对照的为 **0 篇**，其中 6 篇以重实现或自建方式构造对照。用外部 benchmark 或公开数据集作评测基底的为 **2/9**（一篇用 Sub-SkyFinder 图像数据集作学习底座，一篇用真实太阳能采集数据驱动能量模型），且无一采用"公共 benchmark 加统一协议"的形式。这四条同时说明本文的差异化位置与对照方案的构造惯例。
-
-**任务级可靠性没有公认指标名。** 同域论文中的可靠性一律写作链路级的 coverage / outage probability，或服务级的 availability / feasibility rate；"reporting rate"、"mission completion" 这类任务级说法在通读的 9 篇中一次未出现。本文使用的到报率与零执行周期属任务级指标，须在首次出现处给出定义式并论证其必要性。
+**同类论文的结构性空白。** 对 9 篇近期 JSAC / TCOM / TWC / TMC / TVT 同域论文的通读给出四个计数。分母 9 是本次侦察中读到方法与评测层的篇数，非普查；论文中只能表述为 *in the nine papers we surveyed*。用 DEM、地形数据库或实测信道 trace 论证仿真真实性的为 **0 篇**，地形最多作为几何抽象出现，多数完全缺席；3GPP TR 38.901 参数表的使用为 0 篇。设立失效与中断模型小节的为 **0 篇**。运行第三方公开实现作对照的为 **0 篇**，其中 6 篇以重实现或自建方式构造对照。用外部 benchmark 或公开数据集作评测基底的为 **2/9**。方向上有更强的旁证：2025 年一篇 COMST 综述统计 130 篇基于机器学习的资源分配论文，详审的 27 篇中绝大多数不共享源码，78.46% 未给可用的数据来源信息（见 `docs/s5-benchmark/s6-7-experimental-norms.md`）。
 
 **一处数据空白。** 中国地灾监测网络的实测可靠性数据在公开文献中不存在，到报率、在线率、掉线次数、断链时长均无数值，可查到的只有合同条款（广东验收 ≥70%，昆明 ≥95%，河南 ≥95%）。本研究给出的是估计值，不是实测值。
 
@@ -81,110 +80,229 @@
 
 | baseline | 出处 | 隐含假设 |
 |---|---|---|
-| ADR / 链路自适应 | Reynders, Meert, Pollin, *Power and spreading factor control in low-power wide area networks*, IEEE ICC 2017, DOI `10.1109/icc.2017.7996380`；Haxhibeqiri et al., *A Survey of LoRaWAN for IoT*, Sensors 18:3995, 2018, DOI `10.3390/s18113995` | 链路存在，只需调 SF 与发射功率 |
-| DTN store-and-forward | Fall, *A delay-tolerant network architecture for challenged internets*, ACM SIGCOMM 2003, DOI `10.1145/863956.863960` | 接触机会到来即可转发 |
+| ADR / 链路自适应 | Reynders, Meert, Pollin, ICC 2017, DOI `10.1109/icc.2017.7996380`；Haxhibeqiri et al., Sensors 18:3995, 2018, DOI `10.3390/s18113995` | 链路存在，只需调 SF 与发射功率 |
+| DTN store-and-forward | Fall, ACM SIGCOMM 2003, DOI `10.1145/863956.863960` | 接触机会到来即可转发 |
 | Spray-and-Wait | Spyropoulos, Psounis, Raghavendra, ACM SIGCOMM Workshop 2005, DOI `10.1145/1080139.1080143` | 靠副本数控制投递率 |
-| AoI 最优调度 | Kaul, Yates, Gruteser, *Real-time status: How often should one update?*, IEEE INFOCOM 2012, DOI `10.1109/infcom.2012.6195689`；综述见 Yates, Sun, Brown et al., IEEE JSAC 39:1183–1210, 2021, DOI `10.1109/jsac.2021.3065072` | 控制信道可靠，命令按时下达 |
-| Whittle 指数调度 | Hsu, *Age of Information: Whittle Index for Scheduling Stochastic Arrivals*, IEEE ISIT 2018, DOI `10.1109/isit.2018.8437712` | 全部信道状态可观测 |
+| AoI 最优调度 | Kaul, Yates, Gruteser, IEEE INFOCOM 2012, DOI `10.1109/infcom.2012.6195689`；综述见 Yates et al., IEEE JSAC 39:1183–1210, 2021, DOI `10.1109/jsac.2021.3065072` | 控制信道可靠，命令按时下达 |
+| Whittle 指数调度 | Hsu, IEEE ISIT 2018, DOI `10.1109/isit.2018.8437712` | 全部信道状态可观测 |
 | Max-weight / 吞吐最优 | Tassiulas, Ephremides, IEEE TAC 37:1936–1948, 1992, DOI `10.1109/9.182479` | 队列状态可观测且控制可靠 |
-| 多连接链路选择 | Khan, Jacob, *Link Adaptation for Multi-connectivity Enabled 5G URLLC*, IEEE COMSNETS 2021, DOI `10.1109/comsnets51098.2021.9352811` | 各链路状态可及时获得 |
+| 多连接链路选择 | Khan, Jacob, IEEE COMSNETS 2021, DOI `10.1109/comsnets51098.2021.9352811` | 各链路状态可及时获得 |
 | 单链路 / 静态选择 | 退化参照，无单一出处 | 无多链路 |
 | Oracle | 已知未来链路状态的上界 | 全知 |
 
-第二层是 agent 侧方法对照。四个方法与一条控制组，每一步对应一层缺口，且每层对应一篇明确文章。
+第二层是 agent 侧方法对照，四条，每一步对应一层缺口且对应一篇明确文章。
 
 | 方法 | 对应文章 | 在本实验中的角色 |
 |---|---|---|
-| B1 WirelessAgent-style | Tong et al., *WirelessAgent: Large Language Model Agents for Intelligent Wireless Networks*, China Communications 23(3):265–285, 2026, DOI `10.23919/jcc.fa.2025-0163.202603`（另有 arXiv `2409.07964`、`2505.01074` 两个版本） | 通信领域现有的 LLM agent：perception / memory / planning / action。代表"agent 会选工具、会决策，但默认工具执行是可靠的" |
-| B2 WirelessOpsAgent-style | Lu et al., *WirelessOpsAgent: A Benchmark and Agent Design for Action Assurance in Wireless Networks*, arXiv `2608.08277` | 强通信 agent 对照：执行前检查 evidence 与 contract，决定 APPLY / HOLD / RETRY / ESCALATE。它解决的是 pre-execution assurance，本实验测它在 post-dispatch 中断下会怎样。它自己的对照就含 Direct、WirelessAgent++ 加 contract、CRITIC 式三类 |
-| B3 Verified Tool Calls | Mansoor, Phadke, Rana, *Verified Tool Calls Improve LLM Agent Reliability Under Non-Atomic Failures*, arXiv `2608.02645` | 最直接的 execution-reliability 对照：postcondition verification、verify-before-retry、idempotency key。与本文的差别正在于它没有 durable lifecycle、没有远端 epoch、没有重连调和 |
-| Ours | 本文 | stable operation identity + persistent lifecycle + remote epoch / fencing + scoped reconciliation + first-wins settlement |
-| Direct / one-shot | 最低控制组 | 不重试、不记账。只作下界，**不占正式对照名额**，以免主表膨胀 |
+| B1 WirelessAgent-style | Tong et al., *WirelessAgent: Large Language Model Agents for Intelligent Wireless Networks*, China Communications 23(3):265–285, 2026, DOI `10.23919/jcc.fa.2025-0163.202603`（另有 arXiv `2409.07964`、`2505.01074`） | 通信领域现有的 LLM agent：perception / memory / planning / action。代表"agent 会选工具、会决策，但默认工具执行是可靠的" |
+| B2 WirelessOpsAgent-style | Lu et al., *WirelessOpsAgent: A Benchmark and Agent Design for Action Assurance in Wireless Networks*, arXiv `2608.08277` | 执行前检查 evidence 与 contract，决定 APPLY / HOLD / RETRY / ESCALATE。它解决的是 pre-execution assurance，本实验测它在 post-dispatch 中断下会怎样。其自身对照已含 Direct、WirelessAgent++ 加 contract、CRITIC 式三类 |
+| B3 Verified Tool Calls | Mansoor, Phadke, Rana, *Verified Tool Calls Improve LLM Agent Reliability Under Non-Atomic Failures*, arXiv `2608.02645` | 执行后验证、verify-before-retry、idempotency key。差别在于它没有 durable lifecycle、没有远端 epoch、没有重连调和 |
+| 本文 runtime | 本文 | stable operation identity + persistent lifecycle + 远端 epoch / fencing + 限定范围调和 + first-wins 结算 |
+| Direct / one-shot | 最低控制组 | 不重试、不记账。只作下界，不占正式对照名额，以免主表膨胀 |
 
-逻辑链是干净的：B1 会做通信决策；B2 在执行前检查该不该执行；B3 在执行后超时会先验证再重试；本文把一次远端操作当成跨断连持续存在的 durable operation，直到调和完成才结算。四个方法各自停在前一层。
+逻辑链是干净的：B1 会做通信决策；B2 在执行前检查该不该执行；B3 在执行后超时会先验证再重试；本文把一次远端操作当成跨断连持续存在的 durable operation，直到调和完成才结算。四条各自停在前一层。
 
-CRITIC 与 AgentSpec **不进主实验**。它们会把坐标轴搞散：CRITIC 处理的是验证器本身的质量，AgentSpec 处理的是动作允不允许执行，而本文处理的是动作已经释放之后在不可靠远端链路上到底有没有执行。三者不是同一层的对照。
+CRITIC 与 AgentSpec 不进主实验。前者处理验证器本身的质量，后者处理动作允不允许执行，与本文所在的层不同，混入会把坐标轴搞散。
 
-### 必引但不作为对照
+**必引但不跑。** Yao et al., *ReAct*, ICLR 2023, arXiv `2210.03629`（agent-loop 源头，通用背景）；*WirelessAgent++*, arXiv `2603.00501`（通信 agent 已在做 workflow search，但优化的是 workflow 而非执行语义）；Ma et al., *TopoLLM: LLM-driven adaptive tool learning for real-time emergency network topology planning*, Digital Communications and Networks 12(2):273–282, 2026, DOI `10.1016/j.dcan.2025.10.002`（与"应急通信 + LLM + tool use"最贴的正式发表工作，负责把本文场景接进应急通信 agent 文献；其全文尚未核实，工具目录与失败语义未验证）；Wang, Poskitt et al., *AgentSpec: Customizable Runtime Enforcement for Safe and Reliable LLM Agents*, arXiv `2503.18666`, 2025（界定邻近的 runtime enforcement 方向，即动作允不允许执行）。
 
-以下四篇必须引用，但不跑实验。
+另保留最小工程惯例参照：blind retry 与指数退避，以及默认工具超时语义（MCP 规范 2026-07-28 的 Cancellation 章）。
 
-| 文章 | 为什么引 | 为什么不跑 |
-|---|---|---|
-| Yao et al., *ReAct: Synergizing Reasoning and Acting in Language Models*, ICLR 2023, arXiv `2210.03629` | 通信 agent 的 agent-loop 源头之一 | 通用背景，不构成执行语义上的对照 |
-| *WirelessAgent++: Automated Agentic Workflow Design and Benchmarking for Wireless Networks*, arXiv `2603.00501` | WirelessAgent 的直接后续，说明通信 agent 已在做 workflow search 与 WirelessBench | 它优化的是 agent workflow，不是 execution semantics |
-| Ma et al., *TopoLLM: LLM-driven adaptive tool learning for real-time emergency network topology planning*, Digital Communications and Networks 12(2):273–282, 2026, DOI `10.1016/j.dcan.2025.10.002` | 目前与"应急通信 + LLM + tool use"最贴的正式发表工作，负责把本文场景接进应急通信 agent 文献 | 同为场景接入，非执行语义对照。注意其全文尚未核实（ScienceDirect 反爬），工具目录与失败语义未验证 |
-| Wang, Poskitt et al., *AgentSpec: Customizable Runtime Enforcement for Safe and Reliable LLM Agents*, arXiv `2503.18666`, 2025 | 界定另一条邻近的 runtime 方向：runtime enforcement 决定"动作允不允许执行" | 本文处理"动作已经释放后，在不可靠远端链路上到底有没有执行"，层级不同 |
-
-另保留最小工程惯例对照：blind retry 与指数退避（AWS Builders' Library 与 Google SRE Book），以及默认工具超时语义（MCP 规范 2026-07-28 的 Cancellation 章）。二者用于说明"业界默认做法"的位置，不作为方法对照。
-
-第三层是场景对照，即已发表的 LoRa 滑坡与落石监测系统。它们同时是本文参数的实测来源和自然对照集：读者会问"你的设置与真实部署差多远"，这一层就是回答。
+第三层是场景对照，即已发表的 LoRa 滑坡与落石监测系统。它们同时是本文参数的实测来源。
 
 | 系统 | 规模与组网 | 采样与载荷 | 发射功率 | 能耗实测 | 地形处理 |
 |---|---|---|---|---|---|
-| 贵州水城滑坡监测（Wang et al., *Frontiers in Earth Science* 10:899509, 2022） | 5 套设备，星形单网关，回传走 4G，连续运行 9 个月 | 定时 1 h；触发时 5 min×3 包；阈值雨量 0.2 mm、位移 20 mm | 30 dBm（1 W） | 12 V/10 Ah LiFePO4 加太阳能，板功率未报告 | 未建模；作者称现场有效范围 <3 km 故不设中继 |
-| Pantelleria（Ragnoli et al., *JLPEA* 12(3):47, 2022） | 12 节点、2 网关，LoRaWAN Class A 加 ADR，回传走 LTE | 60 min，载荷 38 B，单次活跃窗口约 15 s | 13 dBm | 活跃 35.7 mA、待机 16 µA、周期 0.148 mAh、日均 3.56 mAh、无光照约 2.8 年（INA229 实测） | 未建模；观测到部分节点丢包 |
+| 贵州水城滑坡监测（Wang et al., *Frontiers in Earth Science* 10:899509, 2022） | 5 套设备，星形单网关，回传走 4G，连续运行 9 个月 | 定时 1 h；触发时 5 min×3 包；阈值雨量 0.2 mm、位移 20 mm | 30 dBm | 12 V/10 Ah LiFePO4 加太阳能 | 未建模；作者称现场有效范围 <3 km 故不设中继 |
+| Pantelleria（Ragnoli et al., *JLPEA* 12(3):47, 2022） | 12 节点、2 网关，LoRaWAN Class A 加 ADR，回传走 LTE | 60 min，载荷 38 B，单次活跃窗口约 15 s | 13 dBm | 活跃 35.7 mA、待机 16 µA、日均 3.56 mAh、无光照约 2.8 年（INA229 实测） | 未建模；观测到部分节点丢包 |
 | Hochvogel 高山岩土监测（Leinauer & Krautblatter, EGU25-11121, 2025） | 10 至 12 个传感器，单一网关，自 2019-10 连续运行超过 5 年 | 10 min | 未报告 | 未报告 | 多数传感器处于射频量程边缘，水平 2800 m、垂直 1500 m，且大多无直接视距 |
-| FresSim 验证场景（Torres-Sanz et al., *Internet of Things* 38:102012, 2026） | 6 端节点加 1 网关，另有 5 网关覆盖图场景 | 未报告 | 14 dBm | 睡眠电流 3.5 µA | **显式建模**：DEM 剖面逐点判第一菲涅尔区净空，60% 判据；12 场景与实测连通性 100% 一致，不含地形的基线仅 50% |
+| FresSim 验证场景（Torres-Sanz et al., *Internet of Things* 38:102012, 2026） | 6 端节点加 1 网关 | 未报告 | 14 dBm | 睡眠电流 3.5 µA | 显式建模：DEM 剖面逐点判第一菲涅尔区净空，60% 判据；12 场景与实测连通性 100% 一致，不含地形的基线仅 50% |
 
-上表的用法有三处。参数直接采用，见系统模型；FresSim 的判据作为本文地形模块的方法依据与验证靶子；贵州水城与 Pantelleria 的实测间隔（1 h 与 60 min）与 Hochvogel 的 10 min 共同界定本文采样间隔的取值范围。
+上表的用法有三处。参数直接采用，见第四节；FresSim 的判据作为本文地形模块的方法依据与验证靶子；贵州水城与 Pantelleria 的实测间隔（1 h 与 60 min）与 Hochvogel 的 10 min 共同界定本文采样间隔的取值范围。
 
 对照构造的惯例需要声明：通读的 9 篇同类论文中，运行第三方公开实现作对照的为 0 篇，6 篇以重实现或自建方式构造对照。本文沿用该惯例，并公开代码。
 
-### Benchmark
+### 实验范式
 
-六个现有 agent-network benchmark 全部不适用于本文场景，判断基于对六篇论文 arXiv HTML 全文的阅读与仓库检查，逐条记录见 `docs/s5-benchmark/s6-9-benchmark-comparison.md`。
+通信领域不使用 benchmark。通读的 9 篇同类论文中用外部 benchmark 作评测基底的仅 2 篇，且无一采用"公共 benchmark 加统一协议"的形式；其余全部为作者自建仿真或自建解析模型。领域惯例是**从数学描述重实现对照、用标准信道模型、报 Monte Carlo 次数**，把可复现性寄托在方法与参数表的完整，而非一个可执行的任务套件。JSAC / TCOM / TWC 的作者指南不含代码共享条款，只鼓励补充材料。
 
-| benchmark | 故障模型 | 网络的角色 | 载体 | 能量建模 | 地形建模 |
-|---|---|---|---|---|---|
-| WirelessOpsBench（WirelessOpsAgent 论文，`2608.08277`） | 7 类证据账本故障，每 base 七个孪生 case | 对象（动作授权） | 无 runtime；只发数据与工具契约，射线追踪工具供 CQI | 无 | 仅 HKUST_North / HKUST_South 两区域 |
-| NetConfArena（`2608.23179`） | 不注入，只有 agent 自身的配置错误 | 对象（配置） | GNS3 加厂商路由器镜像，存在许可问题 | 无 | 无 |
-| NetArena（`2506.03231`） | 每次查询合成 | 对象（规划与修复） | Mininet 加 Kubernetes 与 Docker | 无 | 无 |
-| NIKA（`2512.16381`） | 经 Linux TC、stress-ng 与脚本注入，54 问题 / 640 事件 | 对象（检测、定位、根因） | Kathará 容器 | 无 | 无 |
-| NetOpsBench | 注入 `tc` 常量（`loss_pct=30`、`latency_ms=100`），12 类 | 对象（监测与诊断） | Containerlab 加 SONiC-VS，仅限 Linux 且资源占用高 | 无 | 无 |
-| WirelessBench（`2603.00501`） | 无故障，答案为确定性规则或专家解 | 对象（静态解题） | 无仿真器；数据集加 OSM 射线追踪工具 | 无 | 部分，仅 2D 建筑几何 |
+本文因此不寻找 benchmark，而是选定仿真基底并公开场景定义与全部参数。
 
-其中两条自述可以直接引用。NetConfArena 把容错列为未来工作，原文为 *"we plan to add … tasks that target fault-tolerant configuration scenarios"*，其指标 *"target the functional correctness of the final network behavior rather than network performance such as latency, congestion, or transient routing dynamics"*。NIKA 明确不支持评估缓解动作，原文为 *"NIKA currently focuses on diagnosis tasks (detection, localization, RCA) but does not yet support evaluating mitigation actions"*。
+| 层 | 选择 | 理由 |
+|---|---|---|
+| 地形传播 | Longley-Rice ITM v1.2.2，真实 SRTM1 | 不规则地形的标准模型；9 篇同类论文中无一使用真实地形，这一层是本文的差异化位置 |
+| 链路时间相关性 | ChirpBox 实测拟合的 Gilbert-Elliott | 20,913 个逐小时快照、420 条有向链路；i.i.d. 假设会把突发性低估 4.4 倍 |
+| 供电与静默 | LiFePO4 加充电闸门的温度模型 | 高海拔站点的失效由供电决定而非无线；面板从 30 W 增到 200 W，停电率恒为 93.7% |
+| 几何视线 | 第一菲涅尔区净空，60% 判据 | 与 ITM 互为独立验证；该判据在 12 个山区场景与实测连通性 100% 一致 |
+| 协议与能耗层（备选） | ns-3.48 加 FLoRa v0.3.7 | LoRaWAN 的标准平台，自带能耗模型、干扰模型与 ADR 组件。已在 `../ns3/` 建好 |
+| 可微射线追踪（备选） | Sionna RT | 课题组既有平台。RT 接受 Mitsuba 场景，可把 OSM 楼房替换为 DEM 地形网格 |
 
-三个维度上的核验结果如下。agent 自身的操作通道是否退化：六篇全文检索 agent 通道相关构造（agent 自身流量与连接、带外控制面、边缘部署 agent、agent 之间的连通性）零命中，网络在这六个基准中始终是控制的对象，不承载 agent 自身的遥测。故障是否由真实地形与供电导出：六者的故障全部为注入、合成或不存在，词汇层面最接近真实的是 WirelessOptBench（其分类引用 TeleLogs、AIOps2025、RCA100），但该论文承认 oracle 是 benchmark 自定义的；NetOpsBench 用的是手设常数。任务是否为长时监测 mission：NIKA 与 NetOpsBench 最接近，但都是单事件式，一次事件完成检测、定位与根因后即结束；NIKA 报告的 7 至 15 小时是 150 个事件的累计墙钟时间，NetOpsBench 的 efficiency 统计的是 tool call 数与 token 数。二者都不惩罚中途漏掉事件、不惩罚信道随时间衰减、不要求跨小时维持态势。
+传播模型按三档递增真实度组织并逐档量化增益：自由空间 → 加 DEM 视线遮挡 → 加刃峰绕射。该叙事结构取自同类文献的既有做法，本文沿用并把"只按距离"作为最低档对照。
 
-能量与功率建模在六个基准中全部缺失，地形与传播建模只出现在 WirelessBench，且仅作为 agent 可调用的 CQI 工具，不是其流量所穿越的信道。这属于结构差异而非参数差异：六个基准都把网络固定为控制对象，因此自建 benchmark 不必要也无收益。
+几何模块承担一项验证义务。FresSim 的实测场景给出可复核靶子：6 个端节点距网关 190、250、500、620、2200、3200 m，网关海拔 1295 m、节点 1285–1385 m，需复现三个定性结论——2200 与 3200 m 的山区链路不通、平坦地形通、超长距 28 km 场景可通。
 
-### 仿真平台
+### Related work
 
-上表六个都是 LLM-agent 的任务套件，属另一物种。通信领域的惯例不是任务套件而是**仿真器加标准信道模型加可复现场景**：通读的 9 篇同类论文中用外部 benchmark 作评测基底的仅 2 篇，且无一采用"公共 benchmark 加统一协议"的形式，其余全部为作者自建仿真。因此本文不寻找 benchmark，而是选定仿真器栈并公开场景定义。
+**最危险的邻居。** INFOCOM 2026 的 "Rollback Is Not Undo: Path-Dependent Failures in LLM-Arbitrated Network Control"（Weici Pan, Zhenhua Liu，DOI `10.1109/INFOCOM59046.2026.11571400`）已在同类会议与同类问题空间证明，LLM 仲裁的网络控制回路中回滚无法恢复行为，且恢复效果路径相关；该文提出 `recovery gap` 指标，故障模式包含 observation corruption、delay-reordering 与 agent dropout。该文闭源，无公开 artifact。它未覆盖灾害与应急场景、真实轨迹驱动与实体生命周期，本文需要引用它并显式对比。
 
-候选与其状态如下，均为本次逐一核验。
+**同组先前工作。** WirelessOpsAgent（Zijian Lu, Yiping Zuo, Hao Xu, Weicong Chen, Xin He, Jiajia Guo, Shi Jin，arXiv `2608.08277`，2026-08-08，CC BY 4.0）把研究层次定为 **Action Assurance**：判据是动作在下发前是否被正确授权。其表述为 *"repairs recoverable support failures before execution"*，问题被限定在可修复范围内；本文场景中 88.5% 的点位永久不可达、断电可持续数周，大量失败不可修复。该文中心是分发前的 repair，本文中心是分发后任务在实体变动下的存续。
 
-| 平台 | 覆盖 | 状态 | 与本文的关系 |
-|---|---|---|---|
-| ns-3.48 + FLoRa | LoRaWAN 的 MAC/PHY | 活跃；FLoRa v0.3.7 要求 ns-3.48 | 标准 LoRaWAN 平台，自带 `LoraRadioEnergyModel`、干扰模型与 ADR 组件。本文的协议与能耗层 |
-| Sionna RT | 可微射线追踪 | 活跃 | 课题组既有平台（Sionna 0.19.1 的 RayTracing，OSM 加 Blender 场景，基站-RIS-UAV，3.5 GHz）。RT 接受 Mitsuba 场景，因此可把 OSM 楼房换成 DEM 地形网格，在同一工具链上落到本文场景 |
-| Longley-Rice ITM | 不规则地形传播 | 稳定 | 本文地形维的物理模型，非射线追踪。与 RT 互为交叉验证 |
-| The ONE | DTN 与机会网络 | 半死（master 最后提交 2023-04）；Helsinki 地图另有许可限制 | 仅作方法学参考。其基线多数依赖节点移动相遇，在固定节点加间歇链路中退化 |
-| SNS3 | 卫星 DVB-S2/RCS2 载荷 | 活跃 | 卫星回传若需载荷级细节时使用。ns-3 已内置 LEO 移动模型与 3GPP TR 38.811 NTN 信道，起步不必依赖它 |
+**已被占据的机制，不可声称。** idempotency 与 verify-before-retry（arXiv `2608.02645`）；effect exactly-once 与 consume-once，含 TLA+ 状态穷举与故障矩阵（arXiv `2608.03836`）；outcome-unknown 与防盲目重放，prepare-dispatch-settle（arXiv `2606.03895` "Agent libOS"）；authority 与恢复语义绑定（arXiv `2608.01710` "CapLease"）；只读与改状态工具分类（arXiv `2603.29656` "6GAgentGym"）；retry budget 与 stale context（arXiv `2606.01416`）；公平排队（Demers, Keshav, Shenker, SIGCOMM 1989, DOI `10.1145/75247.75248`）；lease 与 heartbeat（Gray, Cheriton, SOSP 1989, DOI `10.1145/74850.74870`）；LLM agent serving 中的队头阻塞（Autellix, arXiv `2502.13965`）；验证者永不失败的隐含假设（CRITIC, arXiv `2305.11738`）。
 
-平台选择同时承担一项验证义务。FresSim 的实测场景给出可复核的靶子：6 个端节点距网关 190、250、500、620、2200、3200 m，网关海拔 1295 m、节点 1285–1385 m，需复现三个定性结论——2200 与 3200 m 的山区链路不通、平坦地形通、超长距 28 km 场景可通。本文的地形模块以复现这三条为验收标准。
+三句不能写。"我们是第一个把 X 用于 LLM agent"（X 取上表任一机制）可由上表直接反驳。"没有工作注入网络故障"应改为 *we are not aware of a workload that overlays a communication-channel fault model onto remote agent actuation*。
 
-传播模型按**三档递增真实度**组织并逐档量化增益：自由空间 → 加 DEM 视线遮挡 → 加刃峰绕射。该叙事结构取自同类文献的既有做法，本文沿用并把"只按距离"作为最低档对照，用于量化地形建模本身带来的差异。
+### 尚未覆盖的部分
 
-### 采用方案
+| 空白 | 依据 |
+|---|---|
+| 分发后的执行语义 | 同类工作的故障模型全部刻画动作释放之前，无一描述释放之后的传输语义 |
+| 实体生命周期作为一等对象 | 通读的同域论文中，网络一律是控制的对象，不承载 agent 自身的遥测 |
+| 结果不可知作为一等故障类 | 既有工作把超时当作失败处理，或假定故障发生可被检出 |
+| 不可修复失败 | WirelessOpsAgent 自述限定 recoverable support failures；本文有 88.5% 永久不可达与数周断电 |
+| 验证者自身不可用 | CRITIC 与 `2608.02645` 均假定 verifier 会响应；分区下验证本身也会超时且结果不可知 |
+| 能量与供电维度 | 通读的 9 篇同类论文中无一建模 |
+| 地形与传播维度 | 同类论文中地形最多是几何抽象，无一使用 DEM 或实测 trace |
 
-不新造 benchmark，不定义新 task，只补已有 benchmark 缺的执行层。任务语义、工具契约、预算、合法迁移与里程碑继承 WirelessOpsBench 的公开开发集。
+## 四、系统模型
 
-继承的边界由公开包的实际内容划定。公开包只有数据：300 base、2400 case、180 repair，无 runner、无 scoring 谓词、无 fault schedule。同一 base 的八个 case 的 `public_task` 逐字节相同，仅 `case_id` 不同；`public_input` 只含任务参数，WCHW 一族为空对象；全库无答案、gold、reference 或 label 字段。证据账本、`ray_tracing` 实现与评测谓词均在评测端扣留。因此可直接取用的是任务契约层，不是可运行的 episode。
+每条参数标注证据层：**M** 实测、**S** 标准模型、**F** 拟合、**A** 假定。A 层须做敏感性扫描，不得当作实测值报告。
 
-须自建的四项为证据账本内容、CQI 提供者、runtime 与 scoring 谓词，即本文所补的执行层。公开包不含 baseline 分数、轨迹、token 数与延迟，故本文数值不与论文所报数值可比，只能作为本文自己的 development 结果报告。完整核验见 `docs/s5-benchmark/s6-10-wirelessopsbench-artifact-audit.md`。
+### 部署与几何
 
-工具面九项，真正变更状态的只有 `commit_policy` 与 `rollback_policy`，`stage_policy` 与 `post_check` 的 `mutates_state` 均为 False。`commit_policy` 要求 `stage_id` 与 `expected_version`，已带乐观并发；`stage_policy` 带以 `protected_*_impact` 为风险字段的危险提案带。状态机三族同构：`stage_<fam>` → `validate_evidence` → `commit_authorization` → `post_check` → `rollback`，外带一条指名实体的 `refresh_then_validate:<entity_id>`。预算为 `max_steps` 24、`max_tool_calls` 12、`wall_time_ms` 60000。
+研究区域为西藏波密与易贡一带，已记录的最大规模滑坡发生地之一。地形取真实 SRTM1（1 角秒，约 30 m），瓦片 N30E094 及相邻三片，原始海拔跨度 2025 至 6690 m。**M**
 
-层栈相邻关系直接来自论文标题。WirelessOpsBench 做 **Task correctness → Action assurance**：判据是动作在分发前是否被正确授权，其 7 类故障——temporal inconsistency、missing required evidence、conflicting sources、schema drift、entity misbinding、concurrent version drift、false-success update——全部落在证据账本的可信度上。本文在同一任务契约上补 **Execution assurance**：判据是动作分发之后到底发生了几次、有没有发生。
+网关单点架设在 (30.330°N, 94.780°E)，海拔 2317 m，处于谷地，四周山脊高出 3300 m 以上。这一选择是场景的一部分：山区监测的现实形态就是谷地汇聚点加坡面节点。**M** 节点布点在网关周围 121×121 格点上，点距约 204 m。**A**
 
-这两组判据不可互相表达。WirelessOpsBench 的 false-success update 是上报成功但状态未生效；本文的 ACK 丢失是状态已生效但回执未达，重试即产生重复副作用，方向相反。其 concurrent version drift 由数据面并发写者造成；本文的视图落后由控制面链路中断造成，触发源不同。派发后节点失联、pending 被遗忘、重放顺序错、网关抖动、分区分歧、协调者重启六类在其故障表中没有对应项，因为其 episode 把工具调用视为必然送达。
+### 信道模型
 
-本文的故障打点在 `commit_policy` 与 `rollback_policy` 两个 `mutates_state=True` 工具外侧的 dispatch → execute → observe 环上。该环随 runtime 一并自建。
+**空间维：地形损耗。** Longley-Rice ITM v1.2.2 点对点模式，沿大圆路径按 DEM 原生分辨率采样，4/3 等效地球半径。参数为 868 MHz、发射 14 dBm、两端天线增益 2 dBi、馈线 1 dB、带宽 125 kHz、天线高 2 m、地面 ε=15 与 σ=0.005 S/m、大陆温带气候、可靠度 90%。**S** 公里与兆赫口径下自由空间损耗为 `20log10(d_km) + 20log10(f_MHz) + 32.44`，总损耗为 `FSPL + avar`，平坦地形回归必须复现两径地面反射模型。**S**
 
-已完成的执行层组件见 `code/`：`disruption_env.py` 提供真实地形节点、Gilbert-Elliott 信道、能量模型以及分区、flapping、重放与重启机制；`operations.py` 实现生命周期状态机与故障记账；`test_failure_model.py` 对 11 类故障做确定性验证，当前 11/11 通过；`agent_react.py` 是可切换恢复语义的调度器骨架；`wirelessops_adapter.py` 在公开任务契约上驱动执行层。
+**时间维：链路好坏的时间相关结构。** Gilbert-Elliott 两态模型，参数由 ChirpBox 拟合：`p(g→b)=0.0712`、`p(b→g)=0.1567`，链路可用率 68.75%。平均下行突发 6.38 h，上行 14.04 h，而 i.i.d. 只预测 1.45 h。中断时长不是指数分布，42.99 万个未删失中断段的经验分位数为中位 2 h、p90 5 h、p95 10 h、p99 42 h，1.8% 超过 24 h；对数正态（μ=0.919、σ=0.807）在 AIC 与 KS 距离上最优。样本量 43 万时 KS 检验对所有参数化模型都给零 p 值，故建模以经验分位数为准，对数正态仅作平滑内插。**F**
+
+ChirpBox 采自上海城区。借用的是时间相关结构，不是绝对水平。**效力威胁**
+
+**地形建模的差异。** 同类论文中无一使用 DEM 或实测 trace。真实地形给出的结果与距离主导的直觉相反：距离近 4.2 km 的点位反而差 15.8 dB；遮挡造成的超额损耗在 71 至 107 dB 量级，而 SF 从 7 提到 12 只增加 14 dB 灵敏度。单网关可达点占 11.5%，不可达点占 88.5%。独立做的几何视线判定给出同量级结果，原生分辨率下仅 6.6% 的格点与网关有清晰视线。**M**
+
+### 能量模型
+
+高海拔站点的失效由供电而非无线决定。储能取 LiFePO4：−20 °C 下可用容量约为标称值的 50%，低于 +5 °C 无法充电。**S/M** 发电取光伏，气温基线由海拔推导：3925 m 处 1 月均温约 −19.5 °C、7 月约 −7.5 °C，日间温度全年低于充电下限。
+
+三条反直觉结论。面板从 30 W 增到 200 W，停电率恒为 93.7%，发电被温度闸门掐死而非被能量禀赋限制。积雪掩埋的概率从 0 扫到 0.20 每天，停电率不动。杠杆只有电池化学、加热电池箱，或降低站点海拔。**M（模型输出）**
+
+器件级能耗账本取实测剖面：活跃平均 35.7 mA、待机 16 µA，单周期活跃窗口约 15 s、休眠 3585 s，日均 3.56 mAh、全年约 1300 mAh，无光照条件下约 2.8 年（INA229 实测）。对照区间：ESP32 深睡 10 µA、SX1276 发射 120 mA，配 2600 mAh Li-ion 时最坏全开约 16.3 h、深睡约 13.5 年。两个区间相差两个数量级，说明寿命对占空比的敏感性远高于对器件的敏感性。**M**
+
+气候基线整体平移 ±6 °C，停电天数在 342 天附近不变，只有夏季均温升到 0 °C 以上才改善至 217 至 260 天。基线可能偏冷约 10 °C。**效力威胁**
+
+真实部署里加热与不加热两类站点并存，本文据此设 0.5 的加热比例。这不是调参：充电闸门决定站点能否越冬，而节点全死时任何 runtime 都送不进去，会把零次率拉到约 90% 从而淹没执行语义的对比。
+
+### 业务与队列
+
+上行为周期性遥测，监测对象含降雨、孔压、水位、地表位移与裂缝开度。实体部署给出的间隔为：贵州水城 **1 h** 定时、触发时 **5 min×3 包**（阈值雨量 0.2 mm、位移 20 mm）；Pantelleria **60 min**、载荷 **38 B**；Hochvogel **10 min**。本文取 10 min 与 1 h 两档并扫描，单包载荷取 38 B。**M** 下行为配置与命令，量小但必须送达：采样率调整、门限下发、休眠调度、告警确认、网关切换、中继启用。**A**
+
+发射功率在同类部署中跨度 13 至 30 dBm，本文取 14 dBm 以符合 EU868 常规子带的限制，并作为扫描维度。**S**
+
+国内地灾监测项目的验收条款为广东 ≥70%、昆明 ≥95%、河南 ≥95%，但这是合同值而非实测值。**效力威胁**
+
+### 失效与中断模型
+
+本节是本文的第一处分野：9 篇同域论文中无一设立失效与中断模型小节，中断在多数工作中是参数扫描的一个维度而非被建模的过程。
+
+单个实体经历上线、可用、退化、掉线、恢复。对节点而言，掉线有两个独立来源，且**观测端不可区分、处置方式完全不同**。
+
+**持续遮挡。** 由地形与传播决定，任何自适应与重传都无法挽回，占比 88.5% 的格点属此类。处置只能改架构：换位置、加中继、走中继回传。单网关加一个最优中继后覆盖升至 33.2%，中继有效但远不足以闭合。
+
+**季节性静默。** 由能量与温度决定，冬季长静默、夏季恢复，处置是等待或加热。
+
+现有工作普遍把两者当作同一件事，后果是：把永久失效算作可恢复故障会高估恢复策略的价值，把季节性静默算作随机丢包会低估所需的缓冲深度。
+
+变动的时间尺度由三处决定，彼此相差三个数量级：空间维给出 11.5% 随时可通与 88.5% 永久不可通；时间维给出 6.38 h 的平均中断突发与 42 h 的 p99 尾部；能量维给出以月计的冬季静默。任何单一尺度的评测都会漏掉另两个。
+
+**agent 的观测模型。** 上述过程是物理真值。agent 看到的是它的调用结果，而调用穿过同一条链路，因此观测是物理过程经一次有损、有延迟、可能重复的投影。agent 对实体 $e$ 的动作 $a$ 得到的观测取值于 {完成并回执, 未完成, 结果不可知}，其中"结果不可知"混合了三种物理原因：请求未达、实体已失效、回执丢失。**agent 无法在单次观测内区分这三者**，只能通过后续调用的时序模式逐步排除。这一投影是本文与"假设状态可观测"的既有工作的根本差别。
+
+### 指标
+
+| 指标 | 定义 | 说明 |
+|---|---|---|
+| 到报率 | 周期内应到达的采样包中最终到达的比例 | 按传感器与按时间分别统计，单一全局值会掩盖局部失效 |
+| 到达时延分布 | 每包从生成到到达的时间，报分位数 | 均值被少数快包主导，监测关心尾部 |
+| 能量预算余量 | 剩余能量相对越冬所需的比例 | 决定下一冬季是否存活 |
+| 重复执行次数 | 同一逻辑命令被实际应用超过一次的次数 | 与任务正确性正交的执行正确性 |
+| 零执行周期 | 应下发但最终未落地的命令数 | 与上一行方向相反，必须同时报 |
+
+最后两行构成一对。只报其一会奖励错误行为：放弃执行可以压低重复率，重发可以压低零执行数。本文实测到 `verified_wrapper` 把重复减半的代价是 562 个周期完全未执行。
+
+报告口径按三档时间分辨率分别给出，取自 Hochvogel 的实测做法：日均（当日至少 1 个测值即算有效）、时均、以及全部原始采样。该实测显示三档差异极大——日均可靠率 97.3–100%，时均裂缝计 96.7–99.4%，而激光测距仪只有 56–65%（每年被雪覆盖数月）。只报日均会把一个半数时间失效的传感器呈现为近乎满分。**M**
+
+同域文献中不存在任务级可靠性的公认指标名。可靠性普遍写作链路级的 coverage / outage probability，或服务级的 availability / feasibility rate。本文的到报率与零执行周期属任务级指标，需在首次出现处给出定义式并论证其必要性。
+
+## 五、方法：面向中断通信的远端操作运行时
+
+### 执行歧义
+
+系统里有一个 agent runtime，它通过无线链路调用远端通信实体。控制请求与执行结果穿过同一条可能中断的路径，没有可靠的带外确认通道。对一次有副作用的操作 $o$，agent 发出请求后等到超时，能确定的只有 $\text{response was not observed}$，推不出 $\text{effect was not executed}$。远端可能根本没收到请求，可能收到但执行失败，也可能已经执行而回执丢失。节点此后还可能掉线、恢复、重启，于是旧操作与新操作跨越多个连通期。
+
+这把无线链路中断变成了一个**远端执行歧义**问题：通信故障开始影响控制操作的语义，而不只是影响分组投递概率。关键的新对象是
+
+$$\text{physical execution state} \neq \text{runtime knowledge state}$$
+
+### 三个正交维度
+
+早先的实现把所有东西塞进一个 11 状态枚举，其中有明确的自相矛盾：`outcome_unknown` 同时出现在终态集合里和"未决"查询的返回里。四个不同维度的量被混为一谈——runtime 自己的生命周期、远端物理效果、agent 掌握的证据、实体的可达性。现在拆开。
+
+```text
+lifecycle    registered -> running -> stopping -> settled      （runtime 拥有）
+outcome      unknown | applied | rejected | failed | superseded （远端效果）
+observation  fresh | unknown | stale | unavailable             （agent 的证据）
+```
+
+旧状态各归其位：`timeout` 成为一个 wait event；`outcome_unknown` 表达为 `outcome=unknown`；`stale_result` 是 observation；`unavailable` 是实体观测；`recovering` 是恢复过程；`compensating` 是另一个 operation。与种类相关的具体事实进 `detail`，不构成新状态。
+
+### 生命周期
+
+agent 只产生一个逻辑动作，例如 `set_sampling_rate(node_17, 5min)`。从这一刻起可靠性不再由 agent 的推理负责，而由 runtime 接管。
+
+**登记。** runtime 生成稳定的 `operation_id` 与单调递增的 `epoch`，写入 registry，然后才允许发送。顺序不能反：先发包后记账会留下一个窗口，协调者恰在此刻崩溃就会产生一个远端可能已执行、而本地完全不知道存在过的幽灵操作。
+
+**发送。** 请求携带 `operation_id`、`entity_id`、`epoch`、`capability`、`arguments`。重试不产生新的逻辑操作，始终重发同一个 `operation_id + epoch`。
+
+**远端接受。** 实体维护最小的持久元数据：`last_accepted_epoch` 与可选的 `operation_id → outcome` 回执。epoch 小于已接受值则拒绝，等于则返回此前记录的结果，大于则原子地应用效果、推进 epoch、记录回执。第三步的原子性是必需的：若应用效果与推进 epoch 不在同一个接受边界内，两者之间崩溃就会重新打开 epoch 本来要关闭的重复窗口。
+
+### Timeout 语义
+
+通用 agent 框架把 timeout 暴露成一个 tool error，由模型下一轮自己决定要不要重试。这个语义把"我方停止等待"和"远端没有执行"混为一谈。本文规定
+
+$$\text{wait\_timeout} \neq \text{execution\_failure}$$
+
+回执没回来时 `lifecycle = running`、`outcome = unknown`，操作继续留在 registry。timeout 只是协调者的一个本地观测事件，之后策略才能决定继续等、查询、重试、调和、放弃或补偿。
+
+这条语义的物理依据是中断的时长。ChirpBox 实测的 p99 中断是 42 h，所以 `outcome_unknown` 可能横跨整个夜间。一个把超时当失败处理的运行时，会在每个夜里把大量实际已执行的操作当成未执行来处理。
+
+### 调和与结算
+
+实体恢复连接后，runtime 检查所有属于该实体、`outcome=unknown` 的操作，逐一做**限定范围的调和**：优先查 operation 级回执，退化到 epoch 比较。远端记录了该 `operation_id` 则 `applied`；远端 epoch 大于该操作的 epoch 则 `superseded`；远端 epoch 小于该操作的 epoch 则说明该写入从未成为当前值，同 epoch 重试是安全的；远端不可达则保持 unknown。
+
+范围限定不是细节。问"这个实体上是否曾经出现过这个效果"会被更早的操作回答成"是"，于是策略停止重试一次根本没发生的写入。正确的问法是"操作 $o$ / epoch $e$ 是否生效"。
+
+结算 first-wins：终态证据一旦按规则结算，迟到的分组只能成为 `late_evidence` 记录，不能改写操作真值。否则延迟到达的确认本身又会造成状态回滚。
+
+### 边界与不变量
+
+agent 只负责选择 capability 与逻辑动作，runtime 在动作之外包住登记、身份分配、epoch 分配、发送、等待、调和、重试许可与结算。这条边界让实验的因果变干净：固定相同的 LLM 轨迹与相同的动作序列，只替换 runtime。
+
+协议正确性的论证强度受限于运行时的强制力度。若 runtime 静默接受一次乱序转换，关于正确性的论证前提就不成立。因此 runtime 自己维护每次操作的转换阶段并在非法时立即抛错：未登记即结算、未发送即调和、效果已确定后重发、未注册操作、重试改变身份，五条均抛 `Violation`。注意第四条与"结果未知时允许重发"不矛盾——`outcome=unknown` 的操作可以重发，这正是 fencing 起作用的前提；被禁止的是在效果已经确定之后再发。五条均已实测会抛出。
+
+### 三条性质
+
+在远端 epoch 持久化、效果应用与 epoch 推进原子、同一逻辑操作的重试复用同一 epoch 三条假设下：
+
+**At-most-once acceptance。** 对任意逻辑操作 $o$，epoch $e_o$ 被远端接受的次数至多一次。只能声称 at-most-once acceptance，不能声称 exactly-once：第一次请求从未到达时，效果可能根本不发生。
+
+**No stale overwrite。** 若 $e_j > e_i$，一旦 $o_j$ 被接受，任何迟到的 $o_i$ 都不能覆盖它。这解决分区、延迟重放与重连后的旧命令污染。
+
+**Eventual resolution under eventual reachability。** 若实体最终保持可达且其远端执行元数据未丢失，未决操作经调和最终能落到 `applied | rejected | superseded | failed`。若元数据随远端重启丢失，则不能保证解决。这条限制必须显式写出，因为它说明协议保证依赖远端持久化。
+
+三条性质在 `code/operations.py` 中可执行验证，连同一条负面结果：客户端只复用幂等键而远端不认该键时，5 次重试全部生效；epoch fencing 下 5 次重试只被接受 1 次。
+
+## 六、结果
 
 ### 主结果
 
@@ -198,21 +316,19 @@ CRITIC 与 AgentSpec **不进主实验**。它们会把坐标轴搞散：CRITIC 
 | **本文 runtime** | **34.4%** | 65.6% | **0.0%** | **0** | 27,919 |
 | 本文 runtime，普通 sink | 25.4% | 65.6% | 9.0% | 1277.6 | 29,665 |
 
-四条读法。
-
 **盲目重试在恰好一次上比不重试更差。** B2 把传输次数从 11,520 提到 29,665，恰好一次率却从 26.1% 降到 25.4%——它付了 2.6 倍代价，把"丢失"换成了"重复"，净收益为负。
 
-**已发表的执行后验证在本设置下等于没做。** B3 与 B1 的恰好一次率是 26.0% 与 26.1%，差 0.1 个百分点。原因是它验证的是**状态后置条件**（"该效果是否已在位"），而商品化实体上只有这个问题可问——没有 operation 级回执可查。当同一条配置每轮重复下发时，状态在首次成功之后就一直是对的，于是此后每一轮都被回答成"已完成"，无论本轮请求是否真的到达。**状态验证不等于操作验证**，这是该对照存在的意义。
+**已发表的执行后验证在本设置下等于没做。** B3 与 B1 的恰好一次率是 26.0% 与 26.1%。原因是它验证的是状态后置条件，而商品化实体上只有这个问题可问——没有 operation 级回执可查。当同一条配置每轮重复下发时，状态在首次成功之后就一直是对的，于是此后每一轮都被回答成"已完成"，无论本轮请求是否真的到达。状态验证不等于操作验证。
 
-**只有本文 runtime 同时改善两个方向。** 恰好一次 34.4%，相对 B1 提高 8.3 个百分点；多余应用为 0。它是唯一一个既不产生重复、又真正减少零次的比例的策略。零次率 65.6% 是物理下限：约四分之一的网格永久被地形遮挡，任何 runtime 都送不进去。
+**只有本文 runtime 同时改善两个方向。** 恰好一次 34.4%，相对 B1 提高 8.3 个百分点，多余应用为 0。零次率 65.6% 是物理下限：约四分之一的网格永久被地形遮挡，任何 runtime 都送不进去。
 
-**远端契约是这份收益的来源，这一点必须自己说破。** 第五行把本文 runtime 跑在普通 sink 上，结果与 B2 **逐位相同**（25.4% / 9.0% / 1277.6 / 29665）。也就是说去掉远端持久 epoch 与 operation 回执之后，本协议退化为一个普通的盲目重试循环。epoch fencing 与 operation 级回执是**远端能力**，商品化实体没有；本文的协议要求部署方提供这一最小契约，并且把"没有它就会退化"作为实验的一部分报出来，而不是留作隐含假设。
+**远端契约是这份收益的来源，这一点必须自己说破。** 第五行把本文 runtime 跑在普通 sink 上，结果与 B2 逐位相同。去掉远端持久 epoch 与 operation 回执之后，本协议退化为一个普通的盲目重试循环。这两项是远端能力，商品化实体没有；本文的协议要求部署方提供这一最小契约，并把"没有它就会退化"作为实验的一部分报出来。
 
-原始输出见 `results/method_comparison.txt`，复现命令见第四节。
+原始输出见 `results/method_comparison.txt`。
 
 ### 协议消融
 
-把本文协议拆成三个成分，各去掉一个。60 天，3 seed，其余设置同上。
+把协议拆成三个成分，各去掉一个。60 天，3 seed，其余设置同上。
 
 | 配置 | 远端能力 | 恰好一次 | 多余应用 |
 |---|---|---:|---:|
@@ -223,72 +339,23 @@ CRITIC 与 AgentSpec **不进主实验**。它们会把坐标轴搞散：CRITIC 
 | 去掉稳定身份 | 两者 | 44.0% | 0 |
 | 调和谓词不限定范围 | 两者 | 44.4% | 0 |
 
-三条结论，其中两条是在缩小而非放大本文的主张。
-
-**回执与 epoch fencing 是冗余的两道防线。** 只留任一个都足以完全消除重复，两者同时存在不产生额外收益。因此协议对远端的要求可以表述为"至少保留一种跨请求的持久记录"，至于保留 epoch 还是比较 operation 回执，交给部署方按能力选择。**两者都去掉时退化到盲目重试水平**（33.4%，539 次多余应用），这才是真正的分界。
+**回执与 epoch fencing 是冗余的两道防线。** 只留任一个都足以完全消除重复，两者同时存在不产生额外收益。协议对远端的要求因此可以表述为"至少保留一种跨请求的持久记录"，至于保留 epoch 还是比较 operation 回执，交给部署方按能力选择。两者都去掉时退化到盲目重试水平（33.4%，539 次多余应用），这才是真正的分界。
 
 **稳定身份的作用很小。** 去掉它只损失 0.4 个百分点，因为只要远端还在 fencing 或查回执，重试就仍是幂等的。
 
-**调和谓词的范围限定在本文协议下不承重。** 去掉了也仍是 44.4%。原因清楚：epoch fencing 使重试幂等，于是"我这次写入是否生效"与"这里是否曾经有过写入"在绝大多数时刻给出同一答案，两个谓词只在极少数边界情形分岔。这一点与 B3 那组不矛盾——B3 是在**没有**远端契约的条件下用状态谓词，那时两者差异很大（26.0% 对 26.1%，几乎等于不做验证）。
+**调和谓词的范围限定在本文协议下不承重。** 去掉了也仍是 44.4%。epoch fencing 使重试幂等，于是"我这次写入是否生效"与"这里是否曾经有过写入"在绝大多数时刻给出同一答案，两个谓词只在极少数边界情形分岔。这与 B3 那组不矛盾——B3 是在没有远端契约的条件下用状态谓词，那时两者差异显著。范围限定的价值取决于远端契约是否存在；有了契约，它就不再是瓶颈。
 
-换言之，范围限定的价值取决于远端契约是否存在；有了契约，它就不再是瓶颈。这比声称"限定范围是关键"要弱，但它是数据支持的版本。
+### 执行层基线复现
 
+在同一套物理模型下复现执行层故障，用于确认主结果的机制来源。180 天、16 节点，naive 盲目重试产生 3454.4 次重复副作用与 3830.4 次丢失，指数退避更差（9044.4 次重复），stable-intent 加生命周期记账降到 653.0 次重复与 8.6 次丢失。原始输出见 `results/baseline_experiment.txt`。
 
-
-在 120 个公开任务上按 2×2 消融两个 agent 侧机制——重试是否复用同一写入身份，以及验证是否限定在本次写入上——并对远端做三种配置。每千操作周期计数，horizon 为 64，详见 `docs/s5-benchmark/s6-11-execution-layer-results.md`。
-
-| 远端 | naive | stable_key_only | verified_wrapper | lifecycle |
-|---|---|---|---|---|
-| 幂等 sink | 280.7 / 8.1 | 0.0 / 8.1 | 132.4 / 73.2 | 0.0 / 4.3 |
-| 非幂等 sink | 280.7 / 8.1 | 280.7 / 8.1 | 132.4 / 73.2 | 140.8 / 4.3 |
-| 非幂等且强制 epoch | 0.0 / 6.8 | 0.0 / 6.8 | 0.0 / 66.4 | 0.0 / 5.3 |
-
-格式为重复 / 零效果。三条结论。幂等键在没有配合的远端时价值为零：`stable_key_only` 从 0 重复变成与 `naive` 逐位相同的 280.7，远端去重计数从 2156 掉到 0，收益全部来自远端对键的配合。epoch 强制让所有策略的重复归零，包括每次都用新身份的 `naive`，重复这一侧的修复位置在远端而不在 agent。重复归零后唯一剩下的差异是冲突消解，`verified_wrapper` 的非限定谓词把零效果率推到不做验证的 9.8 倍，而该缺陷在 horizon 为 1 时不可见（四个策略的零效果均为 0.0）。cycle 限定的验证在三种远端配置下零效果都最低，其优势不依赖远端配合。
-
-### Related work
-
-**最危险的邻居。** INFOCOM 2026 的 "Rollback Is Not Undo: Path-Dependent Failures in LLM-Arbitrated Network Control"（Weici Pan, Zhenhua Liu，DOI `10.1109/INFOCOM59046.2026.11571400`，DBLP `conf/infocom/PanL26`）已在同类会议与同类问题空间证明，LLM 仲裁的网络控制回路中回滚无法恢复行为，且恢复效果路径相关；该文提出 `recovery gap` 指标，故障模式包含 observation corruption、delay-reordering 与 agent dropout。该文为闭源，`open_access` 字段为 `CLOSED`，无公开 artifact。它未覆盖的是灾害与应急场景、真实轨迹驱动、实体生命周期与公开 artifact，本文需要引用它并显式对比。
-
-**同组先前工作。** WirelessOpsAgent 论文（Zijian Lu, Yiping Zuo, Hao Xu, Weicong Chen, Xin He, Jiajia Guo, Shi Jin，arXiv `2608.08277`，2026-08-08，CC BY 4.0）发布 WirelessOpsBench。论文标题把研究层次定为 **Action Assurance**：判据是动作在下发前是否被正确授权。其表述为 *"repairs recoverable support failures before execution"*，问题被限定在可修复范围内；本文场景中 88.5% 的点位永久不可达、断电可持续数周，大量失败不可修复。该文中心是分发前的 repair，本文中心是分发后任务在实体变动下的存续，因此只作引用与边界参照。
-
-公开 artifact 已逐字核验（本地 SHA-256 `df832540beae8cdfe776ea0ffbe294be1355421c1279e69479e0b0655428940d`，与 README 相符）。三族任务为 WCHW（教科书无线计算）、WCNS（5G 切片，含射线追踪 CQI）、WCMSA（移动性保障，含 Kalman 预测加射线追踪 CQI）。开发集 300 base、2400 case、180 repair；完整冻结集 900 base、6300 孪生 case、540 归因与修复记录，final 分片扣在尚未上线的评测服务器后。artifact 只含数据，不含 runner、scoring 谓词与 fault schedule；同一 base 的八个 case 的 `public_task` 逐字节相同，仅 `case_id` 不同，故障由评测端运行时注入。公布的工具面为 `get_primary_evidence`、`get_secondary_evidence`、`get_entity`、`get_schema`、`stage_policy`、`validate_policy`、`commit_policy`、`post_check`、`rollback_policy`，其中三者标注 `mutates_state: True`，`commit_policy` 已带 `expected_version` 乐观并发，预算为 `max_steps` 24、`max_tool_calls` 12、`wall_time_ms` 60000。
-
-**已被占据的机制，不可声称。** 下表列出机制与其原始出处。
-
-| 机制 | 出处 |
-|---|---|
-| idempotency、verify-before-retry、后置条件验证 | Mansoor, Phadke, Rana, arXiv `2608.02645`（2026-07-31），已对 LLM agent 逐字发表 |
-| effect exactly-once 与 consume-once | Khan, arXiv `2608.03836`，含 TLA+ 740 万状态穷举、TLAPS 证明与 39 格故障矩阵，并实测出 LangGraph 1.2.9 在 SIGKILL 后重执行、CrewAI 重复副作用 |
-| outcome-unknown 与防盲目重放 | Zhang, arXiv `2606.03895` "Agent libOS"，提出 prepare-dispatch-settle protocol |
-| authority 与恢复语义绑定 | Xu et al., arXiv `2608.01710` "CapLease"，semantic replay 加 Issue–Prepare–Commit |
-| 只读与改状态工具分类 | Chen, Tang, Yang, Lv, arXiv `2603.29656` "6GAgentGym"，42 个 effect-typed 工具 |
-| retry budget、stale context、恢复预算 | Babu, Agrawal, arXiv `2606.01416` "Self-Healing Agentic Orchestrators"（2026-05-31） |
-| 公平排队 | Demers, Keshav, Shenker, ACM SIGCOMM 1989, DOI `10.1145/75247.75248` |
-| lease 与 heartbeat | Gray, Cheriton, ACM SOSP 1989, DOI `10.1145/74850.74870` |
-| LLM agent serving 中的队头阻塞 | Luo et al., *Autellix*, arXiv `2502.13965`（2025-02-19） |
-| 验证者永不失败的隐含假设 | Gou et al., *CRITIC*, arXiv `2305.11738`（ICLR 2024） |
-
-三句不能写。"我们是第一个把 X 用于 LLM agent"（X 取 idempotency、verify-before-retry、retry budget、checkpointing、staleness guard、fair scheduling 中任一）可由上表直接反驳。"没有 benchmark 注入 tool 失败"同样可反驳。"没有工作注入网络故障"应改为 *"we are not aware of a benchmark that overlays a communication-channel fault model onto agent tool execution"*。
-
-### 尚未覆盖的部分
-
-| 空白 | 依据 |
-|---|---|
-| 分发后的执行语义 | WirelessOpsBench 的 7 类条件全部刻画证据账本的可信度，无一描述分发后的传输语义 |
-| 实体生命周期作为一等对象 | 六个 benchmark 全文检索 agent 通道相关构造零命中，网络一律是控制对象 |
-| 结果不可知作为一等故障类 | 六者的故障全为注入、合成或不存在，且注入类的发生都可观测 |
-| 不可修复失败 | WirelessOpsAgent 自述限定 recoverable support failures；本文有 88.5% 永久不可达与数周断电 |
-| verifier 自身不可用 | CRITIC 与 `2608.02645` 均假定 verifier 会响应；分区下验证本身也会超时且结果不可知 |
-| 能量与供电维度 | 六个 benchmark 全部缺失 |
-| 地形与传播维度 | 六个中只有 WirelessBench 涉及，且仅是 agent 可调用的 CQI 工具 |
-
-## 四、仓库与运行
+## 七、仓库与运行
 
 ```
 agentic communication/
 ├── README.md
-├── code/          18 个可运行脚本
-├── docs/          24 份支撑材料，s1-input 至 s6-model 六个目录
+├── code/          21 个可运行脚本
+├── docs/          25 份支撑材料
 ├── results/       仿真输出
 ├── data/          666 MB，未纳入版本控制
 ├── libs/          71 MB 加 simlibs，未纳入版本控制
@@ -299,18 +366,20 @@ agentic communication/
 export PYTHONPATH="$PWD/libs/pylibs:$PWD/libs/simlibs"
 
 # 物理与几何
-python3 code/mountain_lora_link.py        # 单点链路预算
-python3 code/coverage_map.py              # 区域覆盖图，约 2 min
-python3 code/los_vs_itm.py                # 几何视线判定与 ITM 交叉验证
-python3 code/dem_to_mitsuba.py --render   # SRTM 转 Mitsuba 地形网格并渲染
+python3 code/mountain_lora_link.py              # 单点链路预算
+python3 code/coverage_map.py                    # 区域覆盖图，约 2 min
+python3 code/los_vs_itm.py                      # 几何视线判定与 ITM 交叉验证
+python3 code/fit_outage_distribution.py         # 中断时长分布拟合
+python3 code/dem_to_mitsuba.py --render         # SRTM 转 Mitsuba 地形网格
 
-# 执行层
-python3 code/test_failure_model.py        # 11 类故障确定性验证，11/11
-python3 code/wirelessops_adapter.py --limit 120 --ticks 1200 --rounds 1,2,4,8,16,32,64
+# 执行语义与主实验
+python3 code/operations.py                      # 三维状态与五条性质的自检
+python3 code/test_failure_model.py              # 11 类故障确定性验证
+python3 code/method_comparison.py --days 180 --seeds 5    # 主表
+python3 code/mission_sim.py --days 365 --seeds 5          # 到报率任务级指标
+python3 code/run_baseline.py                    # 执行层基线复现
 ```
 
-`wirelessops_adapter.py` 在 WirelessOpsBench 的公开任务契约上驱动执行层，artifact 路径可用环境变量 `WIRELESSOPS_ARTIFACT` 覆盖。
+仓库之外另有两处。`../ns3/` 为 ns-3.48 加 FLoRa（3.2 GB）；`/home/orion/Communications/recon/` 存放文献侦察的原始抽取。
 
-仓库之外另有两处。`../ns3/` 为 ns-3.48 加 FLoRa（3.2 GB），构建后 `./ns3 run` 使用；`/home/orion/Communications/recon/` 存放文献侦察的原始抽取（全文、DOI 核验、抽取脚本）。
-
-未纳入版本控制的文件及获取方式：`data/` 含 SRTM 高程瓦片与下载的真实轨迹，SRTM 的下载路径见 `code/mountain_lora_link.py` 头部注释，轨迹数据集见上表 Zenodo DOI；`libs/` 为本地 pip 依赖，`pylibs` 可用 `pip install numpy itmlogic` 重建，`simlibs` 用 `pip install mitsuba`；`docs/s1-input/week2-deck.md` 由课题组汇报 PPT 提取，与 `*.pptx` 一并留在仓库之外。
+未纳入版本控制的文件及获取方式：`data/` 含 SRTM 高程瓦片与 ChirpBox 原始轨迹，SRTM 下载路径见 `code/mountain_lora_link.py` 头部注释，ChirpBox 见 Zenodo `10.5281/zenodo.5527877`；`libs/pylibs` 可用 `pip install numpy itmlogic` 重建，`libs/simlibs` 用 `pip install mitsuba`；`docs/s1-input/week2-deck.md` 由课题组汇报 PPT 提取，与 `*.pptx` 一并留在仓库之外。
