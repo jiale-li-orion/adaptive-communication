@@ -45,8 +45,9 @@ import sys
 import numpy as np
 HERE = os.path.dirname(os.path.abspath(__file__))
 ROOT = os.path.normpath(os.path.join(HERE, "..", ".."))
-from operations import (OperationRegistry, Journal, RemoteSink, recover,   # noqa: E402
-                        unresolved_intents, Outcome, Observation, Lifecycle)
+from operations import (OperationRegistry, Journal, recover,   # noqa: E402
+                        Outcome, Observation)
+from method_comparison import Link, FarSide, make_nodes, load_terrain   # noqa: E402
 
 GRID = os.path.join(ROOT, "results", "coverage_grid.csv")
 OUT = os.path.join(ROOT, "results", "restart_experiment.json")
@@ -75,25 +76,13 @@ def p_given_good(loss_db, sf):
     return 1.0 / (1.0 + math.exp(-margin / 5.0))
 
 
-def make_nodes(n_reach, n_blocked, rng):
-    reach, blocked = load_terrain()
-    nodes = []
-    for k, i in enumerate(rng.choice(len(reach), n_reach, replace=False)):
-        r = reach[i]
-        nodes.append({"nid": f"r{k:02d}", "sf": r["sf"], "loss_db": r["loss_db"],
-                      "permanent": False, "good": True})
-    for k, i in enumerate(rng.choice(len(blocked), n_blocked, replace=False)):
-        r = blocked[i]
-        nodes.append({"nid": f"b{k:02d}", "sf": 12, "loss_db": r["loss_db"],
-                      "permanent": True, "good": False})
-    return nodes
-
-
 def run_arm(arm: str, nodes, hours: int, cmd_period: int, crash_period: int,
             seed: int) -> dict:
     rng = np.random.default_rng(seed)
-    sinks = {n["nid"]: RemoteSink(n["nid"], durable_epoch=True, dedup_by_operation_id=True)
-             for n in nodes}
+    # The far side is reached only through the link. Reconciliation is a communication
+    # operation like any other: it can arrive, it can lose its reply, and it costs airtime.
+    sinks = {n["nid"]: FarSide(n["nid"], receipts=True, fencing=True) for n in nodes}
+    link = Link(rng)
     journal = Journal() if arm == "journal" else None
     inc = 0
     reg = OperationRegistry(journal, incarnation=f"i{inc}-")
@@ -127,11 +116,14 @@ def run_arm(arm: str, nodes, hours: int, cmd_period: int, crash_period: int,
                 for intent, op in list(outstanding.items()):
                     if op.first_dispatch_at is None:
                         continue
-                    got = reg.reconcile(op, sinks[op.entity_id], t)
-                    if got is Outcome.APPLIED:
-                        achieved.add(intent)
-                        outstanding.pop(intent, None)
-                    elif got is Outcome.SUPERSEDED:
+                    node = next(x for x in nodes if x["nid"] == op.entity_id)
+                    arrived, replied = link.exchange(node, "reconcile_read")
+                    if not (arrived and replied):
+                        # the receipt may exist remotely and still be unreachable right now.
+                        # Leaving the operation unresolved is the honest outcome; inventing a
+                        # verdict here is what a free read would let us do.
+                        continue
+                    if sinks[op.entity_id].read_receipt(op.operation_id) is Outcome.APPLIED:
                         achieved.add(intent)
                         outstanding.pop(intent, None)
             else:
@@ -164,7 +156,12 @@ def run_arm(arm: str, nodes, hours: int, cmd_period: int, crash_period: int,
                 if rng.random() >= p_given_good(n["loss_db"], n["sf"]):
                     reg.observe(op, Observation.UNKNOWN)
                     continue
-                outcome, did = sinks[n["nid"]].accept(op)
+                arrived, replied = link.exchange(n, "data_write")
+                if not arrived:
+                    reg.observe(op, Observation.UNKNOWN)
+                    continue
+                outcome, did = sinks[n["nid"]].apply(op.operation_id, op.epoch,
+                                                     {"rate": "5min"}, t)
                 if did:
                     applied[intent] = applied.get(intent, 0) + 1
                 if outcome is Outcome.APPLIED and rng.random() >= ACK_LOSS_P:
@@ -219,7 +216,7 @@ def main() -> None:
         acc = []
         for s in range(args.seeds):
             rng = np.random.default_rng(1000 + s)
-            nodes = make_nodes(args.reach, args.blocked, rng)
+            nodes = make_nodes(args.reach, args.blocked, rng, use_energy=True)
             acc.append(run_arm(arm, nodes, hours, args.cmd_period, args.crash_period,
                                2000 + s))
         agg = {k: float(np.mean([a[k] for a in acc])) for k in acc[0] if k != "arm"}

@@ -1,11 +1,11 @@
-对照实验：180 天，16 个节点，每 6 h 一条配置命令
-同一决策轨迹跑 2 个 runtime，加 store-and-forward 中继，远端：基线为普通 sink，ours 为 fenced sink
-ack 丢失率 0.35，重试预算 3，能量模型 开
+对照实验：180 天，16 个节点，每 6 h 一条命令
+workload operation   重试预算 3   加热比例 0.5   能量模型 开
+写入 / 验证读 / 调和读 / 回复 全部走同一条链路并计入空口
 
-runtime                  逻辑写入      恰好一次      零次      多次      多余应用      尝试
--------------------------------------------------------------------------
-relay_retry_uncertainty    11520     28.9%   58.1%   13.0%    1885.6   29160
-relay_ours              11520     42.2%   57.8%    0.0%       0.0   27148
-
+===== workload: operation =====
+runtime                    恰好一次      零次      多余       重复      写入     验证读     调和读       回复     空口h
+-------------------------------------------------------------------------------------------------
+relay_retry_uncertainty    28.3%   61.4%   10.3%   1470.2   29137       0       0     3848     6.9
+relay_ours                38.6%   61.4%    0.0%      0.0   29137       0       0     3848     6.9
 
 wrote /home/orion/Communications/应急通信/project1/agentic communication/results/method_comparison_relay.json
