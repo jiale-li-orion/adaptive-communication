@@ -47,6 +47,12 @@
 | `s5-benchmark/s6-5-data-provenance.md` | 数据来源分层、效力威胁与实验协议 |
 | `s5-benchmark/s6-2-physical-model-results.md` | 物理模型对比的实测结果 |
 
+## 系统模型
+
+| 文件 | 内容 |
+|---|---|
+| `s6-model/system-model.md` | 论文 Section II 初稿，含参数表与证据层标注、指标定义、待补清单 |
+
 ## 运行
 
 ```bash
