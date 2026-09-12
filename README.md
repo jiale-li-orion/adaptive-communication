@@ -843,7 +843,20 @@ self.bat_wh = min(self.bat_wh + hourly_gen - self.load_wh_per_tick, self.usable_
 
 差别在消解方式：Atomix 走事务中止与回滚，重试换新 epoch；本文保持**同一个逻辑身份**不变，靠**单调 epoch 的远端 fencing** 让陈旧重发被拒绝而不是覆盖。§7.23 的公平 CAS 基线在同一张表里给出了这两条路线的可比读数。与之配套的反面论据是 *Rollback Is Not Undo*（INFOCOM 2026，DOI `10.1109/INFOCOM59046.2026.11571400`），**需机构订阅，尚未取得全文**，这是本节仍缺的一项。
 
-**AgentChaos（[arXiv 2608.06790](https://arxiv.org/abs/2608.06790)）给出了本文一条实现规则的先例。** 它在 LLM API 层拦截并改写响应，定义 crash / omission / value 三类故障，作用于 content 与 tool call 字段；**并且逐条验证故障是否真的被触发，把未触发的任务过滤掉，以免低估故障影响**。这与 §7.18 第四节独立得到的结论是同一条：*故障事件非空不等于故障影响了待测动作*。本轮为此把按动作的故障改为按真实动作武装，此处有可引的先例。AgentDisruptBench 尚未取得，留在缺口内。
+**AgentChaos（[arXiv 2608.06790](https://arxiv.org/abs/2608.06790)）给出了本文一条实现规则的先例。** 它在 LLM API 层拦截并改写响应，定义 crash / omission / value 三类故障，作用于 content 与 tool call 字段；**并且逐条验证故障是否真的被触发，把未触发的任务过滤掉，以免低估故障影响**。这与 §7.18 第四节独立得到的结论是同一条：*故障事件非空不等于故障影响了待测动作*。本轮为此把按动作的故障改为按真实动作武装，此处有可引的先例。
+
+**AgentDisruptBench（[HuggingFace `kavirubc/AgentDisruptBench`](https://huggingface.co/datasets/kavirubc/AgentDisruptBench)，MIT，100 任务 / 4 领域）的 20 类干扰分类法加强了 Gap 1，而不是削弱它。** 它的四类干扰是：
+
+| 类别 | 类型 |
+|---|---|
+| Timing | `timeout`、`latency` |
+| HTTP Status | `http_429`、`http_401`、`http_403`、`http_500`、`http_502`、`http_503` |
+| Response Content | `malformed_json`、`truncated`、`null_response`、`missing_fields`、`type_mismatch`、`schema_drift`、`wrong_data` |
+| Behavioral | `intermittent`、`flapping`、`quota_exhausted`、`auth_expiry`、`cascading` |
+
+**二十类全部是"工具调用接口收到了什么坏响应"**，其主指标 `R(k, ε, λ)` 是在重复种子 k、任务措辞变体 ε、故障配置 λ 三个方向上的**通过率曲面**。它衡量的是 agent 对坏响应的**鲁棒性**，而不是**执行结果的不确定性**：没有一类对应"调用可能已经生效，但调用方看到的是失败"。这与 α³-Bench 的结论一致，Gap 1 在它身上同样成立。它的 20 类对照表可用于 §9 第⑥项的故障类型讨论——那是一张**工具调用接口**的分类法，与本文的**链路与生命周期**分类法（请求未达 / 确认丢失 / 旧命令迟到 / 协调者重启 / 端侧重启 / 仅回传中断）互为补充而非重复。
+
+**剩余缺口只有一项。** *Rollback Is Not Undo*（INFOCOM 2026，DOI `10.1109/INFOCOM59046.2026.11571400`）需机构订阅，尚未取得全文。
 
 **引用纪律。** 上述四项的取用只建立在**已读到的原文段落**上；未取得全文的条目（*Rollback Is Not Undo*、AgentDisruptBench）不得据传闻转述。α³-Bench 的结论来自其网络状态定义与指标描述，不是对其代码的复核。
 
