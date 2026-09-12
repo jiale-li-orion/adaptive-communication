@@ -76,6 +76,7 @@ ROOT = os.path.normpath(os.path.join(HERE, "..", ".."))
 sys.path.insert(0, HERE)
 
 from operations import OperationRegistry, Outcome, Observation   # noqa: E402
+from deterministic import stable_uniform                            # noqa: E402
 
 GRID = os.path.join(ROOT, "results", "coverage_grid.csv")
 OUT = os.path.join(ROOT, "results", "method_comparison.json")
@@ -122,14 +123,13 @@ OP_KINDS = ("threshold_update", "alarm_ack", "trigger_measurement", "watchdog_re
 
 
 def _u(seed: int, *key) -> float:
-    """A deterministic uniform in [0,1) addressed by a key.
+    """A deterministic uniform in [0,1) addressed by a key. Delegates to the shared helper.
 
-    The draw depends on WHAT is being drawn, never on how many draws came before it. That is the
-    property the experiment needs: a runtime that sends twice as many queries must not push the
-    channel into different weather for the hours that follow.
+    Kept as a thin wrapper so the mechanism-isolation layer and the business-layer simulator
+    share one implementation. Two copies of "the same" sampling would drift, and the drift would
+    be invisible: both would look random and both would be reproducible.
     """
-    h = hashlib.blake2b(("%d|" % seed + "|".join(map(str, key))).encode(), digest_size=8)
-    return int.from_bytes(h.digest(), "big") / 2.0 ** 64
+    return stable_uniform(seed, *key)
 
 
 class EnvironmentTrace:
