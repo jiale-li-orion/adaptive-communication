@@ -49,8 +49,12 @@ python3 code/experiments/monitoring_trajectories.py --days 3 --seeds 20 \
 
 | 文件 | 配置 | 说明什么 |
 |---|---|---|
-| `monitoring_trajectories_business.json` | 3 天 / 20 种子 / 5 条业务臂 / 七条轨迹 | 业务臂在七条轨迹上的覆盖、关键观测空窗、误报成功、知晓时延、机会账目与远端契约计数 |
-| `monitoring_trajectories_2x2.json` | 3 天 / 20 种子 / 2×2 四格 / 七条轨迹 | planner 因子与 runtime 因子的分解（README §7.23 第四节） |
+| `monitoring_trajectories_business.json` | 3 天 / 20 种子 / 5 条业务臂 / 七条轨迹 | 业务臂在七条轨迹上的覆盖、关键观测空窗、误报成功、知晓时延、机会账目与远端契约计数（§六 业务层五臂表） |
+| `monitoring_trajectories_ablate20.json` | 3 天 / 20 种子 / 5 条臂 / 三条轨迹 | 两条只改一处的消融与两条强基线的同批对照（§7.26） |
+| `monitoring_trajectories_restart20v3.json` | 3 天 / 20 种子 / 6 条臂 / `coordinator_restart` | 协调者重启的定稿读数（§7.30）。**v1 与 v2 已被 v3 取代** |
+| `monitoring_trajectories_2x2v2.json` | 3 天 / 20 种子 / 2×2 四格 / 七条轨迹 | planner 因子与 runtime 因子的分解。**`llm__*` 两格仍带 §7.29 的缺陷，须用 v3 重跑后才可引用** |
+| `monitoring_trajectories_2x2.json` | 同上，修复前 | **已作废**：组合格带 §7.29 的逻辑身份缺陷 |
+| `sensitivity_full.json` | 3 天 / 3 种子 / 4 条臂；机会额度 1/2/4、中断 0/2/6/12 小时 | (F)② 通信机会与断连敏感性（§7.28） |
 | `monitoring_trajectories_paths.json` | 3 天 / 2 种子 / `rule__contract` / 无故障；`--paths backhaul:0.62,backup:0.55 --runtime-paths 0,1` | 独立管理路径对照组：runtime 会发现并使用备用回传（README §7.24） |
 | `monitoring_trajectories_paths_primary_only.json` | 同上，但 `--runtime-paths 0` | 同一部署下只用主路径的对照 |
 
