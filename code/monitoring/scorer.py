@@ -70,6 +70,7 @@ class RunRecord:
     durable_nodes: tuple[str, ...] = ()   # nodes that can hold a profile across a power loss
     radio_wh: dict = field(default_factory=dict)
     airtime_ms: float = 0.0
+    downlink_airtime_ms: float = 0.0
     config_mismatch_s: float = 0.0
     spurious_measurements: int = 0
     unknown_s: float = 0.0
@@ -273,7 +274,25 @@ def _harmful_executions(record: RunRecord) -> dict:
             "duplicate_physical_samples": duplicate_physical}
 
 
-def business_metrics(record: RunRecord) -> dict:
+def _action_energy(record: RunRecord, covered: int = 0) -> dict:
+    """动作驱动能耗：空口能量与每需求能耗。
+
+    契约 §9 第③项问的是"动作驱动能耗"。这里必须说清一件事，否则这一栏会被读错：
+    LoRaWAN Class A 的节点在每次上行之后**本来就要**开 RX1/RX2，因此一条下行命令给节点
+    额外增加的**能量**接近于零——它真正消耗的是那个接收窗口这一**机会**。所以这里报的是
+    空口时间的上下行拆分与总无线电能耗，不合成一个"命令耗电"的数；命令的成本记在机会
+    账目里，不记在能量账目里。
+    """
+    node_wh = sum(v for v in record.radio_wh.values())
+    return {
+        "uplink_airtime_ms": record.airtime_ms - record.downlink_airtime_ms,
+        "downlink_airtime_ms": record.downlink_airtime_ms,
+        "radio_wh_total": node_wh,
+        "energy_per_met_demand_wh": (node_wh / covered) if covered else float("nan"),
+    }
+
+
+def business_metrics(record: RunRecord, covered: int = 0) -> dict:
     """The 7.6 metrics that turn counts into harm.
 
     Four of them, all derived from state the run already has. They answer questions a duplicate
@@ -334,6 +353,7 @@ def business_metrics(record: RunRecord) -> dict:
         "knowledge_latency_s": (sum(latencies) / len(latencies)) if latencies else float("nan"),
         "knowledge_latency_max_s": max(latencies) if latencies else float("nan"),
         **_age_of_information(record),
+        **_action_energy(record, covered),
         **_harmful_executions(record),
         "unknown_s": record.unknown_s,
         "restart_events": record.restart_events,
@@ -408,7 +428,7 @@ def score(record: RunRecord, weights: dict | None = None) -> ScoreResult:
         "records_taken": len(record.taken),
         "records_arrived": len(arrived_index),
     }
-    aux.update(business_metrics(record))
+    aux.update(business_metrics(record, covered))
 
     return ScoreResult(
         coverage=(hit_w / total_w) if total_w else float("nan"),
