@@ -133,9 +133,8 @@ class VersionedConfigPolicy:
         # reported side: what the node last told the center, and what the center kept from it
         self.reported: dict[str, str] = {}
         self.reported_version: dict[str, int] = {}     # version a report is evidence for
-        self.reported_source: dict[str, str] = {}      # "report" | "status" | "local" | "-"
+        self.reported_source: dict[str, str] = {}      # where the reported value came from
         self.reported_at: dict[str, int] = {}
-        self.reported_age: dict[str, int | None] = {}
 
         # counters, exposed for the regression test and for the audit log
         self.writes = 0
@@ -183,21 +182,23 @@ class VersionedConfigPolicy:
         status = view.status
         in_flight = view.in_flight
         demanded = view.demanded_profile
-        reports: dict[str, dict] = {}
         out: list[tuple[str, dict]] = []
 
+        # The reported configuration arrives piggybacked on the node's own telemetry, so the status
+        # map is where the center learns it. No read is bought before a write: that would spend the
+        # opportunity the policy is supposed to be allocating (contract §7).
         for node_id, payload in sorted(status.items()):
             reported = _field(payload, F_PROFILE)
             if reported is not None:
+                if self.reported.get(node_id) != reported:
+                    # A report whose value differs from the last one is new information, and the
+                    # version it can be evidence for is the newest the center had written when this
+                    # report arrived. A report that repeats the same value carries no new information
+                    # and keeps the version it was first tagged with.
+                    self.reported_version[node_id] = self.issued_version.get(node_id, 0)
                 self.reported[node_id] = reported
                 self.reported_source[node_id] = "status"
-                # The version the node's own report is evidence for: the newest desired value the
-                # center had already put on the wire when this report was composed. A report cannot
-                # be evidence for a version the center had not written yet.
-                self.reported_version[node_id] = self.issued_version.get(node_id, 0)
-            self.reported_at[node_id] = _field(payload, F_READ_AT, now)
-            self.reported_age[node_id] = None
-            reports[node_id] = payload
+                self.reported_at[node_id] = _field(payload, F_READ_AT, now)
 
         # The center acts on what it holds. With no demanded value in hand it has nothing to
         # reconcile, and issuing a write would be inventing an instruction the scenario never
@@ -344,7 +345,6 @@ class VTCPolicy:
         self.logical: dict[str, int] = {}             # one logical command identity per node
         self.issues: dict[str, list[tuple[int, str, str]]] = {}   # (t_s, profile, identity)
         self.unresponsive: dict[str, int] = {}
-        self.pauses: int = 0
         self.last_decision: dict[str, dict] = {}
 
     # ------------------------------------------------------------- stable identity
@@ -375,7 +375,12 @@ class VTCPolicy:
 
     # ------------------------------------------------------------------ planning
     def plan(self, view) -> list[tuple[str, dict]]:
-        """Return the commands the center should try to enqueue this tick."""
+        """Return the commands the center should try to enqueue this tick.
+
+        Only the documented WorldView attributes are read: `t_s`, `status`, `demanded_profile` and
+        `in_flight`. The verification read is the reported configuration out of `status`; nothing is
+        asked of the node to obtain it.
+        """
         now = view.t_s
         status = view.status
         in_flight = view.in_flight
@@ -414,9 +419,11 @@ class VTCPolicy:
                                   backoff_s=self.backoff_s.get(node_id, self.base_backoff_s))
                     continue
             elif not self._backoff_elapsed(node_id, now):
-                r = record
-                r.update(action="wait", reason="retry_backoff",
-                         backoff_s=self.backoff_s.get(node_id, self.base_backoff_s))
+                # A conclusive mismatch does not license an immediate retry either. The backoff is
+                # the time the previous attempt needs to have had a chance to land; retrying inside
+                # it spends an opportunity on evidence that has not changed.
+                record.update(action="wait", reason="retry_backoff",
+                              backoff_s=self.backoff_s.get(node_id, self.base_backoff_s))
                 continue
 
             if self._expired(node_id, now):

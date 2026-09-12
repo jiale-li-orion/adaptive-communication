@@ -20,6 +20,18 @@ to the daily figure the panel produces, so the tick count cannot scale the daily
 charge gate, the capacity derate and the heating threshold are properties of the cell
 chemistry in CHEMISTRY, not physical constants shared by every pack.
 
+Alive is a reading of the state, not a memory of it. A node is powered while its pack holds more
+than ALIVE_FRACTION of its reference-temperature usable energy, and dark at or below that; the flag
+is recomputed from the state on every step, in both directions, so a pack that has just crossed
+back above the threshold is powered again. Nothing here latches.
+
+Known and deliberately left in place: the constructor starts the pack at `usable_wh`, the
+reference-temperature usable energy, and the first step clips it down to capacity_Wh(T) when the
+ambient is cold. The difference is energy the state bound does not hold, and it leaves the ledger
+at the bound rather than being accounted for. It is not fixed here because `__init__` is handed no
+ambient temperature to bound the first state against, and inventing one would change the initial
+state of every node that does not pass a temperature in.
+
 Deps: numpy only.
 """
 from __future__ import annotations
@@ -67,6 +79,12 @@ DOD = 0.70                     # usable depth of discharge
 # constant, and the draw is what buying the privilege costs.
 DEFAULT_HEAT_W = 8.0
 
+# ---------------------------------------------------------------- alive
+# A node is powered while the pack holds more than this fraction of its reference-temperature
+# usable energy. The threshold is a device-class figure rather than a measurement of one unit; what
+# matters here is that it is a threshold on the state, so the flag below is read and not remembered.
+ALIVE_FRACTION = 0.05
+
 
 class NodeEnergy:
     """Energy state for one monitoring node. Tick = 1 hour."""
@@ -98,8 +116,11 @@ class NodeEnergy:
 
         self.snow_left = 0
         self.usable_wh = batt_wh_nom * self.derate * DOD
+        # The constructor has no ambient temperature to bound the first state against, so it starts
+        # the pack at the reference-temperature figure and the first step clips it to capacity_Wh(T).
+        # That overshoot is reported, not silently absorbed: see the note in the module docstring.
         self.bat_wh = self.usable_wh
-        self.alive = True
+        self.alive = self.bat_wh > ALIVE_FRACTION * self.usable_wh
         self._hour = 0
 
     # ------------------------------------------------------------------
@@ -204,9 +225,11 @@ class NodeEnergy:
 
         if self.bat_wh <= 0.0:
             self.bat_wh = 0.0
-            self.alive = False
-        elif self.bat_wh > 0.05 * self.usable_wh:
-            self.alive = True
+        # Recomputed from the state on every step, in both directions. Reading the flag instead of
+        # remembering it is what makes "alive" mean "powered now": a node that was alive at 1 % of
+        # its usable energy is dark at that level, and one that has just been charged back above the
+        # threshold is powered again, because that is what the crossing means physically.
+        self.alive = self.bat_wh > ALIVE_FRACTION * self.usable_wh
         return self.alive
 
 

@@ -379,17 +379,29 @@ def t4_clip_curve_and_alive() -> None:
     node.alive = False
     check("4g alive turns True once the state passes the threshold", node.step(doy),
           f"bat_wh {node.bat_wh:.6f} Wh vs threshold {thr:.6f} Wh")
-    # and it is NOT reset to False while the state is positive but below the threshold:
-    # neither branch runs above 0 Wh, so a live node stays flagged alive at any charge level.
-    # Reported as a separate defect; this check pins the current behaviour.
+    # The flag is recomputed from the state on every step, in both directions, so a node that was
+    # alive and has fallen below the threshold is dark now. The earlier code latched: above 0 Wh
+    # neither branch ran, so a live node stayed flagged alive at any charge level and only flipped
+    # False at exactly zero. That is the defect this check now pins shut.
     latch = make_node(lat_deg=lat)
     freeze(latch, daylen, -20.0)
     latch.bat_wh = 0.5 * thr
     latch.alive = True
     latch.step(doy)
-    check("4h a live node below the 5 % threshold is not flagged dead (current behaviour)",
-          latch.alive and latch.bat_wh > 0.0,
-          f"bat_wh {latch.bat_wh:.6f} Wh is below threshold {thr:.6f} Wh but alive={latch.alive}")
+    check("4h a node below the 5 % threshold is flagged dead even if it was alive",
+          (not latch.alive) and latch.bat_wh > 0.0,
+          f"bat_wh {latch.bat_wh:.6f} Wh is below threshold {thr:.6f} Wh and alive={latch.alive}")
+
+    # and the crossing works the other way: charging back above the threshold revives it
+    revive = make_node(lat_deg=lat)
+    freeze(revive, daylen, -20.0)
+    revive.bat_wh = 0.5 * thr
+    revive.alive = False
+    revive.bat_wh = 2.0 * thr
+    revive.step(doy)
+    check("4h2 a node charged back above the threshold is alive again",
+          revive.alive, f"bat_wh {revive.bat_wh:.6f} Wh, threshold {thr:.6f} Wh")
+
 
     # (v) the state lands exactly on the threshold: strictly greater is required, so False
     edge = make_node(lat_deg=lat, batt_wh_nom=1024.0)

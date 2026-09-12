@@ -125,15 +125,39 @@ class OraclePolicy(Policy):
         return out
 
 
+def _after_coordinator_restart(policy):
+    """Give a policy the chance to forget what it kept only in memory.
+
+    The run does not decide what a runtime loses on restart; it only guarantees the restart
+    happened. A policy that keeps durable state across the restart simply does not implement the
+    hook, and one that holds it in memory does. Without this the restart fault would be a no-op and
+    would measure nothing.
+    """
+    hook = getattr(policy, "on_restart", None)
+    if callable(hook):
+        hook()
+    return policy
+
+
 def run_episode(policy: Policy, hours: int = 72, seed: int = 0,
                 profile: LoRaProfile | None = None, downlink_per_uplink: int = 1,
-                grant_announcement: bool = True) -> tuple[RunRecord, dict, ControlPlane]:
+                grant_announcement: bool = True, supply=None,
+                fault=None) -> tuple[RunRecord, dict, ControlPlane]:
     """Run one episode and return the ground-truth record, per-node state and the channel.
 
     Profile changes reach a node only through the channel: the center enqueues a command, the
     gateway delivers it inside an opportunity, and the node applies it. Nothing about the
     demanded schedule is visible to the node unless a command carried it there, which is what
     makes the local-rules arm a real comparison rather than a strawman.
+
+    `supply` couples the run to the power model. When it is given, a node without power does
+    nothing: it takes no sample, opens no window and creates no opportunity, and the energy its
+    radio spends is charged back into its own battery. Without it the run assumes every node is
+    powered throughout, which is what the mechanism-isolation layer wants and what no energy claim
+    may be made from.
+
+    `fault` injects the diagnostic faults. It is consulted at four points -- backhaul, uplink,
+    downlink and restart -- so a fault trajectory is a property of the run rather than of any arm.
     """
     deployment = build_deployment(seed)
     plane = ControlPlane(profile or LoRaProfile(), seed=seed,
@@ -148,6 +172,22 @@ def run_episode(policy: Policy, hours: int = 72, seed: int = 0,
     # Every command the center issues goes through the interface layer, so the run leaves an
     # auditable trail of what was asked, what was observed, and what is in force.
     iface = AgentInterface(plane, runtimes)
+    drained_wh = {nid: 0.0 for nid in runtimes}
+
+    def charge_radio(node_id: str) -> None:
+        """Move the radio energy a node has spent into its own battery."""
+        if supply is None:
+            return
+        spent = plane.energy.get(node_id)
+        if spent is None:
+            return
+        delta = spent.total_wh - drained_wh[node_id]
+        if delta > 0:
+            supply.drain_wh(node_id, delta)
+            drained_wh[node_id] = spent.total_wh
+
+    def powered(node_id: str, t_s: int) -> bool:
+        return True if supply is None else supply.alive(node_id, t_s)
     heard_uplinks: list[tuple[str, int]] = []
     command_seq = 0
     uplink_attempt = 0
@@ -155,6 +195,14 @@ def run_episode(policy: Policy, hours: int = 72, seed: int = 0,
 
     for t_s in range(0, hours * 3600, TICK_S):
         hour = t_s / 3600.0
+        if supply is not None:
+            supply.step_to(t_s)
+        if fault is not None:
+            restarted = fault.active("coordinator_restart", t_s)
+            if restarted:
+                # The center forgot what it only knew from memory. Whatever a runtime keeps
+                # durably is its own business; the run only guarantees the amnesia is real.
+                policy = _after_coordinator_restart(policy)
 
         # ---- what the scenario demands, disclosed to the policy only if it is granted ----
         # The center knows the whole schedule once it holds the announcement, including when the
@@ -188,6 +236,10 @@ def run_episode(policy: Policy, hours: int = 72, seed: int = 0,
 
         # ---- nodes sample, upload, and receive whatever the window carries ----
         for node_id, rt in runtimes.items():
+            # A node without power does nothing at all: no sample, no window, no opportunity.
+            # This is the coupling that makes a blackout a monitoring gap rather than a footnote.
+            if not powered(node_id, t_s):
+                continue
             rt.maybe_sample(t_s)
 
             # profile mismatch time: what the scenario wants versus what the node is running
@@ -211,6 +263,7 @@ def run_episode(policy: Policy, hours: int = 72, seed: int = 0,
                                    payload_bytes=max(payload_bytes, UPLINK_PAYLOAD_BYTES),
                                    attempt_index=uplink_attempt)
                 uplink_attempt += 1
+                charge_radio(node_id)
                 rt.upload_result(packet, heard=rec.arrived, arrival_s=t_s)
                 if rec.arrived:
                     heard_uplinks.append((node_id, t_s))
@@ -249,5 +302,12 @@ def run_episode(policy: Policy, hours: int = 72, seed: int = 0,
         log_entries=len(iface.records),
     )
     record.audit_trail = iface.audit_trail()
+    if supply is not None:
+        for node_id in runtimes:
+            charge_radio(node_id)
+        record.supply_ledger = supply.ledger()
+        record.dead_node_ticks = sum(
+            1 for nid in runtimes for t_s in range(0, hours * 3600, TICK_S)
+            if not supply.alive(nid, t_s))
     state = {nid: rt for nid, rt in runtimes.items()}
     return record, state, plane
