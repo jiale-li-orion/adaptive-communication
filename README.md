@@ -775,14 +775,19 @@ self.bat_wh = min(self.bat_wh + hourly_gen - self.load_wh_per_tick, self.usable_
 
 补接成本很低（两个 backend 已就绪），但**顺序上应当排在昂贵的实证工作之前**：若接上之后结论不保持，叙事要变，那时更贵的工作可能已经白做。最便宜的证伪实验应当排在最贵的工作前面。
 
-### 7.5 必读文献缺口
+### 7.5 必读文献缺口（已补齐三项，一项待订阅）
 
-`docs/s3-novelty/agent-assumption-audit.md` 所列必读项中本地已有 2 项，仍缺 4 项，其中第一项**阻塞 Gap 1 的表述**：
+**α³-Bench（[arXiv 2601.03281](https://arxiv.org/abs/2601.03281)）——阻塞 Gap 1 的那一问有答案了，答案对我们有利。** 该基准的 6G 网络状态是 `n_t = (slice_t, lat_t, jit_t, loss_t, thr_t, edge_t)`，其中 `loss_t` 是"以百分比表示的丢包率"，**它是 agent 观测状态里的一个分量**，不是作用在工具调用执行上的注入故障。工具层做的是 MCP 工具调用与 A2A 协调，量的是"工具使用一致性"；丢包进入的是推理上下文与评分维度（Network Robustness，退化条件下该项下降 30–40%），而它的重试机制针对的是**生成**失败（schema 校验不过），不是网络失败。
 
-- **α³-Bench（arXiv 2601.03281）**——需确认它是把 packet loss 作用到 **tool call** 上，还是只影响推理上下文。未确认前，Gap 1 与短论文定位句都不能落笔。
-- Atomix（arXiv 2602.14849）的 A.2 Fault Injection Details。
-- AgentChaos（arXiv 2608.06790）与 AgentDisruptBench，用于构建注入故障类的对照表。
-- *Rollback Is Not Undo*（INFOCOM 2026，DOI `10.1109/INFOCOM59046.2026.11571400`），需机构订阅。
+**因此 Gap 1 可以落笔**：现有 agent 基准把网络退化建模成**agent 需要观测并据以得分的条件**，而不是**agent 必须消解的执行结果**。"实体已静默"与"我的查询在回程丢了"在观测上不可区分，这件事没有覆盖。这一条此前挂着不能写，现在能写了。
+
+**Atomix（[arXiv 2602.14849](https://arxiv.org/abs/2602.14849)）A.2 是与本文最接近的既有工作，必须正面引用。** 原文：故障按伯努利概率逐 tool call 注入，在工具边界抛异常；Tx-Full 与 CR 中止事务并**用新 epoch 重试**；而 **No-Tx"建模丢失的响应：动作可能已经生效，但调用方看到的是错误，对应现实的超时或丢失的确认"**。这正是本文命题的那条歧义。
+
+差别在消解方式：Atomix 走事务中止与回滚，重试换新 epoch；本文保持**同一个逻辑身份**不变，靠**单调 epoch 的远端 fencing** 让陈旧重发被拒绝而不是覆盖。§7.23 的公平 CAS 基线在同一张表里给出了这两条路线的可比读数。与之配套的反面论据是 *Rollback Is Not Undo*（INFOCOM 2026，DOI `10.1109/INFOCOM59046.2026.11571400`），**需机构订阅，尚未取得全文**，这是本节仍缺的一项。
+
+**AgentChaos（[arXiv 2608.06790](https://arxiv.org/abs/2608.06790)）给出了本文一条实现规则的先例。** 它在 LLM API 层拦截并改写响应，定义 crash / omission / value 三类故障，作用于 content 与 tool call 字段；**并且逐条验证故障是否真的被触发，把未触发的任务过滤掉，以免低估故障影响**。这与 §7.18 第四节独立得到的结论是同一条：*故障事件非空不等于故障影响了待测动作*。本轮为此把按动作的故障改为按真实动作武装，此处有可引的先例。AgentDisruptBench 尚未取得，留在缺口内。
+
+**引用纪律。** 上述四项的取用只建立在**已读到的原文段落**上；未取得全文的条目（*Rollback Is Not Undo*、AgentDisruptBench）不得据传闻转述。α³-Bench 的结论来自其网络状态定义与指标描述，不是对其代码的复核。
 
 ### 7.6 待补的强基线与业务指标
 
