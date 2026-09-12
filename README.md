@@ -76,9 +76,13 @@
 
 ### Baseline
 
-第一层是通信侧对照，每条附原始出处。
+对照分两类，界限要划清。
 
-| baseline | 出处 | 隐含假设 |
+**方法对照**是与本文在同一层、在同一条曲线上竞争的对象：同 agent、同信道，只换执行层。这只有四条加一个控制组。
+
+**定位参照**不是对照。通信侧的调度与链路自适应方案回答的是"哪个方案更好"，而本文的自适应量是操作存续，不是调度优劣。把它们跑成曲线等于让执行协议去比一个调度器，类别就不对。它们的作用是定义定位表里"现有应急通信"那一列——在给定的选项池里组合与恢复。下表列出它们，是为说明本文不做什么。
+
+| 定位参照 | 出处 | 隐含假设 |
 |---|---|---|
 | ADR / 链路自适应 | Reynders, Meert, Pollin, ICC 2017, DOI `10.1109/icc.2017.7996380`；Haxhibeqiri et al., Sensors 18:3995, 2018, DOI `10.3390/s18113995` | 链路存在，只需调 SF 与发射功率 |
 | DTN store-and-forward | Fall, ACM SIGCOMM 2003, DOI `10.1145/863956.863960` | 接触机会到来即可转发 |
@@ -90,7 +94,9 @@
 | 单链路 / 静态选择 | 退化参照，无单一出处 | 无多链路 |
 | Oracle | 已知未来链路状态的上界 | 全知 |
 
-第二层是 agent 侧方法对照，四条，每一步对应一层缺口且对应一篇明确文章。
+#### 方法对照
+
+四条，每一步对应一层缺口且对应一篇明确文章。
 
 | 方法 | 对应文章 | 在本实验中的角色 |
 |---|---|---|
@@ -108,7 +114,9 @@ CRITIC 与 AgentSpec 不进主实验。前者处理验证器本身的质量，�
 
 另保留最小工程惯例参照：blind retry 与指数退避，以及默认工具超时语义（MCP 规范 2026-07-28 的 Cancellation 章）。
 
-第三层是场景对照，即已发表的 LoRa 滑坡与落石监测系统。它们同时是本文参数的实测来源。
+#### 场景来源
+
+已发表的 LoRa 滑坡与落石监测系统。这一层不是对照而是参数来源：读者的第一个疑问是"你的设置与真实部署差多远"，这张表就是回答。
 
 | 系统 | 规模与组网 | 采样与载荷 | 发射功率 | 能耗实测 | 地形处理 |
 |---|---|---|---|---|---|
@@ -120,6 +128,8 @@ CRITIC 与 AgentSpec 不进主实验。前者处理验证器本身的质量，�
 上表的用法有三处。参数直接采用，见第四节；FresSim 的判据作为本文地形模块的方法依据与验证靶子；贵州水城与 Pantelleria 的实测间隔（1 h 与 60 min）与 Hochvogel 的 10 min 共同界定本文采样间隔的取值范围。
 
 对照构造的惯例需要声明：通读的 9 篇同类论文中，运行第三方公开实现作对照的为 0 篇，6 篇以重实现或自建方式构造对照。本文沿用该惯例，并公开代码。
+
+主实验中可能再加一条不属于通信侧调度族、但与本文在同一指标上竞争的对照：**store-and-forward 中继**。节点不可达时把命令缓存在中继上，是解决同一个下行问题的另一种手段，能回答"这是协议问题还是架构问题"。它与执行协议互补而非替代，是否纳入取决于它能否在同一预算下公平实现。
 
 ### 实验范式
 
@@ -142,19 +152,34 @@ CRITIC 与 AgentSpec 不进主实验。前者处理验证器本身的质量，�
 
 ### Related work
 
-**最危险的邻居。** INFOCOM 2026 的 "Rollback Is Not Undo: Path-Dependent Failures in LLM-Arbitrated Network Control"（Weici Pan, Zhenhua Liu，DOI `10.1109/INFOCOM59046.2026.11571400`）已在同类会议与同类问题空间证明，LLM 仲裁的网络控制回路中回滚无法恢复行为，且恢复效果路径相关；该文提出 `recovery gap` 指标，故障模式包含 observation corruption、delay-reordering 与 agent dropout。该文闭源，无公开 artifact。它未覆盖灾害与应急场景、真实轨迹驱动与实体生命周期，本文需要引用它并显式对比。
+**最危险的邻居。** INFOCOM 2026 的 *Rollback Is Not Undo: Path-Dependent Failures in LLM-Arbitrated Network Control*（Weici Pan, Zhenhua Liu，DOI `10.1109/INFOCOM59046.2026.11571400`）在同类会议与同类问题空间证明，LLM 仲裁的网络控制回路中回滚无法恢复行为，且恢复效果路径相关。该文提出 `recovery gap` 指标，故障模式含 observation corruption、delay-reordering 与 agent dropout。它闭源且无公开 artifact。未覆盖的是灾害与应急场景、真实轨迹驱动与实体生命周期。本文需引用并显式对比。
 
-**同组先前工作。** WirelessOpsAgent（Zijian Lu, Yiping Zuo, Hao Xu, Weicong Chen, Xin He, Jiajia Guo, Shi Jin，arXiv `2608.08277`，2026-08-08，CC BY 4.0）把研究层次定为 **Action Assurance**：判据是动作在下发前是否被正确授权。其表述为 *"repairs recoverable support failures before execution"*，问题被限定在可修复范围内；本文场景中 88.5% 的点位永久不可达、断电可持续数周，大量失败不可修复。该文中心是分发前的 repair，本文中心是分发后任务在实体变动下的存续。
+**同组先前工作。** WirelessOpsAgent（Zijian Lu, Yiping Zuo, Hao Xu, Weicong Chen, Xin He, Jiajia Guo, Shi Jin，arXiv `2608.08277`，CC BY 4.0）把研究层次定为 **Action Assurance**，判据是动作在下发前是否被正确授权，其表述为 *repairs recoverable support failures before execution*，问题被限定在可修复范围内。本文场景中 88.5% 的点位永久不可达、断电可持续数周，大量失败不可修复。该文中心是分发前的 repair，本文中心是分发后任务在实体变动下的存续。其发布物是数据与工具契约，不含运行时与评分谓词，核验见 `docs/s5-benchmark/README.md`。
 
-**已被占据的机制，不可声称。** idempotency 与 verify-before-retry（arXiv `2608.02645`）；effect exactly-once 与 consume-once，含 TLA+ 状态穷举与故障矩阵（arXiv `2608.03836`）；outcome-unknown 与防盲目重放，prepare-dispatch-settle（arXiv `2606.03895` "Agent libOS"）；authority 与恢复语义绑定（arXiv `2608.01710` "CapLease"）；只读与改状态工具分类（arXiv `2603.29656` "6GAgentGym"）；retry budget 与 stale context（arXiv `2606.01416`）；公平排队（Demers, Keshav, Shenker, SIGCOMM 1989, DOI `10.1145/75247.75248`）；lease 与 heartbeat（Gray, Cheriton, SOSP 1989, DOI `10.1145/74850.74870`）；LLM agent serving 中的队头阻塞（Autellix, arXiv `2502.13965`）；验证者永不失败的隐含假设（CRITIC, arXiv `2305.11738`）。
+**已被占据的机制，不可声称。**
 
-三句不能写。"我们是第一个把 X 用于 LLM agent"（X 取上表任一机制）可由上表直接反驳。"没有工作注入网络故障"应改为 *we are not aware of a workload that overlays a communication-channel fault model onto remote agent actuation*。
+| 机制 | 出处 |
+|---|---|
+| idempotency、verify-before-retry、后置条件验证 | arXiv `2608.02645`，已对 LLM agent 逐字发表 |
+| effect exactly-once 与 consume-once | arXiv `2608.03836`，含 TLA+ 状态穷举、TLAPS 证明与故障矩阵，实测出 LangGraph 在 SIGKILL 后重执行、CrewAI 重复副作用 |
+| outcome-unknown 与防盲目重放 | arXiv `2606.03895` "Agent libOS"，prepare-dispatch-settle |
+| authority 与恢复语义绑定 | arXiv `2608.01710` "CapLease"，semantic replay 加 Issue–Prepare–Commit |
+| 只读与改状态工具分类 | arXiv `2603.29656` "6GAgentGym"，42 个 effect-typed 工具 |
+| retry budget、stale context、恢复预算 | arXiv `2606.01416` "Self-Healing Agentic Orchestrators" |
+| runtime-owned 操作生命周期与 first-wins 结算 | DeepSeek Harness `packages/jobs`，进程内运行时，见第五节 |
+| 公平排队 | Demers, Keshav, Shenker, SIGCOMM 1989, DOI `10.1145/75247.75248` |
+| lease 与 heartbeat | Gray, Cheriton, SOSP 1989, DOI `10.1145/74850.74870` |
+| LLM agent serving 中的队头阻塞 | Autellix, arXiv `2502.13965` |
+| 验证者永不失败的隐含假设 | CRITIC, arXiv `2305.11738` |
+
+三句不能写。"我们是第一个把 X 用于 LLM agent"（X 取上表任一机制）可由上表直接反驳。"没有工作注入网络故障"应改为 *we are not aware of a workload that overlays a communication-channel fault model onto remote agent actuation*。第三条是"我们提出了 runtime-owned 的操作生命周期"——上表末段的 DeepSeek Harness 已经实现了一套，本文的增量在于把它从进程内执行扩展到中断链路上的非原子远端执行。
 
 ### 尚未覆盖的部分
 
 | 空白 | 依据 |
 |---|---|
 | 分发后的执行语义 | 同类工作的故障模型全部刻画动作释放之前，无一描述释放之后的传输语义 |
+| 协调者重启后的操作存续 | 进程内的操作 registry 依赖 producer 的 `done` 最终返回，没有跨重启的操作存续语义；本文实测无日志时 60 次重启产生 689.4 次重复效果 |
 | 实体生命周期作为一等对象 | 通读的同域论文中，网络一律是控制的对象，不承载 agent 自身的遥测 |
 | 结果不可知作为一等故障类 | 既有工作把超时当作失败处理，或假定故障发生可被检出 |
 | 不可修复失败 | WirelessOpsAgent 自述限定 recoverable support failures；本文有 88.5% 永久不可达与数周断电 |
