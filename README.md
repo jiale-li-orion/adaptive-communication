@@ -433,6 +433,33 @@ agent 只负责选择 capability 与逻辑动作，runtime 在动作之外包住
 
 ## 六、结果
 
+> **本节的读数整体待覆盖。** 下面的每一张表都由 `results/_withdrawn/MANIFEST.md` 列出的那批结果
+> 文件产生，而那批文件已随其实现一并删除，理由有三条：`verified_tool_calls` 当时有保真度缺陷
+> （`want` 被覆盖使 Unknown 从不等待、verify/reconcile 绕过链路、日清理用固定预算）、臂集合里
+> 没有按契约 §7 公平化的精确版本 CAS、业务层把网关与中心合成了一个实体且四条臂里没有本文
+> runtime。
+>
+> **替代表按下列命令重新生成**（各节的替换读数写入后，本节的原读数即行删除）：
+>
+> ```bash
+> export PYTHONPATH="$PWD/libs/pylibs"
+> # 业务层主结果：五条业务臂 × 七条轨迹 × 20 种子
+> python3 code/experiments/monitoring_trajectories.py --days 3 --seeds 20 \
+>   --arms local_rules,versioned_config,vtc_style,ours,oracle --tag business
+> # planner × runtime 的 2×2（scripted 后端，非模型证据）
+> python3 code/experiments/monitoring_trajectories.py --days 3 --seeds 20 \
+>   --arms rule__naive,rule__contract,llm__naive,llm__contract --tag 2x2
+> # 机制层主表：全部臂含 CAS，20 种子
+> python3 code/experiments/method_comparison.py --days 180 --seeds 20 --workload operation
+> # 配对区间与逐种子零值检查
+> python3 code/analysis/paired_ci.py results/monitoring_trajectories_business.json \
+>   --arm-a ours --arm-b versioned_config --workload stale_command --zero-check
+> ```
+>
+> **判定规则。** 一节只有在它引用的结果文件存在、命令写在 `results/README.md` 里、且 `--seeds`
+> 已给定时，其读数才可以被引用。没有种子的表、以及 `scripted` 后端产生的表，都不得进正文。
+
+
 > **本节部分结论受模型层缺陷影响，尚未修正。** 等预算对照的三档全部落在物理不可行的运行点上，能源相关绝对值受一处发电量计算缺陷影响。缺陷清单、影响范围与重跑计划见第八节。本节数字与其实现一一对应，可复现。
 
 ### 实验口径
@@ -461,7 +488,31 @@ agent 只负责选择 capability 与逻辑动作，runtime 在动作之外包住
 
 ### 主表
 
-180 天，20 seed，16 节点（12 地形可达 + 4 永久遮挡），每 6 h 一条命令，重试预算 3，11,520 条逻辑写入。
+> **本表待覆盖。** 下方读数来自被撤销的那一批结果文件（见 `results/_withdrawn/MANIFEST.md`），
+> 三条理由：`verified_tool_calls` 当时有保真度缺陷、臂集合里没有公平化的精确版本 CAS、
+> 结果文件已随实现一并删除。**替代表由下面的命令重新生成，在此之前本表不得引用。**
+>
+> ```bash
+> export PYTHONPATH="$PWD/libs/pylibs"
+> # 机制层主表：全部臂（含 exact_version_cas）与四条消融，20 种子
+> python3 code/experiments/method_comparison.py --days 180 --seeds 20 --workload operation
+> # 等预算对照：预算 3 / 8 / 20，同一臂集合
+> for b in 3 8 20; do
+>   python3 code/experiments/method_comparison.py --days 180 --seeds 20 --retry-budget $b \
+>     --workload operation --tag budget$b
+> done
+> # mutable_state 专用负载（陈旧覆盖的可覆盖字段）
+> python3 code/experiments/method_comparison.py --days 180 --seeds 20 \
+>   --workload mutable_state --tag p2
+> # 配对区间与逐种子零值
+> python3 code/analysis/paired_ci.py results/method_comparison.json \
+>   --arm-a ours --arm-b exact_version_cas --workload operation --zero-check
+> ```
+>
+> 业务层主表由 `monitoring_trajectories.py --days 3 --seeds 20` 生成（见 §7.21 与 §7.23），
+> 其读数是本论文的**业务**侧主结果。
+
+下面保留原读数以备复查。180 天，20 seed，16 节点（12 地形可达 + 4 永久遮挡），每 6 h 一条命令，重试预算 3，11,520 条逻辑写入。
 
 | runtime | 恰好一次 | 零次 | 多余 | 重复 | 写入 | 验证读 | 调和读 | 空口 | 加权代价 |
 |---|---:|---:|---:|---:|---:|---:|---:|---:|---:|
