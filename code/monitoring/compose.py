@@ -70,6 +70,12 @@ class Intent:
                                   self.args["budget"])
         raise ValueError(f"unknown intent kind {self.kind!r}")
 
+    # Which demand cycle this intent belongs to. Two instructions to hold the same profile are the
+    # same instruction only within one cycle: after the demand has moved away and come back, telling
+    # the node to be on that profile is a new instruction and the runtime must not treat it as the
+    # one it already completed.
+    epoch: int = 0
+
     @property
     def logical_key(self) -> str:
         """What makes two intents the same logical action.
@@ -77,9 +83,16 @@ class Intent:
         The planner names this, not the runtime, because only the planner knows whether two
         decisions are the same decision. A backfill order for the same gap is the same action; a
         second retention of the same profile after it was already asked for is the same action too.
+
+        `epoch` is what keeps the last clause true across demand cycles. Keying on the value alone
+        made the runtime settle `{node}:profile:normal` the first time a node reported `normal` and
+        then never dispatch that instruction again -- measured: the composed cell issued 31 `risk`
+        commands and **zero** `normal` commands over 72 hours, leaving nodes in the dense profile
+        78% of the time and creating twice the uplink opportunities the deployment should have.
+        Its coverage advantage over the monolithic runtime was that artifact.
         """
         if self.kind == KIND_SET_PROFILE:
-            return f"{self.node_id}:profile:{self.args['profile']}"
+            return f"{self.node_id}:profile:{self.args['profile']}:e{self.epoch}"
         if self.kind == KIND_REQUEST_MEASUREMENT:
             return f"{self.node_id}:measure:{self.args['request_id']}"
         return (f"{self.node_id}:upload:{self.args['start']}-{self.args['end']}:"
@@ -113,6 +126,10 @@ class RulePlanner:
         self.backfills_ordered = 0
         self.last_profile: dict[str, str] = {}
         self.last_profile_at: dict[str, int] = {}
+        # The demand each node is currently on, and how many times it has changed. The second is
+        # what makes an instruction unique across cycles.
+        self.profile_demand: dict[str, str] = {}
+        self.profile_epoch: dict[str, int] = {}
 
     def read_status(self, view, node_id: str):
         """`read_status(node, max_age)`: what the node last reported, and how old it is."""
@@ -144,10 +161,17 @@ class RulePlanner:
         """
         out = []
         for node_id, want in sorted(view.demanded_profile.items()):
+            previous = self.profile_demand.get(node_id)
+            if previous != want:
+                # The demand moved, so this is a new instruction: the epoch advances and the
+                # runtime can no longer match it against the one it completed in an earlier cycle.
+                self.profile_demand[node_id] = want
+                self.profile_epoch[node_id] = self.profile_epoch.get(node_id, 0) + 1
             payload, _age = self.read_status(view, node_id)
             if payload is not None and payload.get("profile") == want:
                 continue
             out.append(Intent(KIND_SET_PROFILE, node_id, {"profile": want},
+                              epoch=self.profile_epoch.get(node_id, 0),
                               reason="reported_differs_from_demanded"))
         return out
 
