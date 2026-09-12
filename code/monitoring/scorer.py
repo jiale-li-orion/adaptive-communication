@@ -81,6 +81,8 @@ class RunRecord:
     stale_overwrites: int = 0   # an older write that replaced a newer one already in force
     stale_held: int = 0         # commands the network held back for the ordering fault
     stale_released: int = 0     # held commands that were later released
+    refused_actions: int = 0    # policy asked for something outside the four interfaces
+    expired_commands: int = 0   # a command that reached the node after its own deadline
     stale_trace: list = field(default_factory=list)
 
 

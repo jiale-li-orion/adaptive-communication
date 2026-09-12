@@ -78,17 +78,26 @@ class Sample:
     taken_at: int                # seconds since run start
     measurement_type: str
     payload_bytes: int
+    # Set when this sample answers an explicit request. A requested measurement is a different
+    # sample from the one the schedule would have taken, even at the same instant, so the identity
+    # has to say which question it answers -- otherwise a cached reading could be passed off as the
+    # fresh one that was asked for, which is exactly what the interface forbids.
+    request_id: str | None = None
 
     @staticmethod
-    def make(node_id: str, taken_at: int, measurement_type: str) -> "Sample":
-        return Sample(sample_id=f"{node_id}:{taken_at}", node_id=node_id, taken_at=taken_at,
+    def make(node_id: str, taken_at: int, measurement_type: str,
+             request_id: str | None = None) -> "Sample":
+        suffix = f":r{request_id}" if request_id is not None else ""
+        return Sample(sample_id=f"{node_id}:{taken_at}{suffix}", node_id=node_id, taken_at=taken_at,
                       measurement_type=measurement_type,
-                      payload_bytes=SAMPLE_BYTES.get(measurement_type, 20))
+                      payload_bytes=SAMPLE_BYTES.get(measurement_type, 20),
+                      request_id=request_id)
 
     @staticmethod
-    def for_role(node_id: str, taken_at: int, role: str) -> "Sample":
+    def for_role(node_id: str, taken_at: int, role: str,
+                 request_id: str | None = None) -> "Sample":
         """Build a sample for a station, resolving its role to the measurement it produces."""
-        return Sample.make(node_id, taken_at, measurement_of(role))
+        return Sample.make(node_id, taken_at, measurement_of(role), request_id=request_id)
 
 
 @dataclass
@@ -124,6 +133,29 @@ class NodeRuntime:
     _next_upload_at: int = 0
     _last_seen_s: int = 0
 
+    # --- outstanding interface orders ---
+    # request_id -> (window_start, deadline). A measurement request is answered by the first sample
+    # the node takes inside the window, and by nothing else: not by the buffer, not by the schedule.
+    pending_requests: dict[str, tuple[int, int]] = field(default_factory=dict)
+    # The outstanding backfill order, if any: (start_s, end_s, send_cursor, budget). One at a time,
+    # newest wins, because a second order for the same node supersedes the range the first named.
+    backfill: tuple[int, int, int, int] | None = None
+    # The acknowledged cursor: how far the center has confirmed it has. Distinct from the send
+    # cursor, which is how far the node has offered. Conflating them either re-sends everything or
+    # skips whatever was lost, and the interface exists to keep them apart.
+    # Cursors are sample instants, not sample ids. A cursor exists to be compared, and sample ids
+    # sort as strings, so comparing them would put ":10800" before ":3600" and quietly resume the
+    # backfill at the wrong place.
+    acked_cursor: int = 0
+    sent_cursor: int = 0
+    requests_answered: int = 0
+    requests_expired: int = 0
+    backfill_served: int = 0
+
+    # A boot identity. It changes on every restart, which is what lets the center tell "this is the
+    # same node with a new buffer" apart from "this is the same buffer".
+    incarnation: int = 0
+
     # ------------------------------------------------------------- construction
     def __post_init__(self) -> None:
         if not self.profile_history:
@@ -151,6 +183,14 @@ class NodeRuntime:
         self._next_sample_at = at_s
         self._next_upload_at = at_s + self._interval_s("upload_s")
 
+    def demand_measurement(self, request_id: str, window_start_s: int, deadline_s: int) -> None:
+        """Accept a request for a fresh measurement. It is answered by a new sample or by nothing."""
+        self.pending_requests[request_id] = (window_start_s, deadline_s)
+
+    def order_backfill(self, start_s: int, end_s: int, send_cursor: int, budget: int) -> None:
+        """Accept a backfill order. The next upload serves it instead of the default schedule."""
+        self.backfill = (start_s, end_s, send_cursor, budget)
+
     def profile_at(self, t_s: int) -> str:
         current = self.profile_history[0][1]
         for at, name in self.profile_history:
@@ -166,12 +206,28 @@ class NodeRuntime:
         taken: list[Sample] = []
         period = self._interval_s("sample_s")
         while self._next_sample_at <= t_s:
-            sample = Sample.for_role(self.node_id, self._next_sample_at, self.role)
+            at = self._next_sample_at
+            # The first sample inside a request's window answers it. Tagging happens here rather
+            # than at delivery so that a request answered by a sample taken before the request
+            # arrived cannot exist: the tag is attached when the measurement is made.
+            answering = [rid for rid, (start, deadline) in self.pending_requests.items()
+                         if start <= at <= deadline]
+            request_id = sorted(answering)[0] if answering else None
+            if request_id is not None:
+                self.pending_requests.pop(request_id, None)
+                self.requests_answered += 1
+            sample = Sample.for_role(self.node_id, at, self.role, request_id=request_id)
             self.records.append(sample)
             self.taken.append(sample)
             taken.append(sample)
             self._next_sample_at += period
             self._enforce_capacity()
+        # Requests whose window has closed unanswered are expired, not silently forgotten. A node
+        # that could not measure inside the window has to say so by not answering, and the center
+        # learns it from the absence.
+        for rid in [r for r, (_s, d) in self.pending_requests.items() if d < t_s]:
+            self.pending_requests.pop(rid, None)
+            self.requests_expired += 1
         return taken
 
     def _enforce_capacity(self) -> None:
@@ -204,7 +260,23 @@ class NodeRuntime:
         """
         self._next_upload_at = t_s + self._interval_s("upload_s")
         self.uploads_attempted += 1
+        if self.backfill is not None:
+            # A backfill order names a range, a resume point and a cap. The node serves that range
+            # from that point and stops at the cap, which is what makes history compete with new
+            # data for the same opportunity instead of draining the buffer wholesale.
+            start_s, end_s, cursor, budget = self.backfill
+            self.backfill = None
+            window = [s for s in self.records if start_s <= s.taken_at <= end_s]
+            window.sort(key=lambda s: s.taken_at)
+            batch = [s for s in window if s.taken_at >= cursor][:max(0, budget)]
+            self.backfill_served += len(batch)
+            if batch:
+                self.sent_cursor = batch[-1].taken_at
+            self.records_sent += len(batch)
+            return batch
         batch = self.records[:self.batch_max]
+        if batch:
+            self.sent_cursor = batch[-1].taken_at
         self.records_sent += len(batch)
         return batch
 
@@ -240,6 +312,12 @@ class NodeRuntime:
         confirmed = len(self.records) - len(kept)
         self.records = kept
         self.records_acked += confirmed
+        if sample_ids:
+            # The acknowledged cursor is where the center says it has got to. It is not derived from
+            # the send cursor, because the whole reason two cursors exist is that they differ.
+            newest = max((s.taken_at for s in self.taken if s.sample_id in ids), default=None)
+            if newest is not None:
+                self.acked_cursor = max(self.acked_cursor, newest)
         return confirmed
 
     def unacknowledged_ids(self) -> list[str]:
@@ -257,9 +335,15 @@ class NodeRuntime:
         newest = max((s.taken_at for s in self.taken), default=None)
         return {
             "node_id": self.node_id,
-            "profile": self.profile,
+            "read_at": t_s,                      # 时间戳
+            "incarnation": self.incarnation,     # 启动标识
+            "profile": self.profile,             # 配置版本
             "profile_since": self.profile_history[-1][0],
-            "buffer_level": self.buffer_level,
+            "profile_version": len(self.profile_history),
+            "battery_wh": None,                  # 电量估计，由供电模型填写
+            "buffer_level": self.buffer_level,   # 缓存水位
             "newest_sample_at": newest,
-            "read_at": t_s,
+            "acked_cursor": self.acked_cursor,
+            "send_cursor": self.sent_cursor,
+            "pending_requests": len(self.pending_requests),
         }

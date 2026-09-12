@@ -42,6 +42,9 @@ from node_model import NodeRuntime, TICK_S
 from opportunity import ControlPlane, LoRaProfile, DownlinkMessage
 from scorer import RunRecord
 from interfaces import AgentInterface
+# `policies` resolves the two policies that live here by name rather than importing them, so this
+# direction of the dependency is the one that stays acyclic.
+from policies import OP_REQUEST_MEASUREMENT, OP_SET_PROFILE, OP_UPLOAD_RECORDS, OPS
 
 SF_BY_ROLE = {"deformation": 9, "rainfall": 8}     # A: a denser site uses a lower spreading factor
 UPLINK_PAYLOAD_BYTES = 20                          # A: header plus a batch of record ids
@@ -60,6 +63,10 @@ class WorldView:
     # "it is handled": the center can refuse the send outright when the backhaul is down, and
     # nothing has been delivered until the node said so.
     in_flight: frozenset = frozenset()
+    # The newest sample instant the center itself holds for each node. This is the center's own
+    # archive, not the node's buffer: a gap is the distance between the two, and a policy that
+    # could only see the node's side would be reading the simulator rather than its own records.
+    archive_newest: dict = field(default_factory=dict)
 
 
 @dataclass
@@ -242,6 +249,35 @@ def run_episode(policy: Policy, hours: int = 72, seed: int = 0,
             return now_s
         return applied_logical_at.get((node_id, logical), now_s)
 
+    def expires_before(command, t_s: int) -> bool:
+        """Whether a command reached the node after its own deadline.
+
+        An expired order must not be carried out. A measurement request that arrives after its
+        window has closed asks for something that is no longer wanted, and letting the node take it
+        anyway would credit the center with a service it did not deliver on time -- the deadline is
+        part of the instruction, not metadata about it.
+        """
+        return command.expires_at is not None and t_s > command.expires_at
+
+    def apply_command_effect(rt, node_id: str, payload: dict, t_s: int) -> None:
+        """What the node does when a command reaches it, by interface.
+
+        `set_monitoring_profile` changes the schedule; `request_measurement` creates an obligation
+        to take a new sample inside a window; `upload_records` orders a bounded range of history.
+        They are different effects on different node state, which is why they are dispatched here
+        rather than collapsed into one payload shape.
+        """
+        op = payload.get("op")
+        if op == OP_SET_PROFILE:
+            rt.set_profile(payload["profile"], t_s)
+            profile_timeline.append((node_id, t_s, payload["profile"]))
+        elif op == OP_REQUEST_MEASUREMENT:
+            rt.demand_measurement(payload["request_id"], payload["window_start"],
+                                  payload["deadline"])
+        elif op == OP_UPLOAD_RECORDS:
+            rt.order_backfill(payload["start"], payload["end"], payload["cursor"],
+                              payload["budget"])
+
     def remote_apply(node_id: str, payload: dict) -> str:
         """The remote's decision for one delivered operation: `applied`, `duplicate`, or `fenced`.
 
@@ -314,6 +350,8 @@ def run_episode(policy: Policy, hours: int = 72, seed: int = 0,
     # The ordering fault is only meaningful if a newer intent got in first, so that has to be
     # legible rather than inferred from a counter that could be zero for either reason.
     stale_trace: list[dict] = []
+    refused_actions = 0
+    expired_commands = 0
     # A command the network is holding is no longer pending at the center. Keeping it in `in_flight`
     # told every policy that the node still had a command outstanding, so none of them issued the
     # newer write that the held one is supposed to arrive after -- and the ordering hazard silently
@@ -353,18 +391,43 @@ def run_episode(policy: Policy, hours: int = 72, seed: int = 0,
             wanted = profile_for_hour(hour, RISK_WINDOWS_H)
             demanded = {nid: wanted for nid in runtimes}
 
+        archive_newest = {}
+        for nid, rt_ in runtimes.items():
+            newest = max((s.taken_at for s, _arr in rt_.received), default=None)
+            if newest is not None:
+                archive_newest[nid] = newest
         view = WorldView(t_s=t_s, node_ids=tuple(runtimes), status=status,
                          demanded_profile=demanded,
                          center_has_announcement=bool(demanded),
-                         in_flight=view_in_flight)
+                         in_flight=view_in_flight,
+                         archive_newest=archive_newest)
 
         # ---- the center tries to send ----
         for node_id, payload in policy.plan(view):
-            if "profile" not in payload:
+            # The four interfaces are the whole action surface. Anything outside the set is refused
+            # here rather than silently dropped: a policy that asks for something the contract does
+            # not name has made an error, and swallowing it would make the policy look harmless
+            # while the demand it was trying to serve went unserved.
+            op = payload.get("op")
+            if op == OP_SET_PROFILE and "profile" not in payload:
+                refused_actions += 1
                 continue
-            record = iface.set_monitoring_profile(node_id, payload["profile"],
-                                                  generation=command_seq, expires_at=t_s + 6 * 3600,
-                                                  now_s=t_s)
+            if op == OP_SET_PROFILE:
+                record = iface.set_monitoring_profile(
+                    node_id, payload["profile"], generation=command_seq,
+                    expires_at=t_s + 6 * 3600, now_s=t_s)
+            elif op == OP_REQUEST_MEASUREMENT:
+                record = iface.request_measurement(
+                    node_id, payload["request_id"], payload["deadline"], now_s=t_s)
+            elif op == OP_UPLOAD_RECORDS:
+                record = iface.upload_records(
+                    node_id, payload["start"], payload["end"], payload["cursor"],
+                    payload["budget"], now_s=t_s)
+            else:
+                # `read_status` is answered from telemetry the node already sent; it is never
+                # dispatched as an action, and anything else is not an interface at all.
+                refused_actions += 1
+                continue
             command_seq += 1
             if record.attempts:
                 if (node_id, t_s) in stale_plan:
@@ -388,6 +451,10 @@ def run_episode(policy: Policy, hours: int = 72, seed: int = 0,
             command = held_commands.pop(identity, None)
             if command is None:
                 continue
+            if expires_before(command, t_s):
+                expired_commands += 1
+                iface.note_rejected(identity, t_s, "arrived after its own deadline")
+                continue
             stale_released += 1
             _prior = newest_applied.get(node_id)
             stale_trace.append({"node": node_id, "released_at": t_s,
@@ -406,9 +473,7 @@ def run_episode(policy: Policy, hours: int = 72, seed: int = 0,
                 # A newer intent had already been applied and this older one has just replaced it.
                 stale_overwrites += 1
                 iface.note_overwritten(prior[1], t_s, command.issued_at)
-            if "profile" in command.payload:
-                runtimes[node_id].set_profile(command.payload["profile"], t_s)
-                profile_timeline.append((node_id, t_s, command.payload["profile"]))
+            apply_command_effect(runtimes[node_id], node_id, command.payload, t_s)
             mark_applied_at(node_id, command.payload, t_s)
             iface.note_applied(identity, t_s)
             iface.note_observed(identity, t_s)
@@ -491,6 +556,10 @@ def run_episode(policy: Policy, hours: int = 72, seed: int = 0,
                     command = in_flight.pop(identity, None)
                     if command is None:
                         continue
+                    if expires_before(command, t_s):
+                        expired_commands += 1
+                        iface.note_rejected(identity, t_s, "arrived after its own deadline")
+                        continue
 
                     # ---- the remote contract -------------------------------------------------
                     # The node applies an operation once and refuses one that is older than what it
@@ -517,8 +586,7 @@ def run_episode(policy: Policy, hours: int = 72, seed: int = 0,
                         stale_overwrites += 1
                         iface.note_overwritten(prior[1], t_s, command.issued_at)
                     newest_applied[node_id] = (command.issued_at, identity)
-                    rt.set_profile(command.payload["profile"], t_s) if "profile" in command.payload \
-                        else None
+                    apply_command_effect(rt, node_id, command.payload, t_s)
                     mark_applied_at(node_id, command.payload, t_s)
                     command.confirmed = True
                     # Applied at the moment the node applied it, observed at the moment the center
@@ -557,6 +625,7 @@ def run_episode(policy: Policy, hours: int = 72, seed: int = 0,
         profile_timeline=profile_timeline,
         action_records=[r.as_dict() for r in iface.records.values()],
         reaccepted=reaccepted, fenced=fenced, stale_overwrites=stale_overwrites,
+        refused_actions=refused_actions, expired_commands=expired_commands,
         stale_held=stale_held, stale_released=stale_released, stale_trace=stale_trace,
     )
     record.audit_trail = iface.audit_trail()

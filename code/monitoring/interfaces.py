@@ -52,6 +52,10 @@ SUPERSEDED = "superseded"
 # Conflict domain: two actions in the same domain mutate the same node-side setting, so their
 # order matters and an older one must never be applied over a newer one. Actions in different
 # domains commute.
+# How long a backfill order stays valid. A: chosen to outlast the node's own upload cadence by a
+# margin, because an order that expires inside the cadence it waits on cannot be served at all.
+UPLOAD_ORDER_TTL_S = 6 * 3600
+
 DOMAIN_PROFILE = "profile"
 DOMAIN_MEASUREMENT = "measurement"
 DOMAIN_TRANSFER = "transfer"
@@ -306,20 +310,27 @@ class AgentInterface:
         return self._enqueue(record, payload_bytes=12, ttl_s=max(1, deadline - now_s))
 
     def upload_records(self, node_id: str, start_s: int, end_s: int, cursor: int,
-                       budget: int, now_s: int) -> ActionRecord:
+                       budget: int, now_s: int,
+                       deadline_s: int | None = None) -> ActionRecord:
         """Ask for records in a range to be transferred, resuming from a send cursor.
 
         The send cursor and the acknowledged cursor are different numbers and both are carried: a
         request that asked from the acknowledged cursor would re-send everything already delivered,
         and one that asked from the send cursor would skip whatever was lost in flight.
+
+        The deadline defaults to the same order of magnitude as a profile command rather than to one
+        upload interval. A backfill order that expires in exactly the cadence it has to wait for is
+        not a comparison of backfill policies, it is a guaranteed non-delivery, and the opportunity
+        rate here is low enough that a one-hour window would almost never be served.
         """
         identity = self._next_identity(node_id, f"upload:{start_s}-{end_s}:c{cursor}")
+        deadline = deadline_s if deadline_s is not None else now_s + UPLOAD_ORDER_TTL_S
         record = ActionRecord(identity=identity, kind="upload_records", node_id=node_id,
                               parameters={"range": [start_s, end_s], "cursor": cursor,
                                           "budget": budget},
                               conflict_domain=DOMAIN_TRANSFER, issued_at=now_s,
-                              deadline=now_s + 3600)
-        return self._enqueue(record, payload_bytes=16, ttl_s=3600)
+                              deadline=deadline)
+        return self._enqueue(record, payload_bytes=16, ttl_s=max(1, deadline - now_s))
 
     # ------------------------------------------------------------------ reading
     def audit_trail(self) -> list[dict]:

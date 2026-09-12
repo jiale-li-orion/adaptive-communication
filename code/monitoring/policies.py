@@ -45,13 +45,13 @@ from __future__ import annotations
 # The two baselines have no dependencies inside the project, so the only thing this shim does is
 # let the file run both as `monitoring.policies` and as a flat module on sys.path.
 try:                                    # package import, e.g. from monitoring
-    from .task_generator import PROFILE_NORMAL
+    from .task_generator import MONITORING_PROFILES, PROFILE_NORMAL, PROFILE_RISK
 except ImportError:                     # flat import, e.g. with code/monitoring on sys.path
     import os as _os, sys as _sys
     _HERE = _os.path.dirname(_os.path.abspath(__file__))
     if _HERE not in _sys.path:
         _sys.path.insert(0, _HERE)
-    from task_generator import PROFILE_NORMAL
+    from task_generator import MONITORING_PROFILES, PROFILE_NORMAL, PROFILE_RISK
 # -----------------------------------------------------------------------------
 
 from typing import Callable
@@ -60,6 +60,13 @@ from typing import Callable
 # else would be silently skipped by the runtime, which would look like a quiet policy rather than
 # a broken one, so the payload is built in exactly one place per policy.
 OP_SET_PROFILE = "set_monitoring_profile"
+OP_REQUEST_MEASUREMENT = "request_measurement"
+OP_UPLOAD_RECORDS = "upload_records"
+OP_READ_STATUS = "read_status"
+
+# Every op the center may ask for. The runner routes on this field and refuses anything outside the
+# set, so a policy cannot reach the far side through a path the contract did not name.
+OPS = (OP_SET_PROFILE, OP_REQUEST_MEASUREMENT, OP_UPLOAD_RECORDS, OP_READ_STATUS)
 
 # Field names inside a status snapshot. A snapshot may be minimal in a regression harness: the
 # reported configuration is the one field the policy needs, everything else is only recorded.
@@ -95,6 +102,29 @@ def _field(payload: dict | None, key: str, default=None):
     if isinstance(payload, dict):
         return payload.get(key, default)
     return default
+
+
+def measurement_command(request_id: str, window_start_s: int, deadline_s: int) -> dict:
+    """Ask for a fresh measurement the node has not taken yet.
+
+    The request carries the window it must be answered in. A sample from the buffer is not an
+    answer to it and the node is written so that it cannot be: the answer is tagged at the moment
+    the measurement is made, so no cached reading can acquire the tag afterwards.
+    """
+    return {"op": OP_REQUEST_MEASUREMENT, "request_id": request_id,
+            "window_start": int(window_start_s), "deadline": int(deadline_s)}
+
+
+def upload_command(start_s: int, end_s: int, cursor: int, budget: int) -> dict:
+    """Ask for a range of history to be transferred, resuming from a named point.
+
+    `cursor` is the send cursor, not the acknowledged one. Asking from the acknowledged cursor
+    re-sends everything already delivered; asking from a cursor the center invented skips whatever
+    was lost in flight. Both mistakes are cheap to make and expensive to notice, so the cursor is
+    always carried explicitly.
+    """
+    return {"op": OP_UPLOAD_RECORDS, "start": int(start_s), "end": int(end_s),
+            "cursor": int(cursor), "budget": int(budget)}
 
 
 def profile_command(profile: str, version: int | None = None,
@@ -620,6 +650,21 @@ class RuntimePolicy:
         self.reported_at: dict[str, int] = {}   # when the node produced the report, not when it arrived
         self.settled_version: dict[str, int] = {}   # newest version whose effect has been evidenced
 
+        # W1/W2 knobs. The backfill budget is the share of one opportunity the past may take; the
+        # status age is what "fresh" means for the free read.
+        self.backfill_budget = 8
+        self.status_max_age_s = 3600
+        self.measure_retry_s = 900
+        self.backfill_ordered: dict[str, tuple[int, int]] = {}
+        # node -> (request_id, deadline of the outstanding measurement request)
+        self.measure_outstanding: dict[str, tuple[str, int]] = {}
+        # How many upload cadences the request window spans. A window shorter than the cadence it
+        # has to wait for cannot be served at all: the command has to reach the node in a downlink
+        # opportunity, and those arrive at the node's own rhythm, not the center's.
+        self.measure_window_mult = 2
+        self.backfills_ordered = 0
+        self.measurements_asked = 0
+
         self.writes = 0
         self.settled = 0
         self.reconciles = 0                     # writes refused because the evidence was too old
@@ -628,12 +673,98 @@ class RuntimePolicy:
     def identity_of(self, node_id: str) -> str:
         return f"{node_id}:{self.logical.get(node_id, 0)}"
 
+    # ------------------------------------------------------------------ W1/W2/W3
+    def read_status(self, view, node_id: str, max_age_s: int):
+        """`read_status(node, max_age)`: what the node last told us, and how old that is.
+
+        Answered from telemetry the node already sent, which is what the contract allows: a fresh
+        passive report answers the read for free, and only a read that must be newer than anything
+        on hand would cost a message. Returns `(payload, age_s)` with `payload` None when the node
+        has never reported.
+        """
+        payload = view.status.get(node_id)
+        if not payload:
+            return None, None
+        read_at = payload.get("read_at")
+        if read_at is None:
+            return payload, None
+        return payload, max(0, view.t_s - int(read_at))
+
+    def _w1_needs_fresh_measurement(self, view, node_id: str, want: str) -> bool:
+        """Whether the risk-window demand needs a measurement the node has not taken.
+
+        A denser profile only helps once it is in force. While the change is still in flight the
+        window is running and the center holds nothing from it, so it asks for the measurement
+        explicitly rather than waiting for a schedule that may arrive after the window closed.
+        """
+        if want != PROFILE_RISK:
+            return False
+        # One outstanding request per node. Asking again while the first is unanswered spends a
+        # second opportunity on the same question and starves the profile writes, which is how a
+        # policy that looks responsive ends up serving fewer demands than one that waits.
+        # A request stays outstanding until its own deadline. The center cannot tell an answered
+        # request from one still in flight, and re-asking on the strength of a guess is exactly the
+        # move the unknown outcome is supposed to forbid -- so it waits the deadline out.
+        outstanding = self.measure_outstanding.get(node_id)
+        if outstanding is not None:
+            if view.t_s <= outstanding[1]:
+                return False
+            del self.measure_outstanding[node_id]
+        newest = view.archive_newest.get(node_id)
+        if newest is None:
+            return False                      # nothing to compare against yet; the profile loop acts
+        return view.t_s - newest > MONITORING_PROFILES[PROFILE_RISK]["sample_s"] * 2
+
+    def _w2_gap(self, view, node_id: str):
+        """The gap between the center's archive and what the node says it holds, if any.
+
+        Returns `(start_s, end_s, cursor, budget)` for a bounded backfill, or None. The budget is
+        capped so that history cannot take every opportunity: the point of the interface is that
+        the center chooses how much of the scarce channel goes to the past, and an unbounded
+        backfill is the head-of-line blocking the contract warns about.
+        """
+        payload, _age = self.read_status(view, node_id, self.status_max_age_s)
+        if not payload:
+            return None
+        newest = payload.get("newest_sample_at")
+        if newest is None:
+            return None
+        cursor = view.archive_newest.get(node_id, 0)
+        if newest - cursor <= MONITORING_PROFILES[PROFILE_NORMAL]["sample_s"]:
+            return None                      # the archive is current; there is nothing to recover
+        if self.backfill_ordered.get(node_id) == (cursor, newest):
+            return None                      # this exact gap already has an order outstanding
+        return cursor, int(newest), int(cursor), self.backfill_budget
+
     def plan(self, view) -> list[tuple[str, dict]]:
         now = view.t_s
         status = view.status
         in_flight = view.in_flight
         demanded = view.demanded_profile
         out: list[tuple[str, dict]] = []
+
+        # ---- W2: recover what the archive is missing, with a bounded slice of the channel ----
+        for node_id in sorted(demanded):
+            gap = self._w2_gap(view, node_id)
+            if gap is None:
+                continue
+            start_s, end_s, cursor, budget = gap
+            # The cursor is the archive's own newest point, not a number the center invents. Asking
+            # from the acknowledged point re-sends what already arrived; asking from anywhere else
+            # skips whatever was lost.
+            self.backfill_ordered[node_id] = (cursor, end_s)
+            self.backfills_ordered += 1
+            out.append((node_id, upload_command(cursor, end_s, cursor, budget)))
+
+        # ---- W1: ask for a measurement the node would not otherwise take in time ----
+        for node_id, want in sorted(demanded.items()):
+            if not self._w1_needs_fresh_measurement(view, node_id, want):
+                continue
+            window = MONITORING_PROFILES[PROFILE_NORMAL]["upload_s"] * self.measure_window_mult
+            request_id = f"{node_id}:{now}"
+            self.measure_outstanding[node_id] = (request_id, now + window)
+            self.measurements_asked += 1
+            out.append((node_id, measurement_command(request_id, now, now + window)))
 
         # A report is evidence about the moment the node produced it, not the moment it arrived.
         # The backhaul can hold it for hours, and treating arrival as the evidence time is how a
@@ -729,6 +860,11 @@ class RuntimePolicy:
                                                  logical=self.identity_of(node_id))))
 
         for node_id, payload in out:
+            # Only a profile write carries a version. The W1 and W2 commands are different
+            # interfaces with their own identities, and booking them as writes would corrupt the
+            # version this node's reconciliation is keyed on.
+            if payload.get("op") != OP_SET_PROFILE:
+                continue
             self.issued_version[node_id] = payload["version"]
             self.issued_at[node_id] = now
             self.writes += 1
