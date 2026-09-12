@@ -39,7 +39,8 @@
 | 文件 | 内容 |
 |---|---|
 | `s5-benchmark/s5-1-failure-model.md` | 生命周期状态机，以及故障类与物理生成源的映射 |
-| `s5-benchmark/s6-10-wirelessopsbench-artifact-audit.md` | 采用对象的公开 artifact 逐字审计，含不可执行的判定与采用边界 |
+| `s5-benchmark/README.md` | 该目录的状态说明：路线为何放弃、哪几份已被取代、哪几份数字已失效 |
+| `s5-benchmark/s6-10-wirelessopsbench-artifact-audit.md` | 一个公开 artifact 的逐字审计，含不可执行的判定与采用边界 |
 | `s5-benchmark/s6-11-execution-layer-results.md` | 执行层在公开任务契约上的 2×2 消融结果与效力威胁 |
 | `s5-benchmark/s6-9-benchmark-comparison.md` | 六个现有 benchmark 的逐条核验，为 README 现状盘点的依据 |
 | `s5-benchmark/s6-6-same-domain-baselines.md` | 可复现 baseline 的逐库核验与复现验收标准 |
