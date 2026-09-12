@@ -277,7 +277,7 @@ modestly.
 
 Found while checking novelty. These are **published** and overlap the context doc's §9/§10 method.
 
-### 10a. ⚠️ Closest threat
+### 10a. 注意：Closest threat
 **"Verified Tool Calls Improve LLM Agent Reliability Under Non-Atomic Failures"**
 Isham Kalappurackal Mansoor, Abhishek Phadke, Pratip Rana — arXiv **2608.02645**, 2026-07-31.
 Abstract (quoted): *"Existing agent frameworks typically assume that tool calls are atomic and return
@@ -295,7 +295,7 @@ retry, reconcile/verify-before-retry), evaluated with **injected** faults.
 failure distribution; capability/node lifecycle + freshness + fairness; wireless-agent baselines.
 The "we add verify-before-retry with idempotency keys" claim is **no longer available.**
 
-### 10b. Agent runtime at a *networking* venue (⚠️ the venue is closing too)
+### 10b. Agent runtime at a *networking* venue (注意：the venue is closing too)
 **"DelAct: A Replayable Boundary Runtime for Auditable and Governed LLM Agent Workflows"**
 Yuanbo Zhang, Hanlong Liao, Deke Guo, Guoming Tang — **IEEE/ACM IWQoS 2026**,
 DOI `10.1109/iwqos70441.2026.11661202`, 2026-06. (NUDT). Replayable boundary runtime for LLM agent
@@ -319,7 +319,7 @@ other groups in 2026. The defensible contribution is now narrower and must be ex
 
 ---
 
-## 11. 🚨 THE DECISIVE COLLISION — INFOCOM 2026  **VERIFIED (Crossref + Semantic Scholar)**
+## 11. THE DECISIVE COLLISION — INFOCOM 2026  **VERIFIED (Crossref + Semantic Scholar)**
 
 **"Rollback Is Not Undo: Path-Dependent Failures in LLM-Arbitrated Network Control"**
 **Weici Pan, Zhenhua Liu** — **IEEE INFOCOM 2026**, 2026-05-18.

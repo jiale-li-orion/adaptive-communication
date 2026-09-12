@@ -1,6 +1,6 @@
 # 同领域可复现 baseline 清单（已逐库核验）
 
-> ℹ️ **baseline 池以 [`../README.md`](../README.md) §3.2 为准。**
+> **baseline 池以 [`../README.md`](../README.md) §3.2 为准。**
 > 本文档列出的可复现同领域清单**仍然有效**；
 > 但其中「第一层/第二层」划分已被 FRAMING 取代——
 > 第一层应是 **agentic-communication 方法**。
@@ -20,7 +20,7 @@
 | # | 论文 | 会议/期刊 | 代码（已核验内容） | 它的 baseline | 数据/环境 |
 |---|---|---|---|---|---|
 | **1** | **LMTE**（arXiv 2602.00941） | **IEEE INFOCOM 2026** | `Y-debug-sys/LMTE`：`cl_baselines/`、`ml_baselines/`、`src/`、`lms/`、`scripts/`、`main.py`、Apache-2.0 | **Gurobi 经典解**（COPE / oblivious / optimal）+ 学习式 baseline | GÉANT +4 TE 数据集；LLaMA-3 |
-| **2** | **NetConfArena**（arXiv 2608.23179） | arXiv | `liujona/NetConfArena`：**364 文件**；`agent/react.py`、`agent/configs/ReAct.yaml`、`mcp_server/`、`environment/gns3_project.py`、Apache-2.0 | **ReAct vs OneShot**（含完整 prompt 与工具定义） | **GNS3**；96 模板 → 480 实例 → 3840 轨迹；⚠️ 需专有 Cisco 镜像 |
+| **2** | **NetConfArena**（arXiv 2608.23179） | arXiv | `liujona/NetConfArena`：**364 文件**；`agent/react.py`、`agent/configs/ReAct.yaml`、`mcp_server/`、`environment/gns3_project.py`、Apache-2.0 | **ReAct vs OneShot**（含完整 prompt 与工具定义） | **GNS3**；96 模板 → 480 实例 → 3840 轨迹；注意：需专有 Cisco 镜像 |
 | **3** | **NetArena**（arXiv 2506.03231） | **ICLR 2026** | `Froot-NetSys/NetArena`：`a2a_llm/`、`app-k8s/`、`app-malt/`、`app-route/`、`src/netarena/`、43★ | prompt-based agent vs A2A 框架（agent 平均只拿 13–38%） | **Mininet + Kubernetes**；动态生成查询 |
 | **4** | **NIKA**（arXiv 2512.16381） | arXiv | `sands-lab/nika`：**1662 文件 / 1456 代码**，58★ | SOTA LLM agent（可插拔） | **Kathará + Containerlab**；5 场景 54 故障 |
 | **5** | **NetOpsBench** | 无同行评审论文 | `NetX-lab/NetOpsBench`：**373 文件 / 307 代码**，30★，**MIT** | 统一评测器（检测/定位/效率/工具使用） | **SONiC-VS + Containerlab**；HF 轨迹数据集 |
@@ -41,7 +41,7 @@
 - **"Rollback Is Not Undo"（IEEE INFOCOM 2026）** —— 闭源，无 artifact（已核实 CLOSED）
 - Network CoPilot（INFOCOM 2025）、RIDAS、RepLLM（SIGCOMM 2026）、MobiLLM
 - **任何 IEEE JSAC / TCOM / TWC / TMC 2024–2026 的 LLM-agent 公开 artifact** —— **一个都没确认到**
-  ⚠️ 但这些期刊很多论文没有 arXiv 版，属**检索盲区，不等于不存在**
+  注意：但这些期刊很多论文没有 arXiv 版，属**检索盲区，不等于不存在**
 
 ---
 
@@ -107,7 +107,7 @@ RepLLM（SIGCOMM 2026）自述的 **"scarcity of open-source implementations"** 
 
 # 附录 A · baseline 结构的**正确形态**（子领域惯例，已核实）
 
-## A.1 ⚠️ 一处必须纠正的认识：ReAct 是**脚手架**，不是 baseline
+## A.1 注意：一处必须纠正的认识：ReAct 是**脚手架**，不是 baseline
 
 子代理读了 **16 篇** 2024–2026 的 LLM-agent-in-networking 论文全文（逐条 HTTP 核验 artifact 链接），
 统计出的**实际惯例**：
@@ -158,10 +158,10 @@ model ↓ │ MCP 默认语义 │ blind retry │ verified wrap  │  lifecycle
 
 | 项 | 状态 |
 |---|---|
-| 脚手架（ReAct 循环 + MCP 风格工具面 + 可切换恢复语义） | ✅ 已实现（`code/agent_react.py`） |
-| MCP 默认语义 / blind retry | ✅ 已实现 |
-| verified wrapper（2608.02645） | ✅ 已实现 |
-| lifecycle（本文） | ✅ 已实现 |
+| 脚手架（ReAct 循环 + MCP 风格工具面 + 可切换恢复语义） | 已实现（`code/agent_react.py`） |
+| MCP 默认语义 / blind retry | 已实现 |
+| verified wrapper（2608.02645） | 已实现 |
+| lifecycle（本文） | 已实现 |
 | 前沿模型 + 中档模型 | ⬜ 待定 |
 
 ⇒ **除模型本身外，矩阵骨架已全部就位。**
@@ -246,7 +246,7 @@ verified_wrapper(node, tool):
 
 | 步骤 | 内容 | 状态 |
 |---|---|---|
-| 1 | 骨架 + mock 验证 | ✅ 已完成 |
+| 1 | 骨架 + mock 验证 | 已完成 |
 | 2 | 极小 pilot（5 episode × 4 策略 × 1 模型） | ⬜ |
 | 3 | 主实验（4 策略 × 2–3 个称职模型 × 数十 episode） | ⬜ |
 | 4 | 规模扫描 + ablation | ⬜ |
@@ -256,7 +256,7 @@ verified_wrapper(node, tool):
 与 **prompt caching**（system prompt 与工具定义是静态前缀）。
 
 |---|---|
-| 1 | 骨架 + mock 验证 | ✅ CPU 已完成 |
+| 1 | 骨架 + mock 验证 | CPU 已完成 |
 | 2 | 选定模型（前沿 1 个 + 中档 1 个） | 待定 |
 | 3 | **极小 pilot**：5 episode × 4 策略 × 1 模型 ≈ 20 次运行 | API |
 | 4 | 主实验：4 策略 × 2–3 个称职模型 × 数十 episode | API |
@@ -278,8 +278,8 @@ verified_wrapper(node, tool):
 |---|---|
 | `duowuyms/OpenCATP-LLM` | 城市蜂窝容量/流量预测；baseline 为 LLaMA/OPT/Qwen + LoRA 与非 LLM 预测 |
 | `dadsetani/llm-safemit` | IEEE TNSM，Zenodo 有 release，但仅 8 文件/3 代码（**很薄**） |
-| `frezazadeh/LangChain-RAG-Technology` | ns-3 + 5G-LENA 多 agent；⚠️ **论文自称是"lightweight mock version"，不是完整实现** |
-| `secretcheng/HybridRAG-for-Network-Optimization` | ⚠️ **仅有 README + 1 个 notebook**，是 demo 不是实现 |
+| `frezazadeh/LangChain-RAG-Technology` | ns-3 + 5G-LENA 多 agent；注意：**论文自称是"lightweight mock version"，不是完整实现** |
+| `secretcheng/HybridRAG-for-Network-Optimization` | 注意：**仅有 README + 1 个 notebook**，是 demo 不是实现 |
 | `emilbjornson/scalable-cell-free` | TCOM，系数级可复现 |
 | `luanedge/WSR-maximization-for-RIS-system` | TWC，**随附 `without_RIS.m`、`RIS_phaserand.m` 作为独立 baseline 脚本** |
 | `BJTU-MIMO/Power_Allocation_DDPG` | TVT |

@@ -6,7 +6,7 @@
 **Scope:** Pre-disaster (常态监测/预警) landslide and debris-flow monitoring in power- and communication-constrained mountain regions, especially 西藏.
 **Purpose:** Establish the real-world, citable context for a research project on low-power, low-cost communication and signal-enhancement technology to guarantee continuous, stable communication for mountain monitoring nodes.
 
-> ℹ️ **上面这句是合作方的诉求（场景背景），不是本文的研究中心。**
+> **上面这句是合作方的诉求（场景背景），不是本文的研究中心。**
 > 本文中心见 [`../../README.md`](../../README.md)：**agent runtime 位于通信实体之上，在它们动态上线/掉线/退化/恢复时维持任务执行**。
 > 本文只提供支撑 README §1.2 与 §3.1 的场景与可靠性证据。
 

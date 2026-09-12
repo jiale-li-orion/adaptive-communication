@@ -1,4 +1,9 @@
 # 中国通信服务股份有限公司 (China Communications Services Corp. Ltd., "CCS" / 中通服, 0552.HK)
+
+> 溯源说明：本文件正文引用的形如 `pol_*.md`、`gp_*.md`、`ncdc_*.md` 等小写文件名，
+> 是调研时临时工作目录中的证据缓存。该目录已在整理时删除，
+> 引用链与 URL 保留在正文，需要复核时按 URL 重新抓取。
+
 ## Primary sources: annual reports & policy — evidence file
 
 **Research date:** 2026-09-12 (UTC)

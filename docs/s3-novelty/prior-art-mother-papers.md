@@ -1,6 +1,6 @@
 # Literature Reconnaissance: "Mother Papers" for
 
-> ⚠️ **定位说明（2026-09-12 追加）**：本文写作时的论文标题是
+> 注意：**定位说明（2026-09-12 追加）**：本文写作时的论文标题是
 > *"Disruption-Tolerant Runtime for Tool-Using Agents in Emergency Communication Networks"*，
 > **该定位已被取代**。当前定位见 [`../../README.md`](../../README.md)：
 > **agent runtime 位于通信实体之上，在它们动态上线 / 掉线 / 退化 / 恢复时维持任务执行**。
@@ -33,7 +33,7 @@
 
 **Artifact availability:** No code or dataset link found — not in the Crossref record, not in the DOAJ record, and not in the accessible abstract. **Not found.**
 
-**⚠️ Major gap.** Both `curl` and a headless Chromium (Playwright) fetch of the ScienceDirect article returned a JavaScript shell containing **zero** occurrences of the string "TopoLLM". The full text, its tool catalogue, its environment and its failure semantics are **UNVERIFIED**. This is the single largest hole in this report and the first thing to close manually (institutional ScienceDirect access).
+**注意：Major gap.** Both `curl` and a headless Chromium (Playwright) fetch of the ScienceDirect article returned a JavaScript shell containing **zero** occurrences of the string "TopoLLM". The full text, its tool catalogue, its environment and its failure semantics are **UNVERIFIED**. This is the single largest hole in this report and the first thing to close manually (institutional ScienceDirect access).
 
 ---
 
@@ -91,7 +91,7 @@
 - **ReAct-based `ToolAgent` operator** (Algorithm 1): takes a max iteration count *I* and maintains a **consecutive-failure counter `n_fail`** across the loop — so there is a failure-accounting notion, but it is loop-termination bookkeeping rather than a semantic contract.
 - **Mutation dedup:** before a workflow mutation is accepted, a modification check verifies it "is not an exact duplicate of a previously failed modification" and contains no known harmful patterns. This is **search-space** deduplication, not runtime side-effect deduplication.
 
-**⚠️ Important nuance on "outage."** The token "outage" appears twice in the paper and **both** occurrences are *Rayleigh/Rician outage probability* inside the wireless-mathematics calculator tool (`erfc`, `Q`-function, Bessel, Marcum Q, BER, Shannon capacity, fading statistics). It is **physical-layer outage probability, not service outage or loss of connectivity.** Do not cite this paper as handling connectivity outage.
+**注意：Important nuance on "outage."** The token "outage" appears twice in the paper and **both** occurrences are *Rayleigh/Rician outage probability* inside the wireless-mathematics calculator tool (`erfc`, `Q`-function, Bessel, Marcum Q, BER, Shannon capacity, fading statistics). It is **physical-layer outage probability, not service outage or loss of connectivity.** Do not cite this paper as handling connectivity outage.
 
 **Artifact availability:** [https://github.com/jwentong/WirelessAgent-R2](https://github.com/jwentong/WirelessAgent-R2) — 22 stars, Python, created 2026-01-13, last push 2026-08-24. Described as an MCTS-based workflow optimization system. A second repo, `github.com/jwentong/WirelessBench`, is referenced. **Code released: yes.**
 
@@ -139,7 +139,7 @@
 
 **Artifact availability:** **Not found / UNVERIFIED.** The article is gold OA, but MDPI served `Access Denied` (HTTP-level bot wall) to both `curl` with browser headers and headless Chromium, so I could not read the Data/Code Availability statement. This is a fast manual check for anyone with a browser.
 
-### 5b. ComAgent — ⚠️ name collision, read carefully
+### 5b. ComAgent — 注意：name collision, read carefully
 
 There are **two different works called "ComAgent"**, which is worth knowing before citing.
 
@@ -217,11 +217,11 @@ These are the papers a "Disruption-Tolerant Runtime" paper must engage as prior 
 5. **ACRFence: Preventing Semantic Rollback Attacks in Agent Checkpoint-Restore** — [arXiv:2603.20625](https://arxiv.org/abs/2603.20625), 21 Mar 2026, cs.CR. Authors: Yusheng Zheng; Yiwei Yang; Wei Zhang; Andi Quinn.
    Attacks the assumption behind "make external tool calls safe to retry": LLM agents **re-synthesize subtly different requests after restore**, so servers treat them as new, "enabling **duplicate payments**, unauthorized reuse of consumed credentials, and other **irreversible side effects**" — termed **semantic rollback attacks** (classes: **Action Replay**, **Authority Resurrection**). Proposes a framework-agnostic mitigation recording irreversible tool effects and enforcing **replay-or-fork semantics**. **This is the best source for "why naive checkpoint/restore is unsafe for actuating tools."**
 
-6. **Durable Execution for AI Agents: A Design Pattern for Fault-Tolerant Agent Loops** — [IEEE Xplore document 11638700](https://ieeexplore.ieee.org/document/11638700). **⚠️ Title and URL verified only via search listings; IEEE Xplore and the EurekaMag mirror both blocked retrieval. Authors, venue, year, and content are UNVERIFIED.** Listed because it is squarely on-topic and must be checked by hand.
+6. **Durable Execution for AI Agents: A Design Pattern for Fault-Tolerant Agent Loops** — [IEEE Xplore document 11638700](https://ieeexplore.ieee.org/document/11638700). **注意：Title and URL verified only via search listings; IEEE Xplore and the EurekaMag mirror both blocked retrieval. Authors, venue, year, and content are UNVERIFIED.** Listed because it is squarely on-topic and must be checked by hand.
 
-7. **DelAct: A Replayable Boundary Runtime for Auditable and Governed LLM Agent Workflows** — [IEEE Xplore document 11661202](https://ieeexplore.ieee.org/document/11661202). **⚠️ Title and URL verified only via search listings; authors, venue, year and content UNVERIFIED.**
+7. **DelAct: A Replayable Boundary Runtime for Auditable and Governed LLM Agent Workflows** — [IEEE Xplore document 11661202](https://ieeexplore.ieee.org/document/11661202). **注意：Title and URL verified only via search listings; authors, venue, year and content UNVERIFIED.**
 
-8. **Rollback Is Not Undo: Path-Dependent Failures in LLM-Arbitrated Network Control** — [IEEE Xplore document 11571400](https://ieeexplore.ieee.org/document/11571400). **⚠️ Title and URL verified only via search listings; IEEE Xplore blocked retrieval. Authors, venue and — critically — whether "network control" means wireless/RAN or datacenter/SDN are UNVERIFIED.** *Prioritise this one: by title it is the closest existing collision with the proposed contribution space.*
+8. **Rollback Is Not Undo: Path-Dependent Failures in LLM-Arbitrated Network Control** — [IEEE Xplore document 11571400](https://ieeexplore.ieee.org/document/11571400). **注意：Title and URL verified only via search listings; IEEE Xplore blocked retrieval. Authors, venue and — critically — whether "network control" means wireless/RAN or datacenter/SDN are UNVERIFIED.** *Prioritise this one: by title it is the closest existing collision with the proposed contribution space.*
 
 9. **Abhyasa: Custody Transfer of Governance Obligations over Unreliable Channels in Agent Networks** — Zenodo record [20644822](https://zenodo.org/records/20644822) (v1 11 June 2026; v2 9 Aug 2026), code at [github.com/ravikiran438/abhyasa-protocol](https://github.com/ravikiran438/abhyasa-protocol). **Closest match on "unreliable channel + agent protocol"**, but the semantics are governance/authorization custody transfer, not tool execution. Zenodo-hosted (not clearly peer-reviewed).
 

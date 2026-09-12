@@ -1,5 +1,10 @@
 # Published quantitative data on failure physics of wireless links to mountain geohazard-monitoring nodes
 
+> 溯源说明：本文件正文引用的形如 `pol_*.md`、`gp_*.md`、`ncdc_*.md` 等小写文件名，
+> 是调研时临时工作目录中的证据缓存。该目录已在整理时删除，
+> 引用链与 URL 保留在正文，需要复核时按 URL 重新抓取。
+
+
 Focus: Tibetan Plateau / high-altitude China. Compiled from documents actually fetched and read.
 
 **Provenance convention used below**

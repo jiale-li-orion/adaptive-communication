@@ -39,7 +39,7 @@ and I say so.
 
 # A. Open datasets usable entirely offline
 
-## A.1 — ChirpBox long-term outdoor LoRa dataset ✅ FULLY VERIFIED (and richer than described)
+## A.1 — ChirpBox long-term outdoor LoRa dataset FULLY VERIFIED (and richer than described)
 
 | Field | Value |
 |---|---|
@@ -80,22 +80,22 @@ weather_temperature, wind_speed, wind_deg, pressure, humidity
 
 **Verdict on the brief's claims — confirmed, with corrections:**
 
-* ✅ *Per-node and per-link RSSI/SNR matrices* — **CONFIRMED and better than claimed.** There are **six** full
+* *Per-node and per-link RSSI/SNR matrices* — **CONFIRMED and better than claimed.** There are **six** full
   21×21 matrices per record (`max/avg/min` for **both** RSSI and SNR), plus `node_link_matrix` (a per-link
   packet-reception-ratio-like percentage matrix, values like `100.0`, `95.0`, `25.0`) and `symmetry_matrix`
   (link asymmetry — directly relevant to link-interruption modelling), plus `node_degree_list`,
   `node_temperature_list` and `average_temperature`.
-* ✅ *Weather* — **CONFIRMED**, on-board: `weather_temperature, wind_speed, wind_deg, pressure, humidity`.
-* ✅ *~21 nodes* — **CONFIRMED** (exactly 21).
-* ✅ *~4.5 months* — **CONFIRMED**: 3 May → 15 Sept 2021 ≈ 135 days ≈ 4.4 months.
-* ⚠️ **Correction — it is NOT a mountain dataset.** It is the *city of Shanghai*. The brief's framing
+* *Weather* — **CONFIRMED**, on-board: `weather_temperature, wind_speed, wind_deg, pressure, humidity`.
+* *~21 nodes* — **CONFIRMED** (exactly 21).
+* *~4.5 months* — **CONFIRMED**: 3 May → 15 Sept 2021 ≈ 135 days ≈ 4.4 months.
+* 注意：**Correction — it is NOT a mountain dataset.** It is the *city of Shanghai*. The brief's framing
   ("regions like Tibet where grid power is scarce") does not match this deployment. Shanghai is flat, dense urban.
-* ⚠️ **Correction — radio band is 470/480/490 MHz**, i.e. the Chinese LPWAN band, not EU868/US915. Records show
+* 注意：**Correction — radio band is 470/480/490 MHz**, i.e. the Chinese LPWAN band, not EU868/US915. Records show
   `channel = 470000 / 480000 / 490000`, `sf`, `tx_power`, `payload_len`.
-* ℹ️ **It is a multi-hop LoRa network (ChirpBox)**, not pure star LoRaWAN — note the `max_hop`, `max_hop_id`,
+* **It is a multi-hop LoRa network (ChirpBox)**, not pure star LoRaWAN — note the `max_hop`, `max_hop_id`,
   `max_degree` fields. This is a *feature* for mountain relay work (multi-hop is the natural answer to
   terrain-blocked links), but it means the traces are **not** LoRaWAN and cannot validate a LoRaWAN MAC claim.
-* ⚠️ **Sampling cadence is not continuous.** From the metadata filenames, measurements land roughly every
+* 注意：**Sampling cadence is not continuous.** From the metadata filenames, measurements land roughly every
   **2 hours** (e.g. `...20210817012702...`, `...20210817033302...`, `...20210817053702...`). Do not describe it as
   a continuous per-packet trace.
 * ❓ **Node geo-coordinates in machine-readable form: UNVERIFIED.** `topology_map.png` is the deployment map, and
@@ -109,7 +109,7 @@ dataset here that gives **simultaneous, per-link, bidirectional, multi-month RSS
 21-node network with co-recorded weather**. That is exactly the input a link-reliability/replay simulator needs.
 The limitation is that the *terrain* is wrong for the target application.
 
-## A.2 — LoED "LoRaWAN at the Edge" ✅ FULLY VERIFIED (fields confirmed from the actual zip)
+## A.2 — LoED "LoRaWAN at the Edge" FULLY VERIFIED (fields confirmed from the actual zip)
 
 | Field | Value |
 |---|---|
@@ -137,19 +137,19 @@ Sample row (verbatim from `loed_dataset/05_06_2020.csv`):
 
 **Verdict on the brief's claims — all CONFIRMED:**
 
-* ✅ `time, crc_status, frequency, spreading_factor, bandwidth, code_rate, rssi, snr, device address, gateway` —
+* `time, crc_status, frequency, spreading_factor, bandwidth, code_rate, rssi, snr, device address, gateway` —
   **all present**, plus `physical_payload` (base64), `size`, `mtype`, `fcnt`, `fport`.
-* ✅ **9 gateways CONFIRMED**, with the README giving ID / location description / lat / lon / altitude / model /
+* **9 gateways CONFIRMED**, with the README giving ID / location description / lat / lon / altitude / model /
   days / total messages / max-per-day / avg-per-day. Gateway models: Cisco Wireless Gateway for LoRaWAN,
   Multitech MTCDT-H5-246A-868-EU-GB, Kerlink Wirnet Station V2.
-* ✅ **Message count CONFIRMED**: summing the README table = **11,262,001 messages** total.
-* ✅ **Coverage (computed from the zip index)**: **188 daily CSV files**, date range **2019-02-08 → 2020-09-02**,
+* **Message count CONFIRMED**: summing the README table = **11,262,001 messages** total.
+* **Coverage (computed from the zip index)**: **188 daily CSV files**, date range **2019-02-08 → 2020-09-02**,
   **1.51 GB uncompressed**. Per-gateway campaign lengths differ sharply — from 15 days (indoor ground floor) to
   **573 days** (a Multitech inside a university building). Note the union of *files* spans ~19 months while
   individual gateway campaigns are shorter.
 * Location: **urban London** (lat ≈ 51.49–51.52, lon ≈ −0.18 to −0.10), EU868 band, `crc_status` present.
 
-**⚠️ CRITICAL LIMITATION for link-level modelling: there is no transmitter-side ground truth.**
+**注意：CRITICAL LIMITATION for link-level modelling: there is no transmitter-side ground truth.**
 LoED records **only what gateways received**. There is no record of what was transmitted, by whom, or when, from
 the device side. Therefore **you cannot compute true packet delivery ratio or packet error rate per link** from
 LoED alone — you can only compute *reception* statistics. The `crc_status` field lets you split CRC-valid from
@@ -162,7 +162,7 @@ LoED for *network-level / gateway-side / MAC-layer* questions.
 Also: the `physical_payload` field is base64 app payload — useful if you want realistic traffic/payload
 distributions, and `mtype`/`fcnt`/`fport` support full MAC-layer replay.
 
-## A.3 — LoRa on Ice ✅ VERIFIED (per-packet TX/RX with GPS, distance, RSSI, SNR)
+## A.3 — LoRa on Ice VERIFIED (per-packet TX/RX with GPS, distance, RSSI, SNR)
 
 | Field | Value |
 |---|---|
@@ -208,7 +208,7 @@ urban datasets. But the *propagation* environment is **flat sea ice**, not mount
 ground-truth anchor; not as a terrain model. Note the transmitted/received columns are flags, and loss events are
 in the separate `*-lost.csv` files — you must join on time.
 
-## A.4 — Avalanche / snow / alpine LoRa datasets ✅ VERIFIED (two real datasets; important scope caveat)
+## A.4 — Avalanche / snow / alpine LoRa datasets VERIFIED (two real datasets; important scope caveat)
 
 Two genuinely alpine, snow-covered, CC-BY-4.0 LoRa datasets exist. Both are from the same Italian group at
 Col de Mez in the **Dolomites at 1,870 m**. **Both are near-field search-and-rescue localization experiments,
@@ -254,7 +254,7 @@ dry, >1 m deep; April 2024 wet, ~55 cm**. **Fields:** cross → `timestamp, rssi
 polarization`; max_dist → `timestamp, rssi, snr, depth, id_marker, longitude, latitude`; plus drone test, plus
 **AINEVA Model 4 snow profiles**.
 
-**🚨 Scope caveat — read before citing:** the distances are **0.6–50 m**, and even the drone grids are **100 m**.
+**Scope caveat — read before citing:** the distances are **0.6–50 m**, and even the drone grids are **100 m**.
 This is **near-field, through-snow, buried-transmitter** propagation for victim localization — a completely
 different regime from a km-scale mountain LPWAN uplink. These datasets **cannot** support claims about
 kilometre-scale mountain LoRa links. What they *can* legitimately support is (i) **snow/ice attenuation and
@@ -404,7 +404,7 @@ sniffer capture — no RSSI/SNR** — so it is a *traffic/MAC* dataset, not a li
 * The generic Kaggle search for `lora` is dominated by **Valorant esports** datasets (LORA/LoRa substring
   collisions). Use `lorawan` as the query term.
 
-### CRAWDAD — ⚠️ IMPORTANT STATUS CHANGE
+### CRAWDAD — 注意：IMPORTANT STATUS CHANGE
 
 **CRAWDAD no longer exists as an independent archive.** From the live site: *"CRAWDAD has moved to
 IEEE-Dataport — The datasets in the Community Resource for Archiving Wireless Data at Dartmouth (CRAWDAD)
@@ -440,7 +440,7 @@ borrowing from:
 
 ## B.1 — ns-3 LoRaWAN modules
 
-### `signetlabdei/lorawan` — the de-facto standard ns-3 LoRaWAN module ✅ VERIFIED
+### `signetlabdei/lorawan` — the de-facto standard ns-3 LoRaWAN module VERIFIED
 
 | Field | Value |
 |---|---|
@@ -475,7 +475,7 @@ Module source files include `lora-phy.cc`, `lora-interference-helper.cc`,
 `hex-grid-position-allocator.cc`, `lora-radio-energy-model.cc`, `lora-packet-tracker.cc` — i.e. it has a
 **correlated-shadowing** propagation model, an **energy model**, and a **packet tracker**, all directly useful here.
 
-### FLoRa — ⚠️ CORRECTION: it is **OMNeT++**, not ns-3
+### FLoRa — 注意：CORRECTION: it is **OMNeT++**, not ns-3
 
 The brief lists FLoRa among "ns-3 LoRaWAN modules". **That is incorrect.**
 
@@ -488,7 +488,7 @@ The brief lists FLoRa among "ns-3 LoRaWAN modules". **That is incorrect.**
 | Latest release | **v1.3.0, published 2026-05-21** — *"Updated code for INET 4.6.0"* |
 | Last commit | 2026-05-20 (repo pushed 2026-09-09) — actively maintained |
 | Popularity | 64 stars, 46 forks, 30 open issues |
-| License | GitHub API reports **NOASSERTION / not detected** → ⚠️ **license UNVERIFIED — check the repo's own LICENSE file before use** |
+| License | GitHub API reports **NOASSERTION / not detected** → 注意：**license UNVERIFIED — check the repo's own LICENSE file before use** |
 
 Site-stated capabilities (from flora.aalto.fi): *"software framework for carrying out end-to-end simulations of
 Long Range (LoRa) networks; Accurate model of LoRa physical layer (including collisions and capture effect);
@@ -530,11 +530,11 @@ those URLs.
 | Scripts | `loraDir.py` (single BS), `loraDirMulBs.py` (up to 24 BSs), `directionalLoraIntf.py`, `oneDirectionalLoraIntf.py` |
 | Papers | Bor, Roedig, Voigt, Alonso, *"Do LoRa Low-Power Wide-Area Networks Scale?"*, MSWiM 2016; Voigt et al., *"Mitigating Inter-Network Interference in LoRa Networks"*, EWSN 2017 |
 
-⚠️ **Python 2 era** — the page's own instructions say `mkvirtualenv -p python2 lorasim`. It models collisions and
+注意：**Python 2 era** — the page's own instructions say `mkvirtualenv -p python2 lorasim`. It models collisions and
 scalability, not terrain. Treat as a **citation-worthy baseline**, not a working platform; legacy note:
 `http://homepages.lancs.ac.uk/~bor1/lora/lorasim.html` is **dead (HTTP 502)**.
 
-### "LoRaWAN-Sim" — ⚠️ NO SUCH TOOL FOUND
+### "LoRaWAN-Sim" — 注意：NO SUCH TOOL FOUND
 
 I could not find a simulator officially named **"LoRaWAN-Sim"**: `github.com/nicolagrazioli/LoRaWAN-Sim` → **404**,
 `github.com/gabrielporto/lorawan-sim` → **404**. The name appears to be a conflation. **Report it as not found
@@ -567,7 +567,7 @@ interesting if you ever want an emulation path — but the last commit is early 
   reproduces the capture effect, a full LoRaWAN 1.0.4 stack, and a containerized firmware system that
   cross-compiles real STM32 C firmware and redirects HAL calls into the simulator via CFFI"*, distributed as a
   Python package with **no external simulation framework or dependencies**.
-  ⚠️ **License UNVERIFIED**: no `LICENSE`, `LICENSE.md`, `LICENSE.txt`, `COPYING` or `pyproject.toml` at the repo
+  注意：**License UNVERIFIED**: no `LICENSE`, `LICENSE.md`, `LICENSE.txt`, `COPYING` or `pyproject.toml` at the repo
   root (all HTTP 404), and no `lora-simulator` package on PyPI (404). **Confirm licensing before building on it.**
   Its **CAD (channel-activity-detection) + capture-effect** modelling and its *firmware-in-the-loop* trick are
   genuinely useful for an energy/LBT study.
@@ -603,7 +603,7 @@ on CPU, **LLVM** is required by [Mitsuba]"*. GPU (CUDA) is recommended for speed
 the PyTorch CUDA/driver guide). So a hardware-free, **CPU-only** group can run Sionna RT; expect slow ray tracing,
 and budget for it.
 
-**Can it import terrain/DEM for outdoor ray tracing?** ⚠️ **Not natively — you must convert the DEM to a mesh.**
+**Can it import terrain/DEM for outdoor ray tracing?** 注意：**Not natively — you must convert the DEM to a mesh.**
 Verified evidence: Sionna RT loads scenes via `sionna.rt.load_scene(filename)` / `load_scene_from_string(...)`,
 and the API docs state *"Sionna uses the simple XML-based format from **Mitsuba 3**"*. Scenes are therefore
 `Mitsuba 3 XML + .obj/.ply` triangle meshes. The RT tutorial list contains *"Tutorial on Loading and Editing of
@@ -646,7 +646,7 @@ TWC / TMC / INFOCOM / MobiCom class.
 * ❌ **A protocol paper whose evaluation is a real deployment.** INFOCOM/MobiCom especially expect a testbed, and
   often an **artifact-evaluation** process with runnable code; a pure simulation paper there needs an unusually
   strong theoretical or methodological core to survive.
-* ⚠️ **A general "LoRa in the mountains is hard" survey.** Too thin for these venues.
+* 注意：**A general "LoRa in the mountains is hard" survey.** Too thin for these venues.
 
 **Realistically possible and defensible — five viable shapes, roughly in ascending difficulty:**
 
@@ -721,7 +721,7 @@ link model is trusted. Groups typically invert this and over-invest in ns-3.
 
 ## C.3 Honest risks
 
-1. **🔴 Reviewers will ask for testbed validation — this is the dominant risk.** At INFOCOM and MobiCom especially,
+1. **Reviewers will ask for testbed validation — this is the dominant risk.** At INFOCOM and MobiCom especially,
    "simulation only" is a recognised rejection trigger, and both communities increasingly run **artifact
    evaluation** requiring runnable, reproducible code. Expect at least one reviewer to write *"the authors provide
    no experimental validation."* **Mitigations:** (a) aim the theory/systems contribution at **JSAC / TCOM / TMC**,
@@ -729,22 +729,22 @@ link model is trusted. Groups typically invert this and over-invest in ns-3.
    validation on real traces** the headline — it is real data, and it is a stronger validation story than ns-3
    alone; (c) provide a **fully reproducible artifact** (code, seeds, exact dataset DOIs, pinned ns-3/module
    versions) — cheap to do and it defuses a lot of criticism; (d) never imply measurements you did not take.
-2. **🔴 Domain mismatch between the data you have and the claim you want.** The largest technical risk is not
+2. **Domain mismatch between the data you have and the claim you want.** The largest technical risk is not
    methodological, it is that all the good link data is urban/flat and the target is mountain. A reviewer who
    knows the datasets will catch "we validate mountain LoRa using Shanghai urban traces" immediately.
    **Mitigation:** make the mismatch an explicit, quantified part of the paper (see shape 4), and *never* let it
    be an unstated assumption.
-3. **🟠 Propagation-model uncertainty is large and must be reported.** ITM, P.1546, P.2001 and P.1812 disagree by
+3. **Propagation-model uncertainty is large and must be reported.** ITM, P.1546, P.2001 and P.1812 disagree by
    many dB over irregular terrain; the choice of DEM (30 m vs 90 m) changes terrain profiles; vegetation and
    snow are poorly represented in all of them. **If your conclusions flip when you swap propagation model or DEM,
    the paper is not ready.** Run that sensitivity analysis and report it as a first-class result.
-4. **🟠 Data-licensing and redistribution traps.** ChirpBox, LoED, LoRa on Ice, avalanche sets, Strasbourg,
+4. **Data-licensing and redistribution traps.** ChirpBox, LoED, LoRa on Ice, avalanche sets, Strasbourg,
    IoT4Cows, Aernouts, LR-FHSS are **CC-BY-4.0** (attribution required — cite the DOI, fine for papers).
-   ⚠️ **Two exceptions to check before you build:** the **Kaggle Tour Perret / Helium datasets are
+   注意：**Two exceptions to check before you build:** the **Kaggle Tour Perret / Helium datasets are
    "Other (specified in description)"**, not CC-BY, and **FLoRa's license is not detected (NOASSERTION)**.
    Also **Copernicus DEM and SRTM have their own attribution/redistribution terms** (see A.6) that differ from
    CC-BY — do not assume all "open" data is CC-BY.
-5. **🟠 Zone-appropriate radio parameters.** ChirpBox is **470–490 MHz** (China), LoED is **EU868**, IoT4Cows is
+5. **Zone-appropriate radio parameters.** ChirpBox is **470–490 MHz** (China), LoED is **EU868**, IoT4Cows is
    **US915**, and the avalanche sets are **EU868**. A Tibetan deployment would use China's 470–510 MHz LPWAN
    allocations. **Frequency-dependent path loss, duty cycle and regulatory limits all differ** — mixing bands
    without saying so is a factual error a reviewer can catch. State every parameter's provenance.

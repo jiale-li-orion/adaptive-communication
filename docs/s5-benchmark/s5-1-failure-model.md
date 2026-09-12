@@ -1,137 +1,90 @@
-# S5-1 · Runtime Failure Model
+# Runtime failure model
 
-> ✅ **本模型的 11 个状态与 11 类故障已全部实现并确定性验证（见 `code/test_failure_model.py`，11/11 PASS）。**
-> 代码：`code/operations.py`（lifecycle）、`code/disruption_env.py`（故障产生）、
-> `code/test_failure_model.py`（**11/11 PASS**）。
+本文件定义 operation lifecycle 与故障类，即 benchmark 的真值层。episode 格式、工具集与 metrics 不在本文件范围内。
 
-**本段目标**：定义一篇论文里最核心的那个对象——**operation lifecycle 与故障类**。
-**不在本段**：episode 格式、工具集、metrics（下一段）。
+11 个状态与 11 类故障已全部实现并做确定性验证，代码分布在 `code/operations.py`（lifecycle）、`code/disruption_env.py`（故障产生）与 `code/test_failure_model.py`（11/11 通过）。
 
----
+## 为什么需要生命周期而非二值返回
 
-## 为什么需要新的 failure model
+agent 框架对工具调用的默认假设有四项：调用是原子的，返回是二值的，观测是当前的，重试是安全的。在本文场景中这四条同时失效。
 
-现有 agent / wireless-agent 系统对工具调用的默认假设是：
+关键的结构性原因是控制命令与数据走同一条链路：协调通信实体所依赖的命令，必须通过被协调的那条不可靠链路下达。命令超时后，发送方停止等待，但该命令可能已经在远侧执行；此后到达的响应已经没有接收方。现有协议在这一处留下空白，MCP 规范 2026-07-28 版是最直接的例证：它规定了超时后发送方 SHOULD cancel the request and stop waiting for a response，承认 cancellation notifications may arrive after request processing has completed, and potentially after a response has already been sent，并要求发送方 SHOULD ignore any response to the request that arrives afterward，而整份规范中没有结果不确定状态，也没有幂等语义（一手核验见 `docs/s3-novelty/verified-evidence.md`）。
 
-1. 调用是**原子的**；
-2. 返回是**二值**的（success / fail）；
-3. 观测是**当前的**；
-4. 重试是**安全的**。
+## 状态集合
 
-在灾害通信环境里这四条**同时不成立**。
-
-**而且这不是实现缺陷——是协议层面的空白**（一手核验，见 `s3-novelty/verified-evidence.md`）：
-
-MCP 规范 2026-07-28 版规定超时后发送方「SHOULD cancel the request and stop waiting for a response」，
-同时承认「cancellation notifications may arrive after request processing has completed, and **potentially after a response has already been sent**」，
-并要求发送方「SHOULD ignore any response to the request that arrives afterward」。
-
-而全规范里 **`outcome` 零命中、`idempot` 零命中**。
-
-> ⇒ 超时 → 取消并停止等待 → 动作**可能已提交** → 丢弃之后才到的响应 → **没有结果不确定状态、没有幂等键**
-> ⇒ **任何重试都是被协议层面正当化的重复副作用。**
-
-**这就是本文要研究的对象的定义域。**
-
----
-
-## Operation lifecycle（11 状态）
-
-用状态机取代二值返回。这是 benchmark 的"真值层"。
-
-| 状态 | 含义 | 是否终态 | 副作用的确定性 |
+| 状态 | 含义 | 终态 | 副作用确定性 |
 |---|---|---|---|
 | `not_started` | 尚未发出 | 否 | 无副作用 |
-| `running` | 已发出，执行中 | 否 | 未知（可能已部分生效） |
-| `committed` | 已执行且**已确认** | ✅ | **确定已生效** |
-| `failed` | 已执行且**明确失败** | ✅ | **确定未生效** |
-| `retryable` | 失败但**可安全重试**（幂等安全） | 否 | 确定未生效 |
-| `timeout` | 超时终止 | ✅ | ⚠️ **未知** |
-| `outcome_unknown` | **结果不可知**（信道/节点丢失，无法确认） | ✅ | ⚠️ **未知——核心** |
-| `stale_result` | 返回的是**过期**结果（来自更早的采样） | ✅ | 取决于工具类 |
-| `unavailable` | capability/节点当前不可达（尚未发出或已放弃） | 否 | 无新副作用 |
-| `recovering` | 节点已回来，正在对账/重放 | 否 | 待 reconcile 确定 |
+| `running` | 已发出，执行中 | 否 | 未知，可能已部分生效 |
+| `committed` | 已执行且已确认 | 是 | 确定已生效 |
+| `failed` | 已执行且明确失败 | 是 | 确定未生效 |
+| `retryable` | 失败但可安全重试 | 否 | 确定未生效 |
+| `timeout` | 超时终止 | 是 | 未知 |
+| `outcome_unknown` | 结果不可知 | 是 | 未知 |
+| `stale_result` | 返回更早采样得到的值 | 是 | 取决于工具类 |
+| `unavailable` | 节点或 capability 当前不可达 | 否 | 无新副作用 |
+| `recovering` | 节点已回来，正在对账或重放 | 否 | 待 reconcile 确定 |
 | `compensating` | 正在执行补偿动作 | 否 | 有反向副作用 |
 
-**关键设计点**：`timeout` 与 `outcome_unknown` **必须分开**。
-- `timeout` 意味着"我方放弃等待"，**不代表对方没执行**；
-- `outcome_unknown` 是**认识论状态**：我们知道"不知道"。
+`timeout` 与 `outcome_unknown` 是两回事，分开记录才不丢信息。`timeout` 只说明我方放弃等待，不说明远侧未执行。`outcome_unknown` 是认识论状态，它记录了"我们不知道"。现有 benchmark 的 `timeout` 类都是可见超时，agent 能据此判断工具失败；尚无 benchmark 把动作已执行但结果不可见作为一等注入类。
 
-现存 benchmark 的 `timeout` 类都是**可见超时**（agent 能判断工具失败了）。
-**没有任何 benchmark 把"动作执行了但你看不出来"作为一等注入类**——这是 S3 里认定的**分类学 gap**。
+## 故障类与生成源
 
----
+每个故障类都接在已跑通的仿真上，来源是地形、供电与真实轨迹，而非任意注入。
 
-## 故障类 → 生成源映射
+### 空间维：地形导致的不可达
 
-每个故障类都必须有**物理上真实的来源**，而不是随便注入。下表把故障类接到 S4 已跑通的仿真上。
-
-### 空间维：地形导致的不可达（`code/coverage_map.py`）
+生成器为 `code/coverage_map.py`。
 
 | 故障类 | 生成方式 | 实测规模 |
 |---|---|---|
-| `unavailable`（永久） | 网格点在地形死区内，任何 SF 都不闭合 | **27.7% 的点位** |
-| `unavailable`（边缘） | 仅高 SF 闭合 → 可用但吞吐极低 | SF8–SF12 占 29.6% |
-| `stale_result` | 节点只能间歇上报 → 网关持有的是若干轮前的值 | 由上报成功率的间隔导出 |
+| `unavailable`（永久） | 网格点落在地形死区内，任何 SF 都不闭合 | 27.7% 的点位 |
+| `unavailable`（边缘） | 仅高 SF 闭合，可用但吞吐极低 | SF8 至 SF12 占 29.6% |
+| `stale_result` | 节点间歇上报，网关持有的是若干轮之前的值 | 由上报成功率与间隔导出 |
 
-**已实测的地形事实**（决定了这个故障分布长什么样）：
-- 决定连通性的是**遮挡，不是距离**：8.4 km / 1169 m 遮挡连不通；12.6 km / 1102 m 遮挡反而能通
-- SF 7→12 只多 **14 dB** 灵敏度，而地形遮挡是 **30–50 dB** 量级
-  ⇒ **链路自适应（ADR）救不了被挡住的节点**，这类 `unavailable` 不是暂时的
+遮挡决定连通性，距离不是决定因素：8.4 km 处有 1169 m 遮挡的点位连不通，12.6 km 处只有 1102 m 遮挡的点位能通。SF 从 7 提到 12 只增加 14 dB 灵敏度，地形遮挡的额外损耗在 30 至 50 dB 量级，因此 ADR 无法救回被挡住的节点，这类 `unavailable` 是持续的而非暂时的。
 
-### 时间维：供电导致的掉线—恢复（`code/energy_model.py`）
+### 时间维：供电导致的掉线与恢复
 
-| 故障类 | 生成方式 |
-|---|---|
-| `unavailable` → `recovering` | 电池耗尽 → 节点静默 → 充电后回来 |
-| `outcome_unknown` | **调用恰好跨越掉线时刻** ← 最有价值的一类 |
-| `commit` 后无 ACK | 动作已执行，节点在回 ACK 前掉线 |
-| 恢复后**乱序重放** | 节点缓存了多次待发结果，回来时批量上传 |
-
-**已实测的供电事实**：高海拔站点在低温下**电池无法充电**，节点长期静默；掉线是**成片、长时间**的，不是零星抖动。这意味着 `outcome_unknown` 会在**大范围、长时段**上同时发生——这正是单节点故障注入测不出来的。
-
-### 链路抖动维（来自真实轨迹）
+生成器为 `code/energy.py` 与 `code/energy_model.py`。
 
 | 故障类 | 生成方式 |
 |---|---|
-| `timeout` / `outcome_unknown` 交替 | 真实 LoRa 轨迹的丢包突发（ChirpBox / LoED / Strasbourg 五年） |
-| flapping | 状态在 up/degraded 间反复（⚠️ **必须做迟滞**，否则 5 分钟采样会给出上千次伪切换——我在 IODA 轨迹上实测过：朴素阈值 1102 次迁移，平滑后又把真实中断全抹掉） |
+| `unavailable` 转 `recovering` | 电池耗尽使节点静默，充电后恢复 |
+| `outcome_unknown` | 调用跨越掉线时刻 |
+| commit 后无 ACK | 动作已执行，节点在回 ACK 前掉线 |
+| 恢复后乱序重放 | 节点缓存多次待发结果，回来时批量上传 |
 
----
+高海拔站点在低温下无法充电，节点长期静默，掉线呈成片、长时段形态而非零星抖动。`outcome_unknown` 因此会在很大范围与很长时间上同时发生，这是单节点故障注入测不出来的分布特征。
 
-## ⭐ 三类"通信专属"的故障（本文的立足点）
+### 链路抖动维：来自真实轨迹
 
-这三类**只在信道退化场景下出现**，通用 crash 测试（如 arXiv 2608.03836 的 SIGKILL 矩阵）**测不到**：
+| 故障类 | 生成方式 |
+|---|---|
+| `timeout` 与 `outcome_unknown` 交替 | 真实 LoRa 轨迹中的丢包突发（ChirpBox、LoED、Strasbourg 五年） |
+| flapping | 状态在 up 与 degraded 之间反复 |
 
-**① ACK 丢失型重复副作用**
-动作在节点侧**已提交**，但 ACK 在回程丢失。发送方进入 `outcome_unknown`，若盲重试则**副作用被施加两次**。
-> 与进程崩溃的区别：崩溃时**进程死了**，可以用 durable log 判断；这里**节点活着、动作执行了、只有确认丢了**。
+flapping 的检测需要迟滞。在 IODA 轨迹上实测，朴素阈值在 5 分钟采样下产生 1102 次状态迁移，而加大平滑窗口后真实中断被一并抹掉。这个权衡是 benchmark 设计的组成部分，不能当作调参细节隐藏。
 
-**② 陈旧观测驱动的动作**
-节点长期失联，agent 依据的观测是**几分钟到几小时前**的。它在"当前事实"的假设下做出动作。
-> ⚠️ 注意与记忆/推理层的陈旧区分：这里是**效果层**的陈旧（`stale_result`），不是推理层的。
+## 三类通信专属故障
 
-**③ 恢复后的批量重放**
-节点回来时**缓存了若干次未送达的结果**，批量上传。agent 若按到达顺序处理，可能**用旧结果覆盖新状态**，或**重复执行已完成的动作**。
-> 这类故障需要"恢复屏障 + 对账"，是单次故障注入天然测不到的**时序**问题。
+下面三类只在信道退化场景下出现，进程级故障测试（例如 arXiv `2608.03836` 的 SIGKILL 矩阵）覆盖不到它们。
 
----
+**ACK 丢失导致的重复副作用。** 动作在节点侧已提交，ACK 在回程丢失，发送方进入 `outcome_unknown`；盲重试会把同一副作用施加两次。与进程崩溃的区别在于，崩溃时进程已死，可用 durable log 判定；这里节点存活、动作已执行，只有确认丢失。
 
-## 与已占工作的边界（避免撞车）
+**陈旧观测驱动的动作。** 节点长期失联时，agent 依据的观测是几分钟到几小时之前的，而它按当前事实行动。这里陈旧发生在效果层，即 `stale_result`，与推理层或记忆层的陈旧不同。
 
-| 我们的故障类 | 最接近的已占工作 | 界线 |
+**恢复后的批量重放。** 节点回来时缓存了若干次未送达的结果并批量上传。agent 若按到达顺序处理，会用旧结果覆盖新状态，或重复执行已完成的动作。这类故障依赖时序，单次故障注入无法复现，需要恢复屏障与对账机制。
+
+## 与既有工作的边界
+
+| 本文故障类 | 最接近的既有工作 | 分界 |
 |---|---|---|
-| `outcome_unknown` | arXiv 2608.02645 的 "timeouts after dispatch" | 它用**注入**的非原子故障；我们用**真实地形/供电**导出，且把它作为**一等类**并量化发生率 |
-| 重复副作用 | arXiv 2608.03836 已实测 LangGraph/CrewAI | 它测**进程崩溃**；我们测**信道导致的确认丢失** |
-| reconcile | arXiv 2606.03895 libOS "prepare-dispatch-settle" | 它假设**存在可用的对账通道**；我们研究**对账本身也不可达**时怎么办 |
-| 恢复语义 | INFOCOM 2026 "Rollback Is Not Undo" | 它是**边缘 DDoS 控制面**、注入扰动；我们是**灾害监测**、真实轨迹 |
+| `outcome_unknown` | arXiv `2608.02645` 的 timeouts after dispatch | 该文用注入的非原子故障；本文由真实地形与供电导出，并把结果不可知作为一等类量化发生率 |
+| 重复副作用 | arXiv `2608.03836` 已实测 LangGraph 与 CrewAI | 该文测进程崩溃；本文测信道导致的确认丢失 |
+| reconcile | arXiv `2606.03895` 的 prepare-dispatch-settle | 该文假设对账通道可用；本文研究对账本身也不可达的情形 |
+| 恢复语义 | INFOCOM 2026 "Rollback Is Not Undo" | 该文场景为边缘 DDoS 控制面并注入扰动；本文场景为灾害监测并使用真实轨迹 |
 
----
+## 后续
 
-## 下一段（S5-2）
-
-定 episode 格式：把上面三类故障**编码进 episode 的事件流**，并让 `code/` 的仿真直接产出它。
-
-**验收标准**：一个 episode 跑完，能自动报告
-`outcome_unknown 次数` / `重复副作用次数` / `stale 决策次数` / `恢复后乱序事件数`
-——这四个数就是 S6 证伪实验的自变量。
+episode 格式需要把上述故障编码进事件流，并让 `code/` 的仿真直接产出。验收标准是一个 episode 跑完后能自动报告 `outcome_unknown` 次数、重复副作用次数、陈旧决策次数与恢复后乱序事件数，这四个量构成后续证伪实验的自变量。

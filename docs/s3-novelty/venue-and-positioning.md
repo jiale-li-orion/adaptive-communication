@@ -138,19 +138,19 @@ Raw evidence saved in:
 
 | Venue | Next deadline | Status |
 |---|---|---|
-| **WCNC 2027** | **15 Sep 2026** | ✅ verified official |
-| **NSDI '27 (fall)** | **17 Sep 2026** (abstracts were 10 Sep 2026) | ✅ verified official |
-| **ICC 2027** | **2 Oct 2026** | ✅ verified official |
-| **SenSys 2027 (2nd)** | **abstract 29 Oct 2026 / paper 5 Nov 2026** | ✅ verified official |
-| TMC | rolling (none) | ✅ verified |
-| TNSM | rolling (none) | ✅ verified |
-| MobiSys 2027 | ~Dec 2026 | ⚠️ UNVERIFIED (site says TBA) |
-| CoNEXT 2027 | ~Dec 2026 | ⚠️ UNVERIFIED |
-| SIGCOMM 2027 | ~Feb 2027 | ⚠️ UNVERIFIED (site says TBA) |
-| MobiCom 2027 (winter) | ~Mar 2027 | ⚠️ UNVERIFIED (site says TBD) |
-| COMPASS 2027 | ~Mar 2027 | ⚠️ UNVERIFIED |
-| GLOBECOM 2027 | ~Apr/May 2027 | ⚠️ UNVERIFIED (2027 site not up) |
-| INFOCOM 2028 | ~Jul 2027 | ⚠️ UNVERIFIED (2027 passed 31 Jul 2026) |
+| **WCNC 2027** | **15 Sep 2026** | verified official |
+| **NSDI '27 (fall)** | **17 Sep 2026** (abstracts were 10 Sep 2026) | verified official |
+| **ICC 2027** | **2 Oct 2026** | verified official |
+| **SenSys 2027 (2nd)** | **abstract 29 Oct 2026 / paper 5 Nov 2026** | verified official |
+| TMC | rolling (none) | verified |
+| TNSM | rolling (none) | verified |
+| MobiSys 2027 | ~Dec 2026 | 注意：UNVERIFIED (site says TBA) |
+| CoNEXT 2027 | ~Dec 2026 | 注意：UNVERIFIED |
+| SIGCOMM 2027 | ~Feb 2027 | 注意：UNVERIFIED (site says TBA) |
+| MobiCom 2027 (winter) | ~Mar 2027 | 注意：UNVERIFIED (site says TBD) |
+| COMPASS 2027 | ~Mar 2027 | 注意：UNVERIFIED |
+| GLOBECOM 2027 | ~Apr/May 2027 | 注意：UNVERIFIED (2027 site not up) |
+| INFOCOM 2028 | ~Jul 2027 | 注意：UNVERIFIED (2027 passed 31 Jul 2026) |
 | IPSN | — | ❌ merged into SenSys as of 2026 |
 
 ---

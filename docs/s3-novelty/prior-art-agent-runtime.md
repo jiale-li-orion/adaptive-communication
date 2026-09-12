@@ -1,6 +1,6 @@
 # Literature Reconnaissance: Agent Runtime Execution Semantics & Failure
 
-> ⚠️ **定位说明（2026-09-12 追加）**：本文写作时的论文标题是
+> 注意：**定位说明（2026-09-12 追加）**：本文写作时的论文标题是
 > *"Disruption-Tolerant Runtime for Tool-Using Agents in Emergency Communication Networks"*，
 > **该定位已被取代**。当前定位见 [`../../README.md`](../../README.md)：
 > **agent runtime 位于通信实体之上，在它们动态上线 / 掉线 / 退化 / 恢复时维持任务执行**。

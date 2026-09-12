@@ -338,7 +338,7 @@ Downloaded `LoRa-on-Ice.zip` (3.6 MB) and extracted it. Three campaigns:
    - `sensorUnit.csv` columns: `TimeRTC; TimeGPS; coordinates; temp; EMcond; EMinphase; voltage; EMcond_raw; EMinphase_raw; EMcontrolbyte; transmitted`
 3. `2023-12-13_Antarctica_range-test` (snowmobile across Atka Bay): `data_rangetest.csv` (35,978 lines), `data-influxDB.csv` (220), `rangetest-received.csv` (162, header `timeRTC,timeGPS,latitude,longitude,temp,voltage,received,distance,RSSI,SNR`), `rangetest-lost.csv` (14).
 
-### ⭐ The disaster lifecycle — **VERIFIED from the dataset's own README**
+### The disaster lifecycle — **VERIFIED from the dataset's own README**
 Direct quote from `readme.txt`: *"The system was deployed on December 25, 2022 and was meant to remain stationary for a month. The system stores the measured data locally and additionally sends some datasets to the station using LoRa and LoRaWAN. **On January 01, 2023 the sea ice broke away including the measurement system.** The system kept transmitting data and was recovered by helicopter on January 07, 2023. The system remained intact and the data could be evaluated after the recovery."*
 
 **This is a genuine, documented degradation → outage → recovery sequence:**
@@ -416,7 +416,7 @@ No public landslide dataset with LoRaWAN link-layer/availability data was found.
 
 I searched all requested terms: `disaster network outage trace`, `cellular outage dataset`, `network failure trace disaster`, `DTN contact trace disaster`, grassroots/community network outage data (NetCheck, BGP, Outage Observatory, Cloudflare Radar).
 
-### 7.1 ⭐ Cloudflare Radar — **Outage Center API** (best per-network outage timeline, machine-readable)
+### 7.1 Cloudflare Radar — **Outage Center API** (best per-network outage timeline, machine-readable)
 
 ### (1) Name and maintainer
 **Cloudflare Radar — Outage Center (CROC)** and the `radar/annotations/outages` API. Maintainer: **Cloudflare, Inc.**
@@ -461,7 +461,7 @@ Docs examples include **2022-09-28 (Hurricane Ian)** and **2022-10-25 (Ukraine)*
 - **Why strong:** it directly provides **start time, end time, cause, scope and affected network/region** for real disasters, including explicit `WEATHER` and `POWER_OUTAGE` causes. That is precisely a lifecycle event record, and it is API-machine-readable.
 - **Why not a full yes:** resolution stops at ASN/region, so you cannot replay *which node* failed. Also license is proprietary-ish and history depth is unconfirmed. Best used as the **event schedule / ground-truth envelope** layered on top of a finer-grained trace.
 
-### 7.2 ⭐ InetIntel `internet_outages` — **curated IODA outage/shutdown dataset with begin/end times**
+### 7.2 InetIntel `internet_outages` — **curated IODA outage/shutdown dataset with begin/end times**
 
 ### (1) Name and maintainer
 `InetIntel/internet_outages` v0.0.1 — **Zachary S. Bischof** and the **Internet Intelligence Research Lab (InetIntel)**, Georgia Tech, accompanying the **ACM SIGCOMM '23** paper *"Destination Unreachable: Characterizing Internet Outages and Shutdowns"*.
@@ -505,7 +505,7 @@ Records include **2021** dates (verified examples: 2021-03-17, 2021-02-25) and t
 - **Why partial:** it is a **human-curated, verified outage/shutdown catalogue with start and end times, region, AS, and cause** — the best freely downloadable *outage event* dataset, and it is small (1.24 MB) and directly parseable. Ideal for **validating** a synthetic replay or for **sampling realistic outage durations and local start-time distributions** (the shipped CDFs are a real bonus).
 - **Why not yes:** country/region/AS granularity only, no node or link topology, and the live API was erroring. Cause is often blank/`Unknown` (unlike TEMPO's explicit damage/power/transport split).
 
-### 7.3 ⭐ BGP-based datasets — CAIDA / RIPE RIS / RouteViews / `bgp_outages`
+### 7.3 BGP-based datasets — CAIDA / RIPE RIS / RouteViews / `bgp_outages`
 
 - **`gkarop/bgp_outages`** — *"Helper scripts to download and analyse BGP data to identify network outages"*: <https://github.com/gkarop/bgp_outages> (**VERIFIED URL exists via search; I did not clone it — UNVERIFIED contents**). This is a **toolkit**, not a dataset — it pulls raw BGP data and derives outages.
 - **BGP datasets from RIPE, BCNET, Route Views** (Simon Fraser University, Ljilja Trajković / `cnl` group): <https://www.sfu.ca/~ljilja/cnl/projects/BGP_datasets/> (**found via search; UNVERIFIED contents**).
