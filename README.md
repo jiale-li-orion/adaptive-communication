@@ -93,7 +93,7 @@
 
 | benchmark | 故障模型 | 网络的角色 | 载体 | 能量建模 | 地形建模 |
 |---|---|---|---|---|---|
-| WirelessOptBench（`2608.08277`） | 注入遥测故障，5 域 × 600 episode | 对象（动作授权） | 无仿真器；闭式 SINR 加继承的射线追踪 CQI | 无 | 间接 |
+| WirelessOpsBench（WirelessOpsAgent 论文，`2608.08277`） | 7 类证据账本故障，每 base 七个孪生 case | 对象（动作授权） | 无 runtime；只发数据与工具契约，射线追踪工具供 CQI | 无 | 仅 HKUST_North / HKUST_South 两区域 |
 | NetConfArena（`2608.23179`） | 不注入，只有 agent 自身的配置错误 | 对象（配置） | GNS3 加厂商路由器镜像，存在许可问题 | 无 | 无 |
 | NetArena（`2506.03231`） | 每次查询合成 | 对象（规划与修复） | Mininet 加 Kubernetes 与 Docker | 无 | 无 |
 | NIKA（`2512.16381`） | 经 Linux TC、stress-ng 与脚本注入，54 问题 / 640 事件 | 对象（检测、定位、根因） | Kathará 容器 | 无 | 无 |
@@ -104,13 +104,46 @@
 
 三个维度上的核验结果如下。agent 自身的操作通道是否退化：六篇全文检索 agent 通道相关构造（agent 自身流量与连接、带外控制面、边缘部署 agent、agent 之间的连通性）零命中，网络在这六个基准中始终是控制的对象，不承载 agent 自身的遥测。故障是否由真实地形与供电导出：六者的故障全部为注入、合成或不存在，词汇层面最接近真实的是 WirelessOptBench（其分类引用 TeleLogs、AIOps2025、RCA100），但该论文承认 oracle 是 benchmark 自定义的；NetOpsBench 用的是手设常数。任务是否为长时监测 mission：NIKA 与 NetOpsBench 最接近，但都是单事件式，一次事件完成检测、定位与根因后即结束；NIKA 报告的 7 至 15 小时是 150 个事件的累计墙钟时间，NetOpsBench 的 efficiency 统计的是 tool call 数与 token 数。二者都不惩罚中途漏掉事件、不惩罚信道随时间衰减、不要求跨小时维持态势。
 
-能量与功率建模在六个基准中全部缺失，地形与传播建模只出现在 WirelessBench，且仅作为 agent 可调用的 CQI 工具，不是其流量所穿越的信道。这属于结构差异而非参数差异：六个基准都把网络固定为控制对象。自建 benchmark 因此不可避免，已完成的部分见 `code/`：`disruption_env.py` 提供真实地形节点、Gilbert-Elliott 信道、能量模型以及分区、flapping、重放与重启机制；`operations.py` 实现生命周期状态机与故障记账；`test_failure_model.py` 对 11 类故障做确定性验证，当前 11/11 通过；`agent_react.py` 是可切换恢复语义的调度器骨架。
+能量与功率建模在六个基准中全部缺失，地形与传播建模只出现在 WirelessBench，且仅作为 agent 可调用的 CQI 工具，不是其流量所穿越的信道。这属于结构差异而非参数差异：六个基准都把网络固定为控制对象，因此自建 benchmark 不必要也无收益。
+
+### 采用方案
+
+不新造 benchmark，不定义新 task，只补已有 benchmark 缺的执行层。任务语义、工具契约、预算、合法迁移与里程碑继承 WirelessOpsBench 的公开开发集。
+
+继承的边界由公开包的实际内容划定。公开包只有数据：300 base、2400 case、180 repair，无 runner、无 scoring 谓词、无 fault schedule。同一 base 的八个 case 的 `public_task` 逐字节相同，仅 `case_id` 不同；`public_input` 只含任务参数，WCHW 一族为空对象；全库无答案、gold、reference 或 label 字段。证据账本、`ray_tracing` 实现与评测谓词均在评测端扣留。因此可直接取用的是任务契约层，不是可运行的 episode。
+
+须自建的四项为证据账本内容、CQI 提供者、runtime 与 scoring 谓词，即本文所补的执行层。公开包不含 baseline 分数、轨迹、token 数与延迟，故本文数值不与论文所报数值可比，只能作为本文自己的 development 结果报告。完整核验见 `docs/s5-benchmark/s6-10-wirelessopsbench-artifact-audit.md`。
+
+工具面九项，真正变更状态的只有 `commit_policy` 与 `rollback_policy`，`stage_policy` 与 `post_check` 的 `mutates_state` 均为 False。`commit_policy` 要求 `stage_id` 与 `expected_version`，已带乐观并发；`stage_policy` 带以 `protected_*_impact` 为风险字段的危险提案带。状态机三族同构：`stage_<fam>` → `validate_evidence` → `commit_authorization` → `post_check` → `rollback`，外带一条指名实体的 `refresh_then_validate:<entity_id>`。预算为 `max_steps` 24、`max_tool_calls` 12、`wall_time_ms` 60000。
+
+层栈相邻关系直接来自论文标题。WirelessOpsBench 做 **Task correctness → Action assurance**：判据是动作在分发前是否被正确授权，其 7 类故障——temporal inconsistency、missing required evidence、conflicting sources、schema drift、entity misbinding、concurrent version drift、false-success update——全部落在证据账本的可信度上。本文在同一任务契约上补 **Execution assurance**：判据是动作分发之后到底发生了几次、有没有发生。
+
+这两组判据不可互相表达。WirelessOpsBench 的 false-success update 是上报成功但状态未生效；本文的 ACK 丢失是状态已生效但回执未达，重试即产生重复副作用，方向相反。其 concurrent version drift 由数据面并发写者造成；本文的视图落后由控制面链路中断造成，触发源不同。派发后节点失联、pending 被遗忘、重放顺序错、网关抖动、分区分歧、协调者重启六类在其故障表中没有对应项，因为其 episode 把工具调用视为必然送达。
+
+本文的故障打点在 `commit_policy` 与 `rollback_policy` 两个 `mutates_state=True` 工具外侧的 dispatch → execute → observe 环上。该环随 runtime 一并自建。
+
+已完成的执行层组件见 `code/`：`disruption_env.py` 提供真实地形节点、Gilbert-Elliott 信道、能量模型以及分区、flapping、重放与重启机制；`operations.py` 实现生命周期状态机与故障记账；`test_failure_model.py` 对 11 类故障做确定性验证，当前 11/11 通过；`agent_react.py` 是可切换恢复语义的调度器骨架；`wirelessops_adapter.py` 在公开任务契约上驱动执行层。
+
+### 初步结果
+
+在 120 个公开任务上按 2×2 消融两个正交机制——重试是否复用同一写入身份，以及验证是否限定在本次写入上。每千操作周期的计数，详见 `docs/s5-benchmark/s6-11-execution-layer-results.md`。
+
+| horizon | 策略 | 重复/1k | 零效果/1k |
+|---:|---|---:|---:|
+| 64 | naive | 280.7 | 8.1 |
+| 64 | stable_key_only | 0.0 | 8.1 |
+| 64 | verified_wrapper | 132.4 | 73.2 |
+| 64 | lifecycle | 0.0 | 4.3 |
+
+身份稳定性单独就消除了全部重复，其 sink 去重计数与 naive 的重复计数逐 horizon 精确相等。非限定验证在 horizon 为 1 时与不验证无差别（零效果均为 0.0），在 horizon 为 64 时把零效果率推到不验证的 9 倍，因为"此实体上是否曾应用过该动作"会被更早周期的写入回答为是。`verified_wrapper` 把重复从 2156 降到 1017 的代价是 562 个周期的写入从未落地，只统计任务结果与重复率的评测会把它排为更优解。
 
 ### Related work
 
 **最危险的邻居。** INFOCOM 2026 的 "Rollback Is Not Undo: Path-Dependent Failures in LLM-Arbitrated Network Control"（Weici Pan, Zhenhua Liu，DOI `10.1109/INFOCOM59046.2026.11571400`，DBLP `conf/infocom/PanL26`）已在同类会议与同类问题空间证明，LLM 仲裁的网络控制回路中回滚无法恢复行为，且恢复效果路径相关；该文提出 `recovery gap` 指标，故障模式包含 observation corruption、delay-reordering 与 agent dropout。该文为闭源，`open_access` 字段为 `CLOSED`，无公开 artifact。它未覆盖的是灾害与应急场景、真实轨迹驱动、实体生命周期与公开 artifact，本文需要引用它并显式对比。
 
-**同组先前工作。** WirelessOpsAgent 与 WirelessOptBench（Zijian Lu, Yiping Zuo, Hao Xu, Weicong Chen, Xin He, Jiajia Guo, Shi Jin，arXiv `2608.08277`，2026-08-08）的表述为 *"repairs recoverable support failures before execution"*，问题被限定在可修复范围内；本文场景中 27.7% 的点位永久不可达、断电可持续数周，大量失败不可修复。该文中心是 repair，本文中心是任务执行在实体变动下的存续，因此只作引用与边界参照。
+**同组先前工作。** WirelessOpsAgent 论文（Zijian Lu, Yiping Zuo, Hao Xu, Weicong Chen, Xin He, Jiajia Guo, Shi Jin，arXiv `2608.08277`，2026-08-08，CC BY 4.0）发布 WirelessOpsBench。论文标题把研究层次定为 **Action Assurance**：判据是动作在下发前是否被正确授权。其表述为 *"repairs recoverable support failures before execution"*，问题被限定在可修复范围内；本文场景中 27.7% 的点位永久不可达、断电可持续数周，大量失败不可修复。该文中心是分发前的 repair，本文中心是分发后任务在实体变动下的存续，因此只作引用与边界参照。
+
+公开 artifact 已逐字核验（本地 SHA-256 `df832540beae8cdfe776ea0ffbe294be1355421c1279e69479e0b0655428940d`，与 README 相符）。三族任务为 WCHW（教科书无线计算）、WCNS（5G 切片，含射线追踪 CQI）、WCMSA（移动性保障，含 Kalman 预测加射线追踪 CQI）。开发集 300 base、2400 case、180 repair；完整冻结集 900 base、6300 孪生 case、540 归因与修复记录，final 分片扣在尚未上线的评测服务器后。artifact 只含数据，不含 runner、scoring 谓词与 fault schedule；同一 base 的八个 case 的 `public_task` 逐字节相同，仅 `case_id` 不同，故障由评测端运行时注入。公布的工具面为 `get_primary_evidence`、`get_secondary_evidence`、`get_entity`、`get_schema`、`stage_policy`、`validate_policy`、`commit_policy`、`post_check`、`rollback_policy`，其中三者标注 `mutates_state: True`，`commit_policy` 已带 `expected_version` 乐观并发，预算为 `max_steps` 24、`max_tool_calls` 12、`wall_time_ms` 60000。
 
 **已被占据的机制，不可声称。** 下表列出机制与其原始出处。
 
@@ -133,6 +166,7 @@
 
 | 空白 | 依据 |
 |---|---|
+| 分发后的执行语义 | WirelessOpsBench 的 7 类条件全部刻画证据账本的可信度，无一描述分发后的传输语义 |
 | 实体生命周期作为一等对象 | 六个 benchmark 全文检索 agent 通道相关构造零命中，网络一律是控制对象 |
 | 结果不可知作为一等故障类 | 六者的故障全为注入、合成或不存在，且注入类的发生都可观测 |
 | 不可修复失败 | WirelessOpsAgent 自述限定 recoverable support failures；本文有 27.7% 永久不可达与数周断电 |
@@ -145,18 +179,22 @@
 ```
 agentic communication/
 ├── README.md
-├── code/          13 个可运行脚本
+├── code/          16 个可运行脚本
 ├── docs/          INDEX.md 与 s1–s5 支撑材料
 ├── results/       仿真输出
 ├── data/          666 MB，未纳入版本控制
-└── libs/          71 MB，未纳入版本控制
+├── libs/          71 MB，未纳入版本控制
+└── other_repo/    WirelessOpsBench 公开 artifact，未纳入版本控制
 ```
 
 ```bash
 export PYTHONPATH="$PWD/libs/pylibs"
-python3 code/mountain_lora_link.py     # 单点链路预算
-python3 code/coverage_map.py           # 区域覆盖图，约 30 s
-python3 code/test_failure_model.py     # 11 类故障验证
+python3 code/mountain_lora_link.py        # 单点链路预算
+python3 code/coverage_map.py              # 区域覆盖图，约 30 s
+python3 code/test_failure_model.py        # 11 类故障验证
+python3 code/wirelessops_adapter.py --limit 120 --ticks 1200 --rounds 1,2,4,8,16,32,64
 ```
+
+`wirelessops_adapter.py` 在 WirelessOpsBench 的公开任务契约上驱动执行层，artifact 路径可用环境变量 `WIRELESSOPS_ARTIFACT` 覆盖。
 
 未纳入版本控制的文件及获取方式：`data/` 含 SRTM 高程瓦片与下载的真实轨迹，SRTM 的下载路径见 `code/mountain_lora_link.py` 头部注释，轨迹数据集见上表 Zenodo DOI；`libs/` 为本地 pip 依赖，可用 `pip install numpy itmlogic` 重建；`docs/s1-input/week2-deck.md` 由课题组汇报 PPT 提取，与 `*.pptx` 一并留在仓库之外。

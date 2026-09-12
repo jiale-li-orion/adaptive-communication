@@ -333,162 +333,6 @@ class DisruptionEnv:
         op.transition("outcome_unknown", self.t)
         return "outcome_unknown", None
 
-    # ---------------------------------------------------- asynchronous dispatch
-    def dispatch(self, node: Node, tool: str, intent: str | None = None,
-                 latency: int = 2) -> str:
-        """Send a call and return its operation id WITHOUT resolving it.
-
-        Asynchrony is what makes the failure model real: an operation can be in flight when
-        its node dies (README §9 F01), and a pending operation can be abandoned while the
-        capability is gone (F04). A synchronous call cannot express either.
-        """
-        if intent is None:
-            self._anon += 1
-            intent = f"anon-{self._anon}"
-        op = self.registry.new(node.nid, tool, intent, self.t, TOOLS[tool]["side_effect"])
-        op.transition("running", self.t)
-        op.first_dispatch = self.t
-        self._inflight[op.op_id] = {"resolve_at": self.t + latency, "intent": intent}
-        self._by_intent[intent] = op
-        return op.op_id
-
-    def poll(self, op_id: str) -> tuple[str, object]:
-        """Resolve an in-flight operation, if the world has moved far enough."""
-        rec = self._inflight.get(op_id)
-        if rec is None:
-            return self.registry.ops[op_id].state, None
-        op = self.registry.ops[op_id]
-        node = next((n for n in self.nodes if n.nid == op.node), None)
-        if node is None:
-            return op.state, None
-
-        # the node went away while the call was in flight -> F01
-        if self.is_unreachable(node):
-            if op.side_effect and op.buffered_at is None:
-                node.buffered.append((self.t, op.tool, self.logical_key(node)))
-                op.buffered_at = self.t
-            self.registry.f01_node_lost_after_dispatch(op, self.t)
-            del self._inflight[op_id]
-            return "outcome_unknown", None
-
-        if self.t < rec["resolve_at"]:
-            return "running", None        # still in flight
-
-        del self._inflight[op_id]
-        p = self._link_success_p(node)
-        if self.channel == "ge":
-            p = p * 0.95 if node.link_good else p * 0.05
-        if self.rng.random() < p:
-            self._maybe_apply(node, op.tool, rec["intent"])
-            op.transition("committed", self.t)
-            return "committed", self._result(node, op.tool)
-        if op.side_effect and self.rng.random() < 0.6:
-            self._maybe_apply(node, op.tool, rec["intent"])   # ran, ACK lost -> F02
-            self.registry.f02_ack_lost_after_execution(op, self.t)
-            return "outcome_unknown", None
-        op.transition("timeout", self.t)
-        return "timeout", None
-
-    def on_restart(self) -> None:
-        """Hook for the coordinator losing in-memory state. Subclasses may override."""
-        pass
-
-    def _replay(self, node: Node) -> None:
-        """Node is back: flush what it buffered while silent (README §9 F06)."""
-        if not self.enable_replay:
-            node.buffered.clear()
-            return
-        items = list(node.buffered)
-        node.buffered.clear()
-        if len(items) > 1 and self.rng.random() < 0.5:
-            items = list(reversed(items))          # out-of-order replay
-            self.registry.f06_wrong_replay_order(
-                self.registry.new(node.nid, "buffer.flush", "replay", self.t, False), self.t)
-        for (_t, tool, logical) in items:
-            self.truth.applied.append((self.t, node.nid, tool, logical))
-
-    def _forget_pending(self, node: Node) -> None:
-        """README §9 F04: the capability went away; its pending invocations are dropped."""
-        for op in list(self.registry.ops.values()):
-            if op.node == node.nid and op.open and op.state in ("running", "not_started"):
-                self.registry.f04_pending_forgotten(op, self.t)
-
-    def sweep_pending(self) -> None:
-        """Scan for operations that were dispatched and then abandoned.
-
-        README §9 F04 (pending invocation forgotten) and F08 (starvation / head-of-line
-        blocking) share one structure: an operation stays open while the world moves on.
-        Sweeping here — rather than at call time — matches the semantics: being forgotten
-        is a property of elapsed time, not of any single call.
-        """
-        # only sweep operations that could still be pending (recent ones); older ones have
-        # already been classified, so rescanning them every tick is wasted work
-        open_ops = [o for o in self.registry.ops.values()
-                    if o.open and (self.t - o.created) < 600]
-        if not open_ops:
-            return
-        open_ops.sort(key=lambda o: o.created)
-        head = open_ops[0]
-        head_blocking = head is not None and head.open and (self.t - head.created) > 24
-        for k, op in enumerate(open_ops):
-            age = self.t - op.created
-            # F04 — count each operation exactly once
-            node = next((n for n in self.nodes if n.nid == op.node), None)
-            node_gone = node is not None and self.is_unreachable(node)
-            abandoned = (op.state == "running" and node_gone) or \
-                        (op.state == "unavailable" and age > 24) or \
-                        (op.buffered_at is not None and op.settled is None and age > 48)
-            if abandoned and op.op_id not in self._f04_seen:
-                self._f04_seen.add(op.op_id)
-                self.registry.f04_pending_forgotten(op, self.t)
-            # F08 — count each (starved op, blocking head) pair exactly once
-            if k > 0 and age > 12 and head_blocking:
-                key = (op.op_id, head.op_id)
-                if key not in self._f08_seen:
-                    self._f08_seen.add(key)
-                    self.registry.f08_starvation_hol(op, self.t)
-
-    def check_starvation(self) -> None:
-        """README §9 F08: an old unresolved operation blocks a FIFO queue.
-
-        A later operation that has waited longer than `starvation_slack` while an OLDER
-        operation is still unresolved is counted as starved — the head-of-line case.
-        """
-        open_ops = [o for o in self.registry.ops.values() if o.open]
-        if len(open_ops) < 2:
-            return
-        open_ops.sort(key=lambda o: o.created)
-        head = open_ops[0]
-        if head.state in ("running", "not_started") and (self.t - head.created) > 24:
-            for o in open_ops[1:]:
-                if (self.t - o.created) > 12:
-                    self.registry.f08_starvation_hol(o, self.t)
-
-    def stale_read(self, node: Node, tool: str) -> tuple[str, object]:
-        """Force a stale-observation path (README §9 F05)."""
-        return self.call(node, tool, intent=None, fresh_observation=False)
-
-    def is_unreachable(self, node: Node) -> bool:
-        """Terrain-blocked, powered down, or cut off by a partition."""
-        if not node.reachable or not node.alive:
-            return True
-        if self.partitioned and not node.is_gateway:
-            return True
-        return False
-
-    def _maybe_apply(self, node: Node, tool: str, intent: str) -> None:
-        """Apply at an idempotent sink. Dedups on `intent`, counting repeats as duplicates."""
-        if not TOOLS[tool]["side_effect"]:
-            return
-        logical = self.logical_key(node)
-        if intent.startswith("key:") and intent in self._applied_keys:
-            self.truth.deduped = getattr(self.truth, "deduped", 0) + 1
-            return
-        if intent.startswith("key:"):
-            self._applied_keys.add(intent)
-        self.truth.applied.append((self.t, node.nid, tool, logical))
-        self.truth.counts[tool] = self.truth.counts.get(tool, 0) + 1
-
     def logical_key(self, node: Node) -> str:
         """The environment's own identity for the logical action on this node right now."""
         return f"{node.nid}:ep{self._episode.get(node.nid, 0)}"
@@ -681,8 +525,25 @@ class DisruptionEnv:
                       for (_t, nid, tl, _l) in self.truth.applied)
         return "applied" if applied else "not_applied"
 
+    def verify_intent(self, node: Node, intent: str) -> str:
+        """Cycle-scoped postcondition check, over the SAME unreliable channel.
+
+        `verify` above answers "was this tool ever applied on this node", which a later
+        retry can satisfy with an EARLIER cycle's write. A caller that acts on that answer
+        silently skips the cycle it is actually verifying. This variant asks about one
+        logical write and returns "applied" / "not_applied" / "unknown", where the third
+        outcome covers both a lost verification query and an unreachable verifier.
+        """
+        if not node.alive or not node.reachable:
+            return "unknown"                       # the verifier itself is unreachable
+        p = self._link_success_p(node)
+        if self.channel == "ge":
+            p = p * 0.95 if node.link_good else p * 0.05
+        if self.rng.random() > p:
+            return "unknown"                       # verification query lost
+        return "applied" if intent in self._applied_keys else "not_applied"
+
     def duplicate_side_effects(self) -> int:
-        """Count duplicates AND record them as README §9 F03."""
         """Side effects that the SINK accepted more than once for the same intent.
 
         A stable idempotency key is honoured by the sink and yields 0. A fresh identity per
