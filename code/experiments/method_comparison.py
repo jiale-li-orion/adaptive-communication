@@ -217,7 +217,8 @@ def link_attempt(node: dict, rng) -> bool:
 
 def run_arm(arm: str, nodes: list, hours: int, cmd_period: int, seed: int,
             use_energy: bool, relay: bool = False,
-            relay_availability: float = RELAY_AVAILABILITY) -> dict:
+            relay_availability: float = RELAY_AVAILABILITY,
+            retry_budget: int = RETRY_BUDGET) -> dict:
     rng = np.random.default_rng(seed)
     base_arm = arm[6:] if arm.startswith("relay_") else arm
     (receipts, fencing), stable_id, scoped = ARM_SPEC[base_arm]
@@ -275,7 +276,7 @@ def run_arm(arm: str, nodes: list, hours: int, cmd_period: int, seed: int,
                 want = (item["attempts"] == 0)
             elif arm == "retry_uncertainty":
                 # on an uncertain result, retry under a FRESH request up to a budget
-                want = item["attempts"] < RETRY_BUDGET
+                want = item["attempts"] < retry_budget
             elif arm == "verified_tool_calls":
                 # Verify-before-retry, transcribed from the published wrapper. Its verifier is
                 # a POSTCONDITION STATE predicate returning True / False / Unknown, and the
@@ -285,7 +286,7 @@ def run_arm(arm: str, nodes: list, hours: int, cmd_period: int, seed: int,
                 # published method does.
                 if item["attempts"] == 0:
                     want = True
-                elif item["attempts"] >= RETRY_BUDGET:
+                elif item["attempts"] >= retry_budget:
                     want = False
                 elif rng.random() < VERIFIER_UNKNOWN_P:
                     want = "wait"          # inconclusive: back off, stay pending, do not resend
@@ -300,7 +301,7 @@ def run_arm(arm: str, nodes: list, hours: int, cmd_period: int, seed: int,
                     state_ok = bool(sinks[n["nid"]].applied)
                     want = not state_ok
             else:                                            # ours and the ablations
-                want = item["attempts"] < RETRY_BUDGET
+                want = item["attempts"] < retry_budget
             if want == "wait":
                 continue                    # still pending; no attempt and no settlement this hour
             if not want:
@@ -435,6 +436,8 @@ def main() -> None:
                     help="override the heated-site fraction (A-layer nominal; sweep it)")
     ap.add_argument("--relay", action="store_true",
                     help="give permanently-blocked servable nodes a store-and-forward relay")
+    ap.add_argument("--retry-budget", type=int, default=RETRY_BUDGET,
+                    help="attempts per logical write, for the equal-budget control")
     ap.add_argument("--arms", default="",
                     help="comma-separated subset of arms, for sweeps")
     ap.add_argument("--relay-availability", type=float, default=RELAY_AVAILABILITY,
@@ -469,7 +472,8 @@ def main() -> None:
             hf = HEATED_FRACTION if args.heated is None else args.heated
             nodes = make_nodes(args.reach, args.blocked, rng, use_energy, hf)
             acc.append(run_arm(arm, nodes, hours, args.cmd_period, 2000 + s, use_energy,
-                               relay_availability=args.relay_availability))
+                               relay_availability=args.relay_availability,
+                               retry_budget=args.retry_budget))
         agg = {k: float(np.mean([a[k] for a in acc]))
                for k in acc[0] if k != "arm"}
         agg["arm"] = arm
@@ -487,14 +491,15 @@ def main() -> None:
         print(f"\nwrote {path}")
         return
 
-    base = next(r for r in rows if r["arm"] == "one_shot")
-    for r in rows:
-        if r["arm"] == "one_shot":
-            continue
-        print(f"  {r['arm']:20s} 恰好一次 {100*base['exactly_once_rate']:.1f}% -> "
-              f"{100*r['exactly_once_rate']:.1f}%   多余应用 {base['duplicate_applications']:.0f} -> "
-              f"{r['duplicate_applications']:.0f}   零次 {base['zero_times']:.0f} -> "
-              f"{r['zero_times']:.0f}")
+    base = next((r for r in rows if r["arm"] == "one_shot"), rows[0])
+    if base["arm"] == "one_shot":
+        for r in rows:
+            if r["arm"] == "one_shot":
+                continue
+            print(f"  {r['arm']:20s} 恰好一次 {100*base['exactly_once_rate']:.1f}% -> "
+                  f"{100*r['exactly_once_rate']:.1f}%   多余应用 {base['duplicate_applications']:.0f} -> "
+                  f"{r['duplicate_applications']:.0f}   零次 {base['zero_times']:.0f} -> "
+                  f"{r['zero_times']:.0f}")
 
     print()
     ours = next(r for r in rows if r["arm"] == "ours")
