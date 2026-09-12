@@ -735,6 +735,51 @@ class RuntimePolicy:
             self.last_decision[node_id].update(issued=True, issued_version=payload["version"])
 
         return out
+
+
+class RuntimeNoEvidencePolicy(RuntimePolicy):
+    """本文 runtime 的消融：去掉"证据必须晚于写入"这条规则。
+
+    去掉之后，一份与期望相符的上报就足以结束一次写入，无论它产生在写入之前还是之后。这正是
+    版本化配置臂的规则，因此这条消融检验的是：`ack_lost` 上本文臂那段知晓时延优势，究竟来自
+    证据规则，还是来自别处。若两者读数相同，则该规则的贡献为零，本文臂的优势另有来源。
+    """
+
+    name = "ours_no_evidence"
+
+    def plan(self, view) -> list[tuple[str, dict]]:
+        # Settle any matching report immediately, dated to when it was produced. The rest of the
+        # runtime is untouched, so a difference between this arm and `ours` is attributable to the
+        # rule and to nothing else.
+        for node_id, payload in sorted(view.status.items()):
+            reported = _field(payload, F_PROFILE)
+            if reported is None:
+                continue
+            self.reported[node_id] = reported
+            self.reported_at[node_id] = max(self.reported_at.get(node_id, 0),
+                                            _field(payload, F_READ_AT, view.t_s))
+        for node_id, wanted in sorted(view.demanded_profile.items()):
+            if self.reported.get(node_id) == wanted:
+                self.settled_version[node_id] = self.issued_version.get(node_id, 0)
+                self.settled += 1
+        return super().plan(view)
+
+
+class RuntimeNoContractPolicy(RuntimePolicy):
+    """本文 runtime 的消融：不发版本与逻辑身份，只发值。
+
+    远端只能按它看得见的字段防护，报文字段缺席时它退回无防护行为。这条消融把"契约字段在
+    链路上市本文臂与版本化臂共同的收益来源"这件事直接测出来：去掉字段后，陈旧覆盖应当重新
+    出现。
+    """
+
+    name = "ours_no_contract"
+
+    def plan(self, view) -> list[tuple[str, dict]]:
+        out = super().plan(view)
+        return [(node_id, {"op": payload["op"], "profile": payload["profile"]})
+                for node_id, payload in out]
+
 # Every arm the business layer compares, in the order the result tables report them. The runtime
 # is listed with the baselines because a comparison that omits it cannot say anything about it,
 # which is what the first P1 round did.
@@ -743,6 +788,8 @@ BUSINESS_ARMS: dict[str, str] = {
     VersionedConfigPolicy.name: "policies:VersionedConfigPolicy",
     VTCPolicy.name: "policies:VTCPolicy",
     RuntimePolicy.name: "policies:RuntimePolicy",
+    RuntimeNoEvidencePolicy.name: "policies:RuntimeNoEvidencePolicy",
+    RuntimeNoContractPolicy.name: "policies:RuntimeNoContractPolicy",
     "oracle": "runner:OraclePolicy",
 }
 
