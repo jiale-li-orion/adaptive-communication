@@ -315,6 +315,8 @@ class NaiveRuntime:
     def __init__(self, paths: tuple[int, ...] = (0,)) -> None:
         self.sent: set[str] = set()
         self.dispatched = 0
+        self.restarts = 0
+        self.forgotten_on_restart = 0
         # Which candidate paths this runtime will try, in order. One path is the first-round
         # architecture. With more, the runtime has to discover which one works, because there is no
         # out-of-band signal that would tell it: a path that is down and a reply that was lost look
@@ -340,6 +342,19 @@ class NaiveRuntime:
             out.append((intent.node_id, payload))
         return out
 
+    def on_restart(self, lost=(), unresolved=()) -> None:
+        """A center with no durable storage forgets what it had sent, so it sends it again.
+
+        That is the whole content of the restart for this runtime. It cannot tell which of its
+        commands the far side already carried out, so it repeats them; with a receipt-keeping far
+        side the repeats are refused and the cost is the opportunities they spent, and without one
+        they land a second time. The contrast with a journaled runtime is not that one is careful:
+        it is that one of them can name what is outstanding and the other cannot.
+        """
+        self.restarts += 1
+        self.forgotten_on_restart += len(self.sent)
+        self.sent.clear()
+
     def _pick_path(self, key: str) -> int:
         """Which candidate to try. Blind: nothing here can see whether a path is up."""
         return self.paths[0] if self.paths else 0
@@ -355,10 +370,21 @@ class ContractRuntime:
     durable_storage = True
 
     def on_restart(self, lost=(), unresolved=()) -> None:
-        """Same rule as the monolithic runtime: knowledge comes back, authority does not."""
+        """Knowledge comes back; the authority to act on it does not.
+
+        The recovered operations name entities whose last attempt the coordinator cannot account
+        for. Until a reconciliation channel to such an entity is re-established -- concretely, until
+        the node reports something produced after the restart -- the coordinator cannot find out
+        what happened to the last attempt, so dispatching again is an unauthorised action rather
+        than a retry. This is the rule §7.7.2 states, and it is enforced by refusing to dispatch,
+        not by recording an intention to be careful.
+        """
         self.restarts += 1
         self.restart_unresolved += len(unresolved)
         self.awaiting_reconcile.update(op.split(":")[0] for op in unresolved)
+        # Stamped from the next clock the runtime sees, because the hook is not given one. The
+        # restart tick is the first view after this call.
+        self.reconcile_since = None
 
     def __init__(self, ttl_s: int = 6 * 3600, dwell_s: int = 300, retry_budget: int = 3,
                  paths: tuple[int, ...] = (0,)) -> None:
@@ -377,6 +403,8 @@ class ContractRuntime:
         self.restarts = 0
         self.restart_unresolved = 0
         self.awaiting_reconcile: set[str] = set()
+        self.reconcile_since: int | None = None
+        self.blocked_until_reconciled = 0
         self.paths = tuple(paths)
         self.path_uses = [0] * max(1, len(self.paths))
         self.settled: set[str] = set()
@@ -411,10 +439,34 @@ class ContractRuntime:
                 self.open_books.pop(key, None)
                 self.settled_count += 1
 
+    def _channel_reestablished(self, view) -> set[str]:
+        """Nodes still without a reconciliation channel since the restart.
+
+        A node reports something produced at or after the restart => the channel is open and the
+        coordinator may ask it what happened. Until then it may not act for that node, however much
+        it wants to: re-sending without a way to find out is not recovering, it is guessing.
+        """
+        if not self.awaiting_reconcile:
+            return set()
+        if self.reconcile_since is None:
+            self.reconcile_since = view.t_s
+        reopened = set()
+        for node_id in list(self.awaiting_reconcile):
+            payload = view.status.get(node_id) or {}
+            read_at = payload.get("read_at")
+            if read_at is not None and int(read_at) >= int(self.reconcile_since):
+                reopened.add(node_id)
+        self.awaiting_reconcile -= reopened
+        return self.awaiting_reconcile
+
     def dispatch(self, intents, view) -> list[tuple[str, dict]]:
         self._settle_on_evidence(view)
+        awaiting = self._channel_reestablished(view)
         out = []
         for intent in intents:
+            if intent.node_id in awaiting:
+                self.blocked_until_reconciled += 1
+                continue
             key = intent.logical_key
             if key in self.settled:
                 continue

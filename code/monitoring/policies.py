@@ -184,6 +184,22 @@ class VersionedConfigPolicy:
         self.supersessions = 0
         self.identities: dict[str, int] = {}
         self.last_decision: dict[str, dict] = {}
+        self.restarts = 0
+
+    def on_restart(self, lost=(), unresolved=()) -> None:
+        """A center with no durable storage comes back holding nothing it only kept in memory.
+
+        The versions, the dwell timers, what each node last reported and what was already put on
+        the wire all live in this object. Losing the process loses them, and the arm starts again
+        from what it can recompute. Leaving them intact would make the restart a non-event for
+        every arm that keeps its bookkeeping here, which is exactly the fault this trajectory is
+        supposed to exercise.
+        """
+        self.restarts += 1
+        for name in ("desired", "desired_version", "issued_version", "issued_profile",
+                     "issued_at", "deadline", "reported", "reported_version", "reported_source",
+                     "reported_at", "identities", "last_decision"):
+            getattr(self, name).clear()
 
     # ------------------------------------------------------------------ reading
     def version_of(self, node_id: str) -> int:
@@ -392,6 +408,21 @@ class VTCPolicy:
         self.issues: dict[str, list[tuple[int, str, str]]] = {}   # (t_s, profile, identity)
         self.unresponsive: dict[str, int] = {}
         self.last_decision: dict[str, dict] = {}
+        self.restarts = 0
+
+    def on_restart(self, lost=(), unresolved=()) -> None:
+        """A center with no durable storage comes back holding nothing it only kept in memory.
+
+        The verdicts, backoff timers, logical identities and last-issued values all live here. A
+        restart that left them intact would make this arm immune to the fault for a reason that has
+        nothing to do with its protocol, and would leave the restart trajectory measuring which
+        policies happen not to store state in a dictionary rather than what they can recover.
+        """
+        self.restarts += 1
+        for name in ("target", "issued", "issued_at", "deadline", "attempts", "verdict",
+                     "unknown_streak", "backoff_s", "logical", "issues", "unresponsive",
+                     "last_decision"):
+            getattr(self, name).clear()
 
     # ------------------------------------------------------------- stable identity
     def command_of(self, node_id: str) -> str:
@@ -689,6 +720,8 @@ class RuntimePolicy:
         self.restart_unresolved = 0
         self.restart_lost = 0
         self.awaiting_reconcile: set[str] = set()
+        self.reconcile_since: int | None = None
+        self.blocked_until_reconciled = 0
 
         self.writes = 0
         self.settled = 0
@@ -761,12 +794,28 @@ class RuntimePolicy:
             return None                      # this exact gap already has an order outstanding
         return cursor, int(newest), int(cursor), self.backfill_budget
 
+    def _channel_reestablished(self, view) -> set[str]:
+        """重启后尚未重建调和通道的节点。规则的执行方式是拒绝派发，不是记一笔打算谨慎。"""
+        if not self.awaiting_reconcile:
+            return set()
+        if self.reconcile_since is None:
+            self.reconcile_since = view.t_s
+        reopened = set()
+        for node_id in list(self.awaiting_reconcile):
+            payload = view.status.get(node_id) or {}
+            read_at = payload.get("read_at")
+            if read_at is not None and int(read_at) >= int(self.reconcile_since):
+                reopened.add(node_id)
+        self.awaiting_reconcile -= reopened
+        return self.awaiting_reconcile
+
     def plan(self, view) -> list[tuple[str, dict]]:
         now = view.t_s
         status = view.status
         in_flight = view.in_flight
         demanded = view.demanded_profile
         out: list[tuple[str, dict]] = []
+        blocked = self._channel_reestablished(view)
 
         # ---- W2: recover what the archive is missing, with a bounded slice of the channel ----
         for node_id in sorted(demanded):
@@ -782,6 +831,13 @@ class RuntimePolicy:
             out.append((node_id, upload_command(cursor, end_s, cursor, budget)))
 
         # ---- W1: ask for a measurement the node would not otherwise take in time ----
+        for node_id, want in sorted(demanded.items()):
+            if node_id in blocked:
+                # The last attempt to this node is unaccounted for and there is no channel yet to
+                # ask about it. Acting now is guessing, so the profile loop is skipped for this node
+                # until it reports something produced after the restart.
+                self.blocked_until_reconciled += 1
+                continue
         for node_id, want in sorted(demanded.items()):
             if not self._w1_needs_fresh_measurement(view, node_id, want):
                 continue
