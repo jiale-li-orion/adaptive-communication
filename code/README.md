@@ -46,6 +46,7 @@ code/
 | `mission_sim.py` | 任务级指标：到报率、到达时延分位数、能量、存活节点数。遥测间隔与控制面变更速率是两个独立参数 | `results/mission_sim*.txt/json` |
 | `restart_experiment.py` | 协调者重启后 durable lifecycle 是否存续。三种身份来源（每次重发新身份 / 重算同一身份 / 持久日志）× 两类命令（身份可重算的周期测量、身份不可重算的临时处置），全部跑在同一 C1 + C2 远端上。记分按任务原本想执行的那一条身份计，另计『非请求副作用』：重发时换了身份，落地的是任务没要求的动作 | `results/restart_experiment.*` |
 | `monitoring_trajectories.py` | **业务层全量对照**。七条轨迹（无故障 + 契约 §5 六类）× 全部业务臂（`policies.BUSINESS_ARMS`：本地规则 / 版本化配置 / VTC 风格 / 本文 runtime / oracle），分辨率含四项业务指标、机会账目与远端契约计数，并保存 per-seed 值供配对比较。README §7.21 的读数由它产生 | `results/monitoring_trajectories*.json` |
+| `sensitivity.py` | **契约 §9 第②项：通信机会与断连敏感性**。两条轴分开扫——每次上行给几个下行机会（机会供给）、回传中断时长（断连），读数含覆盖、观测空窗、unknown 时长、AoI、下行次数与残余失败分类。两条轴不合成一个鲁棒性分数：机会供给帮助的是命令能不能送到，中断时长考验的是送不到之后怎么收场 | `results/sensitivity*.json` |
 | `test_failure_model.py` | 11 类故障的确定性验证，每类一个定向用例，退出码 0 表示全部可复现 | 终端输出 |
 | `test_draw_keys.py` | 报文级随机契约的回归测试：同一逻辑操作在不同 runtime 间配对、不同逻辑操作不共用抽样、抽样不受其它操作数量影响，且到达/应答/扣留/扣留时长/中继投递五类随机量都带逻辑操作身份 | 退出码 |
 | `test_journal_schema.py` | 持久日志 schema 回归：写入侧拒绝未知 kind 与字段集不符；重放侧先校验整条日志再构造状态，未知 kind、版本不符、多字段、缺字段一律拒绝恢复。两个条目族（注册表 / 决策）版本独立 | 退出码 |

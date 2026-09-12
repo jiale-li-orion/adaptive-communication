@@ -317,6 +317,37 @@ def test_energy_accounting() -> None:
           f"SF12 {e.tx_wh:.3e} Wh 对 SF7 {sf7.energy['r01'].tx_wh:.3e} Wh")
 
 
+def test_candidate_paths() -> None:
+    """候选路径的两条不变量。
+
+    一、**主路径的抽样键不能变。** 它是整条外生轨迹的一部分；把键从 ("backhaul", hour) 改成
+    ("path", name, hour) 会重画每一个小时的通断，使此前所有读数静默失去可比性——数字会动，
+    而没有任何东西说明为什么。这里直接对同一个 ControlPlane 逐小时比对加第二条路径前后的
+    主路径可用性。
+    二、**备用路径独立抽样。** 它与主路径不同步，所以"至少一条可用"才真的高于单条可用率；
+    若两条同步，加一条路径不会改善任何东西，这一组对照也就白做了。
+    """
+    from opportunity import PathSpec
+
+    plane = ControlPlane(LoRaProfile(), seed=11)
+    before = [plane.path_available(h, 0) for h in range(500)]
+    plane.paths = [PathSpec("backhaul", 0.62), PathSpec("backup", 0.55)]
+    after = [plane.path_available(h, 0) for h in range(500)]
+    check("加第二条路径不改变主路径的可用序列", before == after,
+          f"前 500 小时中不同 {sum(a != b for a, b in zip(before, after))} 处")
+
+    main_up = sum(after) / len(after)
+    backup = [plane.path_available(h, 1) for h in range(500)]
+    both = [a and b for a, b in zip(after, backup)]
+    either = sum(a or b for a, b in zip(after, backup)) / len(after)
+    check("备用路径与主路径不同步",
+          0.2 < sum(both) / len(both) < 0.9,
+          f"同时可用 {sum(both)/len(both):.2f}")
+    check("至少一条可用高于单条可用率",
+          either > main_up + 0.05 and either > sum(backup) / len(backup) + 0.05,
+          f"主 {main_up:.2f} 备 {sum(backup)/len(backup):.2f} 至少一条 {either:.2f}")
+
+
 def main() -> int:
     print("控制面机会模型回归测试")
     test_airtime()
@@ -327,6 +358,7 @@ def main() -> int:
     test_identity_separates_draws()
     test_backhaul_and_expiry()
     test_energy_accounting()
+    test_candidate_paths()
     print("\n" + "-" * 74)
     if FAIL:
         print(f"  {len(FAIL)} 项失败：")

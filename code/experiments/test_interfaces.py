@@ -230,6 +230,45 @@ def test_effect_is_real_not_merely_acknowledged() -> None:
           rt.profile_history[-1][0] == 3600 and r.issued_at == h0 * 3600)
 
 
+def test_restart_keeps_knowledge_not_authority() -> None:
+    """协调者重启：有持久存储的能说出未决，没有的说不出。
+
+    这是 §7.7.2 与 §7.9.1 那条轴在业务层的形态。两者在同一个远端契约下运行，唯一差别是中心
+    有没有把操作先写进持久日志；如果这里的两个读数相同，那么重启轨迹测的就不是 runtime，
+    而只是"进程计数器和进程一起没了"这件与协议无关的事。
+    """
+    from interfaces import AgentInterface
+    from node_model import NodeRuntime
+    from operations import Journal, recover
+    from opportunity import ControlPlane, LoRaProfile
+
+    plane = ControlPlane(LoRaProfile(), seed=0)
+    hour = next(h for h in range(200) if plane.path_available(h, 0))
+    rt = NodeRuntime(node_id="n00", role="deformation")
+
+    journal = Journal()
+    durable = AgentInterface(plane, {"n00": rt}, journal=journal)
+    durable.set_monitoring_profile("n00", "risk", generation=1, expires_at=10 ** 9,
+                                   now_s=hour * 3600)
+    check("有持久存储的臂在派发前就把操作写进了日志",
+          len(journal) >= 2 and len(durable.pending) == 1, f"log={len(journal)}")
+    lost = durable.forget_volatile_state()
+    check("重启后有持久存储的臂能点名未决操作",
+          len(lost) == 1 and len(durable.recovered_unresolved) == 1,
+          f"lost={lost} unresolved={durable.recovered_unresolved}")
+    registry = recover(journal)
+    check("未决集合可由日志单独重建",
+          len([o for o in registry.ops.values() if o.unresolved]) == 1)
+
+    volatile = AgentInterface(plane, {"n00": rt})
+    volatile.set_monitoring_profile("n00", "risk", generation=1, expires_at=10 ** 9,
+                                    now_s=hour * 3600)
+    lost_v = volatile.forget_volatile_state()
+    check("没有持久存储的臂说不出未决操作",
+          len(lost_v) == 1 and volatile.recovered_unresolved == [],
+          f"lost={lost_v} unresolved={volatile.recovered_unresolved}")
+
+
 def main() -> int:
     print("四接口与可审计证据回归测试")
     test_applied_is_not_current()
@@ -239,6 +278,7 @@ def main() -> int:
     test_upload_cursors_differ()
     test_audit_trail_and_evidence_age()
     test_effect_is_real_not_merely_acknowledged()
+    test_restart_keeps_knowledge_not_authority()
     print("\n" + "-" * 74)
     if FAIL:
         print(f"  {len(FAIL)} 项失败：")
