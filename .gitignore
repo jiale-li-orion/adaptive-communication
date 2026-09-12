@@ -5,24 +5,21 @@ __pycache__/
 *.pyc
 .ipynb_checkpoints/
 
-# ---- 敏感/第三方资料（不上传）----
-# 第二周汇报 PPT 的原件保存在仓库之外（应急通信/project1/）
+# ---- 第三方资料（不上传）----
 *.pptx
 *.ppt
 *.key
-# PPT 的文本提取件同属该资料
-docs/s1-input/week2-deck.md
-
-# WirelessOpsBench 公开 artifact（第三方数据，按 SHA-256 获取，见 docs/s5-benchmark/s6-10-*）
+# WirelessOpsBench 公开 artifact（第三方数据，按 SHA-256 获取）
 other_repo/
 
-# ---- 系统文件 ----
+# ---- 内部材料（留在本地）----
+docs/s1-input/
+docs/s3-novelty/
+docs/s5-benchmark/
+
+# ---- 系统与工具文件 ----
 .DS_Store
 Thumbs.db
 *.swp
-
-# ---- DSH 内部状态 ----
 .dsh/
-
-# Mitsuba/Dr.Jit 编译缓存
 results/.drjit-cache/

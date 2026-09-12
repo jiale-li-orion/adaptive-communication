@@ -59,24 +59,36 @@ HEATED_FRACTION = 0.5        # sites whose battery box removes the cold charge g
 SENS = {7: -123.0, 8: -126.0, 9: -129.0, 10: -132.0, 11: -134.5, 12: -137.0}
 TX_DBM, G_TX, G_RX, FEEDER = 14.0, 2.0, 2.0, 1.0
 
-ARMS = ("b1_wirelessagent", "b2_wirelessops", "b3_verified", "ours", "ours_plain_sink",
+# Semantic names, not paper names. This table compares EXECUTION RUNTIMES on a fixed decision
+# trajectory; it does not reimplement any paper's planner, so attaching a paper's name to one of
+# these rows would be borrowing authority the implementation has not earned. The named systems
+# (WirelessAgent, WirelessOpsAgent) belong in the LLM supplement, where they are actually
+# implemented at the agent level.
+ARMS = ("one_shot", "retry_uncertainty", "verified_tool_calls", "ours", "ours_plain_sink",
         "ablate_identity", "ablate_fencing", "ablate_receipts", "ablate_scope")
 
 # The architecture axis: a store-and-forward relay that can reach a permanently-blocked node.
 # It answers a different question from the runtime axis, so it gets its own 2x2 rather than a
 # row in the main table. Whether the operation's identity propagates to the relay decides
 # whether the relay's own retries collapse at the far side or land as second effects.
-RELAY_ARMS = ("relay_b2_wirelessops", "relay_ours")
+RELAY_ARMS = ("relay_retry_uncertainty", "relay_ours")
 RELAY_DELIVERY = 0.85
+# The relay is NOT a 38 B periodic-reporting end node. Its panel, battery, duty cycle and heating
+# are a different equipment class, so running it through the node energy model would invent
+# numbers we do not have. Relay availability is therefore an architectural parameter, and the
+# relay experiment is an available-relay UPPER BOUND: it answers "does adding store-and-forward
+# architecture remove execution ambiguity", which needs no statement about a 3925 m site
+# surviving the winter. Deployment-specific realisation waits for real equipment data.
+RELAY_AVAILABILITY = 1.0
 
 # What the far side can do, and what the runtime does with it. The three ablations remove one
 # ingredient of the protocol at a time, because a contribution that cannot be decomposed reads
 # as a monolith.
 ARM_SPEC = {
     #                        far side: (receipts, fencing)   stable id   scoped reconcile
-    "b1_wirelessagent":      ((False, False),                False,      False),
-    "b2_wirelessops":        ((False, False),                False,      False),
-    "b3_verified":           ((False, False),                False,      False),
+    "one_shot":              ((False, False),                False,      False),
+    "retry_uncertainty":     ((False, False),                False,      False),
+    "verified_tool_calls":   ((False, False),                False,      False),
     "ours":                  ((True,  True),                 True,       True),
     "ours_plain_sink":       ((False, False),                True,       True),
     "ablate_identity":       ((True,  True),                 False,      True),
@@ -143,7 +155,8 @@ class FarSide:
         return node_has_any
 
 
-def make_nodes(n_reach: int, n_blocked: int, rng, use_energy: bool):
+def make_nodes(n_reach: int, n_blocked: int, rng, use_energy: bool,
+               heated_fraction: float = HEATED_FRACTION):
     """Nodes on the real terrain grid, with the real energy model where requested.
 
     Half the sites get a heated battery box. That is not a tuning knob: the charge gate is what
@@ -174,7 +187,7 @@ def make_nodes(n_reach: int, n_blocked: int, rng, use_energy: bool):
         if use_energy:
             from energy import NodeEnergy
             nd["energy"] = NodeEnergy(elev_m=elv(dem, r["lat"], r["lon"]), rng=rng,
-                                      heated=bool(rng.random() < HEATED_FRACTION))
+                                      heated=bool(rng.random() < heated_fraction))
         nodes.append(nd)
     return nodes
 
@@ -187,7 +200,8 @@ def link_attempt(node: dict, rng) -> bool:
 
 
 def run_arm(arm: str, nodes: list, hours: int, cmd_period: int, seed: int,
-            use_energy: bool, relay: bool = False) -> dict:
+            use_energy: bool, relay: bool = False,
+            relay_availability: float = RELAY_AVAILABILITY) -> dict:
     rng = np.random.default_rng(seed)
     base_arm = arm[6:] if arm.startswith("relay_") else arm
     (receipts, fencing), stable_id, scoped = ARM_SPEC[base_arm]
@@ -236,15 +250,17 @@ def run_arm(arm: str, nodes: list, hours: int, cmd_period: int, seed: int,
             op, n = item["op"], item["node"]
 
             # ---- what each runtime does this hour ----
-            if arm == "b1_wirelessagent":
-                # one shot per decision; a failed response is reported to the model and dropped
+            if arm == "one_shot":
+                # the agent assumes tool execution is reliable: one attempt per decision, and a
+                # failed response is reported and dropped. This is the WirelessAgent ASSUMPTION,
+                # not the WirelessAgent system.
                 if t < op.created_at:
                     continue
                 want = (item["attempts"] == 0)
-            elif arm == "b2_wirelessops":
-                # pre-execution assurance, then retry under a FRESH request up to a budget
+            elif arm == "retry_uncertainty":
+                # on an uncertain result, retry under a FRESH request up to a budget
                 want = item["attempts"] < RETRY_BUDGET
-            elif arm == "b3_verified":
+            elif arm == "verified_tool_calls":
                 # on no-ACK, verify the postcondition, then retry if it says "not applied"
                 if item["attempts"] == 0:
                     want = True
@@ -283,7 +299,8 @@ def run_arm(arm: str, nodes: list, hours: int, cmd_period: int, seed: int,
             reg.dispatched(op, t)
 
             # ---- the relay hop, when the architecture provides one ----
-            if arm.startswith("relay_") and n["permanent"] and n["servable"]:
+            relay_up = n["servable"] and (rng.random() < relay_availability)
+            if arm.startswith("relay_") and n["permanent"] and relay_up:
                 # the coordinator reaches the relay (a ridge site) even though it cannot reach
                 # the node. The ACK on this hop is what tells it the relay took custody.
                 if rng.random() < ACK_LOSS_P:
@@ -318,7 +335,7 @@ def run_arm(arm: str, nodes: list, hours: int, cmd_period: int, seed: int,
                 settled_intents += 1
             else:
                 # no usable response: this is where the arms differ in what they conclude
-                if arm in ("b1_wirelessagent",):
+                if arm in ("one_shot",):
                     item["done"] = True
                     settled_intents += 1
                 elif stable_id:
@@ -390,8 +407,14 @@ def main() -> None:
     ap.add_argument("--blocked", type=int, default=4)
     ap.add_argument("--seeds", type=int, default=5)
     ap.add_argument("--no-energy", action="store_true")
+    ap.add_argument("--heated", type=float, default=None,
+                    help="override the heated-site fraction (A-layer nominal; sweep it)")
     ap.add_argument("--relay", action="store_true",
                     help="give permanently-blocked servable nodes a store-and-forward relay")
+    ap.add_argument("--arms", default="",
+                    help="comma-separated subset of arms, for sweeps")
+    ap.add_argument("--relay-availability", type=float, default=RELAY_AVAILABILITY,
+                    help="probability the relay exists and is in service for a servable node")
     ap.add_argument("--tag", default="")
     args = ap.parse_args()
 
@@ -412,12 +435,17 @@ def main() -> None:
     print("-" * len(hdr))
     rows = []
     arms = RELAY_ARMS if args.relay else ARMS
+    if args.arms:
+        want = tuple(x.strip() for x in args.arms.split(","))
+        arms = tuple(a for a in arms if a in want)
     for arm in arms:
         acc = []
         for s in range(args.seeds):
             rng = np.random.default_rng(1000 + s)
-            nodes = make_nodes(args.reach, args.blocked, rng, use_energy)
-            acc.append(run_arm(arm, nodes, hours, args.cmd_period, 2000 + s, use_energy))
+            hf = HEATED_FRACTION if args.heated is None else args.heated
+            nodes = make_nodes(args.reach, args.blocked, rng, use_energy, hf)
+            acc.append(run_arm(arm, nodes, hours, args.cmd_period, 2000 + s, use_energy,
+                               relay_availability=args.relay_availability))
         agg = {k: float(np.mean([a[k] for a in acc]))
                for k in acc[0] if k != "arm"}
         agg["arm"] = arm
@@ -435,9 +463,9 @@ def main() -> None:
         print(f"\nwrote {path}")
         return
 
-    base = next(r for r in rows if r["arm"] == "b1_wirelessagent")
+    base = next(r for r in rows if r["arm"] == "one_shot")
     for r in rows:
-        if r["arm"] == "b1_wirelessagent":
+        if r["arm"] == "one_shot":
             continue
         print(f"  {r['arm']:20s} 恰好一次 {100*base['exactly_once_rate']:.1f}% -> "
               f"{100*r['exactly_once_rate']:.1f}%   多余应用 {base['duplicate_applications']:.0f} -> "

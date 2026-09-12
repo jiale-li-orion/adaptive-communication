@@ -23,21 +23,21 @@
 
 **政策层面。** 工信部联信管〔2024〕256号（14 部门，2024-12-31）点名断路、断电、断网，把北斗短报文与天通列为基层兜底手段，要求设备适应严寒与密林，目标年为 2027。十五五方案（自然资办函〔2026〕1198号）不含任何传输连续性、功耗或覆盖要求，因此通信侧的论证只能引 256 号文。
 
-**灾害中的实体退服记录。** 第二周汇报第 30 至 34 页整理了四起事件，其中的实体损失为：2026 年西藏吉隆口岸泥石流造成 5 个基站退服，同期投入卫星电话 36 部、便携卫星设备 10 套、发电油机 18 台；2024 年四川康定姑咱泥石流造成 22 km 光缆受损与 7 个基站退服，投入 1 架大型无人机基站、6 辆应急通信车、9 台高通量卫星便携基站；2024 年日本奥能登土砂灾害一度中断 88 个基站，靠移动基站车与可搬型基站恢复；2023 年新西兰 Gabrielle 滑坡破坏主干光纤，峰值约 20% 基站离线，Gisborne 一度有 90% 基站在两天内离线，临时回传改走卫星与微波，容量低于原光纤。
+**灾害中的实体退服记录。** 本项目调研整理了四起事件，其中的实体损失为：2026 年西藏吉隆口岸泥石流造成 5 个基站退服，同期投入卫星电话 36 部、便携卫星设备 10 套、发电油机 18 台；2024 年四川康定姑咱泥石流造成 22 km 光缆受损与 7 个基站退服，投入 1 架大型无人机基站、6 辆应急通信车、9 台高通量卫星便携基站；2024 年日本奥能登土砂灾害一度中断 88 个基站，靠移动基站车与可搬型基站恢复；2023 年新西兰 Gabrielle 滑坡破坏主干光纤，峰值约 20% 基站离线，Gisborne 一度有 90% 基站在两天内离线，临时回传改走卫星与微波，容量低于原光纤。
 
 **物理约束，来自本项目实测。** 西藏波密与易贡的 SRTM 地形海拔跨度为 2025 至 6690 m。单网关在 121×121 网格上的可达点仅 1689 个，占 11.5%；连不通的点 12952 个，占 88.5%，这些点在 SF12 下仍不闭合。决定连通性的是遮挡而非距离：8.37 km 处有 1169 m 遮挡的点位损耗 217.0 dB，12.61 km 处只有 1102 m 遮挡的点位损耗 201.2 dB，近 4.2 km 反而差 15.8 dB。地形遮挡造成的超额损耗在 71 至 107 dB 量级，而 SF 从 7 提到 12 只增加 14 dB 灵敏度，因此链路自适应无法救回被地形挡住的节点。ChirpBox 真实轨迹（20,913 个逐小时快照、21 节点、420 条有向链路）拟合出的链路可用率为 68.75%，中断时长中位 2 h、p99 42 h，平均中断突发 6.38 h，而同丢失率下 i.i.d. 模型只预测 1.45 h，相差 4.4 倍。供电侧，LiFePO4 在 −20 °C 下容量约为标称值的 50%，且低于 +5 °C 无法充电，高海拔站点因此在冬季长时间静默。
 
-**同类论文的结构性空白。** 对 9 篇近期 JSAC / TCOM / TWC / TMC / TVT 同域论文的通读给出四个计数。分母 9 是本次侦察中读到方法与评测层的篇数，非普查；论文中只能表述为 *in the nine papers we surveyed*。用 DEM、地形数据库或实测信道 trace 论证仿真真实性的为 **0 篇**，地形最多作为几何抽象出现，多数完全缺席；3GPP TR 38.901 参数表的使用为 0 篇。设立失效与中断模型小节的为 **0 篇**。运行第三方公开实现作对照的为 **0 篇**，其中 6 篇以重实现或自建方式构造对照。用外部 benchmark 或公开数据集作评测基底的为 **2/9**。方向上有更强的旁证：2025 年一篇 COMST 综述统计 130 篇基于机器学习的资源分配论文，详审的 27 篇中绝大多数不共享源码，78.46% 未给可用的数据来源信息（见 `docs/s5-benchmark/s6-7-experimental-norms.md`）。
+**同类论文的结构性空白。** 对 9 篇近期 JSAC / TCOM / TWC / TMC / TVT 同域论文的通读给出四个计数。分母 9 是本次侦察中读到方法与评测层的篇数，非普查；论文中只能表述为 *in the nine papers we surveyed*。用 DEM、地形数据库或实测信道 trace 论证仿真真实性的为 **0 篇**，地形最多作为几何抽象出现，多数完全缺席；3GPP TR 38.901 参数表的使用为 0 篇。设立失效与中断模型小节的为 **0 篇**。运行第三方公开实现作对照的为 **0 篇**，其中 6 篇以重实现或自建方式构造对照。用外部 benchmark 或公开数据集作评测基底的为 **2/9**。方向上有更强的旁证：2025 年一篇 COMST 综述统计 130 篇基于机器学习的资源分配论文，详审的 27 篇中绝大多数不共享源码，78.46% 未给可用的数据来源信息（COMST 2025，见 `https://oulurepo.oulu.fi/bitstream/10024/54634/1/nbnfioulu-202503202122.pdf`）。
 
 **一处数据空白。** 中国地灾监测网络的实测可靠性数据在公开文献中不存在，到报率、在线率、掉线次数、断链时长均无数值，可查到的只有合同条款（广东验收 ≥70%，昆明 ≥95%，河南 ≥95%）。本研究给出的是估计值，不是实测值。
 
 ## 二、通信实体的分类
 
-下面三张表来自第二周汇报，每张表附其原始文献依据。它们共同定义通信实体集合：每个实体带角色与基础设施类型，并投影成 agent 可调用的 capability。本文不研究该用哪一类实体，那三张表已经回答；本文研究集合随时间变动时任务如何继续。
+下面三张表给出通信实体集合的分类，每张表附其原始文献依据。它们共同定义通信实体集合：每个实体带角色与基础设施类型，并投影成 agent 可调用的 capability。本文不研究该用哪一类实体，那三张表已经回答；本文研究集合随时间变动时任务如何继续。
 
 ### 按灾损断点选恢复手段
 
-出处为汇报第 36 页，依据为 [5] SAGIN 灾害管理综述（IEEE TNSM 22(5):4021–4049, 2025）与 [6] 灾害区域网络综述（IEEE Access 13:91129–91160, 2025）。
+依据为 SAGIN 灾害管理综述（IEEE TNSM 22(5):4021–4049, 2025）与灾害区域网络综述（IEEE Access 13:91129–91160, 2025）。
 
 | 灾损断点 | 恢复手段 |
 |---|---|
@@ -51,11 +51,11 @@
 
 ### 按 UAV 通信角色分
 
-出处为汇报第 16 页，依据为 [20] OWAID et al., ICEEE 2024 的 UAV 辅助通信综述，以及 [21] NICT 与 [22] ZTE 的工程方案。角色分为 `Relay`、`Base Station`、`Airborne UE` 三类，架构分为 `Infrastructure`、`Ad-hoc`、`Hybrid` 三类，工程组网有四类形态：UAV Relay、UAV 临时基站、UAV+CPE、UAV Mesh。
+依据为 OWAID et al., ICEEE 2024 的 UAV 辅助通信综述，以及 NICT 与 ZTE 的工程方案。角色分为 `Relay`、`Base Station`、`Airborne UE` 三类，架构分为 `Infrastructure`、`Ad-hoc`、`Hybrid` 三类，工程组网有四类形态：UAV Relay、UAV 临时基站、UAV+CPE、UAV Mesh。
 
 ### 按低功耗接入与回传的组合分
 
-出处为汇报第 14 页，依据为 [14] JOUHARI et al., IEEE COMST 25(3):1841–1876, 2023 的 LoRaWAN 综述与 [15] 工信部 2017 年第 27 号公告。组合方式为 LoRa + 4G/卫星、NB-IoT + 运营商核心网、LoRa + NB-IoT、LoRa Mesh + 卫星。
+依据为 JOUHARI et al., IEEE COMST 25(3):1841–1876, 2023 的 LoRaWAN 综述与工信部 2017 年第 27 号公告。组合方式为 LoRa + 4G/卫星、NB-IoT + 运营商核心网、LoRa + NB-IoT、LoRa Mesh + 卫星。
 
 ## 三、现状盘点
 
@@ -96,19 +96,22 @@
 
 #### 方法对照
 
-四条，每一步对应一层缺口且对应一篇明确文章。
+主表比较的是**执行运行时**，在固定决策轨迹上运行，不复现任何一篇的 planner。因此这一列用的是语义名，而不是论文名：把一个论文名贴到一行只实现了其骨架的策略上，等于借用该论文的权威。那些系统本身放到 LLM supplement 里实现，那里才是 agent 级的对照。
 
-| 方法 | 对应文章 | 在本实验中的角色 |
+| 方法 | 语义 | 出处 |
 |---|---|---|
-| B1 WirelessAgent-style | Tong et al., *WirelessAgent: Large Language Model Agents for Intelligent Wireless Networks*, China Communications 23(3):265–285, 2026, DOI `10.23919/jcc.fa.2025-0163.202603`（另有 arXiv `2409.07964`、`2505.01074`） | 通信领域现有的 LLM agent：perception / memory / planning / action。代表"agent 会选工具、会决策，但默认工具执行是可靠的" |
-| B2 WirelessOpsAgent-style | Lu et al., *WirelessOpsAgent: A Benchmark and Agent Design for Action Assurance in Wireless Networks*, arXiv `2608.08277` | 执行前检查 evidence 与 contract，决定 APPLY / HOLD / RETRY / ESCALATE。它解决的是 pre-execution assurance，本实验测它在 post-dispatch 中断下会怎样。其自身对照已含 Direct、WirelessAgent++ 加 contract、CRITIC 式三类 |
-| B3 Verified Tool Calls | Mansoor, Phadke, Rana, *Verified Tool Calls Improve LLM Agent Reliability Under Non-Atomic Failures*, arXiv `2608.02645` | 执行后验证、verify-before-retry、idempotency key。差别在于它没有 durable lifecycle、没有远端 epoch、没有重连调和 |
-| 本文 runtime | 本文 | stable operation identity + persistent lifecycle + 远端 epoch / fencing + 限定范围调和 + first-wins 结算 |
-| Direct / one-shot | 最低控制组 | 不重试、不记账。只作下界，不占正式对照名额，以免主表膨胀 |
+| One-shot execution | 假定工具执行可靠：每个决策只发一次，失败即上报并丢弃。这是 WirelessAgent 的**假设**，不是 WirelessAgent 系统 | 最低控制组，无单一出处 |
+| Retry-on-uncertainty | 结果不确定时以**新的请求身份**重发，带重试预算 | 工程惯例，见 AWS Builders' Library 与 Google SRE Book |
+| Verified Tool Calls | 超时后验证后置条件，再决定是否重发 | Mansoor, Phadke, Rana, arXiv `2608.02645` |
+| **Ours** | 稳定操作身份 + 持久生命周期 + 远端 epoch fencing + 限定范围调和 + first-wins 结算 | 本文 |
 
-逻辑链是干净的：B1 会做通信决策；B2 在执行前检查该不该执行；B3 在执行后超时会先验证再重试；本文把一次远端操作当成跨断连持续存在的 durable operation，直到调和完成才结算。四条各自停在前一层。
+逻辑链是干净的：one-shot 假定执行可靠；retry-on-uncertainty 承认不确定但用新身份重发；verified tool calls 承认不确定且先验证再重发；本文把一次远端操作当成跨断连持续存在的 durable operation，直到调和完成才结算。四条各自停在前一层。
+
+一条口径声明：`retry-on-uncertainty` **不等同于** WirelessOpsAgent 的方法。该文的 RETRY 是动作保证阶段的一个决策，而不是分发后的盲目重试。把它当论文名使用会被正确地质疑；作为语义对照则没有问题。
 
 CRITIC 与 AgentSpec 不进主实验。前者处理验证器本身的质量，后者处理动作允不允许执行，与本文所在的层不同，混入会把坐标轴搞散。
+
+**LLM supplement。** 主表固定决策轨迹，因为本文的自变量是执行语义，模型采样噪声会毁掉这条因果。补充实验再让**同一个 LLM** 接四种执行层，检验闭环情形下结论是否保持；WirelessAgent 与 WirelessOpsAgent 按各自论文的方法在那一层实现，与本文的对照挂在 agent 级而非 runtime 级。接口留在这里，实现待做。
 
 **必引但不跑。** Yao et al., *ReAct*, ICLR 2023, arXiv `2210.03629`（agent-loop 源头，通用背景）；*WirelessAgent++*, arXiv `2603.00501`（通信 agent 已在做 workflow search，但优化的是 workflow 而非执行语义）；Ma et al., *TopoLLM: LLM-driven adaptive tool learning for real-time emergency network topology planning*, Digital Communications and Networks 12(2):273–282, 2026, DOI `10.1016/j.dcan.2025.10.002`（与"应急通信 + LLM + tool use"最贴的正式发表工作，负责把本文场景接进应急通信 agent 文献；其全文尚未核实，工具目录与失败语义未验证）；Wang, Poskitt et al., *AgentSpec: Customizable Runtime Enforcement for Safe and Reliable LLM Agents*, arXiv `2503.18666`, 2025（界定邻近的 runtime enforcement 方向，即动作允不允许执行）。
 
@@ -152,11 +155,11 @@ CRITIC 与 AgentSpec 不进主实验。前者处理验证器本身的质量，�
 
 ### Related work
 
-**最危险的邻居。** INFOCOM 2026 的 *Rollback Is Not Undo: Path-Dependent Failures in LLM-Arbitrated Network Control*（Weici Pan, Zhenhua Liu，DOI `10.1109/INFOCOM59046.2026.11571400`）在同类会议与同类问题空间证明，LLM 仲裁的网络控制回路中回滚无法恢复行为，且恢复效果路径相关。该文提出 `recovery gap` 指标，故障模式含 observation corruption、delay-reordering 与 agent dropout。它闭源且无公开 artifact。未覆盖的是灾害与应急场景、真实轨迹驱动与实体生命周期。本文需引用并显式对比。
+**最接近的既有工作。** INFOCOM 2026 的 *Rollback Is Not Undo: Path-Dependent Failures in LLM-Arbitrated Network Control*（Weici Pan, Zhenhua Liu，DOI `10.1109/INFOCOM59046.2026.11571400`）在同类会议与同类问题空间证明，LLM 仲裁的网络控制回路中回滚无法恢复行为，且恢复效果路径相关。该文提出 `recovery gap` 指标，故障模式含 observation corruption、delay-reordering 与 agent dropout。它闭源且无公开 artifact。未覆盖的是灾害与应急场景、真实轨迹驱动与实体生命周期。本文需引用并显式对比。
 
 **动作保证这一层。** WirelessOpsAgent（arXiv `2608.08277`，CC BY 4.0）把研究层次定为 **Action Assurance**，判据是动作在下发前是否被正确授权，其表述为 *repairs recoverable support failures before execution*，问题被限定在可修复范围内。本文场景中 88.5% 的点位永久不可达、断电可持续数周，大量失败不可修复。该文中心是分发前的 repair，本文中心是分发后任务在实体变动下的存续。其发布物是数据与工具契约，不含运行时与评分谓词，核验见 `docs/s5-benchmark/README.md`。
 
-**已被占据的机制，不可声称。**
+**已被占据的机制。**
 
 | 机制 | 出处 |
 |---|---|
@@ -171,7 +174,7 @@ CRITIC 与 AgentSpec 不进主实验。前者处理验证器本身的质量，�
 | LLM agent serving 中的队头阻塞 | Autellix, arXiv `2502.13965` |
 | 验证者永不失败的隐含假设 | CRITIC, arXiv `2305.11738` |
 
-三句不能写。"我们是第一个把 X 用于 LLM agent"（X 取上表任一机制）可由上表直接反驳。"没有工作注入网络故障"应改为 *we are not aware of a workload that overlays a communication-channel fault model onto remote agent actuation*。第三条是"我们提出了 runtime 拥有的操作生命周期"：运行时应拥有身份与生命周期、超时不应取消工作、终态记录一次写成，这些都是通用的运行时设计原则，本文不据此声称贡献。本文的增量在于把这套语义从进程内执行扩展到中断链路上的非原子远端执行，那里存在"远端已执行而完成证据永远丢失"这一进程内执行不会遇到的状态。
+据此，本文不声称发明上表任一机制。运行时应拥有身份与生命周期、超时不应取消工作、终态记录一次写成，都是通用的运行时设计原则。本文的增量在于把这套语义扩展到中断链路上的非原子远端执行，那里存在"远端已执行而完成证据永远丢失"这一进程内执行不会遇到的状态。同样，本文不声称是第一个注入网络故障的工作；准确的表述是 *we are not aware of a workload that overlays a communication-channel fault model onto remote agent actuation*。
 
 ### 尚未覆盖的部分
 
@@ -443,4 +446,4 @@ python3 code/run_baseline.py                    # 执行层基线复现
 
 仓库之外另有两处。`../ns3/` 为 ns-3.48 加 FLoRa（3.2 GB）；`/home/orion/Communications/recon/` 存放文献侦察的原始抽取。
 
-未纳入版本控制的文件及获取方式：`data/` 含 SRTM 高程瓦片与 ChirpBox 原始轨迹，SRTM 下载路径见 `code/mountain_lora_link.py` 头部注释，ChirpBox 见 Zenodo `10.5281/zenodo.5527877`；`libs/pylibs` 可用 `pip install numpy itmlogic` 重建，`libs/simlibs` 用 `pip install mitsuba`；`docs/s1-input/week2-deck.md` 由课题组汇报 PPT 提取，与 `*.pptx` 一并留在仓库之外。
+未纳入版本控制的文件及获取方式：`data/` 含 SRTM 高程瓦片与 ChirpBox 原始轨迹，SRTM 下载路径见 `code/mountain_lora_link.py` 头部注释，ChirpBox 见 Zenodo `10.5281/zenodo.5527877`；`libs/pylibs` 可用 `pip install numpy itmlogic` 重建，`libs/simlibs` 用 `pip install mitsuba`；`docs/s1-input/` 为课题背景与内部材料，留在仓库之外。

@@ -1,0 +1,68 @@
+### 1. 主表 + 协议消融（9 arms，180d×5）
+  ablate_identity      恰好一次 28.9% -> 38.2%   多余应用 0 -> 0   零次 8196 -> 7119
+  ablate_fencing       恰好一次 28.9% -> 38.7%   多余应用 0 -> 0   零次 8196 -> 7066
+  ablate_receipts      恰好一次 28.9% -> 38.7%   多余应用 0 -> 0   零次 8196 -> 7066
+  ablate_scope         恰好一次 28.9% -> 38.7%   多余应用 0 -> 0   零次 8196 -> 7066
+
+  消融 ours_plain_sink      恰好一次  27.9% (ours 38.7%)  多余应用  1471.2 (ours 0)
+  消融 ablate_identity      恰好一次  38.2% (ours 38.7%)  多余应用     0.0 (ours 0)
+  消融 ablate_fencing       恰好一次  38.7% (ours 38.7%)  多余应用     0.0 (ours 0)
+  消融 ablate_receipts      恰好一次  38.7% (ours 38.7%)  多余应用     0.0 (ours 0)
+  消融 ablate_scope         恰好一次  38.7% (ours 38.7%)  多余应用     0.0 (ours 0)
+
+wrote /home/orion/Communications/应急通信/project1/agentic communication/results/method_comparison_main.json
+
+### 2. 中继 2x2（2 arms，180d×5）
+
+runtime                  逻辑写入      恰好一次      零次      多次      多余应用      尝试
+-------------------------------------------------------------------------
+relay_retry_uncertainty    11520     28.9%   58.1%   13.0%    1885.6   29160
+relay_ours              11520     42.2%   57.8%    0.0%       0.0   27148
+
+
+wrote /home/orion/Communications/应急通信/project1/agentic communication/results/method_comparison_relay.json
+
+### 3. 协调者重启（180d×5）
+no_journal         16      0.0%       4      12     689.4         0
+journal            16     75.0%       4       0       0.0      2955
+
+  无日志：多余应用 689.4，12 条意图被应用了不止一次
+  有日志：多余应用 0.0，0 条意图被应用了不止一次
+  差别：689.4 次重复效果被持久化挡住
+
+wrote /home/orion/Communications/应急通信/project1/agentic communication/results/restart_experiment_main.json
+
+### 4. 加热站点比例 sweep
+--- heated=0.0 ---
+one_shot                11520     28.9%   71.1%    0.0%       0.0   11520
+retry_uncertainty       11520     27.9%   61.7%   10.4%    1471.2   29179
+ours                    11520     38.7%   61.3%    0.0%       0.0   27128
+--- heated=0.75 ---
+one_shot                11520      8.9%   91.1%    0.0%       0.0   11520
+retry_uncertainty       11520      8.6%   88.2%    3.2%     444.0   32920
+ours                    11520     11.9%   88.1%    0.0%       0.0   32280
+--- heated=0.25 ---
+one_shot                11520     34.2%   65.8%    0.0%       0.0   11520
+retry_uncertainty       11520     33.2%   54.6%   12.2%    1728.0   28187
+ours                    11520     45.8%   54.2%    0.0%       0.0   25768
+--- heated=1.0 ---
+one_shot                11520     19.4%   80.6%    0.0%       0.0   11520
+retry_uncertainty       11520     18.3%   74.8%    6.9%     988.6   30961
+ours                    11520     25.2%   74.8%    0.0%       0.0   29665
+--- heated=0.5 ---
+one_shot                11520     41.5%   58.5%    0.0%       0.0   11520
+retry_uncertainty       11520     40.4%   44.7%   14.9%    2110.0   26731
+ours                    11520     55.4%   44.6%    0.0%       0.0   23867
+
+### 5. 中继可用度 sweep
+--- relay_availability=0.25 ---
+relay_retry_uncertainty    11520     29.3%   60.1%   10.5%    1492.0   29196
+relay_ours              11520     40.1%   59.9%    0.0%       0.0   27149
+--- relay_availability=0.5 ---
+relay_retry_uncertainty    11520     29.8%   59.1%   11.2%    1572.6   29188
+relay_ours              11520     41.2%   58.8%    0.0%       0.0   27160
+--- relay_availability=1.0 ---
+relay_retry_uncertainty    11520     28.9%   58.1%   13.0%    1885.6   29160
+relay_ours              11520     42.2%   57.8%    0.0%       0.0   27148
+
+### 全部完成

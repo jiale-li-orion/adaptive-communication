@@ -1,0 +1,53 @@
+{
+  "config": {
+    "days": 180,
+    "cmd_period": 6,
+    "reach": 12,
+    "blocked": 4,
+    "seeds": 5,
+    "no_energy": false,
+    "heated": 0.75,
+    "relay": false,
+    "arms": "one_shot,retry_uncertainty,ours",
+    "relay_availability": 1.0,
+    "tag": "h0.75"
+  },
+  "results": [
+    {
+      "logical_writes": 11520.0,
+      "exactly_once": 3943.2,
+      "zero_times": 7576.8,
+      "more_than_once": 0.0,
+      "duplicate_applications": 0.0,
+      "attempts": 11520.0,
+      "exactly_once_rate": 0.34229166666666666,
+      "zero_rate": 0.6577083333333333,
+      "dup_rate": 0.0,
+      "arm": "one_shot"
+    },
+    {
+      "logical_writes": 11520.0,
+      "exactly_once": 3828.6,
+      "zero_times": 6288.4,
+      "more_than_once": 1403.0,
+      "duplicate_applications": 1728.0,
+      "attempts": 28186.8,
+      "exactly_once_rate": 0.33234375,
+      "zero_rate": 0.5458680555555555,
+      "dup_rate": 0.12178819444444444,
+      "arm": "retry_uncertainty"
+    },
+    {
+      "logical_writes": 11520.0,
+      "exactly_once": 5276.8,
+      "zero_times": 6243.2,
+      "more_than_once": 0.0,
+      "duplicate_applications": 0.0,
+      "attempts": 25768.0,
+      "exactly_once_rate": 0.45805555555555555,
+      "zero_rate": 0.5419444444444445,
+      "dup_rate": 0.0,
+      "arm": "ours"
+    }
+  ]
+}

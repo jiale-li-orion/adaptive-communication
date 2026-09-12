@@ -1,0 +1,41 @@
+{
+  "config": {
+    "days": 180,
+    "cmd_period": 6,
+    "reach": 12,
+    "blocked": 4,
+    "seeds": 5,
+    "no_energy": false,
+    "heated": null,
+    "relay": true,
+    "arms": "",
+    "relay_availability": 0.25,
+    "tag": "ra025"
+  },
+  "results": [
+    {
+      "logical_writes": 11520.0,
+      "exactly_once": 3380.6,
+      "zero_times": 6925.2,
+      "more_than_once": 1214.2,
+      "duplicate_applications": 1492.0,
+      "attempts": 29196.0,
+      "exactly_once_rate": 0.2934548611111111,
+      "zero_rate": 0.6011458333333334,
+      "dup_rate": 0.10539930555555554,
+      "arm": "relay_retry_uncertainty"
+    },
+    {
+      "logical_writes": 11520.0,
+      "exactly_once": 4621.2,
+      "zero_times": 6898.8,
+      "more_than_once": 0.0,
+      "duplicate_applications": 0.0,
+      "attempts": 27149.2,
+      "exactly_once_rate": 0.40114583333333326,
+      "zero_rate": 0.5988541666666667,
+      "dup_rate": 0.0,
+      "arm": "relay_ours"
+    }
+  ]
+}
