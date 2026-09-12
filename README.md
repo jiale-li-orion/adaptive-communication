@@ -878,6 +878,32 @@ self.bat_wh = min(self.bat_wh + hourly_gen - self.load_wh_per_tick, self.usable_
 
 它同时是一条更保守的正确性基线。若它在本项目全部失效注入下都给出零覆盖，那么"零覆盖"本身就不再构成增量，增量只能来自机会消耗与恢复能力。**这个结果无论倒向哪边都有信息量**，因此值得独立于其他基线单列。
 
+### 7.11 P0 定义闭合（进行中）
+
+业务闭环仿真的 P0 正在按契约 §10 推进。已完成的部件与它们的判据：
+
+| 部件 | 产物 | 判据状态 |
+|---|---|---|
+| P0.1 能量模型 | `code/physics/energy.py` 修正 | 29 项手工核算验证通过 |
+| P0.2 控制面机会 | `code/monitoring/opportunity.py` | 机会上界断言在每条臂上成立 |
+| P0.3 采样缓存上传 | `code/monitoring/node_model.py` | 逐事件对齐通过 |
+| P0.4 任务生成器 | `code/monitoring/task_generator.py` | 外生性与开发/测试隔离通过 |
+| P0.6 评分器 | `code/monitoring/scorer.py` | 真值边界通过 |
+| P0.7 公平性审计 | `code/experiments/audit_fairness.py` | 六组检查全部通过 |
+| P0.5 四个接口 | 未开工 | — |
+
+**72 小时参考负载端到端已跑通。** 本地规则基线 44.6%（常态 95.8%、风险 23.3%），oracle 上界 92.2%（常态 97.5%、风险 89.9%）。执行层有 47.6 个百分点的空间，几乎全部来自风险窗。这不是结论，是上界——它说明这条链上确实有值得做的东西，也说明论文的收益上限在哪里。
+
+**三条在实现中发现的机制，值得进入正文。**
+
+控制通道容量取决于数据 profile，而 profile 又取决于控制是否成功。这是自举的：节点切到加密 profile 之前只有常态的每小时一次上行，下发的配置命令只能等那一次机会。oracle 在 12 小时风险窗内仍有约 120 节点小时的配置错配，就是这个延迟的直接读数。
+
+机会的成立条件是上行被网关收到，不是节点发了。Class A 节点发完会开 RX1/RX2，但网关只能使用它知道的窗口，而它知道的唯一途径是收到了那次上行。
+
+上行的分包必须随积压自适应。批量上限取成等于产生速率时，任一次上传失败都会造成队头阻塞且缓冲无界增长——这是回归测试抓出来的一处参数自相矛盾，不是实现细节。
+
+**一处跨模块命名漂移被端到端运行抓出。** 需求侧写 `displacement`、节点侧写 `deformation`，评分器匹配不到任何样本，覆盖率恒为 0 且不报错。已加规范映射，并在公平性审计中断言该映射对两套词表都是满射。
+
 ### 7.10 重跑计划与判据
 
 **第一轮（模型修正，全部是修正而非扩张）**
@@ -948,6 +974,11 @@ python3 code/experiments/run_baseline.py                                      # 
 python3 code/experiments/test_draw_keys.py                                    # 报文级随机契约
 python3 code/experiments/test_journal_schema.py                               # 持久日志 schema
 python3 code/experiments/test_opportunity.py                                  # 控制面机会模型
+python3 code/experiments/test_node_model.py                                   # 采样缓存上传链
+python3 code/experiments/test_scorer.py                                       # 评分器与真值边界
+python3 code/experiments/test_task_generator.py                               # 外生需求生成器
+python3 code/experiments/test_energy_model.py                                 # 能量模型手工核算
+python3 code/experiments/audit_fairness.py                                    # 业务层公平性审计
 python3 code/experiments/audit_consistency.py                                 # 一致性审计
 python3 code/analysis/paired_ci.py results/method_comparison_main.json \      # 配对 95% 区间
     --arm-a ours --arm-b verified_tool_calls --workload operation --zero-check

@@ -373,42 +373,89 @@ def _seed_offset_s(seed: int) -> int:
     return pool[int.from_bytes(digest[:4], "big") % len(pool)]
 
 
-def _release_grid(total_s: int, seed: int = 0) -> list[int]:
-    """Demand-window start instants for the whole run, on the 60 s run clock.
+def _keep_until_reachable(releases: list[int], total_s: int, deadline_s: int
+                          ) -> tuple[list[int], list[int]]:
+    """Split a grid into the windows the run can satisfy and the ones it cannot.
 
-    Normal windows sit on the 60 min grid and five of them fall inside each 6 h risk window. Those
-    five are dropped: hours 12-18 and 48-54 are demanded at the risk cadence, so the normal cadence
-    does not also apply inside them. Without that exclusion the reference load would demand 30 %
-    more windows than its own table implies.
+    A demand exists only if some method could still satisfy it. A window whose deadline falls after
+    the end of the run cannot be satisfied by anything, so leaving it in the denominator would score
+    every method a guaranteed failure and would inflate nothing but the failure count. Those windows
+    are therefore dropped rather than kept, and `dropped_start_instants` reports how many were, so a
+    test can hold the number to what the contract table implies.
 
-    A window is kept when it STARTS inside the run, because every start instant the table specifies
-    is a demand the generator is supposed to produce. The last normal window therefore closes after
-    the nominal 72 h, and its deadline reaches past it too; both overruns are bounded by one window
-    and one deadline respectively, and the run-level rule that nothing is demanded after the run
-    ends still holds. Dropping that window instead would silently remove a demand from the last
-    hour of the reference load.
-
-    Normal windows are then shifted by one documented per-seed offset (see `_seed_offset_s`). The
-    shift is common to all of them, so their spacing stays exactly one hour and they cannot
-    collide. Risk instants are never shifted. The shift is bounded by one risk step, so a normal
-    window can never leave its own hour and can never land inside a risk window.
+    Kept and dropped are both sub-sequences at the ends of the grid: kept windows come first and the
+    dropped ones form a contiguous tail, which is also what the caller asserts.
     """
-    normal = [t for t in range(0, total_s, NORMAL_INTERVAL_S)]
-    risk = [t for t in range(0, total_s, RISK_INTERVAL_S)
-            if profile_for_hour(t / 3600.0) == PROFILE_RISK]
-    in_risk = {t for t in normal if profile_for_hour(t / 3600.0) == PROFILE_RISK}
-    kept_normal = set(normal) - in_risk
-    offset = _seed_offset_s(seed)
-    shifted_normal = {t + offset for t in kept_normal}
-    grid = sorted(shifted_normal | set(risk))
+    kept = [t for t in releases if t + deadline_s <= total_s]
+    dropped = [t for t in releases if t + deadline_s > total_s]
+    return kept, dropped
 
-    assert len(grid) == len(shifted_normal) + len(risk), "a start instant was lost or duplicated"
-    assert not (shifted_normal & set(risk)), "a normal window collides with a risk window"
-    assert all(t % RISK_INTERVAL_S == 0 for t in risk), "risk instants leave the 5 min grid"
-    assert all(t < total_s for t in grid), "a window starts after the end of the run"
-    assert 0 <= offset <= SEED_OFFSET_MAX_S
-    assert offset % NODE_DT_S == 0, "the shift is not on the run clock"
-    assert {t - offset for t in shifted_normal} == kept_normal, "the shift changed the cadence"
+
+def _normal_release_grid(total_s: int, seed: int = 0) -> tuple[list[int], list[int]]:
+    """Normal demand-window start instants: one per whole hour, over all 16 nodes.
+
+    Normal demand runs throughout the run and is NOT interrupted by a risk window. A risk window
+    demands denser monitoring for the critical nodes ON TOP of the normal demand, rather than
+    replacing it: an operator raising the risk level adds measurements, and does not switch the
+    normal monitoring off. The two cadences are therefore independent grids (this one and
+    `_risk_release_grid`), and at an instant that belongs to both, one normal task and one risk task
+    exist side by side with different node sets.
+
+    The seed shifts every normal window by one documented, common offset (see `_seed_offset_s`), so
+    the grid stays exactly one hour apart; risk instants are never shifted.
+    """
+    offset = _seed_offset_s(seed)
+    assert 0 <= offset <= SEED_OFFSET_MAX_S and offset % NODE_DT_S == 0
+    releases = [t + offset for t in range(0, total_s, NORMAL_INTERVAL_S)]
+    kept, dropped = _keep_until_reachable(releases, total_s, DEADLINE_S["normal"])
+    assert kept == sorted(kept) and dropped == sorted(dropped)
+    assert len(kept) + len(dropped) == len(releases)
+    # equidistant: kept windows are exactly one hour apart, and so is the whole grid before clipping
+    assert len({b - a for a, b in zip(kept, kept[1:])}) <= 1 and (
+        not kept or {b - a for a, b in zip(kept, kept[1:])} <= {NORMAL_INTERVAL_S})
+    assert all(b - a == NORMAL_INTERVAL_S for a, b in zip(releases, releases[1:]))
+    return kept, dropped
+
+
+def _risk_release_grid(total_s: int) -> tuple[list[int], list[int]]:
+    """Risk demand-window start instants: one per 5 min inside a risk window, critical nodes only.
+
+    Risk windows start and end on the hour and the risk cadence is 5 min, so the risk grid always
+    starts on a whole hour and every instant it produces is aligned with the hour grid. The two
+    grids are independent; their alignment means an instant can carry both a normal and a risk
+    demand, never that one replaces the other.
+    """
+    releases = [t for t in range(0, total_s, RISK_INTERVAL_S)
+                if profile_for_hour(t / 3600.0) == PROFILE_RISK]
+    kept, dropped = _keep_until_reachable(releases, total_s, DEADLINE_S["risk"])
+    assert all(t % RISK_INTERVAL_S == 0 for t in releases), "risk instants leave the 5 min grid"
+    for window in RISK_WINDOWS_H:
+        start, end = int(window[0] * 3600), int(window[1] * 3600)
+        inside = [t for t in kept if start <= t < end]
+        assert all(b - a == RISK_INTERVAL_S for a, b in zip(inside, inside[1:])), \
+            f"risk instants inside {window} are not 5 min apart"
+    assert len(kept) + len(dropped) == len(releases)
+    return kept, dropped
+
+
+def dropped_start_instants(total_s: int) -> tuple[int, int]:
+    """How many start instants of each kind a run of `total_s` seconds cannot satisfy.
+
+    Both grids lose exactly the windows whose deadline would land after the run end. Reported
+    separately so a test can assert the count instead of accepting whatever the generator produced.
+    """
+    return (len(_normal_release_grid(total_s, 0)[1]), len(_risk_release_grid(total_s)[1]))
+
+
+def _release_grid(total_s: int, seed: int = 0) -> list[int]:
+    """Every demand-window start instant of the run: the normal grid stacked with the risk grid."""
+    normal, _ = _normal_release_grid(total_s, seed)
+    risk, _ = _risk_release_grid(total_s)
+    grid = sorted(set(normal) | set(risk))
+    assert len(grid) >= max(len(normal), len(risk)), "stacking the grids lost an instant"
+    assert all(t + DEADLINE_S["risk" if profile_for_hour(t / 3600.0) == PROFILE_RISK
+                               else "normal"] <= total_s for t in grid), \
+        "a demand was kept that no method could satisfy inside the run"
     return grid
 
 

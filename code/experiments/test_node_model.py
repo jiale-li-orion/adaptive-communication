@@ -120,7 +120,7 @@ def test_cadence_follows_profile() -> None:
     check("风险段为 1 分钟一次", risk == 6 * 60, f"{risk} 个样本 = {risk / 6:.1f}/h")
 
     # A denser profile must not wait out the previous, longer interval.
-    rt2 = NodeRuntime(node_id="r01", role="displacement")
+    rt2 = NodeRuntime(node_id="r01", role="deformation")
     rt2.maybe_sample(0)
     rt2.maybe_sample(299)                    # still inside the normal 5-minute interval
     before = len(rt2.taken)
@@ -147,7 +147,7 @@ def test_cadence_follows_profile() -> None:
 
 def test_retransmission_and_ack() -> None:
     print("\n[3] 未被确认的记录会重发，已确认的不会")
-    rt = NodeRuntime(node_id="r01", role="displacement", batch_max=4)
+    rt = NodeRuntime(node_id="r01", role="deformation", batch_max=4)
     rt.maybe_sample(0)
     rt.maybe_sample(5 * 60)
     rt.maybe_sample(10 * 60)
@@ -172,7 +172,7 @@ def test_retransmission_and_ack() -> None:
 
 def test_capacity_and_loss() -> None:
     print("\n[4] 容量上限与丢失计数")
-    rt = NodeRuntime(node_id="r01", role="displacement", buffer_capacity=10)
+    rt = NodeRuntime(node_id="r01", role="deformation", buffer_capacity=10)
     for i in range(30):
         rt.maybe_sample(i * 5 * 60)
     check("缓冲不超过容量", rt.buffer_level == 10, f"level={rt.buffer_level}")
