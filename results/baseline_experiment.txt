@@ -5,37 +5,37 @@ S6 — BASELINE FAILURE REPRODUCTION (CPU only, no LLM)
 side-effect tool = alert.send.  Ground-truth counts from the environment.
 
 --- A. controlled: ONE intended side effect, retried up to 5x, ACK-loss p=0.7 ---
-    naive      : 0.34 duplicate applications per intended action
+    naive      : 0.18 duplicate applications per intended action
     lifecycle  : 0.00 duplicate applications per intended action
 
 
 --- B. full 180-day, 16-node episodes ---
 policy        dup_side_eff  dup/logical    lost    stale  outcome_unk   unavail
 -------------------------------------------------------------------------------
-naive               3473.8           0.56  5905.6  27727.4        933.2   62950.0
-backoff             3690.6           0.57  3300.0  27695.4        865.6   55059.2
-lifecycle            335.8           0.07    10.2  29697.6        935.8   44296.0
+naive               3454.4           0.57  3830.4  26825.6        462.6   55842.6
+backoff             9044.4           1.15  6440.4  27424.2        411.8   64292.2
+lifecycle            653.0           0.15     8.6  34332.4        430.6   45915.6
 
 Per-seed detail (naive):
   seed     dup    lost   stale  outcome_unk
-     1    1728    8737   25660         1273
-     2   11053    7623   28754          686
-     3    1596     879   27340         1125
-     4    1430    4181   29343          979
-     5    1562    8108   27540          603
+     1   10632    4352   24581          667
+     2    1491    4728   28217          931
+     3    1782    4397   25142          190
+     4    1556     600   28552          468
+     5    1811    5075   27636           57
 
 --- C. do the PHYSICAL models change the conclusion? ---
 channel       energy      policy      dup_side_eff    lost outcome_unk   unavail
-i.i.d.        placeholder naive              378.6  4712.4       255.6   77056.6
-i.i.d.        placeholder lifecycle          176.0    10.2       267.8   62809.6
-i.i.d.        real        naive             3473.8  5905.6       933.2   62950.0
-i.i.d.        real        lifecycle          335.8    10.2       935.8   44296.0
-Gilbert-Ell.  placeholder naive              353.2  5429.2       433.4   78914.6
-Gilbert-Ell.  placeholder lifecycle          106.2    11.6       387.6   62491.6
-Gilbert-Ell.  real        naive             5200.2  4703.4      1496.4   60560.4
-Gilbert-Ell.  real        lifecycle           95.4    12.0      1350.8   43801.6
+i.i.d.        placeholder naive              465.6  6672.8       153.0   82073.2
+i.i.d.        placeholder lifecycle          330.0     7.0       151.8   62239.4
+i.i.d.        real        naive             3454.4  3830.4       462.6   55842.6
+i.i.d.        real        lifecycle          653.0     8.6       430.6   45915.6
+Gilbert-Ell.  placeholder naive              399.8  7532.0       764.6   84736.2
+Gilbert-Ell.  placeholder lifecycle           44.6    12.0       556.8   62422.2
+Gilbert-Ell.  real        naive             5127.4  2275.0      2604.2   50891.0
+Gilbert-Ell.  real        lifecycle           49.0    12.0      1901.4   44116.6
 
 Interpretation:
-  naive retry produces 3473.8 duplicate side effects per 180-day episode;
-  the lifecycle policy reduces this to 335.8.
+  naive retry produces 3454.4 duplicate side effects per 180-day episode;
+  the lifecycle policy reduces this to 653.0.
   => the failure is reproducible and the mechanism fixes it.

@@ -391,7 +391,7 @@ class WirelessOpsAdapter:
                 op = self.dispatch_mutation("commit_policy", self._cycle_intent, version=version,
                                             stage_id=stage, expected_version=version)
             elif state == "running":
-                first = self.env.registry.ops[op].first_dispatch or 0
+                first = self.env.registry.ops[op].first_dispatch_at or 0
                 if (self.env.t - first) > 48:
                     return "unresolved"
         return "unresolved"

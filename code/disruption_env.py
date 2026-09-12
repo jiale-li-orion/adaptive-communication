@@ -22,7 +22,9 @@ from dataclasses import dataclass, field
 
 import numpy as np
 
-from operations import OperationRegistry, MAY_HAVE_EFFECT
+from operations import (
+    OperationRegistry, MAY_HAVE_EFFECT, Lifecycle, Observation, Outcome, Violation,
+)
 
 HERE = os.path.dirname(os.path.abspath(__file__))
 GRID = os.path.normpath(os.path.join(HERE, "..", "results", "coverage_grid.csv"))
@@ -281,28 +283,31 @@ class DisruptionEnv:
             self._anon += 1
             intent = f"anon-{self._anon}"
 
-        # ---- get or create the operation -------------------------------------
+        # ---- register BEFORE anything is sent -------------------------------------------------
+        # A retry of the same logical intent reuses the same operation and epoch; it is not a
+        # new registration. Registering after the send would leave a window in which the
+        # coordinator can crash having dispatched an effect it has no record of.
         op = self._by_intent.get(intent)
         if op is None:
-            op = self.registry.new(node.nid, tool, intent, self.t,
-                                   TOOLS[tool]["side_effect"])
+            op = self.registry.register(node.nid, tool, {}, intent, self.t,
+                                        TOOLS[tool]["side_effect"])
             self._by_intent[intent] = op
 
         # ---- retry budget (README §9 F07) ------------------------------------
-        op.attempts += 1
-        if op.attempts > op.budget:
+        if op.attempts >= op.budget:
             self.registry.f07_retry_budget_exhausted(op, self.t)
             return "failed", None
 
-        op.first_dispatch = op.first_dispatch or self.t
-        op.transition("running", self.t)
+        self.registry.dispatched(op, self.t)
 
         # ---- unreachable ------------------------------------------------------
         if self.is_unreachable(node):
             if TOOLS[tool]["side_effect"] and op.buffered_at is None:
                 node.buffered.append((self.t, tool, self.logical_key(node)))
                 op.buffered_at = self.t
-            op.transition("unavailable", self.t)
+            # the entity is unreachable. That is an OBSERVATION about the entity, not a verdict
+            # on this operation, which stays open and unresolved.
+            self.registry.f04_pending_forgotten(op, self.t)
             return "unavailable", None
 
         # ---- the channel ------------------------------------------------------
@@ -319,7 +324,7 @@ class DisruptionEnv:
                 self._maybe_apply(node, tool, intent)
                 return "stale_result", self._result(node, tool, stale_age=age)
             self._maybe_apply(node, tool, intent)
-            op.transition("committed", self.t)
+            self.registry.settle(op, Outcome.APPLIED, self.t)
             return "committed", self._result(node, tool)
 
         # ---- failure somewhere in the channel ---------------------------------
@@ -334,9 +339,11 @@ class DisruptionEnv:
                 self.registry.f01_node_lost_after_dispatch(op, self.t)
                 return "outcome_unknown", None
         if r < p + (1 - p) * 0.90:
-            op.transition("timeout", self.t)
+            # A WAIT TIMEOUT. The caller stopped waiting; the operation did not fail, was not
+            # cancelled, and is not settled. It stays unresolved and reconcilable.
+            self.registry.wait(op, deadline=self.t, tick=self.t)
             return "timeout", None
-        op.transition("outcome_unknown", self.t)
+        self.registry.settle(op, Outcome.UNKNOWN, self.t, "no evidence of any kind")
         return "outcome_unknown", None
 
     def logical_key(self, node: Node) -> str:
@@ -360,30 +367,31 @@ class DisruptionEnv:
         if intent is None:
             self._anon += 1
             intent = f"anon-{self._anon}"
-        op = self.registry.new(node.nid, tool, intent, self.t, TOOLS[tool]["side_effect"])
-        op.transition("running", self.t)
-        op.first_dispatch = self.t
-        self._inflight[op.op_id] = {"resolve_at": self.t + latency, "intent": intent,
-                                    "version": version}
+        op = self.registry.register(node.nid, tool, {}, intent, self.t,
+                                    TOOLS[tool]["side_effect"])
+        self.registry.dispatched(op, self.t)
+        self._inflight[op.operation_id] = {"resolve_at": self.t + latency, "intent": intent,
+                                           "version": version}
         self._by_intent[intent] = op
-        return op.op_id
+        return op.operation_id
 
     def poll(self, op_id: str) -> tuple[str, object]:
         """Resolve an in-flight operation, if the world has moved far enough."""
         rec = self._inflight.get(op_id)
-        if rec is None:
-            return self.registry.ops[op_id].state, None
         op = self.registry.ops[op_id]
-        node = next((n for n in self.nodes if n.nid == op.node), None)
+        if rec is None:
+            return self._visible(op), None
+        node = next((n for n in self.nodes if n.nid == op.entity_id), None)
         if node is None:
-            return op.state, None
+            return self._visible(op), None
 
         # the node went away while the call was in flight -> F01
         if self.is_unreachable(node):
             if op.side_effect and op.buffered_at is None:
-                node.buffered.append((self.t, op.tool, self.logical_key(node)))
+                node.buffered.append((self.t, op.capability, self.logical_key(node)))
                 op.buffered_at = self.t
             self.registry.f01_node_lost_after_dispatch(op, self.t)
+            self.registry.settle(op, Outcome.UNKNOWN, self.t, "entity lost after dispatch")
             del self._inflight[op_id]
             return "outcome_unknown", None
 
@@ -395,21 +403,32 @@ class DisruptionEnv:
         if self.channel == "ge":
             p = p * 0.95 if node.link_good else p * 0.05
         if self.rng.random() < p:
-            outcome = self._attempt_apply(node, op.tool, rec["intent"], rec.get("version"))
+            outcome = self._attempt_apply(node, op.capability, rec["intent"], rec.get("version"))
             if outcome == "stale":
-                # the far side refused the epoch: the write it would have made is already there
-                op.transition("failed", self.t, note="version_conflict")
+                # The far side refused the epoch. The write it would have made is already there,
+                # superseded by whatever holds the newer epoch. This is a definite answer, not a
+                # failure: the runtime knows the effect did not happen.
+                self.registry.settle(op, Outcome.SUPERSEDED, self.t, "epoch fenced by the sink")
                 self.registry.bump("version_conflict")
                 return "version_conflict", None
-            op.transition("committed", self.t)
-            return "committed", self._result(node, op.tool)
+            self.registry.settle(op, Outcome.APPLIED, self.t)
+            return "committed", self._result(node, op.capability)
         if op.side_effect and self.rng.random() < 0.6:
             # ran, ACK lost -> F02. The write is attempted even though the reply never arrives.
-            self._attempt_apply(node, op.tool, rec["intent"], rec.get("version"))
+            self._attempt_apply(node, op.capability, rec["intent"], rec.get("version"))
             self.registry.f02_ack_lost_after_execution(op, self.t)
             return "outcome_unknown", None
-        op.transition("timeout", self.t)
+        # a wait timeout: the operation is NOT settled and stays reconcilable
+        self.registry.wait(op, deadline=self.t, tick=self.t)
         return "timeout", None
+
+    def _visible(self, op) -> str:
+        """The agent-facing projection. Lifecycle and outcome stay separate underneath."""
+        if op.lifecycle is not Lifecycle.SETTLED:
+            return "running"
+        return {Outcome.APPLIED: "committed", Outcome.REJECTED: "rejected",
+                Outcome.FAILED: "failed", Outcome.SUPERSEDED: "version_conflict",
+                Outcome.UNKNOWN: "outcome_unknown"}[op.outcome]
 
     def _attempt_apply(self, node: Node, tool: str, intent: str,
                        version: int | None = None) -> str:
@@ -444,14 +463,15 @@ class DisruptionEnv:
         if len(items) > 1 and self.rng.random() < 0.5:
             items = list(reversed(items))          # out-of-order replay
             self.registry.f06_wrong_replay_order(
-                self.registry.new(node.nid, "buffer.flush", "replay", self.t, False), self.t)
+                self.registry.register(node.nid, "buffer.flush", {}, "replay", self.t, False),
+                self.t)
         for (_t, tool, logical) in items:
             self.truth.applied.append((self.t, node.nid, tool, logical))
 
     def _forget_pending(self, node: Node) -> None:
         """README §9 F04: the capability went away; its pending invocations are dropped."""
         for op in list(self.registry.ops.values()):
-            if op.node == node.nid and op.open and op.state in ("running", "not_started"):
+            if op.entity_id == node.nid and op.open and op.lifecycle is not Lifecycle.SETTLED:
                 self.registry.f04_pending_forgotten(op, self.t)
 
     def sweep_pending(self) -> None:
@@ -464,27 +484,32 @@ class DisruptionEnv:
         """
         # only sweep operations that could still be pending (recent ones); older ones have
         # already been classified, so rescanning them every tick is wasted work
+        # "unresolved", not "open": an operation settled as outcome=unknown is closed by
+        # lifecycle yet still undecided about the far side, and it is exactly the one that can
+        # silently block a queue or be forgotten.
         open_ops = [o for o in self.registry.ops.values()
-                    if o.open and (self.t - o.created) < 600]
+                    if o.unresolved and (self.t - o.created_at) < 600]
         if not open_ops:
             return
-        open_ops.sort(key=lambda o: o.created)
+        open_ops.sort(key=lambda o: o.created_at)
         head = open_ops[0]
-        head_blocking = head is not None and head.open and (self.t - head.created) > 24
+        head_blocking = head.unresolved and (self.t - head.created_at) > 24
         for k, op in enumerate(open_ops):
-            age = self.t - op.created
-            # F04 — count each operation exactly once
-            node = next((n for n in self.nodes if n.nid == op.node), None)
+            age = self.t - op.created_at
+            # F04 — count each operation exactly once. "Forgotten" now means the runtime has
+            # stopped carrying it, which shows up as an observation of unavailability, not as a
+            # lifecycle state.
+            node = next((n for n in self.nodes if n.nid == op.entity_id), None)
             node_gone = node is not None and self.is_unreachable(node)
-            abandoned = (op.state == "running" and node_gone) or \
-                        (op.state == "unavailable" and age > 24) or \
-                        (op.buffered_at is not None and op.settled is None and age > 48)
-            if abandoned and op.op_id not in self._f04_seen:
-                self._f04_seen.add(op.op_id)
+            abandoned = (node_gone and age > 24) or \
+                        (op.observation is Observation.UNAVAILABLE and age > 24) or \
+                        (op.buffered_at is not None and age > 48)
+            if abandoned and op.operation_id not in self._f04_seen:
+                self._f04_seen.add(op.operation_id)
                 self.registry.f04_pending_forgotten(op, self.t)
             # F08 — count each (starved op, blocking head) pair exactly once
             if k > 0 and age > 12 and head_blocking:
-                key = (op.op_id, head.op_id)
+                key = (op.operation_id, head.operation_id)
                 if key not in self._f08_seen:
                     self._f08_seen.add(key)
                     self.registry.f08_starvation_hol(op, self.t)

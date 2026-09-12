@@ -124,8 +124,15 @@ def f06() -> None:
 
 # --------------------------------------------------------------------- F07
 def f07() -> None:
-    e = env(seed=7, ack_loss_p=1.0)
-    n = reachable(e)
+    """Retry until the budget runs out.
+
+    A terrain-blocked node is used on purpose. The earlier version relied on ack_loss_p=1.0,
+    but a call can still succeed and settle, and re-dispatching a SETTLED effect is now refused
+    (correctly: that would be a second logical write, not a retry). An unreachable node never
+    settles, so the budget is what ends the attempts.
+    """
+    e = env(seed=7)
+    n = next(x for x in e.nodes if not x.reachable)
     for _ in range(50):
         e.tick()
     for _ in range(10):                      # same intent, more attempts than the budget
@@ -139,10 +146,14 @@ def f08() -> None:
     """An old unresolved operation blocks later ones (head-of-line)."""
     e = env(seed=8)
     n = reachable(e)
-    old = e.registry.new(n.nid, "alert.send", "key:stuck", e.t, True, budget=99)
+    old = e.registry.register(n.nid, "alert.send", {}, "key:stuck", e.t, True)
+    old.budget = 99
+    e.registry.dispatched(old, e.t)
     for _ in range(60):
         e.tick()
-        e.registry.new(n.nid, "sensor.read", f"later-{_}", e.t, False, budget=99)
+        later = e.registry.register(n.nid, "sensor.read", {}, f"later-{_}", e.t, False)
+        later.budget = 99
+        e.registry.dispatched(later, e.t)
         e.sweep_pending()
         if e.registry.counts.get("F08_starvation_head_of_line", 0) > 0:
             break

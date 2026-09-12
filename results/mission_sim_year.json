@@ -1,0 +1,73 @@
+{
+  "config": {
+    "days": 365,
+    "period": 1,
+    "reach": 12,
+    "blocked": 4,
+    "seeds": 3,
+    "no_energy": false,
+    "tag": "year"
+  },
+  "results": [
+    {
+      "scheduled": 140160.0,
+      "delivered": 49350.666666666664,
+      "reporting_rate": 0.35210235920852356,
+      "on_time_rate": 0.35210235920852356,
+      "daily_resolution_rate": 0.6110159817351598,
+      "latency_median_h": 0.0,
+      "latency_p90_h": 1.0,
+      "latency_p99_h": 1.0,
+      "dropped_expired": 89795.33333333333,
+      "tx_per_node": 6146.041666666667,
+      "wh_per_node": 0.11854704043163915,
+      "nodes_alive_end": 10.0,
+      "nodes_total": 16.0,
+      "cmd_issued": 5122.0,
+      "cmd_applied": 2412.3333333333335,
+      "cmd_duplicates": 356.3333333333333,
+      "cmd_missed": 2251.0,
+      "policy": "blind"
+    },
+    {
+      "scheduled": 140160.0,
+      "delivered": 79035.66666666667,
+      "reporting_rate": 0.5638960235920852,
+      "on_time_rate": 0.38585664003044134,
+      "daily_resolution_rate": 0.5646118721461187,
+      "latency_median_h": 0.6666666666666666,
+      "latency_p90_h": 7.333333333333333,
+      "latency_p99_h": 21.666666666666668,
+      "dropped_expired": 59877.333333333336,
+      "tx_per_node": 4965.125,
+      "wh_per_node": 0.0806916186499275,
+      "nodes_alive_end": 10.0,
+      "nodes_total": 16.0,
+      "cmd_issued": 5096.0,
+      "cmd_applied": 2420.3333333333335,
+      "cmd_duplicates": 338.3333333333333,
+      "cmd_missed": 2251.0,
+      "policy": "retry"
+    },
+    {
+      "scheduled": 140160.0,
+      "delivered": 79021.0,
+      "reporting_rate": 0.5637913812785388,
+      "on_time_rate": 0.386560597412481,
+      "daily_resolution_rate": 0.5644977168949772,
+      "latency_median_h": 0.6666666666666666,
+      "latency_p90_h": 7.333333333333333,
+      "latency_p99_h": 21.333333333333332,
+      "dropped_expired": 59883.666666666664,
+      "tx_per_node": 4942.375,
+      "wh_per_node": 0.07965303844514934,
+      "nodes_alive_end": 10.0,
+      "nodes_total": 16.0,
+      "cmd_issued": 3589.0,
+      "cmd_applied": 2056.6666666666665,
+      "cmd_duplicates": 0.0,
+      "cmd_missed": 2251.0,
+      "policy": "churn_aware"
+    }
+  ]
+}
