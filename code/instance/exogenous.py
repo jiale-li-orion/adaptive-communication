@@ -387,41 +387,48 @@ def solar_harvest(node_ids, hours: int, seed: int, *,
 #: NASA POWER 逐小时辐照与气温（部署点 30.33 N / 94.78 E）。
 #: 来源、许可、哈希与**必须一起引用的读法**见
 #: `data/downloads/nasa_power_irradiance/SOURCE.md`。`data/` 不入库，因此缺文件时要报出重取命令。
-IRRADIANCE_CSV = _os.path.normpath(_os.path.join(
-    _CODE, "..", "data", "downloads", "nasa_power_irradiance",
-    "power_hourly_2023_30.33N_94.78E.csv"))
+#: 可用年份。**三年都取到了**（同一坐标 30.33 N / 94.78 E），因为单年天气有偶然性：
+#: ≥5 °C 的小时占比 2022 **21.7%** / 2023 **19.0%** / 2024 **21.5%**——**2023 是最冷的一年**。
+IRRADIANCE_YEARS = (2022, 2023, 2024)
+IRRADIANCE_DIR = _os.path.normpath(_os.path.join(
+    _CODE, "..", "data", "downloads", "nasa_power_irradiance"))
+
+
+def _irradiance_csv(year: int = 2023) -> str:
+    return _os.path.join(IRRADIANCE_DIR, "power_hourly_%d_30.33N_94.78E.csv" % year)
 
 _FETCH_CMD = ('curl "https://power.larc.nasa.gov/api/temporal/hourly/point'
               '?parameters=ALLSKY_SFC_SW_DWN,T2M&community=RE'
               '&longitude=94.78&latitude=30.33&start=20230101&end=20231231&format=JSON"')
 
-_IRRADIANCE_CACHE: tuple[list[float], list[float]] | None = None
+_IRRADIANCE_CACHE: dict[int, tuple[list[float], list[float]]] = {}
 
 
-def _load_irradiance() -> tuple[list[float], list[float]]:
+def _load_irradiance(year: int = 2023) -> tuple[list[float], list[float]]:
     """读一次、缓存。**缺文件时报出重取命令**，而不是让调用方看到一个含糊的 KeyError。"""
-    global _IRRADIANCE_CACHE
-    if _IRRADIANCE_CACHE is None:
-        if not _os.path.exists(IRRADIANCE_CSV):
+    if year not in _IRRADIANCE_CACHE:
+        path = _irradiance_csv(year)
+        if not _os.path.exists(path):
             raise FileNotFoundError(
-                f"缺少来源数据 {IRRADIANCE_CSV}（`data/` 不入库）。重取：\n  {_FETCH_CMD}\n"
-                f"然后见 data/downloads/nasa_power_irradiance/SOURCE.md 的派生 CSV 步骤。")
+                f"缺少来源数据 {path}（`data/` 不入库）。重取：\n  {_FETCH_CMD}\n"
+                f"然后跑 `python3 code/analysis/make_irradiance_csv.py` 派生 CSV。")
         irr, tmp = [], []
-        with open(IRRADIANCE_CSV, newline="", encoding="utf-8") as fh:
+        with open(path, newline="", encoding="utf-8") as fh:
             for row in csv.DictReader(fh):
                 irr.append(float(row["irradiance_wh_m2"]))
                 tmp.append(float(row["temp_c"]))
-        _IRRADIANCE_CACHE = (irr, tmp)
-    return _IRRADIANCE_CACHE
+        _IRRADIANCE_CACHE[year] = (irr, tmp)
+    return _IRRADIANCE_CACHE[year]
 
 
-def irradiance_windows(hours: int, n: int = 0, stride_h: int = 1) -> list[int]:
+def irradiance_windows(hours: int, n: int = 0, stride_h: int = 1,
+                       year: int = 2023) -> list[int]:
     """可用的**真实**起点集合（小时索引）：把 8760 小时切成 `hours` 长的窗口，取每隔
     `stride_h` 小时一个起点。`n > 0` 时在整年上**等间隔取 `n` 个**，用于扫"不同季节/天气时段"。
 
     这是"第二来源场景"的落点：每一个起点都是一段**真实发生过的**天气，不是一个随机种子。
     """
-    irr, _ = _load_irradiance()
+    irr, _ = _load_irradiance(year)
     total = len(irr)
     starts = list(range(0, total, max(1, stride_h)))
     if n > 0:
@@ -434,7 +441,7 @@ def irradiance_harvest(node_ids, hours: int, seed: int, *, start_hour: int = 0,
                        peak_wh_per_hour: float = 0.01, shade_frac: float = 0.0,
                        shade_atten: float = 0.1, snow_frac: float = 0.0,
                        snow_after_h: int = 0, source_temp: bool = True,
-                       temp_c: float | None = None) -> tuple[dict, dict]:
+                       temp_c: float | None = None, year: int = 2023) -> tuple[dict, dict]:
     """**来源派生**的采能时间过程：形状取自 NASA POWER 逐小时辐照（E），量级是 A 层换算。
 
     与 `solar_harvest` 的区别是**因果来源不同**，不是精度不同：
@@ -458,7 +465,7 @@ def irradiance_harvest(node_ids, hours: int, seed: int, *, start_hour: int = 0,
     逐节点降额（`shade_frac` / `snow_frac` / `snow_after_h`）仍然是 A 层叠加，用 `stable_uniform`
     按 (种子, 节点) 抽，因此可复现。
     """
-    irr, tmp_series = _load_irradiance()
+    irr, tmp_series = _load_irradiance(year)
     total = len(irr)
     imax = max(irr) or 1.0
     n_ticks = hours * 60

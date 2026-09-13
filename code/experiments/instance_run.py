@@ -69,6 +69,7 @@ def one_seed(seed: int, task_hours: float, tail_hours: float,
              irr_start_h: int = 0, irr_peak_wh_per_hour: float = 0.01,
              irr_shade_frac: float = 0.0, irr_snow_frac: float = 0.0,
              irr_snow_after_h: int = 0, irr_source_temp: bool = True,
+             irr_year: int = 2023,
              charge_min_c: float | None = 5.0,
              idle_wh_per_tick: float = 0.0,
              energy_scale: float = 1.0) -> dict:
@@ -92,7 +93,7 @@ def one_seed(seed: int, task_hours: float, tail_hours: float,
             nodes.keys(), int(hours), seed, start_hour=irr_start_h,
             peak_wh_per_hour=irr_peak_wh_per_hour, shade_frac=irr_shade_frac,
             snow_frac=irr_snow_frac, snow_after_h=irr_snow_after_h,
-            source_temp=irr_source_temp)
+            source_temp=irr_source_temp, year=irr_year)
     elif harvest_mode == "solar":
         # **合成**日照时间过程（A 层）。形状是研究选择，不是拟合值——结论只能读作
         # "在这个形状下如何"。见 `solar_harvest` 的文档。
@@ -298,6 +299,9 @@ def main() -> None:
     ap.add_argument("--dynamic-oracle", action="store_true",
                     help="同时计算真上界（逐节点逐小时离线 DP，读完整未来采能轨迹）")
     ap.add_argument("--oracle-soc-bins", type=int, default=200)
+    ap.add_argument("--irr-year", type=int, default=2023,
+                    choices=[2022, 2023, 2024],
+                    help="辐照年份。三年都有；2023 是最冷的一年")
     ap.add_argument("--irr-start-h", type=int, default=0,
                     help="取 2023 年逐小时辐照的起点（小时索引，8760 内回绕）")
     ap.add_argument("--irr-peak-wh-per-hour", type=float, default=0.01)
@@ -382,6 +386,7 @@ def main() -> None:
                      irr_snow_frac=args.irr_snow_frac,
                      irr_snow_after_h=args.irr_snow_after_h,
                      irr_source_temp=not args.irr_no_source_temp,
+                     irr_year=args.irr_year,
                      charge_min_c=(None if args.charge_min_c == 'off'
                                    else float(args.charge_min_c)),
                      idle_wh_per_tick=args.idle_wh_per_tick)
