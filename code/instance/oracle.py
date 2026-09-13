@@ -49,7 +49,8 @@ UPLINK_WH = 2.33e-5
 
 def delivery_oracle(obligations, log, hours: int, *, plane,
                     kinds: tuple[str, ...] = (KIND_ROUTINE,),
-                    free_transmit: bool = False) -> dict:
+                    free_transmit: bool = False,
+                    require_sample: bool = False) -> dict:
     """**发送调度的上界**：给定**这次运行真实采集到的那些样本**，在**同一条物理链路**下，
     最多能交付几条义务。
 
@@ -105,7 +106,20 @@ def delivery_oracle(obligations, log, hours: int, *, plane,
         if free_transmit:
             lo = max(o.window[0] - o.tolerance_s, o.release_at)
             hi = o.window[1] + o.tolerance_s
-            for tk in range(((lo + TICK_S - 1) // TICK_S) * TICK_S, hi + 1, TICK_S):
+            # `require_sample=True`：**样本必须真的采到过**，只把"什么时候发"交给上界。
+            # 这条把"择时"与"采集"分开：`free_transmit` 不要求样本存在，所以它同时松弛了
+            # 两样东西，中间那一项就等于"择时损 + 采集损"混在一起。
+            earliest = lo
+            if require_sample:
+                taken = [s.taken_at for s, _tr in by_key.get((o.node_id, o.measurand), ())
+                         if o.matches(s)]
+                if not taken:
+                    n_heard += 0
+                    d = per_node.setdefault(o.node_id, {"n": 0, "ok": 0, "heard": 0})
+                    d["n"] += 1
+                    continue
+                earliest = max(lo, min(taken))
+            for tk in range(((earliest + TICK_S - 1) // TICK_S) * TICK_S, hi + 1, TICK_S):
                 if not _heard_at(o.node_id, tk):
                     continue
                 heard_any = True
@@ -146,7 +160,7 @@ def delivery_oracle(obligations, log, hours: int, *, plane,
         d["ok"] += 1 if ok else 0
         d["heard"] += 1 if heard_any else 0
     return {"total_oracle": n_ok, "n_obligations": n_ob,
-            "free_transmit": free_transmit,
+            "free_transmit": free_transmit, "require_sample": require_sample,
             "heard_but_undeliverable": n_heard - n_ok,
             "never_heard": n_ob - n_heard, "per_node": per_node,
             "note": ("发送调度上界：保留'必须被网关听到'与'转发落在回传可用时刻'，"

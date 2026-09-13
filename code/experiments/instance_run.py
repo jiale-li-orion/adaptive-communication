@@ -222,6 +222,10 @@ def one_seed(seed: int, task_hours: float, tail_hours: float,
     _delivery_free = delivery_oracle(obligations, inst.log, int(hours),
                                      plane=inst.plane,
                                      free_transmit=True)["total_oracle"]
+    # 中间上界：**样本必须真的采到过**，只把"什么时候发"交给上界。
+    _delivery_mid = delivery_oracle(obligations, inst.log, int(hours),
+                                    plane=inst.plane, free_transmit=True,
+                                    require_sample=True)["total_oracle"]
     res = evaluate(obligations, log, int(hours), nodes.keys(),
                    battery={k: v.power.to_dict() for k, v in nodes.items()},
                    plane=inst.plane, task_hours=int(task_hours), outage=outage)
@@ -237,6 +241,7 @@ def one_seed(seed: int, task_hours: float, tail_hours: float,
         # **发送调度上界**：同样的样本、同一条实测链路，最多能送到几条。
         "delivery_oracle": _delivery_total,
         "delivery_oracle_free_tx": _delivery_free,
+        "delivery_oracle_mid": _delivery_mid,
         "autonomy_margin": margin_mean,
         "autonomy_margin_min": margin_min,
         "command_counters": dict(inst.counters),
@@ -444,6 +449,7 @@ def main() -> None:
             # **发送侧分解**：实际交付 + 发送侧损失（可控）+ 链路侧损失（不可控）= 总义务。
             "delivery_oracle": mean([r.get("delivery_oracle", 0) for r in rs]),
             "delivery_oracle_free_tx": mean([r.get("delivery_oracle_free_tx", 0) for r in rs]),
+            "delivery_oracle_mid": mean([r.get("delivery_oracle_mid", 0) for r in rs]),
             "dynamic_oracle": mean([r["dynamic_oracle"] for r in rs
                                     if r.get("dynamic_oracle") is not None]) if any(
                 r.get("dynamic_oracle") is not None for r in rs) else None,
@@ -501,7 +507,8 @@ def main() -> None:
            + (" {:>9} {:>9}".format("margin均", "margin最小")
               if args.harvest_mode == "solar" else "")
            + " {:>7} {:>7} {:>7}".format("改值", "同值", "未知态")
-           + " {:>9} {:>9} {:>9} {:>9}".format("转发损", "择时损", "链路损", "自由上界"))
+           + " {:>8} {:>8} {:>8} {:>8} {:>8}".format(
+               "转发损", "择时损", "采集损", "链路损", "自由上界"))
     print(hdr)
     print("-" * 96)
     for a in agg["arms"]:
@@ -521,9 +528,10 @@ def main() -> None:
                  if args.harvest_mode == "solar" else "")
               + " {:>7.1f} {:>7.1f} {:>7.1f}".format(
                   x["writes_changed"], x["writes_same_value"], x["writes_speculative"])
-              + " {:>9.1f} {:>9.1f} {:>9.1f} {:>9.1f}".format(
+              + " {:>8.1f} {:>8.1f} {:>8.1f} {:>8.1f} {:>8.1f}".format(
                   x["delivery_oracle"] - x["routine_delivered"],
-                  x["delivery_oracle_free_tx"] - x["delivery_oracle"],
+                  x["delivery_oracle_mid"] - x["delivery_oracle"],
+                  x["delivery_oracle_free_tx"] - x["delivery_oracle_mid"],
                   168.0 - x["delivery_oracle_free_tx"],
                   x["delivery_oracle_free_tx"]))
     print("=" * 96)
