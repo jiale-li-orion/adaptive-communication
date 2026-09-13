@@ -764,7 +764,7 @@ class Instance:
 
         | 侧 | 类别 | 含义 |
         |---|---|---|
-        | 生成端 | `refused` | 连下行机会都没拿到（机会额度用尽） |
+        | 生成端 | `refused` | **`ControlPlane.center_send` 因回传路径当时不可用而拒绝**（`path_available(hour, path)` 为假，`_send_command` 里配对的 `else` 分支）。**不是**"下行机会额度用尽"——那是别的东西，原写法是错的 |
         | 生成端 | `sent` | 真的发出去了 |
         | 到达端 | `landed` | 到了节点并被接受 |
         | 到达端 | `lost` | 发出去了但没到（链路丢） |

@@ -3428,3 +3428,42 @@ trace 上分别测两条腿，`T_return = t_applied − t_plan`（按 节点+值
 **目标第 3 项据此判定为「未通过」**，并按纪律如实写入，不硬撑：
 **authority failure 与 delivery failure 在本实例上无法用 burstiness 分开，
 因为所定义的条件概率对 burstiness 不敏感。**
+
+---
+
+## §7.83 return-leg fate accounting：**主要死在第一层（center→gateway 回传不可用）**，第 3、4 层恒为 0
+
+新脚本 `code/analysis/intent_fate.py`：把"未落地"按 `ControlPlane`/`intent_ledger` **已有的分层**
+归因，**用已登记聚合、不跑新条件、不加 trace 字段**。四条恒等式**全部闭合**（先校验再印表；
+第一版漏了 `expired` 与 `queued_left`，假报不闭合——`lost` 在实现里是**残差**，闭合式必须含这两项，
+而聚合里没有 `queued_left`，只能当残差反算并单列）。
+
+| 条件 / 臂 | 生成 → 发出 → 落地 | **第 1 层**（`center_send` 回传不可用） | **第 2 层**（排队未等到机会/过期/滞留） | 第 3 层 | 第 4 层 |
+|---|---|---|---|---|---|
+| `adm_noout` / `aoi` | 284 → 59 → 53 | **97.4%** | 2.6% | **0** | **0** |
+| `adm_noout` / `ea_nb` | 67 → 42 → 36 | **79.0%** | 21.0% | **0** | **0** |
+| **`polar_c0.05` / `aoi`** | **562 → 16 → 10** | **98.9%**（546） | 1.1% | **0** | **0** |
+| `polar_c0.05` / `dense600` | 204 → 22 → 10 | **93.9%** | 6.1% | **0** | **0** |
+| **`adm_out3` / `ea_nb`** | 76 → 54 → 16 | 36.4% | **63.6%** | **0** | **0** |
+| `adm_out3` / `aoi` | 166 → 48 → 25 | **83.4%** | 16.6% | **0** | **0** |
+
+**层 1 的标签已按代码核对**：`network.py:_send_command` 里 `else: commands_refused += 1`
+配对的正是 `if self.plane.center_send(...)`，而 `center_send` 只在 `not path_available(hour, path)`
+时返回 False ⇒ 它就是"**回传路径当时不可用**"。**`intent_ledger` 的 docstring 原先写"连下行机会都没拿到
+（机会额度用尽）"，与本实现不符，已修**——这正是那条纪律（同一件事两处写法不一致）的又一例。
+
+**⇒ failure → method 映射（按你给的判据）**：
+
+1. **除 `out3` 外，主要死在第一层（79–98.9%）** ⇒ 问题是 **center→gateway 当下不可达** ⇒
+   **「缩短 `report_period` 买 authority」根本解决不了这一层**——它买的是**节点侧 RX 机会**（第 2 层）。
+   **这是对 joint authority envelope 那条方法假设的机制级反驳。**
+2. **`out3` 是例外**：第 2 层占 **63.6%**（节点侧机会稀缺）⇒ 在**总量断链**型条件下，
+   `report_period` / 「先买 authority 再承担负载」**才有依据**。⇒ 方法方向**条件是"断链型"，不是"回传型"**。
+3. **第 3、4 层在所有格子里恒为 0** ⇒ `intent suppression`/`coalescing`（第 3 层）与
+   `contract/version/atomic execution`（第 4 层）**在这些条件下没有着力点**。
+4. `polar`/`aoi` 生成 **562** 条、**546 条被第一层拒**（98.9%）——§6.24 那条「99% 未知态、98% 无信道」
+   现在被**定位到了具体一层**。
+
+**本轮仍未修的三处（你指出的，下一轮做）**：`loop_split.py` 的 **identity 配对**（现按 节点+值，
+遇 67% 重发会重复认领）、**time-origin 口径**（`T_harm` 用"从现在起"、`T_loop` 含决策前的 `T_evidence`，
+两者拼在一起）、**右删失**（`T_return=None` 一律当 ∞）。**§7.81–§7.82 的 `A` 数值因此仍不可承重。**
