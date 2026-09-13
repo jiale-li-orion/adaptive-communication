@@ -21,42 +21,33 @@
 >
 > ---
 >
-> ### 当前工作（2026-09-13 最新）：**agent-infra 门的最后一次检验 = 真实 LLM**
+> ### 当前状态（2026-09-14）：**agent 方法假说已按 §28 预写分支判定结束**
 >
-> [`27-llm-aoi-matched-gate-failed-2026-09-13.md`](docs/s7-method/instance-v1/27-llm-aoi-matched-gate-failed-2026-09-13.md)
-> ｜协议 `code/protocols/llm_naive_v{1..4}.json`｜harness `code/analysis/llm_naive_baseline.py`
+> [`28-global-research-direction-review-2026-09-14.md`](docs/s7-method/instance-v1/28-global-research-direction-review-2026-09-14.md)
+> ｜[`29-wirelessagent-adaptation-diff`](docs/s7-method/instance-v1/29-wirelessagent-adaptation-diff-2026-09-14.md)
+> ｜[`30-discriminative-decision-cases`](docs/s7-method/instance-v1/30-discriminative-decision-cases-2026-09-14.md)
 >
-> **在测什么。** 用户给定的一句话问题：**真实 LLM 在间歇执行失败之后，会不会自然把同一个
-> semantic episode 重新变成 planning problem？** 这是那份全局复盘里点名的、最干净的 agent-infra 入口
-> （"这些现在全是 scripted policy；真实 LLM 若自然出现同一现象，这是最干净的入口"）。
+> **§28 的重定向**：此前困难有两层——现有通信 agent 的**原生决策能力**与本站**动作能力**不同；
+> 本站 LLM 实验又把**配置目标交给规则产生**（A′ 的 `desired_target` 由 AoI 规则算），
+> 主要测**执行行为**。**继续增加调用量跨不过这个差。**
 >
-> **已达成的（v4 仪器闸门，`adm_noout × seed0 × 200 epoch`）**：
+> **交付 3 的判定（决定性）**：三个判别候选**没一个够格**——
+> ① `out3` h1 选 dense 虽是合法的风险取舍（暴露量当时可算），
+> 但**更好的选择是「不动手」**，而 `local` 本身就是最优可执行点 ⇒ 只测**暴露纪律**，平凡规则即覆盖；
+> ② h7/h8 的重申**不满足判别条件**（SoC≈0.0002，降稀疏也只能撑 0.4 h，伤害早已锁定）
+> ⇒ **排除**，且**不得把「没有预知未来中断」记成 agent 推理错误**；
+> ③ `polar` 继续买上行只差 **+7% 上行**，且机制是**可辩护的探测**（对从未听到的节点发最快档）。
 >
-> | 量 | 值 |
-> |---|---|
-> | `need_action_epochs`（desired≠confirmed 且**无** pending） | **200 / 200** |
-> | `actions` | `{noop: 196, set_report_period: 4}` |
-> | **target agreement** | **4 / 4（0 不一致）** |
-> | **same-target unresolved replan** | **0** |
-> | semantic episodes | 4（closed 3）｜`amp_intents` **1.0** |
+> ⇒ **落在 §28 第 65 行预先写下的分支**：「若只剩普通参数调优，或成熟 workflow 已承担全部有效决策，
+> 就如实结束这条 agent 方法假说」。**⇒ 不再为「找 agent 错误」追加实验；交付 4 不启动。**
 >
-> ⇒ **方向性答案：没有观察到 planning amplification（一个 episode 恰好一个 intent）。**
+> **不依赖这条假说、仍然保留的**：source-grounded benchmark；burstiness / cadence / energy 的 failure analysis；
+> **episode-vs-intent 的测量层次**；以及三个硬否定（`A=0` 否掉 authority-latency；
+> 四层账本机制级反驳 `report_period` 买 authority；损害进 Pareto 不改变前沿）。
 >
-> **但还不能收盘，两条理由**：
->
-> 1. **v4 的 prompt 仍有措辞缺陷**：它把 `pending_effect` 描述成 *"whether an effect is still
->    unresolved"*，而代码取的是 **`in_flight`（网关队列里真有一条在路上）**。
->    **这正是把 v3 判成 instrument invalid 的那个区分，以文字形式残留**——模型若信这句，
->    看到 `pending_effect=false` 会推断"没什么未决"⇒ 可能又是系统性 noop。
->    ⇒ **下一步 v5：只改这一句措辞**，重跑 200-epoch 闸门（约 ¥0.5）。
-> 2. **样本太薄**：只动了 4 次。`same_target_unresolved = 0` 在 n=4 上承不住重，
->    无法区分"它从不重复"与"它几乎不动"。
->
-> **真正的卡点（结构性，不是仪器）**：
-> **要让 planning amplification 可观测，Agent 必须处在"反复尝试、反复失败"的状态；
-> 而本任务允许它靠"不动手"就满足目标。** 把它推出去的两条路都已被用户按方法论否决：
-> **`B′`**（"满足义务下省电"目标欠定义，把 `ea_nb` 的阈值写进 prompt = 让 LLM 模仿 `ea_nb`）、
-> **`C′`**（把义务调紧到它必须做事 = **为了 Agent 造需求，破坏因果纪律**）。
+> **唯一还在跑的实验（窄用途）**：`llm_naive_v5` 三条件全量。它只回答
+> **「给定配置目标下的执行行为」**，**不回答**规划/调度能力；
+> **不以是否出现坏重试作为筛选模型或 prompt 的标准**。
 >
 > ### 已收盘的（2026-09-13 前半段）：把现象压成**能提前预测的判据**
 >
