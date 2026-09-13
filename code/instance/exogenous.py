@@ -18,6 +18,7 @@ Task Contract v1.1 §4 的三分对象在这里实现：
 
 from __future__ import annotations
 
+import csv
 import math
 
 # --- module resolution -------------------------------------------------------
@@ -380,6 +381,108 @@ def solar_harvest(node_ids, hours: int, seed: int, *,
         harvest[node_id] = series
         if temp_c is not None:
             temp[node_id] = {t: temp_c for t in range(0, hours * 3600, TICK_S)}
+    return harvest, temp
+
+
+#: NASA POWER 逐小时辐照与气温（部署点 30.33 N / 94.78 E）。
+#: 来源、许可、哈希与**必须一起引用的读法**见
+#: `data/downloads/nasa_power_irradiance/SOURCE.md`。`data/` 不入库，因此缺文件时要报出重取命令。
+IRRADIANCE_CSV = _os.path.normpath(_os.path.join(
+    _CODE, "..", "data", "downloads", "nasa_power_irradiance",
+    "power_hourly_2023_30.33N_94.78E.csv"))
+
+_FETCH_CMD = ('curl "https://power.larc.nasa.gov/api/temporal/hourly/point'
+              '?parameters=ALLSKY_SFC_SW_DWN,T2M&community=RE'
+              '&longitude=94.78&latitude=30.33&start=20230101&end=20231231&format=JSON"')
+
+_IRRADIANCE_CACHE: tuple[list[float], list[float]] | None = None
+
+
+def _load_irradiance() -> tuple[list[float], list[float]]:
+    """读一次、缓存。**缺文件时报出重取命令**，而不是让调用方看到一个含糊的 KeyError。"""
+    global _IRRADIANCE_CACHE
+    if _IRRADIANCE_CACHE is None:
+        if not _os.path.exists(IRRADIANCE_CSV):
+            raise FileNotFoundError(
+                f"缺少来源数据 {IRRADIANCE_CSV}（`data/` 不入库）。重取：\n  {_FETCH_CMD}\n"
+                f"然后见 data/downloads/nasa_power_irradiance/SOURCE.md 的派生 CSV 步骤。")
+        irr, tmp = [], []
+        with open(IRRADIANCE_CSV, newline="", encoding="utf-8") as fh:
+            for row in csv.DictReader(fh):
+                irr.append(float(row["irradiance_wh_m2"]))
+                tmp.append(float(row["temp_c"]))
+        _IRRADIANCE_CACHE = (irr, tmp)
+    return _IRRADIANCE_CACHE
+
+
+def irradiance_windows(hours: int, n: int = 0, stride_h: int = 1) -> list[int]:
+    """可用的**真实**起点集合（小时索引）：把 8760 小时切成 `hours` 长的窗口，取每隔
+    `stride_h` 小时一个起点。`n > 0` 时在整年上**等间隔取 `n` 个**，用于扫"不同季节/天气时段"。
+
+    这是"第二来源场景"的落点：每一个起点都是一段**真实发生过的**天气，不是一个随机种子。
+    """
+    irr, _ = _load_irradiance()
+    total = len(irr)
+    starts = list(range(0, total, max(1, stride_h)))
+    if n > 0:
+        step = max(1, total // n)
+        starts = list(range(0, total, step))[:n]
+    return starts
+
+
+def irradiance_harvest(node_ids, hours: int, seed: int, *, start_hour: int = 0,
+                       peak_wh_per_hour: float = 0.01, shade_frac: float = 0.0,
+                       shade_atten: float = 0.1, snow_frac: float = 0.0,
+                       snow_after_h: int = 0, source_temp: bool = True,
+                       temp_c: float | None = None) -> tuple[dict, dict]:
+    """**来源派生**的采能时间过程：形状取自 NASA POWER 逐小时辐照（E），量级是 A 层换算。
+
+    与 `solar_harvest` 的区别是**因果来源不同**，不是精度不同：
+
+    | | 形状来自 | 能证明什么 |
+    |---|---|---|
+    | `solar_harvest` | 我写的一个正弦 + 云遮概率 | "在这些**假设的形状**下成立" |
+    | `irradiance_harvest` | **2023 年该点位的真实逐小时辐照** | "在这些**真实发生过的天气时段**下成立" |
+
+    **必须一起引用的两步读法（都不是来源事实）**：
+
+    1. **量级换算是 A 层选择。** 来源给的是辐照 Wh/m²，不是这台设备的采能。本函数按
+       `wh = peak_wh_per_hour × I(t) / I_max` 归一化后缩放——**形状是来源的，量级是我定的**
+       （组件面积 × 效率 × 站点降额被这一个参数吸收）。所以 `peak_wh_per_hour` 是一个
+       可扫描的旋钮，不是拟合值。
+    2. **时区按 UTC 读**（POWER 的 header 未返回 `time-standard`）。若实际为 +8，日照窗整体平移 8 h。
+
+    温度默认取**来源自带的 `T2M`**（同一张表、同一时刻），于是低温闸门作用在真实气温上，
+    而不是一个常数。这一项是比合成曲线**实质更强**的地方（该站点全年最低 −20.49 °C）。
+
+    逐节点降额（`shade_frac` / `snow_frac` / `snow_after_h`）仍然是 A 层叠加，用 `stable_uniform`
+    按 (种子, 节点) 抽，因此可复现。
+    """
+    irr, tmp_series = _load_irradiance()
+    total = len(irr)
+    imax = max(irr) or 1.0
+    n_ticks = hours * 60
+    harvest, temp = {}, {}
+    for node_id in node_ids:
+        shaded = stable_uniform(seed, "irr_shade", node_id) < shade_frac
+        snowy = stable_uniform(seed, "irr_snow", node_id) < snow_frac
+        series: dict[int, float] = {}
+        temps: dict[int, float] = {}
+        for tick in range(n_ticks):
+            h_idx = (start_hour + tick // 60) % total
+            wh_h = peak_wh_per_hour * (irr[h_idx] / imax)
+            if shaded:
+                wh_h *= shade_atten
+            if snowy and (tick // 60) >= snow_after_h:
+                wh_h = 0.0
+            series[tick * TICK_S] = wh_h / 60.0
+            if source_temp:
+                temps[tick * TICK_S] = tmp_series[h_idx]
+            elif temp_c is not None:
+                temps[tick * TICK_S] = temp_c
+        harvest[node_id] = series
+        if source_temp or temp_c is not None:
+            temp[node_id] = temps
     return harvest, temp
 
 

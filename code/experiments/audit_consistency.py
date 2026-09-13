@@ -432,6 +432,141 @@ def audit_cost_weight_is_separate_from_radio() -> None:
               f"{[round(c) for _, c in vals]}")
 
 
+def audit_instance_figures() -> None:
+    """实例层文档里引用的每一个数，都必须与 `results/` 下的结果文件对得上。
+
+    **为什么单独加这一条。** 已有的 `audit_readme_matches_results` 只覆盖**旧批次**（那批已随实现
+    撤销）。README 6.1–6.4 与 `05-final-analysis.md` 里的实例层数字**此前没有任何自动核对**——
+    也就是说，一个数字被写错、或者某个结果文件被重新生成而值变了，**没有任何东西会变红**。
+    这正是本项目反复栽的那一类：数字算对了，但**它已经不是当初那句话里的那个数**。
+
+    表里左列是**文档里写的数**，右列是**从结果文件现算的数**。任一侧改动而另一侧没跟上，这里就红。
+    """
+    print("\n[10] 实例层文档数字与结果文件对齐")
+
+    def g(tag, arm, field):
+        path = os.path.join(ROOT, "results", f"instance_{tag}.json")
+        if not os.path.exists(path):
+            return None
+        arms = json.load(open(path, encoding="utf-8"))["aggregate"]["arms"]
+        return (arms.get(arm) or {}).get(field)
+
+    # (说明, tag, 臂, 字段, 文档里写的数, 容差)
+    CASES = [
+        ("6.1 宽松 dense600 naive 交付", "exec_layer_20s_v2", "dense600__naive",
+         "routine_delivered", 154.3, 0.05),
+        ("6.1 宽松 dense600 contract 交付", "exec_layer_20s_v2", "dense600__contract",
+         "routine_delivered", 154.3, 0.05),
+        ("6.1 宽松 dense600 atomic 交付", "exec_layer_20s_v2", "dense600__atomic",
+         "routine_delivered", 152.8, 0.05),
+        ("6.1 宽松 dense600 naive AoI", "exec_layer_20s_v2", "dense600__naive",
+         "routine_aoi_mean_s", 984.0, 0.5),
+        ("6.1 宽松 dense600 atomic AoI", "exec_layer_20s_v2", "dense600__atomic",
+         "routine_aoi_mean_s", 1305.0, 0.5),
+        ("6.1 绑定 dense600 naive 交付", "exec_layer_bind0.008v2", "dense600__naive",
+         "routine_delivered", 122.2, 0.05),
+        ("6.1 绑定 dense600 contract 交付", "exec_layer_bind0.008v2", "dense600__contract",
+         "routine_delivered", 131.1, 0.05),
+        ("6.1 绑定 dense600 atomic 交付", "exec_layer_bind0.008v2", "dense600__atomic",
+         "routine_delivered", 132.2, 0.05),
+        ("6.1 绑定 dense600 naive 缺采", "exec_layer_bind0.008v2", "dense600__naive",
+         "routine_missing_collection", 33.5, 0.05),
+        ("6.1 绑定 dense600 atomic 缺采", "exec_layer_bind0.008v2", "dense600__atomic",
+         "routine_missing_collection", 22.6, 0.05),
+        ("6.2 名义上界", "oracle_headroom005", "local", "dynamic_oracle", 168.0, 0.05),
+        ("6.2 绑定上界 (0.008)", "oracle_headroom008", "local", "dynamic_oracle", 168.0, 0.05),
+        ("6.2 强绑定上界 (0.004)", "oracle_headroom004", "local", "dynamic_oracle", 146.2, 0.05),
+        ("6.2 名义 dense600 达标", "oracle_headroom005", "dense600", "oracle_coverage",
+         0.919, 0.0005),
+        ("6.2 强绑定 local 达标", "oracle_headroom004", "local", "oracle_coverage",
+         0.870, 0.0005),
+        ("6.3 C1 上界", "oodoracle_C1", "local", "dynamic_oracle", 168.0, 0.05),
+        ("6.3 容量 0.006 上界", "oodoracle_cap0.006", "local", "dynamic_oracle", 162.6, 0.05),
+        ("6.3 容量 0.004 上界", "oodoracle_cap0.004", "local", "dynamic_oracle", 146.2, 0.05),
+        ("6.3 容量 0.002 上界", "oodoracle_cap0.002", "local", "dynamic_oracle", 124.4, 0.05),
+        ("6.3 容量 0.001 上界", "oodoracle_cap0.001", "local", "dynamic_oracle", 113.5, 0.05),
+        ("6.3 C4 dense600 达标", "oodoracle_C4", "dense600", "oracle_coverage", 0.677, 0.0005),
+        ("6.3 初始 SoC 1.0 dense600 达标", "initsoc_1.0", "dense600", "oracle_coverage",
+         0.666, 0.0005),
+        ("6.3 初始 SoC 0.05 dense600 达标", "initsoc_0.05", "dense600", "oracle_coverage",
+         0.921, 0.0005),
+        ("6.4 日照 s12p1 上界", "solar_s12p1", "local", "dynamic_oracle", 126.0, 0.05),
+        ("6.4 日照 s12p1 dense600 达标", "solar_s12p1", "dense600", "oracle_coverage",
+         0.199, 0.0005),
+        ("6.4 日照 s6p2 上界", "solar_s6p2", "local", "dynamic_oracle", 168.0, 0.05),
+        ("6.4 日照 s6p2 dense600 达标", "solar_s6p2", "dense600", "oracle_coverage",
+         0.157, 0.0005),
+        ("6.4 日照 s0p4 local 达标", "solar_s0p4", "local", "oracle_coverage", 0.352, 0.0005),
+        ("6.4 日照 s0p4 margin", "solar_s0p4", "local", "autonomy_margin", 0.0, 0.005),
+        ("6.4 日照 s12p4 margin", "solar_s12p4", "local", "autonomy_margin", 2.88, 0.005),
+    ]
+    missing, drifted = [], []
+    for name, tag, arm_key, field, want, tol in CASES:
+        got = g(tag, arm_key, field)
+        if got is None:
+            missing.append(f"{name}（{tag}）")
+        elif abs(got - want) > tol:
+            drifted.append(f"{name}: 文档 {want} → 实际 {round(got, 4)}")
+    check("文档引用的实例层数字都能在结果文件里找到", not missing,
+          f"缺失 {missing[:3]}" if missing else f"{len(CASES)} 项")
+    check("文档引用的实例层数字与结果文件逐项一致", not drifted,
+          f"{drifted[:3]}" if drifted else f"{len(CASES)} 项全部对齐")
+
+
+def audit_manifest_matches_code() -> None:
+    """`02-instance-manifest.md` 的**部署条件**那一节必须与代码一致。
+
+    部署条件是系统模型那节唯一的数字来源。它一旦与代码不一致，**不会自己报错**——只会让引用它的人
+    算错。本项目已经栽过一次：manifest §五 的采样能耗长期停在已作废的 `2e-5 Wh`，而实现早已是
+    `4.7e-4 Wh`。所以这一条查的不是"文档写得好不好"，是**两边是不是同一个数**。
+    """
+    print("\n[11] manifest 部署条件与代码一致")
+    import sys as _sys
+    for d in ("instance", "monitoring", "physics"):
+        _p = os.path.join(ROOT, "code", d)
+        if _p not in _sys.path:
+            _sys.path.insert(0, _p)
+    import deployment as _dep
+    from network import DeviceProfile, nodes_from
+
+    prof = DeviceProfile()
+    dep = _dep.build_deployment(groups=2)
+    nodes = nodes_from(dep, profile=prof)
+
+    md = open(os.path.join(ROOT, "docs", "s7-method", "instance-v1",
+                           "02-instance-manifest.md"), encoding="utf-8").read()
+    # **数值项按数值比，不按字符串比。** 同一件事有 `4.7e-4` 与 `0.00047` 两种合理写法，
+    # 用字符串比会把它们判成不一致——那种噪声化的核对很快就会被无视，比没有核对更糟。
+    import re as _re
+    tokens = [float(x) for x in _re.findall(r"[-+]?\d+\.?\d*(?:[eE][-+]?\d+)?", md)
+              if x.strip() not in ("", ".", "-")]
+
+    def has_num(v: float, tol: float = 1e-12) -> bool:
+        return any(abs(x - v) <= tol + 1e-9 * max(1.0, abs(v)) for x in tokens)
+
+    num_expect = {
+        "纬度": float(_dep.GATEWAY_LAT),
+        "经度": float(_dep.GATEWAY_LON),
+        "海拔": float(_dep.GATEWAY_ELEV_M),
+        "采样能耗": prof.sample_wh,
+        "闸门": float(prof.charge_min_c),
+        "静息": prof.idle_wh_per_tick,
+        "缓存": float(prof.cache_slots),
+        "节点数": float(len(nodes)),
+    }
+    for name, val in num_expect.items():
+        check(f"部署条件「{name}」= {val:g} 出现在 manifest 里（按数值比）", has_num(val),
+              "" if has_num(val) else f"manifest 里找不到与 {val:g} 相等的数")
+    check("部署条件「地形瓦片」出现在 manifest 里", _dep.TILE in md, _dep.TILE)
+
+    # 实测点数与测项分布也要对得上（曾在文档里被写成 16 个节点）
+    n_disp = sum(1 for n in nodes.values() if n.measurand == "displacement")
+    n_rain = sum(1 for n in nodes.values() if n.measurand == "rainfall")
+    check("manifest 的节点数与实测一致（14 = 网关 + 13 位移站）",
+          len(nodes) == 14 and n_disp == 13 and n_rain == 1,
+          f"实测 {len(nodes)} 个：位移 {n_disp}、雨量 {n_rain}")
+
+
 def main() -> int:
     print("一致性审计")
     audit_far_side_only_through_link()
@@ -445,6 +580,8 @@ def main() -> int:
     audit_cost_weight_is_separate_from_radio()
     audit_analysis_inputs()
     audit_result_index()
+    audit_instance_figures()
+    audit_manifest_matches_code()
     print("\n" + "-" * 74)
     if FAIL:
         print(f"  {len(FAIL)} 项失败：")

@@ -30,7 +30,8 @@ for _p in (_HERE, *(_os.path.join(_CODE, d) for d in ("physics", "runtime", "exp
 
 from deployment import build_deployment
 from exogenous import (ObligationSet, autonomy_margin, constant_harvest,
-                       displacement_series, hetero_harvest, solar_harvest,
+                       displacement_series, hetero_harvest, irradiance_harvest,
+                       solar_harvest,
                        rule_obligations_for_truth, routine_obligations_by_node,
                        wang_fragment_truth)
 from center import ARMS, ClairvoyantStaticSelector, SocObservationModel, build_policy
@@ -62,16 +63,29 @@ def one_seed(seed: int, task_hours: float, tail_hours: float,
              solar_cloud_p: float = 0.35, solar_cloud_atten: float = 0.25,
              solar_snow_frac: float = 0.0, solar_snow_start_h: float = 8.0,
              solar_shade_frac: float = 0.0,
-             initial_soc: float = 1.0) -> dict:
+             initial_soc: float = 1.0,
+             irr_start_h: int = 0, irr_peak_wh_per_hour: float = 0.01,
+             irr_shade_frac: float = 0.0, irr_snow_frac: float = 0.0,
+             irr_snow_after_h: int = 0, irr_source_temp: bool = True,
+             charge_min_c: float | None = 5.0) -> dict:
     hours = task_hours + tail_hours
     dep = build_deployment(groups=2)
     prof = DeviceProfile(sample_interval_s=sample_interval_s,
                          event_interval_s=event_spacing_s,
-                         capacity_wh=capacity_wh, initial_soc=initial_soc)
+                         capacity_wh=capacity_wh, initial_soc=initial_soc,
+                         charge_min_c=charge_min_c)
     nodes = nodes_from(dep, profile=prof)
     truth = wang_fragment_truth(0, int(hours), (dep.gateway.sid,))
     truth.displacement = displacement_series(nodes.keys(), int(hours), seed)
-    if harvest_mode == "solar":
+    if harvest_mode == "irradiance":
+        # **来源派生**：形状取自 NASA POWER 2023 逐小时辐照（E），量级是 A 层换算。
+        # 温度默认取来源自带的 `T2M`——这一项会让**低温闸门作用在真实气温上**。
+        harvest, temp = irradiance_harvest(
+            nodes.keys(), int(hours), seed, start_hour=irr_start_h,
+            peak_wh_per_hour=irr_peak_wh_per_hour, shade_frac=irr_shade_frac,
+            snow_frac=irr_snow_frac, snow_after_h=irr_snow_after_h,
+            source_temp=irr_source_temp)
+    elif harvest_mode == "solar":
         # **合成**日照时间过程（A 层）。形状是研究选择，不是拟合值——结论只能读作
         # "在这个形状下如何"。见 `solar_harvest` 的文档。
         harvest, temp = solar_harvest(
@@ -236,7 +250,8 @@ def main() -> None:
     ap.add_argument("--hold-op", default=None,
                     help="只扣留某一类字段命令，用于构造跨代混配（例如 set_sampling_interval）")
     ap.add_argument("--harvest-wh-per-hour", type=float, default=0.05)
-    ap.add_argument("--harvest-mode", default="uniform", choices=["uniform", "hetero", "solar"])
+    ap.add_argument("--harvest-mode", default="uniform",
+                    choices=["uniform", "hetero", "solar", "irradiance"])
     ap.add_argument("--capacity-wh", type=float, default=0.05)
     ap.add_argument("--low-frac", type=float, default=0.4)
     ap.add_argument("--low-wh-per-hour", type=float, default=0.005)
@@ -261,6 +276,16 @@ def main() -> None:
     ap.add_argument("--dynamic-oracle", action="store_true",
                     help="同时计算真上界（逐节点逐小时离线 DP，读完整未来采能轨迹）")
     ap.add_argument("--oracle-soc-bins", type=int, default=200)
+    ap.add_argument("--irr-start-h", type=int, default=0,
+                    help="取 2023 年逐小时辐照的起点（小时索引，8760 内回绕）")
+    ap.add_argument("--irr-peak-wh-per-hour", type=float, default=0.01)
+    ap.add_argument("--irr-shade-frac", type=float, default=0.0)
+    ap.add_argument("--irr-snow-frac", type=float, default=0.0)
+    ap.add_argument("--irr-snow-after-h", type=int, default=0)
+    ap.add_argument("--irr-no-source-temp", action="store_true",
+                    help="不用来源气温（改用 10°C 常数）——用于把时序形状与低温闸门分开")
+    ap.add_argument("--charge-min-c", default="5.0",
+                    help="低温充电闸门（°C）；`off` 表示不设闸门")
     ap.add_argument("--initial-soc", type=float, default=1.0,
                     help="初始电量比例。扫 autonomy margin 时要用小于 1 的值")
     ap.add_argument("--solar-day-start-h", type=float, default=6.0,
@@ -311,7 +336,15 @@ def main() -> None:
                      solar_snow_frac=args.solar_snow_frac,
                      solar_snow_start_h=args.solar_snow_start_h,
                      solar_shade_frac=args.solar_shade_frac,
-                     initial_soc=args.initial_soc)
+                     initial_soc=args.initial_soc,
+                     irr_start_h=args.irr_start_h,
+                     irr_peak_wh_per_hour=args.irr_peak_wh_per_hour,
+                     irr_shade_frac=args.irr_shade_frac,
+                     irr_snow_frac=args.irr_snow_frac,
+                     irr_snow_after_h=args.irr_snow_after_h,
+                     irr_source_temp=not args.irr_no_source_temp,
+                     charge_min_c=(None if args.charge_min_c == 'off'
+                                   else float(args.charge_min_c)))
             for a in arm_names for L in layers for s in range(args.seeds)]
 
     # 聚合：**按臂分组**。分母类用求和天然是整数，时延与比率类用逐种子均值。
