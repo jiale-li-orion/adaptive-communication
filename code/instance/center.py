@@ -277,11 +277,13 @@ class EnergyAwarePolicy(DenseSamplingPolicy):
         return out
 
 
-class OracleDeployPolicy(DenseSamplingPolicy):
-    """**上界参考**：知道部署的真实约束（哪些站点被遮荫／失电），据此逐节点设定。
+class ClairvoyantStaticSelector(DenseSamplingPolicy):
+    """**clairvoyant static selector**：知道部署的真实约束（哪些站点被遮荫／失电），据此逐节点
+    在**稀疏与加密两条固定轨迹之间二选一**，选定之后不再变。
 
-    它读的是**环境真值**，因此**不是一条可实现的策略**，只是"如果完全知道参数，最好能做到
-    什么"的参照。它存在的唯一目的是回答：自适应策略从节点上报里推断出的东西，离"全知"还有多远。
+    **它不能叫"上界"。** 它知道参数，但不随时间调整；因此一条逐时刻依据状态的策略**可以超过它**
+    （实测 60% 失电档 `ea_i600` 交付 150.7、它 150.2）。一条会被超过的东西不是上界。
+    它的正确用途是"**静态但知情**"的参照：用来分离"知道参数"与"随状态调整"这两件事的贡献。
     """
 
     def __init__(self, constrained: frozenset, interval_s: int = 300, period_s: int = 900,
@@ -290,7 +292,7 @@ class OracleDeployPolicy(DenseSamplingPolicy):
         self.constrained = frozenset(constrained)
         self.sparse_interval_s = sparse_interval_s
         self.sparse_period_s = sparse_period_s
-        self.name = "oracle_deploy"
+        self.name = "clairvoyant_static"
 
     def plan(self, view: CenterView) -> list[tuple[str, dict]]:
         out = []

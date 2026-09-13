@@ -32,7 +32,7 @@ from deployment import build_deployment
 from exogenous import (ObligationSet, constant_harvest, displacement_series, hetero_harvest,
                        rule_obligations_for_truth, routine_obligations_by_node,
                        wang_fragment_truth)
-from center import ARMS, OracleDeployPolicy, build_policy
+from center import ARMS, ClairvoyantStaticSelector, build_policy
 from network import DeviceProfile, Instance, nodes_from
 from scoring import evaluate
 
@@ -94,7 +94,7 @@ def one_seed(seed: int, task_hours: float, tail_hours: float,
         acc = (lo, hi)
     # 上界参考需要知道哪些站点受约束（遮荫或失电）。它读环境真值，**不是可实现策略**，
     # 只作参照；因此它由 runner 直接构造，不放进 ARMS 供一般调用。
-    if arm == "oracle_deploy":
+    if arm == "clairvoyant_static":
         # **上界参考必须是真正可行的判据。** 前两版都错了，而且错法本身有信息量：
         #   · 第一版按"历史最大采能"判 → 失电从第 4 h 才切断，被切断的节点看起来仍健康；
         #   · 第二版按"全程采能总和"判 → 0.02 Wh 的电池**存不下** 4 小时采到的 0.2 Wh，
@@ -116,7 +116,7 @@ def one_seed(seed: int, task_hours: float, tail_hours: float,
             if ok:
                 feasible.add(nid)
         constrained = frozenset(nid for nid in nodes if nid not in feasible)
-        pol = OracleDeployPolicy(constrained)
+        pol = ClairvoyantStaticSelector(constrained)
     else:
         pol = build_policy(arm)
     inst = Instance(nodes, truth, seed=seed, policy=pol,
@@ -198,8 +198,8 @@ def main() -> None:
 
     arm_names = [a.strip() for a in args.arms.split(",") if a.strip()]
     for a in arm_names:
-        if a not in ARMS and a != "oracle_deploy":
-            raise SystemExit(f"unknown arm {a!r}; have {sorted(ARMS)} + oracle_deploy")
+        if a not in ARMS and a != "clairvoyant_static":
+            raise SystemExit(f"unknown arm {a!r}; have {sorted(ARMS)} + clairvoyant_static")
     layers = [x.strip() for x in args.exec_layers.split(",") if x.strip()]
     runs = [one_seed(s, args.task_hours, args.tail_hours,
                      args.outage_start_h, args.outage_hours, a,
@@ -268,6 +268,15 @@ def main() -> None:
             key = a if layers == ["naive"] else f"{a}__{L}"
             agg["arms"][key] = agg_of([r for r in runs
                                        if r["arm"] == a and r["exec_layer"] == L])
+
+    # **后验最优固定**：如果知道这个测试条件、可以重新标定，最好的固定配置能到多少。
+    # 它把"标定差距"与"反馈收益"分开：固定配置的 regret 相对它算，反馈的优势相对它算。
+    fixed_keys = [k for k in agg["arms"] if k.startswith("dense") and "__" not in k]
+    if len(fixed_keys) >= 2:
+        best = max(fixed_keys, key=lambda k: agg["arms"][k]["routine_delivered"])
+        agg["best_fixed_posthoc"] = dict(agg["arms"][best])
+        agg["best_fixed_posthoc"]["_which"] = best
+
 
     doc = {"config": vars(args), "aggregate": agg, "runs": runs}
     _os.makedirs(OUT, exist_ok=True)
