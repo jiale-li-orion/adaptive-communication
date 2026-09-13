@@ -317,12 +317,28 @@ class EnergyAwarePolicy(DenseSamplingPolicy):
 
     def __init__(self, healthy_wh: float = 0.010, interval_s: int = 300,
                  period_s: int = 900, sparse_interval_s: int = 3600,
-                 sparse_period_s: int = 3600, **kw) -> None:
+                 sparse_period_s: int = 3600, exit_wh: float | None = None,
+                 confirm_n: int = 1, send_when_unknown: bool = True, **kw) -> None:
         super().__init__(interval_s=interval_s, period_s=period_s, **kw)
         self.healthy_wh = healthy_wh
         self.sparse_interval_s = sparse_interval_s
         self.sparse_period_s = sparse_period_s
-        self.name = f"energyaware{int(healthy_wh * 1000)}mwh"
+        #: **滞环第二阈值**。`None` 表示单阈值（原行为）：每次只用 `soc >= healthy_wh` 判一次。
+        #: 给定值后进入"粘滞模式"——加密态要跌破 `exit_wh` 才退回稀疏，稀疏态要涨到
+        #: `healthy_wh` 才加密，两者之间是**死区**。
+        self.exit_wh = exit_wh
+        #: 切换前要求连续几次观测都落在新的一侧（去抖）。`1` 表示不要求。
+        self.confirm_n = max(1, int(confirm_n))
+        #: 没有电量读数时要不要先下发一次保守配置。**这是"读状态"的入场费**：不知道状态就得
+        #: 先按最保守的来，于是每台设备多一对命令。而保守配置（稀疏间隔 + 稀疏周期）与设备
+        #: **出厂默认完全相同**，所以那一代是**空操作**——把它省掉不改变任何行为，只省下行。
+        self.send_when_unknown = send_when_unknown
+        #: 逐节点的粘滞模式与去抖计数。**这是策略自己的记忆**（它上次下达的是什么），
+        #: 不是环境真值。单阈值模式下不用它。
+        self._dense_mode: dict[str, bool] = {}
+        self._streak: dict[str, tuple[bool, int]] = {}
+        self.name = (f"energyaware{int(healthy_wh * 1000)}mwh"
+                     + (f"_x{int(exit_wh * 1000)}_c{self.confirm_n}" if exit_wh else ""))
 
     def plan(self, view: CenterView) -> list[tuple[str, dict]]:
         out = []
@@ -335,6 +351,9 @@ class EnergyAwarePolicy(DenseSamplingPolicy):
             snap = view.reports.get(nid) or {}
             soc = view.soc_of(nid)
             if soc is None:
+                if not self.send_when_unknown:
+                    # 等第一份读数再决定。节点保持出厂默认，而默认就是最保守的那一档。
+                    continue
                 # 从没收到过电量读数 → 保守地退回稀疏配置。**这里也必须发完整世代**：
                 # 只发一个字段，在"整代生效"的执行层下永远凑不齐一对而被丢弃，于是这一整类
                 # 节点在任何执行层下都收不到配置，策略与执行层就不可比了。
@@ -346,7 +365,23 @@ class EnergyAwarePolicy(DenseSamplingPolicy):
                 out.append((nid, b))
                 self._last[nid] = view.t_s
                 continue
-            healthy = soc >= self.healthy_wh
+            if self.exit_wh is None:
+                healthy = soc >= self.healthy_wh
+            else:
+                # **滞环 + 去抖**。单阈值下 `soc` 在阈值附近抖动会让节点在稀疏/加密之间来回翻，
+                # 每次翻转都是一对下发命令——下行次数因此翻倍，而那些命令大多什么也没改变。
+                # 死区（`exit_wh` 与 `healthy_wh` 之间）让人数不反复；去抖再要求新的一侧连续
+                # 出现 `confirm_n` 次，挡掉单次读数毛刺。
+                was_dense = self._dense_mode.get(nid, soc >= self.healthy_wh)
+                if was_dense:
+                    want_dense = soc >= self.exit_wh
+                else:
+                    want_dense = soc >= self.healthy_wh
+                side, n = self._streak.get(nid, (want_dense, 0))
+                n = n + 1 if side == want_dense else 1
+                self._streak[nid] = (want_dense, n)
+                healthy = was_dense if n < self.confirm_n else want_dense
+                self._dense_mode[nid] = healthy
             want_i = self.interval_s if healthy else self.sparse_interval_s
             want_p = self.period_s if healthy else self.sparse_period_s
             if (snap.get("sample_interval_s") == want_i
@@ -422,6 +457,15 @@ ARMS: dict[str, type[CenterPolicy]] = {
     "ea_h25": lambda: EnergyAwarePolicy(0.025, 300, 900),
     "ea_i600": lambda: EnergyAwarePolicy(0.010, 600, 900),
     "ea_i600h5": lambda: EnergyAwarePolicy(0.005, 600, 900),
+    # 下行代价的 Pareto 臂：单阈值 ea_i600 在容量 0.02 附近每种子发 69–83 次下行。
+    # 死区 + 去抖把"翻转"压掉，目标是把下行压向固定配置的 36.5 而不损失服务。
+    "ea_hyst1": lambda: EnergyAwarePolicy(0.010, 600, 900, exit_wh=0.006, confirm_n=2),
+    "ea_hyst2": lambda: EnergyAwarePolicy(0.010, 600, 900, exit_wh=0.004, confirm_n=3),
+    "ea_hyst3": lambda: EnergyAwarePolicy(0.010, 600, 900, exit_wh=0.002, confirm_n=4),
+    # 省掉"未知状态时的保守配置"那一代（它与出厂默认相同，是空操作）。
+    "ea_nb": lambda: EnergyAwarePolicy(0.010, 600, 900, send_when_unknown=False),
+    "ea_nb_hyst": lambda: EnergyAwarePolicy(0.010, 600, 900, exit_wh=0.006, confirm_n=2,
+                                            send_when_unknown=False),
 }
 
 

@@ -635,6 +635,83 @@ def test_dynamic_oracle_is_a_bound() -> None:
           f"{len(varied)}/{len(sched['per_node'])} 个节点的档位不止一种")
 
 
+def test_blind_config_is_a_noop() -> None:
+    """**"读状态"的入场费**：不知道状态时先发一代保守配置——而它必须是**空操作**。
+
+    反馈策略要按状态决定给谁加密，可在收到第一份读数之前它不知道状态，于是保守地先下发
+    "稀疏间隔 + 稀疏周期"。实测这一代占了 `ea_i600` 全部下发的一半（54 条里的 28 条），
+    也是它与固定配置在**下行次数**上差距的主要来源（85.2 vs 36.2）。
+
+    它之所以可以整代省掉，是因为它设的值与**设备出厂默认完全相同**——节点本来就跑这一档。
+    这里把这条等价关系钉住：**一旦有人改了默认 profile 或稀疏档，省略它就不再等价**，
+    那不是优化而是行为改变，测试必须红。
+    """
+    print("\n[16] 未知状态时的保守配置是不是空操作")
+    dp = DeviceProfile()
+    pol = build_policy("ea_i600")
+    check("保守档（稀疏）与设备出厂默认逐位相同",
+          pol.sparse_interval_s == dp.sample_interval_s
+          and pol.sparse_period_s == dp.report_period_s,
+          f"稀疏 {pol.sparse_interval_s}/{pol.sparse_period_s} "
+          f"vs 默认 {dp.sample_interval_s}/{dp.report_period_s}")
+
+    dep = build_deployment(groups=2)
+    hours = 6
+
+    def run(arm: str, lossless: bool):
+        """`lossless=True` 时把接入与回传都设成全通。
+
+        **为什么必须要这个受控对照。** 有损链路上，少发 26 条命令会让后续的随机抽样整体错位，
+        两条臂因此走到不同的样本序列上——末态配置不同是**随机流偏移**，不是行为差异。
+        全通链路下没有随机分支，两条臂必须给出**逐位相同**的末态配置；若不同，那就真的是
+        省掉那一代改变了行为，测试必须红。
+        """
+        nodes = nodes_from(dep)
+        truth = wang_fragment_truth(0, hours, (dep.gateway.sid,))
+        truth.displacement = displacement_series(nodes.keys(), hours, 0)
+        h, t_ = hetero_harvest(nodes.keys(), hours, 0, low_frac=0.4, low_wh_per_hour=0.0)
+        truth.harvest_wh.update(h)
+        truth.temp_c.update(t_)
+        inst = Instance(nodes, truth, seed=0, policy=build_policy(arm),
+                        send_contract_fields=True,
+                        uplink_p_arrive=1.0 if lossless else 0.74,
+                        backhaul_p_good=1.0 if lossless else 0.62)
+        inst.run(hours)
+        final = sorted((n.sample_interval_s, n.report_period_s) for n in nodes.values())
+        return inst, final
+
+    inst_b, _ = run("ea_i600", lossless=False)
+    inst_s, _ = run("ea_nb", lossless=False)
+    check("省掉那一代后下发条数严格减少",
+          len(inst_s.intent_log) < len(inst_b.intent_log),
+          f"ea_i600 {len(inst_b.intent_log)} 条 → ea_nb {len(inst_s.intent_log)} 条")
+
+    # **无损链路下的受控对照。** 为什么必须无损：有损链路上少发 26 条命令会让后续随机抽样整体
+    # 错位，两条臂走到不同样本序列上，差异到底是行为还是随机就分不清。全通链路没有随机分支。
+    #
+    # 测出来的结论与"什么都不做"不同，而且更重要：**那一代冗余配置会抢占同一份稀缺的下行机会**，
+    # 于是真正的那对命令里"上报周期"字段被拒，节点卡在跨代混配上直到运行结束。
+    # 所以省掉它不只是省下行，它同时消除了策略**自己制造**的非法配置。
+    inst_b2, _ = run("ea_i600", lossless=True)
+    inst_s2, _ = run("ea_nb", lossless=True)
+    check("无损下冗余那一代真的会制造跨代混配（不是链路造成的）",
+          inst_b2.mixed_config_ticks > 0 and inst_s2.mixed_config_ticks == 0,
+          f"ea_i600 混配 {inst_b2.mixed_config_ticks}s、ea_nb 混配 {inst_s2.mixed_config_ticks}s")
+
+    def first_dense(inst):
+        seen = {}
+        for e in inst.intent_log:
+            nid = e[1].split(":")[0]
+            if e[2] == 600 and nid not in seen:
+                seen[nid] = e[0]
+        return sorted(seen.values())
+
+    fb, fs = first_dense(inst_b2), first_dense(inst_s2)
+    check("省掉那一代后节点更早被切到密集（冗余下发会重置 dwell 计时器）",
+          bool(fs) and bool(fb) and max(fs) < max(fb),
+          f"ea_nb 最晚 {max(fs)}s vs ea_i600 最晚 {max(fb)}s")
+
+
 def main() -> int:
     print("实例层验收（Task Contract v1.1）")
     test_denominator_is_exogenous()
@@ -652,6 +729,7 @@ def main() -> int:
     test_center_command_path()
     test_config_generation_identity()
     test_dynamic_oracle_is_a_bound()
+    test_blind_config_is_a_noop()
     print("\n" + "-" * 74)
     if FAIL:
         print(f"  {len(FAIL)} 项失败: {', '.join(FAIL)}")
