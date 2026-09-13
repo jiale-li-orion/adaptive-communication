@@ -3644,3 +3644,32 @@ return leg 总短于剩余伤害预算。**要让 `A` 非零就得让 `T_harm` �
 `max_total_input_tokens=4.5M`、`max_total_output_tokens=0.30M`，任一触发即停），
 跑 `adm_noout` / `adm_out3` / `polar_c0.05` × 1 seed，报六个量。
 **未实现任何新 runtime、未做 durable reconciliation。**
+
+---
+
+## §7.90 真实 LLM naive baseline：**协议已冻结、smoke 通过、阶段一已在跑**
+
+**冻结协议**：`code/protocols/llm_naive_v1.json`（`sha256=11a0ce4481756392…`）。
+模型 / endpoint / **`thinking:{"type":"disabled"}`** / temperature / `max_tokens=64` /
+`response_format=json_object` / system prompt 原文 / 状态模式（字段、`soc_seen` 取 5 位、`max_nodes=20`、
+节点按 id 排序）/ 动作模式与非法处理 / 三个 condition / `env_seed=0` / 12 h + 1 h tail / 60 s epoch /
+**每 epoch 一次调用、不降频** / 五个预算 caps / 成本模型 / 六个指标 / 三条预注册判据 / 不在范围内的事项 /
+复现命令——**全部固化在这一个文件里**。
+
+**代码不复制协议里的任何字符串**：`llm_naive_baseline.py` 从该文件读取，并在每个结果里记录
+`protocol_id` 与 `protocol_sha256`，跑之前跑 `protocol_guard()` 校验盘上协议没被改过。
+**理由**：文档与实跑各写一份必然漂移——本 repo 已经反复栽在"同一件事两处写法不一致"上。
+
+**smoke（3 次调用，不作证据）**：全 `noop`、零解析失败、`actions={'noop':3}`、
+tokens `981/18` ⇒ **≈327 输入 / 6 输出 token/次**。
+
+**阶段一预算核算**：2160 次 × 327 ≈ **0.71 M 输入**、2160 × 6 ≈ **13 k 输出**
+⇒ 峰值价 `0.71×3 + 0.013×9 ≈ **¥2.2**`，**远低于 8 元上限**；prompt 固定故实际更低。
+
+**账户**：起跑前查得余额 **23.85 CNY**（用户给的是 24）。**差额 ≈0.15 元来自我自己的一次误跑**：
+`--smoke` 的 epoch 限制**参数传了却从未使用**，于是它跑了满 720 个 epoch 的 LLM 调用、被 600 s 超时杀掉。
+**已修为 `call_limit` 真正生效**（超过 N 次后策略变惰性、不再发请求）。
+
+**已启动**：`nohup python3 code/analysis/llm_naive_baseline.py > results/llm_naive_phase1.log`，
+**进程已确认存活**（PID 207200）。日志 0 字节是 Python 缓冲所致，**退出时才 flush**。
+预计 1–2 h（2160 次调用）。跑完后按协议里的三条预注册判据对号入座，并落 `26-...` 文档。
