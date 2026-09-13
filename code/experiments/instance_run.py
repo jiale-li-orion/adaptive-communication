@@ -70,6 +70,7 @@ def one_seed(seed: int, task_hours: float, tail_hours: float,
              irr_shade_frac: float = 0.0, irr_snow_frac: float = 0.0,
              irr_snow_after_h: int = 0, irr_source_temp: bool = True,
              charge_min_c: float | None = 5.0,
+             idle_wh_per_tick: float = 0.0,
              energy_scale: float = 1.0) -> dict:
     hours = task_hours + tail_hours
     dep = build_deployment(groups=2)
@@ -79,6 +80,7 @@ def one_seed(seed: int, task_hours: float, tail_hours: float,
                          event_interval_s=event_spacing_s,
                          capacity_wh=capacity_wh, initial_soc=initial_soc,
                          charge_min_c=charge_min_c,
+                         idle_wh_per_tick=idle_wh_per_tick * energy_scale,
                          sample_wh=DeviceProfile().sample_wh * energy_scale)
     nodes = nodes_from(dep, profile=prof)
     truth = wang_fragment_truth(0, int(hours), (dep.gateway.sid,))
@@ -127,7 +129,12 @@ def one_seed(seed: int, task_hours: float, tail_hours: float,
     # **必须与实例用同一个初始电量**，否则这个横轴描述的是另一个系统。`initial_soc=1.0`
     # （满格启动）会让 margin 恒为无穷——初始电量自己就能跑完整个任务时，采能与可行性无关，
     # 那个横轴没有任何信息量。扫 margin 时必须配一个需要采能的初始电量。
-    _cost_h = (prof.sample_wh + _oracle.UPLINK_WH)
+    # **无量纲横轴**：初始自主小时数 `A_0 = soc_0 * C / load_h`，
+    # 其中 `load_h` 是"每小时的名义负载"，必须把**静息功耗**也算进去——
+    # 否则 `idle_wh_per_tick > 0` 时这个横轴就不代表自主时长（实测：idle 会让
+    # "停止采样也照样耗电"成为一条新的失效路径）。
+    _cost_h = (prof.sample_wh + _oracle.UPLINK_WH
+               + 3600.0 * idle_wh_per_tick * energy_scale)
     margins = [autonomy_margin(harvest[nid], int(task_hours),
                                capacity_wh=capacity_wh,
                                initial_wh=initial_soc * capacity_wh,
@@ -299,6 +306,8 @@ def main() -> None:
     ap.add_argument("--irr-snow-after-h", type=int, default=0)
     ap.add_argument("--irr-no-source-temp", action="store_true",
                     help="不用来源气温（改用 10°C 常数）——用于把时序形状与低温闸门分开")
+    ap.add_argument("--idle-wh-per-tick", type=float, default=0.0,
+                    help="静息功耗（Wh/tick）。默认 0——**这是一个 A 层取值**，见 manifest")
     ap.add_argument("--charge-min-c", default="5.0",
                     help="低温充电闸门（°C）；`off` 表示不设闸门")
     ap.add_argument("--initial-soc", type=float, default=1.0,
@@ -374,7 +383,8 @@ def main() -> None:
                      irr_snow_after_h=args.irr_snow_after_h,
                      irr_source_temp=not args.irr_no_source_temp,
                      charge_min_c=(None if args.charge_min_c == 'off'
-                                   else float(args.charge_min_c)))
+                                   else float(args.charge_min_c)),
+                     idle_wh_per_tick=args.idle_wh_per_tick)
             for a in arm_names for L in layers for s in range(args.seeds)]
 
     # 聚合：**按臂分组**。分母类用求和天然是整数，时延与比率类用逐种子均值。

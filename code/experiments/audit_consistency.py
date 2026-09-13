@@ -210,7 +210,11 @@ def audit_result_index() -> None:
         check("results/README.md 存在", False, readme)
         return
     text = open(readme, encoding="utf-8").read()
-    named = set(_re.findall(r"`([A-Za-z_0-9.]+\.(?:json|txt|csv|png|obj|xml|log))`", text))
+    # **文件名里可以有连字符。** 字符类原本是 `[A-Za-z_0-9.]`、**不含 `-`**，
+    # 于是任何名字带连字符的结果文件（如 `instance_idle_5e-8.json`）**永远无法被登记**——
+    # 审计会一直报"未登记"，而照着 README 改也改不掉。此前没人用过带 `-` 的文件名所以没露出来。
+    # 记住这条：**检查工具的限制会伪装成数据的缺陷**。
+    named = set(_re.findall(r"`([A-Za-z_0-9.-]+\.(?:json|txt|csv|png|obj|xml|log))`", text))
     on_disk = {f for f in _os.listdir(results_dir)
                if _os.path.isfile(_os.path.join(results_dir, f)) and f != "README.md"}
     unlisted = sorted(on_disk - named)
