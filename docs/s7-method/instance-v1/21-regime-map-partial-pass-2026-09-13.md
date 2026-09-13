@@ -148,3 +148,26 @@ python3 code/analysis/regime_map.py --selftest   # 全部通过（手算核对�
 python3 code/analysis/regime_map.py --blind      # 盲测表 + 混杂警告
 python3 code/analysis/regime_map.py              # 配置能耗与生存曲线
 ```
+
+---
+
+## 八、补记（2026-09-13 第 2 轮）：`T_harm^traj` 拿出来了，但**表不采用**
+
+`regime_map.py --traj` 已接上**来源派生**采能（`irradiance_harvest`：形状来自 NASA POWER 2023
+逐小时辐照；量级 `--peak` 是 **A 层旋钮**，不是拟合值），逐 tick 积分求 `T_harm^traj`。
+积分顺序与实例的 `Node.step` 一致（先充电后扣负载）。
+
+**两个语义要点（都是这轮才弄清的）**：
+
+1. **`T_harm^traj` 在任务窗内右删失。** 返回 `hours` 表示「任务窗内没死」，**不是死亡时间**——
+   `sparse` 的 `T_harm^worst` 是 37.84 h，在 12 h 窗里本来就死不了。第一版断言没区分删失，
+   把 `aoi-like` 误判成违反（`12.00 < 19.24`），**断言本身写错了**，已修成只在未删失时比较。
+2. **逐 tick 积分只能落在 `1/60 h` 网格上**，所以它与连续的 `soc / load_h` 只相等到 tick 分辨率。
+   自检已按 `1/60 h` 断言，并写明「上界是连续的、轨迹是量化的」。
+
+**未解决的一处**：`dense600` 的 `T_harm^traj` 比 `T_harm^worst` **早一个 tick（≈1 min）**
+（6.4833 对 6.4974 h）。采能非负，数学上不可能让节点更早死 ⇒ **必有口径或浮点边界问题**，
+**本轮未查明**。量级是 6.5 h 里的 1 min，**不影响任何结论**，但**必须记下来**。
+工具里加了硬断言（未删失却更早死就 `raise`，不印错表）；它目前恰好卡在容差边界上通过。
+
+⇒ **`--traj` 的表本轮不采用**，`T_harm^traj` 只作机制接线完成，不作证据。

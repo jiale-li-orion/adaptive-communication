@@ -44,7 +44,11 @@ Cleveland 上报周期跟不上义务、宽松能量下执行语义只剩代价�
 from __future__ import annotations
 
 import argparse
+import os
 import sys
+
+sys.path.insert(0, os.path.join(os.path.dirname(os.path.abspath(__file__)),
+                                "..", "instance"))
 
 # ── 实例常量（唯一来源：docs/s7-method/instance-v1/02-instance-manifest.md §三·〇）──────────
 SAMPLE_WH = 4.7e-4
@@ -155,6 +159,70 @@ def regimes() -> dict[str, tuple[float, float, float, float]]:
     return out
 
 
+CAPACITY_WH = 0.02          # 实例声明容量（开发集用的那一档）
+#: 来源派生采能的量级旋钮（**A 层选择，不是拟合值，也不是来源事实**）。
+#: 形状来自 NASA POWER 2023 逐小时辐照，量级由 `peak_wh_per_hour` 定。
+PEAK_WH_PER_HOUR = 0.01
+
+
+def t_harm_traj(load_h: float, soc0: float, harvest: dict, hours: int,
+                capacity_wh: float = CAPACITY_WH) -> float:
+    """沿**来源派生采能轨迹**走到电量归零的小时数（`T_harm^traj`）。
+
+    逐 tick 积分，**与实例里 `Node.step` 的顺序一致**（先充电、后按负载扣）： 
+
+        soc ← min(capacity, soc + harvest[t]);  soc ← soc − load_h/60
+
+    采能为 0 时它必须**逐位退化**成 `T_harm^worst = soc0 / load_h`——
+    这条是自检里钉住的恒等式，也是两个边界之间的关系定义。
+    """
+    soc = soc0
+    for t in range(0, hours * 3600, TICK_S):
+        soc = min(capacity_wh, soc + harvest.get(t, 0.0))
+        soc -= load_h * (TICK_S / 3600.0)
+        if soc <= 0.0:
+            return t / 3600.0
+    return float(hours)
+
+
+def source_harvest(hours: int, seed: int, peak_wh_per_hour: float) -> dict:
+    """**来源派生**的逐 tick 采能（形状：NASA POWER 2023 逐小时辐照）。"""
+    from exogenous import irradiance_harvest
+    h, _temp = irradiance_harvest(["n01"], hours, seed,
+                                  peak_wh_per_hour=peak_wh_per_hour)
+    return h["n01"]
+
+
+def traj_table(hours: int, soc0: float, seed: int, peak: float) -> int:
+    cfg = ((600, 900, "dense600"), (900, 900, "dense900"),
+           (3600, 300, "aoi-like"), (3600, 3600, "sparse"))
+    have = source_harvest(hours, seed, peak)
+    print(f"来源派生采能（NASA POWER 2023 逐小时辐照，形状来自来源；"
+          f"量级 peak = {peak} Wh/h 是 **A 层旋钮**）")
+    print(f"任务 {hours} h；soc0 = {soc0} Wh；容量上限 {CAPACITY_WH} Wh；种子 {seed}\n")
+    print(f"{'配置':<12}{'load_h Wh/h':>14}{'T_harm^worst':>14}{'T_harm^traj':>13}"
+          f"{'差（风险容许区）':>18}")
+    print("-" * 72)
+    for i, r, tag in cfg:
+        lh = hourly_load(i, r)
+        worst = soc0 / lh
+        traj = t_harm_traj(lh, soc0, have, hours)
+        d = traj - worst
+        # `traj == hours` 是**右删失**（任务窗内没死），不是死亡时间——所以只在未删失时比较。
+        censored = traj >= hours
+        # **非负采能不可能让节点更早死。** 未删失却更早死 ⇒ 积分或口径有错，
+        # 宁可响亮失败也不印错表。**（2026-09-13：`dense600` 触发此断言，原因未查明，见文档）**
+        if (not censored) and d < -1.0 / 60 - 1e-9:
+            raise AssertionError(
+                f"{tag}: 未删失的 T_harm^traj {traj:.4f} h < T_harm^worst {worst:.4f} h —— "
+                f"采能非负却更早死，积分或口径有错，本表不可用")
+        d_s = "右删失（任务窗内没死）" if censored else f"{d:+.2f} h"
+        print(f"{tag:<12}{lh:>14.6e}{worst:>13.2f}h{traj:>12.2f}h{d_s:>18}")
+    print("\n读法：`traj − worst` 就是**允许风险控制发挥的区域**——"
+          "沿真实采能节点撑得比零采能上界久多少。")
+    return 0
+
+
 def cadence(t_report_s: int, t_deadline_s: int) -> float:
     """`C = T_report / T_deadline`。`C > 1` ⇒ cadence-infeasible。"""
     return t_report_s / t_deadline_s
@@ -165,6 +233,11 @@ def main() -> int:
     ap.add_argument("--hours", type=int, default=12, help="任务时长（小时）")
     ap.add_argument("--soc", type=float, default=0.0195, help="初始 SoC（Wh）")
     ap.add_argument("--report-period-s", type=int, default=3600)
+    ap.add_argument("--traj", action="store_true",
+                    help="算 T_harm^traj（沿来源派生采能轨迹）并与 T_harm^worst 对比")
+    ap.add_argument("--peak", type=float, default=PEAK_WH_PER_HOUR,
+                    help="来源派生采能的量级旋钮（A 层）")
+    ap.add_argument("--seed", type=int, default=0)
     ap.add_argument("--selftest", action="store_true")
     ap.add_argument("--blind", action="store_true",
                     help="把判据与已知答案并排（答案栏来自已登记结果，判据不含它）")
@@ -172,6 +245,8 @@ def main() -> int:
 
     if args.blind:
         return blind()
+    if args.traj:
+        return traj_table(args.hours, args.soc, args.seed, args.peak)
 
     if args.selftest:
         return selftest()
@@ -282,6 +357,13 @@ def selftest() -> int:
     chk("i.i.d. S(12) < 1e-3（几乎不可能一次机会都没有）", S[12] < 1e-3, True)
     chk("南极 / i.i.d. 的『零机会』概率之比 > 1000×（这才是可判别量）",
         Sp[12] / S[12] > 1000, True)
+
+    # T_harm^traj 在零采能下必须**逐位**退化到 T_harm^worst（两个边界的关系定义）
+    lh = hourly_load(600, 900)
+    # 注意：逐 tick 积分的结果**只能落在 1/60 h 的网格上**，所以与连续的 `soc/load_h`
+    # 只相等到 tick 分辨率——这本身就是一条要记住的事（上界是连续的，轨迹是量化的）。
+    chk("零采能下 T_harm^traj 与 T_harm^worst 相等（到 tick 分辨率 1/60 h）",
+        abs(t_harm_traj(lh, 0.0195, {}, 12) - 0.0195 / lh) <= 1.0 / 60 + 1e-9, True)
 
     # cadence
     chk("Cleveland：C = 3600/900 = 4 ⇒ cadence-infeasible", cadence(3600, 900), 4.0)
