@@ -1821,3 +1821,46 @@ unavailable 1（灾前边界，明确不声称）**。**§九** 能力矩阵已�
 **[20]** `autonomy_margin` 的盲区（判可行而实测 14/14 全灭；手算：初始 0.0012 → t=0 采样后剩
 7.3e-4 → 触发连采 3 条只付得起 1 条）。**[21]** 最强传统基线两维不互相削弱；无读数时一条都不发。
 `test_instance.py` 现 **21 组**，`run_checks.py` **18/18**。
+
+## §7.49 两处判断的更正、两个 benchmark 陷阱，与第二阶段的轨划分
+
+### 一、更正（**都要以更正后的版本引用**）
+
+**A. 传统基线不是"最强的那一个点"。** 此前写"最强传统基线是 `aoi`，不是 `ea_nb`"收得太满：
+`aoi` 是**最高 service point**、`ea_nb` 是 **low-control-cost point**、`local` 是**零中心控制端点**，
+**三者互不支配**。v1.1 本就要求业务服务与资源消耗分列，所以后续方法面对的是**一条 Pareto frontier**。
+**支配判据**：交付低于 `aoi` **且**成本高于 `ea_nb` → 已被传统基线支配；只有在**相近成本下超过 `aoi`**、
+或**相近服务下显著少用通信/能量**，才产生新点。`ea_aoi` 叠加后没有超过 `aoi` —— **两类收益不是天然可加的**。
+
+**B. "交付侧是链路属性、不是中心决策对象"不成立。** `local → aoi` 直接证明中心改 report scheduling
+就能减少缺送（交付 149.5 → 155.8、缺送 18.5 → 12.2）。`缺送` **同时**含"物理上不可送"与
+"当前策略没用好可用机会"两部分。而现有 `dynamic_oracle` **有意松弛 delivery**，**分不开这两者**——
+12.2/12.0/9.7 里有多少可控，**本轮没测**，需要**另一个** policy-independent 的 delivery 上界。
+
+**C. counterfactual 污染已在代码里定位。** 两处抽签键：
+- 上行 `stable_uniform(seed, "ul", node_id, hour, attempt_index)` —— `attempt_index` 是**该节点自己的
+  上行计数**，改上报周期即整体错位；
+- 下行接收窗 `stable_uniform(seed, "rx-win", node_id, hour, slot, message.identity)`，而
+  `message.identity = f"cmd{seq:05d}"` 是**全局命令序号** —— **任一处多发一条命令，
+  所有节点后续的下行抽签全部平移**。注释的意图是"同小时内两条命令不共享命运"，
+  副作用正是污染 counterfactual。
+  **修法方向**：把潜在结果按 `(node, 绝对时间/机会, 方向)` **预先固定**，策略只决定是否使用机会。
+
+### 二、两个 benchmark 陷阱（论文级 finding）
+
+写进 `docs/s7-method/instance-v1/08-benchmark-pitfalls.md`，可独立引用：
+
+1. **相位锁定抽样**（见 §7.43，此处升格为 artifact 级 finding）。
+2. **标量摘要替代轨迹**：同 1.37 margin、总量高 15 倍者全灭；且该标量本身偏乐观。
+   **规则**：标量摘要要当可行性判据，必须先证明它对同一总量下的不同时序不敏感。
+
+### 三、第二阶段的轨划分（三条并行，互为约束，不串行）
+
+| 轨 | 要回答的 | 决定 |
+|---|---|---|
+| **Task / benchmark** | 第二业务来源、真实链路 trace、A 层敏感性、跨年份天气 | 结论能有多宽 |
+| **Classical control** | `aoi`/`ea_nb`/queue/freshness/EH 做成真前沿；交付 residual 拆成 controllable 与 irreducible | 传统方法还能吃掉多少 |
+| **Agent / runtime** | intent admission、partial observation、跨断连恢复、真实 LLM planner 的自然 failure | 是否回到 agent infra contribution |
+
+**纪律**：agent/runtime 轨的每个结果**必须回到冻结 task 的业务指标与资源账本**，
+**不能靠给 task 加义务来救它**。
