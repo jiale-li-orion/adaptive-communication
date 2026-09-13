@@ -27,6 +27,27 @@
 | `baseline_experiment.txt` | 执行层故障复现，属同一批机制层代码 |
 | `wirelessops_execution_*.txt` | 来自已移出仓库的适配器 |
 
+## 业务与机制层：本轮修复过程中被取代的文件
+
+这些文件在产出时是有效的，之后被同一个实验在修完缺陷后的重跑取代。保留它们是为了让
+"某个读数曾经是多少、后来为什么变了"可被追溯。
+
+| 文件 | 被谁取代 | 取代原因 |
+|---|---|---|
+| `monitoring_trajectories_business.json` | `business2` | §7.32：评分器的到达索引取最后一次而非第一次，压低全部覆盖读数 |
+| `monitoring_trajectories_2x2.json` | `2x2v3` | §7.29 的逻辑身份缺陷 + §7.32 的评分缺陷 |
+| `monitoring_trajectories_restart20.json` | `restart20v4` | 同上 |
+| `monitoring_trajectories_restart20v2.json` | `restart20v4` | 同上（v2 只修了 rule planner，`llm__*` 两格仍带缺陷） |
+| `monitoring_trajectories_restart20v3.json` | `restart20v4` | 同上（v3 仍未用定稿评分器） |
+| `method_comparison.json` | `method_comparison_main20.json` | 只有 5 个种子、4 条臂；主表用 20 种子、11 条臂 |
+
+## 机制层的加热与中继扫描：产出代码已被取代
+
+`heating_sweep.txt`、`relay_availability_sweep.txt`、`sweeps.log` 由 `method_comparison.py`
+的 `--heated` 与 `--relay` 扫描产生，而那一版脚本带有 `verified_tool_calls` 的保真度缺陷
+（§7.18）与不公平的精确版本 CAS（§7.23）。**它们既未被重跑，也不得引用**；重跑命令见
+`results/README.md`。
+
 ## 位置数据
 
 `data/` 下的内容全部保留：`dem/hgt` 是 SRTM 高程，`downloads/chirpbox.csv`、`lora_on_ice`、

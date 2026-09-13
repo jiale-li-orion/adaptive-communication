@@ -20,6 +20,7 @@ from __future__ import annotations
 
 import os as _os, sys as _sys
 _HERE = _os.path.dirname(_os.path.abspath(__file__))
+_CODE_ROOT = _os.path.dirname(_HERE)
 _CODE = _os.path.dirname(_HERE)
 for _p in (_HERE, *(_os.path.join(_CODE, d) for d in ("physics", "runtime",
                                                      "experiments", "analysis"))):
@@ -193,6 +194,33 @@ def audit_analysis_inputs() -> None:
     check("轨迹脚本按 workload 分组写出（paired_ci 的分组键）",
           '"workload": trajectory' in src)
     check("轨迹脚本保存 per_seed（配对区间的前提）", '"per_seed":' in src)
+
+
+def audit_result_index() -> None:
+    """`results/README.md` 的索引与实际目录必须互为子集。
+
+    D29 要求每个结果文件都能说清是否可用、被谁取代。索引漏登一个文件，那个文件就变成了
+    "没有任何说明"的孤儿；索引多登一个不存在的文件，则复现命令指向空气。两种都不报错。
+    """
+    import os as _os
+    import re as _re
+    results_dir = _os.path.join(_CODE_ROOT, "..", "results")
+    readme = _os.path.join(results_dir, "README.md")
+    if not _os.path.exists(readme):
+        check("results/README.md 存在", False, readme)
+        return
+    text = open(readme, encoding="utf-8").read()
+    named = set(_re.findall(r"`([A-Za-z_0-9.]+\.(?:json|txt|csv|png|obj|xml|log))`", text))
+    on_disk = {f for f in _os.listdir(results_dir)
+               if _os.path.isfile(_os.path.join(results_dir, f)) and f != "README.md"}
+    unlisted = sorted(on_disk - named)
+    check("results/ 下没有被索引漏登的文件", not unlisted, f"未登记: {unlisted}")
+    # A file the index names but that is not on disk is allowed only when it is named as withdrawn.
+    missing = sorted(n for n in named if not _os.path.exists(_os.path.join(results_dir, n)))
+    withdrawn_named = [n for n in missing if n in open(
+        _os.path.join(results_dir, "_withdrawn", "MANIFEST.md"), encoding="utf-8").read()]
+    check("索引提到的缺失文件都在归档清单里", len(withdrawn_named) == len(missing),
+          f"缺失 {missing}，其中已归档 {withdrawn_named}")
 
 
 def audit_relay_bypasses_screen() -> None:
@@ -416,6 +444,7 @@ def main() -> int:
     audit_readme_matches_results()
     audit_cost_weight_is_separate_from_radio()
     audit_analysis_inputs()
+    audit_result_index()
     print("\n" + "-" * 74)
     if FAIL:
         print(f"  {len(FAIL)} 项失败：")
