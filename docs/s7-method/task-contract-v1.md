@@ -1,4 +1,6 @@
-# Task Contract v1（冻结）：灾前山区监测服务连续性
+# Task Contract v1（历史版本）：灾前山区监测服务连续性
+
+> **后续修订**：当前设计依据为 [Task Contract v1.1](task-contract-v1.1.md) 与 [原始证据复核](task-design/source-audit-2026-09-13.md)，登记 D49–D54。下面保留 `e8d2eca` 的历史冻结文本。其中“本地规则必须不够用”“远程字段证明中心必需”“G5唯一空白”等判断已由新决策取代；未核条款不再视为已冻结。
 
 **日期**：2026-09-13
 **状态**：**冻结。** 本文件取代 `docs/s6-model/pre-disaster-paper-contract-v0.1.md` §5 的参考负载，

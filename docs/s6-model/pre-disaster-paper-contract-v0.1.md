@@ -1,5 +1,7 @@
 # 灾前山区监测论文契约 v0.1
 
+> **任务部分为历史设计**：任务结构、证据边界与评分原则以 [Task v1.1](../s7-method/task-contract-v1.1.md) 为准。本文的人工风险窗、固定10／90 min评分门槛等不得作为新任务的现场规格；旧实现尚未迁移。
+
 日期：2026-09-13。状态：**研究设计建议，不是已完成实验或中通服确认的部署规范。** 继承 README §7、s3 的既有 gap、[任务与动作空间](../s7-method/task-and-action-space.md)和[评测契约](evaluation-contract.md)，补齐任务、资源与成文证据定义。另见 [TopoLLM 全文完成度对照](../s3-novelty/topollm-fulltext-completion-audit.md)。
 
 ## 1. 一篇论文的主线与撤回条件
