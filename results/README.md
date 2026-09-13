@@ -49,6 +49,8 @@ Task Contract v1.1 的实例层。**不做方法比较**，只把当前实例在
 | 文件 | 命令 | 种子 | 说明什么 |
 |---|---|---|---|
 | `instance_base.json` | `instance_run.py --seeds 20 --task-hours 12 --tail-hours 1 --tag base` | 20 | 多节点 + 真实地形实例的分列读数：周期新鲜度与完整性、事件采集与交付、传播时延、通信代价、删失 |
+| `instance_arms.json` | `instance_run.py --seeds 20 --task-hours 12 --tail-hours 1 --arms local,fixed300,fixed900,aoi,aoi_link --tag arms` | 20 | **中心策略对照**：现场自治 / 固定周期 / 按 AoI 自适应 / 自适应+跳过静默节点，分列报告业务指标与代价 |
+| `instance_arms_outage3h.json` | `instance_run.py --seeds 20 --task-hours 12 --tail-hours 1 --outage-start-h 4 --outage-hours 3 --arms local,fixed900,aoi,aoi_link --tag arms_outage3h` | 20 | 同上，外加回传中断 3 h 的恢复分列 |
 | `instance_outage3h.json` | `instance_run.py --seeds 20 --task-hours 12 --tail-hours 1 --outage-start-h 4 --outage-hours 3 --tag outage3h` | 20 | 同上，另加**回传中断 3 h** 的恢复分列：采集缺失与交付缺失分开，以及自动补发追回数 |
 
 **实例是什么**：一个监测单元 = 网关带雨量计 + 13 个坡面位移测点（真实 SRTM/ITM 布点，绕射边缘上

@@ -32,6 +32,7 @@ from deployment import build_deployment
 from exogenous import (ObligationSet, constant_harvest, displacement_series,
                        rule_obligations_for_truth, routine_obligations_by_node,
                        wang_fragment_truth)
+from center import ARMS, build_policy
 from network import DeviceProfile, Instance, nodes_from
 from scoring import evaluate
 
@@ -39,7 +40,8 @@ OUT = _os.path.normpath(_os.path.join(_CODE, "..", "results"))
 
 
 def one_seed(seed: int, task_hours: float, tail_hours: float,
-             outage_start_h: float = 0.0, outage_hours: float = 0.0) -> dict:
+             outage_start_h: float = 0.0, outage_hours: float = 0.0,
+             arm: str = "local") -> dict:
     hours = task_hours + tail_hours
     dep = build_deployment(groups=2)
     nodes = nodes_from(dep)
@@ -54,7 +56,7 @@ def one_seed(seed: int, task_hours: float, tail_hours: float,
         routine_obligations_by_node(meas, int(task_hours))
         + rule_obligations_for_truth(truth))
 
-    inst = Instance(nodes, truth, seed=seed)
+    inst = Instance(nodes, truth, seed=seed, policy=build_policy(arm))
     outage = None
     if outage_hours > 0:
         # 回传中断窗。`backhaul_gate` 只能让路径更不可用，因此中断不会给任何一方送好处。
@@ -68,6 +70,8 @@ def one_seed(seed: int, task_hours: float, tail_hours: float,
 
     return {
         "seed": seed,
+        "arm": arm,
+        "command_counters": dict(inst.counters),
         "deployment": dep.summary(),
         "n_obligations": res["n_obligations"],
         "by_kind": res["by_kind"],
@@ -92,50 +96,60 @@ def main() -> None:
     ap.add_argument("--seeds", type=int, default=20)
     ap.add_argument("--task-hours", type=float, default=12.0)
     ap.add_argument("--tail-hours", type=float, default=1.0)
+    ap.add_argument("--arms", default="local",
+                    help="逗号分隔的中心策略，见 instance/center.py 的 ARMS")
     ap.add_argument("--outage-start-h", type=float, default=0.0)
     ap.add_argument("--outage-hours", type=float, default=0.0)
     ap.add_argument("--tag", default="base")
     args = ap.parse_args()
 
+    arm_names = [a.strip() for a in args.arms.split(",") if a.strip()]
+    for a in arm_names:
+        if a not in ARMS:
+            raise SystemExit(f"unknown arm {a!r}; have {sorted(ARMS)}")
     runs = [one_seed(s, args.task_hours, args.tail_hours,
-                     args.outage_start_h, args.outage_hours) for s in range(args.seeds)]
+                     args.outage_start_h, args.outage_hours, a)
+            for a in arm_names for s in range(args.seeds)]
 
-    # 聚合：分母类用求和（它们天然是整数），时延与比率类用逐种子均值
-    agg = {
-        "n_seeds": args.seeds,
-        "task_hours": args.task_hours,
-        "tail_hours": args.tail_hours,
-        "routine_delivered_rate": mean([r["routine"]["delivered"] / r["routine"]["n"]
-                                        for r in runs]),
-        "event_match_rate": mean([r["event"]["match_rate"] for r in runs]),
-        "event_deliver_rate": mean([r["event"]["deliver_rate"] for r in runs]),
-        "routine_aoi_mean_s": mean([r["routine"]["aoi_mean_s"] for r in runs]),
-        "routine_missing_collection": mean([r["routine"]["missing_collection"] for r in runs]),
-        "routine_missing_delivery": mean([r["routine"]["missing_delivery"] for r in runs]),
-        "event_missing_collection": mean([r["by_kind"]["event"]["missing_collection"]
-                                          for r in runs]),
-        "event_missing_delivery": mean([r["by_kind"]["event"]["missing_delivery"]
-                                        for r in runs]),
-        "detection_latency_mean_s": mean([r["propagation"]["detection_latency_mean_s"]
-                                          for r in runs]),
-        "knowledge_latency_mean_s": mean([r["propagation"]["knowledge_latency_mean_s"]
-                                          for r in runs]),
-        "knowledge_latency_p90_s": mean([r["propagation"]["knowledge_latency_p90_s"]
-                                         for r in runs]),
-        "uplinks": mean([r["communication"]["uplinks"] for r in runs]),
-        "uplinks_heard": mean([r["communication"]["uplinks_heard"] for r in runs]),
-        "gateway_forwarded": mean([r["communication"]["gateway_forwarded"] for r in runs]),
-        "censored": mean([r["observation_window"]["censored_total"] for r in runs]),
-    }
-    if args.outage_hours > 0:
-        rec = [r["recovery"] for r in runs if r["recovery"]]
-        agg.update({
-            "recovery_n_obligations": mean([x["n_obligations_in_window"] for x in rec]),
-            "recovery_delivered": mean([x["delivered"] for x in rec]),
-            "recovery_missing_collection": mean([x["missing_collection"] for x in rec]),
-            "recovery_missing_delivery": mean([x["missing_delivery"] for x in rec]),
-            "recovery_backlog_recovered": mean([x["backlog_recovered"] for x in rec]),
-        })
+    # 聚合：**按臂分组**。分母类用求和天然是整数，时延与比率类用逐种子均值。
+    def agg_of(rs):
+        a = {
+            "n_seeds": len(rs),
+            "routine_delivered": mean([r["routine"]["delivered"] for r in rs]),
+            "routine_missing_collection": mean([r["routine"]["missing_collection"] for r in rs]),
+            "routine_missing_delivery": mean([r["routine"]["missing_delivery"] for r in rs]),
+            "routine_aoi_mean_s": mean([r["routine"]["aoi_mean_s"] for r in rs]),
+            "event_match": mean([r["event"]["slots_matched_by_collection"] for r in rs]),
+            "event_delivered": mean([r["event"]["slots_delivered"] for r in rs]),
+            "event_missing_delivery": mean([r["by_kind"]["event"]["missing_delivery"]
+                                            for r in rs]),
+            "knowledge_latency_mean_s": mean([r["propagation"]["knowledge_latency_mean_s"]
+                                              for r in rs]),
+            "uplinks": mean([r["communication"]["uplinks"] for r in rs]),
+            "uplinks_heard": mean([r["communication"]["uplinks_heard"] for r in rs]),
+            "downlink_attempts": mean([(r["communication"].get("downlink_attempts") or 0)
+                                       for r in rs]),
+            "commands_sent": mean([r["command_counters"]["commands_sent"] for r in rs]),
+            "commands_delivered": mean([r["command_counters"]["commands_delivered"]
+                                        for r in rs]),
+            "commands_refused": mean([r["command_counters"]["commands_refused"] for r in rs]),
+            "censored": mean([r["observation_window"]["censored_total"] for r in rs]),
+        }
+        if args.outage_hours > 0:
+            rec = [r["recovery"] for r in rs if r["recovery"]]
+            a.update({
+                "recovery_n_obligations": mean([x["n_obligations_in_window"] for x in rec]),
+                "recovery_delivered": mean([x["delivered"] for x in rec]),
+                "recovery_missing_collection": mean([x["missing_collection"] for x in rec]),
+                "recovery_missing_delivery": mean([x["missing_delivery"] for x in rec]),
+                "recovery_backlog_recovered": mean([x["backlog_recovered"] for x in rec]),
+            })
+        return a
+
+    agg = {"n_seeds": args.seeds, "task_hours": args.task_hours,
+           "tail_hours": args.tail_hours, "arms": {}}
+    for a in arm_names:
+        agg["arms"][a] = agg_of([r for r in runs if r["arm"] == a])
 
     doc = {"config": vars(args), "aggregate": agg, "runs": runs}
     _os.makedirs(OUT, exist_ok=True)
@@ -144,14 +158,28 @@ def main() -> None:
         json.dump(doc, fh, indent=1, sort_keys=True, default=str)
 
     w = 30
-    print(f"实例读数（{args.seeds} 种子，义务 {args.task_hours}h + 尾部 {args.tail_hours}h）")
-    print("-" * 62)
-    for k, v in agg.items():
-        if isinstance(v, float):
-            print(f"  {k:<{w}} {v:,.2f}")
-        else:
-            print(f"  {k:<{w}} {v}")
-    print("-" * 62)
+    print(f"实例读数（{args.seeds} 种子/臂，义务 {args.task_hours}h + 尾部 {args.tail_hours}h）")
+    print("=" * 96)
+    hdr = (f"{'arm':<10} {'周期交付':>9} {'缺采':>5} {'缺送':>6} {'AoI s':>7} "
+           f"{'事件采集':>8} {'事件交付':>8} {'获知s':>7} {'上行':>6} {'下行试':>6} {'送达':>5} {'拒':>5}")
+    print(hdr)
+    print("-" * 96)
+    for a in arm_names:
+        x = agg["arms"][a]
+        print(f"{a:<10} {x['routine_delivered']:>9.1f} {x['routine_missing_collection']:>5.1f} "
+              f"{x['routine_missing_delivery']:>6.1f} {x['routine_aoi_mean_s']:>7.0f} "
+              f"{x['event_match']:>8.1f} {x['event_delivered']:>8.1f} "
+              f"{x['knowledge_latency_mean_s']:>7.0f} {x['uplinks']:>6.1f} "
+              f"{x['downlink_attempts']:>6.1f} {x['commands_delivered']:>5.1f} "
+              f"{x['commands_refused']:>5.1f}")
+    print("=" * 96)
+    if args.outage_hours > 0:
+        print("恢复分列（中断窗内 + 固定恢复观察期）")
+        for a in arm_names:
+            x = agg["arms"][a]
+            print(f"  {a:<10} 义务 {x['recovery_n_obligations']:.0f} 交付 {x['recovery_delivered']:.1f} "
+                  f"缺采 {x['recovery_missing_collection']:.1f} 缺送 {x['recovery_missing_delivery']:.1f} "
+                  f"补发追回 {x['recovery_backlog_recovered']:.1f}")
     print(f"wrote {path}")
 
 

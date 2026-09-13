@@ -34,8 +34,9 @@ for _p in (_HERE, *(_os.path.join(_CODE, d) for d in ("physics", "runtime",
 
 from dataclasses import dataclass, field
 
+from center import OP_SET_REPORT_PERIOD, CenterPolicy, CenterView, LocalPolicy
 from deterministic import stable_uniform
-from opportunity import ControlPlane, LoRaProfile
+from opportunity import ControlPlane, DownlinkMessage, LoRaProfile
 
 TICK_S = 60
 
@@ -372,7 +373,8 @@ class Instance:
                  profile: LoRaProfile | None = None,
                  uplink_p_arrive: float = 0.74,
                  backhaul_p_good: float = 0.62,
-                 backhaul_delay_s: int = 0) -> None:
+                 backhaul_delay_s: int = 0,
+                 policy: CenterPolicy | None = None) -> None:
         # 节点是**每次运行的状态**：缓存与传递台账都属于这一次运行。把同一批节点交给两个
         # Instance 会在第二次运行里看到上一次残留的缓存，而 `sample_id` 是按时刻命名的，
         # 于是旧样本会被当成新样本发出去——静默混合两次运行。**响亮地失败，不要静默。**
@@ -389,9 +391,14 @@ class Instance:
                                   uplink_p_arrive=uplink_p_arrive,
                                   backhaul_p_good=backhaul_p_good,
                                   backhaul_delay_s=backhaul_delay_s)
+        #: 中心策略。默认不下发任何命令——**这是所有方法的共同起点**，现场自治照常工作。
+        self.policy: CenterPolicy = policy or LocalPolicy()
         self.center = Center()
         self.log = HopLog()
         self._radio_wh_seen: dict[str, float] = {}
+        self.command_seq = 0
+        self.counters = {"commands_sent": 0, "commands_delivered": 0,
+                         "commands_refused": 0, "commands_lost": 0}
 
     # -------------------------------------------------- 一个 tick
 
@@ -406,6 +413,11 @@ class Instance:
                 self.log.samples[sample.sample_id] = sample
                 self.log.transit[sample.sample_id] = node.transit[sample.sample_id]
                 counters["sampled"] += 1
+
+        # 1.5) 中心按**它自己看得见的东西**决定要不要下发。命令经回传进网关队列，等接收窗口。
+        view = self._center_view(t_s)
+        for node_id, payload in self.policy.plan(view):
+            self._send_command(node_id, payload, t_s)
 
         # 2) 到上报周期的节点发一批（缓存里全是未确认记录 → 自动补发）
         for node in self.nodes.values():
@@ -428,6 +440,8 @@ class Instance:
                                     payload_bytes=payload_bytes,
                                     attempt_index=t_s // TICK_S)
             counters["uplinks"] += 1
+            for delivery in rec.delivered:
+                self._apply_delivery(delivery, t_s)
             self._charge_radio(node)
             if not rec.arrived:
                 continue
@@ -438,6 +452,9 @@ class Instance:
                                       [s.sample_id for s in batch],
                                       node.snapshot(t_s), payload=list(batch))
 
+        # 2.5 命令在接收窗口里送达 → 落到节点上。**送达才是生效**，不是发出。
+        # （下发在 uplink 内部完成，此处只统计；应用已在 `_apply_delivery` 里做。）
+
         # 3) 回传可用时，网关把缓存的交给中心
         for item in self.plane.backhaul_forward(t_s):
             self.center.receive(item, t_s)
@@ -446,6 +463,47 @@ class Instance:
                 self.log.transit[sample.sample_id].received_at = t_s
                 self.nodes[sample.node_id].ack([sample.sample_id])
         return counters
+
+    # -------------------------------------------------- 中心侧
+
+    def _center_view(self, t_s: int) -> CenterView:
+        """把中心**真正收到的**东西整理成视图。环境真值与节点缓存都不在其中。"""
+        newest: dict[str, int] = {}
+        for sample in self.center.received.values():
+            cur = newest.get(sample.node_id)
+            if cur is None or sample.taken_at > cur:
+                newest[sample.node_id] = sample.taken_at
+        in_flight = frozenset(
+            nid for nid in self.nodes if self.plane.queued_count(nid) > 0)
+        return CenterView(t_s=t_s, node_ids=tuple(self.nodes), reports=self.center.reports,
+                          report_at=self.center.report_at, newest_taken_at=newest,
+                          in_flight=in_flight)
+
+    def _send_command(self, node_id: str, payload: dict, t_s: int) -> None:
+        """把一条意图放进回传。**它此刻还没有到达任何地方。**"""
+        self.command_seq += 1
+        msg = DownlinkMessage(
+            identity=f"cmd{self.command_seq:05d}",
+            kind=payload.get("op", "command"),
+            payload_bytes=16,
+            enqueued_at=t_s,
+            expires_at=t_s + 6 * 3600,
+            payload=dict(payload))
+        if self.plane.center_send(node_id, msg, t_s // 3600):
+            self.counters["commands_sent"] += 1
+            self.policy.note_command_sent(node_id, payload)
+        else:
+            self.counters["commands_refused"] += 1
+
+    def _apply_delivery(self, delivery, t_s: int) -> None:
+        """命令真的到了节点。到这一步才算生效——之前都只是意图。"""
+        node = self.nodes.get(delivery.node_id)
+        if node is None or not node.alive:
+            return
+        payload = getattr(delivery.message, "payload", None) or {}
+        if payload.get("op") == OP_SET_REPORT_PERIOD:
+            node.report_period_s = max(60, int(payload["period_s"]))
+            self.counters["commands_delivered"] += 1
 
     def _charge_radio(self, node: Node) -> None:
         """把 `ControlPlane` 记的空口能耗搬进节点电池（动作驱动，不是预生成序列）。"""

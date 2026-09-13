@@ -130,6 +130,9 @@ class DownlinkMessage:
     payload_bytes: int
     enqueued_at: int
     expires_at: int | None = None
+    #: 命令携带的参数（例如要设置的字段与新值）。**默认空**，因此既有的调用点与读数逐位不变；
+    #: 加了它之后，实例层的中心下发不再需要把参数塞进 `kind` 字符串里。
+    payload: dict = field(default_factory=dict)
 
 
 @dataclass

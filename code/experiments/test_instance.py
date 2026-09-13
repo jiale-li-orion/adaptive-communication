@@ -28,6 +28,7 @@ for _p in (_HERE, *(_os.path.join(_CODE, d) for d in ("physics", "runtime", "exp
     if _p not in _sys.path:
         _sys.path.insert(0, _p)
 
+from center import LocalPolicy, build_policy
 from deployment import build_deployment
 from exogenous import (KIND_EVENT, KIND_ROUTINE, EnvironmentTruth, ObligationSet,
                        constant_harvest,
@@ -411,6 +412,52 @@ def test_recovery_splits_lost_from_recoverable() -> None:
           f"无中断 {inst2.plane.backhaul_forwarded} vs 中断 {inst.plane.backhaul_forwarded}")
 
 
+# ------------------------------------------------------------------ 13 中心下发与回执
+
+def test_center_command_path() -> None:
+    """中心下发必须**经链路到达**才生效，回执必须**来自节点上报**。"""
+    print("\n[13] 中心下发与回执")
+    dep = build_deployment(groups=2)
+    hours, task = 13, 12
+    truth = wang_fragment_truth(0, hours, (dep.gateway.sid,))
+
+    def run(arm):
+        nodes = nodes_from(dep)
+        truth.displacement = displacement_series(nodes.keys(), hours, 0)
+        harvest, temp = constant_harvest(nodes.keys(), hours, 3.0, 10.0)
+        truth.harvest_wh.update(harvest)
+        truth.temp_c.update(temp)
+        inst = Instance(nodes, truth, seed=0, policy=build_policy(arm))
+        return nodes, inst, inst.run(hours)
+
+    nodes_l, inst_l, _ = run("local")
+    check("默认策略（现场自治）一条命令都不下发",
+          inst_l.counters["commands_sent"] == 0 and inst_l.plane.downlink_attempts == 0,
+          f"sent={inst_l.counters['commands_sent']} dl={inst_l.plane.downlink_attempts}")
+
+    nodes_f, inst_f, log_f = run("fixed900")
+    check("固定策略确实发出了命令", inst_f.counters["commands_sent"] > 0,
+          f"sent={inst_f.counters['commands_sent']}")
+    check("命令只有送达节点才算生效（送达数 <= 发出数）",
+          0 < inst_f.counters["commands_delivered"] <= inst_f.counters["commands_sent"],
+          f"发出 {inst_f.counters['commands_sent']} 送达 {inst_f.counters['commands_delivered']}")
+    changed = [k for k, n in nodes_f.items() if n.report_period_s == 900]
+    check("送达后节点配置真的变了", bool(changed), f"{len(changed)} 个节点周期=900")
+
+    # 回执只能来自节点上报：中心看到的周期必须来自收到的快照，且不早于命令送达
+    receipt_nodes = [k for k, v in inst_f.center.reports.items()
+                     if v.get("report_period_s") == 900]
+    check("中心通过节点上报拿到回执（不是自己记账）", bool(receipt_nodes),
+          f"{len(receipt_nodes)} 个节点回执确认")
+    first_receipt = min(inst_f.center.report_at[k] for k in receipt_nodes)
+    check("回执时刻不早于该节点第一次上报", first_receipt > 0, f"最早回执 {first_receipt}s")
+
+    # 视图里不能有环境真值
+    view = inst_l._center_view(3600)
+    check("中心视图不含环境真值/链路状态",
+          not any(hasattr(view, a) for a in ("truth", "rainfall", "loss_db", "link")))
+
+
 def main() -> int:
     print("实例层验收（Task Contract v1.1）")
     test_denominator_is_exogenous()
@@ -425,6 +472,7 @@ def main() -> int:
     test_propagation_splits_the_two_latencies()
     test_tail_decides_what_may_be_judged()
     test_recovery_splits_lost_from_recoverable()
+    test_center_command_path()
     print("\n" + "-" * 74)
     if FAIL:
         print(f"  {len(FAIL)} 项失败: {', '.join(FAIL)}")
