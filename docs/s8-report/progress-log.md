@@ -3026,3 +3026,31 @@ seed 7 / `ea_nb` / `n02`：
 `20-remaining-horizon-rerun-2026-09-13.md`（修正与判定）；`18-...` §三/§六 与 `19-...` 顶部已标注更正；
 `results/README.md` 的 `adm_*` 说明已改；旧版备份 `results/_withdrawn/fixed-horizon_2026-09-13/`。
 测试 [30] 新增剩余时域语义断言（剩余 6 h 可行 / 7 h 不可行 / 临界 D = 5.36 h）。
+
+---
+
+## §7.69 修掉两个基本错误：拒绝原因账本有洞、门的账本没进聚合
+
+### 一、拒绝原因账本有一个洞
+
+`GatePolicy._admit` 里"证据过期"（`evidence_stale`）在 `gate.check()` **之前**就返回了，
+于是它不进 `ResourceGate.rejects`——**`denied_reasons` 里有、`gate.rejects` 里没有，两个口径对不上**。
+"为什么全拒绝"因此只能靠猜。**修**：加 `ResourceGate.note_reject(reason)`，让检查之前发生的拒绝
+也进同一本账。
+
+### 二、门的账本只有逐种子有，没进聚合
+
+上一次想读"门一共放行了几次"时，从聚合里取 `x["gate"]["denied_total"]` 直接 `KeyError`——
+`agg_of` 根本没有聚合这一项。**修**：聚合里加 `gate_checks` / `gate_accepts` / `gate_denied`
+与 `gate_reject_reasons`（**按原因求和，不平均**；计数可加，"总共因为什么被拒"不能被平均掉），
+以及按剩余时域分档的 `remaining_Xh: [放行, 拒绝]`。
+
+### 三、`prune` 修复的影响面：改成**整批重跑**，不再靠猜
+
+先前想在"哪些文件受影响"上做推断。**`queued_left > 0` 不是一个可用的判据**——实测
+**285/287** 个文件都有（运行末尾还压在队列里的命令是正常的）。而 `expired` 在修复前**恒为 0**，
+所以旧数据里没有任何可用来筛的痕迹。判据只能从条件本身推（接入中断 ≥ 6 h，或坏突发 ≥ 6 h）。
+
+与其按条件挑，不如**用现行代码重跑全部实例结果**（`code/analysis/rerun_from_config.py`
+本来就是为此写的：从文件自带的 `config` 重建命令、逐路径比对、把差异列出来）。
+重跑记录与逐文件差异见下一次提交。

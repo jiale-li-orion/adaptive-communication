@@ -76,6 +76,16 @@ class ResourceGate:
         self.rejects[reason] = self.rejects.get(reason, 0) + 1
         return False, reason
 
+    def note_reject(self, reason: str) -> None:
+        """记一次**发生在可行性检查之前**的拒绝（例如证据过期）。
+
+        为什么要这个口子：`_admit` 里"证据过期"在 `gate.check` **之前**就返回了，
+        于是它不进 `rejects`——第一版的拒绝原因账本因此有一个洞：`denied_reasons` 里有、
+        `gate.rejects` 里没有，两个口径对不上。**拒绝原因必须逐条可查**，
+        否则"为什么全拒绝"就只能靠猜。
+        """
+        self.rejects[reason] = self.rejects.get(reason, 0) + 1
+
     def check(self, soc_lo_wh: float, config: tuple[int, int],
               remaining_s: int) -> tuple[bool, str]:
         """`soc_lo_wh` 是**此刻**的电量下界；`config` 是候选 `(采样间隔, 上报周期)`；
@@ -206,6 +216,7 @@ class GatePolicy(CenterPolicy):
         if self.max_age_s is not None:
             age = view.soc_age_s(nid)
             if age is None or age > self.max_age_s:
+                self.gate.note_reject("evidence_stale")
                 return False, "evidence_stale"
         if self.end_s is None:
             return True, "no_horizon_check"

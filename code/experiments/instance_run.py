@@ -299,6 +299,23 @@ def one_seed(seed: int, task_hours: float, tail_hours: float,
     }
 
 
+def _merge_nested(rs, key: str) -> dict:
+    """把逐种子的 `gate.rejects`（以及 `by_remaining_h`）**按原因键求和**。
+
+    不做平均：拒绝原因的次数是可加的计数，平均之后"总共因为什么被拒"就答不上来。
+    """
+    out: dict = {}
+    for r in rs:
+        g = (r.get(key) or {}).get("gate") or {}
+        for k, v in (g.get("rejects") or {}).items():
+            out[k] = out.get(k, 0) + v
+        for k, v in (g.get("by_remaining_h") or {}).items():
+            cur = out.setdefault(f"remaining_{k}h", [0, 0])
+            cur[0] += v[0]
+            cur[1] += v[1]
+    return out
+
+
 def mean(xs):
     xs = [x for x in xs if x is not None]
     return sum(xs) / len(xs) if xs else None
@@ -514,6 +531,14 @@ def main() -> None:
             "intent_stale_gen": mean([r["intent_ledger"]["stale_gen"] for r in rs]),
             "intent_refused": mean([r["intent_ledger"]["refused"] for r in rs]),
             "intent_expired": mean([r["intent_ledger"]["expired"] for r in rs]),
+            # **准入层的账本要进聚合**：只有逐种子有的话，"门到底放行过几次"
+            # 就没法从一个已登记的文件里直接读出来（实测踩过：`x["gate"]["denied_total"]` 取不到）。
+            "gate_checks": mean([(r.get("gate") or {}).get("gate", {}).get("checks", 0)
+                                 for r in rs]),
+            "gate_accepts": mean([(r.get("gate") or {}).get("gate", {}).get("accepts", 0)
+                                  for r in rs]),
+            "gate_denied": mean([(r.get("gate") or {}).get("denied_total", 0) for r in rs]),
+            "gate_reject_reasons": _merge_nested(rs, "gate"),
             **{f"skip_{k}": mean([r["skip_reasons"].get(k, 0) for r in rs])
                for k in ("in_flight", "dwell", "no_soc", "at_target",
                          "at_target_evidence_stale")},
