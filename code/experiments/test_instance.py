@@ -29,12 +29,13 @@ for _p in (_HERE, *(_os.path.join(_CODE, d) for d in ("physics", "runtime", "exp
         _sys.path.insert(0, _p)
 
 from deployment import build_deployment
-from exogenous import (KIND_EVENT, KIND_ROUTINE, ObligationSet, constant_harvest,
+from exogenous import (KIND_EVENT, KIND_ROUTINE, EnvironmentTruth, ObligationSet,
+                       constant_harvest,
                        displacement_series, rule_obligations_for_truth,
                        routine_obligations, routine_obligations_by_node,
                        wang_burst_obligations, wang_fragment_truth)
-from network import DeviceProfile, Instance, Node, nodes_from
-from scoring import evaluate
+from network import DeviceProfile, HopLog, Instance, Node, nodes_from
+from scoring import evaluate, event_propagation
 
 FAIL: list[str] = []
 
@@ -317,6 +318,50 @@ def test_multinode_run() -> None:
           f"坡面听到 {len(slope_heard)}/{len(slope_all)}")
 
 
+# ------------------------------------------------------------------ 10 传播与删失
+
+def test_propagation_splits_the_two_latencies() -> None:
+    """触发 → 检测 → 获知必须分开计时，否则"本地没检测到"会被读成"通信慢"。"""
+    print("\n[10] 事件传播：检测与获知分开计时")
+    _n, truth, inst, log = build()
+    pg = event_propagation(truth, log)
+
+    check("每个触发都有一条传播记录", pg["n_triggers"] == TRIGGERS, f"{pg['n_triggers']}")
+    check("检测时刻不早于源触发时刻",
+          all(r["detected_at"] is None or r["detected_at"] >= r["source_at"]
+              for r in pg["per_trigger"]))
+    check("获知时刻不早于检测时刻",
+          all(r["knowledge_at"] is None or r["detected_at"] is None
+              or r["knowledge_at"] >= r["detected_at"] for r in pg["per_trigger"]))
+    check("两项时延确实分开报，且不相等",
+          pg["knowledge_latency_mean_s"] is not None
+          and pg["knowledge_latency_mean_s"] > pg["detection_latency_mean_s"],
+          f"检测 {pg['detection_latency_mean_s']:.0f}s vs 获知 "
+          f"{pg['knowledge_latency_mean_s']:.0f}s")
+
+
+def test_tail_decides_what_may_be_judged() -> None:
+    """尾部观察期决定**哪些义务可以被判定**，而不是"跑完就算失败"。"""
+    print("\n[11] 尾部观察期与右删失")
+    # **直接测判定规则，不依赖投递是否走运。** 用一个空记录：没有样本，因此每条义务都既未采集
+    # 也未交付，唯一的区别只剩"它的观察截止在不在运行末之前"。
+    D = ObligationSet(routine_obligations(("a",), hours=2))    # 截止 7200 与 10800
+    empty = HopLog()
+
+    short = evaluate(D, empty, 1, ("a",), plane=None, task_hours=2)["observation_window"]
+    full = evaluate(D, empty, 3, ("a",), plane=None, task_hours=2)["observation_window"]
+
+    check("观察截止超出运行末的义务标右删失（手工：2 条都超）",
+          short["censored_total"] == 2, f"运行 1h 删失 {short['censored_total']}")
+    check("运行覆盖全部截止后不再有删失（手工：0 条）",
+          full["censored_total"] == 0, f"运行 3h 删失 {full['censored_total']}")
+    check("删失的留在分母里，没有被剔掉",
+          short["task_hours"] == full["task_hours"] == 2, f"task_hours={short['task_hours']}")
+    check("尾部长度被如实报出（运行 3h - 义务 2h = 1h）",
+          full["run_hours"] - full["task_hours"] == 1 and full["tail_s"] == 3600,
+          f"run={full['run_hours']}h task={full['task_hours']}h tail={full['tail_s']}s")
+
+
 def main() -> int:
     print("实例层验收（Task Contract v1.1）")
     test_denominator_is_exogenous()
@@ -328,6 +373,8 @@ def main() -> int:
     test_routine_and_fragment()
     test_multinode_terrain()
     test_multinode_run()
+    test_propagation_splits_the_two_latencies()
+    test_tail_decides_what_may_be_judged()
     print("\n" + "-" * 74)
     if FAIL:
         print(f"  {len(FAIL)} 项失败: {', '.join(FAIL)}")

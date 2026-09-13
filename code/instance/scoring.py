@@ -61,10 +61,23 @@ def _index_samples(log):
 
 def evaluate(obligations: ObligationSet, log, hours: int, node_ids,
              battery: dict[str, dict] | None = None,
-             plane=None) -> dict:
-    """对一次运行评分。返回**分列**的结果字典，不含任何合成分数。"""
+             plane=None, task_hours: int | None = None) -> dict:
+    """对一次运行评分。返回**分列**的结果字典，不含任何合成分数。
+
+    **尾部观察期（v1.1 §9）。** `hours` 是**运行**长度，`task_hours` 是**义务**覆盖的区间；
+    两者之差就是固定的尾部观察期。义务只在 `[0, task_hours)` 内产生，但运行会继续跑到
+    `hours`，让"任务期结束前发出、还在路上"的样本有机会到达。
+
+    判定规则不是"跑完就算失败"，而是：
+
+      * 义务的观察截止 `deadline <= 运行末`  → 可以判定，未交付就是 `missing_delivery`；
+      * 义务的观察截止 `deadline >  运行末`  → **右删失**：运行结束时它的期限还没到，
+        既不能说成功也不能说失败。**删失的留在分母里**，不许悄悄剔掉，也不许无限等待之后
+        算作按时完成。
+    """
     by_key = _index_samples(log)
     end_s = hours * 3600
+    task_s = end_s if task_hours is None else task_hours * 3600
 
     outcomes: list[ObligationOutcome] = []
     for o in obligations.obligations:
@@ -79,8 +92,9 @@ def evaluate(obligations: ObligationSet, log, hours: int, node_ids,
                 out.delivered_at = received_at
                 out.latency_s = received_at - sample.taken_at
                 break
-        if not out.delivered and end_s <= o.deadline:
-            out.censored = True          # 观察期先于截止结束：右删失，不是失败
+        if not out.delivered and end_s < o.deadline:
+            # 运行结束时该义务的观察截止还没到：右删失。**不是失败**，也不能当作成功。
+            out.censored = True
         outcomes.append(out)
 
     res: dict = {"n_obligations": len(outcomes),
@@ -99,6 +113,16 @@ def evaluate(obligations: ObligationSet, log, hours: int, node_ids,
     res["communication"] = _comm_block(log, plane)
 
     # -------------------------------------------------- 不适用项，显式说明原因
+    if getattr(log, "truth", None) is not None:
+        res["propagation"] = event_propagation(log.truth, log)
+
+    res["observation_window"] = {
+        "task_hours": task_s // 3600,
+        "run_hours": end_s // 3600,
+        "tail_s": end_s - task_s,
+        "censored_total": sum(o.censored for o in outcomes),
+        "note": "删失 = 运行结束时该义务的观察截止还没到；既不算成功也不算失败，留在分母里。",
+    }
     res["config_mismatch_s"] = None
     res["not_applicable"] = {
         "config_mismatch_s": "最小实例没有外部配置要求，无法定义'错误配置'；返回 None 而不是 0。",
@@ -233,6 +257,67 @@ def _comm_block(log, plane) -> dict:
             "airtime_downlink_h": plane.airtime_downlink_ms / 3.6e6,
         })
     return out
+
+
+# ---------------------------------------------------------------- 事件传播
+
+def event_propagation(truth, log, burst_window_s: int = 900) -> dict:
+    """把一次触发拆成三个时刻：**源发生 → 设备检测 → 中心获知**（v1.1 §9）。
+
+    为什么必须分开：v1.1 §4 明说"事件的原始发生、设备检测、中心获知分别计时"。合成一个"事件时延"
+    会把两件性质完全不同的事混起来——**设备没检测到**（本地规则没跑、或节点没电）与
+    **检测到了但送不回来**（接入或回传断了）。前者要靠现场自治解决，后者才是通信问题。
+
+    判定方式是从记录里推导，不在循环里埋点：
+
+      * `source_at`   = 环境真值里的触发时刻；
+      * `detected_at` = 该节点在触发之后的第一条样本的采集时刻（本地规则被唤醒的产物）；
+      * `knowledge_at`= 那些样本里**第一条到达中心**的接收时刻。
+
+    **本实例里"中心获知事件"与"中心拿到首份新数据"是同一个时刻**，因为中心没有第二条获知渠道
+    （没有外部公告进入模型）。这两者在本实例中不区分，**不得**据此声称测过它们的差。
+    """
+    trig = sorted(truth.triggers)
+    by_node: dict[str, list] = {}
+    for sid, sample in log.samples.items():
+        by_node.setdefault(sample.node_id, []).append((sample, log.transit[sid].received_at))
+    for v in by_node.values():
+        v.sort(key=lambda pair: pair[0].taken_at)
+
+    rows = []
+    for source_at, node_id in trig:
+        burst = [(smp, rec) for smp, rec in by_node.get(node_id, ())
+                 if source_at <= smp.taken_at <= source_at + burst_window_s]
+        detected_at = burst[0][0].taken_at if burst else None
+        arrivals = [rec for _smp, rec in burst if rec is not None]
+        knowledge_at = min(arrivals) if arrivals else None
+        rows.append({
+            "node_id": node_id,
+            "source_at": source_at,
+            "detected_at": detected_at,
+            "knowledge_at": knowledge_at,
+            "detection_latency_s": None if detected_at is None else detected_at - source_at,
+            "knowledge_latency_s": None if knowledge_at is None else knowledge_at - source_at,
+            "delivery_latency_s": (None if (knowledge_at is None or detected_at is None)
+                                   else knowledge_at - detected_at),
+        })
+
+    det = [r["detection_latency_s"] for r in rows if r["detection_latency_s"] is not None]
+    kno = [r["knowledge_latency_s"] for r in rows if r["knowledge_latency_s"] is not None]
+    dly = [r["delivery_latency_s"] for r in rows if r["delivery_latency_s"] is not None]
+    return {
+        "n_triggers": len(rows),
+        "detected": len(det),
+        "known_to_center": len(kno),
+        "detection_latency_mean_s": _mean(det),
+        "knowledge_latency_mean_s": _mean(kno),
+        "delivery_latency_mean_s": _mean(dly),
+        "detection_latency_p90_s": _pct(det, 90),
+        "knowledge_latency_p90_s": _pct(kno, 90),
+        "per_trigger": rows,
+        "note": ("本实例没有第二条获知渠道，因此'中心获知事件'与'中心拿到首份新数据'同一时刻；"
+                 "两者的差未被测过。"),
+    }
 
 
 # ---------------------------------------------------------------- 小工具

@@ -42,6 +42,23 @@ python3 code/analysis/paired_ci.py results/monitoring_trajectories_business2.jso
   --arm-a ours --arm-b versioned_config --workload none --zero-check
 ```
 
+## 一之二、实例层读数：`code/experiments/instance_run.py`
+
+Task Contract v1.1 的实例层。**不做方法比较**，只把当前实例在多个种子下的分列指标落盘。
+
+| 文件 | 命令 | 种子 | 说明什么 |
+|---|---|---|---|
+| `instance_base.json` | `instance_run.py --seeds 20 --task-hours 12 --tail-hours 1 --tag base` | 20 | 多节点 + 真实地形实例的分列读数：周期新鲜度与完整性、事件采集与交付、传播时延、通信代价、删失 |
+
+**实例是什么**：一个监测单元 = 网关带雨量计 + 13 个坡面位移测点（真实 SRTM/ITM 布点，绕射边缘上
+的 3 个位点已排除）。业务事件来自 Wang 等 2022 Table 3 的公开片段（7 组触发），常态 1 h 定时。
+
+**读数的效力边界（必须随引用一起写）**：
+- 采能是**合成的恒定过程**（A 层），因此**能源相关读数不得外推**；
+- 不是真实 trace benchmark，不是任何站点的配置；
+- 单一片段、同一天、同一设备 → **只能报案例级诊断，不认领跨站泛化**；
+- 不含中心下发动作，因此**不能支持任何"中心改配置更快"类结论**。
+
 ## 二、机制层主表：`code/experiments/method_comparison.py`
 
 | 文件 | 命令 | 种子 | 说明什么 |

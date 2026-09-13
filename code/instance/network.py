@@ -356,6 +356,9 @@ class HopLog:
 
     samples: dict[str, Sample] = field(default_factory=dict)
     transit: dict[str, Transit] = field(default_factory=dict)
+    #: 环境真值。评分器要用它把"源触发"与"设备检测"分开计时（v1.1 §4）。
+    #: **它只进评分器，不进任何策略的可见历史**——策略只看 `O_i(t)`。
+    truth: object | None = None
 
 
 class Instance:
@@ -447,6 +450,7 @@ class Instance:
             node.spend(delta)
 
     def run(self, hours: int) -> HopLog:
+        self.log.truth = self.truth
         for t_s in range(0, hours * 3600, TICK_S):
             self.tick(t_s)
         return self.log
