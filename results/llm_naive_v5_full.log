@@ -18,3 +18,21 @@
   tokens in/out = 588931/5240  （粗算 ¥1.81 峰值价）
 
    [adm_out3] 实际 epoch=780（task 12.0h + tail 1.0h）⇒ 三条件合计上限 2340 次
+== adm_out3 ==
+  planner invocations = 780
+  semantic episodes   = 6（closed 3）
+  **planning amplification（#意图/#episode，与 scripted 可比）= 1.83×**（单种子参照 3.66/5.42/78.00；3种子汇总 3.70/4.04/17.56）
+  planning amplification（#调用/#episode，含 noop，成本侧）= 130.00×
+  **wasted per closed effect = 意图侧 2.67 / 调用侧 259.00**
+  terminal = {'layer2': 3, 'closed': 3}
+  actions = {'noop': 769, 'set_report_period': 11}；noop=769；解析失败=0
+  **未下达动作的原因分类 = {'action_noop': 769}**
+  原始输出采样 = ['{"action":"noop"}', '{"action":"noop"}', '{"action":"noop"}', '{"action":"noop"}', '{"action":"noop"}']
+  **need_action_epochs（desired != confirmed 且无 pending）= 780**
+  **target agreement = 11 次一致 / 0 次不一致**；**same-target unresolved replan = 0 次**
+  **其中「听到过但证据老化」的 epoch 数 = 0（最多 0 个）**；「从未听到」出现的 epoch 数 = 780
+  **状态里有超期节点的 epoch 数 = 780**（最多一次 14 个节点超期）  ← 若为 0，则 noop 是「目标已满足」，不是失败
+  service = 45.0/168；AoI = 18006 s（**确认没靠少做事作弊**）
+  tokens in/out = 594016/4801  （粗算 ¥1.83 峰值价）
+
+   [polar_c0.05] 实际 epoch=780（task 12.0h + tail 1.0h）⇒ 三条件合计上限 2340 次
