@@ -52,7 +52,7 @@ from episode_lifecycle import episodes                  # noqa: E402
 # 为什么这样写：文档与实跑两处各写一份必然漂移（本 repo 反复栽在"同一件事两处写法不一致"）。
 # 所以代码**不复制**协议里的任何字符串；并且把协议哈希记进每个结果，事后可核对跑的是哪一版。
 import hashlib
-PROTOCOL_ID = os.environ.get("LLM_PROTOCOL", "llm_naive_v2")
+PROTOCOL_ID = os.environ.get("LLM_PROTOCOL", "llm_naive_v3")
 PROTOCOL_PATH = os.path.join(_HERE, "..", "protocols", f"{PROTOCOL_ID}.json")
 _PROTO_BYTES = open(PROTOCOL_PATH, "rb").read()
 PROTOCOL_SHA = hashlib.sha256(_PROTO_BYTES).hexdigest()
@@ -108,6 +108,10 @@ class Budget:
         self.out_tok += out_tok
 
 
+#: 每个节点"desired 与 confirmed 不一致"从什么时候开始（用来算 `pending_age_s`）。
+_penda: dict = {}
+
+
 def brief(view, max_nodes: int | None = None) -> dict:
     """**中心真视图**的压缩快照。只读 `CenterView` 的字段，不读环境真值。"""
     max_nodes = max_nodes or int(STATE_SCHEMA["max_nodes"])
@@ -135,6 +139,18 @@ def brief(view, max_nodes: int | None = None) -> dict:
     # **v2 的唯一改动**：把义务写成可判定的。`last_heard_age_s` = 中心上次**收到**该节点
     # 报文距今多久（用 `report_at`，不是 `taken_at`——义务问的是"有没有听到"）。
     # **超期与否由模型自己比**，我不替它算 `overdue` 布尔量（那才是加智慧）。
+    # **A′/v3：外部规则产生 desired target**（与 `AoiPolicy` 的 target function 相同），
+    # 只把**事实**交给 LLM：desired / confirmed / pending / pending_age / AoI / evidence_age。
+    # **不写任何"该不该重发"的提示**——那正是要观察的行为。
+    for _n in nodes:
+        a = _n.get("soc_age_s")
+        _n["aoi_s"] = a
+        _n["desired_target"] = 300 if (a is None or a > 3600) else 900
+        _n["pending_age_s"] = (None if not _n.get("pending_effect")
+                               else _penda.get(_n["id"]))
+    if "desired_target" in (STATE_SCHEMA.get("node_fields") or []):
+        return {"time_s": view.t_s, "nodes": nodes,
+                "last_tool_outcome": _LAST["result"]}
     return {"time_s": view.t_s,
             "obligation_period_s": OBLIGATION_S,
             "overdue_rule": STATE_SCHEMA.get(

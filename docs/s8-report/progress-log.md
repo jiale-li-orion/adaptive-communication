@@ -3891,3 +3891,57 @@ LLM 跑的是 **1 个种子**（协议 `env_seed=0`），而我一直在用 **3 
 **为何停在这里**：要判预注册 1/2/3，必须让 LLM 的目标与它被对比的 scripted 策略一致
 （`aoi` 压 AoI / `ea_nb` 省电），否则分子分母不在同一任务定义下。**这需要用户选 A′/B′/C′**，
 且涉及"改 task"这条需用户同意的边界。
+
+---
+
+## §7.100 按用户裁决：**目标改为 A′（AoI-matched semantic target）**；先把上一轮的定性更正掉
+
+**用户裁决（2026-09-13）**：选 **A′**；**`C′` 明确不做**、**`B′` 暂缓**。理由（用户给出，我照办）：
+- **`C′` 不能开**：它的逻辑是"现在 Agent 没事做，所以把义务调紧到它必须做事"——
+  这会**直接破坏前面守了很久的因果纪律**。除非未来新的公开来源本来就支持更紧的业务义务，
+  否则**只能作 stress test，不得用于打开 agent 方法门**。
+- **`B′` 会陷入目标欠定义**："满足义务下省电/保活"**还不是一个完整目标**——`local` 本来就是极低控制成本端点，
+  一个理性的 LLM 完全可以继续 `noop` 然后说"我省电了"；而 `ea_nb` 内部有具体的 `healthy_wh` 阈值与
+  dense/sparse 切换规则，**把这些阈值写进 prompt 就变成"让 LLM 模仿 `ea_nb`"**。
+
+### 必须做的定性更正（我接受）
+
+> 上一轮那 200 epoch 的结果（79/200 老化、11 次动作）**只能标注为
+> `objective mismatch / conservative-agent observation`，不得写成"LLM 行动不足 failure"。**
+
+因为：在"满足现有监测义务"这个目标下 LLM 选择近乎 `local` 的行为，**与 repo 早已反复发现的事实一致**——
+默认配置与本地自治本就能承担大量业务，**Task v1.1 明确不要求中心必须有增益**。
+硬把它解释成"应该多动手却没动"，**很容易又滑回"为了让 agent 有事做而定义任务"**。
+**数据保留，但不得用来判 planning amplification。**
+
+### 已落地的 v3
+
+`code/protocols/llm_naive_v3.json`（`sha256=2112620282fc1519…`，含 `derives_from` v2 + v2 的 sha256）：
+- **不再给宽泛自然语言目标**。外部规则产生 desired target，**与 `AoiPolicy(stale_s=3600, fast_s=300, slow_s=900)`
+  同一个 target function**：`g_i(t) = 300 if AoI_i 空 or AoI_i > 3600 else 900`。
+- LLM 的任务只有一句：「当前 desired effect 是 `report_period = g_i(t)`；依据 confirmed state、pending state、
+  最近 tool outcome，决定现在是否需要调用工具。」
+- 状态**只给事实**：`time_s`、逐节点 `aoi_s` / `desired_target` / `confirmed_target` / `pending_effect` /
+  `pending_age_s` / `evidence_age_s`、`last_tool_outcome`。**已核实 prompt 里不含
+  "不要重复/失败后等待/避免冗余重试"这类禁用词**（`system prompt 含禁用词吗: False`）。
+- **不改 Task v1.1、不改 condition、不改 action surface、不改 planner cadence。**
+- 判据重新冻结：旧 **3.70/4.04/17.56× 降为 reference，不再当硬阈值**；Agent-failure gate 写成
+  ① target agreement 正常 ② 同 target 在 unresolved 下自然产生重复 planning ③ 重复**没有**提高
+  closure/service/AoI ④ amplification 显著高于 1；**并明确"LLM 只有 2.2× 但几乎全是 unresolved
+  same-target replan 且业务零增益，仍算 failure"**。
+
+### ⚠ 本轮未完成的部分（如实记）
+
+1. **v3 的两个关键计数还没写进代码**：`target agreement` 与 `same_target_unresolved`。
+   那次 patch 的**第 5 个锚点没匹配 ⇒ `write_text` 在末尾 ⇒ 整次 patch 一个字都没写盘**。
+   已核实：`v3 计数已写入: False`、`pending_age 维护: False`。**所以闸门还没跑，也还没算这两个量。**
+2. **`pending_age_s` 未接线**（`_penda` 未维护）⇒ v3 状态里该字段目前是 `None`。**这是 v3 的一处缺口**，
+   会影响 LLM 看到的信息完整性，**必须在跑闸门之前补上**。
+3. 默认协议已切到 **v3**（`LLM_PROTOCOL` 可用环境变量覆盖），并已通过 import 校验：
+   `协议: llm_naive_v3`、`node_fields` 正确、prompt 无禁用词。
+
+### 下一轮第一件事
+
+补 `target agreement` / `same_target_unresolved` 计数与 `pending_age_s` 维护 → 跑
+**`adm_noout × seed0 × 200 epoch` 仪器闸门**（只查：target agreement 是否正常、semantic episodes 是否非零）
+→ **两项都过才**启动 `adm_noout / adm_out3 / polar_c0.05 × seed0 × 720 epoch`。
