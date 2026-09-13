@@ -1078,6 +1078,72 @@ def test_delivery_ceiling_is_policy_independent() -> None:
           f"自由 {free_vals} vs 固定 {fixed_vals}")
 
 
+def test_energy_scale_invariance() -> None:
+    """**整个能量系统乘以 λ，业务结果必须逐位不变。**
+
+    这条测的不是实现细节，是**这个实例的物理性质**：它的能量轴是**无量纲**的。
+    实证：λ ∈ {0.25, 1, 4, 16}（64 倍范围）下 `local` / `aoi` / `dense600` / `dense1800`
+    四条臂的每一列都逐位相同。
+
+    **为什么必须钉住。** 它决定论文能用什么横轴。既然结果只取决于**比值**，
+    那么 `0.004 Wh`、`0.05 Wh` 这些数**不是现实部署数值**，把它们当现场事实写出来是错的；
+    正确的表述是**无量纲的**——例如「电池的初始自主小时数 `A₀ = soc₀·C / (sample_wh + uplink_wh)`
+    与最长无采能时段之比」。本实例里 cliff 恰好落在 `A₀ ≈ 任务时长`。
+
+    **注意它检验的是实例，不是策略。** 用的是**不含能量阈值**的臂：`local`（无阈值）、
+    `aoi`（只按年龄）、`dense600`/`dense1800`（固定）。
+    带绝对能量阈值的策略（如 `ea_nb` 的 `healthy_wh = 0.010`）**本来就不满足尺度不变性**——
+    那是策略属性的问题，不是实例的问题，因此**不放在这条测试里**。
+    """
+    print("\n[24] 能量尺度不变性：整个能量系统 × λ，业务列逐位不变")
+    import oracle as _or
+    import opportunity as _op
+
+    dep = build_deployment(groups=2)
+    hours, task, cap = 13, 12, 0.004
+    base_sample = DeviceProfile().sample_wh
+    arms = ("local", "aoi", "dense600", "dense1800")
+
+    def run_all(lam: float):
+        saved_bus, saved_up = _op.BUS_V, _or.UPLINK_WH
+        _op.BUS_V = saved_bus * lam
+        _or.UPLINK_WH = saved_up * lam
+        try:
+            out = {}
+            for arm in arms:
+                ns = nodes_from(dep)
+                prof = DeviceProfile(capacity_wh=cap * lam, sample_wh=base_sample * lam)
+                ns = nodes_from(dep, profile=prof)
+                truth = wang_fragment_truth(0, hours, (dep.gateway.sid,))
+                truth.displacement = displacement_series(ns.keys(), hours, 0)
+                h, t_ = hetero_harvest(ns.keys(), hours, 0, low_frac=0.4,
+                                       low_wh_per_hour=0.0, high_wh_per_hour=3.0 * lam)
+                truth.harvest_wh.update(h)
+                truth.temp_c.update(t_)
+                meas = {k: v.measurand for k, v in ns.items()}
+                obs = ObligationSet(routine_obligations_by_node(meas, task))
+                inst = Instance(ns, truth, seed=0, policy=build_policy(arm))
+                log = inst.run(hours)
+                res = evaluate(obs, log, hours, ns.keys(),
+                               battery={k: v.power.to_dict() for k, v in ns.items()},
+                               plane=inst.plane, task_hours=task)
+                out[arm] = (round(res["routine"]["delivered"], 9),
+                            round(res["routine"]["missing_collection"], 9),
+                            round(res["routine"]["missing_delivery"], 9),
+                            round(res["routine"]["aoi_mean_s"], 6))
+            return out
+        finally:
+            _op.BUS_V, _or.UPLINK_WH = saved_bus, saved_up
+
+    ref = run_all(1.0)
+    for lam in (0.25, 4.0, 16.0):
+        got = run_all(lam)
+        same = all(got[a] == ref[a] for a in arms)
+        diff = [a for a in arms if got[a] != ref[a]]
+        check(f"λ={lam:g} 下四条无能量阈值臂的业务列与 λ=1 逐位相同", same,
+              f"不一致的臂 {diff}" if diff else f"四项读数 x {len(arms)} 臂全同")
+
+
 def main() -> int:
     print("实例层验收（Task Contract v1.1）")
     test_denominator_is_exogenous()
@@ -1103,6 +1169,7 @@ def main() -> int:
     test_composed_baseline_keeps_both_dimensions()
     test_delivery_oracle_is_a_bound_and_splits_the_gap()
     test_delivery_ceiling_is_policy_independent()
+    test_energy_scale_invariance()
     print("\n" + "-" * 74)
     if FAIL:
         print(f"  {len(FAIL)} 项失败: {', '.join(FAIL)}")

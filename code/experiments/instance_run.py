@@ -36,6 +36,8 @@ from exogenous import (ObligationSet, autonomy_margin, constant_harvest,
                        wang_fragment_truth)
 from center import ARMS, ClairvoyantStaticSelector, SocObservationModel, build_policy
 from network import DeviceProfile, Instance, nodes_from
+import oracle as _oracle
+import opportunity as _opportunity
 from oracle import delivery_oracle, dynamic_oracle
 from scoring import evaluate
 
@@ -67,13 +69,17 @@ def one_seed(seed: int, task_hours: float, tail_hours: float,
              irr_start_h: int = 0, irr_peak_wh_per_hour: float = 0.01,
              irr_shade_frac: float = 0.0, irr_snow_frac: float = 0.0,
              irr_snow_after_h: int = 0, irr_source_temp: bool = True,
-             charge_min_c: float | None = 5.0) -> dict:
+             charge_min_c: float | None = 5.0,
+             energy_scale: float = 1.0) -> dict:
     hours = task_hours + tail_hours
     dep = build_deployment(groups=2)
+    #: `energy_scale` 同时作用于**采样能耗**与**电池容量**（空口母线在 `main` 里按同一 λ 缩放）。
+    #: 三者一起缩放才是真正的"把整个能量系统乘以 λ"，否则只是改了比例、不是尺度检验。
     prof = DeviceProfile(sample_interval_s=sample_interval_s,
                          event_interval_s=event_spacing_s,
                          capacity_wh=capacity_wh, initial_soc=initial_soc,
-                         charge_min_c=charge_min_c)
+                         charge_min_c=charge_min_c,
+                         sample_wh=DeviceProfile().sample_wh * energy_scale)
     nodes = nodes_from(dep, profile=prof)
     truth = wang_fragment_truth(0, int(hours), (dep.gateway.sid,))
     truth.displacement = displacement_series(nodes.keys(), int(hours), seed)
@@ -121,7 +127,7 @@ def one_seed(seed: int, task_hours: float, tail_hours: float,
     # **必须与实例用同一个初始电量**，否则这个横轴描述的是另一个系统。`initial_soc=1.0`
     # （满格启动）会让 margin 恒为无穷——初始电量自己就能跑完整个任务时，采能与可行性无关，
     # 那个横轴没有任何信息量。扫 margin 时必须配一个需要采能的初始电量。
-    _cost_h = (prof.sample_wh + 2.33e-5)
+    _cost_h = (prof.sample_wh + _oracle.UPLINK_WH)
     margins = [autonomy_margin(harvest[nid], int(task_hours),
                                capacity_wh=capacity_wh,
                                initial_wh=initial_soc * capacity_wh,
@@ -305,8 +311,21 @@ def main() -> None:
     ap.add_argument("--solar-snow-frac", type=float, default=0.0)
     ap.add_argument("--solar-snow-start-h", type=float, default=8.0)
     ap.add_argument("--solar-shade-frac", type=float, default=0.0)
+    ap.add_argument("--energy-scale", type=float, default=1.0,
+                    help="把**整套能量系统**（采样能耗、电池容量、空口母线、采能、上界上行能耗）同时乘以 λ。配合 base 值取 C/λ、H/λ 即可检验尺度不变性")
     ap.add_argument("--tag", default="base")
     args = ap.parse_args()
+
+    # **能量尺度不变性检验。** 把整个能量系统同时乘以 `λ`：采样能耗、电池容量、
+    # 空口母线电压（tx 与 rx 都线性跟随）、以及两个上界代价模型里的上行能耗。
+    # 若业务列在 `λ` 下**逐位相同**，说明这个实例在能量上是**无量纲**的——
+    # 悬崖只活在比值上，绝对 Wh **不是**现实部署数值。
+    # 这是 A 层有效性里最要紧的一条：它决定论文该用绝对能量还是无量纲 slack。
+    if args.energy_scale != 1.0:
+        lam = float(args.energy_scale)
+        _ES_SAVED = (_opportunity.BUS_V, _oracle.UPLINK_WH)
+        _opportunity.BUS_V = _ES_SAVED[0] * lam
+        _oracle.UPLINK_WH = _ES_SAVED[1] * lam
 
     arm_names = [a.strip() for a in args.arms.split(",") if a.strip()]
     for a in arm_names:
@@ -326,9 +345,11 @@ def main() -> None:
                      uplink_p_arrive=args.uplink_p_arrive,
                      backhaul_p_good=args.backhaul_p_good,
                      event_spacing_s=args.event_spacing_s,
-                     harvest_mode=args.harvest_mode, capacity_wh=args.capacity_wh,
+                     harvest_mode=args.harvest_mode,
+                     capacity_wh=args.capacity_wh * args.energy_scale,
+                     energy_scale=args.energy_scale,
                      low_frac=args.low_frac,
-                     low_wh_per_hour=args.low_wh_per_hour,
+                     low_wh_per_hour=args.low_wh_per_hour * args.energy_scale,
                      access_outage_h=args.access_outage_h,
                      access_outage_start_h=args.access_outage_start_h,
                      blackout_start_h=args.blackout_start_h,
@@ -347,7 +368,7 @@ def main() -> None:
                      solar_shade_frac=args.solar_shade_frac,
                      initial_soc=args.initial_soc,
                      irr_start_h=args.irr_start_h,
-                     irr_peak_wh_per_hour=args.irr_peak_wh_per_hour,
+                     irr_peak_wh_per_hour=args.irr_peak_wh_per_hour * args.energy_scale,
                      irr_shade_frac=args.irr_shade_frac,
                      irr_snow_frac=args.irr_snow_frac,
                      irr_snow_after_h=args.irr_snow_after_h,
