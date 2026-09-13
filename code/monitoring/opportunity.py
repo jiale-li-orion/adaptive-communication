@@ -405,9 +405,19 @@ class ControlPlane:
             self.airtime_downlink_ms += airtime
             self.energy.setdefault(node_id, RadioEnergy()).add_tx(airtime)
 
-            # Draw addressed by the full identity, so two operations queued for the same node in
-            # the same hour do not share one fate.
-            u = stable_uniform(self.seed, "rx-win", node_id, hour, slot, message.identity)
+            # **潜在结果按"机会"固定，不按"报文"固定。**
+            #
+            # 这一行原先用 `message.identity`（= `cmd{全局序号}`）当键。它的副作用是
+            # **counterfactual 污染**：任何一处多发一条命令都会推进全局序号，于是**所有节点
+            # 后续的下行抽签全部平移**——策略 A 多发一个包之后，策略 B 看到的"随机链路"
+            # 已经不是同一条。跨策略比较（尤其"再聪明一点还能拿回几条"这类问题）因此不成立。
+            #
+            # 改成按 `(node_id, opportunity_index, slot)` 抽签：`opportunity_index` 是
+            # **这台节点的第 k 次机会**，是**物理资源**，与队列里放了什么、放了多少无关。
+            # 语义上正确的读法是："这台节点得到的第 k 次机会有固定的命运，策略只决定是否使用它。"
+            # 注意各机会之间仍然是独立的：机会数由节点自己的上行节奏决定，改上报周期本来就会
+            # 改变机会数——那是策略**真的**在改变它拥有的资源，不是污染。
+            u = stable_uniform(self.seed, "rx-win", node_id, opportunity_index, slot)
             if u < self._downlink_success_p(sf):
                 queue.pop(0)
                 self.downlink_delivered += 1

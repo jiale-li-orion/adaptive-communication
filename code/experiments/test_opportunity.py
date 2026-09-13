@@ -229,17 +229,47 @@ def test_downlink_per_uplink() -> None:
     expect_raise("额度为 0 时拒绝构造", bad, ValueError)
 
 
-def test_identity_separates_draws() -> None:
-    print("\n[5] 同节点同小时的不同操作不共享结局")
+def test_opportunity_fixes_the_fate() -> None:
+    """**潜在结果按"机会"固定，不按"报文"固定。**
+
+    这一条替换了原先的"不同 identity 得到两种结局"。旧测试钉住的是**错的行为**：
+    它让下行结局取决于 `message.identity`，而 identity 是 `cmd{全局序号}`——
+    于是**任何一处多发一条命令都会推进全局序号，平移所有节点后续的下行抽签**。
+    策略 A 多发一个包之后，策略 B 看到的"随机链路"已不是同一条，
+    跨策略比较（尤其"再聪明一点还能拿回几条"）因此不成立。
+
+    新性质要两条同时成立：
+
+      1. **同一机会下，报文身份不影响结局** —— 潜在结果与策略无关；
+      2. **不同机会之间仍然独立** —— 否则等于把所有机会压成同一次抽签，
+         那就不是"固定的潜在结果"，而是"没有随机性"。
+    """
+    print("\n[5] 潜在结果按机会固定：同机会同结局、跨机会仍独立")
     node = "r01"
-    outcomes = set()
-    for identity in range(200):
+
+    # (1) 同一个机会、200 个不同 identity
+    outs = set()
+    for ident in range(200):
         plane = ControlPlane(LoRaProfile(), seed=7, downlink_per_uplink=1)
-        plane.center_send(node, DownlinkMessage(identity=f"op:{identity}", kind="command",
+        plane.center_send(node, DownlinkMessage(identity=f"op:{ident}", kind="command",
                                                 payload_bytes=38, enqueued_at=0), hour=5)
         plane.uplink(node, hour=5, sf=9, payload_bytes=20)
-        outcomes.add(plane.downlink_delivered)
-    check("不同 identity 得到两种结局", len(outcomes) == 2, f"结局集合 {outcomes}")
+        outs.add(plane.downlink_delivered)
+    check("同一机会下报文身份不影响结局（潜在结果与策略无关）", len(outs) == 1,
+          f"结局集合 {outs}")
+
+    # (2) 推进机会计数后再投递，结局必须仍然有两种
+    outs2 = set()
+    for k in range(200):
+        plane = ControlPlane(LoRaProfile(), seed=7, downlink_per_uplink=1)
+        for _ in range(k):
+            plane.uplink(node, hour=5, sf=9, payload_bytes=20)   # 空队列，只推进机会计数
+        plane.center_send(node, DownlinkMessage(identity="op:x", kind="command",
+                                                payload_bytes=38, enqueued_at=0), hour=5)
+        plane.uplink(node, hour=5, sf=9, payload_bytes=20)       # 第 k+1 次机会上投递
+        outs2.add(plane.downlink_delivered)
+    check("不同机会之间仍然独立（两种结局都出现）", len(outs2) == 2,
+          f"结局集合 {outs2}")
 
     a = stable_uniform(7, "rx-win", node, 5, 0, "op:1")
     b = stable_uniform(7, "rx-win", node, 5, 0, "op:2")
@@ -355,7 +385,7 @@ def main() -> int:
     test_no_uplink_no_downlink()
     test_unheard_uplink_creates_no_opportunity()
     test_downlink_per_uplink()
-    test_identity_separates_draws()
+    test_opportunity_fixes_the_fate()
     test_backhaul_and_expiry()
     test_energy_accounting()
     test_candidate_paths()
