@@ -21,7 +21,44 @@
 >
 > ---
 >
-> ### 当前工作（2026-09-13 起）：把已有现象压成**能提前预测的判据**
+> ### 当前工作（2026-09-13 最新）：**agent-infra 门的最后一次检验 = 真实 LLM**
+>
+> [`27-llm-aoi-matched-gate-failed-2026-09-13.md`](docs/s7-method/instance-v1/27-llm-aoi-matched-gate-failed-2026-09-13.md)
+> ｜协议 `code/protocols/llm_naive_v{1..4}.json`｜harness `code/analysis/llm_naive_baseline.py`
+>
+> **在测什么。** 用户给定的一句话问题：**真实 LLM 在间歇执行失败之后，会不会自然把同一个
+> semantic episode 重新变成 planning problem？** 这是那份全局复盘里点名的、最干净的 agent-infra 入口
+> （"这些现在全是 scripted policy；真实 LLM 若自然出现同一现象，这是最干净的入口"）。
+>
+> **已达成的（v4 仪器闸门，`adm_noout × seed0 × 200 epoch`）**：
+>
+> | 量 | 值 |
+> |---|---|
+> | `need_action_epochs`（desired≠confirmed 且**无** pending） | **200 / 200** |
+> | `actions` | `{noop: 196, set_report_period: 4}` |
+> | **target agreement** | **4 / 4（0 不一致）** |
+> | **same-target unresolved replan** | **0** |
+> | semantic episodes | 4（closed 3）｜`amp_intents` **1.0** |
+>
+> ⇒ **方向性答案：没有观察到 planning amplification（一个 episode 恰好一个 intent）。**
+>
+> **但还不能收盘，两条理由**：
+>
+> 1. **v4 的 prompt 仍有措辞缺陷**：它把 `pending_effect` 描述成 *"whether an effect is still
+>    unresolved"*，而代码取的是 **`in_flight`（网关队列里真有一条在路上）**。
+>    **这正是把 v3 判成 instrument invalid 的那个区分，以文字形式残留**——模型若信这句，
+>    看到 `pending_effect=false` 会推断"没什么未决"⇒ 可能又是系统性 noop。
+>    ⇒ **下一步 v5：只改这一句措辞**，重跑 200-epoch 闸门（约 ¥0.5）。
+> 2. **样本太薄**：只动了 4 次。`same_target_unresolved = 0` 在 n=4 上承不住重，
+>    无法区分"它从不重复"与"它几乎不动"。
+>
+> **真正的卡点（结构性，不是仪器）**：
+> **要让 planning amplification 可观测，Agent 必须处在"反复尝试、反复失败"的状态；
+> 而本任务允许它靠"不动手"就满足目标。** 把它推出去的两条路都已被用户按方法论否决：
+> **`B′`**（"满足义务下省电"目标欠定义，把 `ea_nb` 的阈值写进 prompt = 让 LLM 模仿 `ea_nb`）、
+> **`C′`**（把义务调紧到它必须做事 = **为了 Agent 造需求，破坏因果纪律**）。
+>
+> ### 已收盘的（2026-09-13 前半段）：把现象压成**能提前预测的判据**
 >
 > **本阶段不造新策略。** 目标是把 repo 里已经出现的现象压成一个能提前预测
 > "哪些方法会有效、哪些一定没用"的**结构判据**；判据成立之后，方法从边界里长出来，而不是拍出来。
