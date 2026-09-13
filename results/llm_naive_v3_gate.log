@@ -1,0 +1,20 @@
+协议 llm_naive_v3  sha256=2112620282fc1519  model=deepseek-flash  thinking={'type': 'disabled'}
+   [adm_noout] 实际 epoch=780（task 12.0h + tail 1.0h）⇒ 三条件合计上限 2340 次
+== adm_noout ==
+  planner invocations = 200
+  semantic episodes   = 0（closed 0）
+  ⚠ **0 个 semantic episode** ⇒ 比值无定义（0/0）。**先查动作分布与原始输出，不要直接解读成"LLM 克制"**
+  **planning amplification（#意图/#episode，与 scripted 可比）= —×**（单种子参照 3.66/5.42/78.00；3种子汇总 3.70/4.04/17.56）
+  planning amplification（#调用/#episode，含 noop，成本侧）= —×
+  **wasted per closed effect = 意图侧 — / 调用侧 —**
+  terminal = {}
+  actions = {'noop': 200}；noop=200；解析失败=0
+  **未下达动作的原因分类 = {'action_noop': 200}**
+  原始输出采样 = ['{"action":"noop"}', '{"action":"noop"}', '{"action":"noop"}', '{"action":"noop"}', '{"action":"noop"}']
+  **target agreement = 0 次一致 / 0 次不一致**；**same-target unresolved replan = 0 次**
+  **其中「听到过但证据老化」的 epoch 数 = 0（最多 0 个）**；「从未听到」出现的 epoch 数 = 200
+  **状态里有超期节点的 epoch 数 = 200**（最多一次 14 个节点超期）  ← 若为 0，则 noop 是「目标已满足」，不是失败
+  service = 160.0/168；AoI = 3517 s（**确认没靠少做事作弊**）
+  tokens in/out = 156536/1200  （粗算 ¥0.48 峰值价）
+
+[{"protocol_id": "llm_naive_v3", "protocol_sha256": "2112620282fc1519bd29a2ebcfbd14f11feb5313a782232946096ceb024cdcee", "tag": "adm_noout", "seed": 0, "invocations": 200, "intents": 0, "episodes": 0, "closed": 0, "amp_intents": null, "amp_invocations": null, "wasted_intents_per_closed": null, "wasted_invocations_per_closed": null, "terminal": {}, "actions": {"noop": 200}, "noop": 200, "bad": 0, "rejects": {"action_noop": 200}, "raw_sample": ["{\"action\":\"noop\"}", "{\"action\":\"noop\"}", "{\"action\":\"noop\"}", "{\"action\":\"noop\"}", "{\"action\":\"noop\"}"], "overdue_epochs": 200, "overdue_max": 14, "agree": 0, "disagree": 0, "same_target_unresolved": 0, "stale_epochs": 0, "stale_max": 0, "unseen_epochs": 200, "node_ids_sample": ["gw0"], "routine_delivered": 160, "routine_aoi_mean_s": 3516.836363636364, "in_tok": 156536, "out_tok": 1200}]

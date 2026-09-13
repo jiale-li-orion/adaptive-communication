@@ -223,3 +223,4 @@ python3 code/analysis/steady_gap.py --seeds 20 --tag q3_dpu2 --downlink-per-upli
 | 文件 | 内容 |
 |---|---|
 | `llm_naive_phase1.log` | **真实 LLM（`deepseek-flash`，`thinking` 关闭）naive planner 的原始运行日志**；协议 `code/protocols/llm_naive_v1.json`（`sha256=11a0ce4481756392…`）。跑完后再把末行 JSON 抽成登记的结果文件。**日志本身不是读数**，读数以抽出的结果文件为准 |
+| `llm_naive_v3_gate.log` | 协议 `llm_naive_v3`（AoI-matched semantic target）**仪器闸门**的原始运行日志（`adm_noout × seed0 × 200 epoch`）。**日志不是读数**，读数以抽出的结果文件为准 |

@@ -93,16 +93,28 @@ class Budget:
         self.in_tok = 0
         self.out_tok = 0
         self.per_epoch: list[dict] = []
+        #: 上一次**实测**的 `prompt_tokens`。单次输入上限按**实测**执法，不按 `bytes/4` 估算——
+        #: 那个估算在本状态上偏高约 19%（估 1001 vs 实测 843），会把一次合法运行直接挡掉。
+        self.last_in: int | None = None
 
     def check(self, in_tok: int, out_tok: int) -> None:
+        # 单次输入上限：**有实测就用实测**；未知（首次调用）时放行一次用于测量，
+        # 实测超限会在 `charge()` 里立刻抛。**总量上限与调用数上限永远照旧执行。**
         if self.calls >= CAPS["max_calls"]:
             raise BudgetExceeded(f"max_calls {CAPS['max_calls']}")
+        if self.last_in is not None and self.last_in > CAPS["max_input_tokens_per_call"]:
+            raise BudgetExceeded(
+                f"实测单次输入 {self.last_in} > {CAPS['max_input_tokens_per_call']}")
         if (self.in_tok + in_tok) > CAPS["max_total_input_tokens"]:
             raise BudgetExceeded(f"max_total_input_tokens {CAPS['max_total_input_tokens']}")
         if (self.out_tok + out_tok) > CAPS["max_total_output_tokens"]:
             raise BudgetExceeded(f"max_total_output_tokens {CAPS['max_total_output_tokens']}")
 
     def charge(self, in_tok: int, out_tok: int) -> None:
+        self.last_in = in_tok
+        if in_tok > CAPS["max_input_tokens_per_call"]:
+            raise BudgetExceeded(
+                f"实测单次输入 {in_tok} > {CAPS['max_input_tokens_per_call']}（本次已发生）")
         self.calls += 1
         self.in_tok += in_tok
         self.out_tok += out_tok
@@ -160,7 +172,12 @@ def brief(view, max_nodes: int | None = None) -> dict:
             _penda.pop(_n["id"], None)
             _n["pending_age_s"] = None
     if "desired_target" in (STATE_SCHEMA.get("node_fields") or []):
-        return {"time_s": view.t_s, "nodes": nodes,
+        # **只发协议 `node_fields` 里列出的键。** 原先 v3 直接复用 v2 建好的节点字典
+        # （11 个键）⇒ 单次输入实测 **1237 token > 协议上限 1000**，被预算闸门挡下。
+        # **不放宽上限**（那是纪律），而是**让代码与它自己冻结的协议一致**：协议说 7 个键就发 7 个。
+        _keep = tuple(STATE_SCHEMA["node_fields"])
+        return {"time_s": view.t_s,
+                "nodes": [{k: _n.get(k) for k in _keep} for _n in nodes],
                 "last_tool_outcome": _LAST["result"]}
     return {"time_s": view.t_s,
             "obligation_period_s": OBLIGATION_S,
@@ -186,8 +203,10 @@ def ask(state: dict, budget: Budget) -> dict:
             "stream": m.get("stream", False)}
     payload = json.dumps(body).encode()
     est_in = len(SYSTEM.encode()) // 4 + len(json.dumps(state).encode()) // 4
-    if est_in > CAPS["max_input_tokens_per_call"]:
-        raise BudgetExceeded(f"单次输入估计 {est_in} > {CAPS['max_input_tokens_per_call']}")
+    # 估算**只告警不拦**（它偏高）；真正的执法在 `charge()` 用实测值做。
+    if est_in > CAPS["max_input_tokens_per_call"] and budget.last_in is None:
+        print(f"   [注意] 单次输入估算 {est_in} > {CAPS['max_input_tokens_per_call']}，"
+              f"首次调用以实测为准")
     budget.check(est_in, CAPS["max_output_tokens_per_call"])
     req = urllib.request.Request(URL, data=payload, headers={
         "Content-Type": "application/json",
