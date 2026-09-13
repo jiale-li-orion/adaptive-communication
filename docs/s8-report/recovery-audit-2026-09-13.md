@@ -316,8 +316,11 @@ python3 code/analysis/steady_gap.py --seeds 20 --tag q3_attrib
 **排序修好之后，档位写入排到了队首，这个缺口在无故障工况下基本被写入自己填掉了**——这就是
 0.16 点的来源。**但"写入总能及时落地"是 `none` 轨迹上的性质，不是故障轨迹上的性质。**
 
-**四、因此正确的结论是：W1 承担一项不可替代的义务，它的价值必须在"档位写入被延迟或丢失"的
-条件下衡量，而不是在无故障轨迹的总体覆盖率上衡量。** 现有数据里，`ours W1 off` 只在
+**四、因此正确的结论是：W1 服务的义务是真实且被强制执行的，但现有证据没有证明这个动作不可
+替代。** `_covered_by` 不检查样本是否由 W1 触发，也不看请求 ID（`scorer.py:113-125`），因此
+周期采样加及时上传是合法替代路径——§7.34 的排序修复做的正是让周期上传自己满足它。**"不可
+替代的义务"是过头话，已改。** 它的价值必须在"档位写入被延迟或丢失"的条件下衡量，而不是在
+无故障轨迹的总体覆盖率上衡量。 现有数据里，`ours W1 off` 只在
 trajectory `none` 上测过。要决定默认行为，需要的是一组**范围明确的对照**：
 
 - 轨迹：`request_lost`（写入可能没到）、`stale_command`（写入被扣留）、`backhaul_only`（回传断
@@ -377,7 +380,48 @@ python3 code/analysis/steady_gap.py --seeds 20 \
 
 ---
 
-## 十三、复现与版本（回应"旧读数怎么复现"）
+## 十三、`false_success` 读的是路径，不是策略的判断；而记录策略判断的那一列是死代码
+
+审查提出一个可核查的具体怀疑：`false_success` 是否真的测到了各策略自己的"成功判断"。
+**核查结果：它没有；而且专门用来测这件事的字段从来没有被写入过。** 这一条比怀疑本身更硬。
+
+**一、`false_success` 读的是什么。** `scorer.py:381-402`：遍历 `record.action_records`，取
+`outcome == APPLIED` 且 `observed_at is not None` 的记录，再比对
+`_actual_profile_at(record, node_id, observed_at) != commanded`。也就是说它测的是
+**"中心结算了这次操作，而节点在那个时刻实际不在这个档位"**——一个真实的"告诉了操作员一件不真
+的事"。这是有效指标。
+
+**二、但 `observed_at` 不是策略打的时间戳。** `runner` 在送达路径上直接调用
+`iface.note_observed(...)`（正常送达一处，`ack_lost` 另一处延后到节点下次遥测）。**策略对"我
+什么时候认为它成功了"的判断，不参与这个过程。**
+
+**三、专门记录策略判断的那条路是断的。** `AgentInterface.declare(identity, at_s)`
+（`interfaces.py:257`）会写下 `declared_without_evidence = (observed_at is None)`——"策略在没有
+任何观测的情况下宣告成功"，正是本文 runtime 的核心主张要防的事。评分器为它算了
+`declared_bare`（`scorer.py:385`）并放进 audit 字典（`:418`）。**但是：**
+
+- `grep -rn "\\.declare(" code/` **零命中**——没有任何一条臂调用过它；
+- 因此 `declared_without_evidence` 恒为 `False`、`declared_bare` 恒为 `0`；
+- 而且 `declared_bare` **没有进入任何一张结果表**（`monitoring_trajectories.py` 与
+  `steady_gap.py` 的列里都没有它）。
+
+**四、这意味着什么。** "本文 runtime 要求证据晚于写入"这条主张，目前**只能通过覆盖率与下行次数
+间接观察**，它的直接指标是 0 且从未被报告。两个 runtime（`policies.RuntimePolicy` 与
+`compose.ContractRuntime`）各自在内部维护 `settled` / `settled_version`，**谁也不告诉接口**——
+而接口正是为记录这件事而建的。
+
+**五、但这不等于"指标死了"。** 现有数据里已经有正向对照：去掉契约字段的 `ours_no_contract` 在
+`stale_command` 上出现乱序 0.25、覆盖回退 0.05、误报成功 0.10；不带任何契约字段的 `oracle` 在
+同一轨迹上是 0.20 / 0.15 / 0.15，而带契约字段的四条臂接近全 0。**所以列的灵敏度是有的、方向也
+对**，问题是**暴露量级只有约 0.2 次 / 72 小时**。
+
+**六、因此下一步的顺序应当是**：先把 `declare()` 接上（让策略真的通过接口宣告结算），把
+`declared_bare` 与 `settled` 放进结果表，**再**谈任何暴露诊断或参数扫描。**在一个恒为 0 的列上
+扫描，无论扫多密都不会有结果。**
+
+---
+
+## 十四、复现与版本（回应"旧读数怎么复现"）
 
 `steady_gap.py` 直接继承当前的 `RuntimePolicy`，因此**在排序修好之后跑它，默认臂给出的不再是
 89.07%**，不能原样复现旧表。旧读数与旧脚本的对应关系：
