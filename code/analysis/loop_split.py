@@ -51,30 +51,41 @@ import regime_map as RM                                # noqa: E402
 DEFAULT_DEADLINE_S = 3600
 
 
-def pairs(trace: list) -> list[dict]:
-    """从一条时间线里抽出每个 `plan` 及其配对 `applied`，算两条腿。
+def pairs(trace: list) -> tuple[list[dict], dict]:
+    """把 `plan` 与 `applied` 配对，算两条腿。**贪心一对一 + 右删失标注。**
 
-    配对规则：同一节点、**同一字段值**、时间严格在 `plan` 之后的**第一个** `applied`。
-    配不上的 `plan` 单独记（它们是"意图没有落地"，本身也是信息，不能悄悄丢掉）。
+    为什么不能按「同节点 + 同值 + 之后第一个 `applied`」直接配：`aoi` 有 **67% 的 intent 是重发**
+    （§6.24），同一个节点会连续产生多条 `period=300`。旧写法下 `plan₁` 与 `plan₂` **都会认领同一次
+    `applied`**，既污染 `T_return`，也把"哪条 intent 从未落地"搞错。
+
+    现在**每个 `applied` 只被认领一次**，归给时间上最早的那条未认领 `plan`。
+    ⚠ **这只是贪心，不是真身份。** 真身份要用 `logical = f"{node_id}:{op}:{generation}"`
+    （repo 已有，且节点侧用 `applied_logicals` 去重）进入 trace——那需要改 `network.py` 的 trace 载荷。
+    `applied_unclaimed` 与"从未落地的 plan"两个计数一并报出，用来暴露贪心配对残留的不确定性。
     """
-    by_node: dict[str, list] = {}
+    applied: dict[str, list] = {}
     for e in trace:
         if e[2] == "applied":
-            by_node.setdefault(e[1], []).append(e)
+            applied.setdefault(e[1], []).append([e, False])       # [事件, 是否已被认领]
     out = []
     for e in trace:
         if e[2] != "plan":
             continue
         t_s, nid, _k, soc_seen, op, value, age = (list(e) + [None] * 7)[:7]
         hit = None
-        for a in by_node.get(nid, ()):
-            if a[0] > t_s and a[4] == value:
-                hit = a
+        for slot in applied.get(nid, ()):
+            if (not slot[1]) and slot[0][0] > t_s and slot[0][4] == value:
+                slot[1] = True
+                hit = slot[0][0]
                 break
         out.append({"t": t_s, "node": nid, "soc_seen": soc_seen,
                     "t_evidence_s": age,
-                    "t_return_s": None if hit is None else hit[0] - t_s})
-    return out
+                    "t_return_s": None if hit is None else hit - t_s})
+    stats = {"t_end": max((e[0] for e in trace), default=0),
+             "applied_total": sum(len(v) for v in applied.values()),
+             "applied_unclaimed": sum(1 for v in applied.values() for s in v if not s[1]),
+             "plans": len(out)}
+    return out, stats
 
 
 def t_harm_at(soc: float, cfg_pair: tuple[int, int]) -> float:
@@ -94,7 +105,7 @@ def main() -> int:
 
     print(f"闭环分解：arm = {args.arm}，{args.seeds} 个种子，"
           f"T_deadline = {args.deadline_s} s（已登记的常规义务周期）\n")
-    all_rows = []
+    all_rows, stats_by_tag = [], {}
     for tag in [t.strip() for t in args.tags.split(",") if t.strip()]:
         cfg = json.load(open(f"results/instance_{tag}.json", encoding="utf-8"))["config"]
         kw = build_kwargs(dict(cfg))
@@ -107,7 +118,10 @@ def main() -> int:
                 print(f"  {tag} seed {seed}: 跑不动 —— {type(exc).__name__}: {exc}")
                 continue
             # 节点侧真实配置（用最后一条 state 事件推此刻在跑什么）
-            for p in pairs(d["_trace"]):
+            _pairs, st_ = pairs(d["_trace"])
+            t_end = st_["t_end"]
+            stats_by_tag[tag] = st_
+            for p in _pairs:
                 st_ev = [e for e in d["_trace"]
                          if e[2] == "state" and e[1] == p["node"] and e[0] == p["t"]]
                 pair_cfg = (st_ev[0][3], st_ev[0][4]) if st_ev else (3600, 3600)
@@ -117,6 +131,7 @@ def main() -> int:
                 # 决策时**在跑的上报周期**：`T_return` 若由"上报周期 + 一次回传"量化决定，
                 # 那么按它分箱就该看到 `T_return` 随上报周期成比例变化。
                 p["report_s"] = st_ev[0][4] if st_ev else None
+                p["_t_end"] = t_end
                 p["t_harm_true_s"] = t_harm_at(st_ev[0][5] if st_ev else None, pair_cfg) * 3600.0
                 p["t_harm_belief_s"] = t_harm_at(p["soc_seen"], pair_cfg) * 3600.0
                 rows.append(p)
@@ -126,8 +141,10 @@ def main() -> int:
         ev = [r["t_evidence_s"] for r in rows if r["t_evidence_s"] is not None]
         rt = [r["t_return_s"] for r in matched]
         print(f"== {tag} ==")
+        st_ = stats_by_tag.get(tag, {})
         print(f"   决策数 n={n}；配到 applied 的 n={len(matched)}"
-              f"（**配不上的 {n - len(matched)} 个是意图没落地，单独计**）")
+              f"（**从未落地 {n - len(matched)}**）；"
+              f"applied 共 {st_.get('applied_total')}，**贪心后未被认领 {st_.get('applied_unclaimed')}**")
         if ev:
             print(f"   T_evidence 秒：中位 {st.median(ev):.0f}  最大 {max(ev):.0f}  n={len(ev)}")
         if rt:
@@ -151,31 +168,30 @@ def main() -> int:
             r["loop_s"] = (None if r["t_return_s"] is None
                            else r["t_evidence_s"] + r["t_return_s"])
         if cond:
-            ft = [r for r in cond
-                  if r["loop_s"] is None or r["loop_s"] > r["t_harm_true_s"]]
-            fb = [r for r in cond
-                  if r["loop_s"] is None or r["loop_s"] > r["t_harm_belief_s"]]
+            def is_fail(r, horizon_key):
+                """**主口径**：`T_return` 对 `T_harm^now`（从现在起）；`T_evidence` 只作条件。
+                未落地（`T_return=None`）**只在** `t_plan + T_harm^now <= t_end` 时才无争议记 failure；
+                否则是**右删失**，单列。
+                """
+                hr = r[horizon_key]
+                if r["t_return_s"] is None:
+                    return (r["t"] + hr) <= r["_t_end"], True      # (是否 failure, 是否删失)
+                return r["t_return_s"] > hr, False
+            fails, cens = 0, 0
+            for r in cond:
+                f, c = is_fail(r, "t_harm_true_s")
+                fails += bool(f)
+                cens += bool(c)
+            # 旧口径（**口径不一致，仅作对照，不作结论**）：`T_loop > T_harm^now`，
+            # 把发生在决策之前的 `T_evidence` 也从当前生存预算里扣了一遍。
+            old_f = sum(1 for r in cond
+                        if r["loop_s"] is None or r["loop_s"] > r["t_harm_true_s"])
             print(f"   **条件样本**（T_evidence ≤ deadline）n={len(cond)}")
-            print(f"     A（真实 SoC 算 T_harm，主口径）= {len(ft)/len(cond):.3f}  (n_fail={len(ft)})")
-            print(f"     A（信念 SoC 算 T_harm，旧口径） = {len(fb)/len(cond):.3f}  (n_fail={len(fb)})")
+            print(f"     ★ A（主口径 T_return vs T_harm^now）= {fails/len(cond):.3f}"
+                  f"  (n_fail={fails}, 其中右删失 {cens})")
+            print(f"       A（旧口径 T_loop vs T_harm^now，**口径不一致**) = {old_f/len(cond):.3f}")
         else:
             print("   **条件样本 n=0 ⇒ 不许下结论**")
-        # **按 `T_harm` 分箱**：不必造新条件——`T_harm` 是逐决策按当时 SoC 算的，
-        # 所以同一条件内它自然变化。这直接回答"损害窗口逼近时 authority failure 会不会出现"，
-        # 而且把"分母（链路决定）"与"分子（能量决定）"在同一条件里解耦开。
-        if cond:
-            edges = (0, 2 * 3600, 4 * 3600, 8 * 3600, 10 ** 9)
-            print("   按 T_harm 分箱（**同一条件内**，分母与分子在此解耦）：")
-            for lo, hi in zip(edges, edges[1:]):
-                b = [r for r in cond if lo <= r["t_harm_true_s"] < hi]
-                if not b:
-                    continue
-                f = [r for r in b
-                     if r["loop_s"] is None or r["loop_s"] > r["t_harm_true_s"]]
-                nev = sum(1 for r in b if r["loop_s"] is None)
-                lab = (f"{lo//3600}-{hi//3600}h" if hi < 10**8 else f">{lo//3600}h")
-                print(f"     T_harm {lab:<8} n={len(b):<4} n_fail={len(f):<3} "
-                      f"(其中从未落地 {nev}) A={len(f)/len(b):.3f}")
         print()
     return 0
 
