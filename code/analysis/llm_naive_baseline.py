@@ -196,11 +196,21 @@ class LLMNaiPolicy(C.CenterPolicy):
         #: 原始输出采样：**用来回答"零动作是模型克制，还是我的接口把它判成非法"**
         self.raw_sample: list = []
         self.rejects: dict = {}
+        #: **状态里到底有没有"超期"**：`last_heard_age_s > obligation_period_s` 的节点数。
+        #: 没有它就无法区分"目标已满足 ⇒ noop 是对的"与"模型无视超期 ⇒ 真是失败"。
+        self.overdue_epochs = 0
+        self.overdue_max = 0
 
     def plan(self, view):
         if self.call_limit is not None and self.budget.calls >= self.call_limit:
             return []                                   # 惰性：不再发请求（也不伪造动作）
         st = brief(view)
+        _od = sum(1 for _n in st["nodes"]
+                  if (not _n.get("seen"))
+                  or (_n.get("last_heard_age_s") or 0) > OBLIGATION_S)
+        self.overdue_max = max(self.overdue_max, _od)
+        if _od:
+            self.overdue_epochs += 1
         try:
             act = ask(st, self.budget)
         except BudgetExceeded:
@@ -284,6 +294,7 @@ def run(tag: str, seed: int, budget: Budget, call_limit: int | None = None) -> d
                          for t in {r["terminal"] for r in rows}},
             "actions": pol.actions, "noop": pol.noop, "bad": pol.bad,
             "rejects": pol.rejects, "raw_sample": pol.raw_sample,
+            "overdue_epochs": pol.overdue_epochs, "overdue_max": pol.overdue_max,
             "node_ids_sample": sorted(d["_trace"][0][1:2]) if d["_trace"] else [],
             "routine_delivered": d["routine"]["delivered"],
             "routine_aoi_mean_s": d["routine"]["aoi_mean_s"],
@@ -347,6 +358,9 @@ def main() -> int:
         print(f"  actions = {r['actions']}；noop={r['noop']}；解析失败={r['bad']}")
         print(f"  **未下达动作的原因分类 = {r['rejects']}**")
         print(f"  原始输出采样 = {r['raw_sample']}")
+        print("  **状态里有超期节点的 epoch 数 = " + str(r["overdue_epochs"])
+              + "**（最多一次 " + str(r["overdue_max"]) + " 个节点超期）"
+              + "  ← 若为 0，则 noop 是「目标已满足」，不是失败")
         print(f"  service = {_fmt(r['routine_delivered'],1)}/168"
               f"；AoI = {_fmt(r['routine_aoi_mean_s'],0)} s（**确认没靠少做事作弊**）")
         print(f"  tokens in/out = {r['in_tok']}/{r['out_tok']}  "
