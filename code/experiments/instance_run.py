@@ -34,6 +34,7 @@ from exogenous import (ObligationSet, constant_harvest, displacement_series, het
                        wang_fragment_truth)
 from center import ARMS, ClairvoyantStaticSelector, SocObservationModel, build_policy
 from network import DeviceProfile, Instance, nodes_from
+from oracle import dynamic_oracle
 from scoring import evaluate
 
 OUT = _os.path.normpath(_os.path.join(_CODE, "..", "results"))
@@ -53,7 +54,9 @@ def one_seed(seed: int, task_hours: float, tail_hours: float,
              soc_bias: float = 1.0, soc_loss_p: float = 0.0, hold_op: str | None = None,
              atomic: bool = False, exec_label: str | None = None,
              capacity_wh: float = 0.05, low_frac: float = 0.4,
-             low_wh_per_hour: float = 0.005) -> dict:
+             low_wh_per_hour: float = 0.005,
+             oracle_cache: dict | None = None,
+             oracle_soc_bins: int = 200) -> dict:
     hours = task_hours + tail_hours
     dep = build_deployment(groups=2)
     prof = DeviceProfile(sample_interval_s=sample_interval_s,
@@ -89,6 +92,19 @@ def one_seed(seed: int, task_hours: float, tail_hours: float,
     obligations = ObligationSet(
         routine_obligations_by_node(meas, int(task_hours))
         + rule_obligations_for_truth(truth, spacing_s=event_spacing_s))
+
+    # **真上界**：逐节点、逐小时的离线动态规划，读完整未来采能轨迹。它不依赖臂，所以按
+    # (种子, 条件) 记忆化——否则每个臂都会重算一遍同一个值。
+    oracle_total = None
+    if oracle_cache is not None:
+        okey = (seed, int(task_hours), capacity_wh, low_frac, low_wh_per_hour,
+                harvest_wh_per_hour, harvest_mode, blackout_start_h, blackout_frac,
+                event_spacing_s, oracle_soc_bins)
+        if okey not in oracle_cache:
+            oracle_cache[okey] = dynamic_oracle(
+                obligations, int(task_hours), truth.harvest_wh, nodes.keys(),
+                profile=prof, soc_bins=oracle_soc_bins)["total_oracle"]
+        oracle_total = oracle_cache[okey]
 
     acc = None
     if access_outage_h > 0:
@@ -150,6 +166,7 @@ def one_seed(seed: int, task_hours: float, tail_hours: float,
         "hazard": {"hold_every": hold_every, "hold_s": hold_s},
         "intent_mismatch_s": inst.intent_mismatch_s(int(hours)),
         "mixed_config_s": inst.mixed_config_ticks,
+        "dynamic_oracle": oracle_total,
         "command_counters": dict(inst.counters),
         "deployment": dep.summary(),
         "n_obligations": res["n_obligations"],
@@ -206,6 +223,9 @@ def main() -> None:
     ap.add_argument("--access-outage-start-h", type=float, default=4.0)
     ap.add_argument("--outage-start-h", type=float, default=0.0)
     ap.add_argument("--outage-hours", type=float, default=0.0)
+    ap.add_argument("--dynamic-oracle", action="store_true",
+                    help="同时计算真上界（逐节点逐小时离线 DP，读完整未来采能轨迹）")
+    ap.add_argument("--oracle-soc-bins", type=int, default=200)
     ap.add_argument("--tag", default="base")
     args = ap.parse_args()
 
@@ -217,6 +237,7 @@ def main() -> None:
     for L in layers:
         if L not in ("naive", "contract", "atomic"):
             raise SystemExit(f"unknown exec layer {L!r}; have naive/contract/atomic")
+    _oracle_cache: dict = {}
     runs = [one_seed(s, args.task_hours, args.tail_hours,
                      args.outage_start_h, args.outage_hours, a,
                      contract=(L in ("contract", "atomic")), hold_every=args.hold_every,
@@ -235,7 +256,9 @@ def main() -> None:
                      blackout_frac=args.blackout_frac,
                      soc_max_age_s=args.soc_max_age_s, soc_noise_wh=args.soc_noise_wh,
                      soc_bias=args.soc_bias, soc_loss_p=args.soc_loss_p,
-                     hold_op=args.hold_op)
+                     hold_op=args.hold_op,
+                     oracle_cache=(_oracle_cache if args.dynamic_oracle else None),
+                     oracle_soc_bins=args.oracle_soc_bins)
             for a in arm_names for L in layers for s in range(args.seeds)]
 
     # 聚合：**按臂分组**。分母类用求和天然是整数，时延与比率类用逐种子均值。
@@ -270,6 +293,19 @@ def main() -> None:
             "access_blocked": mean([r["access_blocked"] for r in rs]),
             "fenced": mean([r["command_counters"].get("fenced", 0) for r in rs]),
             "deduplicated": mean([r["command_counters"].get("deduplicated", 0) for r in rs]),
+            "dynamic_oracle": mean([r["dynamic_oracle"] for r in rs
+                                    if r.get("dynamic_oracle") is not None]) if any(
+                r.get("dynamic_oracle") is not None for r in rs) else None,
+            # 达标率 = **周期交付** / 真上界。**分子分母必须是同一个量**：真上界只覆盖周期义务
+            # （事件义务靠触发锚定的本地采样，上界的动作集够不到，且事件列在全部臂上恒定、
+            # 明令不得支撑结论）。曾经这里用"周期+事件"做分子，于是 dense600 在容量 0.05 下
+            # 报出 100.1% 的达标率——**上界被突破**。与"相对事后最优固定配置"的 regret 不同，
+            # 这个分母不受测试条件改变的操纵。
+            "oracle_coverage": (mean([r["routine"]["delivered"] for r in rs]) /
+                                mean([r["dynamic_oracle"] for r in rs
+                                      if r.get("dynamic_oracle") is not None])
+                                if any(r.get("dynamic_oracle") is not None for r in rs)
+                                else None),
         }
         if args.outage_hours > 0:
             rec = [r["recovery"] for r in rs if r["recovery"]]
@@ -309,7 +345,8 @@ def main() -> None:
     print(f"实例读数（{args.seeds} 种子/臂，义务 {args.task_hours}h + 尾部 {args.tail_hours}h）")
     print("=" * 96)
     hdr = (f"{'arm':<18} {'周期交付':>9} {'缺采':>5} {'缺送':>6} {'AoI s':>7} "
-           f"{'事件采集':>8} {'事件交付':>8} {'上行':>6} {'下行试':>6} {'死节点':>6} {'混配min':>8}")
+           f"{'事件采集':>8} {'事件交付':>8} {'上行':>6} {'下行试':>6} {'死节点':>6} {'混配min':>8}"
+           + (" {:>8} {:>8}".format("真上界", "周期达标%") if args.dynamic_oracle else ""))
     print(hdr)
     print("-" * 96)
     for a in agg["arms"]:
@@ -318,7 +355,10 @@ def main() -> None:
               f"{x['routine_missing_delivery']:>6.1f} {x['routine_aoi_mean_s']:>7.0f} "
               f"{x['event_match']:>8.1f} {x['event_delivered']:>8.1f} "
               f"{x['uplinks']:>6.1f} {x['downlink_attempts']:>6.1f} "
-              f"{x['dead_nodes_end']:>6.1f} {x['mixed_config_min']:>8.0f}")
+              f"{x['dead_nodes_end']:>6.1f} {x['mixed_config_min']:>8.0f}"
+              + (" {:>8.1f} {:>7.1f}%".format(x["dynamic_oracle"] or 0.0,
+                                              100.0 * (x["oracle_coverage"] or 0.0))
+                 if args.dynamic_oracle else ""))
     print("=" * 96)
     if args.outage_hours > 0:
         print("恢复分列（中断窗内 + 固定恢复观察期）")

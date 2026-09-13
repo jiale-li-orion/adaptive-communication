@@ -37,6 +37,7 @@ from exogenous import (KIND_EVENT, KIND_ROUTINE, EnvironmentTruth, ObligationSet
                        routine_obligations, routine_obligations_by_node,
                        wang_burst_obligations, wang_fragment_truth)
 from network import DeviceProfile, HopLog, Instance, Node, nodes_from
+from oracle import dynamic_oracle
 from scoring import evaluate, event_propagation, recovery_block
 
 FAIL: list[str] = []
@@ -560,6 +561,80 @@ def test_config_generation_identity() -> None:
           f"{moved_s} 个节点周期改变、混配 {inst_s.mixed_config_ticks}s")
 
 
+def test_dynamic_oracle_is_a_bound() -> None:
+    """真上界必须**真的是上界**，而且**不是恒饱和的**。
+
+    `dynamic_upper_bound` 的两条松弛叠起来松到 168/168——"什么都能做到"的上界不带信息，
+    用它算 regret 等于用一个常数当分母。`dynamic_oracle` 只松弛可交付性，保留档位离散性与能量的
+    小时耦合，因此必须同时满足两条：**不低于任何真实策略**、**在绑定条件下严格低于义务总数**。
+
+    另外钉一条实现缺陷的回归：把"窗与本小时有交集"当计入条件会**重复计数**（本实例的窗是闭区间
+    `[h*3600, (h+1)*3600]`，第 h 小时的义务会在第 h+1 小时里再被记一次，12 条被数成 23 条）。
+    所以逐节点上界不得超过该节点的义务条数。
+    """
+    print("\n[15] 真上界（逐节点逐小时离线 DP）")
+    dep = build_deployment(groups=2)
+    hours = 12
+
+    def build(cap: float):
+        nodes = nodes_from(dep)
+        prof = DeviceProfile(capacity_wh=cap)
+        for n in nodes.values():
+            n.p = DeviceProfile(sample_interval_s=n.p.sample_interval_s,
+                                report_period_s=n.p.report_period_s,
+                                capacity_wh=cap, sample_wh=n.p.sample_wh)
+            n.soc_wh = cap
+            n.power = type(n.power)(soc_initial_wh=cap, soc_wh=cap)
+        truth = wang_fragment_truth(0, hours, (dep.gateway.sid,))
+        truth.displacement = displacement_series(nodes.keys(), hours, 0)
+        h, t = hetero_harvest(nodes.keys(), hours, 0, low_frac=0.4, low_wh_per_hour=0.0)
+        truth.harvest_wh.update(h)
+        truth.temp_c.update(t)
+        meas = {k: v.measurand for k, v in nodes.items()}
+        obs = ObligationSet(routine_obligations_by_node(meas, hours)
+                            + rule_obligations_for_truth(truth))
+        return nodes, prof, truth, obs
+
+    for cap in (0.008, 0.05):
+        nodes, prof, truth, obs = build(cap)
+        do = dynamic_oracle(obs, hours, truth.harvest_wh, nodes.keys(), profile=prof)
+        n_routine = sum(1 for o in obs.obligations if o.kind == KIND_ROUTINE)
+        over = [k for k, v in do["per_node"].items() if v["oracle"] > v["n_obligations"]]
+        check(f"逐节点上界不超过该节点义务条数（cap {cap}）", not over,
+              f"越界 {over}" if over else f"{n_routine} 条周期义务")
+        # **上界只覆盖周期义务**：事件义务靠触发锚定的本地采样，本函数的动作集够不到它
+        # （这条真的被突破过——见函数文档）。所以两边的比较也必须都只算周期义务。
+        #
+        # 注意**不要把"上界严格小于义务总数"当普遍要求**：0.008 Wh 的电池够跑
+        # `0.008 / 4.93e-4 = 16.2` 小时的稀疏档，12 小时的任务里所有周期义务本来就都做得到，
+        # 上界因此合理地为满值。能量真正咬人的门槛是 `12 * 4.93e-4 = 5.9e-3 Wh` 以下，
+        # 那一条单独在 cap 0.004 上查。
+
+        inst = Instance(nodes, truth, seed=0, policy=build_policy("dense600"))
+        log = inst.run(hours)
+        res = evaluate(obs, log, hours, nodes.keys(),
+                       battery={k: v.power.to_dict() for k, v in nodes.items()},
+                       plane=inst.plane, task_hours=hours)
+        got = res["routine"]["delivered"]
+        check(f"真实策略的周期交付不超过上界（cap {cap}）", got <= do["total_oracle"],
+              f"dense600 周期交付 {got} ≤ 上界 {do['total_oracle']}")
+
+    # 能量真正绑定的一档：0.004 Wh 撑不满 12 小时，上界必须掉下来。
+    nodes_b, prof_b, truth_b, obs_b = build(0.004)
+    do_b = dynamic_oracle(obs_b, hours, truth_b.harvest_wh, nodes_b.keys(), profile=prof_b)
+    n_routine_b = sum(1 for o in obs_b.obligations if o.kind == KIND_ROUTINE)
+    check("能量真绑定(0.004 Wh)时上界严格低于周期义务总数",
+          do_b["total_oracle"] < n_routine_b,
+          f"上界 {do_b['total_oracle']} < {n_routine_b}")
+
+    # 档位必须真的随小时变——否则"动态"二字没有内容。
+    sched = dynamic_oracle(obs, hours, truth.harvest_wh, nodes.keys(), profile=prof)
+    varied = [k for k, v in sched["per_node"].items()
+              if len({x for x in v["schedule"] if x is not None}) > 1]
+    check("最优档位序列确实随小时变化（不是一条恒定配置）", bool(varied),
+          f"{len(varied)}/{len(sched['per_node'])} 个节点的档位不止一种")
+
+
 def main() -> int:
     print("实例层验收（Task Contract v1.1）")
     test_denominator_is_exogenous()
@@ -576,6 +651,7 @@ def main() -> int:
     test_recovery_splits_lost_from_recoverable()
     test_center_command_path()
     test_config_generation_identity()
+    test_dynamic_oracle_is_a_bound()
     print("\n" + "-" * 74)
     if FAIL:
         print(f"  {len(FAIL)} 项失败: {', '.join(FAIL)}")
