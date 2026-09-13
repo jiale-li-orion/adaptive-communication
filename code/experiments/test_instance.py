@@ -28,10 +28,11 @@ for _p in (_HERE, *(_os.path.join(_CODE, d) for d in ("physics", "runtime", "exp
     if _p not in _sys.path:
         _sys.path.insert(0, _p)
 
-from center import LocalPolicy, build_policy
+from center import (OP_SET_REPORT_PERIOD, OP_SET_SAMPLING_INTERVAL, LocalPolicy,
+                    build_policy)
 from deployment import build_deployment
 from exogenous import (KIND_EVENT, KIND_ROUTINE, EnvironmentTruth, ObligationSet,
-                       constant_harvest,
+                       constant_harvest, hetero_harvest,
                        displacement_series, rule_obligations_for_truth,
                        routine_obligations, routine_obligations_by_node,
                        wang_burst_obligations, wang_fragment_truth)
@@ -459,6 +460,106 @@ def test_center_command_path() -> None:
           not any(hasattr(view, a) for a in ("truth", "rainfall", "loss_db", "link")))
 
 
+def test_config_generation_identity() -> None:
+    """执行层的身份与世代：**身份必须按字段分**，世代必须整对生效。
+
+    这一组是为一个真实缺陷补的回归。`logical` 曾经只按世代编号、不带字段维度，于是同一次配置
+    决策的第二个字段在远端与"第一个字段的重发"不可区分，被当重复永久丢弃。后果很隐蔽：
+
+      - `atomic` 层永远凑不齐一对，**等于一条配置都不下发**——它的三个业务数字与 `local` 逐位
+        相同，看上去像一个"正确但没用"的结论，实际是身份方案的错；
+      - `contract` 层每次决策只落地一个字段（下发次序是先采样间隔、后上报周期，于是上报周期
+        永远停在默认值），把跨代混配的时间推得**比 `naive` 更长**。
+
+    两者都会污染"执行层"这条结论线。所以这里钉住三条性质：两个字段共享同一个世代号、身份各自
+    不同、整对才生效。
+    """
+    print("\n[14] 配置身份与世代")
+    dep = build_deployment(groups=2)
+    hours = 12
+
+    def run(contract: bool, atomic: bool, captured: list | None = None):
+        nodes = nodes_from(dep)
+        before = {k: (n.sample_interval_s, n.report_period_s) for k, n in nodes.items()}
+        truth = wang_fragment_truth(0, hours, (dep.gateway.sid,))
+        truth.displacement = displacement_series(nodes.keys(), hours, 0)
+        h, t = hetero_harvest(nodes.keys(), hours, 0, low_frac=0.4, low_wh_per_hour=0.0)
+        truth.harvest_wh.update(h)
+        truth.temp_c.update(t)
+        inst = Instance(nodes, truth, seed=0, policy=build_policy("ea_i600"),
+                        send_contract_fields=contract, atomic_generation=atomic)
+        if captured is not None:
+            orig = inst.plane.center_send
+
+            def spy(nid, msg, hh, _orig=orig, _sink=captured):
+                _sink.append((nid, dict(getattr(msg, "payload", None) or {})))
+                return _orig(nid, msg, hh)
+
+            inst.plane.center_send = spy
+        inst.run(hours)
+        return nodes, before, inst
+
+    # 1. 身份按字段分：同一世代的两个字段，世代号相同、逻辑身份不同。
+    # **世代号是逐节点计数的**，所以分组的键必须是 (节点, 世代)，不能只用世代号。
+    captured: list = []
+    _, _, inst_c = run(contract=True, atomic=False, captured=captured)
+    by_gen: dict[tuple, dict[str, set]] = {}
+    for nid, p in captured:
+        by_gen.setdefault((nid, p.get("generation")), {}).setdefault(
+            p.get("op"), set()).add(p.get("logical"))
+    paired = [g for g, ops in by_gen.items()
+              if OP_SET_SAMPLING_INTERVAL in ops and OP_SET_REPORT_PERIOD in ops]
+    check("成对下发的世代里，两个字段各自有身份（不是共享一个）",
+          bool(paired) and all(
+              by_gen[g][OP_SET_SAMPLING_INTERVAL].isdisjoint(
+                  by_gen[g][OP_SET_REPORT_PERIOD]) for g in paired),
+          f"{len(paired)} 个成对世代 / {len(by_gen)} 个 (节点,世代)")
+    # 同一条命令的重发必须共享身份——否则远端认不出重复，去重本身就不成立。
+    check("同一 (节点, 字段, 世代) 的重发共享同一个身份",
+          all(len(v) == 1 for ops in by_gen.values() for v in ops.values()),
+          f"{len(captured)} 条下发")
+
+    # 2. 契约层下**两个字段都必须落地**。旧缺陷在这里表现为上报周期恒为默认值。
+    nodes_c, before_c, _ = run(contract=True, atomic=False)
+    moved_i = sum(1 for k, n in nodes_c.items() if n.sample_interval_s != before_c[k][0])
+    moved_p = sum(1 for k, n in nodes_c.items() if n.report_period_s != before_c[k][1])
+    check("契约层下采样间隔与上报周期都真的落地了",
+          moved_i > 0 and moved_p > 0,
+          f"间隔动了 {moved_i} 个、周期动了 {moved_p} 个")
+
+    # 3. 原子层：混配时间必须为 0，而且**不能退化成"什么都不改"**。
+    nodes_a, before_a, inst_a = run(contract=True, atomic=True)
+    check("原子世代层：跨代混配时间为 0", inst_a.mixed_config_ticks == 0,
+          f"混配 {inst_a.mixed_config_ticks}s")
+    moved_a = sum(1 for k, n in nodes_a.items()
+                  if (n.sample_interval_s, n.report_period_s) != before_a[k])
+    check("原子世代层确实改动了配置（不是把命令全拒了）", moved_a > 0,
+          f"{moved_a} 个节点配置改变")
+
+    # 4. 这一列会动：不加任何执行层时，常态网络里就有跨代混配。
+    _, _, inst_n = run(contract=False, atomic=False)
+    check("不加执行层时跨代混配确实出现（这一列不是恒 0）",
+          inst_n.mixed_config_ticks > 0, f"混配 {inst_n.mixed_config_ticks}s")
+
+    # 5. **单字段策略在原子层下也必须落地。** 只改一个字段的决策是一个只有一个字段的完整
+    #    世代；若把"到齐"写死成"两个字段都到"，`AoiPolicy` 这类策略在原子层下会被整类丢弃，
+    #    于是策略与执行层不可比——那是个比缺陷更难发现的错误。
+    nodes_s = nodes_from(dep)
+    before_s = {k: (n.sample_interval_s, n.report_period_s) for k, n in nodes_s.items()}
+    truth = wang_fragment_truth(0, hours, (dep.gateway.sid,))
+    truth.displacement = displacement_series(nodes_s.keys(), hours, 0)
+    h, t = hetero_harvest(nodes_s.keys(), hours, 0, low_frac=0.4, low_wh_per_hour=0.0)
+    truth.harvest_wh.update(h)
+    truth.temp_c.update(t)
+    inst_s = Instance(nodes_s, truth, seed=0, policy=build_policy("aoi"),
+                      send_contract_fields=True, atomic_generation=True)
+    inst_s.run(hours)
+    moved_s = sum(1 for k, n in nodes_s.items() if n.report_period_s != before_s[k][1])
+    check("单字段策略在整代生效的执行层下也能落地",
+          moved_s > 0 and inst_s.mixed_config_ticks == 0,
+          f"{moved_s} 个节点周期改变、混配 {inst_s.mixed_config_ticks}s")
+
+
 def main() -> int:
     print("实例层验收（Task Contract v1.1）")
     test_denominator_is_exogenous()
@@ -474,6 +575,7 @@ def main() -> int:
     test_tail_decides_what_may_be_judged()
     test_recovery_splits_lost_from_recoverable()
     test_center_command_path()
+    test_config_generation_identity()
     print("\n" + "-" * 74)
     if FAIL:
         print(f"  {len(FAIL)} 项失败: {', '.join(FAIL)}")

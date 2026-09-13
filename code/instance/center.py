@@ -115,14 +115,38 @@ class CenterPolicy:
         self.generation: dict[str, int] = {}
 
     def stamp(self, node_id: str, **fields) -> dict:
-        """给一条命令盖上世代号。目标没变就不换号。"""
+        """给**单字段**命令盖上世代号。目标没变就不换号。
+
+        注意：两个配置字段各自调用它会得到**两条独立的世代序列**，那样"两个字段的世代号不等"
+        只是常态，不表示跨代混配。要表达"一次配置决策"请用 `stamp_pair`。
+        """
         key = tuple(sorted(fields.items()))
         if self.target.get(node_id) != key:
             self.target[node_id] = key
             self.generation[node_id] = self.generation.get(node_id, 0) + 1
         out = dict(fields)
         out["generation"] = self.generation[node_id]
+        #: 这个世代**意图写上哪些字段**。只改一个字段的决策就是一个只有一个字段的完整世代；
+        #: 远端据此判断这一代什么时候算到齐。没有这个字段集合，"到齐"就只能靠硬编码"两个字段"，
+        #: 于是单字段策略（如 `AoiPolicy`）在整代生效的执行层下会被整类丢弃。
+        out["fields"] = [fields["op"]]
         return out
+
+    def stamp_pair(self, node_id: str, left: dict, right: dict) -> tuple[dict, dict]:
+        """把**一次配置决策的两个字段**盖上**同一个**世代号。
+
+        协议里 `sampling interval` 与 `report period` 是两个独立字段，但它们由同一次决策产生。
+        用一个世代号覆盖这一对，才使得"两个字段的世代不一致"意味着**跨代混配**：节点正在跑
+        一个从未被任何 planner 请求过的组合。
+        """
+        key = ("pair", tuple(sorted(left.items())), tuple(sorted(right.items())))
+        if self.target.get(node_id) != key:
+            self.target[node_id] = key
+            self.generation[node_id] = self.generation.get(node_id, 0) + 1
+        g = self.generation[node_id]
+        want = [left["op"], right["op"]]
+        return ({**left, "generation": g, "fields": list(want)},
+                {**right, "generation": g, "fields": list(want)})
 
     def note_command_sent(self, node_id: str, payload: dict) -> None:
         """中心自己的记账：它发过什么。**这不是回执**，回执只能来自节点上报。"""
@@ -273,10 +297,13 @@ class DenseSamplingPolicy(CenterPolicy):
             if done:
                 continue
             self._last[nid] = view.t_s
-            out.append((nid, self.stamp(nid, op=OP_SET_SAMPLING_INTERVAL,
-                                        interval_s=self.interval_s)))
-            out.append((nid, self.stamp(nid, op=OP_SET_REPORT_PERIOD,
-                                        period_s=self.period_s)))
+            a, b = self.stamp_pair(nid,
+                                   {"op": OP_SET_SAMPLING_INTERVAL,
+                                    "interval_s": self.interval_s},
+                                   {"op": OP_SET_REPORT_PERIOD,
+                                    "period_s": self.period_s})
+            out.append((nid, a))
+            out.append((nid, b))
         return out
 
 
@@ -308,8 +335,15 @@ class EnergyAwarePolicy(DenseSamplingPolicy):
             snap = view.reports.get(nid) or {}
             soc = view.soc_of(nid)
             if soc is None:
-                out.append((nid, self.stamp(nid, op=OP_SET_REPORT_PERIOD,
-                                            period_s=self.sparse_period_s)))
+                # 从没收到过电量读数 → 保守地退回稀疏配置。**这里也必须发完整世代**：
+                # 只发一个字段，在"整代生效"的执行层下永远凑不齐一对而被丢弃，于是这一整类
+                # 节点在任何执行层下都收不到配置，策略与执行层就不可比了。
+                a, b = self.stamp_pair(
+                    nid,
+                    {"op": OP_SET_SAMPLING_INTERVAL, "interval_s": self.sparse_interval_s},
+                    {"op": OP_SET_REPORT_PERIOD, "period_s": self.sparse_period_s})
+                out.append((nid, a))
+                out.append((nid, b))
                 self._last[nid] = view.t_s
                 continue
             healthy = soc >= self.healthy_wh
@@ -319,10 +353,13 @@ class EnergyAwarePolicy(DenseSamplingPolicy):
                     and snap.get("report_period_s") == want_p):
                 continue
             self._last[nid] = view.t_s
-            out.append((nid, self.stamp(nid, op=OP_SET_SAMPLING_INTERVAL,
-                                        interval_s=want_i)))
-            out.append((nid, self.stamp(nid, op=OP_SET_REPORT_PERIOD,
-                                        period_s=want_p)))
+            # **一次配置决策 → 一个世代号**，覆盖两个字段。若这里对两个字段各盖一次号，
+            # "两个字段世代不等"就变成常态，跨代混配根本测不出来（这是实现里踩过的一个错）。
+            a, b = self.stamp_pair(nid,
+                                   {"op": OP_SET_SAMPLING_INTERVAL, "interval_s": want_i},
+                                   {"op": OP_SET_REPORT_PERIOD, "period_s": want_p})
+            out.append((nid, a))
+            out.append((nid, b))
         return out
 
 
@@ -359,9 +396,11 @@ class ClairvoyantStaticSelector(DenseSamplingPolicy):
                     and snap.get("report_period_s") == want_p):
                 continue
             self._last[nid] = view.t_s
-            out.append((nid, self.stamp(nid, op=OP_SET_SAMPLING_INTERVAL,
-                                        interval_s=want_i)))
-            out.append((nid, self.stamp(nid, op=OP_SET_REPORT_PERIOD, period_s=want_p)))
+            a, b = self.stamp_pair(nid,
+                                   {"op": OP_SET_SAMPLING_INTERVAL, "interval_s": want_i},
+                                   {"op": OP_SET_REPORT_PERIOD, "period_s": want_p})
+            out.append((nid, a))
+            out.append((nid, b))
         return out
 
 

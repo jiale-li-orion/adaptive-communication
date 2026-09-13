@@ -186,6 +186,14 @@ class Node:
         self.applied_version = 0
         #: 中心最近一次**想**让它跑的上报周期，以及中心认为已经在位的值。用于算配置错配时长。
         self.wanted_period_s: int | None = None
+        #: 每个配置字段各自生效到第几代。**两个字段的世代不一致 = 跨代混配**：节点正在跑一个
+        #: 没有任何 planner 请求过的组合（如"新上传周期 + 旧采样间隔"）。协议里
+        #: `sampling interval` 与 `report period` 本来就是两个独立字段，间歇链路下极易错位。
+        self.field_generation: dict[str, int | None] = {"interval": None, "period": None}
+        #: 已到货但**尚未成对**的字段：generation -> {field: value}
+        self.pending_fields: dict[int, dict] = {}
+        #: 最近一次**完整成对生效**的世代号。
+        self.config_generation: int | None = None
         # 计数器（供手工核算）
         self.sampled = 0
         self.dropped = 0
@@ -391,7 +399,8 @@ class Instance:
                  backhaul_delay_s: int = 0,
                  policy: CenterPolicy | None = None,
                  send_contract_fields: bool = False,
-                 hold_every: int = 0, hold_s: int = 0,
+                 hold_every: int = 0, hold_s: int = 0, hold_op: str | None = None,
+                 atomic_generation: bool = False,
                  access_outage: tuple[int, int] | None = None) -> None:
         # 节点是**每次运行的状态**：缓存与传递台账都属于这一次运行。把同一批节点交给两个
         # Instance 会在第二次运行里看到上一次残留的缓存，而 `sample_id` 是按时刻命名的，
@@ -413,6 +422,10 @@ class Instance:
         self.policy: CenterPolicy = policy or LocalPolicy()
         #: 执行层开关：报文是否携带稳定逻辑身份与单调版本。
         self.send_contract_fields = send_contract_fields
+        #: **按世代原子应用**：一次配置决策的两个字段要么都生效、要么都不生效。
+        #: 逐字段 fencing 做不到这件事——它拒掉陈旧的那个字段、却留下新的另一个字段，
+        #: 于是节点跑在一个从未被任何 planner 请求过的混合配置上（实测混配时间反而更长）。
+        self.atomic_generation = atomic_generation
         self.center = Center()
         self.log = HopLog()
         self._radio_wh_seen: dict[str, float] = {}
@@ -426,6 +439,12 @@ class Instance:
         self.held: list[tuple[int, str, object]] = []
         self.hold_every = hold_every
         self.hold_s = hold_s
+        #: 只扣留某一类字段命令。**多字段跨代一致性的构造手段**：若只扣留
+        #: `set_sampling_interval` 而放过 `set_report_period`，节点的采样间隔会落后于世代，
+        #: 而上传周期照常前进，于是形成一个**从未被任何 planner 请求过的混合配置**
+        #: （例如"新上传周期 + 旧采样间隔"）。这正是两个独立配置字段在间歇链路下的真实风险。
+        self.hold_op = hold_op
+        self.mixed_config_ticks = 0
         #: 接入中断窗 (start_s, end_s)：**节点仍有电、仍在采样，只是上行到不了网关**。
         #: 与回传中断的区别是丢失发生在哪一跳，而这两跳的业务后果不同（v1.1 §5.3）。
         self.access_outage = access_outage
@@ -526,6 +545,15 @@ class Instance:
             for sample in (item.payload or ()):
                 self.log.transit[sample.sample_id].received_at = t_s
                 self.nodes[sample.node_id].ack([sample.sample_id])
+        # 跨代混配：两个配置字段的世代号不一致，说明节点正在跑一个**没有任何 planner 请求过
+        # 的组合**（如"新上报周期 + 旧采样间隔"）。协议里 sampling interval 与 report period
+        # 本来就是两个独立字段，间歇链路下极易错位。按 v1.1 §9 这属于**代价**，单列，不计正确性。
+        for node in self.nodes.values():
+            gi = node.field_generation.get("interval")
+            gp = node.field_generation.get("period")
+            if gi is not None and gp is not None and gi != gp:
+                self.mixed_config_ticks += TICK_S
+
         return counters
 
     # -------------------------------------------------- 中心侧
@@ -553,7 +581,12 @@ class Instance:
         self.command_seq += 1
         body = dict(payload)
         if self.send_contract_fields:
-            body["logical"] = f"{node_id}:period:{payload.get('generation', 0)}"
+            # 逻辑身份必须**按字段**定：`sampling interval` 与 `report period` 虽然共享一个世代号，
+            # 但它们是两条可独立重发的命令。身份里省掉字段维度，同一次决策的第二个字段在远端
+            # 就与"第一个字段的重发"不可区分，会被当成重复而永久丢弃——那样原子层永远凑不齐一对，
+            # 契约层则每次只落地一个字段。**两个字段都携带同一个 `generation`，身份必须各自不同。**
+            body["logical"] = (f"{node_id}:{payload.get('op', 'cmd')}:"
+                               f"{payload.get('generation', 0)}")
             body["version"] = self.command_seq
         msg = DownlinkMessage(
             identity=f"cmd{self.command_seq:05d}",
@@ -569,7 +602,12 @@ class Instance:
                 self.intent_log.append((t_s, node_id + ":" + body["op"], val))
             # 延迟释放：按固定步长扣留一部分命令，让它们越过中心后来的目标变更。
             # **按真实下发武装**，不按时钟时刻武装——按时刻武装会落在什么都不发生的分钟上。
-            if self.hold_every and self.counters["commands_sent"] % self.hold_every == 0:
+            hold_it = False
+            if self.hold_op is not None:
+                hold_it = (body.get("op") == self.hold_op)
+            elif self.hold_every:
+                hold_it = (self.counters["commands_sent"] % self.hold_every == 0)
+            if hold_it:
                 self.hold_until[f"cmd{self.command_seq:05d}"] = t_s + self.hold_s
                 self.counters["held"] = self.counters.get("held", 0) + 1
             self.policy.note_command_sent(node_id, payload)
@@ -603,14 +641,50 @@ class Instance:
             node.applied_version = version
 
         op = payload.get("op")
+        gen = payload.get("generation")
+        if self.atomic_generation and gen is not None:
+            # 按世代缓冲：**这一代意图写的字段全部到齐**才一起生效；更新的世代一旦生效，
+            # 更旧的整个丢弃。
+            if node.config_generation is not None and int(gen) < node.config_generation:
+                self.counters["stale_generation_dropped"] = \
+                    self.counters.get("stale_generation_dropped", 0) + 1
+                return
+            slot = node.pending_fields.setdefault(int(gen), {})
+            slot[op] = payload
+            # **世代由"这次决策意图写的字段集合"定义，不是由"必须两个字段"定义。**
+            # 只改上报周期的决策就是一个只有一个字段的完整世代，它到齐就该生效；把"到齐"
+            # 写死成两个字段，会让单字段策略在下发后永远悬着、一条配置都落不了地。
+            want = set(payload.get("fields") or [op])
+            if want <= set(slot):
+                for f in sorted(want):
+                    self._apply_field(node, slot[f], gen)
+                node.config_generation = int(gen)
+                node.pending_fields = {k: v for k, v in node.pending_fields.items()
+                                       if k > int(gen)}
+                self.counters["commands_delivered"] += len(want)
+            return
+        if self._apply_field(node, payload, gen):
+            self.counters["commands_delivered"] += 1
+
+    @staticmethod
+    def _apply_field(node, payload: dict, gen) -> bool:
+        """把**单个**配置字段写进节点。
+
+        **逐字段写入就是契约层的行为**（谁先到谁先生效，于是可能跑在跨代混配上）；整代生效
+        由调用方保证。两条路径共用这一个写入点，免得"改了行为"和"改了生效时机"各自漂移。
+        """
+        op = payload.get("op")
         if op == OP_SET_REPORT_PERIOD:
             node.report_period_s = max(60, int(payload["period_s"]))
-            self.counters["commands_delivered"] += 1
-        elif op == OP_SET_SAMPLING_INTERVAL:
+            node.field_generation["period"] = gen
+            return True
+        if op == OP_SET_SAMPLING_INTERVAL:
             # **这一条会改变电量轨迹**：采样间隔是密集观测的主要能耗来源（v1.1 §8 的
             # "动作驱动的电量演化"）。把它调密，遮荫站点会耗尽电量而永久失去服务。
             node.sample_interval_s = max(60, int(payload["interval_s"]))
-            self.counters["commands_delivered"] += 1
+            node.field_generation["interval"] = gen
+            return True
+        return False
 
     def _charge_radio(self, node: Node) -> None:
         """把 `ControlPlane` 记的空口能耗搬进节点电池（动作驱动，不是预生成序列）。"""

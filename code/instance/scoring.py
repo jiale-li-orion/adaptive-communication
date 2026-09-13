@@ -133,6 +133,8 @@ def evaluate(obligations: ObligationSet, log, hours: int, node_ids,
     res["config_mismatch_s"] = None
     res["not_applicable"] = {
         "config_mismatch_s": "最小实例没有外部配置要求，无法定义'错误配置'；返回 None 而不是 0。",
+        "mixed_config_s": "计数器在 Instance.mixed_config_ticks 上，本函数只拿到 log、"
+                          "取不到；**不返回恒定值的假列**。需要这一列请从 Instance 取。",
     }
     return res
 

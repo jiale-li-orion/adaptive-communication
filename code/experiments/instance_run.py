@@ -50,7 +50,8 @@ def one_seed(seed: int, task_hours: float, tail_hours: float,
              blackout_start_h: float = 0.0,
              blackout_frac: float = 0.0,
              soc_max_age_s: int | None = None, soc_noise_wh: float = 0.0,
-             soc_bias: float = 1.0, soc_loss_p: float = 0.0,
+             soc_bias: float = 1.0, soc_loss_p: float = 0.0, hold_op: str | None = None,
+             atomic: bool = False, exec_label: str | None = None,
              capacity_wh: float = 0.05, low_frac: float = 0.4,
              low_wh_per_hour: float = 0.005) -> dict:
     hours = task_hours + tail_hours
@@ -123,7 +124,8 @@ def one_seed(seed: int, task_hours: float, tail_hours: float,
         pol = build_policy(arm)
     inst = Instance(nodes, truth, seed=seed, policy=pol,
                     send_contract_fields=contract, hold_every=hold_every,
-                    hold_s=hold_s, access_outage=acc)
+                    hold_s=hold_s, access_outage=acc, hold_op=hold_op,
+                    atomic_generation=atomic)
     inst.plane.uplink_p_arrive = uplink_p_arrive
     inst.plane.backhaul_p_good = backhaul_p_good
     for pth in inst.plane.paths:
@@ -144,9 +146,10 @@ def one_seed(seed: int, task_hours: float, tail_hours: float,
     return {
         "seed": seed,
         "arm": arm,
-        "exec_layer": "contract" if contract else "naive",
+        "exec_layer": exec_label or ("contract" if contract else "naive"),
         "hazard": {"hold_every": hold_every, "hold_s": hold_s},
         "intent_mismatch_s": inst.intent_mismatch_s(int(hours)),
+        "mixed_config_s": inst.mixed_config_ticks,
         "command_counters": dict(inst.counters),
         "deployment": dep.summary(),
         "n_obligations": res["n_obligations"],
@@ -178,6 +181,8 @@ def main() -> None:
     ap.add_argument("--hold-every", type=int, default=0,
                     help="每 k 条下发扣留一条；0 表示不扣留")
     ap.add_argument("--hold-s", type=int, default=0)
+    ap.add_argument("--hold-op", default=None,
+                    help="只扣留某一类字段命令，用于构造跨代混配（例如 set_sampling_interval）")
     ap.add_argument("--harvest-wh-per-hour", type=float, default=0.05)
     ap.add_argument("--harvest-mode", default="uniform", choices=["uniform", "hetero"])
     ap.add_argument("--capacity-wh", type=float, default=0.05)
@@ -209,9 +214,13 @@ def main() -> None:
         if a not in ARMS and a != "clairvoyant_static":
             raise SystemExit(f"unknown arm {a!r}; have {sorted(ARMS)} + clairvoyant_static")
     layers = [x.strip() for x in args.exec_layers.split(",") if x.strip()]
+    for L in layers:
+        if L not in ("naive", "contract", "atomic"):
+            raise SystemExit(f"unknown exec layer {L!r}; have naive/contract/atomic")
     runs = [one_seed(s, args.task_hours, args.tail_hours,
                      args.outage_start_h, args.outage_hours, a,
-                     contract=(L == "contract"), hold_every=args.hold_every,
+                     contract=(L in ("contract", "atomic")), hold_every=args.hold_every,
+                     atomic=(L == "atomic"), exec_label=L,
                      hold_s=args.hold_s, harvest_wh_per_hour=args.harvest_wh_per_hour,
                      sample_interval_s=args.sample_interval_s,
                      uplink_p_arrive=args.uplink_p_arrive,
@@ -225,7 +234,8 @@ def main() -> None:
                      blackout_start_h=args.blackout_start_h,
                      blackout_frac=args.blackout_frac,
                      soc_max_age_s=args.soc_max_age_s, soc_noise_wh=args.soc_noise_wh,
-                     soc_bias=args.soc_bias, soc_loss_p=args.soc_loss_p)
+                     soc_bias=args.soc_bias, soc_loss_p=args.soc_loss_p,
+                     hold_op=args.hold_op)
             for a in arm_names for L in layers for s in range(args.seeds)]
 
     # 聚合：**按臂分组**。分母类用求和天然是整数，时延与比率类用逐种子均值。
@@ -252,6 +262,7 @@ def main() -> None:
             "commands_refused": mean([r["command_counters"]["commands_refused"] for r in rs]),
             "censored": mean([r["observation_window"]["censored_total"] for r in rs]),
             "intent_mismatch_min": mean([r["intent_mismatch_s"] / 60.0 for r in rs]),
+            "mixed_config_min": mean([r["mixed_config_s"] / 60.0 for r in rs]),
             "dead_nodes_end": mean([sum(1 for v in r["energy"]["per_node"].values()
                                         if v["dead_at_s"] is not None) for r in rs]),
             "deficit_h": mean([sum(v["deficit_s"] for v in r["energy"]["per_node"].values())
@@ -298,7 +309,7 @@ def main() -> None:
     print(f"实例读数（{args.seeds} 种子/臂，义务 {args.task_hours}h + 尾部 {args.tail_hours}h）")
     print("=" * 96)
     hdr = (f"{'arm':<18} {'周期交付':>9} {'缺采':>5} {'缺送':>6} {'AoI s':>7} "
-           f"{'事件采集':>8} {'事件交付':>8} {'上行':>6} {'下行试':>6} {'死节点':>6} {'缺电h':>6}")
+           f"{'事件采集':>8} {'事件交付':>8} {'上行':>6} {'下行试':>6} {'死节点':>6} {'混配min':>8}")
     print(hdr)
     print("-" * 96)
     for a in agg["arms"]:
@@ -307,7 +318,7 @@ def main() -> None:
               f"{x['routine_missing_delivery']:>6.1f} {x['routine_aoi_mean_s']:>7.0f} "
               f"{x['event_match']:>8.1f} {x['event_delivered']:>8.1f} "
               f"{x['uplinks']:>6.1f} {x['downlink_attempts']:>6.1f} "
-              f"{x['dead_nodes_end']:>6.1f} {x['deficit_h']:>6.1f}")
+              f"{x['dead_nodes_end']:>6.1f} {x['mixed_config_min']:>8.0f}")
     print("=" * 96)
     if args.outage_hours > 0:
         print("恢复分列（中断窗内 + 固定恢复观察期）")
