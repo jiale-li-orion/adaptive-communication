@@ -77,3 +77,4 @@ code/
 **参数带证据层。** 系统模型中的每个参数标 M（实测）、S（标准模型）、F（拟合）、A（假定）。A 层必须做敏感性扫描，不能当作实测值报告。
 
 **确定性优先。** 故障类的验证用定向构造而非随机命中；实验用固定种子，可复现。
+- `analysis/regime_map.py`：**两轴结构判据**（`C = T_report/T_deadline` 与 `R = P(T_ctrl > T_harm)`）。`T_ctrl` 生存曲线由两态链吸收式 DP 精确算出、`T_harm^worst` 手算可核。`--selftest` 手算核对、`--blind` 盲测。见 `docs/s7-method/instance-v1/21-...`
