@@ -4052,3 +4052,62 @@ LLM 跑的是 **1 个种子**（协议 `env_seed=0`），而我一直在用 **3 
 
 **这是 A′ 这条线的最后一个可执行步骤。** 进一步要么改目标（已否 C′、暂缓 B′），
 要么接受"在这个目标+这个模型下，真实 LLM 不产生动作"这一实测事实并如实记录。
+
+---
+
+## §7.104 用户复核认定 **v3 = instrument invalid**（不是 gate failed）；v4 修完两处语义漂移，**闸门通过**
+
+**用户的两条指认我全部接受，并确认是我的错**：
+
+1. **`pending_effect` 被覆盖**。冻结协议写的是 `pending_effect_source = CenterView.in_flight`
+   （= 网关队列里真的有一条动作在路上）。代码一开始也写对了
+   （`bool(nid in view.in_flight)`），**是我的 A′ 块把它改成了 `desired != confirmed`**。
+   两者的语义完全不同：
+   - `desired=900, confirmed=3600, pending=false` ⇒ **「我想改成 900，现在还没人去改」**
+   - `desired=900, confirmed=3600, pending=true` ⇒ **「已有一个动作在路上，暂时没确认」**
+
+   ⇒ **把"还没人去做"标成"已经有人在处理"，等于从第一秒起就告诉模型这件事有人在管**——
+   **系统性制造 noop**。而 200/200 noop 恰恰是**一个 pending-aware controller 该做的事**，
+   所以它**不能**证明模型保守。**是仪器在替模型回答。**
+2. **`aoi_s` 用 `soc_age_s` 冒充**。协议要求与 `AoiPolicy` 同源，而代码取的是电量证据年龄
+   ⇒ **target function 的输入根本不是同一个量**，"AoI-matched"名不副实。
+
+**用户裁决**：v3 判 **instrument invalid**（不是 gate failed）；**不改 1000-token 上限**（783 已在预算内）、
+**不开 B′/C′**；新建 v4 **只修协议—实现一致性**，然后重跑同一个 200-epoch gate。
+
+### v4（`sha256=5e36b7b1264f93e7`，`derives_from` v3），只改六处
+
+`aoi_s = view.aoi_s(nid)`（与 `AoiPolicy` 同源）；`desired_target` 只由该 aoi 算（常量取自
+`C.AoiPolicy()` 实例，不硬编码）；`confirmed_target = view.known_report_period(nid)`；
+**`pending_effect = nid in view.in_flight` 且永不被覆盖**；**删掉 `pending_age_s`**（取不到真实未决起点
+就不许用 mismatch age 代替）；`soc_evidence_age_s` 明确为**电量证据**年龄并与 AoI 分开。
+
+**另加三条语义不变量**（用户要求，且在花 API 钱之前跑）：
+`aoi_s == view.aoi_s(node)`、`pending_effect == (node in view.in_flight)`、
+`desired_target == target_fn(aoi_s)`。桩对象验证：`n00`（aoi 5000）⇒ `pending=false` 且**需要动作**；
+`n01`（在 `in_flight`）⇒ **不计入 need_action**；`n02`（aoi 100、confirmed 900）⇒ 无需动作。
+
+### v4 闸门结果（`adm_noout × seed0 × 200 epoch`，340 s）
+
+| 量 | 值 |
+|---|---|
+| **`need_action_epochs`**（desired≠confirmed 且**无** pending） | **200 / 200** |
+| **`actions`** | **`{'noop': 196, 'set_report_period': 4}`** |
+| **① `target agreement`** | **4 一致 / 0 不一致** ⇒ **正常** ✓ |
+| **② `semantic episodes`** | **4**（closed 3）⇒ **非零** ✓ |
+| **`same-target unresolved replan`** | **0** |
+| `amp_intents` / `amp_invocations` | **1.0** / 50.0 |
+| service / AoI | 161.0 / 168 ；3426 s |
+| 解析失败 | 0 |
+
+**⇒ 两项闸门判据都通过。**
+
+**这是本线第一次拿到干净的答案**：
+
+> **在 200/200 个 epoch 里都存在"确实是 desired≠confirmed 且没有任何 pending 动作"的节点，
+> 而真实 LLM 只动了 4 次；这 4 次目标全对（4/4 一致、0 不一致），
+> 且 `same-target unresolved replan = 0`——它从未在 unresolved 状态下对同一 target 重新规划。**
+
+⇒ **`amplification = 1.0`：一个 semantic episode 恰好一个 intent。**
+按用户给的判据，**"同 target 在 unresolved 下自然产生重复 planning"没有发生**
+⇒ **真实 LLM 没有把 transport 失败变成新的 planning problem**；这条线可以收。

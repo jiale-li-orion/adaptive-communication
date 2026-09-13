@@ -52,7 +52,7 @@ from episode_lifecycle import episodes                  # noqa: E402
 # 为什么这样写：文档与实跑两处各写一份必然漂移（本 repo 反复栽在"同一件事两处写法不一致"）。
 # 所以代码**不复制**协议里的任何字符串；并且把协议哈希记进每个结果，事后可核对跑的是哪一版。
 import hashlib
-PROTOCOL_ID = os.environ.get("LLM_PROTOCOL", "llm_naive_v3")
+PROTOCOL_ID = os.environ.get("LLM_PROTOCOL", "llm_naive_v4")
 PROTOCOL_PATH = os.path.join(_HERE, "..", "protocols", f"{PROTOCOL_ID}.json")
 _PROTO_BYTES = open(PROTOCOL_PATH, "rb").read()
 PROTOCOL_SHA = hashlib.sha256(_PROTO_BYTES).hexdigest()
@@ -120,8 +120,23 @@ class Budget:
         self.out_tok += out_tok
 
 
-#: 每个节点"desired 与 confirmed 不一致"从什么时候开始（用来算 `pending_age_s`）。
-_penda: dict = {}
+def target_fn(aoi, pol=None):
+    """**与 `AoiPolicy` 同源的 target function**（常量取自该策略实例，不硬编码）：
+    `aoi is None or aoi > stale_s` ⇒ `fast_s`，否则 `slow_s`。"""
+    pol = pol or C.AoiPolicy()
+    return pol.fast_s if (aoi is None or aoi > pol.stale_s) else pol.slow_s
+
+
+def state_invariants(st: dict, view) -> None:
+    """**三条状态不变量**。v3 的错在「所有键名/token/JSON 都对，但变量代表什么漂了」——
+    常规体检全绿，所以必须用**语义断言**钉住。**花 API 钱之前先跑它。**"""
+    for _n in st.get("nodes", ()):
+        _nid = _n["id"]
+        assert _n["aoi_s"] == view.aoi_s(_nid), "aoi_s 必须与 view.aoi_s 同源: " + _nid
+        assert _n["pending_effect"] == (_nid in view.in_flight), \
+            "pending_effect 必须只来自 in_flight: " + _nid
+        assert _n["desired_target"] == target_fn(_n["aoi_s"]), \
+            "desired_target 必须只由 aoi_s 决定: " + _nid
 
 
 def brief(view, max_nodes: int | None = None) -> dict:
@@ -154,23 +169,24 @@ def brief(view, max_nodes: int | None = None) -> dict:
     # **A′/v3：外部规则产生 desired target**（与 `AoiPolicy` 的 target function 相同），
     # 只把**事实**交给 LLM：desired / confirmed / pending / pending_age / AoI / evidence_age。
     # **不写任何"该不该重发"的提示**——那正是要观察的行为。
+    _pol = C.AoiPolicy()
     for _n in nodes:
-        a = _n.get("soc_age_s")
-        _n["aoi_s"] = a
-        _n["desired_target"] = 300 if (a is None or a > 3600) else 900
-        # **v3 的 pending 语义 = desired 与 confirmed 不一致**（比 `in_flight` 更贴 target contract），
-        # 并在 `brief()` 内维护 pending_age，**不依赖外部调用点**（上一轮就是因为找不到调用点锚点而整次没写盘）。
-        _conf = _n.get("report_period")
-        # ⚠ **键名必须与 system prompt 一致**：prompt 里说的是 `confirmed_target`，
-        # 而状态原先只有 `report_period` ⇒ **模型被指向一个不存在的键**（仪器缺陷，已修）。
-        _n["confirmed_target"] = _conf
-        _n["pending_effect"] = (_conf is not None and _conf != _n["desired_target"])
-        if _n["pending_effect"]:
-            _penda.setdefault(_n["id"], view.t_s)
-            _n["pending_age_s"] = view.t_s - _penda[_n["id"]]
-        else:
-            _penda.pop(_n["id"], None)
-            _n["pending_age_s"] = None
+        _nid = _n["id"]
+        # ① AoI **与 AoiPolicy 同源**（`view.aoi_s`）；**不再用 `soc_age_s` 冒充**
+        _a = view.aoi_s(_nid)
+        _n["aoi_s"] = _a
+        # ② desired 只由该 aoi 决定，常量取自同一策略实例
+        _n["desired_target"] = target_fn(_a, _pol)
+        # ③ confirmed 用 `known_report_period`（中心已确认的上报周期）
+        _n["confirmed_target"] = view.known_report_period(_nid)
+        # ④ **`pending_effect` 只取 `in_flight`，此后永不被覆盖**。v3 把它改成
+        #    `desired != confirmed`，等于把「还没人去做」标成「已经有人在处理」，
+        #    **系统性制造 noop** —— 这是 v3 判 instrument invalid 的首要原因。
+        _n["pending_effect"] = _nid in view.in_flight
+        # ⑤ `pending_age_s` **删掉**（取不到真实未决起点就不许用 mismatch age 代替）
+        _n.pop("pending_age_s", None)
+        # ⑥ 证据年龄**明确是电量证据**的年龄，与 AoI 分开
+        _n["soc_evidence_age_s"] = view.soc_age_s(_nid)
     if "desired_target" in (STATE_SCHEMA.get("node_fields") or []):
         # **只发协议 `node_fields` 里列出的键。** 原先 v3 直接复用 v2 建好的节点字典
         # （11 个键）⇒ 单次输入实测 **1237 token > 协议上限 1000**，被预算闸门挡下。
@@ -254,7 +270,10 @@ class LLMNaiPolicy(C.CenterPolicy):
         self.agree = 0
         self.disagree = 0
         self.same_target_unresolved = 0
-        _penda.clear()
+        #: **`need_action_epochs`** = `count(desired != confirmed and pending == false)`。
+        #: 判据的核心量：只有它 > 0，"LLM 仍不动手"才是干净的 conservative-agent observation。
+        #: 注意 `confirmed is None`（从未听到）**也满足** `desired != confirmed`，按用户给的式子照此计入。
+        self.need_action_epochs = 0
         self.stale_epochs = 0
         self.stale_max = 0
         self.unseen_epochs = 0
@@ -263,6 +282,10 @@ class LLMNaiPolicy(C.CenterPolicy):
         if self.call_limit is not None and self.budget.calls >= self.call_limit:
             return []                                   # 惰性：不再发请求（也不伪造动作）
         st = brief(view)
+        state_invariants(st, view)          # **语义不变量：花 API 钱之前先钉住**
+        if any((_n.get("confirmed_target") != _n.get("desired_target")
+                and not _n.get("pending_effect")) for _n in st["nodes"]):
+            self.need_action_epochs += 1
         _stale = [n_ for n_ in st["nodes"] if n_.get("seen")
                   and (n_.get("last_heard_age_s") or 0) > OBLIGATION_S]
         _unseen = [n_ for n_ in st["nodes"] if not n_.get("seen")]
@@ -372,6 +395,7 @@ def run(tag: str, seed: int, budget: Budget, call_limit: int | None = None) -> d
             "actions": pol.actions, "noop": pol.noop, "bad": pol.bad,
             "rejects": pol.rejects, "raw_sample": pol.raw_sample,
             "overdue_epochs": pol.overdue_epochs, "overdue_max": pol.overdue_max,
+            "need_action_epochs": pol.need_action_epochs,
             "agree": pol.agree, "disagree": pol.disagree,
             "same_target_unresolved": pol.same_target_unresolved,
             "stale_epochs": pol.stale_epochs, "stale_max": pol.stale_max,
@@ -439,6 +463,8 @@ def main() -> int:
         print(f"  actions = {r['actions']}；noop={r['noop']}；解析失败={r['bad']}")
         print(f"  **未下达动作的原因分类 = {r['rejects']}**")
         print(f"  原始输出采样 = {r['raw_sample']}")
+        print("  **need_action_epochs（desired != confirmed 且无 pending）= "
+              + str(r["need_action_epochs"]) + "**")
         print("  **target agreement = " + str(r["agree"]) + " 次一致 / "
               + str(r["disagree"]) + " 次不一致**；**same-target unresolved replan = "
               + str(r["same_target_unresolved"]) + " 次**")
