@@ -106,7 +106,9 @@
 
 | # | 交付 | 状态 |
 |---|---|---|
-| 1 | 更新后的审查报告 + JSONL 时间线 + 重放命令 | 机制纠正与时间线见 `17-gate-0-1h-mechanism-closure-2026-09-13.md`；重放命令 `python3 code/analysis/trace_seed_timeline.py --tag contcfg_b1.0_out3 --seed 7 --arm ea_nb`（与登记行逐字段一致后才采信） |
+| 1 | 更新后的审查报告 + JSONL 时间线 + 重放命令 | 机制纠正与时间线见 `17-gate-0-1h-mechanism-closure-2026-09-13.md`。**JSONL 已落盘**：`evidence/seed7-n02-out3-timeline.jsonl`（**11 047 条事件**，逐事件 `[t_s, node, kind, ...]`，kind ∈ `state`/`plan`/`applied`）。**重放命令**：
+`python3 code/analysis/trace_seed_timeline.py --tag contcfg_b1.0_out3 --seed 7 --arm ea_nb --node n02 --dump <路径>`
+该命令先做两项自检（**与登记行逐字段一致**、**开 trace 后逐字段相同**），任一不通过就**非零退出**——本次两条都是 `True` 才采信时间线 |
 | 2 | 一页方法规格 | `18-method-spec-continuous-config-admission-2026-09-13.md` |
 | 3 | 同版本开发/留出结果表 + 逐种子 JSON | **开发**：本文 §一（`instance_adm_{noout,out0,out3}.json`，10 种子）；**留出：未做**（见下） |
 | 4 | 拒绝介入的代价说明 | §二。**"被拒但原本有益"标为未识别**——那需要配对的反事实回放，本轮没做；**仅凭被拒数不能算误拒率** |
