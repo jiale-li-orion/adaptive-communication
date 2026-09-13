@@ -50,7 +50,7 @@ def one_seed(seed: int, task_hours: float, tail_hours: float,
              hold_every: int = 0, hold_s: int = 0,
              harvest_wh_per_hour: float = 3.0, sample_interval_s: int = 3600,
              report_period_s: int = 3600, routine_period_s: int = 3600,
-             with_events: bool = True,
+             with_events: bool = True, trace: bool = False,
              uplink_p_arrive: float = 0.74, backhaul_p_good: float = 0.62,
              event_spacing_s: int = 300, harvest_mode: str = "uniform",
              access_outage_h: float = 0.0, access_outage_start_h: float = 4.0,
@@ -222,7 +222,7 @@ def one_seed(seed: int, task_hours: float, tail_hours: float,
                     atomic_generation=atomic,
                     burst_p_gb=burst_p_gb, burst_p_bg=burst_p_bg,
                     uplink_burst_p_gb=uplink_burst_p_gb,
-                    uplink_burst_p_bg=uplink_burst_p_bg)
+                    uplink_burst_p_bg=uplink_burst_p_bg, trace=trace)
     inst.plane.uplink_p_arrive = uplink_p_arrive
     inst.plane.backhaul_p_good = backhaul_p_good
     for pth in inst.plane.paths:
@@ -279,6 +279,8 @@ def one_seed(seed: int, task_hours: float, tail_hours: float,
         "access_blocked": inst.access_blocked,
         "observation_window": res["observation_window"],
         "not_applicable": res["not_applicable"],
+        #: **只在 `trace=True` 时非空**。逐事件时间线属于诊断产物，不进结果文件的常规列。
+        **({"_trace": inst.trace_events} if trace else {}),
     }
 
 

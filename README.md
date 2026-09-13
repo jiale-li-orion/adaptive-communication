@@ -28,6 +28,7 @@
 > - **两条论文级 finding 可独立引用**：相位锁定抽样、以及**中心 AoI 实现缺陷**
 >   （按采集时刻而非接收时刻推进，见 §6.22）——后者是"先证明坐标轴会动、再拿它下结论"的又一个实例。
 > - **收盘解析**：[`09-phase2-synthesis-2026-09-13.md`](docs/s7-method/instance-v1/09-phase2-synthesis-2026-09-13.md)
+> - **候选核验（持续配置的资源约束）**：[`15-continuous-config-verification-2026-09-13.md`](docs/s7-method/instance-v1/15-continuous-config-verification-2026-09-13.md)
 > - **两阶段总汇总（含全部交付物清单与"被推翻的旧结论"）**：[`12-two-phase-summary-2026-09-13.md`](docs/s7-method/instance-v1/12-two-phase-summary-2026-09-13.md)
 > - **过期章节（方法／结果／旧业务口径）**：[`docs/早期状态/`](docs/早期状态/README.md) —— 迁出不是删除，**但不得作为证据引用**
 > - **历史过程、被推翻的读数、逐轮审计**：[`docs/s8-report/progress-log.md`](docs/s8-report/progress-log.md)

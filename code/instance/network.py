@@ -431,7 +431,8 @@ class Instance:
                  send_contract_fields: bool = False,
                  hold_every: int = 0, hold_s: int = 0, hold_op: str | None = None,
                  atomic_generation: bool = False,
-                 access_outage: tuple[int, int] | None = None) -> None:
+                 access_outage: tuple[int, int] | None = None,
+                 trace: bool = False) -> None:
         # 节点是**每次运行的状态**：缓存与传递台账都属于这一次运行。把同一批节点交给两个
         # Instance 会在第二次运行里看到上一次残留的缓存，而 `sample_id` 是按时刻命名的，
         # 于是旧样本会被当成新样本发出去——静默混合两次运行。**响亮地失败，不要静默。**
@@ -502,6 +503,12 @@ class Instance:
             "sent": {"unknown_state": 0, "target_change": 0, "resend": 0},
         }
         self._target_of: dict[str, tuple] = {}
+        #: **逐事件时间线（默认关闭）。** 打开时记下"中心看到什么 → 下了什么 → 节点何时真的生效
+        #: → 节点当时在跑什么配置/还剩多少电"。**结果文件只存聚合量，存不下这条链**，
+        #: 而"配置生效之后持续耗电"这类问题只有把链连起来才答得上。
+        #: 关闭时**一个字节都不记**，所以带 trace 的运行必须与登记的结果逐位相同（已核）。
+        self.trace = trace
+        self.trace_events: list[tuple] = []
         #: 最近一次为某节点生成的意图属于哪一类，供 `_send_command` 记 **sent 侧**的成本。
         self._last_reason: dict[str, str] = {}
         #: 状态观测模型，由 runner 注入。默认完美观测。
@@ -522,11 +529,20 @@ class Instance:
                 self.log.samples[sample.sample_id] = sample
                 self.log.transit[sample.sample_id] = node.transit[sample.sample_id]
                 counters["sampled"] += 1
+            if self.trace:
+                # 节点侧**此刻真实在跑什么**：两个周期字段、真实电量、是否还活着。
+                self.trace_events.append(
+                    (t_s, node.node_id, "state", node.sample_interval_s,
+                     node.report_period_s, round(node.soc_wh, 8), node.alive))
 
         # 1.5) 中心按**它自己看得见的东西**决定要不要下发。命令经回传进网关队列，等接收窗口。
         view = self._center_view(t_s)
         for node_id, payload in self.policy.plan(view):
             self._note_intent_reason(node_id, payload, view)
+            if self.trace:
+                self.trace_events.append(
+                    (t_s, node_id, "plan", view.soc_of(node_id), payload.get("op"),
+                     payload.get("period_s", payload.get("interval_s"))))
             self._send_command(node_id, payload, t_s)
 
         # 2) 到上报周期的节点发一批（缓存里全是未确认记录 → 自动补发）
@@ -814,6 +830,10 @@ class Instance:
             if want <= set(slot):
                 for f in sorted(want):
                     self._apply_field(node, slot[f], gen)
+                    if self.trace:
+                        self.trace_events.append(
+                            (t_s, node.node_id, "applied", f,
+                             slot[f].get("period_s", slot[f].get("interval_s"))))
                 node.config_generation = int(gen)
                 node.pending_fields = {k: v for k, v in node.pending_fields.items()
                                        if k > int(gen)}
@@ -821,6 +841,10 @@ class Instance:
             return
         if self._apply_field(node, payload, gen):
             self.counters["commands_delivered"] += 1
+            if self.trace:
+                self.trace_events.append(
+                    (t_s, node.node_id, "applied", payload.get("op"),
+                     payload.get("period_s", payload.get("interval_s"))))
 
     def _note_write(self, want, current) -> None:
         """**动作准入计数**：这次写入到底改变了什么。

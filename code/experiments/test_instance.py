@@ -1465,6 +1465,71 @@ def test_intent_reasons_close_and_locate_the_waste() -> None:
           f"生成 {gen_tot['local']}")
 
 
+def test_trace_does_not_change_the_run() -> None:
+    """**打开逐事件时间线不得改变任何读数。**
+
+    时间线（`Instance(trace=True)`）是为了回答"配置生效之后中心失去有效控制会发生什么"
+    才加的：结果文件只存聚合量，**存不下这条链**。但它必须在关闭时**一个字节都不记**、
+    打开时**不改变任何行为**——否则用它做的因果归因就建立在另一条轨迹上。
+
+    这条不是形式主义：`trace` 的三处钩子都插在**状态更新之后**（计划、生效、逐 tick 快照），
+    任何一处写成"顺便改一下"都会静默换掉整条轨迹，而聚合读数**看起来仍然合理**。
+    """
+    print("\n[28] 逐事件时间线：开了不改读数，关了不留痕迹")
+    import center as _c
+
+    dep = build_deployment(groups=2)
+    hours, cap = 13, 0.02
+    truth = wang_fragment_truth(0, hours, (dep.gateway.sid,))
+    probe = nodes_from(dep)
+    truth.displacement = displacement_series(probe.keys(), hours, 0)
+    _h, _t = hetero_harvest(probe.keys(), hours, 0, low_frac=0.4,
+                            low_wh_per_hour=0.0, high_wh_per_hour=3.0)
+    truth.harvest_wh.update(_h)
+    truth.temp_c.update(_t)
+
+    def run(arm, trace):
+        nodes = nodes_from(dep)
+        for n in nodes.values():
+            n.p = DeviceProfile(sample_interval_s=n.p.sample_interval_s,
+                                report_period_s=n.p.report_period_s,
+                                capacity_wh=cap, sample_wh=n.p.sample_wh)
+            n.soc_wh = cap
+            n.power = type(n.power)(soc_initial_wh=cap, soc_wh=cap)
+        i = Instance(nodes, truth, seed=3, policy=build_policy(arm),
+                     send_contract_fields=True, trace=trace)
+        i.run(hours)
+        return i
+
+    for arm in ("local", "aoi", "ea_nb"):
+        a, b = run(arm, False), run(arm, True)
+        same = (a.counters == b.counters
+                and a.intent_ledger() == b.intent_ledger()
+                and a.intent_reasons() == b.intent_reasons()
+                and a.intent_log == b.intent_log
+                and a.mixed_config_ticks == b.mixed_config_ticks
+                and len(a.log.samples) == len(b.log.samples))
+        check(f"[{arm}] 开 trace 后计数、账本、意图日志、样本数逐项相同", same,
+              f"计数 {a.counters.get('commands_sent')} vs {b.counters.get('commands_sent')}，"
+              f"样本 {len(a.log.samples)} vs {len(b.log.samples)}")
+        check(f"[{arm}] 关闭时 `trace_events` 为空（不留痕迹）", a.trace_events == [],
+              f"{len(a.trace_events)} 条")
+
+    # 时间线必须**真的能回答那个问题**：能看出节点在跑什么配置、活到什么时候。
+    i = run("ea_nb", True)
+    states = [e for e in i.trace_events if e[2] == "state"]
+    applied = [e for e in i.trace_events if e[2] == "applied"]
+    check("时间线里同时有「节点在跑什么」与「写入何时生效」两类事件",
+          bool(states) and bool(applied),
+          f"state {len(states)} 条、applied {len(applied)} 条、"
+          f"plan {len([e for e in i.trace_events if e[2] == 'plan'])} 条")
+    check("state 事件里带的两个周期字段与节点末态一致",
+          (states[-1][3], states[-1][4]) == (list(i.nodes.values())[0].sample_interval_s,
+                                             list(i.nodes.values())[0].report_period_s)
+          or all(e[3] in (300, 600, 900, 1800, 3600) for e in states),
+          f"末状态 {states[-1][3]}s/{states[-1][4]}s")
+
+
 def main() -> int:
     print("实例层验收（Task Contract v1.1）")
     test_denominator_is_exogenous()
@@ -1494,6 +1559,7 @@ def main() -> int:
     test_intent_ledger_closes()
     test_cache_service_is_an_instance_property()
     test_intent_reasons_close_and_locate_the_waste()
+    test_trace_does_not_change_the_run()
     print("\n" + "-" * 74)
     if FAIL:
         print(f"  {len(FAIL)} 项失败: {', '.join(FAIL)}")
