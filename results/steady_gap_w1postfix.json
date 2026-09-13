@@ -1,0 +1,734 @@
+{
+  "config": {
+    "seeds": 20,
+    "hours": 72,
+    "tag": "w1postfix",
+    "arms": "ours,ours W1 off,rule__contract",
+    "json_out": "",
+    "downlink_per_uplink": 1
+  },
+  "measures": [
+    "coverage",
+    "observation_gap",
+    "downlink_attempts",
+    "risk_coverage",
+    "risk_open_wrong",
+    "switch_on_delay_min",
+    "config_mismatch_min"
+  ],
+  "scenario": {
+    "trajectory": "none",
+    "paths": [
+      [
+        "backhaul",
+        0.62
+      ]
+    ],
+    "runtime_paths": [
+      0
+    ],
+    "energy": true,
+    "downlink_per_uplink": 1
+  },
+  "results": [
+    {
+      "arm": "ours",
+      "note": "monolithic runtime, every default",
+      "per_seed": [
+        {
+          "coverage": 87.20930232558139,
+          "observation_gap": 0.0,
+          "downlink_attempts": 764.0,
+          "risk_coverage": 80.90277777777779,
+          "config_mismatch_min": 9514.0,
+          "demands": 430,
+          "covered": 375,
+          "risk_open_wrong": 25.0,
+          "switch_on_delay_min": 134.375
+        },
+        {
+          "coverage": 97.67441860465115,
+          "observation_gap": 0.0,
+          "downlink_attempts": 505.0,
+          "risk_coverage": 96.875,
+          "config_mismatch_min": 5844.0,
+          "demands": 430,
+          "covered": 420,
+          "risk_open_wrong": 4.861111111111111,
+          "switch_on_delay_min": 40.46875
+        },
+        {
+          "coverage": 97.90697674418605,
+          "observation_gap": 0.0,
+          "downlink_attempts": 787.0,
+          "risk_coverage": 96.875,
+          "config_mismatch_min": 3469.0,
+          "demands": 430,
+          "covered": 421,
+          "risk_open_wrong": 4.861111111111111,
+          "switch_on_delay_min": 44.21875
+        },
+        {
+          "coverage": 100.0,
+          "observation_gap": 0.0,
+          "downlink_attempts": 800.0,
+          "risk_coverage": 100.0,
+          "config_mismatch_min": 3939.0,
+          "demands": 430,
+          "covered": 430,
+          "risk_open_wrong": 0.3472222222222222,
+          "switch_on_delay_min": 22.96875
+        },
+        {
+          "coverage": 89.06976744186046,
+          "observation_gap": 10.46875,
+          "downlink_attempts": 532.0,
+          "risk_coverage": 84.02777777777779,
+          "config_mismatch_min": 4555.0,
+          "demands": 430,
+          "covered": 383,
+          "risk_open_wrong": 20.833333333333332,
+          "switch_on_delay_min": 118.59375
+        },
+        {
+          "coverage": 89.30232558139535,
+          "observation_gap": 10.01736111111111,
+          "downlink_attempts": 421.0,
+          "risk_coverage": 84.375,
+          "config_mismatch_min": 4447.0,
+          "demands": 430,
+          "covered": 384,
+          "risk_open_wrong": 21.180555555555557,
+          "switch_on_delay_min": 114.84375
+        },
+        {
+          "coverage": 99.76744186046511,
+          "observation_gap": 0.0,
+          "downlink_attempts": 698.0,
+          "risk_coverage": 99.65277777777779,
+          "config_mismatch_min": 4844.0,
+          "demands": 430,
+          "covered": 429,
+          "risk_open_wrong": 0.3472222222222222,
+          "switch_on_delay_min": 33.125
+        },
+        {
+          "coverage": 100.0,
+          "observation_gap": 0.0,
+          "downlink_attempts": 803.0,
+          "risk_coverage": 100.0,
+          "config_mismatch_min": 2434.0,
+          "demands": 430,
+          "covered": 430,
+          "risk_open_wrong": 0.0,
+          "switch_on_delay_min": 36.5625
+        },
+        {
+          "coverage": 81.62790697674419,
+          "observation_gap": 7.326388888888889,
+          "downlink_attempts": 382.0,
+          "risk_coverage": 72.56944444444444,
+          "config_mismatch_min": 7542.0,
+          "demands": 430,
+          "covered": 351,
+          "risk_open_wrong": 34.72222222222222,
+          "switch_on_delay_min": 151.25
+        },
+        {
+          "coverage": 97.44186046511628,
+          "observation_gap": 0.0,
+          "downlink_attempts": 737.0,
+          "risk_coverage": 96.18055555555556,
+          "config_mismatch_min": 6434.0,
+          "demands": 430,
+          "covered": 419,
+          "risk_open_wrong": 4.166666666666667,
+          "switch_on_delay_min": 46.71875
+        },
+        {
+          "coverage": 91.62790697674419,
+          "observation_gap": 7.569444444444444,
+          "downlink_attempts": 608.0,
+          "risk_coverage": 87.5,
+          "config_mismatch_min": 4764.0,
+          "demands": 430,
+          "covered": 394,
+          "risk_open_wrong": 17.01388888888889,
+          "switch_on_delay_min": 108.75
+        },
+        {
+          "coverage": 92.79069767441861,
+          "observation_gap": 3.5937499999999996,
+          "downlink_attempts": 565.0,
+          "risk_coverage": 89.23611111111111,
+          "config_mismatch_min": 5387.0,
+          "demands": 430,
+          "covered": 399,
+          "risk_open_wrong": 18.40277777777778,
+          "switch_on_delay_min": 100.625
+        },
+        {
+          "coverage": 99.30232558139535,
+          "observation_gap": 0.0,
+          "downlink_attempts": 562.0,
+          "risk_coverage": 98.95833333333334,
+          "config_mismatch_min": 2819.0,
+          "demands": 430,
+          "covered": 427,
+          "risk_open_wrong": 0.0,
+          "switch_on_delay_min": 37.96875
+        },
+        {
+          "coverage": 97.90697674418605,
+          "observation_gap": 0.0,
+          "downlink_attempts": 915.0,
+          "risk_coverage": 96.875,
+          "config_mismatch_min": 5274.0,
+          "demands": 430,
+          "covered": 421,
+          "risk_open_wrong": 4.861111111111111,
+          "switch_on_delay_min": 40.0
+        },
+        {
+          "coverage": 100.0,
+          "observation_gap": 0.0,
+          "downlink_attempts": 713.0,
+          "risk_coverage": 100.0,
+          "config_mismatch_min": 3562.0,
+          "demands": 430,
+          "covered": 430,
+          "risk_open_wrong": 0.6944444444444444,
+          "switch_on_delay_min": 55.15625
+        },
+        {
+          "coverage": 100.0,
+          "observation_gap": 0.0,
+          "downlink_attempts": 480.0,
+          "risk_coverage": 100.0,
+          "config_mismatch_min": 3624.0,
+          "demands": 430,
+          "covered": 430,
+          "risk_open_wrong": 0.0,
+          "switch_on_delay_min": 25.15625
+        },
+        {
+          "coverage": 96.27906976744185,
+          "observation_gap": 0.0,
+          "downlink_attempts": 549.0,
+          "risk_coverage": 94.44444444444444,
+          "config_mismatch_min": 4929.0,
+          "demands": 430,
+          "covered": 414,
+          "risk_open_wrong": 9.027777777777779,
+          "switch_on_delay_min": 65.0
+        },
+        {
+          "coverage": 75.81395348837209,
+          "observation_gap": 15.555555555555555,
+          "downlink_attempts": 441.0,
+          "risk_coverage": 63.888888888888886,
+          "config_mismatch_min": 8016.0,
+          "demands": 430,
+          "covered": 326,
+          "risk_open_wrong": 46.52777777777778,
+          "switch_on_delay_min": 195.625
+        },
+        {
+          "coverage": 96.97674418604652,
+          "observation_gap": 0.0,
+          "downlink_attempts": 613.0,
+          "risk_coverage": 95.83333333333334,
+          "config_mismatch_min": 6139.0,
+          "demands": 430,
+          "covered": 417,
+          "risk_open_wrong": 4.861111111111111,
+          "switch_on_delay_min": 45.625
+        },
+        {
+          "coverage": 100.0,
+          "observation_gap": 0.0,
+          "downlink_attempts": 703.0,
+          "risk_coverage": 100.0,
+          "config_mismatch_min": 2374.0,
+          "demands": 430,
+          "covered": 430,
+          "risk_open_wrong": 0.0,
+          "switch_on_delay_min": 26.40625
+        }
+      ],
+      "coverage": 94.53488372093022,
+      "observation_gap": 2.7265625,
+      "downlink_attempts": 628.9,
+      "risk_coverage": 91.90972222222221,
+      "risk_open_wrong": 10.885416666666666,
+      "switch_on_delay_min": 72.171875,
+      "config_mismatch_min": 4995.5
+    },
+    {
+      "arm": "ours W1 off",
+      "note": "ablation: never ask for a fresh measurement",
+      "per_seed": [
+        {
+          "coverage": 91.3953488372093,
+          "observation_gap": 0.0,
+          "downlink_attempts": 268.0,
+          "risk_coverage": 87.15277777777779,
+          "config_mismatch_min": 8752.0,
+          "demands": 430,
+          "covered": 393,
+          "risk_open_wrong": 17.36111111111111,
+          "switch_on_delay_min": 122.34375
+        },
+        {
+          "coverage": 97.90697674418605,
+          "observation_gap": 0.0,
+          "downlink_attempts": 337.0,
+          "risk_coverage": 96.875,
+          "config_mismatch_min": 6104.0,
+          "demands": 430,
+          "covered": 421,
+          "risk_open_wrong": 4.513888888888889,
+          "switch_on_delay_min": 40.625
+        },
+        {
+          "coverage": 95.5813953488372,
+          "observation_gap": 0.0,
+          "downlink_attempts": 252.0,
+          "risk_coverage": 93.40277777777779,
+          "config_mismatch_min": 2969.0,
+          "demands": 430,
+          "covered": 411,
+          "risk_open_wrong": 8.333333333333334,
+          "switch_on_delay_min": 40.0
+        },
+        {
+          "coverage": 100.0,
+          "observation_gap": 0.0,
+          "downlink_attempts": 335.0,
+          "risk_coverage": 100.0,
+          "config_mismatch_min": 3829.0,
+          "demands": 430,
+          "covered": 430,
+          "risk_open_wrong": 0.3472222222222222,
+          "switch_on_delay_min": 28.59375
+        },
+        {
+          "coverage": 89.30232558139535,
+          "observation_gap": 9.427083333333334,
+          "downlink_attempts": 378.0,
+          "risk_coverage": 84.375,
+          "config_mismatch_min": 3989.0,
+          "demands": 430,
+          "covered": 384,
+          "risk_open_wrong": 20.833333333333332,
+          "switch_on_delay_min": 105.0
+        },
+        {
+          "coverage": 89.30232558139535,
+          "observation_gap": 9.20138888888889,
+          "downlink_attempts": 276.0,
+          "risk_coverage": 84.02777777777779,
+          "config_mismatch_min": 4348.0,
+          "demands": 430,
+          "covered": 384,
+          "risk_open_wrong": 20.833333333333332,
+          "switch_on_delay_min": 109.6875
+        },
+        {
+          "coverage": 99.76744186046511,
+          "observation_gap": 0.0,
+          "downlink_attempts": 414.0,
+          "risk_coverage": 99.65277777777779,
+          "config_mismatch_min": 5274.0,
+          "demands": 430,
+          "covered": 429,
+          "risk_open_wrong": 0.6944444444444444,
+          "switch_on_delay_min": 40.0
+        },
+        {
+          "coverage": 100.0,
+          "observation_gap": 0.8420138888888888,
+          "downlink_attempts": 254.0,
+          "risk_coverage": 100.0,
+          "config_mismatch_min": 2062.0,
+          "demands": 430,
+          "covered": 430,
+          "risk_open_wrong": 0.0,
+          "switch_on_delay_min": 36.25
+        },
+        {
+          "coverage": 82.55813953488372,
+          "observation_gap": 5.538194444444445,
+          "downlink_attempts": 360.0,
+          "risk_coverage": 73.95833333333334,
+          "config_mismatch_min": 7287.0,
+          "demands": 430,
+          "covered": 355,
+          "risk_open_wrong": 34.02777777777778,
+          "switch_on_delay_min": 139.21875
+        },
+        {
+          "coverage": 97.90697674418605,
+          "observation_gap": 0.0,
+          "downlink_attempts": 291.0,
+          "risk_coverage": 96.875,
+          "config_mismatch_min": 6139.0,
+          "demands": 430,
+          "covered": 421,
+          "risk_open_wrong": 4.513888888888889,
+          "switch_on_delay_min": 49.375
+        },
+        {
+          "coverage": 91.16279069767442,
+          "observation_gap": 10.45138888888889,
+          "downlink_attempts": 197.0,
+          "risk_coverage": 87.5,
+          "config_mismatch_min": 3902.0,
+          "demands": 430,
+          "covered": 392,
+          "risk_open_wrong": 16.666666666666668,
+          "switch_on_delay_min": 108.28125
+        },
+        {
+          "coverage": 91.62790697674419,
+          "observation_gap": 3.4201388888888893,
+          "downlink_attempts": 376.0,
+          "risk_coverage": 87.84722222222221,
+          "config_mismatch_min": 5649.0,
+          "demands": 430,
+          "covered": 394,
+          "risk_open_wrong": 17.708333333333332,
+          "switch_on_delay_min": 103.90625
+        },
+        {
+          "coverage": 99.30232558139535,
+          "observation_gap": 0.0,
+          "downlink_attempts": 236.0,
+          "risk_coverage": 98.95833333333334,
+          "config_mismatch_min": 2804.0,
+          "demands": 430,
+          "covered": 427,
+          "risk_open_wrong": 0.0,
+          "switch_on_delay_min": 36.09375
+        },
+        {
+          "coverage": 97.90697674418605,
+          "observation_gap": 0.0,
+          "downlink_attempts": 321.0,
+          "risk_coverage": 96.875,
+          "config_mismatch_min": 4934.0,
+          "demands": 430,
+          "covered": 421,
+          "risk_open_wrong": 4.166666666666667,
+          "switch_on_delay_min": 30.625
+        },
+        {
+          "coverage": 94.88372093023256,
+          "observation_gap": 0.0,
+          "downlink_attempts": 333.0,
+          "risk_coverage": 92.70833333333334,
+          "config_mismatch_min": 3484.0,
+          "demands": 430,
+          "covered": 408,
+          "risk_open_wrong": 8.333333333333334,
+          "switch_on_delay_min": 51.25
+        },
+        {
+          "coverage": 100.0,
+          "observation_gap": 0.0,
+          "downlink_attempts": 344.0,
+          "risk_coverage": 100.0,
+          "config_mismatch_min": 3944.0,
+          "demands": 430,
+          "covered": 430,
+          "risk_open_wrong": 0.0,
+          "switch_on_delay_min": 23.59375
+        },
+        {
+          "coverage": 96.27906976744185,
+          "observation_gap": 0.0,
+          "downlink_attempts": 337.0,
+          "risk_coverage": 94.44444444444444,
+          "config_mismatch_min": 5079.0,
+          "demands": 430,
+          "covered": 414,
+          "risk_open_wrong": 9.027777777777779,
+          "switch_on_delay_min": 70.625
+        },
+        {
+          "coverage": 75.11627906976744,
+          "observation_gap": 11.42361111111111,
+          "downlink_attempts": 453.0,
+          "risk_coverage": 62.84722222222222,
+          "config_mismatch_min": 8640.0,
+          "demands": 430,
+          "covered": 323,
+          "risk_open_wrong": 50.69444444444444,
+          "switch_on_delay_min": 186.71875
+        },
+        {
+          "coverage": 100.0,
+          "observation_gap": 0.0,
+          "downlink_attempts": 368.0,
+          "risk_coverage": 100.0,
+          "config_mismatch_min": 6674.0,
+          "demands": 430,
+          "covered": 430,
+          "risk_open_wrong": 0.0,
+          "switch_on_delay_min": 54.375
+        },
+        {
+          "coverage": 97.44186046511628,
+          "observation_gap": 0.0,
+          "downlink_attempts": 345.0,
+          "risk_coverage": 96.52777777777779,
+          "config_mismatch_min": 3629.0,
+          "demands": 430,
+          "covered": 419,
+          "risk_open_wrong": 4.166666666666667,
+          "switch_on_delay_min": 32.8125
+        }
+      ],
+      "coverage": 94.37209302325581,
+      "observation_gap": 2.5151909722222223,
+      "downlink_attempts": 323.75,
+      "risk_coverage": 91.70138888888889,
+      "risk_open_wrong": 11.11111111111111,
+      "switch_on_delay_min": 70.46875,
+      "config_mismatch_min": 4974.6
+    },
+    {
+      "arm": "rule__contract",
+      "note": "composed runtime: RulePlanner + ContractRuntime",
+      "per_seed": [
+        {
+          "coverage": 84.88372093023256,
+          "observation_gap": 0.0,
+          "downlink_attempts": 943.0,
+          "risk_coverage": 77.43055555555556,
+          "config_mismatch_min": 9050.0,
+          "demands": 430,
+          "covered": 365,
+          "risk_open_wrong": 29.166666666666668,
+          "switch_on_delay_min": 135.0
+        },
+        {
+          "coverage": 97.67441860465115,
+          "observation_gap": 0.0,
+          "downlink_attempts": 717.0,
+          "risk_coverage": 96.52777777777779,
+          "config_mismatch_min": 6132.0,
+          "demands": 430,
+          "covered": 420,
+          "risk_open_wrong": 4.166666666666667,
+          "switch_on_delay_min": 51.40625
+        },
+        {
+          "coverage": 95.81395348837209,
+          "observation_gap": 0.0,
+          "downlink_attempts": 901.0,
+          "risk_coverage": 93.75,
+          "config_mismatch_min": 3232.0,
+          "demands": 430,
+          "covered": 412,
+          "risk_open_wrong": 8.333333333333334,
+          "switch_on_delay_min": 46.25
+        },
+        {
+          "coverage": 100.0,
+          "observation_gap": 0.0,
+          "downlink_attempts": 881.0,
+          "risk_coverage": 100.0,
+          "config_mismatch_min": 4054.0,
+          "demands": 430,
+          "covered": 430,
+          "risk_open_wrong": 0.0,
+          "switch_on_delay_min": 32.65625
+        },
+        {
+          "coverage": 93.95348837209302,
+          "observation_gap": 8.645833333333334,
+          "downlink_attempts": 845.0,
+          "risk_coverage": 91.31944444444444,
+          "config_mismatch_min": 3684.0,
+          "demands": 430,
+          "covered": 404,
+          "risk_open_wrong": 13.88888888888889,
+          "switch_on_delay_min": 96.71875
+        },
+        {
+          "coverage": 91.3953488372093,
+          "observation_gap": 0.0,
+          "downlink_attempts": 1901.0,
+          "risk_coverage": 87.15277777777779,
+          "config_mismatch_min": 7294.0,
+          "demands": 430,
+          "covered": 393,
+          "risk_open_wrong": 16.666666666666668,
+          "switch_on_delay_min": 120.46875
+        },
+        {
+          "coverage": 97.44186046511628,
+          "observation_gap": 0.0,
+          "downlink_attempts": 1153.0,
+          "risk_coverage": 96.18055555555556,
+          "config_mismatch_min": 5749.0,
+          "demands": 430,
+          "covered": 419,
+          "risk_open_wrong": 4.513888888888889,
+          "switch_on_delay_min": 51.09375
+        },
+        {
+          "coverage": 100.0,
+          "observation_gap": 1.328125,
+          "downlink_attempts": 1097.0,
+          "risk_coverage": 100.0,
+          "config_mismatch_min": 2902.0,
+          "demands": 430,
+          "covered": 430,
+          "risk_open_wrong": 0.0,
+          "switch_on_delay_min": 51.5625
+        },
+        {
+          "coverage": 76.74418604651163,
+          "observation_gap": 5.868055555555555,
+          "downlink_attempts": 843.0,
+          "risk_coverage": 65.27777777777779,
+          "config_mismatch_min": 7952.0,
+          "demands": 430,
+          "covered": 330,
+          "risk_open_wrong": 43.05555555555556,
+          "switch_on_delay_min": 151.09375
+        },
+        {
+          "coverage": 99.76744186046511,
+          "observation_gap": 0.0,
+          "downlink_attempts": 1049.0,
+          "risk_coverage": 99.65277777777779,
+          "config_mismatch_min": 6882.0,
+          "demands": 430,
+          "covered": 429,
+          "risk_open_wrong": 0.6944444444444444,
+          "switch_on_delay_min": 63.90625
+        },
+        {
+          "coverage": 91.62790697674419,
+          "observation_gap": 11.128472222222221,
+          "downlink_attempts": 722.0,
+          "risk_coverage": 87.5,
+          "config_mismatch_min": 5078.0,
+          "demands": 430,
+          "covered": 394,
+          "risk_open_wrong": 17.01388888888889,
+          "switch_on_delay_min": 129.6875
+        },
+        {
+          "coverage": 91.62790697674419,
+          "observation_gap": 4.184027777777778,
+          "downlink_attempts": 668.0,
+          "risk_coverage": 87.5,
+          "config_mismatch_min": 4849.0,
+          "demands": 430,
+          "covered": 394,
+          "risk_open_wrong": 17.36111111111111,
+          "switch_on_delay_min": 94.84375
+        },
+        {
+          "coverage": 99.30232558139535,
+          "observation_gap": 0.0,
+          "downlink_attempts": 623.0,
+          "risk_coverage": 98.95833333333334,
+          "config_mismatch_min": 2449.0,
+          "demands": 430,
+          "covered": 427,
+          "risk_open_wrong": 0.0,
+          "switch_on_delay_min": 34.21875
+        },
+        {
+          "coverage": 97.90697674418605,
+          "observation_gap": 0.0,
+          "downlink_attempts": 1131.0,
+          "risk_coverage": 96.875,
+          "config_mismatch_min": 4932.0,
+          "demands": 430,
+          "covered": 421,
+          "risk_open_wrong": 4.861111111111111,
+          "switch_on_delay_min": 41.5625
+        },
+        {
+          "coverage": 100.0,
+          "observation_gap": 0.0,
+          "downlink_attempts": 1000.0,
+          "risk_coverage": 100.0,
+          "config_mismatch_min": 3704.0,
+          "demands": 430,
+          "covered": 430,
+          "risk_open_wrong": 0.0,
+          "switch_on_delay_min": 50.78125
+        },
+        {
+          "coverage": 100.0,
+          "observation_gap": 0.0,
+          "downlink_attempts": 771.0,
+          "risk_coverage": 100.0,
+          "config_mismatch_min": 4004.0,
+          "demands": 430,
+          "covered": 430,
+          "risk_open_wrong": 0.0,
+          "switch_on_delay_min": 28.59375
+        },
+        {
+          "coverage": 93.95348837209302,
+          "observation_gap": 1.597222222222222,
+          "downlink_attempts": 997.0,
+          "risk_coverage": 90.97222222222221,
+          "config_mismatch_min": 6752.0,
+          "demands": 430,
+          "covered": 404,
+          "risk_open_wrong": 13.541666666666666,
+          "switch_on_delay_min": 112.96875
+        },
+        {
+          "coverage": 77.20930232558139,
+          "observation_gap": 14.635416666666668,
+          "downlink_attempts": 974.0,
+          "risk_coverage": 65.97222222222221,
+          "config_mismatch_min": 9123.0,
+          "demands": 430,
+          "covered": 332,
+          "risk_open_wrong": 46.875,
+          "switch_on_delay_min": 208.75
+        },
+        {
+          "coverage": 99.53488372093024,
+          "observation_gap": 0.0,
+          "downlink_attempts": 656.0,
+          "risk_coverage": 99.65277777777779,
+          "config_mismatch_min": 5599.0,
+          "demands": 430,
+          "covered": 428,
+          "risk_open_wrong": 0.6944444444444444,
+          "switch_on_delay_min": 34.375
+        },
+        {
+          "coverage": 99.30232558139535,
+          "observation_gap": 0.0,
+          "downlink_attempts": 964.0,
+          "risk_coverage": 99.30555555555556,
+          "config_mismatch_min": 3529.0,
+          "demands": 430,
+          "covered": 427,
+          "risk_open_wrong": 0.0,
+          "switch_on_delay_min": 42.34375
+        }
+      ],
+      "coverage": 94.40697674418604,
+      "observation_gap": 2.3693576388888893,
+      "downlink_attempts": 941.8,
+      "risk_coverage": 91.70138888888889,
+      "risk_open_wrong": 11.041666666666668,
+      "switch_on_delay_min": 78.9140625,
+      "config_mismatch_min": 5347.5
+    }
+  ]
+}

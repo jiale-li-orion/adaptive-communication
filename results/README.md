@@ -27,7 +27,7 @@
 | ~~`monitoring_trajectories_business2.json`~~ | — | 20 | **已取代**：§7.34 的下发顺序修正之前产出，`ours` 记 89.07 / 604.8，当前代码给 94.53 / 628.9。只有 `local_rules` / `versioned_config` / `vtc_style` / `oracle` 四条未受影响的臂仍可引用 |
 | `monitoring_trajectories_2x2v3.json` | `--days 3 --seeds 20 --arms rule__naive,rule__contract,llm__naive,llm__contract --tag 2x2v3` | 20 | **2×2 定稿表**：planner 因子与 runtime 因子的分解（§六）。**用 `scripted` 后端**。四格都是组合实现，不受 §7.34 影响 |
 | ~~`monitoring_trajectories_restart20v4.json`~~ | — | 20 | **已作废**（§7.30）：重启对照不公平——本文臂的状态留在活着的对象里，基线被清空。**读数不得引用** |
-| `monitoring_trajectories_fairrestart3.json` | `--days 3 --seeds 20 --arms versioned_config,versioned_config_shadow,versioned_config_version_only,vtc_style,ours,ours_amnesiac,ours_reconstructed,oracle --trajectories none,coordinator_restart --tag fairrestart3` | 20 | **恢复归因定稿表**（§7.33）：给基线平等的持久化能力之后，重启轴上本文不再领先 |
+| `monitoring_trajectories_fairrestart4.json` | `--days 3 --seeds 20 --arms versioned_config,versioned_config_shadow,versioned_config_version_only,vtc_style,vtc_style_durable,ours,ours_amnesiac,ours_reconstructed,oracle --trajectories none,coordinator_restart --tag fairrestart4` | 20 | **恢复归因定稿表**（§7.33）：给基线平等的持久化能力之后，重启轴上本文不再领先。九条臂，含 `vtc_style_durable`（该行的证据只在这个文件里） |
 | ~~`monitoring_trajectories_fairrestart2.json`~~ | — | 20 | **已取代**：§7.34 的顺序修正之前产出 |
 | ~~`monitoring_trajectories_ablate20.json`~~ | — | 20 | **已撤下**：该文件由旧代码产出，`ours` 记 63.00 / 下行 682.5，而当时的代码给 89.07 / 604.8。**覆盖与下行两列都不一致，与主表不可拼接。** |
 | `monitoring_trajectories_ablate20v3.json` | `--days 3 --seeds 20 --arms ours,ours_no_evidence,ours_no_contract,versioned_config,vtc_style --trajectories none,ack_lost,stale_command --tag ablate20v3` | 20 | 两条只改一处的消融与两条强基线的同批对照（§7.35）。`ours` 在 `none` 上记 94.53 / 628.9，**与 `business3` 逐位一致**，故与主表可拼接 |
@@ -114,6 +114,7 @@ done
 |---|---|---|---|
 | `steady_gap_q3_attrib.json` | `--seeds 20 --tag q3_attrib` | 20 | 每条臂的覆盖率/观测空窗/下行次数：参数逐项放宽 + 三条结构性消融（W1 关闭、W3 先于 W1、去 in-flight 否决） |
 | `steady_gap_counters_q3_attrib.json` | `steady_gap_counters.py --seeds 20 --tag q3_attrib` | 20 | 同一 runtime 的逐分支决策计数：`skip/in_flight` 与其中「有 W1 请求未结」的占比 |
+| `steady_gap_w1postfix.json` | `steady_gap.py --seeds 20 --arms "ours,ours W1 off,rule__contract" --tag w1postfix` | 20 | **W1 边际值的定稿读数**（§7.36）：修好下发顺序之后，保留 W1 值 +0.16 点、多花 305 次下行 |
 | `steady_gap_q3_dpu2.json` | `--seeds 20 --tag q3_dpu2 --downlink-per-uplink 2 --arms "ours,rule__contract,ours W3 before W1"` | 20 | **机制验证，不是场景结论**：`downlink_per_uplink` 是 Class A 之外的假设（冻结场景是 1），只用来检验"队首阻塞"这条机制——把它提到 2，5.34 个点里的 4.77 点无需改任何代码就消失 |
 
 ```bash
