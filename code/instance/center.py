@@ -400,6 +400,89 @@ class EnergyAwarePolicy(DenseSamplingPolicy):
         return out
 
 
+class EnergyAoiPolicy(CenterPolicy):
+    """**最强传统基线**：能源反馈 + 简单上报，两者都只用合法观测。
+
+    这是把两条各自成熟的常规做法**组合**起来，不引入任何新机制：
+
+      - **采样间隔**由节点上报的 `soc_wh` 决定（电能反馈，与 `EnergyAwarePolicy` 同法）；
+      - **上报周期**由中心自己看到的 AoI 决定（与 `AoiPolicy` 同法）；
+      - 两者**成对**下发（一次决策一个世代），且**没有电量读数时不发**——那一代是值域空操作。
+
+    **为什么它必须存在。** 实测在宽松条件下 `aoi` 的周期达标率（92.7%）高于
+    `EnergyAwarePolicy` 的 `ea_nb`（91.2%）与最优固定配置 `dense600`（91.9%）——
+    也就是说"我们想超越的传统做法"如果只拿 `ea_nb` 当代表，**会把门槛设低了**。
+    第二阶段的判据是"在冻结 task、冻结 capability、合法观测、强传统基线之下还有没有 residual"，
+    那么这条基线必须先做到位。
+
+    **它不是什么**：它不读环境真值、不预测未来、不做任何跨节点协调，也不新增动作——
+    动作集合与所有臂完全相同（改采样间隔、改上报周期）。差异只在**什么时候改**。
+    """
+
+    def __init__(self, healthy_wh: float = 0.010, dense_interval_s: int = 600,
+                 dense_period_s: int = 900, sparse_interval_s: int = 3600,
+                 sparse_period_s: int = 3600, stale_s: int = 3600,
+                 fast_period_s: int = 300, slow_period_s: int = 900,
+                 dwell_s: int = 600, exit_wh: float | None = None,
+                 confirm_n: int = 1) -> None:
+        super().__init__()
+        self.healthy_wh = healthy_wh
+        self.dense_interval_s, self.dense_period_s = dense_interval_s, dense_period_s
+        self.sparse_interval_s, self.sparse_period_s = sparse_interval_s, sparse_period_s
+        self.stale_s, self.fast_period_s, self.slow_period_s = stale_s, fast_period_s, slow_period_s
+        self.dwell_s = dwell_s
+        self.exit_wh, self.confirm_n = exit_wh, max(1, int(confirm_n))
+        self._dense_mode: dict[str, bool] = {}
+        self._streak: dict[str, tuple[bool, int]] = {}
+        self._last: dict[str, int] = {}
+        self.name = "energy_aoi"
+
+    def plan(self, view: CenterView) -> list[tuple[str, dict]]:
+        out = []
+        for nid in view.node_ids:
+            if nid in view.in_flight:
+                continue
+            last = self._last.get(nid)
+            if last is not None and view.t_s - last < self.dwell_s:
+                continue
+            soc = view.soc_of(nid)
+            if soc is None:
+                # **没有电量读数就不发。** 保守档与出厂默认逐位相同，发出去是值域空操作，
+                # 却要花掉一次下行机会（实测它占了 ea_i600 全部控制流量的一半）。
+                continue
+            # --- 采样间隔：电能反馈 ---
+            if self.exit_wh is None:
+                dense = soc >= self.healthy_wh
+            else:
+                was = self._dense_mode.get(nid, soc >= self.healthy_wh)
+                want = soc >= (self.exit_wh if was else self.healthy_wh)
+                side, n = self._streak.get(nid, (want, 0))
+                n = n + 1 if side == want else 1
+                self._streak[nid] = (want, n)
+                dense = was if n < self.confirm_n else want
+            self._dense_mode[nid] = dense
+            # --- 上报周期：AoI 反馈 ---
+            # **上报周期保持 AoI 逻辑，不被电能状态覆盖。** 第一版在密集时把它压成 900 s，
+            # 结果整条基线的达标率（90.4%）反而低于只做 AoI 的 `aoi`（91.8%）——叠加一个维度
+            # 不该削弱另一个维度。要成为"最强传统基线"，两维必须各自保持自己的最优做法。
+            aoi = view.aoi_s(nid)
+            period = self.fast_period_s if (aoi is None or aoi > self.stale_s) \
+                else self.slow_period_s
+            ni = self.dense_interval_s if dense else self.sparse_interval_s
+            snap = view.reports.get(nid) or {}
+            if (snap.get("sample_interval_s") == ni
+                    and snap.get("report_period_s") == period):
+                continue
+            self._last[nid] = view.t_s
+            a, b = self.stamp_pair(
+                nid,
+                {"op": OP_SET_SAMPLING_INTERVAL, "interval_s": ni},
+                {"op": OP_SET_REPORT_PERIOD, "period_s": period})
+            out.append((nid, a))
+            out.append((nid, b))
+        return out
+
+
 class ClairvoyantStaticSelector(DenseSamplingPolicy):
     """**clairvoyant static selector**：知道部署的真实约束（哪些站点被遮荫／失电），据此逐节点
     在**稀疏与加密两条固定轨迹之间二选一**，选定之后不再变。
@@ -468,6 +551,9 @@ ARMS: dict[str, type[CenterPolicy]] = {
     "ea_nb": lambda: EnergyAwarePolicy(0.010, 600, 900, send_when_unknown=False),
     "ea_nb_hyst": lambda: EnergyAwarePolicy(0.010, 600, 900, exit_wh=0.006, confirm_n=2,
                                             send_when_unknown=False),
+    # **最强传统基线**：能源反馈（采样间隔）+ AoI 反馈（上报周期），成对下发、无读数不发。
+    "ea_aoi": lambda: EnergyAoiPolicy(),
+    "ea_aoi_h": lambda: EnergyAoiPolicy(exit_wh=0.006, confirm_n=2),
 }
 
 

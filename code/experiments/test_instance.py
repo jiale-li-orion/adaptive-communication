@@ -28,8 +28,8 @@ for _p in (_HERE, *(_os.path.join(_CODE, d) for d in ("physics", "runtime", "exp
     if _p not in _sys.path:
         _sys.path.insert(0, _p)
 
-from center import (ARMS, OP_SET_REPORT_PERIOD, OP_SET_SAMPLING_INTERVAL, LocalPolicy,
-                    build_policy)
+from center import (ARMS, OP_SET_REPORT_PERIOD, OP_SET_SAMPLING_INTERVAL, CenterView,
+                    LocalPolicy, SocObservationModel, build_policy)
 from deployment import build_deployment
 from exogenous import (KIND_EVENT, KIND_ROUTINE, EnvironmentTruth, ObligationSet,
                        autonomy_margin, irradiance_harvest,
@@ -928,6 +928,46 @@ def test_autonomy_margin_blind_spot() -> None:
           m > 1.0, f"margin = {m:.2f}（这个数**不代表**可用性）")
 
 
+def test_composed_baseline_keeps_both_dimensions() -> None:
+    """最强传统基线：**两个维度各自保持自己的最优做法，谁都不许削弱谁**。
+
+    第一版把上报周期在"电能健康"时压成 900 s，结果整条基线的周期达标率（90.4%）**低于**
+    只做 AoI 的 `aoi`（91.8%）——叠加一个维度反而削弱了另一个。这条测试直接查策略的输出：
+    **当 AoI 陈旧时，无论电能是否健康，上报周期都必须是 300 s。**
+
+    另一条同时钉住：**没有电量读数时一条都不发**。保守档与出厂默认逐位相同，发出去是值域空操作，
+    却要花掉一次下行机会（实测它占了 `ea_i600` 全部控制流量的一半）。
+    """
+    print("\n[21] 最强传统基线：两维不互相削弱")
+    pol = build_policy("ea_aoi")
+    check("aoi 的陈旧阈值与快速周期（这两条是它领先的来源）",
+          pol.stale_s == 3600 and pol.fast_period_s == 300 and pol.slow_period_s == 900,
+          f"stale {pol.stale_s} / fast {pol.fast_period_s} / slow {pol.slow_period_s}")
+    check("电能健康档不再改写上报周期",
+          pol.dense_period_s == pol.slow_period_s,
+          f"dense_period {pol.dense_period_s} vs slow {pol.slow_period_s}")
+
+    sm = SocObservationModel(4000, 0.0, 1.0, 0.0, seed=0)
+    # 电量健康（报回的 soc 很高）+ AoI 陈旧（最后一份样本在 7200 s 前）
+    view = CenterView(t_s=7200, node_ids=("n00",),
+                      # **遥测新、样本旧**：`report_at` 近（所以知道电量），
+                      # `newest_taken_at` 远（所以 AoI 陈旧）。这两个不是一回事，
+                      # 混用会让"知道电量"和"数据新鲜"分不开。
+                      reports={"n00": {"soc_wh": 0.02}},
+                      report_at={"n00": 7000}, newest_taken_at={"n00": 0},
+                      in_flight=frozenset(), soc_model=sm)
+    periods = [p["period_s"] for _, p in pol.plan(view)
+               if p.get("op") == OP_SET_REPORT_PERIOD]
+    check("AoI 陈旧 + 电量健康时报出的是快速周期 300 s（未被电能维度覆盖）",
+          periods == [300], f"报出的周期 = {periods}")
+
+    pol2 = build_policy("ea_aoi")
+    view2 = CenterView(t_s=7200, node_ids=("n00",), reports={}, report_at={},
+                       newest_taken_at={}, in_flight=frozenset(), soc_model=sm)
+    check("没有电量读数时一条都不发（不做无证据下发）",
+          pol2.plan(view2) == [], f"发出 {len(pol2.plan(view2))} 条")
+
+
 def main() -> int:
     print("实例层验收（Task Contract v1.1）")
     test_denominator_is_exogenous()
@@ -950,6 +990,7 @@ def main() -> int:
     test_oracle_action_is_two_dimensional()
     test_action_admission_classification()
     test_autonomy_margin_blind_spot()
+    test_composed_baseline_keeps_both_dimensions()
     print("\n" + "-" * 74)
     if FAIL:
         print(f"  {len(FAIL)} 项失败: {', '.join(FAIL)}")
