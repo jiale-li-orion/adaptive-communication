@@ -1,4 +1,23 @@
-# A′（AoI-matched semantic target）：真实 LLM baseline 的仪器闸门**未通过**
+# A′ v3 **instrument invalidated**：pending-state 语义与 AoI 来源偏离了冻结协议；**无行为结论**
+
+> ## ⚠ 状态更正（2026-09-14，用户裁定）
+>
+> 本文原先写作「A′ 仪器闸门 **未通过**」。**那个说法不准确，已改为**：
+>
+> > **A′ v3 invalidated: pending-state semantics and AoI source diverged from the frozen
+> > protocol; no behavioral conclusion.**
+>
+> **为什么不是 gate failed**：v3 的两处偏差**恰好会系统性制造 noop**——
+> ① `pending_effect` 被 `desired != confirmed` 覆盖，而协议写的是 `CenterView.in_flight`
+> （把「还没人去做」标成「已经有人在处理」）；② `aoi_s` 用 `soc_age_s` 冒充。
+> ⇒ **v3 下任何行为读数都不构成对模型的证据**，所以「未通过」这个提法本身是错的。
+>
+> **后续已修正并重跑**（**以那两份为准，不以本文为准**）：
+> [`v4` 修两处语义漂移后闸门**通过**](29-wirelessagent-adaptation-diff-2026-09-14.md)（数值见 §7.104）；
+> **v5 只改 `pending_effect` 一句措辞**后 `same-target unresolved replan` 由 0 变 3（§7.105）；
+> **780-epoch 全量**下该量为 **0**（n=52 次动作，§7.108）⇒ **v5 那 3 次是小样本波动**。
+>
+> **本文其余部分只作历史记录保留**（协议 v3 的设计与当时读数），**不得作证据引用**。
 
 日期：2026-09-13。协议 `llm_naive_v3`（`sha256=2112620282fc1519…`，`derives_from` v2）。基线 `79b0ff8`。
 按用户裁决：选 **A′**；**`C′` 不开**、**`B′` 暂缓**。
