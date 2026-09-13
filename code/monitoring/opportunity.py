@@ -205,7 +205,9 @@ class ControlPlane:
     def __init__(self, profile: LoRaProfile, seed: int, downlink_per_uplink: int = 1,
                  rx_window_ms: float = 2000.0, backhaul_p_good: float = 0.62,
                  uplink_p_arrive: float = 0.74, backhaul_delay_s: int = 0,
-                 burst_p_gb: float | None = None, burst_p_bg: float | None = None):
+                 burst_p_gb: float | None = None, burst_p_bg: float | None = None,
+                 uplink_burst_p_gb: float | None = None,
+                 uplink_burst_p_bg: float | None = None):
         if downlink_per_uplink < 1:
             raise ValueError("downlink_per_uplink must be at least 1")
         self.profile = profile
@@ -225,6 +227,12 @@ class ControlPlane:
         #: `(seed, 绝对小时)` 决定，**与策略无关**（跨策略比较的前提）。
         self.burst_p_gb, self.burst_p_bg = burst_p_gb, burst_p_bg
         self._burst_series: list[bool] = []
+        #: **上行接入的突发模型**（可选，逐节点）。设置后**替代**原来逐分钟的 i.i.d. 抽签：
+        #: 小时级的可用性由两态链给出（平稳可用概率仍是 `uplink_p_arrive`），
+        #: 于是**只改突发度、不改均值**。
+        self.uplink_burst_p_gb, self.uplink_burst_p_bg = (uplink_burst_p_gb,
+                                                          uplink_burst_p_bg)
+        self._ul_burst: dict[str, list[bool]] = {}
         self.backhaul_gate = None
         # Store-and-forward latency on the gateway-to-center hop. Zero means the gateway forwards
         # as soon as the link is up; a positive value models a batch that leaves on a schedule.
@@ -285,6 +293,25 @@ class ControlPlane:
         # with the primary. It shares everything downstream of the gateway, which is what keeps it
         # from being an out-of-band health channel.
         return stable_uniform(self.seed, "path", spec.name, hour) < spec.p_good
+
+    def _ul_burst_state(self, node_id: str, hour: int) -> bool:
+        """逐节点两态马尔可夫接入：坏态以 `p_bg` 转好、好态以 `p_gb` 转坏；首小时从平稳分布抽。
+
+        平稳好态概率取 `min(1, uplink_p_arrive / 1.0)`——即**保持与 i.i.d. 相同的边际可用率**，
+        所以两者之差**只在时间结构上**。状态只由 `(seed, 节点, 0..h)` 决定，**与策略无关**。
+        """
+        gb, bg = self.uplink_burst_p_gb, self.uplink_burst_p_bg
+        good_frac = min(1.0, max(0.0, self.uplink_p_arrive))
+        seq = self._ul_burst.setdefault(node_id, [])
+        while len(seq) <= hour:
+            h = len(seq)
+            if h == 0:
+                seq.append(stable_uniform(self.seed, "ulburst0", node_id, gb, bg) < good_frac)
+                continue
+            prev_bad = not seq[h - 1]
+            u = stable_uniform(self.seed, "ulburst", node_id, h)
+            seq.append(u < bg if prev_bad else not (u < gb))
+        return seq[hour]
 
     def _burst_available(self, hour: int) -> bool:
         """两态马尔可夫：坏态以 `p_bg` 转好、好态以 `p_gb` 转坏；首小时从**平稳分布**抽。
@@ -400,8 +427,11 @@ class ControlPlane:
         energy.add_rx(self.rx_window_ms)
 
         self.prune(node_id, hour)
-        heard = stable_uniform(self.seed, "ul", node_id, hour,
-                               attempt_index) < self.uplink_p_arrive
+        if self.uplink_burst_p_gb is not None and self.uplink_burst_p_bg is not None:
+            heard = self._ul_burst_state(node_id, hour)
+        else:
+            heard = stable_uniform(self.seed, "ul", node_id, hour,
+                                   attempt_index) < self.uplink_p_arrive
         if not heard:
             self.uplinks_unheard = getattr(self, "uplinks_unheard", 0) + 1
             return UplinkRecord(node_id=node_id, hour=hour, opportunity_index=-1,

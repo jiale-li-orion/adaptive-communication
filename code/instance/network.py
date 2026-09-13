@@ -397,6 +397,8 @@ class Instance:
                  uplink_p_arrive: float = 0.74,
                  backhaul_p_good: float = 0.62,
                  burst_p_gb: float | None = None, burst_p_bg: float | None = None,
+                 uplink_burst_p_gb: float | None = None,
+                 uplink_burst_p_bg: float | None = None,
                  backhaul_delay_s: int = 0,
                  policy: CenterPolicy | None = None,
                  send_contract_fields: bool = False,
@@ -419,6 +421,8 @@ class Instance:
                                   uplink_p_arrive=uplink_p_arrive,
                                   backhaul_p_good=backhaul_p_good,
                                   burst_p_gb=burst_p_gb, burst_p_bg=burst_p_bg,
+                                  uplink_burst_p_gb=uplink_burst_p_gb,
+                                  uplink_burst_p_bg=uplink_burst_p_bg,
                                   backhaul_delay_s=backhaul_delay_s)
         #: 中心策略。默认不下发任何命令——**这是所有方法的共同起点**，现场自治照常工作。
         self.policy: CenterPolicy = policy or LocalPolicy()
