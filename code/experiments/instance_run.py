@@ -75,6 +75,7 @@ def one_seed(seed: int, task_hours: float, tail_hours: float,
              uplink_burst_p_bg: float | None = None,
              charge_min_c: float | None = 5.0,
              idle_wh_per_tick: float = 0.0,
+             cache_service: str = "fifo",
              energy_scale: float = 1.0) -> dict:
     hours = task_hours + tail_hours
     dep = build_deployment(groups=2)
@@ -84,6 +85,7 @@ def one_seed(seed: int, task_hours: float, tail_hours: float,
                          event_interval_s=event_spacing_s,
                          capacity_wh=capacity_wh, initial_soc=initial_soc,
                          charge_min_c=charge_min_c,
+                         cache_service=cache_service,
                          idle_wh_per_tick=idle_wh_per_tick * energy_scale,
                          sample_wh=DeviceProfile().sample_wh * energy_scale)
     nodes = nodes_from(dep, profile=prof)
@@ -330,6 +332,10 @@ def main() -> None:
                     help="静息功耗（Wh/tick）。默认 0——**这是一个 A 层取值**，见 manifest")
     ap.add_argument("--charge-min-c", default="5.0",
                     help="低温充电闸门（°C）；`off` 表示不设闸门")
+    ap.add_argument("--cache-service", choices=("fifo", "lifo", "latest_only"), default="fifo",
+                    help="缓存服务次序：`fifo` 最老优先（设备既有自动补发，默认）；"
+                         "`lifo` 最新优先（AoI 文献的标准服务纪律）。"
+                         "**这是实例属性，不是策略动作**——换它等于换实例，所有臂必须同值重跑")
     ap.add_argument("--initial-soc", type=float, default=1.0,
                     help="初始电量比例。扫 autonomy margin 时要用小于 1 的值")
     ap.add_argument("--solar-day-start-h", type=float, default=6.0,
@@ -413,7 +419,8 @@ def main() -> None:
                                         if args.uplink_burst else None),
                      charge_min_c=(None if args.charge_min_c == 'off'
                                    else float(args.charge_min_c)),
-                     idle_wh_per_tick=args.idle_wh_per_tick)
+                     idle_wh_per_tick=args.idle_wh_per_tick,
+                     cache_service=args.cache_service)
             for a in arm_names for L in layers for s in range(args.seeds)]
 
     # 聚合：**按臂分组**。分母类用求和天然是整数，时延与比率类用逐种子均值。

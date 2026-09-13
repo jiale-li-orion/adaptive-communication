@@ -37,7 +37,7 @@ from exogenous import (KIND_EVENT, KIND_ROUTINE, EnvironmentTruth, ObligationSet
                        displacement_series, rule_obligations_for_truth,
                        routine_obligations, routine_obligations_by_node,
                        wang_burst_obligations, wang_fragment_truth)
-from network import DeviceProfile, HopLog, Instance, Node, nodes_from
+from network import DeviceProfile, HopLog, Instance, Node, Transit, nodes_from
 from oracle import delivery_oracle, dynamic_oracle
 from scoring import evaluate, event_propagation, recovery_block
 
@@ -297,8 +297,24 @@ def test_multinode_run() -> None:
                    plane=inst.plane)
 
     rt = res["routine"]
-    check("周期侧没有任何实体整段无观测", rt["no_observation_s"] == 0,
-          f"aoi_mean={rt['aoi_mean_s']:.0f}s, no_obs={rt['no_observation_s']}s")
+    # **无观测只发生在每个测项的首次送达之前**——这是一个可手算的量：
+    # 每个 (节点, 测项) 的未观测 tick 数 = ceil(首次接收时刻 / TICK_S)，把它们加起来即总数。
+    # 第一版断言 `no_observation_s == 0`，那是按**旧 AoI 实现**写的：旧实现按采集时刻排序推进，
+    # 于是一条 0 点采集、40 h 后才收到的样本被当成 0 点就已经在中心手里，无观测永远是 0。
+    # 那个实现已被替换（见 scoring `_routine_block`），这条断言也必须跟着改成有意义的版本。
+    from scoring import TICK_S as _TICK
+    _recv_first: dict[tuple[str, str], int] = {}
+    for _sid, _s in log.samples.items():
+        _r = log.transit[_sid].received_at
+        if _r is None:
+            continue
+        _k = (_s.node_id, _s.measurand)
+        _recv_first[_k] = min(_recv_first.get(_k, _r), _r)
+    _expect = sum(-(-_r // _TICK) for _r in _recv_first.values())
+    check("无观测 tick 数等于「各测项首次送达前」的 tick 数之和（可手算）",
+          rt["no_observation_s"] == _expect * _TICK,
+          f"实测 {rt['no_observation_s']}s，手算 {_expect * _TICK}s "
+          f"（测项 {len(_recv_first)} 个，首达 {min(_recv_first.values())}–{max(_recv_first.values())}s）")
     check("缺采与已采相加等于分母",
           rt["missing_collection"] + rt["n"] - rt["missing_delivery"] - rt["censored"]
           == rt["delivered"], f"缺采 {rt['missing_collection']} / 缺送 {rt['missing_delivery']}")
@@ -1211,6 +1227,168 @@ def test_intent_ledger_closes() -> None:
           f"生成 {n['generated']}")
 
 
+def test_cache_service_is_an_instance_property() -> None:
+    """**缓存服务次序是实例属性，不是策略动作**——而且它只在有积压时才动。
+
+    为什么要单列一条。状态更新／AoI 文献的标准服务纪律是**最新优先**（队列里只留最新的），
+    而本实例的设备既有语义是**最老优先的自动补发**（v1.1 §5.3、§6 规定为各方法共享的能力）。
+    这两者不是两个策略：动作面在两种取值下完全相同（仍然只有 `sampling interval` 与
+    `report period` 两个字段）。所以换它就是**换实例**，所有臂必须在同一取值下重跑。
+
+    三条必须同时成立，否则这个开关要么是死列、要么是免费的好处：
+      (a) **手算积压**：一次机会最多 32 条。缓存里 40 条未确认记录时，
+          `fifo` 送第 0–31 条（最新一条是 31 h 前采的），`lifo` 送第 39–8 条（最新一条是 1 h 前）。
+      (b) **无积压时两值逐位相同**——i.i.d. 链路下积压远小于 32，这个开关**什么都不改**。
+          一个"一开就涨"的开关是可疑的；先证明它在不该动的时候不动。
+      (c) **只在积压超过一次机会的容量（32 条）时才动**：接入中断 0–40 h（积压 40 条）时
+          `lifo` 把交付拉回**比 FIFO 多 18 条**，而且**正好等于固定发送时刻的转发上界**——
+          也就是说这一档的"转发损"整体就是 FIFO 重放旧记录造成的。中断 12–40 h（积压 28 条
+          < 32）时，小时级上报的臂**一条都不差**，只有 600 s 上报的臂（积压 168 条）动。
+      (d) **这一档的 AoI 列是死列，必须记下来**：`aoi_mean_s` 只对"中心已有过观测"的 tick 取
+          平均，完全没有观测的 tick 计入 `no_observation_s`（scoring §「不得默认为 0」）。
+          因此接入中断的效果**全部落在 `no_observation_s`**，AoI 在两值下逐位相同。
+          **读 AoI 必须同时读 `no_observation_s`。**
+
+    **实现里踩过的坑（记在这里）**：第一版把中断做成"回传中断"（`backhaul_gate`），指望节点端
+    出现积压。回传中断时**上行照常到达网关**，网关先收到哪一批由节点服务次序决定，于是测到的是
+    "网关队列里留下谁"，不是"节点缓存里积压多久"。真正的积压要用 `access_outage`。
+    """
+    print("\n[26] 缓存服务次序：实例属性、只在积压超容量时动、且能同时改善交付与 AoI")
+    dep = build_deployment(groups=2)
+    hours, task, cap = 49, 48, 0.05
+    max_slots = 32
+
+    # (a) 手算积压：直接对 `Node.batch` 做，不经过任何策略。
+    node = nodes_from(dep, profile=DeviceProfile(sample_interval_s=3600,
+                                                 report_period_s=3600))[dep.nodes[0].sid]
+    n_samples = 40
+    for k in range(n_samples):
+        sid = f"s{k}"
+        node.cache.append(type("S", (), {"sample_id": sid, "taken_at": k * 3600,
+                                         "node_id": node.node_id,
+                                         "measurand": node.measurand, "value": 0.0,
+                                         "unit": "mm"})())
+        # `latest_only` 会**丢弃**旧记录并记进 `transit`，因此这里必须建台账，
+        # 否则测到的是 KeyError 而不是丢弃行为。
+        node.transit[sid] = Transit(sample_id=sid)
+    node.p = DeviceProfile(sample_interval_s=3600, report_period_s=3600, cache_service="fifo")
+    fifo = [int(s.taken_at // 3600) for s in node.batch(0, max_slots)]
+    node.p = DeviceProfile(sample_interval_s=3600, report_period_s=3600, cache_service="lifo")
+    lifo = [int(s.taken_at // 3600) for s in node.batch(0, max_slots)]
+    check("积压 40 条时 fifo 送第 0–31 条（最新一条是 31 h 前）",
+          fifo == list(range(0, 32)), f"{fifo[0]}..{fifo[-1]}，共 {len(fifo)} 条")
+    check("积压 40 条时 lifo 送第 39–8 条、最新在前（最新一条是 1 h 前）",
+          lifo == list(range(39, 7, -1)), f"{lifo[0]}..{lifo[-1]}，共 {len(lifo)} 条")
+    check("两种服务次序取到的记录**条数相同**（换的是花在哪几条上，不是花多少）",
+          len(fifo) == len(lifo) == max_slots, f"{len(fifo)} vs {len(lifo)}")
+
+    # 运行端：同一实例的两个取值，同一批臂。
+    truth = wang_fragment_truth(0, hours, (dep.gateway.sid,))
+    probe = nodes_from(dep)
+    truth.displacement = displacement_series(probe.keys(), hours, 0)
+    h, t_ = hetero_harvest(probe.keys(), hours, 0, low_frac=0.4, low_wh_per_hour=0.0,
+                           high_wh_per_hour=3.0)
+    truth.harvest_wh.update(h)
+    truth.temp_c.update(t_)
+    meas = {k: v.measurand for k, v in probe.items()}
+    obs = ObligationSet(routine_obligations_by_node(meas, task))
+    arms = ("local", "aoi", "dense600", "ea_nb")
+
+    def run(service: str, lo_h: float, hi_h: float):
+        out = {}
+        for arm in arms:
+            nodes = nodes_from(dep)
+            for n in nodes.values():
+                n.p = DeviceProfile(sample_interval_s=n.p.sample_interval_s,
+                                    report_period_s=n.p.report_period_s,
+                                    capacity_wh=cap, sample_wh=n.p.sample_wh,
+                                    cache_service=service)
+                n.soc_wh = cap
+                n.power = type(n.power)(soc_initial_wh=cap, soc_wh=cap)
+            acc = (int(lo_h * 3600), int(hi_h * 3600)) if hi_h > lo_h else None
+            inst = Instance(nodes, truth, seed=0, policy=build_policy(arm),
+                            access_outage=acc)
+            log = inst.run(hours)
+            res = evaluate(obs, log, hours, nodes.keys(), plane=inst.plane,
+                           task_hours=task)
+            out[arm] = (res["routine"]["delivered"], res["routine"]["aoi_mean_s"],
+                        res["routine"]["no_observation_s"],
+                        delivery_oracle(obs, log, hours,
+                                        plane=inst.plane)["total_oracle"],
+                        delivery_oracle(obs, log, hours, plane=inst.plane,
+                                        free_transmit=True,
+                                        require_sample=True)["total_oracle"])
+        return out
+
+    def fmt(t):
+        return (f"交付 {t[0]:.0f}、AoI {t[1]:.0f}s、无观测 {t[2] / 3600:.0f}h、"
+                f"转发上界 {t[3]:.0f}")
+
+    # (b) 无积压：i.i.d. 链路，积压远小于 32 条。
+    no_bk = {s: run(s, 0.0, 0.0) for s in ("fifo", "lifo")}
+    check("无中断时两值**逐位相同**（这个开关在不该动的时候不动）",
+          all(no_bk["fifo"][a] == no_bk["lifo"][a] for a in arms),
+          "；".join(f"{a}: {fmt(no_bk['fifo'][a])} vs {fmt(no_bk['lifo'][a])}"
+                    for a in arms))
+
+    # (c) 积压 40 条 > 32 条：服务次序才起作用。
+    bk = {s: run(s, 0.0, 40.0) for s in ("fifo", "lifo", "latest_only")}
+    gain = {a: bk["lifo"][a][0] - bk["fifo"][a][0] for a in arms}
+    drop = {a: bk["fifo"][a][1] - bk["lifo"][a][1] for a in arms}
+    check("接入中断 40 h（积压 40 条 > 一次机会的 32 条）时 lifo 每条臂都多交付 14–18 条",
+          all(14 <= v <= 18 for v in gain.values()),
+          "；".join(f"{a}: {bk['fifo'][a][0]:.0f}→{bk['lifo'][a][0]:.0f}"
+                    f"（{gain[a]:+.0f}）" for a in arms))
+    check("同一档下 lifo 的中心 AoI **在每条臂上都更低**（两个目标同向，不是零和）",
+          all(v > 0 for v in drop.values()),
+          "；".join(f"{a}: {bk['fifo'][a][1]:.0f}→{bk['lifo'][a][1]:.0f}s"
+                    f"（−{drop[a]:.0f}）" for a in arms))
+    check("积压 28 条（< 一次机会的 32 条）的臂上两值逐位相同（只有真积压才动）",
+          all(run("fifo", 12.0, 40.0)[a][0] == run("lifo", 12.0, 40.0)[a][0]
+              for a in ("local", "aoi")),
+          "；".join(f"{a}: {run('fifo', 12.0, 40.0)[a][0]:.0f}"
+                    f" = {run('lifo', 12.0, 40.0)[a][0]:.0f}" for a in ("local", "aoi")))
+
+    # (c2) `latest_only`＝AoI 文献的标准纪律：只留最新，旧记录丢弃。载荷最小。
+    lo_ = bk["latest_only"]
+    node.p = DeviceProfile(sample_interval_s=3600, report_period_s=3600,
+                           cache_service="latest_only")
+    got = node.batch(0, 32)
+    check("latest_only 的载荷只剩 1 条记录（手算：每次机会 12 B 而不是 32×12 B）",
+          len(got) == 1 and got[0].taken_at == 39 * 3600,
+          f"取到 {len(got)} 条，最新一条 taken_at={got[0].taken_at // 3600}h")
+    check("latest_only 的 AoI 不高于 lifo（两者都保最新；它只是不再重传旧的）",
+          all(lo_[a][1] <= bk["lifo"][a][1] for a in arms),
+          "；".join(f"{a}: {lo_[a][1]:.0f} vs lifo {bk['lifo'][a][1]:.0f}" for a in arms))
+    check("latest_only 的交付不高于 lifo（丢掉的旧记录有代价，不是白拿）",
+          all(lo_[a][0] <= bk["lifo"][a][0] for a in arms),
+          "；".join(f"{a}: {lo_[a][0]:.0f} vs lifo {bk['lifo'][a][0]:.0f}" for a in arms))
+
+    # (d) 两种上界对服务次序的敏感性不同——这是读分解时的关键。
+    check("**固定发送时刻的上界跟着服务次序变**（它用实测 heard_at，而 heard_at 就是服务次序的产物）",
+          all(bk["lifo"][a][3] > bk["fifo"][a][3] for a in arms),
+          "；".join(f"{a}: 上界 {bk['fifo'][a][3]:.0f}→{bk['lifo'][a][3]:.0f}"
+                    for a in arms))
+    check("自由发送时刻的上界**不变**（那一支用潜在链路过程，与实例属性无关）",
+          all(bk["fifo"][a][4] == bk["lifo"][a][4] for a in arms),
+          "；".join(f"{a}: 自由上界 {bk['fifo'][a][4]:.0f} vs {bk['lifo'][a][4]:.0f}"
+                    for a in arms))
+    check("这一档下 FIFO 的「转发损」正好为 0——**那一列量不到队列顺序的代价**",
+          all(bk["fifo"][a][3] - bk["fifo"][a][0] == 0 for a in arms),
+          "；".join(f"{a}: 上界 {bk['fifo'][a][3]:.0f} − 交付 {bk['fifo'][a][0]:.0f} = 0"
+                    for a in arms))
+
+    # (e) AoI 列的语义：无观测的 tick 不进平均，接入中断的效果落在 `no_observation_s`。
+    check("接入中断让「无观测」时长从 17 h 涨到 523 h（= 13 个位移节点 × 40 h + 网关自身 3 h）",
+          all(bk["fifo"][a][2] == 523 * 3600 for a in arms)
+          and all(no_bk["fifo"][a][2] == 17 * 3600 for a in arms),
+          f"无中断 {no_bk['fifo']['local'][2] / 3600:.0f}h → 中断 "
+          f"{bk['fifo']['local'][2] / 3600:.0f}h")
+    check("AoI **不再忽略送达时刻**：同一档下 AoI 从 4256 s 涨到 6763 s（修复前两档恒为 1795 s）",
+          bk["fifo"]["local"][1] > 1.5 * no_bk["fifo"]["local"][1],
+          f"无中断 {no_bk['fifo']['local'][1]:.0f}s → 中断 {bk['fifo']['local'][1]:.0f}s")
+
+
 def main() -> int:
     print("实例层验收（Task Contract v1.1）")
     test_denominator_is_exogenous()
@@ -1238,6 +1416,7 @@ def main() -> int:
     test_delivery_ceiling_is_policy_independent()
     test_energy_scale_invariance()
     test_intent_ledger_closes()
+    test_cache_service_is_an_instance_property()
     print("\n" + "-" * 74)
     if FAIL:
         print(f"  {len(FAIL)} 项失败: {', '.join(FAIL)}")

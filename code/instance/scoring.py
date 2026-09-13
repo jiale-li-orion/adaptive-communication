@@ -176,16 +176,33 @@ def _routine_block(outcomes, log, node_ids, end_s, by_key) -> dict:
     pairs = sorted({(o.node_id, o.measurand) for o in rows})
     aoi_sum, aoi_ticks, no_obs_ticks = 0, 0, 0
     for node_id, measurand in pairs:
-        stamps = sorted(s.taken_at for s, r in by_key.get((node_id, measurand), ())
-                        if r is not None)
-        if not stamps:
+        # **必须按「中心收到的时刻」排序，不是按「采集时刻」。**（2026-09-13 修）
+        #
+        # 第一版写的是 `sorted(s.taken_at ...)`，推进条件用 `stamps[i] <= t`：
+        # 于是一条**采集于 0 点、40 h 后才收到**的样本，被算成 0 点就已经在中心手里了。
+        # 后果是这一列对**接入中断完全不可见**——实测 49 h 运行、0–40 h 接入中断下
+        # `no_observation_s = 0`、`aoi_mean_s` 与无中断时**逐位相同**（1794.58 s），
+        # 而那一档实际有 517/672 条义务没送达。AoI 是四个目标之一，这个偏差会污染支配判据。
+        #
+        # 正确语义：`t` 时刻的年龄 = `t − max{ taken_at : 该样本在 t 之前已被中心收到 }`。
+        #
+        # 两个坑，都在这里踩过：
+        #   ① 排序键必须是**接收时刻**（见上）；
+        #   ② `newest` 必须取 **max**，不能"来一条就覆盖"。缓存服务次序取最新优先时，
+        #      同一小时内的两次上报会**先到新记录、后到旧记录**（第一次带最新的 9–40 点，
+        #      第二次带剩下的 0–8 点），直接覆盖会让"最新采集时刻"**倒退**——实测 t=41 h 时
+        #      年龄算成 33 h，而中心其实在 40 h 就拿到了 40 点的记录。
+        recv = sorted((r, s.taken_at) for s, r in by_key.get((node_id, measurand), ())
+                      if r is not None)
+        if not recv:
             no_obs_ticks += end_s // TICK_S
             continue
         i = 0
         newest = None
         for t in range(0, end_s, TICK_S):
-            while i < len(stamps) and stamps[i] <= t:
-                newest = stamps[i]
+            while i < len(recv) and recv[i][0] <= t:
+                ta = recv[i][1]
+                newest = ta if newest is None or ta > newest else newest
                 i += 1
             if newest is None:
                 no_obs_ticks += 1

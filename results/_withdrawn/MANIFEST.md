@@ -65,3 +65,28 @@
 `outage_distribution.*`、`energy_model_*`、`heating_sweep.txt`、`mountain_lora_result.txt`、
 `terrain_*`、`relay_siting_summary.txt`、`relay_availability_sweep.txt`、`sweeps.log`
 不受上述任何缺陷影响，全部保留。
+
+## 实例层：`arm-removed_2026-09-13/`
+
+| 文件 | 失效原因 |
+|---|---|
+| `instance_oracle_bo0.0.json`、`instance_oracle_bo0.3.json`、`instance_oracle_bo0.6.json` | 这三份用的臂是 `oracle_deploy`，**该臂已从 `center.ARMS` 中移除**（被 `clairvoyant_static` 取代）。2026-09-13 的全量重跑里它们是唯一三份**连命令都跑不起来**的文件（`unknown arm 'oracle_deploy'`），既不能重算也不能核对，因此移出可引用集 |
+
+## 实例层：`aoi_defect_2026-09-13/`（备份，不是撤销）
+
+这个子目录放的是 **237 个实例结果文件在 AoI 修复前的原样副本**，外加：
+
+| 文件 | 说明 |
+|---|---|
+| `regeneration_report.json` | 逐文件记录重跑后的差异：`only_aoi`＝只有 AoI/无观测这一列变（66 个）；`moved`＝**别的列也变了**（171 个），并列出变化的字段名 |
+
+**为什么这不是"撤销"。** `scoring._routine_block` 的 AoI 实现有两个缺陷（按采集时刻而非接收时刻推进；
+`newest` 可倒退），修好之后**每一个实例结果文件的 AoI 列都作废**。处理办法不是把这些文件撤出引用，
+而是**用文件自己记录的 `config` 重建命令、逐文件重跑**（`code/analysis/rerun_from_config.py`），
+并把重跑前后的差异逐路径核对出来。旧副本留在这里，是为了让"重跑之后到底变了什么"可被审计，
+**其读数本身不得引用**。
+
+**重跑同时暴露的第二件事**：171 个文件在现行代码下**除 AoI 之外也有列变化**
+（典型字段 `consumed_wh` / `airtime_uplink_h` / `commands_refused` / `dead_nodes_end`）——
+也就是说，**它们登记时的代码与现在不同**。这不是本次修复造成的，是它们早已如此，
+只是此前没有任何检查会发现这一点。逐文件结论见 `regeneration_report.json`。

@@ -1,39 +1,169 @@
 {
  "aggregate": {
-  "censored": 0.0,
-  "detection_latency_mean_s": 0.0,
-  "event_deliver_rate": 0.8,
-  "event_match_rate": 1.0,
-  "event_missing_collection": 0.0,
-  "event_missing_delivery": 4.2,
-  "gateway_forwarded": 152.9,
-  "knowledge_latency_mean_s": 1219.0714285714287,
-  "knowledge_latency_p90_s": 3207.0,
+  "arms": {
+   "local": {
+    "access_blocked": 0.0,
+    "autonomy_margin": null,
+    "autonomy_margin_min": null,
+    "censored": 0.0,
+    "commands_delivered": 0.0,
+    "commands_refused": 0.0,
+    "commands_sent": 0.0,
+    "dead_nodes_end": 0.0,
+    "deduplicated": 0.0,
+    "deficit_h": 0.0,
+    "delivery_oracle": 127.65,
+    "delivery_oracle_free_tx": 135.1,
+    "delivery_oracle_mid": 135.1,
+    "downlink_attempts": 0.0,
+    "dynamic_oracle": null,
+    "event_delivered": 16.8,
+    "event_match": 21.0,
+    "event_missing_delivery": 4.2,
+    "fenced": 0.0,
+    "intent_expired": 0.0,
+    "intent_generated": 0.0,
+    "intent_lost": 0.0,
+    "intent_mismatch_min": 0.0,
+    "intent_refused": 0.0,
+    "intent_rejected": 0.0,
+    "intent_stale_gen": 0.0,
+    "knowledge_latency_mean_s": 1219.0714285714287,
+    "mixed_config_min": 0.0,
+    "n_seeds": 20,
+    "oracle_coverage": null,
+    "recovery_backlog_recovered": 42.0,
+    "recovery_delivered": 35.1,
+    "recovery_missing_collection": 0.0,
+    "recovery_missing_delivery": 20.9,
+    "recovery_n_obligations": 56.0,
+    "routine_aoi_mean_s": 6521.713864406696,
+    "routine_delivered": 125.55,
+    "routine_missing_collection": 0.0,
+    "routine_missing_delivery": 42.45,
+    "uplinks": 169.0,
+    "uplinks_heard": 124.6,
+    "writes_changed": 0.0,
+    "writes_same_value": 0.0,
+    "writes_speculative": 0.0
+   }
+  },
+  "config": {
+   "access_outage_h": 0.0,
+   "access_outage_start_h": 4.0,
+   "arms": "local",
+   "backhaul_burst": "",
+   "backhaul_p_good": 0.62,
+   "blackout_frac": 0.0,
+   "blackout_start_h": 0.0,
+   "cache_service": "fifo",
+   "capacity_wh": 0.05,
+   "charge_min_c": "5.0",
+   "dynamic_oracle": false,
+   "energy_scale": 1.0,
+   "event_spacing_s": 300,
+   "exec_layers": "naive",
+   "harvest_mode": "uniform",
+   "harvest_wh_per_hour": 0.05,
+   "hold_every": 0,
+   "hold_op": null,
+   "hold_s": 0,
+   "idle_wh_per_tick": 0.0,
+   "initial_soc": 1.0,
+   "irr_no_source_temp": false,
+   "irr_peak_wh_per_hour": 0.01,
+   "irr_shade_frac": 0.0,
+   "irr_snow_after_h": 0,
+   "irr_snow_frac": 0.0,
+   "irr_start_h": 0,
+   "irr_year": 2023,
+   "low_frac": 0.4,
+   "low_wh_per_hour": 0.005,
+   "oracle_soc_bins": 200,
+   "outage_hours": 3.0,
+   "outage_start_h": 4.0,
+   "sample_interval_s": 3600,
+   "seeds": 20,
+   "soc_bias": 1.0,
+   "soc_loss_p": 0.0,
+   "soc_max_age_s": null,
+   "soc_noise_wh": 0.0,
+   "solar_cloud_atten": 0.25,
+   "solar_cloud_p": 0.35,
+   "solar_day_start_h": 6.0,
+   "solar_peak_wh_per_hour": 0.06,
+   "solar_shade_frac": 0.0,
+   "solar_snow_frac": 0.0,
+   "solar_snow_start_h": 8.0,
+   "tag": "outage3h",
+   "tail_hours": 1.0,
+   "task_hours": 12.0,
+   "uplink_burst": "",
+   "uplink_p_arrive": 0.74
+  },
   "n_seeds": 20,
-  "recovery_backlog_recovered": 42.0,
-  "recovery_delivered": 35.1,
-  "recovery_missing_collection": 0.0,
-  "recovery_missing_delivery": 20.9,
-  "recovery_n_obligations": 56.0,
-  "routine_aoi_mean_s": 2210.502747252747,
-  "routine_delivered_rate": 0.7473214285714286,
-  "routine_missing_collection": 0.0,
-  "routine_missing_delivery": 42.45,
-  "tail_hours": 1.0,
-  "task_hours": 12.0,
-  "uplinks": 169.0,
-  "uplinks_heard": 124.6
- },
- "config": {
-  "outage_hours": 3.0,
-  "outage_start_h": 4.0,
-  "seeds": 20,
-  "tag": "outage3h",
   "tail_hours": 1.0,
   "task_hours": 12.0
  },
+ "config": {
+  "access_outage_h": 0.0,
+  "access_outage_start_h": 4.0,
+  "arms": "local",
+  "backhaul_burst": "",
+  "backhaul_p_good": 0.62,
+  "blackout_frac": 0.0,
+  "blackout_start_h": 0.0,
+  "cache_service": "fifo",
+  "capacity_wh": 0.05,
+  "charge_min_c": "5.0",
+  "dynamic_oracle": false,
+  "energy_scale": 1.0,
+  "event_spacing_s": 300,
+  "exec_layers": "naive",
+  "harvest_mode": "uniform",
+  "harvest_wh_per_hour": 0.05,
+  "hold_every": 0,
+  "hold_op": null,
+  "hold_s": 0,
+  "idle_wh_per_tick": 0.0,
+  "initial_soc": 1.0,
+  "irr_no_source_temp": false,
+  "irr_peak_wh_per_hour": 0.01,
+  "irr_shade_frac": 0.0,
+  "irr_snow_after_h": 0,
+  "irr_snow_frac": 0.0,
+  "irr_start_h": 0,
+  "irr_year": 2023,
+  "low_frac": 0.4,
+  "low_wh_per_hour": 0.005,
+  "oracle_soc_bins": 200,
+  "outage_hours": 3.0,
+  "outage_start_h": 4.0,
+  "sample_interval_s": 3600,
+  "seeds": 20,
+  "soc_bias": 1.0,
+  "soc_loss_p": 0.0,
+  "soc_max_age_s": null,
+  "soc_noise_wh": 0.0,
+  "solar_cloud_atten": 0.25,
+  "solar_cloud_p": 0.35,
+  "solar_day_start_h": 6.0,
+  "solar_peak_wh_per_hour": 0.06,
+  "solar_shade_frac": 0.0,
+  "solar_snow_frac": 0.0,
+  "solar_snow_start_h": 8.0,
+  "tag": "outage3h",
+  "tail_hours": 1.0,
+  "task_hours": 12.0,
+  "uplink_burst": "",
+  "uplink_p_arrive": 0.74
+ },
  "runs": [
   {
+   "access_blocked": 0,
+   "arm": "local",
+   "autonomy_margin": Infinity,
+   "autonomy_margin_min": Infinity,
    "by_kind": {
     "event": {
      "censored": 0,
@@ -52,6 +182,17 @@
      "n": 168
     }
    },
+   "command_counters": {
+    "commands_delivered": 0,
+    "commands_refused": 0,
+    "commands_sent": 0,
+    "deduplicated": 0,
+    "fenced": 0,
+    "stale_generation_dropped": 0,
+    "writes_changed": 0,
+    "writes_same_value": 0,
+    "writes_speculative": 0
+   },
    "communication": {
     "airtime_downlink_h": 0.0,
     "airtime_uplink_h": 0.010259626666666674,
@@ -61,6 +202,9 @@
     "uplinks": 169,
     "uplinks_heard": 124
    },
+   "delivery_oracle": 135,
+   "delivery_oracle_free_tx": 140,
+   "delivery_oracle_mid": 140,
    "deployment": {
     "best_sf": {
      "n00": 7,
@@ -105,119 +249,120 @@
     "n_reachable": 13,
     "n_slope_nodes": 16
    },
+   "dynamic_oracle": null,
    "energy": {
     "per_node": {
      "gw0": {
-      "consumed_wh": 0.0006800000000000005,
+      "consumed_wh": 0.01598,
       "dead_at_s": null,
       "deficit_s": 0,
-      "harvested_wh": 0.0006799999999742568,
-      "soc_final_wh": 40.0,
-      "soc_initial_wh": 40.0
+      "harvested_wh": 0.01597999999999994,
+      "soc_final_wh": 0.05,
+      "soc_initial_wh": 0.05
      },
      "n00": {
-      "consumed_wh": 0.0006790503680000001,
+      "consumed_wh": 0.006529050368,
       "dead_at_s": null,
       "deficit_s": 0,
-      "harvested_wh": 0.0006790503679852122,
-      "soc_final_wh": 40.0,
-      "soc_initial_wh": 40.0
+      "harvested_wh": 0.006529050367999972,
+      "soc_final_wh": 0.05,
+      "soc_initial_wh": 0.05
      },
      "n01": {
-      "consumed_wh": 0.000670039168,
+      "consumed_wh": 0.006520039168,
       "dead_at_s": null,
       "deficit_s": 0,
-      "harvested_wh": 0.0006700391679856921,
-      "soc_final_wh": 40.0,
-      "soc_initial_wh": 40.0
+      "harvested_wh": 0.00652003916799998,
+      "soc_final_wh": 0.05,
+      "soc_initial_wh": 0.05
      },
      "n02": {
-      "consumed_wh": 0.0006655335680000002,
+      "consumed_wh": 0.006515533568,
       "dead_at_s": null,
       "deficit_s": 0,
-      "harvested_wh": 0.0006655335679823793,
-      "soc_final_wh": 40.0,
-      "soc_initial_wh": 40.0
+      "harvested_wh": 0.00651553356799997,
+      "soc_final_wh": 0.05,
+      "soc_initial_wh": 0.05
      },
      "n03": {
-      "consumed_wh": 0.000665533568,
+      "consumed_wh": 0.006515533568,
       "dead_at_s": null,
       "deficit_s": 0,
-      "harvested_wh": 0.0006655335679823793,
-      "soc_final_wh": 40.0,
-      "soc_initial_wh": 40.0
+      "harvested_wh": 0.00651553356799997,
+      "soc_final_wh": 0.05,
+      "soc_initial_wh": 0.05
      },
      "n04": {
-      "consumed_wh": 0.000665533568,
+      "consumed_wh": 0.006515533568,
       "dead_at_s": null,
       "deficit_s": 0,
-      "harvested_wh": 0.0006655335679823793,
-      "soc_final_wh": 40.0,
-      "soc_initial_wh": 40.0
+      "harvested_wh": 0.00651553356799997,
+      "soc_final_wh": 0.05,
+      "soc_initial_wh": 0.05
      },
      "n05": {
-      "consumed_wh": 0.0006700391680000002,
+      "consumed_wh": 0.006520039167999999,
       "dead_at_s": null,
       "deficit_s": 0,
-      "harvested_wh": 0.0006700391679856921,
-      "soc_final_wh": 40.0,
-      "soc_initial_wh": 40.0
+      "harvested_wh": 0.006520039167999973,
+      "soc_final_wh": 0.05,
+      "soc_initial_wh": 0.05
      },
      "n06": {
-      "consumed_wh": 0.0006655335680000002,
+      "consumed_wh": 0.006515533568000001,
       "dead_at_s": null,
       "deficit_s": 0,
-      "harvested_wh": 0.0006655335679823793,
-      "soc_final_wh": 40.0,
-      "soc_initial_wh": 40.0
+      "harvested_wh": 0.00651553356799997,
+      "soc_final_wh": 0.05,
+      "soc_initial_wh": 0.05
      },
      "n07": {
-      "consumed_wh": 0.0006655335680000002,
+      "consumed_wh": 0.006515533568000001,
       "dead_at_s": null,
       "deficit_s": 0,
-      "harvested_wh": 0.0006655335679823793,
-      "soc_final_wh": 40.0,
-      "soc_initial_wh": 40.0
+      "harvested_wh": 0.00651553356799997,
+      "soc_final_wh": 0.05,
+      "soc_initial_wh": 0.05
      },
      "n10": {
-      "consumed_wh": 0.0006637313280000001,
+      "consumed_wh": 0.0065137313280000005,
       "dead_at_s": null,
       "deficit_s": 0,
-      "harvested_wh": 0.0006637313279824752,
-      "soc_final_wh": 40.0,
-      "soc_initial_wh": 40.0
+      "harvested_wh": 0.006513731327999969,
+      "soc_final_wh": 0.05,
+      "soc_initial_wh": 0.05
      },
      "n11": {
-      "consumed_wh": 0.0006673358080000003,
+      "consumed_wh": 0.006517335808,
       "dead_at_s": null,
       "deficit_s": 0,
-      "harvested_wh": 0.0006673358079822833,
-      "soc_final_wh": 40.0,
-      "soc_initial_wh": 40.0
+      "harvested_wh": 0.006517335807999972,
+      "soc_final_wh": 0.05,
+      "soc_initial_wh": 0.05
      },
      "n13": {
-      "consumed_wh": 0.0006898638080000002,
+      "consumed_wh": 0.006539863807999999,
       "dead_at_s": null,
       "deficit_s": 0,
-      "harvested_wh": 0.0006898638079917419,
-      "soc_final_wh": 40.0,
-      "soc_initial_wh": 40.0
+      "harvested_wh": 0.006539863807999972,
+      "soc_final_wh": 0.05,
+      "soc_initial_wh": 0.05
      },
      "n15": {
-      "consumed_wh": 0.0006790503680000001,
+      "consumed_wh": 0.006529050368,
       "dead_at_s": null,
       "deficit_s": 0,
-      "harvested_wh": 0.0006790503679852122,
-      "soc_final_wh": 40.0,
-      "soc_initial_wh": 40.0
+      "harvested_wh": 0.006529050367999972,
+      "soc_final_wh": 0.05,
+      "soc_initial_wh": 0.05
      },
      "n16": {
-      "consumed_wh": 0.0006763470080000001,
+      "consumed_wh": 0.006526347008,
       "dead_at_s": null,
       "deficit_s": 0,
-      "harvested_wh": 0.0006763470079889089,
-      "soc_final_wh": 40.0,
-      "soc_initial_wh": 40.0
+      "harvested_wh": 0.0065263470079999775,
+      "soc_final_wh": 0.05,
+      "soc_initial_wh": 0.05
      }
     }
    },
@@ -226,10 +371,10 @@
     "deliver_rate": 0.8095238095238095,
     "delivery_cdf": {
      "0": 0.7142857142857143,
-     "300": 0.7619047619047619,
-     "600": 0.8095238095238095,
      "1800": 0.8095238095238095,
-     "3600": 0.8095238095238095
+     "300": 0.7619047619047619,
+     "3600": 0.8095238095238095,
+     "600": 0.8095238095238095
     },
     "delivery_latency_mean_s": 24.705882352941178,
     "delivery_latency_p90_s": 0,
@@ -238,13 +383,37 @@
     "slots_delivered": 17,
     "slots_matched_by_collection": 21
    },
+   "exec_layer": "naive",
+   "hazard": {
+    "hold_every": 0,
+    "hold_s": 0
+   },
+   "intent_ledger": {
+    "change": 0,
+    "dedup": 0,
+    "expired": 0,
+    "fenced": 0,
+    "generated": 0,
+    "landed": 0,
+    "lost": 0,
+    "queued_left": 0,
+    "refused": 0,
+    "rejected": 0,
+    "same_value": 0,
+    "sent": 0,
+    "speculative": 0,
+    "stale_gen": 0
+   },
+   "intent_mismatch_s": 0,
+   "mixed_config_s": 0,
    "n_obligations": 189,
    "not_applicable": {
-    "config_mismatch_s": "\u6700\u5c0f\u5b9e\u4f8b\u6ca1\u6709\u5916\u90e8\u914d\u7f6e\u8981\u6c42\uff0c\u65e0\u6cd5\u5b9a\u4e49'\u9519\u8bef\u914d\u7f6e'\uff1b\u8fd4\u56de None \u800c\u4e0d\u662f 0\u3002"
+    "config_mismatch_s": "最小实例没有外部配置要求，无法定义'错误配置'；返回 None 而不是 0。",
+    "mixed_config_s": "计数器在 Instance.mixed_config_ticks 上，本函数只拿到 log、取不到；**不返回恒定值的假列**。需要这一列请从 Instance 取。"
    },
    "observation_window": {
     "censored_total": 0,
-    "note": "\u5220\u5931 = \u8fd0\u884c\u7ed3\u675f\u65f6\u8be5\u4e49\u52a1\u7684\u89c2\u5bdf\u622a\u6b62\u8fd8\u6ca1\u5230\uff1b\u65e2\u4e0d\u7b97\u6210\u529f\u4e5f\u4e0d\u7b97\u5931\u8d25\uff0c\u7559\u5728\u5206\u6bcd\u91cc\u3002",
+    "note": "删失 = 运行结束时该义务的观察截止还没到；既不算成功也不算失败，留在分母里。",
     "run_hours": 13,
     "tail_s": 3600,
     "task_hours": 12
@@ -258,7 +427,7 @@
     "knowledge_latency_p90_s": 660,
     "known_to_center": 7,
     "n_triggers": 7,
-    "note": "\u672c\u5b9e\u4f8b\u6ca1\u6709\u7b2c\u4e8c\u6761\u83b7\u77e5\u6e20\u9053\uff0c\u56e0\u6b64'\u4e2d\u5fc3\u83b7\u77e5\u4e8b\u4ef6'\u4e0e'\u4e2d\u5fc3\u62ff\u5230\u9996\u4efd\u65b0\u6570\u636e'\u540c\u4e00\u65f6\u523b\uff1b\u4e24\u8005\u7684\u5dee\u672a\u88ab\u6d4b\u8fc7\u3002"
+    "note": "本实例没有第二条获知渠道，因此'中心获知事件'与'中心拿到首份新数据'同一时刻；两者的差未被测过。"
    },
    "recovery": {
     "backlog_recovered": 42,
@@ -267,7 +436,7 @@
     "missing_collection": 0,
     "missing_delivery": 29,
     "n_obligations_in_window": 56,
-    "note": "\u91c7\u96c6\u7f3a\u5931\u5728\u6062\u590d\u540e\u8865\u4e0d\u56de\u6765\uff08\u4e0d\u8865\u9020\u5f53\u65f6\u672a\u91c7\u5230\u7684\u8bfb\u6570\uff09\uff1b\u4ea4\u4ed8\u7f3a\u5931\u5355\u5217\uff0c\u56e0\u4e3a\u5b83\u53ef\u7531\u81ea\u52a8\u8865\u53d1\u8ffd\u56de\u3002",
+    "note": "采集缺失在恢复后补不回来（不补造当时未采到的读数）；交付缺失单列，因为它可由自动补发追回。",
     "outage_hours": 3.0,
     "outage_s": [
      14400,
@@ -276,7 +445,7 @@
     "recovery_observation_s": 3600
    },
    "routine": {
-    "aoi_mean_s": 2139.565934065934,
+    "aoi_mean_s": 6004.109090909091,
     "censored": 0,
     "delivered": 132,
     "latency_mean_s": 2127.2727272727275,
@@ -284,11 +453,15 @@
     "missing_collection": 0,
     "missing_delivery": 36,
     "n": 168,
-    "no_observation_s": 0
+    "no_observation_s": 61200
    },
    "seed": 0
   },
   {
+   "access_blocked": 0,
+   "arm": "local",
+   "autonomy_margin": Infinity,
+   "autonomy_margin_min": Infinity,
    "by_kind": {
     "event": {
      "censored": 0,
@@ -307,6 +480,17 @@
      "n": 168
     }
    },
+   "command_counters": {
+    "commands_delivered": 0,
+    "commands_refused": 0,
+    "commands_sent": 0,
+    "deduplicated": 0,
+    "fenced": 0,
+    "stale_generation_dropped": 0,
+    "writes_changed": 0,
+    "writes_same_value": 0,
+    "writes_speculative": 0
+   },
    "communication": {
     "airtime_downlink_h": 0.0,
     "airtime_uplink_h": 0.01098780444444446,
@@ -316,6 +500,9 @@
     "uplinks": 169,
     "uplinks_heard": 128
    },
+   "delivery_oracle": 123,
+   "delivery_oracle_free_tx": 126,
+   "delivery_oracle_mid": 126,
    "deployment": {
     "best_sf": {
      "n00": 7,
@@ -360,119 +547,120 @@
     "n_reachable": 13,
     "n_slope_nodes": 16
    },
+   "dynamic_oracle": null,
    "energy": {
     "per_node": {
      "gw0": {
-      "consumed_wh": 0.0006800000000000005,
+      "consumed_wh": 0.01598,
       "dead_at_s": null,
       "deficit_s": 0,
-      "harvested_wh": 0.0006799999999742568,
-      "soc_final_wh": 40.0,
-      "soc_initial_wh": 40.0
+      "harvested_wh": 0.01597999999999994,
+      "soc_final_wh": 0.05,
+      "soc_initial_wh": 0.05
      },
      "n00": {
-      "consumed_wh": 0.0006817537280000001,
+      "consumed_wh": 0.006531753727999999,
       "dead_at_s": null,
       "deficit_s": 0,
-      "harvested_wh": 0.000681753727988621,
-      "soc_final_wh": 40.0,
-      "soc_initial_wh": 40.0
+      "harvested_wh": 0.006531753727999974,
+      "soc_final_wh": 0.05,
+      "soc_initial_wh": 0.05
      },
      "n01": {
-      "consumed_wh": 0.0006790503680000001,
+      "consumed_wh": 0.006529050368000001,
       "dead_at_s": null,
       "deficit_s": 0,
-      "harvested_wh": 0.0006790503679852122,
-      "soc_final_wh": 40.0,
-      "soc_initial_wh": 40.0
+      "harvested_wh": 0.006529050367999979,
+      "soc_final_wh": 0.05,
+      "soc_initial_wh": 0.05
      },
      "n02": {
-      "consumed_wh": 0.0006889626880000001,
+      "consumed_wh": 0.0065389626880000004,
       "dead_at_s": null,
       "deficit_s": 0,
-      "harvested_wh": 0.0006889626879882371,
-      "soc_final_wh": 40.0,
-      "soc_initial_wh": 40.0
+      "harvested_wh": 0.006538962687999979,
+      "soc_final_wh": 0.05,
+      "soc_initial_wh": 0.05
      },
      "n03": {
-      "consumed_wh": 0.0006772481280000001,
+      "consumed_wh": 0.006527248128,
       "dead_at_s": null,
       "deficit_s": 0,
-      "harvested_wh": 0.0006772481279853082,
-      "soc_final_wh": 40.0,
-      "soc_initial_wh": 40.0
+      "harvested_wh": 0.006527248127999971,
+      "soc_final_wh": 0.05,
+      "soc_initial_wh": 0.05
      },
      "n04": {
-      "consumed_wh": 0.000677248128,
+      "consumed_wh": 0.006527248128000001,
       "dead_at_s": null,
       "deficit_s": 0,
-      "harvested_wh": 0.0006772481279853082,
-      "soc_final_wh": 40.0,
-      "soc_initial_wh": 40.0
+      "harvested_wh": 0.006527248127999978,
+      "soc_final_wh": 0.05,
+      "soc_initial_wh": 0.05
      },
      "n05": {
-      "consumed_wh": 0.0006790503680000001,
+      "consumed_wh": 0.006529050367999999,
       "dead_at_s": null,
       "deficit_s": 0,
-      "harvested_wh": 0.0006790503679852122,
-      "soc_final_wh": 40.0,
-      "soc_initial_wh": 40.0
+      "harvested_wh": 0.006529050367999972,
+      "soc_final_wh": 0.05,
+      "soc_initial_wh": 0.05
      },
      "n06": {
-      "consumed_wh": 0.0006835559680000002,
+      "consumed_wh": 0.006533555967999999,
       "dead_at_s": null,
       "deficit_s": 0,
-      "harvested_wh": 0.000683555967988525,
-      "soc_final_wh": 40.0,
-      "soc_initial_wh": 40.0
+      "harvested_wh": 0.006533555967999975,
+      "soc_final_wh": 0.05,
+      "soc_initial_wh": 0.05
      },
      "n07": {
-      "consumed_wh": 0.0006772481280000001,
+      "consumed_wh": 0.006527248128,
       "dead_at_s": null,
       "deficit_s": 0,
-      "harvested_wh": 0.0006772481279853082,
-      "soc_final_wh": 40.0,
-      "soc_initial_wh": 40.0
+      "harvested_wh": 0.006527248127999971,
+      "soc_final_wh": 0.05,
+      "soc_initial_wh": 0.05
      },
      "n10": {
-      "consumed_wh": 0.0006799514880000001,
+      "consumed_wh": 0.006529951488,
       "dead_at_s": null,
       "deficit_s": 0,
-      "harvested_wh": 0.000679951487988717,
-      "soc_final_wh": 40.0,
-      "soc_initial_wh": 40.0
+      "harvested_wh": 0.006529951487999973,
+      "soc_final_wh": 0.05,
+      "soc_initial_wh": 0.05
      },
      "n11": {
-      "consumed_wh": 0.000679951488,
+      "consumed_wh": 0.006529951488,
       "dead_at_s": null,
       "deficit_s": 0,
-      "harvested_wh": 0.000679951487988717,
-      "soc_final_wh": 40.0,
-      "soc_initial_wh": 40.0
+      "harvested_wh": 0.006529951487999973,
+      "soc_final_wh": 0.05,
+      "soc_initial_wh": 0.05
      },
      "n13": {
-      "consumed_wh": 0.0006790503680000001,
+      "consumed_wh": 0.006529050368000001,
       "dead_at_s": null,
       "deficit_s": 0,
-      "harvested_wh": 0.0006790503679852122,
-      "soc_final_wh": 40.0,
-      "soc_initial_wh": 40.0
+      "harvested_wh": 0.006529050367999979,
+      "soc_final_wh": 0.05,
+      "soc_initial_wh": 0.05
      },
      "n15": {
-      "consumed_wh": 0.0006799514880000001,
+      "consumed_wh": 0.006529951488,
       "dead_at_s": null,
       "deficit_s": 0,
-      "harvested_wh": 0.000679951487988717,
-      "soc_final_wh": 40.0,
-      "soc_initial_wh": 40.0
+      "harvested_wh": 0.006529951487999973,
+      "soc_final_wh": 0.05,
+      "soc_initial_wh": 0.05
      },
      "n16": {
-      "consumed_wh": 0.0006754458880000001,
+      "consumed_wh": 0.006525445888,
       "dead_at_s": null,
       "deficit_s": 0,
-      "harvested_wh": 0.0006754458879854042,
-      "soc_final_wh": 40.0,
-      "soc_initial_wh": 40.0
+      "harvested_wh": 0.00652544588799997,
+      "soc_final_wh": 0.05,
+      "soc_initial_wh": 0.05
      }
     }
    },
@@ -481,10 +669,10 @@
     "deliver_rate": 1.0,
     "delivery_cdf": {
      "0": 1.0,
-     "300": 1.0,
-     "600": 1.0,
      "1800": 1.0,
-     "3600": 1.0
+     "300": 1.0,
+     "3600": 1.0,
+     "600": 1.0
     },
     "delivery_latency_mean_s": 0.0,
     "delivery_latency_p90_s": 0,
@@ -493,13 +681,37 @@
     "slots_delivered": 21,
     "slots_matched_by_collection": 21
    },
+   "exec_layer": "naive",
+   "hazard": {
+    "hold_every": 0,
+    "hold_s": 0
+   },
+   "intent_ledger": {
+    "change": 0,
+    "dedup": 0,
+    "expired": 0,
+    "fenced": 0,
+    "generated": 0,
+    "landed": 0,
+    "lost": 0,
+    "queued_left": 0,
+    "refused": 0,
+    "rejected": 0,
+    "same_value": 0,
+    "sent": 0,
+    "speculative": 0,
+    "stale_gen": 0
+   },
+   "intent_mismatch_s": 0,
+   "mixed_config_s": 0,
    "n_obligations": 189,
    "not_applicable": {
-    "config_mismatch_s": "\u6700\u5c0f\u5b9e\u4f8b\u6ca1\u6709\u5916\u90e8\u914d\u7f6e\u8981\u6c42\uff0c\u65e0\u6cd5\u5b9a\u4e49'\u9519\u8bef\u914d\u7f6e'\uff1b\u8fd4\u56de None \u800c\u4e0d\u662f 0\u3002"
+    "config_mismatch_s": "最小实例没有外部配置要求，无法定义'错误配置'；返回 None 而不是 0。",
+    "mixed_config_s": "计数器在 Instance.mixed_config_ticks 上，本函数只拿到 log、取不到；**不返回恒定值的假列**。需要这一列请从 Instance 取。"
    },
    "observation_window": {
     "censored_total": 0,
-    "note": "\u5220\u5931 = \u8fd0\u884c\u7ed3\u675f\u65f6\u8be5\u4e49\u52a1\u7684\u89c2\u5bdf\u622a\u6b62\u8fd8\u6ca1\u5230\uff1b\u65e2\u4e0d\u7b97\u6210\u529f\u4e5f\u4e0d\u7b97\u5931\u8d25\uff0c\u7559\u5728\u5206\u6bcd\u91cc\u3002",
+    "note": "删失 = 运行结束时该义务的观察截止还没到；既不算成功也不算失败，留在分母里。",
     "run_hours": 13,
     "tail_s": 3600,
     "task_hours": 12
@@ -513,7 +725,7 @@
     "knowledge_latency_p90_s": 0,
     "known_to_center": 7,
     "n_triggers": 7,
-    "note": "\u672c\u5b9e\u4f8b\u6ca1\u6709\u7b2c\u4e8c\u6761\u83b7\u77e5\u6e20\u9053\uff0c\u56e0\u6b64'\u4e2d\u5fc3\u83b7\u77e5\u4e8b\u4ef6'\u4e0e'\u4e2d\u5fc3\u62ff\u5230\u9996\u4efd\u65b0\u6570\u636e'\u540c\u4e00\u65f6\u523b\uff1b\u4e24\u8005\u7684\u5dee\u672a\u88ab\u6d4b\u8fc7\u3002"
+    "note": "本实例没有第二条获知渠道，因此'中心获知事件'与'中心拿到首份新数据'同一时刻；两者的差未被测过。"
    },
    "recovery": {
     "backlog_recovered": 42,
@@ -522,7 +734,7 @@
     "missing_collection": 0,
     "missing_delivery": 14,
     "n_obligations_in_window": 56,
-    "note": "\u91c7\u96c6\u7f3a\u5931\u5728\u6062\u590d\u540e\u8865\u4e0d\u56de\u6765\uff08\u4e0d\u8865\u9020\u5f53\u65f6\u672a\u91c7\u5230\u7684\u8bfb\u6570\uff09\uff1b\u4ea4\u4ed8\u7f3a\u5931\u5355\u5217\uff0c\u56e0\u4e3a\u5b83\u53ef\u7531\u81ea\u52a8\u8865\u53d1\u8ffd\u56de\u3002",
+    "note": "采集缺失在恢复后补不回来（不补造当时未采到的读数）；交付缺失单列，因为它可由自动补发追回。",
     "outage_hours": 3.0,
     "outage_s": [
      14400,
@@ -531,7 +743,7 @@
     "recovery_observation_s": 3600
    },
    "routine": {
-    "aoi_mean_s": 1882.423076923077,
+    "aoi_mean_s": 6717.826815642458,
     "censored": 0,
     "delivered": 123,
     "latency_mean_s": 2195.121951219512,
@@ -539,11 +751,15 @@
     "missing_collection": 0,
     "missing_delivery": 45,
     "n": 168,
-    "no_observation_s": 0
+    "no_observation_s": 10800
    },
    "seed": 1
   },
   {
+   "access_blocked": 0,
+   "arm": "local",
+   "autonomy_margin": Infinity,
+   "autonomy_margin_min": Infinity,
    "by_kind": {
     "event": {
      "censored": 0,
@@ -562,6 +778,17 @@
      "n": 168
     }
    },
+   "command_counters": {
+    "commands_delivered": 0,
+    "commands_refused": 0,
+    "commands_sent": 0,
+    "deduplicated": 0,
+    "fenced": 0,
+    "stale_generation_dropped": 0,
+    "writes_changed": 0,
+    "writes_same_value": 0,
+    "writes_speculative": 0
+   },
    "communication": {
     "airtime_downlink_h": 0.0,
     "airtime_uplink_h": 0.01243278222222222,
@@ -571,6 +798,9 @@
     "uplinks": 169,
     "uplinks_heard": 120
    },
+   "delivery_oracle": 103,
+   "delivery_oracle_free_tx": 112,
+   "delivery_oracle_mid": 112,
    "deployment": {
     "best_sf": {
      "n00": 7,
@@ -615,119 +845,120 @@
     "n_reachable": 13,
     "n_slope_nodes": 16
    },
+   "dynamic_oracle": null,
    "energy": {
     "per_node": {
      "gw0": {
-      "consumed_wh": 0.0006800000000000005,
+      "consumed_wh": 0.01598,
       "dead_at_s": null,
       "deficit_s": 0,
-      "harvested_wh": 0.0006799999999742568,
-      "soc_final_wh": 40.0,
-      "soc_initial_wh": 40.0
+      "harvested_wh": 0.01597999999999994,
+      "soc_final_wh": 0.05,
+      "soc_initial_wh": 0.05
      },
      "n00": {
-      "consumed_wh": 0.0006889626880000001,
+      "consumed_wh": 0.0065389626880000004,
       "dead_at_s": null,
       "deficit_s": 0,
-      "harvested_wh": 0.0006889626879882371,
-      "soc_final_wh": 40.0,
-      "soc_initial_wh": 40.0
+      "harvested_wh": 0.006538962687999979,
+      "soc_final_wh": 0.05,
+      "soc_initial_wh": 0.05
      },
      "n01": {
-      "consumed_wh": 0.0006889626880000001,
+      "consumed_wh": 0.0065389626880000004,
       "dead_at_s": null,
       "deficit_s": 0,
-      "harvested_wh": 0.0006889626879882371,
-      "soc_final_wh": 40.0,
-      "soc_initial_wh": 40.0
+      "harvested_wh": 0.006538962687999972,
+      "soc_final_wh": 0.05,
+      "soc_initial_wh": 0.05
      },
      "n02": {
-      "consumed_wh": 0.000724106368,
+      "consumed_wh": 0.006574106368000002,
       "dead_at_s": null,
       "deficit_s": 0,
-      "harvested_wh": 0.0007241063679899185,
-      "soc_final_wh": 40.0,
-      "soc_initial_wh": 40.0
+      "harvested_wh": 0.006574106367999981,
+      "soc_final_wh": 0.05,
+      "soc_initial_wh": 0.05
      },
      "n03": {
-      "consumed_wh": 0.0006907649280000002,
+      "consumed_wh": 0.006540764928,
       "dead_at_s": null,
       "deficit_s": 0,
-      "harvested_wh": 0.0006907649279881412,
-      "soc_final_wh": 40.0,
-      "soc_initial_wh": 40.0
+      "harvested_wh": 0.006540764927999973,
+      "soc_final_wh": 0.05,
+      "soc_initial_wh": 0.05
      },
      "n04": {
-      "consumed_wh": 0.000711490688,
+      "consumed_wh": 0.006561490688,
       "dead_at_s": null,
       "deficit_s": 0,
-      "harvested_wh": 0.0007114906879905902,
-      "soc_final_wh": 40.0,
-      "soc_initial_wh": 40.0
+      "harvested_wh": 0.0065614906879999865,
+      "soc_final_wh": 0.05,
+      "soc_initial_wh": 0.05
      },
      "n05": {
-      "consumed_wh": 0.0007096884479999999,
+      "consumed_wh": 0.006559688448000001,
       "dead_at_s": null,
       "deficit_s": 0,
-      "harvested_wh": 0.0007096884479906862,
-      "soc_final_wh": 40.0,
-      "soc_initial_wh": 40.0
+      "harvested_wh": 0.006559688447999985,
+      "soc_final_wh": 0.05,
+      "soc_initial_wh": 0.05
      },
      "n06": {
-      "consumed_wh": 0.0006871604480000002,
+      "consumed_wh": 0.006537160448000001,
       "dead_at_s": null,
       "deficit_s": 0,
-      "harvested_wh": 0.0006871604479883331,
-      "soc_final_wh": 40.0,
-      "soc_initial_wh": 40.0
+      "harvested_wh": 0.006537160447999978,
+      "soc_final_wh": 0.05,
+      "soc_initial_wh": 0.05
      },
      "n07": {
-      "consumed_wh": 0.0006871604480000002,
+      "consumed_wh": 0.006537160448000001,
       "dead_at_s": null,
       "deficit_s": 0,
-      "harvested_wh": 0.0006871604479883331,
-      "soc_final_wh": 40.0,
-      "soc_initial_wh": 40.0
+      "harvested_wh": 0.006537160447999978,
+      "soc_final_wh": 0.05,
+      "soc_initial_wh": 0.05
      },
      "n10": {
-      "consumed_wh": 0.0006871604480000002,
+      "consumed_wh": 0.006537160448000001,
       "dead_at_s": null,
       "deficit_s": 0,
-      "harvested_wh": 0.0006871604479883331,
-      "soc_final_wh": 40.0,
-      "soc_initial_wh": 40.0
+      "harvested_wh": 0.006537160447999978,
+      "soc_final_wh": 0.05,
+      "soc_initial_wh": 0.05
      },
      "n11": {
-      "consumed_wh": 0.0006889626880000001,
+      "consumed_wh": 0.0065389626880000004,
       "dead_at_s": null,
       "deficit_s": 0,
-      "harvested_wh": 0.0006889626879882371,
-      "soc_final_wh": 40.0,
-      "soc_initial_wh": 40.0
+      "harvested_wh": 0.006538962687999979,
+      "soc_final_wh": 0.05,
+      "soc_initial_wh": 0.05
      },
      "n13": {
-      "consumed_wh": 0.0007024794880000001,
+      "consumed_wh": 0.006552479488000001,
       "dead_at_s": null,
       "deficit_s": 0,
-      "harvested_wh": 0.0007024794879910701,
-      "soc_final_wh": 40.0,
-      "soc_initial_wh": 40.0
+      "harvested_wh": 0.006552479487999974,
+      "soc_final_wh": 0.05,
+      "soc_initial_wh": 0.05
      },
      "n15": {
-      "consumed_wh": 0.0006907649280000002,
+      "consumed_wh": 0.006540764928,
       "dead_at_s": null,
       "deficit_s": 0,
-      "harvested_wh": 0.0006907649279881412,
-      "soc_final_wh": 40.0,
-      "soc_initial_wh": 40.0
+      "harvested_wh": 0.006540764927999973,
+      "soc_final_wh": 0.05,
+      "soc_initial_wh": 0.05
      },
      "n16": {
-      "consumed_wh": 0.0007096884479999999,
+      "consumed_wh": 0.006559688448000001,
       "dead_at_s": null,
       "deficit_s": 0,
-      "harvested_wh": 0.0007096884479906862,
-      "soc_final_wh": 40.0,
-      "soc_initial_wh": 40.0
+      "harvested_wh": 0.006559688447999985,
+      "soc_final_wh": 0.05,
+      "soc_initial_wh": 0.05
      }
     }
    },
@@ -736,10 +967,10 @@
     "deliver_rate": 0.6666666666666666,
     "delivery_cdf": {
      "0": 0.5714285714285714,
-     "300": 0.6190476190476191,
-     "600": 0.6666666666666666,
      "1800": 0.6666666666666666,
-     "3600": 0.6666666666666666
+     "300": 0.6190476190476191,
+     "3600": 0.6666666666666666,
+     "600": 0.6666666666666666
     },
     "delivery_latency_mean_s": 64.28571428571429,
     "delivery_latency_p90_s": 300,
@@ -748,13 +979,37 @@
     "slots_delivered": 14,
     "slots_matched_by_collection": 21
    },
+   "exec_layer": "naive",
+   "hazard": {
+    "hold_every": 0,
+    "hold_s": 0
+   },
+   "intent_ledger": {
+    "change": 0,
+    "dedup": 0,
+    "expired": 0,
+    "fenced": 0,
+    "generated": 0,
+    "landed": 0,
+    "lost": 0,
+    "queued_left": 0,
+    "refused": 0,
+    "rejected": 0,
+    "same_value": 0,
+    "sent": 0,
+    "speculative": 0,
+    "stale_gen": 0
+   },
+   "intent_mismatch_s": 0,
+   "mixed_config_s": 0,
    "n_obligations": 189,
    "not_applicable": {
-    "config_mismatch_s": "\u6700\u5c0f\u5b9e\u4f8b\u6ca1\u6709\u5916\u90e8\u914d\u7f6e\u8981\u6c42\uff0c\u65e0\u6cd5\u5b9a\u4e49'\u9519\u8bef\u914d\u7f6e'\uff1b\u8fd4\u56de None \u800c\u4e0d\u662f 0\u3002"
+    "config_mismatch_s": "最小实例没有外部配置要求，无法定义'错误配置'；返回 None 而不是 0。",
+    "mixed_config_s": "计数器在 Instance.mixed_config_ticks 上，本函数只拿到 log、取不到；**不返回恒定值的假列**。需要这一列请从 Instance 取。"
    },
    "observation_window": {
     "censored_total": 0,
-    "note": "\u5220\u5931 = \u8fd0\u884c\u7ed3\u675f\u65f6\u8be5\u4e49\u52a1\u7684\u89c2\u5bdf\u622a\u6b62\u8fd8\u6ca1\u5230\uff1b\u65e2\u4e0d\u7b97\u6210\u529f\u4e5f\u4e0d\u7b97\u5931\u8d25\uff0c\u7559\u5728\u5206\u6bcd\u91cc\u3002",
+    "note": "删失 = 运行结束时该义务的观察截止还没到；既不算成功也不算失败，留在分母里。",
     "run_hours": 13,
     "tail_s": 3600,
     "task_hours": 12
@@ -768,7 +1023,7 @@
     "knowledge_latency_p90_s": 5340,
     "known_to_center": 7,
     "n_triggers": 7,
-    "note": "\u672c\u5b9e\u4f8b\u6ca1\u6709\u7b2c\u4e8c\u6761\u83b7\u77e5\u6e20\u9053\uff0c\u56e0\u6b64'\u4e2d\u5fc3\u83b7\u77e5\u4e8b\u4ef6'\u4e0e'\u4e2d\u5fc3\u62ff\u5230\u9996\u4efd\u65b0\u6570\u636e'\u540c\u4e00\u65f6\u523b\uff1b\u4e24\u8005\u7684\u5dee\u672a\u88ab\u6d4b\u8fc7\u3002"
+    "note": "本实例没有第二条获知渠道，因此'中心获知事件'与'中心拿到首份新数据'同一时刻；两者的差未被测过。"
    },
    "recovery": {
     "backlog_recovered": 42,
@@ -777,7 +1032,7 @@
     "missing_collection": 0,
     "missing_delivery": 56,
     "n_obligations_in_window": 56,
-    "note": "\u91c7\u96c6\u7f3a\u5931\u5728\u6062\u590d\u540e\u8865\u4e0d\u56de\u6765\uff08\u4e0d\u8865\u9020\u5f53\u65f6\u672a\u91c7\u5230\u7684\u8bfb\u6570\uff09\uff1b\u4ea4\u4ed8\u7f3a\u5931\u5355\u5217\uff0c\u56e0\u4e3a\u5b83\u53ef\u7531\u81ea\u52a8\u8865\u53d1\u8ffd\u56de\u3002",
+    "note": "采集缺失在恢复后补不回来（不补造当时未采到的读数）；交付缺失单列，因为它可由自动补发追回。",
     "outage_hours": 3.0,
     "outage_s": [
      14400,
@@ -786,7 +1041,7 @@
     "recovery_observation_s": 3600
    },
    "routine": {
-    "aoi_mean_s": 2100.0054945054944,
+    "aoi_mean_s": 9038.045977011494,
     "censored": 0,
     "delivered": 103,
     "latency_mean_s": 1992.2330097087379,
@@ -794,11 +1049,15 @@
     "missing_collection": 0,
     "missing_delivery": 65,
     "n": 168,
-    "no_observation_s": 0
+    "no_observation_s": 28800
    },
    "seed": 2
   },
   {
+   "access_blocked": 0,
+   "arm": "local",
+   "autonomy_margin": Infinity,
+   "autonomy_margin_min": Infinity,
    "by_kind": {
     "event": {
      "censored": 0,
@@ -817,6 +1076,17 @@
      "n": 168
     }
    },
+   "command_counters": {
+    "commands_delivered": 0,
+    "commands_refused": 0,
+    "commands_sent": 0,
+    "deduplicated": 0,
+    "fenced": 0,
+    "stale_generation_dropped": 0,
+    "writes_changed": 0,
+    "writes_same_value": 0,
+    "writes_speculative": 0
+   },
    "communication": {
     "airtime_downlink_h": 0.0,
     "airtime_uplink_h": 0.011084515555555573,
@@ -826,6 +1096,9 @@
     "uplinks": 169,
     "uplinks_heard": 130
    },
+   "delivery_oracle": 121,
+   "delivery_oracle_free_tx": 126,
+   "delivery_oracle_mid": 126,
    "deployment": {
     "best_sf": {
      "n00": 7,
@@ -870,119 +1143,120 @@
     "n_reachable": 13,
     "n_slope_nodes": 16
    },
+   "dynamic_oracle": null,
    "energy": {
     "per_node": {
      "gw0": {
-      "consumed_wh": 0.0006800000000000005,
+      "consumed_wh": 0.01598,
       "dead_at_s": null,
       "deficit_s": 0,
-      "harvested_wh": 0.0006799999999742568,
-      "soc_final_wh": 40.0,
-      "soc_initial_wh": 40.0
+      "harvested_wh": 0.01597999999999994,
+      "soc_final_wh": 0.05,
+      "soc_initial_wh": 0.05
      },
      "n00": {
-      "consumed_wh": 0.0006781492480000001,
+      "consumed_wh": 0.0065281492479999995,
       "dead_at_s": null,
       "deficit_s": 0,
-      "harvested_wh": 0.0006781492479888129,
-      "soc_final_wh": 40.0,
-      "soc_initial_wh": 40.0
+      "harvested_wh": 0.006528149247999979,
+      "soc_final_wh": 0.05,
+      "soc_initial_wh": 0.05
      },
      "n01": {
-      "consumed_wh": 0.0006781492480000001,
+      "consumed_wh": 0.0065281492479999995,
       "dead_at_s": null,
       "deficit_s": 0,
-      "harvested_wh": 0.0006781492479888129,
-      "soc_final_wh": 40.0,
-      "soc_initial_wh": 40.0
+      "harvested_wh": 0.006528149247999979,
+      "soc_final_wh": 0.05,
+      "soc_initial_wh": 0.05
      },
      "n02": {
-      "consumed_wh": 0.0006763470080000002,
+      "consumed_wh": 0.006526347008,
       "dead_at_s": null,
       "deficit_s": 0,
-      "harvested_wh": 0.0006763470079889089,
-      "soc_final_wh": 40.0,
-      "soc_initial_wh": 40.0
+      "harvested_wh": 0.0065263470079999775,
+      "soc_final_wh": 0.05,
+      "soc_initial_wh": 0.05
      },
      "n03": {
-      "consumed_wh": 0.0006781492480000001,
+      "consumed_wh": 0.0065281492479999995,
       "dead_at_s": null,
       "deficit_s": 0,
-      "harvested_wh": 0.0006781492479888129,
-      "soc_final_wh": 40.0,
-      "soc_initial_wh": 40.0
+      "harvested_wh": 0.006528149247999979,
+      "soc_final_wh": 0.05,
+      "soc_initial_wh": 0.05
      },
      "n04": {
-      "consumed_wh": 0.0006880615680000001,
+      "consumed_wh": 0.006538061568,
       "dead_at_s": null,
       "deficit_s": 0,
-      "harvested_wh": 0.0006880615679918378,
-      "soc_final_wh": 40.0,
-      "soc_initial_wh": 40.0
+      "harvested_wh": 0.006538061567999985,
+      "soc_final_wh": 0.05,
+      "soc_initial_wh": 0.05
      },
      "n05": {
-      "consumed_wh": 0.0006781492480000001,
+      "consumed_wh": 0.0065281492479999995,
       "dead_at_s": null,
       "deficit_s": 0,
-      "harvested_wh": 0.0006781492479888129,
-      "soc_final_wh": 40.0,
-      "soc_initial_wh": 40.0
+      "harvested_wh": 0.006528149247999979,
+      "soc_final_wh": 0.05,
+      "soc_initial_wh": 0.05
      },
      "n06": {
-      "consumed_wh": 0.0006880615680000001,
+      "consumed_wh": 0.006538061568,
       "dead_at_s": null,
       "deficit_s": 0,
-      "harvested_wh": 0.0006880615679918378,
-      "soc_final_wh": 40.0,
-      "soc_initial_wh": 40.0
+      "harvested_wh": 0.006538061567999985,
+      "soc_final_wh": 0.05,
+      "soc_initial_wh": 0.05
      },
      "n07": {
-      "consumed_wh": 0.0006763470080000002,
+      "consumed_wh": 0.006526347008,
       "dead_at_s": null,
       "deficit_s": 0,
-      "harvested_wh": 0.0006763470079889089,
-      "soc_final_wh": 40.0,
-      "soc_initial_wh": 40.0
+      "harvested_wh": 0.0065263470079999775,
+      "soc_final_wh": 0.05,
+      "soc_initial_wh": 0.05
      },
      "n10": {
-      "consumed_wh": 0.0006853582080000001,
+      "consumed_wh": 0.006535358207999999,
       "dead_at_s": null,
       "deficit_s": 0,
-      "harvested_wh": 0.0006853582079955345,
-      "soc_final_wh": 40.0,
-      "soc_initial_wh": 40.0
+      "harvested_wh": 0.006535358207999983,
+      "soc_final_wh": 0.05,
+      "soc_initial_wh": 0.05
      },
      "n11": {
-      "consumed_wh": 0.0006826548480000002,
+      "consumed_wh": 0.006532654848,
       "dead_at_s": null,
       "deficit_s": 0,
-      "harvested_wh": 0.0006826548479921257,
-      "soc_final_wh": 40.0,
-      "soc_initial_wh": 40.0
+      "harvested_wh": 0.006532654847999982,
+      "soc_final_wh": 0.05,
+      "soc_initial_wh": 0.05
      },
      "n13": {
-      "consumed_wh": 0.0006763470080000002,
+      "consumed_wh": 0.006526347008,
       "dead_at_s": null,
       "deficit_s": 0,
-      "harvested_wh": 0.0006763470079889089,
-      "soc_final_wh": 40.0,
-      "soc_initial_wh": 40.0
+      "harvested_wh": 0.0065263470079999775,
+      "soc_final_wh": 0.05,
+      "soc_initial_wh": 0.05
      },
      "n15": {
-      "consumed_wh": 0.000689863808,
+      "consumed_wh": 0.006539863807999999,
       "dead_at_s": null,
       "deficit_s": 0,
-      "harvested_wh": 0.0006898638079917419,
-      "soc_final_wh": 40.0,
-      "soc_initial_wh": 40.0
+      "harvested_wh": 0.006539863807999986,
+      "soc_final_wh": 0.05,
+      "soc_initial_wh": 0.05
      },
      "n16": {
-      "consumed_wh": 0.0006781492480000001,
+      "consumed_wh": 0.0065281492479999995,
       "dead_at_s": null,
       "deficit_s": 0,
-      "harvested_wh": 0.0006781492479888129,
-      "soc_final_wh": 40.0,
-      "soc_initial_wh": 40.0
+      "harvested_wh": 0.006528149247999972,
+      "soc_final_wh": 0.05,
+      "soc_initial_wh": 0.05
      }
     }
    },
@@ -991,10 +1265,10 @@
     "deliver_rate": 0.6666666666666666,
     "delivery_cdf": {
      "0": 0.5714285714285714,
-     "300": 0.6190476190476191,
-     "600": 0.6666666666666666,
      "1800": 0.6666666666666666,
-     "3600": 0.6666666666666666
+     "300": 0.6190476190476191,
+     "3600": 0.6666666666666666,
+     "600": 0.6666666666666666
     },
     "delivery_latency_mean_s": 30.0,
     "delivery_latency_p90_s": 60,
@@ -1003,13 +1277,37 @@
     "slots_delivered": 14,
     "slots_matched_by_collection": 21
    },
+   "exec_layer": "naive",
+   "hazard": {
+    "hold_every": 0,
+    "hold_s": 0
+   },
+   "intent_ledger": {
+    "change": 0,
+    "dedup": 0,
+    "expired": 0,
+    "fenced": 0,
+    "generated": 0,
+    "landed": 0,
+    "lost": 0,
+    "queued_left": 0,
+    "refused": 0,
+    "rejected": 0,
+    "same_value": 0,
+    "sent": 0,
+    "speculative": 0,
+    "stale_gen": 0
+   },
+   "intent_mismatch_s": 0,
+   "mixed_config_s": 0,
    "n_obligations": 189,
    "not_applicable": {
-    "config_mismatch_s": "\u6700\u5c0f\u5b9e\u4f8b\u6ca1\u6709\u5916\u90e8\u914d\u7f6e\u8981\u6c42\uff0c\u65e0\u6cd5\u5b9a\u4e49'\u9519\u8bef\u914d\u7f6e'\uff1b\u8fd4\u56de None \u800c\u4e0d\u662f 0\u3002"
+    "config_mismatch_s": "最小实例没有外部配置要求，无法定义'错误配置'；返回 None 而不是 0。",
+    "mixed_config_s": "计数器在 Instance.mixed_config_ticks 上，本函数只拿到 log、取不到；**不返回恒定值的假列**。需要这一列请从 Instance 取。"
    },
    "observation_window": {
     "censored_total": 0,
-    "note": "\u5220\u5931 = \u8fd0\u884c\u7ed3\u675f\u65f6\u8be5\u4e49\u52a1\u7684\u89c2\u5bdf\u622a\u6b62\u8fd8\u6ca1\u5230\uff1b\u65e2\u4e0d\u7b97\u6210\u529f\u4e5f\u4e0d\u7b97\u5931\u8d25\uff0c\u7559\u5728\u5206\u6bcd\u91cc\u3002",
+    "note": "删失 = 运行结束时该义务的观察截止还没到；既不算成功也不算失败，留在分母里。",
     "run_hours": 13,
     "tail_s": 3600,
     "task_hours": 12
@@ -1023,7 +1321,7 @@
     "knowledge_latency_p90_s": 2520,
     "known_to_center": 7,
     "n_triggers": 7,
-    "note": "\u672c\u5b9e\u4f8b\u6ca1\u6709\u7b2c\u4e8c\u6761\u83b7\u77e5\u6e20\u9053\uff0c\u56e0\u6b64'\u4e2d\u5fc3\u83b7\u77e5\u4e8b\u4ef6'\u4e0e'\u4e2d\u5fc3\u62ff\u5230\u9996\u4efd\u65b0\u6570\u636e'\u540c\u4e00\u65f6\u523b\uff1b\u4e24\u8005\u7684\u5dee\u672a\u88ab\u6d4b\u8fc7\u3002"
+    "note": "本实例没有第二条获知渠道，因此'中心获知事件'与'中心拿到首份新数据'同一时刻；两者的差未被测过。"
    },
    "recovery": {
     "backlog_recovered": 42,
@@ -1032,7 +1330,7 @@
     "missing_collection": 0,
     "missing_delivery": 15,
     "n_obligations_in_window": 56,
-    "note": "\u91c7\u96c6\u7f3a\u5931\u5728\u6062\u590d\u540e\u8865\u4e0d\u56de\u6765\uff08\u4e0d\u8865\u9020\u5f53\u65f6\u672a\u91c7\u5230\u7684\u8bfb\u6570\uff09\uff1b\u4ea4\u4ed8\u7f3a\u5931\u5355\u5217\uff0c\u56e0\u4e3a\u5b83\u53ef\u7531\u81ea\u52a8\u8865\u53d1\u8ffd\u56de\u3002",
+    "note": "采集缺失在恢复后补不回来（不补造当时未采到的读数）；交付缺失单列，因为它可由自动补发追回。",
     "outage_hours": 3.0,
     "outage_s": [
      14400,
@@ -1041,7 +1339,7 @@
     "recovery_observation_s": 3600
    },
    "routine": {
-    "aoi_mean_s": 1842.8626373626373,
+    "aoi_mean_s": 7185.556886227545,
     "censored": 0,
     "delivered": 121,
     "latency_mean_s": 3183.471074380165,
@@ -1049,11 +1347,15 @@
     "missing_collection": 0,
     "missing_delivery": 47,
     "n": 168,
-    "no_observation_s": 0
+    "no_observation_s": 54000
    },
    "seed": 3
   },
   {
+   "access_blocked": 0,
+   "arm": "local",
+   "autonomy_margin": Infinity,
+   "autonomy_margin_min": Infinity,
    "by_kind": {
     "event": {
      "censored": 0,
@@ -1072,6 +1374,17 @@
      "n": 168
     }
    },
+   "command_counters": {
+    "commands_delivered": 0,
+    "commands_refused": 0,
+    "commands_sent": 0,
+    "deduplicated": 0,
+    "fenced": 0,
+    "stale_generation_dropped": 0,
+    "writes_changed": 0,
+    "writes_same_value": 0,
+    "writes_speculative": 0
+   },
    "communication": {
     "airtime_downlink_h": 0.0,
     "airtime_uplink_h": 0.010020693333333342,
@@ -1081,6 +1394,9 @@
     "uplinks": 169,
     "uplinks_heard": 118
    },
+   "delivery_oracle": 144,
+   "delivery_oracle_free_tx": 154,
+   "delivery_oracle_mid": 154,
    "deployment": {
     "best_sf": {
      "n00": 7,
@@ -1125,119 +1441,120 @@
     "n_reachable": 13,
     "n_slope_nodes": 16
    },
+   "dynamic_oracle": null,
    "energy": {
     "per_node": {
      "gw0": {
-      "consumed_wh": 0.0006800000000000005,
+      "consumed_wh": 0.01598,
       "dead_at_s": null,
       "deficit_s": 0,
-      "harvested_wh": 0.0006799999999742568,
-      "soc_final_wh": 40.0,
-      "soc_initial_wh": 40.0
+      "harvested_wh": 0.01597999999999994,
+      "soc_final_wh": 0.05,
+      "soc_initial_wh": 0.05
      },
      "n00": {
-      "consumed_wh": 0.0006583246080000002,
+      "consumed_wh": 0.0065083246079999995,
       "dead_at_s": null,
       "deficit_s": 0,
-      "harvested_wh": 0.0006583246079827632,
-      "soc_final_wh": 40.0,
-      "soc_initial_wh": 40.0
+      "harvested_wh": 0.006508324607999973,
+      "soc_final_wh": 0.05,
+      "soc_initial_wh": 0.05
      },
      "n01": {
-      "consumed_wh": 0.000667335808,
+      "consumed_wh": 0.006517335808,
       "dead_at_s": null,
       "deficit_s": 0,
-      "harvested_wh": 0.0006673358079822833,
-      "soc_final_wh": 40.0,
-      "soc_initial_wh": 40.0
+      "harvested_wh": 0.0065173358079999785,
+      "soc_final_wh": 0.05,
+      "soc_initial_wh": 0.05
      },
      "n02": {
-      "consumed_wh": 0.0006565223680000001,
+      "consumed_wh": 0.006506522368,
       "dead_at_s": null,
       "deficit_s": 0,
-      "harvested_wh": 0.0006565223679828591,
-      "soc_final_wh": 40.0,
-      "soc_initial_wh": 40.0
+      "harvested_wh": 0.0065065223679999715,
+      "soc_final_wh": 0.05,
+      "soc_initial_wh": 0.05
      },
      "n03": {
-      "consumed_wh": 0.000667335808,
+      "consumed_wh": 0.006517335808,
       "dead_at_s": null,
       "deficit_s": 0,
-      "harvested_wh": 0.0006673358079893887,
-      "soc_final_wh": 40.0,
-      "soc_initial_wh": 40.0
+      "harvested_wh": 0.0065173358079999785,
+      "soc_final_wh": 0.05,
+      "soc_initial_wh": 0.05
      },
      "n04": {
-      "consumed_wh": 0.0006601268480000003,
+      "consumed_wh": 0.006510126848,
       "dead_at_s": null,
       "deficit_s": 0,
-      "harvested_wh": 0.0006601268479826672,
-      "soc_final_wh": 40.0,
-      "soc_initial_wh": 40.0
+      "harvested_wh": 0.006510126847999974,
+      "soc_final_wh": 0.05,
+      "soc_initial_wh": 0.05
      },
      "n05": {
-      "consumed_wh": 0.0006565223680000001,
+      "consumed_wh": 0.006506522368,
       "dead_at_s": null,
       "deficit_s": 0,
-      "harvested_wh": 0.0006565223679828591,
-      "soc_final_wh": 40.0,
-      "soc_initial_wh": 40.0
+      "harvested_wh": 0.0065065223679999715,
+      "soc_final_wh": 0.05,
+      "soc_initial_wh": 0.05
      },
      "n06": {
-      "consumed_wh": 0.0006700391680000001,
+      "consumed_wh": 0.006520039168,
       "dead_at_s": null,
       "deficit_s": 0,
-      "harvested_wh": 0.0006700391679856921,
-      "soc_final_wh": 40.0,
-      "soc_initial_wh": 40.0
+      "harvested_wh": 0.00652003916799998,
+      "soc_final_wh": 0.05,
+      "soc_initial_wh": 0.05
      },
      "n07": {
-      "consumed_wh": 0.000673643648,
+      "consumed_wh": 0.006523643647999999,
       "dead_at_s": null,
       "deficit_s": 0,
-      "harvested_wh": 0.0006736436479926056,
-      "soc_final_wh": 40.0,
-      "soc_initial_wh": 40.0
+      "harvested_wh": 0.006523643647999983,
+      "soc_final_wh": 0.05,
+      "soc_initial_wh": 0.05
      },
      "n10": {
-      "consumed_wh": 0.0006817537280000001,
+      "consumed_wh": 0.006531753728,
       "dead_at_s": null,
       "deficit_s": 0,
-      "harvested_wh": 0.000681753727988621,
-      "soc_final_wh": 40.0,
-      "soc_initial_wh": 40.0
+      "harvested_wh": 0.006531753727999974,
+      "soc_final_wh": 0.05,
+      "soc_initial_wh": 0.05
      },
      "n11": {
-      "consumed_wh": 0.0006610279680000002,
+      "consumed_wh": 0.0065110279679999996,
       "dead_at_s": null,
       "deficit_s": 0,
-      "harvested_wh": 0.0006610279679861719,
-      "soc_final_wh": 40.0,
-      "soc_initial_wh": 40.0
+      "harvested_wh": 0.006511027967999974,
+      "soc_final_wh": 0.05,
+      "soc_initial_wh": 0.05
      },
      "n13": {
-      "consumed_wh": 0.0007051828480000002,
+      "consumed_wh": 0.006555182848000001,
       "dead_at_s": null,
       "deficit_s": 0,
-      "harvested_wh": 0.0007051828479873734,
-      "soc_final_wh": 40.0,
-      "soc_initial_wh": 40.0
+      "harvested_wh": 0.0065551828479999755,
+      "soc_final_wh": 0.05,
+      "soc_initial_wh": 0.05
      },
      "n15": {
-      "consumed_wh": 0.0006628302079999999,
+      "consumed_wh": 0.006512830208,
       "dead_at_s": null,
       "deficit_s": 0,
-      "harvested_wh": 0.000662830207986076,
-      "soc_final_wh": 40.0,
-      "soc_initial_wh": 40.0
+      "harvested_wh": 0.0065128302079999825,
+      "soc_final_wh": 0.05,
+      "soc_initial_wh": 0.05
      },
      "n16": {
-      "consumed_wh": 0.0006646324480000001,
+      "consumed_wh": 0.006514632447999999,
       "dead_at_s": null,
       "deficit_s": 0,
-      "harvested_wh": 0.00066463244798598,
-      "soc_final_wh": 40.0,
-      "soc_initial_wh": 40.0
+      "harvested_wh": 0.006514632447999977,
+      "soc_final_wh": 0.05,
+      "soc_initial_wh": 0.05
      }
     }
    },
@@ -1246,10 +1563,10 @@
     "deliver_rate": 0.8095238095238095,
     "delivery_cdf": {
      "0": 0.7142857142857143,
-     "300": 0.7619047619047619,
-     "600": 0.8095238095238095,
      "1800": 0.8095238095238095,
-     "3600": 0.8095238095238095
+     "300": 0.7619047619047619,
+     "3600": 0.8095238095238095,
+     "600": 0.8095238095238095
     },
     "delivery_latency_mean_s": 38.8235294117647,
     "delivery_latency_p90_s": 0,
@@ -1258,13 +1575,37 @@
     "slots_delivered": 17,
     "slots_matched_by_collection": 21
    },
+   "exec_layer": "naive",
+   "hazard": {
+    "hold_every": 0,
+    "hold_s": 0
+   },
+   "intent_ledger": {
+    "change": 0,
+    "dedup": 0,
+    "expired": 0,
+    "fenced": 0,
+    "generated": 0,
+    "landed": 0,
+    "lost": 0,
+    "queued_left": 0,
+    "refused": 0,
+    "rejected": 0,
+    "same_value": 0,
+    "sent": 0,
+    "speculative": 0,
+    "stale_gen": 0
+   },
+   "intent_mismatch_s": 0,
+   "mixed_config_s": 0,
    "n_obligations": 189,
    "not_applicable": {
-    "config_mismatch_s": "\u6700\u5c0f\u5b9e\u4f8b\u6ca1\u6709\u5916\u90e8\u914d\u7f6e\u8981\u6c42\uff0c\u65e0\u6cd5\u5b9a\u4e49'\u9519\u8bef\u914d\u7f6e'\uff1b\u8fd4\u56de None \u800c\u4e0d\u662f 0\u3002"
+    "config_mismatch_s": "最小实例没有外部配置要求，无法定义'错误配置'；返回 None 而不是 0。",
+    "mixed_config_s": "计数器在 Instance.mixed_config_ticks 上，本函数只拿到 log、取不到；**不返回恒定值的假列**。需要这一列请从 Instance 取。"
    },
    "observation_window": {
     "censored_total": 0,
-    "note": "\u5220\u5931 = \u8fd0\u884c\u7ed3\u675f\u65f6\u8be5\u4e49\u52a1\u7684\u89c2\u5bdf\u622a\u6b62\u8fd8\u6ca1\u5230\uff1b\u65e2\u4e0d\u7b97\u6210\u529f\u4e5f\u4e0d\u7b97\u5931\u8d25\uff0c\u7559\u5728\u5206\u6bcd\u91cc\u3002",
+    "note": "删失 = 运行结束时该义务的观察截止还没到；既不算成功也不算失败，留在分母里。",
     "run_hours": 13,
     "tail_s": 3600,
     "task_hours": 12
@@ -1278,7 +1619,7 @@
     "knowledge_latency_p90_s": 780,
     "known_to_center": 7,
     "n_triggers": 7,
-    "note": "\u672c\u5b9e\u4f8b\u6ca1\u6709\u7b2c\u4e8c\u6761\u83b7\u77e5\u6e20\u9053\uff0c\u56e0\u6b64'\u4e2d\u5fc3\u83b7\u77e5\u4e8b\u4ef6'\u4e0e'\u4e2d\u5fc3\u62ff\u5230\u9996\u4efd\u65b0\u6570\u636e'\u540c\u4e00\u65f6\u523b\uff1b\u4e24\u8005\u7684\u5dee\u672a\u88ab\u6d4b\u8fc7\u3002"
+    "note": "本实例没有第二条获知渠道，因此'中心获知事件'与'中心拿到首份新数据'同一时刻；两者的差未被测过。"
    },
    "recovery": {
     "backlog_recovered": 42,
@@ -1287,7 +1628,7 @@
     "missing_collection": 0,
     "missing_delivery": 17,
     "n_obligations_in_window": 56,
-    "note": "\u91c7\u96c6\u7f3a\u5931\u5728\u6062\u590d\u540e\u8865\u4e0d\u56de\u6765\uff08\u4e0d\u8865\u9020\u5f53\u65f6\u672a\u91c7\u5230\u7684\u8bfb\u6570\uff09\uff1b\u4ea4\u4ed8\u7f3a\u5931\u5355\u5217\uff0c\u56e0\u4e3a\u5b83\u53ef\u7531\u81ea\u52a8\u8865\u53d1\u8ffd\u56de\u3002",
+    "note": "采集缺失在恢复后补不回来（不补造当时未采到的读数）；交付缺失单列，因为它可由自动补发追回。",
     "outage_hours": 3.0,
     "outage_s": [
      14400,
@@ -1296,7 +1637,7 @@
     "recovery_observation_s": 3600
    },
    "routine": {
-    "aoi_mean_s": 1803.3021978021977,
+    "aoi_mean_s": 5139.494117647058,
     "censored": 0,
     "delivered": 144,
     "latency_mean_s": 2325.0,
@@ -1304,11 +1645,15 @@
     "missing_collection": 0,
     "missing_delivery": 24,
     "n": 168,
-    "no_observation_s": 0
+    "no_observation_s": 43200
    },
    "seed": 4
   },
   {
+   "access_blocked": 0,
+   "arm": "local",
+   "autonomy_margin": Infinity,
+   "autonomy_margin_min": Infinity,
    "by_kind": {
     "event": {
      "censored": 0,
@@ -1327,6 +1672,17 @@
      "n": 168
     }
    },
+   "command_counters": {
+    "commands_delivered": 0,
+    "commands_refused": 0,
+    "commands_sent": 0,
+    "deduplicated": 0,
+    "fenced": 0,
+    "stale_generation_dropped": 0,
+    "writes_changed": 0,
+    "writes_same_value": 0,
+    "writes_speculative": 0
+   },
    "communication": {
     "airtime_downlink_h": 0.0,
     "airtime_uplink_h": 0.01078869333333334,
@@ -1336,6 +1692,9 @@
     "uplinks": 169,
     "uplinks_heard": 130
    },
+   "delivery_oracle": 117,
+   "delivery_oracle_free_tx": 126,
+   "delivery_oracle_mid": 126,
    "deployment": {
     "best_sf": {
      "n00": 7,
@@ -1380,119 +1739,120 @@
     "n_reachable": 13,
     "n_slope_nodes": 16
    },
+   "dynamic_oracle": null,
    "energy": {
     "per_node": {
      "gw0": {
-      "consumed_wh": 0.0006800000000000005,
+      "consumed_wh": 0.01598,
       "dead_at_s": null,
       "deficit_s": 0,
-      "harvested_wh": 0.0006799999999742568,
-      "soc_final_wh": 40.0,
-      "soc_initial_wh": 40.0
+      "harvested_wh": 0.01597999999999994,
+      "soc_final_wh": 0.05,
+      "soc_initial_wh": 0.05
      },
      "n00": {
-      "consumed_wh": 0.0006808526080000001,
+      "consumed_wh": 0.0065308526079999995,
       "dead_at_s": null,
       "deficit_s": 0,
-      "harvested_wh": 0.0006808526079922217,
-      "soc_final_wh": 40.0,
-      "soc_initial_wh": 40.0
+      "harvested_wh": 0.00653085260799998,
+      "soc_final_wh": 0.05,
+      "soc_initial_wh": 0.05
      },
      "n01": {
-      "consumed_wh": 0.0006718414080000001,
+      "consumed_wh": 0.006521841408,
       "dead_at_s": null,
       "deficit_s": 0,
-      "harvested_wh": 0.0006718414079927015,
-      "soc_final_wh": 40.0,
-      "soc_initial_wh": 40.0
+      "harvested_wh": 0.0065218414079999815,
+      "soc_final_wh": 0.05,
+      "soc_initial_wh": 0.05
      },
      "n02": {
-      "consumed_wh": 0.000680852608,
+      "consumed_wh": 0.0065308526079999995,
       "dead_at_s": null,
       "deficit_s": 0,
-      "harvested_wh": 0.0006808526079922217,
-      "soc_final_wh": 40.0,
-      "soc_initial_wh": 40.0
+      "harvested_wh": 0.00653085260799998,
+      "soc_final_wh": 0.05,
+      "soc_initial_wh": 0.05
      },
      "n03": {
-      "consumed_wh": 0.000680852608,
+      "consumed_wh": 0.0065308526079999995,
       "dead_at_s": null,
       "deficit_s": 0,
-      "harvested_wh": 0.0006808526079922217,
-      "soc_final_wh": 40.0,
-      "soc_initial_wh": 40.0
+      "harvested_wh": 0.00653085260799998,
+      "soc_final_wh": 0.05,
+      "soc_initial_wh": 0.05
      },
      "n04": {
-      "consumed_wh": 0.000680852608,
+      "consumed_wh": 0.0065308526079999995,
       "dead_at_s": null,
       "deficit_s": 0,
-      "harvested_wh": 0.0006808526079922217,
-      "soc_final_wh": 40.0,
-      "soc_initial_wh": 40.0
+      "harvested_wh": 0.00653085260799998,
+      "soc_final_wh": 0.05,
+      "soc_initial_wh": 0.05
      },
      "n05": {
-      "consumed_wh": 0.000680852608,
+      "consumed_wh": 0.0065308526079999995,
       "dead_at_s": null,
       "deficit_s": 0,
-      "harvested_wh": 0.0006808526079922217,
-      "soc_final_wh": 40.0,
-      "soc_initial_wh": 40.0
+      "harvested_wh": 0.00653085260799998,
+      "soc_final_wh": 0.05,
+      "soc_initial_wh": 0.05
      },
      "n06": {
-      "consumed_wh": 0.0006718414080000001,
+      "consumed_wh": 0.006521841408,
       "dead_at_s": null,
       "deficit_s": 0,
-      "harvested_wh": 0.0006718414079927015,
-      "soc_final_wh": 40.0,
-      "soc_initial_wh": 40.0
+      "harvested_wh": 0.0065218414079999815,
+      "soc_final_wh": 0.05,
+      "soc_initial_wh": 0.05
      },
      "n07": {
-      "consumed_wh": 0.0006808526080000001,
+      "consumed_wh": 0.0065308526079999995,
       "dead_at_s": null,
       "deficit_s": 0,
-      "harvested_wh": 0.0006808526079922217,
-      "soc_final_wh": 40.0,
-      "soc_initial_wh": 40.0
+      "harvested_wh": 0.00653085260799998,
+      "soc_final_wh": 0.05,
+      "soc_initial_wh": 0.05
      },
      "n10": {
-      "consumed_wh": 0.0006718414080000001,
+      "consumed_wh": 0.006521841408,
       "dead_at_s": null,
       "deficit_s": 0,
-      "harvested_wh": 0.0006718414079927015,
-      "soc_final_wh": 40.0,
-      "soc_initial_wh": 40.0
+      "harvested_wh": 0.0065218414079999815,
+      "soc_final_wh": 0.05,
+      "soc_initial_wh": 0.05
      },
      "n11": {
-      "consumed_wh": 0.000673643648,
+      "consumed_wh": 0.006523643647999999,
       "dead_at_s": null,
       "deficit_s": 0,
-      "harvested_wh": 0.0006736436479926056,
-      "soc_final_wh": 40.0,
-      "soc_initial_wh": 40.0
+      "harvested_wh": 0.00652364364799999,
+      "soc_final_wh": 0.05,
+      "soc_initial_wh": 0.05
      },
      "n13": {
-      "consumed_wh": 0.0006718414080000001,
+      "consumed_wh": 0.006521841408,
       "dead_at_s": null,
       "deficit_s": 0,
-      "harvested_wh": 0.0006718414079927015,
-      "soc_final_wh": 40.0,
-      "soc_initial_wh": 40.0
+      "harvested_wh": 0.0065218414079999815,
+      "soc_final_wh": 0.05,
+      "soc_initial_wh": 0.05
      },
      "n15": {
-      "consumed_wh": 0.000673643648,
+      "consumed_wh": 0.006523643647999999,
       "dead_at_s": null,
       "deficit_s": 0,
-      "harvested_wh": 0.0006736436479926056,
-      "soc_final_wh": 40.0,
-      "soc_initial_wh": 40.0
+      "harvested_wh": 0.00652364364799999,
+      "soc_final_wh": 0.05,
+      "soc_initial_wh": 0.05
      },
      "n16": {
-      "consumed_wh": 0.0006871604480000001,
+      "consumed_wh": 0.006537160447999999,
       "dead_at_s": null,
       "deficit_s": 0,
-      "harvested_wh": 0.0006871604479954385,
-      "soc_final_wh": 40.0,
-      "soc_initial_wh": 40.0
+      "harvested_wh": 0.006537160447999978,
+      "soc_final_wh": 0.05,
+      "soc_initial_wh": 0.05
      }
     }
    },
@@ -1501,10 +1861,10 @@
     "deliver_rate": 0.5714285714285714,
     "delivery_cdf": {
      "0": 0.5714285714285714,
-     "300": 0.5714285714285714,
-     "600": 0.5714285714285714,
      "1800": 0.5714285714285714,
-     "3600": 0.5714285714285714
+     "300": 0.5714285714285714,
+     "3600": 0.5714285714285714,
+     "600": 0.5714285714285714
     },
     "delivery_latency_mean_s": 0.0,
     "delivery_latency_p90_s": 0,
@@ -1513,13 +1873,37 @@
     "slots_delivered": 12,
     "slots_matched_by_collection": 21
    },
+   "exec_layer": "naive",
+   "hazard": {
+    "hold_every": 0,
+    "hold_s": 0
+   },
+   "intent_ledger": {
+    "change": 0,
+    "dedup": 0,
+    "expired": 0,
+    "fenced": 0,
+    "generated": 0,
+    "landed": 0,
+    "lost": 0,
+    "queued_left": 0,
+    "refused": 0,
+    "rejected": 0,
+    "same_value": 0,
+    "sent": 0,
+    "speculative": 0,
+    "stale_gen": 0
+   },
+   "intent_mismatch_s": 0,
+   "mixed_config_s": 0,
    "n_obligations": 189,
    "not_applicable": {
-    "config_mismatch_s": "\u6700\u5c0f\u5b9e\u4f8b\u6ca1\u6709\u5916\u90e8\u914d\u7f6e\u8981\u6c42\uff0c\u65e0\u6cd5\u5b9a\u4e49'\u9519\u8bef\u914d\u7f6e'\uff1b\u8fd4\u56de None \u800c\u4e0d\u662f 0\u3002"
+    "config_mismatch_s": "最小实例没有外部配置要求，无法定义'错误配置'；返回 None 而不是 0。",
+    "mixed_config_s": "计数器在 Instance.mixed_config_ticks 上，本函数只拿到 log、取不到；**不返回恒定值的假列**。需要这一列请从 Instance 取。"
    },
    "observation_window": {
     "censored_total": 0,
-    "note": "\u5220\u5931 = \u8fd0\u884c\u7ed3\u675f\u65f6\u8be5\u4e49\u52a1\u7684\u89c2\u5bdf\u622a\u6b62\u8fd8\u6ca1\u5230\uff1b\u65e2\u4e0d\u7b97\u6210\u529f\u4e5f\u4e0d\u7b97\u5931\u8d25\uff0c\u7559\u5728\u5206\u6bcd\u91cc\u3002",
+    "note": "删失 = 运行结束时该义务的观察截止还没到；既不算成功也不算失败，留在分母里。",
     "run_hours": 13,
     "tail_s": 3600,
     "task_hours": 12
@@ -1533,7 +1917,7 @@
     "knowledge_latency_p90_s": 4380,
     "known_to_center": 6,
     "n_triggers": 7,
-    "note": "\u672c\u5b9e\u4f8b\u6ca1\u6709\u7b2c\u4e8c\u6761\u83b7\u77e5\u6e20\u9053\uff0c\u56e0\u6b64'\u4e2d\u5fc3\u83b7\u77e5\u4e8b\u4ef6'\u4e0e'\u4e2d\u5fc3\u62ff\u5230\u9996\u4efd\u65b0\u6570\u636e'\u540c\u4e00\u65f6\u523b\uff1b\u4e24\u8005\u7684\u5dee\u672a\u88ab\u6d4b\u8fc7\u3002"
+    "note": "本实例没有第二条获知渠道，因此'中心获知事件'与'中心拿到首份新数据'同一时刻；两者的差未被测过。"
    },
    "recovery": {
     "backlog_recovered": 42,
@@ -1542,7 +1926,7 @@
     "missing_collection": 0,
     "missing_delivery": 14,
     "n_obligations_in_window": 56,
-    "note": "\u91c7\u96c6\u7f3a\u5931\u5728\u6062\u590d\u540e\u8865\u4e0d\u56de\u6765\uff08\u4e0d\u8865\u9020\u5f53\u65f6\u672a\u91c7\u5230\u7684\u8bfb\u6570\uff09\uff1b\u4ea4\u4ed8\u7f3a\u5931\u5355\u5217\uff0c\u56e0\u4e3a\u5b83\u53ef\u7531\u81ea\u52a8\u8865\u53d1\u8ffd\u56de\u3002",
+    "note": "采集缺失在恢复后补不回来（不补造当时未采到的读数）；交付缺失单列，因为它可由自动补发追回。",
     "outage_hours": 3.0,
     "outage_s": [
      14400,
@@ -1551,7 +1935,7 @@
     "recovery_observation_s": 3600
    },
    "routine": {
-    "aoi_mean_s": 4759.950549450549,
+    "aoi_mean_s": 7612.927374301676,
     "censored": 0,
     "delivered": 104,
     "latency_mean_s": 2976.923076923077,
@@ -1559,11 +1943,15 @@
     "missing_collection": 0,
     "missing_delivery": 64,
     "n": 168,
-    "no_observation_s": 0
+    "no_observation_s": 10800
    },
    "seed": 5
   },
   {
+   "access_blocked": 0,
+   "arm": "local",
+   "autonomy_margin": Infinity,
+   "autonomy_margin_min": Infinity,
    "by_kind": {
     "event": {
      "censored": 0,
@@ -1582,6 +1970,17 @@
      "n": 168
     }
    },
+   "command_counters": {
+    "commands_delivered": 0,
+    "commands_refused": 0,
+    "commands_sent": 0,
+    "deduplicated": 0,
+    "fenced": 0,
+    "stale_generation_dropped": 0,
+    "writes_changed": 0,
+    "writes_same_value": 0,
+    "writes_speculative": 0
+   },
    "communication": {
     "airtime_downlink_h": 0.0,
     "airtime_uplink_h": 0.009400604444444446,
@@ -1591,6 +1990,9 @@
     "uplinks": 169,
     "uplinks_heard": 130
    },
+   "delivery_oracle": 149,
+   "delivery_oracle_free_tx": 154,
+   "delivery_oracle_mid": 154,
    "deployment": {
     "best_sf": {
      "n00": 7,
@@ -1635,119 +2037,120 @@
     "n_reachable": 13,
     "n_slope_nodes": 16
    },
+   "dynamic_oracle": null,
    "energy": {
     "per_node": {
      "gw0": {
-      "consumed_wh": 0.0006800000000000005,
+      "consumed_wh": 0.01598,
       "dead_at_s": null,
       "deficit_s": 0,
-      "harvested_wh": 0.0006799999999742568,
-      "soc_final_wh": 40.0,
-      "soc_initial_wh": 40.0
+      "harvested_wh": 0.01597999999999994,
+      "soc_final_wh": 0.05,
+      "soc_initial_wh": 0.05
      },
      "n00": {
-      "consumed_wh": 0.0006565223680000001,
+      "consumed_wh": 0.006506522368,
       "dead_at_s": null,
       "deficit_s": 0,
-      "harvested_wh": 0.0006565223679828591,
-      "soc_final_wh": 40.0,
-      "soc_initial_wh": 40.0
+      "harvested_wh": 0.0065065223679999715,
+      "soc_final_wh": 0.05,
+      "soc_initial_wh": 0.05
      },
      "n01": {
-      "consumed_wh": 0.0006565223680000001,
+      "consumed_wh": 0.006506522368,
       "dead_at_s": null,
       "deficit_s": 0,
-      "harvested_wh": 0.0006565223679828591,
-      "soc_final_wh": 40.0,
-      "soc_initial_wh": 40.0
+      "harvested_wh": 0.006506522367999978,
+      "soc_final_wh": 0.05,
+      "soc_initial_wh": 0.05
      },
      "n02": {
-      "consumed_wh": 0.000658324608,
+      "consumed_wh": 0.0065083246079999995,
       "dead_at_s": null,
       "deficit_s": 0,
-      "harvested_wh": 0.0006583246079827632,
-      "soc_final_wh": 40.0,
-      "soc_initial_wh": 40.0
+      "harvested_wh": 0.006508324607999973,
+      "soc_final_wh": 0.05,
+      "soc_initial_wh": 0.05
      },
      "n03": {
-      "consumed_wh": 0.0006583246080000002,
+      "consumed_wh": 0.0065083246079999995,
       "dead_at_s": null,
       "deficit_s": 0,
-      "harvested_wh": 0.0006583246079827632,
-      "soc_final_wh": 40.0,
-      "soc_initial_wh": 40.0
+      "harvested_wh": 0.006508324607999973,
+      "soc_final_wh": 0.05,
+      "soc_initial_wh": 0.05
      },
      "n04": {
-      "consumed_wh": 0.0006565223680000001,
+      "consumed_wh": 0.006506522368,
       "dead_at_s": null,
       "deficit_s": 0,
-      "harvested_wh": 0.0006565223679828591,
-      "soc_final_wh": 40.0,
-      "soc_initial_wh": 40.0
+      "harvested_wh": 0.006506522367999978,
+      "soc_final_wh": 0.05,
+      "soc_initial_wh": 0.05
      },
      "n05": {
-      "consumed_wh": 0.0006592257280000002,
+      "consumed_wh": 0.006509225728,
       "dead_at_s": null,
       "deficit_s": 0,
-      "harvested_wh": 0.0006592257279862679,
-      "soc_final_wh": 40.0,
-      "soc_initial_wh": 40.0
+      "harvested_wh": 0.00650922572799998,
+      "soc_final_wh": 0.05,
+      "soc_initial_wh": 0.05
      },
      "n06": {
-      "consumed_wh": 0.0006655335680000002,
+      "consumed_wh": 0.006515533567999999,
       "dead_at_s": null,
       "deficit_s": 0,
-      "harvested_wh": 0.0006655335679894847,
-      "soc_final_wh": 40.0,
-      "soc_initial_wh": 40.0
+      "harvested_wh": 0.006515533567999984,
+      "soc_final_wh": 0.05,
+      "soc_initial_wh": 0.05
      },
      "n07": {
-      "consumed_wh": 0.0006628302080000001,
+      "consumed_wh": 0.006512830207999999,
       "dead_at_s": null,
       "deficit_s": 0,
-      "harvested_wh": 0.000662830207986076,
-      "soc_final_wh": 40.0,
-      "soc_initial_wh": 40.0
+      "harvested_wh": 0.006512830207999976,
+      "soc_final_wh": 0.05,
+      "soc_initial_wh": 0.05
      },
      "n10": {
-      "consumed_wh": 0.0006610279680000003,
+      "consumed_wh": 0.0065110279679999996,
       "dead_at_s": null,
       "deficit_s": 0,
-      "harvested_wh": 0.0006610279679861719,
-      "soc_final_wh": 40.0,
-      "soc_initial_wh": 40.0
+      "harvested_wh": 0.006511027967999981,
+      "soc_final_wh": 0.05,
+      "soc_initial_wh": 0.05
      },
      "n11": {
-      "consumed_wh": 0.0006610279680000003,
+      "consumed_wh": 0.0065110279679999996,
       "dead_at_s": null,
       "deficit_s": 0,
-      "harvested_wh": 0.0006610279679861719,
-      "soc_final_wh": 40.0,
-      "soc_initial_wh": 40.0
+      "harvested_wh": 0.006511027967999981,
+      "soc_final_wh": 0.05,
+      "soc_initial_wh": 0.05
      },
      "n13": {
-      "consumed_wh": 0.0006565223680000001,
+      "consumed_wh": 0.006506522368,
       "dead_at_s": null,
       "deficit_s": 0,
-      "harvested_wh": 0.0006565223679828591,
-      "soc_final_wh": 40.0,
-      "soc_initial_wh": 40.0
+      "harvested_wh": 0.006506522367999978,
+      "soc_final_wh": 0.05,
+      "soc_initial_wh": 0.05
      },
      "n15": {
-      "consumed_wh": 0.0006583246080000002,
+      "consumed_wh": 0.0065083246079999995,
       "dead_at_s": null,
       "deficit_s": 0,
-      "harvested_wh": 0.0006583246079827632,
-      "soc_final_wh": 40.0,
-      "soc_initial_wh": 40.0
+      "harvested_wh": 0.006508324607999973,
+      "soc_final_wh": 0.05,
+      "soc_initial_wh": 0.05
      },
      "n16": {
-      "consumed_wh": 0.0006763470080000001,
+      "consumed_wh": 0.006526347007999999,
       "dead_at_s": null,
       "deficit_s": 0,
-      "harvested_wh": 0.0006763470079889089,
-      "soc_final_wh": 40.0,
-      "soc_initial_wh": 40.0
+      "harvested_wh": 0.0065263470079999705,
+      "soc_final_wh": 0.05,
+      "soc_initial_wh": 0.05
      }
     }
    },
@@ -1756,10 +2159,10 @@
     "deliver_rate": 0.7142857142857143,
     "delivery_cdf": {
      "0": 0.7142857142857143,
-     "300": 0.7142857142857143,
-     "600": 0.7142857142857143,
      "1800": 0.7142857142857143,
-     "3600": 0.7142857142857143
+     "300": 0.7142857142857143,
+     "3600": 0.7142857142857143,
+     "600": 0.7142857142857143
     },
     "delivery_latency_mean_s": 0.0,
     "delivery_latency_p90_s": 0,
@@ -1768,13 +2171,37 @@
     "slots_delivered": 15,
     "slots_matched_by_collection": 21
    },
+   "exec_layer": "naive",
+   "hazard": {
+    "hold_every": 0,
+    "hold_s": 0
+   },
+   "intent_ledger": {
+    "change": 0,
+    "dedup": 0,
+    "expired": 0,
+    "fenced": 0,
+    "generated": 0,
+    "landed": 0,
+    "lost": 0,
+    "queued_left": 0,
+    "refused": 0,
+    "rejected": 0,
+    "same_value": 0,
+    "sent": 0,
+    "speculative": 0,
+    "stale_gen": 0
+   },
+   "intent_mismatch_s": 0,
+   "mixed_config_s": 0,
    "n_obligations": 189,
    "not_applicable": {
-    "config_mismatch_s": "\u6700\u5c0f\u5b9e\u4f8b\u6ca1\u6709\u5916\u90e8\u914d\u7f6e\u8981\u6c42\uff0c\u65e0\u6cd5\u5b9a\u4e49'\u9519\u8bef\u914d\u7f6e'\uff1b\u8fd4\u56de None \u800c\u4e0d\u662f 0\u3002"
+    "config_mismatch_s": "最小实例没有外部配置要求，无法定义'错误配置'；返回 None 而不是 0。",
+    "mixed_config_s": "计数器在 Instance.mixed_config_ticks 上，本函数只拿到 log、取不到；**不返回恒定值的假列**。需要这一列请从 Instance 取。"
    },
    "observation_window": {
     "censored_total": 0,
-    "note": "\u5220\u5931 = \u8fd0\u884c\u7ed3\u675f\u65f6\u8be5\u4e49\u52a1\u7684\u89c2\u5bdf\u622a\u6b62\u8fd8\u6ca1\u5230\uff1b\u65e2\u4e0d\u7b97\u6210\u529f\u4e5f\u4e0d\u7b97\u5931\u8d25\uff0c\u7559\u5728\u5206\u6bcd\u91cc\u3002",
+    "note": "删失 = 运行结束时该义务的观察截止还没到；既不算成功也不算失败，留在分母里。",
     "run_hours": 13,
     "tail_s": 3600,
     "task_hours": 12
@@ -1788,7 +2215,7 @@
     "knowledge_latency_p90_s": 1740,
     "known_to_center": 7,
     "n_triggers": 7,
-    "note": "\u672c\u5b9e\u4f8b\u6ca1\u6709\u7b2c\u4e8c\u6761\u83b7\u77e5\u6e20\u9053\uff0c\u56e0\u6b64'\u4e2d\u5fc3\u83b7\u77e5\u4e8b\u4ef6'\u4e0e'\u4e2d\u5fc3\u62ff\u5230\u9996\u4efd\u65b0\u6570\u636e'\u540c\u4e00\u65f6\u523b\uff1b\u4e24\u8005\u7684\u5dee\u672a\u88ab\u6d4b\u8fc7\u3002"
+    "note": "本实例没有第二条获知渠道，因此'中心获知事件'与'中心拿到首份新数据'同一时刻；两者的差未被测过。"
    },
    "recovery": {
     "backlog_recovered": 42,
@@ -1797,7 +2224,7 @@
     "missing_collection": 0,
     "missing_delivery": 15,
     "n_obligations_in_window": 56,
-    "note": "\u91c7\u96c6\u7f3a\u5931\u5728\u6062\u590d\u540e\u8865\u4e0d\u56de\u6765\uff08\u4e0d\u8865\u9020\u5f53\u65f6\u672a\u91c7\u5230\u7684\u8bfb\u6570\uff09\uff1b\u4ea4\u4ed8\u7f3a\u5931\u5355\u5217\uff0c\u56e0\u4e3a\u5b83\u53ef\u7531\u81ea\u52a8\u8865\u53d1\u8ffd\u56de\u3002",
+    "note": "采集缺失在恢复后补不回来（不补造当时未采到的读数）；交付缺失单列，因为它可由自动补发追回。",
     "outage_hours": 3.0,
     "outage_s": [
      14400,
@@ -1806,7 +2233,7 @@
     "recovery_observation_s": 3600
    },
    "routine": {
-    "aoi_mean_s": 1981.3241758241759,
+    "aoi_mean_s": 4587.262569832402,
     "censored": 0,
     "delivered": 149,
     "latency_mean_s": 2005.3691275167785,
@@ -1814,11 +2241,15 @@
     "missing_collection": 0,
     "missing_delivery": 19,
     "n": 168,
-    "no_observation_s": 0
+    "no_observation_s": 10800
    },
    "seed": 6
   },
   {
+   "access_blocked": 0,
+   "arm": "local",
+   "autonomy_margin": Infinity,
+   "autonomy_margin_min": Infinity,
    "by_kind": {
     "event": {
      "censored": 0,
@@ -1837,6 +2268,17 @@
      "n": 168
     }
    },
+   "command_counters": {
+    "commands_delivered": 0,
+    "commands_refused": 0,
+    "commands_sent": 0,
+    "deduplicated": 0,
+    "fenced": 0,
+    "stale_generation_dropped": 0,
+    "writes_changed": 0,
+    "writes_same_value": 0,
+    "writes_speculative": 0
+   },
    "communication": {
     "airtime_downlink_h": 0.0,
     "airtime_uplink_h": 0.012256426666666678,
@@ -1846,6 +2288,9 @@
     "uplinks": 169,
     "uplinks_heard": 130
    },
+   "delivery_oracle": 107,
+   "delivery_oracle_free_tx": 112,
+   "delivery_oracle_mid": 112,
    "deployment": {
     "best_sf": {
      "n00": 7,
@@ -1890,119 +2335,120 @@
     "n_reachable": 13,
     "n_slope_nodes": 16
    },
+   "dynamic_oracle": null,
    "energy": {
     "per_node": {
      "gw0": {
-      "consumed_wh": 0.0006800000000000005,
+      "consumed_wh": 0.01598,
       "dead_at_s": null,
       "deficit_s": 0,
-      "harvested_wh": 0.0006799999999742568,
-      "soc_final_wh": 40.0,
-      "soc_initial_wh": 40.0
+      "harvested_wh": 0.01597999999999994,
+      "soc_final_wh": 0.05,
+      "soc_initial_wh": 0.05
      },
      "n00": {
-      "consumed_wh": 0.0007051828480000002,
+      "consumed_wh": 0.006555182848000001,
       "dead_at_s": null,
       "deficit_s": 0,
-      "harvested_wh": 0.0007051828479873734,
-      "soc_final_wh": 40.0,
-      "soc_initial_wh": 40.0
+      "harvested_wh": 0.006555182847999982,
+      "soc_final_wh": 0.05,
+      "soc_initial_wh": 0.05
      },
      "n01": {
-      "consumed_wh": 0.0007015783680000002,
+      "consumed_wh": 0.006551578368,
       "dead_at_s": null,
       "deficit_s": 0,
-      "harvested_wh": 0.0007015783679946708,
-      "soc_final_wh": 40.0,
-      "soc_initial_wh": 40.0
+      "harvested_wh": 0.00655157836799998,
+      "soc_final_wh": 0.05,
+      "soc_initial_wh": 0.05
      },
      "n02": {
-      "consumed_wh": 0.0006889626880000001,
+      "consumed_wh": 0.006538962688000001,
       "dead_at_s": null,
       "deficit_s": 0,
-      "harvested_wh": 0.0006889626879882371,
-      "soc_final_wh": 40.0,
-      "soc_initial_wh": 40.0
+      "harvested_wh": 0.006538962687999979,
+      "soc_final_wh": 0.05,
+      "soc_initial_wh": 0.05
      },
      "n03": {
-      "consumed_wh": 0.0007096884480000001,
+      "consumed_wh": 0.006559688448,
       "dead_at_s": null,
       "deficit_s": 0,
-      "harvested_wh": 0.0007096884479906862,
-      "soc_final_wh": 40.0,
-      "soc_initial_wh": 40.0
+      "harvested_wh": 0.006559688447999985,
+      "soc_final_wh": 0.05,
+      "soc_initial_wh": 0.05
      },
      "n04": {
-      "consumed_wh": 0.0006889626880000003,
+      "consumed_wh": 0.0065389626880000004,
       "dead_at_s": null,
       "deficit_s": 0,
-      "harvested_wh": 0.0006889626879882371,
-      "soc_final_wh": 40.0,
-      "soc_initial_wh": 40.0
+      "harvested_wh": 0.006538962687999972,
+      "soc_final_wh": 0.05,
+      "soc_initial_wh": 0.05
      },
      "n05": {
-      "consumed_wh": 0.0006871604480000002,
+      "consumed_wh": 0.006537160448000001,
       "dead_at_s": null,
       "deficit_s": 0,
-      "harvested_wh": 0.0006871604479883331,
-      "soc_final_wh": 40.0,
-      "soc_initial_wh": 40.0
+      "harvested_wh": 0.006537160447999971,
+      "soc_final_wh": 0.05,
+      "soc_initial_wh": 0.05
      },
      "n06": {
-      "consumed_wh": 0.0006889626880000003,
+      "consumed_wh": 0.0065389626880000004,
       "dead_at_s": null,
       "deficit_s": 0,
-      "harvested_wh": 0.0006889626879882371,
-      "soc_final_wh": 40.0,
-      "soc_initial_wh": 40.0
+      "harvested_wh": 0.006538962687999972,
+      "soc_final_wh": 0.05,
+      "soc_initial_wh": 0.05
      },
      "n07": {
-      "consumed_wh": 0.0006907649280000002,
+      "consumed_wh": 0.006540764928,
       "dead_at_s": null,
       "deficit_s": 0,
-      "harvested_wh": 0.0006907649279881412,
-      "soc_final_wh": 40.0,
-      "soc_initial_wh": 40.0
+      "harvested_wh": 0.006540764927999973,
+      "soc_final_wh": 0.05,
+      "soc_initial_wh": 0.05
      },
      "n10": {
-      "consumed_wh": 0.0006871604480000002,
+      "consumed_wh": 0.006537160448000001,
       "dead_at_s": null,
       "deficit_s": 0,
-      "harvested_wh": 0.0006871604479883331,
-      "soc_final_wh": 40.0,
-      "soc_initial_wh": 40.0
+      "harvested_wh": 0.006537160447999971,
+      "soc_final_wh": 0.05,
+      "soc_initial_wh": 0.05
      },
      "n11": {
-      "consumed_wh": 0.0006889626880000003,
+      "consumed_wh": 0.0065389626880000004,
       "dead_at_s": null,
       "deficit_s": 0,
-      "harvested_wh": 0.0006889626879882371,
-      "soc_final_wh": 40.0,
-      "soc_initial_wh": 40.0
+      "harvested_wh": 0.006538962687999972,
+      "soc_final_wh": 0.05,
+      "soc_initial_wh": 0.05
      },
      "n13": {
-      "consumed_wh": 0.0006889626880000003,
+      "consumed_wh": 0.0065389626880000004,
       "dead_at_s": null,
       "deficit_s": 0,
-      "harvested_wh": 0.0006889626879882371,
-      "soc_final_wh": 40.0,
-      "soc_initial_wh": 40.0
+      "harvested_wh": 0.006538962687999972,
+      "soc_final_wh": 0.05,
+      "soc_initial_wh": 0.05
      },
      "n15": {
-      "consumed_wh": 0.0007051828480000002,
+      "consumed_wh": 0.006555182848000001,
       "dead_at_s": null,
       "deficit_s": 0,
-      "harvested_wh": 0.0007051828479873734,
-      "soc_final_wh": 40.0,
-      "soc_initial_wh": 40.0
+      "harvested_wh": 0.006555182847999982,
+      "soc_final_wh": 0.05,
+      "soc_initial_wh": 0.05
      },
      "n16": {
-      "consumed_wh": 0.0007078862080000001,
+      "consumed_wh": 0.006557886208000001,
       "dead_at_s": null,
       "deficit_s": 0,
-      "harvested_wh": 0.0007078862079907822,
-      "soc_final_wh": 40.0,
-      "soc_initial_wh": 40.0
+      "harvested_wh": 0.006557886207999984,
+      "soc_final_wh": 0.05,
+      "soc_initial_wh": 0.05
      }
     }
    },
@@ -2011,10 +2457,10 @@
     "deliver_rate": 1.0,
     "delivery_cdf": {
      "0": 1.0,
-     "300": 1.0,
-     "600": 1.0,
      "1800": 1.0,
-     "3600": 1.0
+     "300": 1.0,
+     "3600": 1.0,
+     "600": 1.0
     },
     "delivery_latency_mean_s": 0.0,
     "delivery_latency_p90_s": 0,
@@ -2023,13 +2469,37 @@
     "slots_delivered": 21,
     "slots_matched_by_collection": 21
    },
+   "exec_layer": "naive",
+   "hazard": {
+    "hold_every": 0,
+    "hold_s": 0
+   },
+   "intent_ledger": {
+    "change": 0,
+    "dedup": 0,
+    "expired": 0,
+    "fenced": 0,
+    "generated": 0,
+    "landed": 0,
+    "lost": 0,
+    "queued_left": 0,
+    "refused": 0,
+    "rejected": 0,
+    "same_value": 0,
+    "sent": 0,
+    "speculative": 0,
+    "stale_gen": 0
+   },
+   "intent_mismatch_s": 0,
+   "mixed_config_s": 0,
    "n_obligations": 189,
    "not_applicable": {
-    "config_mismatch_s": "\u6700\u5c0f\u5b9e\u4f8b\u6ca1\u6709\u5916\u90e8\u914d\u7f6e\u8981\u6c42\uff0c\u65e0\u6cd5\u5b9a\u4e49'\u9519\u8bef\u914d\u7f6e'\uff1b\u8fd4\u56de None \u800c\u4e0d\u662f 0\u3002"
+    "config_mismatch_s": "最小实例没有外部配置要求，无法定义'错误配置'；返回 None 而不是 0。",
+    "mixed_config_s": "计数器在 Instance.mixed_config_ticks 上，本函数只拿到 log、取不到；**不返回恒定值的假列**。需要这一列请从 Instance 取。"
    },
    "observation_window": {
     "censored_total": 0,
-    "note": "\u5220\u5931 = \u8fd0\u884c\u7ed3\u675f\u65f6\u8be5\u4e49\u52a1\u7684\u89c2\u5bdf\u622a\u6b62\u8fd8\u6ca1\u5230\uff1b\u65e2\u4e0d\u7b97\u6210\u529f\u4e5f\u4e0d\u7b97\u5931\u8d25\uff0c\u7559\u5728\u5206\u6bcd\u91cc\u3002",
+    "note": "删失 = 运行结束时该义务的观察截止还没到；既不算成功也不算失败，留在分母里。",
     "run_hours": 13,
     "tail_s": 3600,
     "task_hours": 12
@@ -2043,7 +2513,7 @@
     "knowledge_latency_p90_s": 0,
     "known_to_center": 7,
     "n_triggers": 7,
-    "note": "\u672c\u5b9e\u4f8b\u6ca1\u6709\u7b2c\u4e8c\u6761\u83b7\u77e5\u6e20\u9053\uff0c\u56e0\u6b64'\u4e2d\u5fc3\u83b7\u77e5\u4e8b\u4ef6'\u4e0e'\u4e2d\u5fc3\u62ff\u5230\u9996\u4efd\u65b0\u6570\u636e'\u540c\u4e00\u65f6\u523b\uff1b\u4e24\u8005\u7684\u5dee\u672a\u88ab\u6d4b\u8fc7\u3002"
+    "note": "本实例没有第二条获知渠道，因此'中心获知事件'与'中心拿到首份新数据'同一时刻；两者的差未被测过。"
    },
    "recovery": {
     "backlog_recovered": 42,
@@ -2052,7 +2522,7 @@
     "missing_collection": 0,
     "missing_delivery": 28,
     "n_obligations_in_window": 56,
-    "note": "\u91c7\u96c6\u7f3a\u5931\u5728\u6062\u590d\u540e\u8865\u4e0d\u56de\u6765\uff08\u4e0d\u8865\u9020\u5f53\u65f6\u672a\u91c7\u5230\u7684\u8bfb\u6570\uff09\uff1b\u4ea4\u4ed8\u7f3a\u5931\u5355\u5217\uff0c\u56e0\u4e3a\u5b83\u53ef\u7531\u81ea\u52a8\u8865\u53d1\u8ffd\u56de\u3002",
+    "note": "采集缺失在恢复后补不回来（不补造当时未采到的读数）；交付缺失单列，因为它可由自动补发追回。",
     "outage_hours": 3.0,
     "outage_s": [
      14400,
@@ -2061,7 +2531,7 @@
     "recovery_observation_s": 3600
    },
    "routine": {
-    "aoi_mean_s": 1763.7417582417581,
+    "aoi_mean_s": 8469.672222222222,
     "censored": 0,
     "delivered": 107,
     "latency_mean_s": 2018.6915887850466,
@@ -2069,11 +2539,15 @@
     "missing_collection": 0,
     "missing_delivery": 61,
     "n": 168,
-    "no_observation_s": 0
+    "no_observation_s": 7200
    },
    "seed": 7
   },
   {
+   "access_blocked": 0,
+   "arm": "local",
+   "autonomy_margin": Infinity,
+   "autonomy_margin_min": Infinity,
    "by_kind": {
     "event": {
      "censored": 0,
@@ -2092,6 +2566,17 @@
      "n": 168
     }
    },
+   "command_counters": {
+    "commands_delivered": 0,
+    "commands_refused": 0,
+    "commands_sent": 0,
+    "deduplicated": 0,
+    "fenced": 0,
+    "stale_generation_dropped": 0,
+    "writes_changed": 0,
+    "writes_same_value": 0,
+    "writes_speculative": 0
+   },
    "communication": {
     "airtime_downlink_h": 0.0,
     "airtime_uplink_h": 0.009588337777777785,
@@ -2101,6 +2586,9 @@
     "uplinks": 169,
     "uplinks_heard": 127
    },
+   "delivery_oracle": 143,
+   "delivery_oracle_free_tx": 154,
+   "delivery_oracle_mid": 154,
    "deployment": {
     "best_sf": {
      "n00": 7,
@@ -2145,119 +2633,120 @@
     "n_reachable": 13,
     "n_slope_nodes": 16
    },
+   "dynamic_oracle": null,
    "energy": {
     "per_node": {
      "gw0": {
-      "consumed_wh": 0.0006800000000000005,
+      "consumed_wh": 0.01598,
       "dead_at_s": null,
       "deficit_s": 0,
-      "harvested_wh": 0.0006799999999742568,
-      "soc_final_wh": 40.0,
-      "soc_initial_wh": 40.0
+      "harvested_wh": 0.01597999999999994,
+      "soc_final_wh": 0.05,
+      "soc_initial_wh": 0.05
      },
      "n00": {
-      "consumed_wh": 0.0006655335680000001,
+      "consumed_wh": 0.006515533567999999,
       "dead_at_s": null,
       "deficit_s": 0,
-      "harvested_wh": 0.0006655335679894847,
-      "soc_final_wh": 40.0,
-      "soc_initial_wh": 40.0
+      "harvested_wh": 0.006515533567999984,
+      "soc_final_wh": 0.05,
+      "soc_initial_wh": 0.05
      },
      "n01": {
-      "consumed_wh": 0.000670039168,
+      "consumed_wh": 0.006520039167999999,
       "dead_at_s": null,
       "deficit_s": 0,
-      "harvested_wh": 0.0006700391679856921,
-      "soc_final_wh": 40.0,
-      "soc_initial_wh": 40.0
+      "harvested_wh": 0.00652003916799998,
+      "soc_final_wh": 0.05,
+      "soc_initial_wh": 0.05
      },
      "n02": {
-      "consumed_wh": 0.0006601268480000003,
+      "consumed_wh": 0.006510126848,
       "dead_at_s": null,
       "deficit_s": 0,
-      "harvested_wh": 0.0006601268479826672,
-      "soc_final_wh": 40.0,
-      "soc_initial_wh": 40.0
+      "harvested_wh": 0.006510126847999974,
+      "soc_final_wh": 0.05,
+      "soc_initial_wh": 0.05
      },
      "n03": {
-      "consumed_wh": 0.0006691380480000001,
+      "consumed_wh": 0.006519138047999999,
       "dead_at_s": null,
       "deficit_s": 0,
-      "harvested_wh": 0.0006691380479892928,
-      "soc_final_wh": 40.0,
-      "soc_initial_wh": 40.0
+      "harvested_wh": 0.006519138047999973,
+      "soc_final_wh": 0.05,
+      "soc_initial_wh": 0.05
      },
      "n04": {
-      "consumed_wh": 0.0006565223680000001,
+      "consumed_wh": 0.006506522368,
       "dead_at_s": null,
       "deficit_s": 0,
-      "harvested_wh": 0.0006565223679828591,
-      "soc_final_wh": 40.0,
-      "soc_initial_wh": 40.0
+      "harvested_wh": 0.006506522367999978,
+      "soc_final_wh": 0.05,
+      "soc_initial_wh": 0.05
      },
      "n05": {
-      "consumed_wh": 0.0006700391680000002,
+      "consumed_wh": 0.006520039167999999,
       "dead_at_s": null,
       "deficit_s": 0,
-      "harvested_wh": 0.0006700391679856921,
-      "soc_final_wh": 40.0,
-      "soc_initial_wh": 40.0
+      "harvested_wh": 0.00652003916799998,
+      "soc_final_wh": 0.05,
+      "soc_initial_wh": 0.05
      },
      "n06": {
-      "consumed_wh": 0.000667335808,
+      "consumed_wh": 0.006517335807999999,
       "dead_at_s": null,
       "deficit_s": 0,
-      "harvested_wh": 0.0006673358079893887,
-      "soc_final_wh": 40.0,
-      "soc_initial_wh": 40.0
+      "harvested_wh": 0.0065173358079999785,
+      "soc_final_wh": 0.05,
+      "soc_initial_wh": 0.05
      },
      "n07": {
-      "consumed_wh": 0.0006628302080000001,
+      "consumed_wh": 0.006512830208,
       "dead_at_s": null,
       "deficit_s": 0,
-      "harvested_wh": 0.000662830207986076,
-      "soc_final_wh": 40.0,
-      "soc_initial_wh": 40.0
+      "harvested_wh": 0.0065128302079999825,
+      "soc_final_wh": 0.05,
+      "soc_initial_wh": 0.05
      },
      "n10": {
-      "consumed_wh": 0.0006583246080000001,
+      "consumed_wh": 0.0065083246079999995,
       "dead_at_s": null,
       "deficit_s": 0,
-      "harvested_wh": 0.0006583246079827632,
-      "soc_final_wh": 40.0,
-      "soc_initial_wh": 40.0
+      "harvested_wh": 0.006508324607999973,
+      "soc_final_wh": 0.05,
+      "soc_initial_wh": 0.05
      },
      "n11": {
-      "consumed_wh": 0.0006610279680000002,
+      "consumed_wh": 0.0065110279679999996,
       "dead_at_s": null,
       "deficit_s": 0,
-      "harvested_wh": 0.0006610279679861719,
-      "soc_final_wh": 40.0,
-      "soc_initial_wh": 40.0
+      "harvested_wh": 0.006511027967999981,
+      "soc_final_wh": 0.05,
+      "soc_initial_wh": 0.05
      },
      "n13": {
-      "consumed_wh": 0.0006583246080000001,
+      "consumed_wh": 0.0065083246079999995,
       "dead_at_s": null,
       "deficit_s": 0,
-      "harvested_wh": 0.0006583246079827632,
-      "soc_final_wh": 40.0,
-      "soc_initial_wh": 40.0
+      "harvested_wh": 0.006508324607999973,
+      "soc_final_wh": 0.05,
+      "soc_initial_wh": 0.05
      },
      "n15": {
-      "consumed_wh": 0.0006610279680000002,
+      "consumed_wh": 0.0065110279679999996,
       "dead_at_s": null,
       "deficit_s": 0,
-      "harvested_wh": 0.0006610279679861719,
-      "soc_final_wh": 40.0,
-      "soc_initial_wh": 40.0
+      "harvested_wh": 0.006511027967999981,
+      "soc_final_wh": 0.05,
+      "soc_initial_wh": 0.05
      },
      "n16": {
-      "consumed_wh": 0.0006565223680000001,
+      "consumed_wh": 0.006506522368,
       "dead_at_s": null,
       "deficit_s": 0,
-      "harvested_wh": 0.0006565223679828591,
-      "soc_final_wh": 40.0,
-      "soc_initial_wh": 40.0
+      "harvested_wh": 0.006506522367999978,
+      "soc_final_wh": 0.05,
+      "soc_initial_wh": 0.05
      }
     }
    },
@@ -2266,10 +2755,10 @@
     "deliver_rate": 0.9523809523809523,
     "delivery_cdf": {
      "0": 0.8571428571428571,
-     "300": 0.9047619047619048,
-     "600": 0.9523809523809523,
      "1800": 0.9523809523809523,
-     "3600": 0.9523809523809523
+     "300": 0.9047619047619048,
+     "3600": 0.9523809523809523,
+     "600": 0.9523809523809523
     },
     "delivery_latency_mean_s": 45.0,
     "delivery_latency_p90_s": 0,
@@ -2278,13 +2767,37 @@
     "slots_delivered": 20,
     "slots_matched_by_collection": 21
    },
+   "exec_layer": "naive",
+   "hazard": {
+    "hold_every": 0,
+    "hold_s": 0
+   },
+   "intent_ledger": {
+    "change": 0,
+    "dedup": 0,
+    "expired": 0,
+    "fenced": 0,
+    "generated": 0,
+    "landed": 0,
+    "lost": 0,
+    "queued_left": 0,
+    "refused": 0,
+    "rejected": 0,
+    "same_value": 0,
+    "sent": 0,
+    "speculative": 0,
+    "stale_gen": 0
+   },
+   "intent_mismatch_s": 0,
+   "mixed_config_s": 0,
    "n_obligations": 189,
    "not_applicable": {
-    "config_mismatch_s": "\u6700\u5c0f\u5b9e\u4f8b\u6ca1\u6709\u5916\u90e8\u914d\u7f6e\u8981\u6c42\uff0c\u65e0\u6cd5\u5b9a\u4e49'\u9519\u8bef\u914d\u7f6e'\uff1b\u8fd4\u56de None \u800c\u4e0d\u662f 0\u3002"
+    "config_mismatch_s": "最小实例没有外部配置要求，无法定义'错误配置'；返回 None 而不是 0。",
+    "mixed_config_s": "计数器在 Instance.mixed_config_ticks 上，本函数只拿到 log、取不到；**不返回恒定值的假列**。需要这一列请从 Instance 取。"
    },
    "observation_window": {
     "censored_total": 0,
-    "note": "\u5220\u5931 = \u8fd0\u884c\u7ed3\u675f\u65f6\u8be5\u4e49\u52a1\u7684\u89c2\u5bdf\u622a\u6b62\u8fd8\u6ca1\u5230\uff1b\u65e2\u4e0d\u7b97\u6210\u529f\u4e5f\u4e0d\u7b97\u5931\u8d25\uff0c\u7559\u5728\u5206\u6bcd\u91cc\u3002",
+    "note": "删失 = 运行结束时该义务的观察截止还没到；既不算成功也不算失败，留在分母里。",
     "run_hours": 13,
     "tail_s": 3600,
     "task_hours": 12
@@ -2298,7 +2811,7 @@
     "knowledge_latency_p90_s": 0,
     "known_to_center": 7,
     "n_triggers": 7,
-    "note": "\u672c\u5b9e\u4f8b\u6ca1\u6709\u7b2c\u4e8c\u6761\u83b7\u77e5\u6e20\u9053\uff0c\u56e0\u6b64'\u4e2d\u5fc3\u83b7\u77e5\u4e8b\u4ef6'\u4e0e'\u4e2d\u5fc3\u62ff\u5230\u9996\u4efd\u65b0\u6570\u636e'\u540c\u4e00\u65f6\u523b\uff1b\u4e24\u8005\u7684\u5dee\u672a\u88ab\u6d4b\u8fc7\u3002"
+    "note": "本实例没有第二条获知渠道，因此'中心获知事件'与'中心拿到首份新数据'同一时刻；两者的差未被测过。"
    },
    "recovery": {
     "backlog_recovered": 42,
@@ -2307,7 +2820,7 @@
     "missing_collection": 0,
     "missing_delivery": 15,
     "n_obligations_in_window": 56,
-    "note": "\u91c7\u96c6\u7f3a\u5931\u5728\u6062\u590d\u540e\u8865\u4e0d\u56de\u6765\uff08\u4e0d\u8865\u9020\u5f53\u65f6\u672a\u91c7\u5230\u7684\u8bfb\u6570\uff09\uff1b\u4ea4\u4ed8\u7f3a\u5931\u5355\u5217\uff0c\u56e0\u4e3a\u5b83\u53ef\u7531\u81ea\u52a8\u8865\u53d1\u8ffd\u56de\u3002",
+    "note": "采集缺失在恢复后补不回来（不补造当时未采到的读数）；交付缺失单列，因为它可由自动补发追回。",
     "outage_hours": 3.0,
     "outage_s": [
      14400,
@@ -2316,7 +2829,7 @@
     "recovery_observation_s": 3600
    },
    "routine": {
-    "aoi_mean_s": 2950.554945054945,
+    "aoi_mean_s": 5354.083798882682,
     "censored": 0,
     "delivered": 131,
     "latency_mean_s": 1923.6641221374045,
@@ -2324,11 +2837,15 @@
     "missing_collection": 0,
     "missing_delivery": 37,
     "n": 168,
-    "no_observation_s": 0
+    "no_observation_s": 10800
    },
    "seed": 8
   },
   {
+   "access_blocked": 0,
+   "arm": "local",
+   "autonomy_margin": Infinity,
+   "autonomy_margin_min": Infinity,
    "by_kind": {
     "event": {
      "censored": 0,
@@ -2347,6 +2864,17 @@
      "n": 168
     }
    },
+   "command_counters": {
+    "commands_delivered": 0,
+    "commands_refused": 0,
+    "commands_sent": 0,
+    "deduplicated": 0,
+    "fenced": 0,
+    "stale_generation_dropped": 0,
+    "writes_changed": 0,
+    "writes_same_value": 0,
+    "writes_speculative": 0
+   },
    "communication": {
     "airtime_downlink_h": 0.0,
     "airtime_uplink_h": 0.012489671111111126,
@@ -2356,6 +2884,9 @@
     "uplinks": 169,
     "uplinks_heard": 120
    },
+   "delivery_oracle": 105,
+   "delivery_oracle_free_tx": 112,
+   "delivery_oracle_mid": 112,
    "deployment": {
     "best_sf": {
      "n00": 7,
@@ -2400,119 +2931,120 @@
     "n_reachable": 13,
     "n_slope_nodes": 16
    },
+   "dynamic_oracle": null,
    "energy": {
     "per_node": {
      "gw0": {
-      "consumed_wh": 0.0006800000000000005,
+      "consumed_wh": 0.01598,
       "dead_at_s": null,
       "deficit_s": 0,
-      "harvested_wh": 0.0006799999999742568,
-      "soc_final_wh": 40.0,
-      "soc_initial_wh": 40.0
+      "harvested_wh": 0.01597999999999994,
+      "soc_final_wh": 0.05,
+      "soc_initial_wh": 0.05
      },
      "n00": {
-      "consumed_wh": 0.0007159962880000001,
+      "consumed_wh": 0.006565996288,
       "dead_at_s": null,
       "deficit_s": 0,
-      "harvested_wh": 0.000715996287993903,
-      "soc_final_wh": 40.0,
-      "soc_initial_wh": 40.0
+      "harvested_wh": 0.0065659962879999825,
+      "soc_final_wh": 0.05,
+      "soc_initial_wh": 0.05
      },
      "n01": {
-      "consumed_wh": 0.0006907649280000002,
+      "consumed_wh": 0.006540764928,
       "dead_at_s": null,
       "deficit_s": 0,
-      "harvested_wh": 0.0006907649279881412,
-      "soc_final_wh": 40.0,
-      "soc_initial_wh": 40.0
+      "harvested_wh": 0.00654076492799998,
+      "soc_final_wh": 0.05,
+      "soc_initial_wh": 0.05
      },
      "n02": {
-      "consumed_wh": 0.0006889626880000001,
+      "consumed_wh": 0.0065389626880000004,
       "dead_at_s": null,
       "deficit_s": 0,
-      "harvested_wh": 0.0006889626879882371,
-      "soc_final_wh": 40.0,
-      "soc_initial_wh": 40.0
+      "harvested_wh": 0.006538962687999979,
+      "soc_final_wh": 0.05,
+      "soc_initial_wh": 0.05
      },
      "n03": {
-      "consumed_wh": 0.0006934682880000001,
+      "consumed_wh": 0.006543468288,
       "dead_at_s": null,
       "deficit_s": 0,
-      "harvested_wh": 0.0006934682879915499,
-      "soc_final_wh": 40.0,
-      "soc_initial_wh": 40.0
+      "harvested_wh": 0.006543468287999982,
+      "soc_final_wh": 0.05,
+      "soc_initial_wh": 0.05
      },
      "n04": {
-      "consumed_wh": 0.0006997761280000002,
+      "consumed_wh": 0.006549776128,
       "dead_at_s": null,
       "deficit_s": 0,
-      "harvested_wh": 0.0006997761279947667,
-      "soc_final_wh": 40.0,
-      "soc_initial_wh": 40.0
+      "harvested_wh": 0.006549776127999979,
+      "soc_final_wh": 0.05,
+      "soc_initial_wh": 0.05
      },
      "n05": {
-      "consumed_wh": 0.0006907649280000002,
+      "consumed_wh": 0.006540764928,
       "dead_at_s": null,
       "deficit_s": 0,
-      "harvested_wh": 0.0006907649279881412,
-      "soc_final_wh": 40.0,
-      "soc_initial_wh": 40.0
+      "harvested_wh": 0.00654076492799998,
+      "soc_final_wh": 0.05,
+      "soc_initial_wh": 0.05
      },
      "n06": {
-      "consumed_wh": 0.0006952705280000003,
+      "consumed_wh": 0.006545270527999999,
       "dead_at_s": null,
       "deficit_s": 0,
-      "harvested_wh": 0.000695270527991454,
-      "soc_final_wh": 40.0,
-      "soc_initial_wh": 40.0
+      "harvested_wh": 0.006545270527999983,
+      "soc_final_wh": 0.05,
+      "soc_initial_wh": 0.05
      },
      "n07": {
-      "consumed_wh": 0.0006907649280000002,
+      "consumed_wh": 0.006540764928,
       "dead_at_s": null,
       "deficit_s": 0,
-      "harvested_wh": 0.0006907649279881412,
-      "soc_final_wh": 40.0,
-      "soc_initial_wh": 40.0
+      "harvested_wh": 0.00654076492799998,
+      "soc_final_wh": 0.05,
+      "soc_initial_wh": 0.05
      },
      "n10": {
-      "consumed_wh": 0.0007096884480000001,
+      "consumed_wh": 0.006559688448,
       "dead_at_s": null,
       "deficit_s": 0,
-      "harvested_wh": 0.0007096884479906862,
-      "soc_final_wh": 40.0,
-      "soc_initial_wh": 40.0
+      "harvested_wh": 0.006559688447999978,
+      "soc_final_wh": 0.05,
+      "soc_initial_wh": 0.05
      },
      "n11": {
-      "consumed_wh": 0.0006889626880000001,
+      "consumed_wh": 0.0065389626880000004,
       "dead_at_s": null,
       "deficit_s": 0,
-      "harvested_wh": 0.0006889626879882371,
-      "soc_final_wh": 40.0,
-      "soc_initial_wh": 40.0
+      "harvested_wh": 0.006538962687999979,
+      "soc_final_wh": 0.05,
+      "soc_initial_wh": 0.05
      },
      "n13": {
-      "consumed_wh": 0.0006934682880000001,
+      "consumed_wh": 0.006543468288,
       "dead_at_s": null,
       "deficit_s": 0,
-      "harvested_wh": 0.0006934682879915499,
-      "soc_final_wh": 40.0,
-      "soc_initial_wh": 40.0
+      "harvested_wh": 0.006543468287999982,
+      "soc_final_wh": 0.05,
+      "soc_initial_wh": 0.05
      },
      "n15": {
-      "consumed_wh": 0.0006934682880000001,
+      "consumed_wh": 0.006543468288,
       "dead_at_s": null,
       "deficit_s": 0,
-      "harvested_wh": 0.0006934682879915499,
-      "soc_final_wh": 40.0,
-      "soc_initial_wh": 40.0
+      "harvested_wh": 0.006543468287999982,
+      "soc_final_wh": 0.05,
+      "soc_initial_wh": 0.05
      },
      "n16": {
-      "consumed_wh": 0.0007250074880000002,
+      "consumed_wh": 0.006575007488,
       "dead_at_s": null,
       "deficit_s": 0,
-      "harvested_wh": 0.0007250074879934232,
-      "soc_final_wh": 40.0,
-      "soc_initial_wh": 40.0
+      "harvested_wh": 0.0065750074879999815,
+      "soc_final_wh": 0.05,
+      "soc_initial_wh": 0.05
      }
     }
    },
@@ -2521,10 +3053,10 @@
     "deliver_rate": 0.7142857142857143,
     "delivery_cdf": {
      "0": 0.7142857142857143,
-     "300": 0.7142857142857143,
-     "600": 0.7142857142857143,
      "1800": 0.7142857142857143,
-     "3600": 0.7142857142857143
+     "300": 0.7142857142857143,
+     "3600": 0.7142857142857143,
+     "600": 0.7142857142857143
     },
     "delivery_latency_mean_s": 0.0,
     "delivery_latency_p90_s": 0,
@@ -2533,13 +3065,37 @@
     "slots_delivered": 15,
     "slots_matched_by_collection": 21
    },
+   "exec_layer": "naive",
+   "hazard": {
+    "hold_every": 0,
+    "hold_s": 0
+   },
+   "intent_ledger": {
+    "change": 0,
+    "dedup": 0,
+    "expired": 0,
+    "fenced": 0,
+    "generated": 0,
+    "landed": 0,
+    "lost": 0,
+    "queued_left": 0,
+    "refused": 0,
+    "rejected": 0,
+    "same_value": 0,
+    "sent": 0,
+    "speculative": 0,
+    "stale_gen": 0
+   },
+   "intent_mismatch_s": 0,
+   "mixed_config_s": 0,
    "n_obligations": 189,
    "not_applicable": {
-    "config_mismatch_s": "\u6700\u5c0f\u5b9e\u4f8b\u6ca1\u6709\u5916\u90e8\u914d\u7f6e\u8981\u6c42\uff0c\u65e0\u6cd5\u5b9a\u4e49'\u9519\u8bef\u914d\u7f6e'\uff1b\u8fd4\u56de None \u800c\u4e0d\u662f 0\u3002"
+    "config_mismatch_s": "最小实例没有外部配置要求，无法定义'错误配置'；返回 None 而不是 0。",
+    "mixed_config_s": "计数器在 Instance.mixed_config_ticks 上，本函数只拿到 log、取不到；**不返回恒定值的假列**。需要这一列请从 Instance 取。"
    },
    "observation_window": {
     "censored_total": 0,
-    "note": "\u5220\u5931 = \u8fd0\u884c\u7ed3\u675f\u65f6\u8be5\u4e49\u52a1\u7684\u89c2\u5bdf\u622a\u6b62\u8fd8\u6ca1\u5230\uff1b\u65e2\u4e0d\u7b97\u6210\u529f\u4e5f\u4e0d\u7b97\u5931\u8d25\uff0c\u7559\u5728\u5206\u6bcd\u91cc\u3002",
+    "note": "删失 = 运行结束时该义务的观察截止还没到；既不算成功也不算失败，留在分母里。",
     "run_hours": 13,
     "tail_s": 3600,
     "task_hours": 12
@@ -2553,7 +3109,7 @@
     "knowledge_latency_p90_s": 18780,
     "known_to_center": 7,
     "n_triggers": 7,
-    "note": "\u672c\u5b9e\u4f8b\u6ca1\u6709\u7b2c\u4e8c\u6761\u83b7\u77e5\u6e20\u9053\uff0c\u56e0\u6b64'\u4e2d\u5fc3\u83b7\u77e5\u4e8b\u4ef6'\u4e0e'\u4e2d\u5fc3\u62ff\u5230\u9996\u4efd\u65b0\u6570\u636e'\u540c\u4e00\u65f6\u523b\uff1b\u4e24\u8005\u7684\u5dee\u672a\u88ab\u6d4b\u8fc7\u3002"
+    "note": "本实例没有第二条获知渠道，因此'中心获知事件'与'中心拿到首份新数据'同一时刻；两者的差未被测过。"
    },
    "recovery": {
     "backlog_recovered": 42,
@@ -2562,7 +3118,7 @@
     "missing_collection": 0,
     "missing_delivery": 16,
     "n_obligations_in_window": 56,
-    "note": "\u91c7\u96c6\u7f3a\u5931\u5728\u6062\u590d\u540e\u8865\u4e0d\u56de\u6765\uff08\u4e0d\u8865\u9020\u5f53\u65f6\u672a\u91c7\u5230\u7684\u8bfb\u6570\uff09\uff1b\u4ea4\u4ed8\u7f3a\u5931\u5355\u5217\uff0c\u56e0\u4e3a\u5b83\u53ef\u7531\u81ea\u52a8\u8865\u53d1\u8ffd\u56de\u3002",
+    "note": "采集缺失在恢复后补不回来（不补造当时未采到的读数）；交付缺失单列，因为它可由自动补发追回。",
     "outage_hours": 3.0,
     "outage_s": [
      14400,
@@ -2571,7 +3127,7 @@
     "recovery_observation_s": 3600
    },
    "routine": {
-    "aoi_mean_s": 1803.3021978021977,
+    "aoi_mean_s": 7878.782608695652,
     "censored": 0,
     "delivered": 105,
     "latency_mean_s": 2605.714285714286,
@@ -2579,11 +3135,15 @@
     "missing_collection": 0,
     "missing_delivery": 63,
     "n": 168,
-    "no_observation_s": 0
+    "no_observation_s": 75600
    },
    "seed": 9
   },
   {
+   "access_blocked": 0,
+   "arm": "local",
+   "autonomy_margin": Infinity,
+   "autonomy_margin_min": Infinity,
    "by_kind": {
     "event": {
      "censored": 0,
@@ -2602,6 +3162,17 @@
      "n": 168
     }
    },
+   "command_counters": {
+    "commands_delivered": 0,
+    "commands_refused": 0,
+    "commands_sent": 0,
+    "deduplicated": 0,
+    "fenced": 0,
+    "stale_generation_dropped": 0,
+    "writes_changed": 0,
+    "writes_same_value": 0,
+    "writes_speculative": 0
+   },
    "communication": {
     "airtime_downlink_h": 0.0,
     "airtime_uplink_h": 0.010236871111111122,
@@ -2611,6 +3182,9 @@
     "uplinks": 169,
     "uplinks_heard": 124
    },
+   "delivery_oracle": 127,
+   "delivery_oracle_free_tx": 140,
+   "delivery_oracle_mid": 140,
    "deployment": {
     "best_sf": {
      "n00": 7,
@@ -2655,119 +3229,120 @@
     "n_reachable": 13,
     "n_slope_nodes": 16
    },
+   "dynamic_oracle": null,
    "energy": {
     "per_node": {
      "gw0": {
-      "consumed_wh": 0.0006800000000000005,
+      "consumed_wh": 0.01598,
       "dead_at_s": null,
       "deficit_s": 0,
-      "harvested_wh": 0.0006799999999742568,
-      "soc_final_wh": 40.0,
-      "soc_initial_wh": 40.0
+      "harvested_wh": 0.01597999999999994,
+      "soc_final_wh": 0.05,
+      "soc_initial_wh": 0.05
      },
      "n00": {
-      "consumed_wh": 0.0006610279680000002,
+      "consumed_wh": 0.0065110279679999996,
       "dead_at_s": null,
       "deficit_s": 0,
-      "harvested_wh": 0.0006610279679861719,
-      "soc_final_wh": 40.0,
-      "soc_initial_wh": 40.0
+      "harvested_wh": 0.006511027967999974,
+      "soc_final_wh": 0.05,
+      "soc_initial_wh": 0.05
      },
      "n01": {
-      "consumed_wh": 0.000671841408,
+      "consumed_wh": 0.006521841408,
       "dead_at_s": null,
       "deficit_s": 0,
-      "harvested_wh": 0.0006718414079855961,
-      "soc_final_wh": 40.0,
-      "soc_initial_wh": 40.0
+      "harvested_wh": 0.0065218414079999815,
+      "soc_final_wh": 0.05,
+      "soc_initial_wh": 0.05
      },
      "n02": {
-      "consumed_wh": 0.0006808526080000001,
+      "consumed_wh": 0.0065308526079999995,
       "dead_at_s": null,
       "deficit_s": 0,
-      "harvested_wh": 0.0006808526079922217,
-      "soc_final_wh": 40.0,
-      "soc_initial_wh": 40.0
+      "harvested_wh": 0.00653085260799998,
+      "soc_final_wh": 0.05,
+      "soc_initial_wh": 0.05
      },
      "n03": {
-      "consumed_wh": 0.0006853582080000001,
+      "consumed_wh": 0.006535358208,
       "dead_at_s": null,
       "deficit_s": 0,
-      "harvested_wh": 0.0006853582079884291,
-      "soc_final_wh": 40.0,
-      "soc_initial_wh": 40.0
+      "harvested_wh": 0.006535358207999983,
+      "soc_final_wh": 0.05,
+      "soc_initial_wh": 0.05
      },
      "n04": {
-      "consumed_wh": 0.0006628302080000002,
+      "consumed_wh": 0.006512830207999999,
       "dead_at_s": null,
       "deficit_s": 0,
-      "harvested_wh": 0.000662830207986076,
-      "soc_final_wh": 40.0,
-      "soc_initial_wh": 40.0
+      "harvested_wh": 0.006512830207999976,
+      "soc_final_wh": 0.05,
+      "soc_initial_wh": 0.05
      },
      "n05": {
-      "consumed_wh": 0.000667335808,
+      "consumed_wh": 0.006517335807999999,
       "dead_at_s": null,
       "deficit_s": 0,
-      "harvested_wh": 0.0006673358079893887,
-      "soc_final_wh": 40.0,
-      "soc_initial_wh": 40.0
+      "harvested_wh": 0.0065173358079999785,
+      "soc_final_wh": 0.05,
+      "soc_initial_wh": 0.05
      },
      "n06": {
-      "consumed_wh": 0.0006628302080000002,
+      "consumed_wh": 0.006512830208,
       "dead_at_s": null,
       "deficit_s": 0,
-      "harvested_wh": 0.000662830207986076,
-      "soc_final_wh": 40.0,
-      "soc_initial_wh": 40.0
+      "harvested_wh": 0.006512830207999976,
+      "soc_final_wh": 0.05,
+      "soc_initial_wh": 0.05
      },
      "n07": {
-      "consumed_wh": 0.0006700391680000002,
+      "consumed_wh": 0.006520039168,
       "dead_at_s": null,
       "deficit_s": 0,
-      "harvested_wh": 0.0006700391679856921,
-      "soc_final_wh": 40.0,
-      "soc_initial_wh": 40.0
+      "harvested_wh": 0.00652003916799998,
+      "soc_final_wh": 0.05,
+      "soc_initial_wh": 0.05
      },
      "n10": {
-      "consumed_wh": 0.0006817537280000002,
+      "consumed_wh": 0.006531753728000001,
       "dead_at_s": null,
       "deficit_s": 0,
-      "harvested_wh": 0.000681753727988621,
-      "soc_final_wh": 40.0,
-      "soc_initial_wh": 40.0
+      "harvested_wh": 0.006531753727999981,
+      "soc_final_wh": 0.05,
+      "soc_initial_wh": 0.05
      },
      "n11": {
-      "consumed_wh": 0.0006691380480000001,
+      "consumed_wh": 0.006519138048,
       "dead_at_s": null,
       "deficit_s": 0,
-      "harvested_wh": 0.0006691380479892928,
-      "soc_final_wh": 40.0,
-      "soc_initial_wh": 40.0
+      "harvested_wh": 0.006519138047999973,
+      "soc_final_wh": 0.05,
+      "soc_initial_wh": 0.05
      },
      "n13": {
-      "consumed_wh": 0.0006628302080000002,
+      "consumed_wh": 0.006512830207999999,
       "dead_at_s": null,
       "deficit_s": 0,
-      "harvested_wh": 0.000662830207986076,
-      "soc_final_wh": 40.0,
-      "soc_initial_wh": 40.0
+      "harvested_wh": 0.006512830207999976,
+      "soc_final_wh": 0.05,
+      "soc_initial_wh": 0.05
      },
      "n15": {
-      "consumed_wh": 0.0006808526080000001,
+      "consumed_wh": 0.0065308526079999995,
       "dead_at_s": null,
       "deficit_s": 0,
-      "harvested_wh": 0.0006808526079922217,
-      "soc_final_wh": 40.0,
-      "soc_initial_wh": 40.0
+      "harvested_wh": 0.006530852607999987,
+      "soc_final_wh": 0.05,
+      "soc_initial_wh": 0.05
      },
      "n16": {
-      "consumed_wh": 0.0006628302080000002,
+      "consumed_wh": 0.006512830207999999,
       "dead_at_s": null,
       "deficit_s": 0,
-      "harvested_wh": 0.000662830207986076,
-      "soc_final_wh": 40.0,
-      "soc_initial_wh": 40.0
+      "harvested_wh": 0.006512830207999976,
+      "soc_final_wh": 0.05,
+      "soc_initial_wh": 0.05
      }
     }
    },
@@ -2776,10 +3351,10 @@
     "deliver_rate": 0.8095238095238095,
     "delivery_cdf": {
      "0": 0.7142857142857143,
-     "300": 0.7619047619047619,
-     "600": 0.8095238095238095,
      "1800": 0.8095238095238095,
-     "3600": 0.8095238095238095
+     "300": 0.7619047619047619,
+     "3600": 0.8095238095238095,
+     "600": 0.8095238095238095
     },
     "delivery_latency_mean_s": 38.8235294117647,
     "delivery_latency_p90_s": 0,
@@ -2788,13 +3363,37 @@
     "slots_delivered": 17,
     "slots_matched_by_collection": 21
    },
+   "exec_layer": "naive",
+   "hazard": {
+    "hold_every": 0,
+    "hold_s": 0
+   },
+   "intent_ledger": {
+    "change": 0,
+    "dedup": 0,
+    "expired": 0,
+    "fenced": 0,
+    "generated": 0,
+    "landed": 0,
+    "lost": 0,
+    "queued_left": 0,
+    "refused": 0,
+    "rejected": 0,
+    "same_value": 0,
+    "sent": 0,
+    "speculative": 0,
+    "stale_gen": 0
+   },
+   "intent_mismatch_s": 0,
+   "mixed_config_s": 0,
    "n_obligations": 189,
    "not_applicable": {
-    "config_mismatch_s": "\u6700\u5c0f\u5b9e\u4f8b\u6ca1\u6709\u5916\u90e8\u914d\u7f6e\u8981\u6c42\uff0c\u65e0\u6cd5\u5b9a\u4e49'\u9519\u8bef\u914d\u7f6e'\uff1b\u8fd4\u56de None \u800c\u4e0d\u662f 0\u3002"
+    "config_mismatch_s": "最小实例没有外部配置要求，无法定义'错误配置'；返回 None 而不是 0。",
+    "mixed_config_s": "计数器在 Instance.mixed_config_ticks 上，本函数只拿到 log、取不到；**不返回恒定值的假列**。需要这一列请从 Instance 取。"
    },
    "observation_window": {
     "censored_total": 0,
-    "note": "\u5220\u5931 = \u8fd0\u884c\u7ed3\u675f\u65f6\u8be5\u4e49\u52a1\u7684\u89c2\u5bdf\u622a\u6b62\u8fd8\u6ca1\u5230\uff1b\u65e2\u4e0d\u7b97\u6210\u529f\u4e5f\u4e0d\u7b97\u5931\u8d25\uff0c\u7559\u5728\u5206\u6bcd\u91cc\u3002",
+    "note": "删失 = 运行结束时该义务的观察截止还没到；既不算成功也不算失败，留在分母里。",
     "run_hours": 13,
     "tail_s": 3600,
     "task_hours": 12
@@ -2808,7 +3407,7 @@
     "knowledge_latency_p90_s": 780,
     "known_to_center": 7,
     "n_triggers": 7,
-    "note": "\u672c\u5b9e\u4f8b\u6ca1\u6709\u7b2c\u4e8c\u6761\u83b7\u77e5\u6e20\u9053\uff0c\u56e0\u6b64'\u4e2d\u5fc3\u83b7\u77e5\u4e8b\u4ef6'\u4e0e'\u4e2d\u5fc3\u62ff\u5230\u9996\u4efd\u65b0\u6570\u636e'\u540c\u4e00\u65f6\u523b\uff1b\u4e24\u8005\u7684\u5dee\u672a\u88ab\u6d4b\u8fc7\u3002"
+    "note": "本实例没有第二条获知渠道，因此'中心获知事件'与'中心拿到首份新数据'同一时刻；两者的差未被测过。"
    },
    "recovery": {
     "backlog_recovered": 42,
@@ -2817,7 +3416,7 @@
     "missing_collection": 0,
     "missing_delivery": 16,
     "n_obligations_in_window": 56,
-    "note": "\u91c7\u96c6\u7f3a\u5931\u5728\u6062\u590d\u540e\u8865\u4e0d\u56de\u6765\uff08\u4e0d\u8865\u9020\u5f53\u65f6\u672a\u91c7\u5230\u7684\u8bfb\u6570\uff09\uff1b\u4ea4\u4ed8\u7f3a\u5931\u5355\u5217\uff0c\u56e0\u4e3a\u5b83\u53ef\u7531\u81ea\u52a8\u8865\u53d1\u8ffd\u56de\u3002",
+    "note": "采集缺失在恢复后补不回来（不补造当时未采到的读数）；交付缺失单列，因为它可由自动补发追回。",
     "outage_hours": 3.0,
     "outage_s": [
      14400,
@@ -2826,7 +3425,7 @@
     "recovery_observation_s": 3600
    },
    "routine": {
-    "aoi_mean_s": 3687.368131868132,
+    "aoi_mean_s": 6495.633333333333,
     "censored": 0,
     "delivered": 113,
     "latency_mean_s": 2102.6548672566373,
@@ -2834,11 +3433,15 @@
     "missing_collection": 0,
     "missing_delivery": 55,
     "n": 168,
-    "no_observation_s": 0
+    "no_observation_s": 7200
    },
    "seed": 10
   },
   {
+   "access_blocked": 0,
+   "arm": "local",
+   "autonomy_margin": Infinity,
+   "autonomy_margin_min": Infinity,
    "by_kind": {
     "event": {
      "censored": 0,
@@ -2857,6 +3460,17 @@
      "n": 168
     }
    },
+   "command_counters": {
+    "commands_delivered": 0,
+    "commands_refused": 0,
+    "commands_sent": 0,
+    "deduplicated": 0,
+    "fenced": 0,
+    "stale_generation_dropped": 0,
+    "writes_changed": 0,
+    "writes_same_value": 0,
+    "writes_speculative": 0
+   },
    "communication": {
     "airtime_downlink_h": 0.0,
     "airtime_uplink_h": 0.010959360000000013,
@@ -2866,6 +3480,9 @@
     "uplinks": 169,
     "uplinks_heard": 121
    },
+   "delivery_oracle": 119,
+   "delivery_oracle_free_tx": 126,
+   "delivery_oracle_mid": 126,
    "deployment": {
     "best_sf": {
      "n00": 7,
@@ -2910,119 +3527,120 @@
     "n_reachable": 13,
     "n_slope_nodes": 16
    },
+   "dynamic_oracle": null,
    "energy": {
     "per_node": {
      "gw0": {
-      "consumed_wh": 0.0006800000000000005,
+      "consumed_wh": 0.01598,
       "dead_at_s": null,
       "deficit_s": 0,
-      "harvested_wh": 0.0006799999999742568,
-      "soc_final_wh": 40.0,
-      "soc_initial_wh": 40.0
+      "harvested_wh": 0.01597999999999994,
+      "soc_final_wh": 0.05,
+      "soc_initial_wh": 0.05
      },
      "n00": {
-      "consumed_wh": 0.0006952705280000001,
+      "consumed_wh": 0.006545270527999999,
       "dead_at_s": null,
       "deficit_s": 0,
-      "harvested_wh": 0.000695270527991454,
-      "soc_final_wh": 40.0,
-      "soc_initial_wh": 40.0
+      "harvested_wh": 0.006545270527999976,
+      "soc_final_wh": 0.05,
+      "soc_initial_wh": 0.05
      },
      "n01": {
-      "consumed_wh": 0.0006790503680000001,
+      "consumed_wh": 0.006529050367999999,
       "dead_at_s": null,
       "deficit_s": 0,
-      "harvested_wh": 0.0006790503679852122,
-      "soc_final_wh": 40.0,
-      "soc_initial_wh": 40.0
+      "harvested_wh": 0.006529050367999972,
+      "soc_final_wh": 0.05,
+      "soc_initial_wh": 0.05
      },
      "n02": {
-      "consumed_wh": 0.0006754458880000001,
+      "consumed_wh": 0.006525445888,
       "dead_at_s": null,
       "deficit_s": 0,
-      "harvested_wh": 0.0006754458879854042,
-      "soc_final_wh": 40.0,
-      "soc_initial_wh": 40.0
+      "harvested_wh": 0.00652544588799997,
+      "soc_final_wh": 0.05,
+      "soc_initial_wh": 0.05
      },
      "n03": {
-      "consumed_wh": 0.000677248128,
+      "consumed_wh": 0.006527248128000001,
       "dead_at_s": null,
       "deficit_s": 0,
-      "harvested_wh": 0.0006772481279853082,
-      "soc_final_wh": 40.0,
-      "soc_initial_wh": 40.0
+      "harvested_wh": 0.006527248127999978,
+      "soc_final_wh": 0.05,
+      "soc_initial_wh": 0.05
      },
      "n04": {
-      "consumed_wh": 0.0006772481280000002,
+      "consumed_wh": 0.006527248128,
       "dead_at_s": null,
       "deficit_s": 0,
-      "harvested_wh": 0.0006772481279853082,
-      "soc_final_wh": 40.0,
-      "soc_initial_wh": 40.0
+      "harvested_wh": 0.006527248127999971,
+      "soc_final_wh": 0.05,
+      "soc_initial_wh": 0.05
      },
      "n05": {
-      "consumed_wh": 0.0006772481280000001,
+      "consumed_wh": 0.006527248128,
       "dead_at_s": null,
       "deficit_s": 0,
-      "harvested_wh": 0.0006772481279853082,
-      "soc_final_wh": 40.0,
-      "soc_initial_wh": 40.0
+      "harvested_wh": 0.006527248127999971,
+      "soc_final_wh": 0.05,
+      "soc_initial_wh": 0.05
      },
      "n06": {
-      "consumed_wh": 0.0006835559680000001,
+      "consumed_wh": 0.006533555968,
       "dead_at_s": null,
       "deficit_s": 0,
-      "harvested_wh": 0.000683555967988525,
-      "soc_final_wh": 40.0,
-      "soc_initial_wh": 40.0
+      "harvested_wh": 0.006533555967999982,
+      "soc_final_wh": 0.05,
+      "soc_initial_wh": 0.05
      },
      "n07": {
-      "consumed_wh": 0.0006754458880000001,
+      "consumed_wh": 0.006525445888,
       "dead_at_s": null,
       "deficit_s": 0,
-      "harvested_wh": 0.0006754458879854042,
-      "soc_final_wh": 40.0,
-      "soc_initial_wh": 40.0
+      "harvested_wh": 0.00652544588799997,
+      "soc_final_wh": 0.05,
+      "soc_initial_wh": 0.05
      },
      "n10": {
-      "consumed_wh": 0.0006772481280000001,
+      "consumed_wh": 0.006527248128,
       "dead_at_s": null,
       "deficit_s": 0,
-      "harvested_wh": 0.0006772481279853082,
-      "soc_final_wh": 40.0,
-      "soc_initial_wh": 40.0
+      "harvested_wh": 0.006527248127999971,
+      "soc_final_wh": 0.05,
+      "soc_initial_wh": 0.05
      },
      "n11": {
-      "consumed_wh": 0.000686259328,
+      "consumed_wh": 0.006536259328,
       "dead_at_s": null,
       "deficit_s": 0,
-      "harvested_wh": 0.0006862593279919338,
-      "soc_final_wh": 40.0,
-      "soc_initial_wh": 40.0
+      "harvested_wh": 0.006536259327999984,
+      "soc_final_wh": 0.05,
+      "soc_initial_wh": 0.05
      },
      "n13": {
-      "consumed_wh": 0.000677248128,
+      "consumed_wh": 0.006527248128000001,
       "dead_at_s": null,
       "deficit_s": 0,
-      "harvested_wh": 0.0006772481279853082,
-      "soc_final_wh": 40.0,
-      "soc_initial_wh": 40.0
+      "harvested_wh": 0.006527248127999978,
+      "soc_final_wh": 0.05,
+      "soc_initial_wh": 0.05
      },
      "n15": {
-      "consumed_wh": 0.000677248128,
+      "consumed_wh": 0.006527248128000001,
       "dead_at_s": null,
       "deficit_s": 0,
-      "harvested_wh": 0.0006772481279853082,
-      "soc_final_wh": 40.0,
-      "soc_initial_wh": 40.0
+      "harvested_wh": 0.006527248127999978,
+      "soc_final_wh": 0.05,
+      "soc_initial_wh": 0.05
      },
      "n16": {
-      "consumed_wh": 0.0006754458880000001,
+      "consumed_wh": 0.006525445888,
       "dead_at_s": null,
       "deficit_s": 0,
-      "harvested_wh": 0.0006754458879854042,
-      "soc_final_wh": 40.0,
-      "soc_initial_wh": 40.0
+      "harvested_wh": 0.00652544588799997,
+      "soc_final_wh": 0.05,
+      "soc_initial_wh": 0.05
      }
     }
    },
@@ -3031,10 +3649,10 @@
     "deliver_rate": 0.7142857142857143,
     "delivery_cdf": {
      "0": 0.7142857142857143,
-     "300": 0.7142857142857143,
-     "600": 0.7142857142857143,
      "1800": 0.7142857142857143,
-     "3600": 0.7142857142857143
+     "300": 0.7142857142857143,
+     "3600": 0.7142857142857143,
+     "600": 0.7142857142857143
     },
     "delivery_latency_mean_s": 0.0,
     "delivery_latency_p90_s": 0,
@@ -3043,13 +3661,37 @@
     "slots_delivered": 15,
     "slots_matched_by_collection": 21
    },
+   "exec_layer": "naive",
+   "hazard": {
+    "hold_every": 0,
+    "hold_s": 0
+   },
+   "intent_ledger": {
+    "change": 0,
+    "dedup": 0,
+    "expired": 0,
+    "fenced": 0,
+    "generated": 0,
+    "landed": 0,
+    "lost": 0,
+    "queued_left": 0,
+    "refused": 0,
+    "rejected": 0,
+    "same_value": 0,
+    "sent": 0,
+    "speculative": 0,
+    "stale_gen": 0
+   },
+   "intent_mismatch_s": 0,
+   "mixed_config_s": 0,
    "n_obligations": 189,
    "not_applicable": {
-    "config_mismatch_s": "\u6700\u5c0f\u5b9e\u4f8b\u6ca1\u6709\u5916\u90e8\u914d\u7f6e\u8981\u6c42\uff0c\u65e0\u6cd5\u5b9a\u4e49'\u9519\u8bef\u914d\u7f6e'\uff1b\u8fd4\u56de None \u800c\u4e0d\u662f 0\u3002"
+    "config_mismatch_s": "最小实例没有外部配置要求，无法定义'错误配置'；返回 None 而不是 0。",
+    "mixed_config_s": "计数器在 Instance.mixed_config_ticks 上，本函数只拿到 log、取不到；**不返回恒定值的假列**。需要这一列请从 Instance 取。"
    },
    "observation_window": {
     "censored_total": 0,
-    "note": "\u5220\u5931 = \u8fd0\u884c\u7ed3\u675f\u65f6\u8be5\u4e49\u52a1\u7684\u89c2\u5bdf\u622a\u6b62\u8fd8\u6ca1\u5230\uff1b\u65e2\u4e0d\u7b97\u6210\u529f\u4e5f\u4e0d\u7b97\u5931\u8d25\uff0c\u7559\u5728\u5206\u6bcd\u91cc\u3002",
+    "note": "删失 = 运行结束时该义务的观察截止还没到；既不算成功也不算失败，留在分母里。",
     "run_hours": 13,
     "tail_s": 3600,
     "task_hours": 12
@@ -3063,7 +3705,7 @@
     "knowledge_latency_p90_s": 1740,
     "known_to_center": 7,
     "n_triggers": 7,
-    "note": "\u672c\u5b9e\u4f8b\u6ca1\u6709\u7b2c\u4e8c\u6761\u83b7\u77e5\u6e20\u9053\uff0c\u56e0\u6b64'\u4e2d\u5fc3\u83b7\u77e5\u4e8b\u4ef6'\u4e0e'\u4e2d\u5fc3\u62ff\u5230\u9996\u4efd\u65b0\u6570\u636e'\u540c\u4e00\u65f6\u523b\uff1b\u4e24\u8005\u7684\u5dee\u672a\u88ab\u6d4b\u8fc7\u3002"
+    "note": "本实例没有第二条获知渠道，因此'中心获知事件'与'中心拿到首份新数据'同一时刻；两者的差未被测过。"
    },
    "recovery": {
     "backlog_recovered": 42,
@@ -3072,7 +3714,7 @@
     "missing_collection": 0,
     "missing_delivery": 15,
     "n_obligations_in_window": 56,
-    "note": "\u91c7\u96c6\u7f3a\u5931\u5728\u6062\u590d\u540e\u8865\u4e0d\u56de\u6765\uff08\u4e0d\u8865\u9020\u5f53\u65f6\u672a\u91c7\u5230\u7684\u8bfb\u6570\uff09\uff1b\u4ea4\u4ed8\u7f3a\u5931\u5355\u5217\uff0c\u56e0\u4e3a\u5b83\u53ef\u7531\u81ea\u52a8\u8865\u53d1\u8ffd\u56de\u3002",
+    "note": "采集缺失在恢复后补不回来（不补造当时未采到的读数）；交付缺失单列，因为它可由自动补发追回。",
     "outage_hours": 3.0,
     "outage_s": [
      14400,
@@ -3081,7 +3723,7 @@
     "recovery_observation_s": 3600
    },
    "routine": {
-    "aoi_mean_s": 2238.467032967033,
+    "aoi_mean_s": 6881.807909604519,
     "censored": 0,
     "delivered": 119,
     "latency_mean_s": 1996.638655462185,
@@ -3089,11 +3731,15 @@
     "missing_collection": 0,
     "missing_delivery": 49,
     "n": 168,
-    "no_observation_s": 0
+    "no_observation_s": 18000
    },
    "seed": 11
   },
   {
+   "access_blocked": 0,
+   "arm": "local",
+   "autonomy_margin": Infinity,
+   "autonomy_margin_min": Infinity,
    "by_kind": {
     "event": {
      "censored": 0,
@@ -3112,6 +3758,17 @@
      "n": 168
     }
    },
+   "command_counters": {
+    "commands_delivered": 0,
+    "commands_refused": 0,
+    "commands_sent": 0,
+    "deduplicated": 0,
+    "fenced": 0,
+    "stale_generation_dropped": 0,
+    "writes_changed": 0,
+    "writes_same_value": 0,
+    "writes_speculative": 0
+   },
    "communication": {
     "airtime_downlink_h": 0.0,
     "airtime_uplink_h": 0.012165404444444448,
@@ -3121,6 +3778,9 @@
     "uplinks": 169,
     "uplinks_heard": 126
    },
+   "delivery_oracle": 108,
+   "delivery_oracle_free_tx": 112,
+   "delivery_oracle_mid": 112,
    "deployment": {
     "best_sf": {
      "n00": 7,
@@ -3165,119 +3825,120 @@
     "n_reachable": 13,
     "n_slope_nodes": 16
    },
+   "dynamic_oracle": null,
    "energy": {
     "per_node": {
      "gw0": {
-      "consumed_wh": 0.0006800000000000005,
+      "consumed_wh": 0.01598,
       "dead_at_s": null,
       "deficit_s": 0,
-      "harvested_wh": 0.0006799999999742568,
-      "soc_final_wh": 40.0,
-      "soc_initial_wh": 40.0
+      "harvested_wh": 0.01597999999999994,
+      "soc_final_wh": 0.05,
+      "soc_initial_wh": 0.05
      },
      "n00": {
-      "consumed_wh": 0.000687160448,
+      "consumed_wh": 0.006537160448000001,
       "dead_at_s": null,
       "deficit_s": 0,
-      "harvested_wh": 0.0006871604479883331,
-      "soc_final_wh": 40.0,
-      "soc_initial_wh": 40.0
+      "harvested_wh": 0.006537160447999978,
+      "soc_final_wh": 0.05,
+      "soc_initial_wh": 0.05
      },
      "n01": {
-      "consumed_wh": 0.0006907649280000002,
+      "consumed_wh": 0.006540764928000001,
       "dead_at_s": null,
       "deficit_s": 0,
-      "harvested_wh": 0.0006907649279881412,
-      "soc_final_wh": 40.0,
-      "soc_initial_wh": 40.0
+      "harvested_wh": 0.00654076492799998,
+      "soc_final_wh": 0.05,
+      "soc_initial_wh": 0.05
      },
      "n02": {
-      "consumed_wh": 0.0006907649280000002,
+      "consumed_wh": 0.006540764928000001,
       "dead_at_s": null,
       "deficit_s": 0,
-      "harvested_wh": 0.0006907649279881412,
-      "soc_final_wh": 40.0,
-      "soc_initial_wh": 40.0
+      "harvested_wh": 0.00654076492799998,
+      "soc_final_wh": 0.05,
+      "soc_initial_wh": 0.05
      },
      "n03": {
-      "consumed_wh": 0.000687160448,
+      "consumed_wh": 0.006537160448000001,
       "dead_at_s": null,
       "deficit_s": 0,
-      "harvested_wh": 0.0006871604479883331,
-      "soc_final_wh": 40.0,
-      "soc_initial_wh": 40.0
+      "harvested_wh": 0.006537160447999978,
+      "soc_final_wh": 0.05,
+      "soc_initial_wh": 0.05
      },
      "n04": {
-      "consumed_wh": 0.0006889626880000001,
+      "consumed_wh": 0.0065389626880000004,
       "dead_at_s": null,
       "deficit_s": 0,
-      "harvested_wh": 0.0006889626879882371,
-      "soc_final_wh": 40.0,
-      "soc_initial_wh": 40.0
+      "harvested_wh": 0.006538962687999979,
+      "soc_final_wh": 0.05,
+      "soc_initial_wh": 0.05
      },
      "n05": {
-      "consumed_wh": 0.0006952705280000001,
+      "consumed_wh": 0.006545270528,
       "dead_at_s": null,
       "deficit_s": 0,
-      "harvested_wh": 0.000695270527991454,
-      "soc_final_wh": 40.0,
-      "soc_initial_wh": 40.0
+      "harvested_wh": 0.006545270527999983,
+      "soc_final_wh": 0.05,
+      "soc_initial_wh": 0.05
      },
      "n06": {
-      "consumed_wh": 0.0006889626880000001,
+      "consumed_wh": 0.006538962688000001,
       "dead_at_s": null,
       "deficit_s": 0,
-      "harvested_wh": 0.0006889626879882371,
-      "soc_final_wh": 40.0,
-      "soc_initial_wh": 40.0
+      "harvested_wh": 0.006538962687999979,
+      "soc_final_wh": 0.05,
+      "soc_initial_wh": 0.05
      },
      "n07": {
-      "consumed_wh": 0.000687160448,
+      "consumed_wh": 0.006537160448000001,
       "dead_at_s": null,
       "deficit_s": 0,
-      "harvested_wh": 0.0006871604479883331,
-      "soc_final_wh": 40.0,
-      "soc_initial_wh": 40.0
+      "harvested_wh": 0.006537160447999978,
+      "soc_final_wh": 0.05,
+      "soc_initial_wh": 0.05
      },
      "n10": {
-      "consumed_wh": 0.000687160448,
+      "consumed_wh": 0.006537160448000001,
       "dead_at_s": null,
       "deficit_s": 0,
-      "harvested_wh": 0.0006871604479883331,
-      "soc_final_wh": 40.0,
-      "soc_initial_wh": 40.0
+      "harvested_wh": 0.006537160447999978,
+      "soc_final_wh": 0.05,
+      "soc_initial_wh": 0.05
      },
      "n11": {
-      "consumed_wh": 0.0006889626880000001,
+      "consumed_wh": 0.006538962688000001,
       "dead_at_s": null,
       "deficit_s": 0,
-      "harvested_wh": 0.0006889626879882371,
-      "soc_final_wh": 40.0,
-      "soc_initial_wh": 40.0
+      "harvested_wh": 0.006538962687999979,
+      "soc_final_wh": 0.05,
+      "soc_initial_wh": 0.05
      },
      "n13": {
-      "consumed_wh": 0.0006907649280000002,
+      "consumed_wh": 0.006540764928000001,
       "dead_at_s": null,
       "deficit_s": 0,
-      "harvested_wh": 0.0006907649279881412,
-      "soc_final_wh": 40.0,
-      "soc_initial_wh": 40.0
+      "harvested_wh": 0.00654076492799998,
+      "soc_final_wh": 0.05,
+      "soc_initial_wh": 0.05
      },
      "n15": {
-      "consumed_wh": 0.000717798528,
+      "consumed_wh": 0.006567798528,
       "dead_at_s": null,
       "deficit_s": 0,
-      "harvested_wh": 0.0007177985279938071,
-      "soc_final_wh": 40.0,
-      "soc_initial_wh": 40.0
+      "harvested_wh": 0.006567798527999991,
+      "soc_final_wh": 0.05,
+      "soc_initial_wh": 0.05
      },
      "n16": {
-      "consumed_wh": 0.0007241063680000002,
+      "consumed_wh": 0.006574106368000001,
       "dead_at_s": null,
       "deficit_s": 0,
-      "harvested_wh": 0.0007241063679899185,
-      "soc_final_wh": 40.0,
-      "soc_initial_wh": 40.0
+      "harvested_wh": 0.006574106367999981,
+      "soc_final_wh": 0.05,
+      "soc_initial_wh": 0.05
      }
     }
    },
@@ -3286,10 +3947,10 @@
     "deliver_rate": 0.7142857142857143,
     "delivery_cdf": {
      "0": 0.7142857142857143,
-     "300": 0.7142857142857143,
-     "600": 0.7142857142857143,
      "1800": 0.7142857142857143,
-     "3600": 0.7142857142857143
+     "300": 0.7142857142857143,
+     "3600": 0.7142857142857143,
+     "600": 0.7142857142857143
     },
     "delivery_latency_mean_s": 0.0,
     "delivery_latency_p90_s": 0,
@@ -3298,13 +3959,37 @@
     "slots_delivered": 15,
     "slots_matched_by_collection": 21
    },
+   "exec_layer": "naive",
+   "hazard": {
+    "hold_every": 0,
+    "hold_s": 0
+   },
+   "intent_ledger": {
+    "change": 0,
+    "dedup": 0,
+    "expired": 0,
+    "fenced": 0,
+    "generated": 0,
+    "landed": 0,
+    "lost": 0,
+    "queued_left": 0,
+    "refused": 0,
+    "rejected": 0,
+    "same_value": 0,
+    "sent": 0,
+    "speculative": 0,
+    "stale_gen": 0
+   },
+   "intent_mismatch_s": 0,
+   "mixed_config_s": 0,
    "n_obligations": 189,
    "not_applicable": {
-    "config_mismatch_s": "\u6700\u5c0f\u5b9e\u4f8b\u6ca1\u6709\u5916\u90e8\u914d\u7f6e\u8981\u6c42\uff0c\u65e0\u6cd5\u5b9a\u4e49'\u9519\u8bef\u914d\u7f6e'\uff1b\u8fd4\u56de None \u800c\u4e0d\u662f 0\u3002"
+    "config_mismatch_s": "最小实例没有外部配置要求，无法定义'错误配置'；返回 None 而不是 0。",
+    "mixed_config_s": "计数器在 Instance.mixed_config_ticks 上，本函数只拿到 log、取不到；**不返回恒定值的假列**。需要这一列请从 Instance 取。"
    },
    "observation_window": {
     "censored_total": 0,
-    "note": "\u5220\u5931 = \u8fd0\u884c\u7ed3\u675f\u65f6\u8be5\u4e49\u52a1\u7684\u89c2\u5bdf\u622a\u6b62\u8fd8\u6ca1\u5230\uff1b\u65e2\u4e0d\u7b97\u6210\u529f\u4e5f\u4e0d\u7b97\u5931\u8d25\uff0c\u7559\u5728\u5206\u6bcd\u91cc\u3002",
+    "note": "删失 = 运行结束时该义务的观察截止还没到；既不算成功也不算失败，留在分母里。",
     "run_hours": 13,
     "tail_s": 3600,
     "task_hours": 12
@@ -3318,7 +4003,7 @@
     "knowledge_latency_p90_s": 1740,
     "known_to_center": 7,
     "n_triggers": 7,
-    "note": "\u672c\u5b9e\u4f8b\u6ca1\u6709\u7b2c\u4e8c\u6761\u83b7\u77e5\u6e20\u9053\uff0c\u56e0\u6b64'\u4e2d\u5fc3\u83b7\u77e5\u4e8b\u4ef6'\u4e0e'\u4e2d\u5fc3\u62ff\u5230\u9996\u4efd\u65b0\u6570\u636e'\u540c\u4e00\u65f6\u523b\uff1b\u4e24\u8005\u7684\u5dee\u672a\u88ab\u6d4b\u8fc7\u3002"
+    "note": "本实例没有第二条获知渠道，因此'中心获知事件'与'中心拿到首份新数据'同一时刻；两者的差未被测过。"
    },
    "recovery": {
     "backlog_recovered": 42,
@@ -3327,7 +4012,7 @@
     "missing_collection": 0,
     "missing_delivery": 42,
     "n_obligations_in_window": 56,
-    "note": "\u91c7\u96c6\u7f3a\u5931\u5728\u6062\u590d\u540e\u8865\u4e0d\u56de\u6765\uff08\u4e0d\u8865\u9020\u5f53\u65f6\u672a\u91c7\u5230\u7684\u8bfb\u6570\uff09\uff1b\u4ea4\u4ed8\u7f3a\u5931\u5355\u5217\uff0c\u56e0\u4e3a\u5b83\u53ef\u7531\u81ea\u52a8\u8865\u53d1\u8ffd\u56de\u3002",
+    "note": "采集缺失在恢复后补不回来（不补造当时未采到的读数）；交付缺失单列，因为它可由自动补发追回。",
     "outage_hours": 3.0,
     "outage_s": [
      14400,
@@ -3336,7 +4021,7 @@
     "recovery_observation_s": 3600
    },
    "routine": {
-    "aoi_mean_s": 1803.3021978021977,
+    "aoi_mean_s": 8544.5197740113,
     "censored": 0,
     "delivered": 108,
     "latency_mean_s": 2000.0,
@@ -3344,11 +4029,15 @@
     "missing_collection": 0,
     "missing_delivery": 60,
     "n": 168,
-    "no_observation_s": 0
+    "no_observation_s": 18000
    },
    "seed": 12
   },
   {
+   "access_blocked": 0,
+   "arm": "local",
+   "autonomy_margin": Infinity,
+   "autonomy_margin_min": Infinity,
    "by_kind": {
     "event": {
      "censored": 0,
@@ -3367,6 +4056,17 @@
      "n": 168
     }
    },
+   "command_counters": {
+    "commands_delivered": 0,
+    "commands_refused": 0,
+    "commands_sent": 0,
+    "deduplicated": 0,
+    "fenced": 0,
+    "stale_generation_dropped": 0,
+    "writes_changed": 0,
+    "writes_same_value": 0,
+    "writes_speculative": 0
+   },
    "communication": {
     "airtime_downlink_h": 0.0,
     "airtime_uplink_h": 0.009679360000000008,
@@ -3376,6 +4076,9 @@
     "uplinks": 169,
     "uplinks_heard": 123
    },
+   "delivery_oracle": 150,
+   "delivery_oracle_free_tx": 154,
+   "delivery_oracle_mid": 154,
    "deployment": {
     "best_sf": {
      "n00": 7,
@@ -3420,119 +4123,120 @@
     "n_reachable": 13,
     "n_slope_nodes": 16
    },
+   "dynamic_oracle": null,
    "energy": {
     "per_node": {
      "gw0": {
-      "consumed_wh": 0.0006800000000000005,
+      "consumed_wh": 0.01598,
       "dead_at_s": null,
       "deficit_s": 0,
-      "harvested_wh": 0.0006799999999742568,
-      "soc_final_wh": 40.0,
-      "soc_initial_wh": 40.0
+      "harvested_wh": 0.01597999999999994,
+      "soc_final_wh": 0.05,
+      "soc_initial_wh": 0.05
      },
      "n00": {
-      "consumed_wh": 0.0006601268480000001,
+      "consumed_wh": 0.006510126848,
       "dead_at_s": null,
       "deficit_s": 0,
-      "harvested_wh": 0.0006601268479826672,
-      "soc_final_wh": 40.0,
-      "soc_initial_wh": 40.0
+      "harvested_wh": 0.006510126847999974,
+      "soc_final_wh": 0.05,
+      "soc_initial_wh": 0.05
      },
      "n01": {
-      "consumed_wh": 0.0006628302080000001,
+      "consumed_wh": 0.006512830208,
       "dead_at_s": null,
       "deficit_s": 0,
-      "harvested_wh": 0.000662830207986076,
-      "soc_final_wh": 40.0,
-      "soc_initial_wh": 40.0
+      "harvested_wh": 0.006512830207999976,
+      "soc_final_wh": 0.05,
+      "soc_initial_wh": 0.05
      },
      "n02": {
-      "consumed_wh": 0.0006601268480000001,
+      "consumed_wh": 0.006510126848,
       "dead_at_s": null,
       "deficit_s": 0,
-      "harvested_wh": 0.0006601268479826672,
-      "soc_final_wh": 40.0,
-      "soc_initial_wh": 40.0
+      "harvested_wh": 0.006510126847999974,
+      "soc_final_wh": 0.05,
+      "soc_initial_wh": 0.05
      },
      "n03": {
-      "consumed_wh": 0.0006718414080000002,
+      "consumed_wh": 0.006521841407999999,
       "dead_at_s": null,
       "deficit_s": 0,
-      "harvested_wh": 0.0006718414079927015,
-      "soc_final_wh": 40.0,
-      "soc_initial_wh": 40.0
+      "harvested_wh": 0.0065218414079999815,
+      "soc_final_wh": 0.05,
+      "soc_initial_wh": 0.05
      },
      "n04": {
-      "consumed_wh": 0.000667335808,
+      "consumed_wh": 0.006517335808,
       "dead_at_s": null,
       "deficit_s": 0,
-      "harvested_wh": 0.0006673358079893887,
-      "soc_final_wh": 40.0,
-      "soc_initial_wh": 40.0
+      "harvested_wh": 0.0065173358079999785,
+      "soc_final_wh": 0.05,
+      "soc_initial_wh": 0.05
      },
      "n05": {
-      "consumed_wh": 0.000669138048,
+      "consumed_wh": 0.006519138047999999,
       "dead_at_s": null,
       "deficit_s": 0,
-      "harvested_wh": 0.0006691380479892928,
-      "soc_final_wh": 40.0,
-      "soc_initial_wh": 40.0
+      "harvested_wh": 0.00651913804799998,
+      "soc_final_wh": 0.05,
+      "soc_initial_wh": 0.05
      },
      "n06": {
-      "consumed_wh": 0.0006646324480000001,
+      "consumed_wh": 0.006514632447999999,
       "dead_at_s": null,
       "deficit_s": 0,
-      "harvested_wh": 0.00066463244798598,
-      "soc_final_wh": 40.0,
-      "soc_initial_wh": 40.0
+      "harvested_wh": 0.006514632447999977,
+      "soc_final_wh": 0.05,
+      "soc_initial_wh": 0.05
      },
      "n07": {
-      "consumed_wh": 0.0006601268480000001,
+      "consumed_wh": 0.006510126848,
       "dead_at_s": null,
       "deficit_s": 0,
-      "harvested_wh": 0.0006601268479826672,
-      "soc_final_wh": 40.0,
-      "soc_initial_wh": 40.0
+      "harvested_wh": 0.006510126847999974,
+      "soc_final_wh": 0.05,
+      "soc_initial_wh": 0.05
      },
      "n10": {
-      "consumed_wh": 0.0006628302080000001,
+      "consumed_wh": 0.006512830208,
       "dead_at_s": null,
       "deficit_s": 0,
-      "harvested_wh": 0.000662830207986076,
-      "soc_final_wh": 40.0,
-      "soc_initial_wh": 40.0
+      "harvested_wh": 0.006512830207999976,
+      "soc_final_wh": 0.05,
+      "soc_initial_wh": 0.05
      },
      "n11": {
-      "consumed_wh": 0.0006691380480000001,
+      "consumed_wh": 0.006519138048,
       "dead_at_s": null,
       "deficit_s": 0,
-      "harvested_wh": 0.0006691380479821873,
-      "soc_final_wh": 40.0,
-      "soc_initial_wh": 40.0
+      "harvested_wh": 0.006519138047999973,
+      "soc_final_wh": 0.05,
+      "soc_initial_wh": 0.05
      },
      "n13": {
-      "consumed_wh": 0.000664632448,
+      "consumed_wh": 0.006514632447999999,
       "dead_at_s": null,
       "deficit_s": 0,
-      "harvested_wh": 0.00066463244798598,
-      "soc_final_wh": 40.0,
-      "soc_initial_wh": 40.0
+      "harvested_wh": 0.006514632447999977,
+      "soc_final_wh": 0.05,
+      "soc_initial_wh": 0.05
      },
      "n15": {
-      "consumed_wh": 0.0006583246080000002,
+      "consumed_wh": 0.006508324608,
       "dead_at_s": null,
       "deficit_s": 0,
-      "harvested_wh": 0.0006583246079827632,
-      "soc_final_wh": 40.0,
-      "soc_initial_wh": 40.0
+      "harvested_wh": 0.006508324607999973,
+      "soc_final_wh": 0.05,
+      "soc_initial_wh": 0.05
      },
      "n16": {
-      "consumed_wh": 0.0006601268480000001,
+      "consumed_wh": 0.006510126848,
       "dead_at_s": null,
       "deficit_s": 0,
-      "harvested_wh": 0.0006601268479826672,
-      "soc_final_wh": 40.0,
-      "soc_initial_wh": 40.0
+      "harvested_wh": 0.006510126847999974,
+      "soc_final_wh": 0.05,
+      "soc_initial_wh": 0.05
      }
     }
    },
@@ -3541,10 +4245,10 @@
     "deliver_rate": 0.8095238095238095,
     "delivery_cdf": {
      "0": 0.7142857142857143,
-     "300": 0.7619047619047619,
-     "600": 0.8095238095238095,
      "1800": 0.8095238095238095,
-     "3600": 0.8095238095238095
+     "300": 0.7619047619047619,
+     "3600": 0.8095238095238095,
+     "600": 0.8095238095238095
     },
     "delivery_latency_mean_s": 24.705882352941178,
     "delivery_latency_p90_s": 0,
@@ -3553,13 +4257,37 @@
     "slots_delivered": 17,
     "slots_matched_by_collection": 21
    },
+   "exec_layer": "naive",
+   "hazard": {
+    "hold_every": 0,
+    "hold_s": 0
+   },
+   "intent_ledger": {
+    "change": 0,
+    "dedup": 0,
+    "expired": 0,
+    "fenced": 0,
+    "generated": 0,
+    "landed": 0,
+    "lost": 0,
+    "queued_left": 0,
+    "refused": 0,
+    "rejected": 0,
+    "same_value": 0,
+    "sent": 0,
+    "speculative": 0,
+    "stale_gen": 0
+   },
+   "intent_mismatch_s": 0,
+   "mixed_config_s": 0,
    "n_obligations": 189,
    "not_applicable": {
-    "config_mismatch_s": "\u6700\u5c0f\u5b9e\u4f8b\u6ca1\u6709\u5916\u90e8\u914d\u7f6e\u8981\u6c42\uff0c\u65e0\u6cd5\u5b9a\u4e49'\u9519\u8bef\u914d\u7f6e'\uff1b\u8fd4\u56de None \u800c\u4e0d\u662f 0\u3002"
+    "config_mismatch_s": "最小实例没有外部配置要求，无法定义'错误配置'；返回 None 而不是 0。",
+    "mixed_config_s": "计数器在 Instance.mixed_config_ticks 上，本函数只拿到 log、取不到；**不返回恒定值的假列**。需要这一列请从 Instance 取。"
    },
    "observation_window": {
     "censored_total": 0,
-    "note": "\u5220\u5931 = \u8fd0\u884c\u7ed3\u675f\u65f6\u8be5\u4e49\u52a1\u7684\u89c2\u5bdf\u622a\u6b62\u8fd8\u6ca1\u5230\uff1b\u65e2\u4e0d\u7b97\u6210\u529f\u4e5f\u4e0d\u7b97\u5931\u8d25\uff0c\u7559\u5728\u5206\u6bcd\u91cc\u3002",
+    "note": "删失 = 运行结束时该义务的观察截止还没到；既不算成功也不算失败，留在分母里。",
     "run_hours": 13,
     "tail_s": 3600,
     "task_hours": 12
@@ -3573,7 +4301,7 @@
     "knowledge_latency_p90_s": 660,
     "known_to_center": 7,
     "n_triggers": 7,
-    "note": "\u672c\u5b9e\u4f8b\u6ca1\u6709\u7b2c\u4e8c\u6761\u83b7\u77e5\u6e20\u9053\uff0c\u56e0\u6b64'\u4e2d\u5fc3\u83b7\u77e5\u4e8b\u4ef6'\u4e0e'\u4e2d\u5fc3\u62ff\u5230\u9996\u4efd\u65b0\u6570\u636e'\u540c\u4e00\u65f6\u523b\uff1b\u4e24\u8005\u7684\u5dee\u672a\u88ab\u6d4b\u8fc7\u3002"
+    "note": "本实例没有第二条获知渠道，因此'中心获知事件'与'中心拿到首份新数据'同一时刻；两者的差未被测过。"
    },
    "recovery": {
     "backlog_recovered": 42,
@@ -3582,7 +4310,7 @@
     "missing_collection": 0,
     "missing_delivery": 14,
     "n_obligations_in_window": 56,
-    "note": "\u91c7\u96c6\u7f3a\u5931\u5728\u6062\u590d\u540e\u8865\u4e0d\u56de\u6765\uff08\u4e0d\u8865\u9020\u5f53\u65f6\u672a\u91c7\u5230\u7684\u8bfb\u6570\uff09\uff1b\u4ea4\u4ed8\u7f3a\u5931\u5355\u5217\uff0c\u56e0\u4e3a\u5b83\u53ef\u7531\u81ea\u52a8\u8865\u53d1\u8ffd\u56de\u3002",
+    "note": "采集缺失在恢复后补不回来（不补造当时未采到的读数）；交付缺失单列，因为它可由自动补发追回。",
     "outage_hours": 3.0,
     "outage_s": [
      14400,
@@ -3591,7 +4319,7 @@
     "recovery_observation_s": 3600
    },
    "routine": {
-    "aoi_mean_s": 1902.2032967032967,
+    "aoi_mean_s": 4875.469879518072,
     "censored": 0,
     "delivered": 150,
     "latency_mean_s": 2592.0,
@@ -3599,11 +4327,15 @@
     "missing_collection": 0,
     "missing_delivery": 18,
     "n": 168,
-    "no_observation_s": 0
+    "no_observation_s": 57600
    },
    "seed": 13
   },
   {
+   "access_blocked": 0,
+   "arm": "local",
+   "autonomy_margin": Infinity,
+   "autonomy_margin_min": Infinity,
    "by_kind": {
     "event": {
      "censored": 0,
@@ -3622,6 +4354,17 @@
      "n": 168
     }
    },
+   "command_counters": {
+    "commands_delivered": 0,
+    "commands_refused": 0,
+    "commands_sent": 0,
+    "deduplicated": 0,
+    "fenced": 0,
+    "stale_generation_dropped": 0,
+    "writes_changed": 0,
+    "writes_same_value": 0,
+    "writes_speculative": 0
+   },
    "communication": {
     "airtime_downlink_h": 0.0,
     "airtime_uplink_h": 0.01061233777777778,
@@ -3631,6 +4374,9 @@
     "uplinks": 169,
     "uplinks_heard": 125
    },
+   "delivery_oracle": 138,
+   "delivery_oracle_free_tx": 154,
+   "delivery_oracle_mid": 154,
    "deployment": {
     "best_sf": {
      "n00": 7,
@@ -3675,119 +4421,120 @@
     "n_reachable": 13,
     "n_slope_nodes": 16
    },
+   "dynamic_oracle": null,
    "energy": {
     "per_node": {
      "gw0": {
-      "consumed_wh": 0.0006800000000000005,
+      "consumed_wh": 0.01598,
       "dead_at_s": null,
       "deficit_s": 0,
-      "harvested_wh": 0.0006799999999742568,
-      "soc_final_wh": 40.0,
-      "soc_initial_wh": 40.0
+      "harvested_wh": 0.01597999999999994,
+      "soc_final_wh": 0.05,
+      "soc_initial_wh": 0.05
      },
      "n00": {
-      "consumed_wh": 0.0006907649279999999,
+      "consumed_wh": 0.006540764928,
       "dead_at_s": null,
       "deficit_s": 0,
-      "harvested_wh": 0.0006907649279952466,
-      "soc_final_wh": 40.0,
-      "soc_initial_wh": 40.0
+      "harvested_wh": 0.006540764927999987,
+      "soc_final_wh": 0.05,
+      "soc_initial_wh": 0.05
      },
      "n01": {
-      "consumed_wh": 0.000667335808,
+      "consumed_wh": 0.006517335807999999,
       "dead_at_s": null,
       "deficit_s": 0,
-      "harvested_wh": 0.0006673358079893887,
-      "soc_final_wh": 40.0,
-      "soc_initial_wh": 40.0
+      "harvested_wh": 0.0065173358079999855,
+      "soc_final_wh": 0.05,
+      "soc_initial_wh": 0.05
      },
      "n02": {
-      "consumed_wh": 0.0006745447680000002,
+      "consumed_wh": 0.006524544768,
       "dead_at_s": null,
       "deficit_s": 0,
-      "harvested_wh": 0.0006745447679890049,
-      "soc_final_wh": 40.0,
-      "soc_initial_wh": 40.0
+      "harvested_wh": 0.006524544767999983,
+      "soc_final_wh": 0.05,
+      "soc_initial_wh": 0.05
      },
      "n03": {
-      "consumed_wh": 0.0006655335680000001,
+      "consumed_wh": 0.006515533568,
       "dead_at_s": null,
       "deficit_s": 0,
-      "harvested_wh": 0.0006655335679894847,
-      "soc_final_wh": 40.0,
-      "soc_initial_wh": 40.0
+      "harvested_wh": 0.006515533567999984,
+      "soc_final_wh": 0.05,
+      "soc_initial_wh": 0.05
      },
      "n04": {
-      "consumed_wh": 0.000667335808,
+      "consumed_wh": 0.006517335807999999,
       "dead_at_s": null,
       "deficit_s": 0,
-      "harvested_wh": 0.0006673358079893887,
-      "soc_final_wh": 40.0,
-      "soc_initial_wh": 40.0
+      "harvested_wh": 0.0065173358079999855,
+      "soc_final_wh": 0.05,
+      "soc_initial_wh": 0.05
      },
      "n05": {
-      "consumed_wh": 0.000679951488,
+      "consumed_wh": 0.006529951487999999,
       "dead_at_s": null,
       "deficit_s": 0,
-      "harvested_wh": 0.0006799514879958224,
-      "soc_final_wh": 40.0,
-      "soc_initial_wh": 40.0
+      "harvested_wh": 0.006529951487999987,
+      "soc_final_wh": 0.05,
+      "soc_initial_wh": 0.05
      },
      "n06": {
-      "consumed_wh": 0.0006745447680000002,
+      "consumed_wh": 0.006524544768,
       "dead_at_s": null,
       "deficit_s": 0,
-      "harvested_wh": 0.0006745447679890049,
-      "soc_final_wh": 40.0,
-      "soc_initial_wh": 40.0
+      "harvested_wh": 0.006524544767999983,
+      "soc_final_wh": 0.05,
+      "soc_initial_wh": 0.05
      },
      "n07": {
-      "consumed_wh": 0.000667335808,
+      "consumed_wh": 0.006517335807999999,
       "dead_at_s": null,
       "deficit_s": 0,
-      "harvested_wh": 0.0006673358079893887,
-      "soc_final_wh": 40.0,
-      "soc_initial_wh": 40.0
+      "harvested_wh": 0.0065173358079999855,
+      "soc_final_wh": 0.05,
+      "soc_initial_wh": 0.05
      },
      "n10": {
-      "consumed_wh": 0.0006826548480000002,
+      "consumed_wh": 0.006532654847999999,
       "dead_at_s": null,
       "deficit_s": 0,
-      "harvested_wh": 0.0006826548479921257,
-      "soc_final_wh": 40.0,
-      "soc_initial_wh": 40.0
+      "harvested_wh": 0.006532654847999982,
+      "soc_final_wh": 0.05,
+      "soc_initial_wh": 0.05
      },
      "n11": {
-      "consumed_wh": 0.0006655335680000001,
+      "consumed_wh": 0.006515533568,
       "dead_at_s": null,
       "deficit_s": 0,
-      "harvested_wh": 0.0006655335679894847,
-      "soc_final_wh": 40.0,
-      "soc_initial_wh": 40.0
+      "harvested_wh": 0.006515533567999984,
+      "soc_final_wh": 0.05,
+      "soc_initial_wh": 0.05
      },
      "n13": {
-      "consumed_wh": 0.0006952705280000003,
+      "consumed_wh": 0.006545270528,
       "dead_at_s": null,
       "deficit_s": 0,
-      "harvested_wh": 0.000695270527991454,
-      "soc_final_wh": 40.0,
-      "soc_initial_wh": 40.0
+      "harvested_wh": 0.006545270527999983,
+      "soc_final_wh": 0.05,
+      "soc_initial_wh": 0.05
      },
      "n15": {
-      "consumed_wh": 0.0006745447680000002,
+      "consumed_wh": 0.006524544768,
       "dead_at_s": null,
       "deficit_s": 0,
-      "harvested_wh": 0.0006745447679890049,
-      "soc_final_wh": 40.0,
-      "soc_initial_wh": 40.0
+      "harvested_wh": 0.006524544767999983,
+      "soc_final_wh": 0.05,
+      "soc_initial_wh": 0.05
      },
      "n16": {
-      "consumed_wh": 0.000673643648,
+      "consumed_wh": 0.006523643647999999,
       "dead_at_s": null,
       "deficit_s": 0,
-      "harvested_wh": 0.0006736436479926056,
-      "soc_final_wh": 40.0,
-      "soc_initial_wh": 40.0
+      "harvested_wh": 0.006523643647999983,
+      "soc_final_wh": 0.05,
+      "soc_initial_wh": 0.05
      }
     }
    },
@@ -3796,10 +4543,10 @@
     "deliver_rate": 0.38095238095238093,
     "delivery_cdf": {
      "0": 0.2857142857142857,
-     "300": 0.3333333333333333,
-     "600": 0.38095238095238093,
      "1800": 0.38095238095238093,
-     "3600": 0.38095238095238093
+     "300": 0.3333333333333333,
+     "3600": 0.38095238095238093,
+     "600": 0.38095238095238093
     },
     "delivery_latency_mean_s": 112.5,
     "delivery_latency_p90_s": 300,
@@ -3808,13 +4555,37 @@
     "slots_delivered": 8,
     "slots_matched_by_collection": 21
    },
+   "exec_layer": "naive",
+   "hazard": {
+    "hold_every": 0,
+    "hold_s": 0
+   },
+   "intent_ledger": {
+    "change": 0,
+    "dedup": 0,
+    "expired": 0,
+    "fenced": 0,
+    "generated": 0,
+    "landed": 0,
+    "lost": 0,
+    "queued_left": 0,
+    "refused": 0,
+    "rejected": 0,
+    "same_value": 0,
+    "sent": 0,
+    "speculative": 0,
+    "stale_gen": 0
+   },
+   "intent_mismatch_s": 0,
+   "mixed_config_s": 0,
    "n_obligations": 189,
    "not_applicable": {
-    "config_mismatch_s": "\u6700\u5c0f\u5b9e\u4f8b\u6ca1\u6709\u5916\u90e8\u914d\u7f6e\u8981\u6c42\uff0c\u65e0\u6cd5\u5b9a\u4e49'\u9519\u8bef\u914d\u7f6e'\uff1b\u8fd4\u56de None \u800c\u4e0d\u662f 0\u3002"
+    "config_mismatch_s": "最小实例没有外部配置要求，无法定义'错误配置'；返回 None 而不是 0。",
+    "mixed_config_s": "计数器在 Instance.mixed_config_ticks 上，本函数只拿到 log、取不到；**不返回恒定值的假列**。需要这一列请从 Instance 取。"
    },
    "observation_window": {
     "censored_total": 0,
-    "note": "\u5220\u5931 = \u8fd0\u884c\u7ed3\u675f\u65f6\u8be5\u4e49\u52a1\u7684\u89c2\u5bdf\u622a\u6b62\u8fd8\u6ca1\u5230\uff1b\u65e2\u4e0d\u7b97\u6210\u529f\u4e5f\u4e0d\u7b97\u5931\u8d25\uff0c\u7559\u5728\u5206\u6bcd\u91cc\u3002",
+    "note": "删失 = 运行结束时该义务的观察截止还没到；既不算成功也不算失败，留在分母里。",
     "run_hours": 13,
     "tail_s": 3600,
     "task_hours": 12
@@ -3828,7 +4599,7 @@
     "knowledge_latency_p90_s": 6240,
     "known_to_center": 7,
     "n_triggers": 7,
-    "note": "\u672c\u5b9e\u4f8b\u6ca1\u6709\u7b2c\u4e8c\u6761\u83b7\u77e5\u6e20\u9053\uff0c\u56e0\u6b64'\u4e2d\u5fc3\u83b7\u77e5\u4e8b\u4ef6'\u4e0e'\u4e2d\u5fc3\u62ff\u5230\u9996\u4efd\u65b0\u6570\u636e'\u540c\u4e00\u65f6\u523b\uff1b\u4e24\u8005\u7684\u5dee\u672a\u88ab\u6d4b\u8fc7\u3002"
+    "note": "本实例没有第二条获知渠道，因此'中心获知事件'与'中心拿到首份新数据'同一时刻；两者的差未被测过。"
    },
    "recovery": {
     "backlog_recovered": 42,
@@ -3837,7 +4608,7 @@
     "missing_collection": 0,
     "missing_delivery": 20,
     "n_obligations_in_window": 56,
-    "note": "\u91c7\u96c6\u7f3a\u5931\u5728\u6062\u590d\u540e\u8865\u4e0d\u56de\u6765\uff08\u4e0d\u8865\u9020\u5f53\u65f6\u672a\u91c7\u5230\u7684\u8bfb\u6570\uff09\uff1b\u4ea4\u4ed8\u7f3a\u5931\u5355\u5217\uff0c\u56e0\u4e3a\u5b83\u53ef\u7531\u81ea\u52a8\u8865\u53d1\u8ffd\u56de\u3002",
+    "note": "采集缺失在恢复后补不回来（不补造当时未采到的读数）；交付缺失单列，因为它可由自动补发追回。",
     "outage_hours": 3.0,
     "outage_s": [
      14400,
@@ -3846,7 +4617,7 @@
     "recovery_observation_s": 3600
    },
    "routine": {
-    "aoi_mean_s": 1941.7637362637363,
+    "aoi_mean_s": 6262.914772727273,
     "censored": 0,
     "delivered": 138,
     "latency_mean_s": 3313.0434782608695,
@@ -3854,11 +4625,15 @@
     "missing_collection": 0,
     "missing_delivery": 30,
     "n": 168,
-    "no_observation_s": 0
+    "no_observation_s": 21600
    },
    "seed": 14
   },
   {
+   "access_blocked": 0,
+   "arm": "local",
+   "autonomy_margin": Infinity,
+   "autonomy_margin_min": Infinity,
    "by_kind": {
     "event": {
      "censored": 0,
@@ -3877,6 +4652,17 @@
      "n": 168
     }
    },
+   "command_counters": {
+    "commands_delivered": 0,
+    "commands_refused": 0,
+    "commands_sent": 0,
+    "deduplicated": 0,
+    "fenced": 0,
+    "stale_generation_dropped": 0,
+    "writes_changed": 0,
+    "writes_same_value": 0,
+    "writes_speculative": 0
+   },
    "communication": {
     "airtime_downlink_h": 0.0,
     "airtime_uplink_h": 0.010327893333333346,
@@ -3886,6 +4672,9 @@
     "uplinks": 169,
     "uplinks_heard": 117
    },
+   "delivery_oracle": 132,
+   "delivery_oracle_free_tx": 140,
+   "delivery_oracle_mid": 140,
    "deployment": {
     "best_sf": {
      "n00": 7,
@@ -3930,119 +4719,120 @@
     "n_reachable": 13,
     "n_slope_nodes": 16
    },
+   "dynamic_oracle": null,
    "energy": {
     "per_node": {
      "gw0": {
-      "consumed_wh": 0.0006800000000000005,
+      "consumed_wh": 0.01598,
       "dead_at_s": null,
       "deficit_s": 0,
-      "harvested_wh": 0.0006799999999742568,
-      "soc_final_wh": 40.0,
-      "soc_initial_wh": 40.0
+      "harvested_wh": 0.01597999999999994,
+      "soc_final_wh": 0.05,
+      "soc_initial_wh": 0.05
      },
      "n00": {
-      "consumed_wh": 0.0006718414080000002,
+      "consumed_wh": 0.006521841408,
       "dead_at_s": null,
       "deficit_s": 0,
-      "harvested_wh": 0.0006718414079855961,
-      "soc_final_wh": 40.0,
-      "soc_initial_wh": 40.0
+      "harvested_wh": 0.0065218414079999815,
+      "soc_final_wh": 0.05,
+      "soc_initial_wh": 0.05
      },
      "n01": {
-      "consumed_wh": 0.0006745447680000001,
+      "consumed_wh": 0.006524544768,
       "dead_at_s": null,
       "deficit_s": 0,
-      "harvested_wh": 0.0006745447679890049,
-      "soc_final_wh": 40.0,
-      "soc_initial_wh": 40.0
+      "harvested_wh": 0.006524544767999983,
+      "soc_final_wh": 0.05,
+      "soc_initial_wh": 0.05
      },
      "n02": {
-      "consumed_wh": 0.000663731328,
+      "consumed_wh": 0.0065137313280000005,
       "dead_at_s": null,
       "deficit_s": 0,
-      "harvested_wh": 0.0006637313279824752,
-      "soc_final_wh": 40.0,
-      "soc_initial_wh": 40.0
+      "harvested_wh": 0.006513731327999976,
+      "soc_final_wh": 0.05,
+      "soc_initial_wh": 0.05
      },
      "n03": {
-      "consumed_wh": 0.0006907649280000002,
+      "consumed_wh": 0.006540764928,
       "dead_at_s": null,
       "deficit_s": 0,
-      "harvested_wh": 0.0006907649279881412,
-      "soc_final_wh": 40.0,
-      "soc_initial_wh": 40.0
+      "harvested_wh": 0.00654076492799998,
+      "soc_final_wh": 0.05,
+      "soc_initial_wh": 0.05
      },
      "n04": {
-      "consumed_wh": 0.0006718414080000001,
+      "consumed_wh": 0.006521841408,
       "dead_at_s": null,
       "deficit_s": 0,
-      "harvested_wh": 0.0006718414079855961,
-      "soc_final_wh": 40.0,
-      "soc_initial_wh": 40.0
+      "harvested_wh": 0.0065218414079999815,
+      "soc_final_wh": 0.05,
+      "soc_initial_wh": 0.05
      },
      "n05": {
-      "consumed_wh": 0.0006700391680000002,
+      "consumed_wh": 0.006520039168,
       "dead_at_s": null,
       "deficit_s": 0,
-      "harvested_wh": 0.0006700391679856921,
-      "soc_final_wh": 40.0,
-      "soc_initial_wh": 40.0
+      "harvested_wh": 0.00652003916799998,
+      "soc_final_wh": 0.05,
+      "soc_initial_wh": 0.05
      },
      "n06": {
-      "consumed_wh": 0.000688962688,
+      "consumed_wh": 0.0065389626880000004,
       "dead_at_s": null,
       "deficit_s": 0,
-      "harvested_wh": 0.0006889626879882371,
-      "soc_final_wh": 40.0,
-      "soc_initial_wh": 40.0
+      "harvested_wh": 0.006538962687999979,
+      "soc_final_wh": 0.05,
+      "soc_initial_wh": 0.05
      },
      "n07": {
-      "consumed_wh": 0.0006673358080000003,
+      "consumed_wh": 0.006517335808,
       "dead_at_s": null,
       "deficit_s": 0,
-      "harvested_wh": 0.0006673358079822833,
-      "soc_final_wh": 40.0,
-      "soc_initial_wh": 40.0
+      "harvested_wh": 0.0065173358079999785,
+      "soc_final_wh": 0.05,
+      "soc_initial_wh": 0.05
      },
      "n10": {
-      "consumed_wh": 0.0006673358080000003,
+      "consumed_wh": 0.006517335807999999,
       "dead_at_s": null,
       "deficit_s": 0,
-      "harvested_wh": 0.0006673358079822833,
-      "soc_final_wh": 40.0,
-      "soc_initial_wh": 40.0
+      "harvested_wh": 0.0065173358079999785,
+      "soc_final_wh": 0.05,
+      "soc_initial_wh": 0.05
      },
      "n11": {
-      "consumed_wh": 0.0006682369280000001,
+      "consumed_wh": 0.006518236928,
       "dead_at_s": null,
       "deficit_s": 0,
-      "harvested_wh": 0.000668236927985788,
-      "soc_final_wh": 40.0,
-      "soc_initial_wh": 40.0
+      "harvested_wh": 0.006518236927999979,
+      "soc_final_wh": 0.05,
+      "soc_initial_wh": 0.05
      },
      "n13": {
-      "consumed_wh": 0.0006655335680000001,
+      "consumed_wh": 0.006515533568,
       "dead_at_s": null,
       "deficit_s": 0,
-      "harvested_wh": 0.0006655335679823793,
-      "soc_final_wh": 40.0,
-      "soc_initial_wh": 40.0
+      "harvested_wh": 0.006515533567999977,
+      "soc_final_wh": 0.05,
+      "soc_initial_wh": 0.05
      },
      "n15": {
-      "consumed_wh": 0.0006700391680000002,
+      "consumed_wh": 0.006520039167999999,
       "dead_at_s": null,
       "deficit_s": 0,
-      "harvested_wh": 0.0006700391679856921,
-      "soc_final_wh": 40.0,
-      "soc_initial_wh": 40.0
+      "harvested_wh": 0.00652003916799998,
+      "soc_final_wh": 0.05,
+      "soc_initial_wh": 0.05
      },
      "n16": {
-      "consumed_wh": 0.000663731328,
+      "consumed_wh": 0.0065137313280000005,
       "dead_at_s": null,
       "deficit_s": 0,
-      "harvested_wh": 0.0006637313279824752,
-      "soc_final_wh": 40.0,
-      "soc_initial_wh": 40.0
+      "harvested_wh": 0.006513731327999976,
+      "soc_final_wh": 0.05,
+      "soc_initial_wh": 0.05
      }
     }
    },
@@ -4051,10 +4841,10 @@
     "deliver_rate": 1.0,
     "delivery_cdf": {
      "0": 1.0,
-     "300": 1.0,
-     "600": 1.0,
      "1800": 1.0,
-     "3600": 1.0
+     "300": 1.0,
+     "3600": 1.0,
+     "600": 1.0
     },
     "delivery_latency_mean_s": 0.0,
     "delivery_latency_p90_s": 0,
@@ -4063,13 +4853,37 @@
     "slots_delivered": 21,
     "slots_matched_by_collection": 21
    },
+   "exec_layer": "naive",
+   "hazard": {
+    "hold_every": 0,
+    "hold_s": 0
+   },
+   "intent_ledger": {
+    "change": 0,
+    "dedup": 0,
+    "expired": 0,
+    "fenced": 0,
+    "generated": 0,
+    "landed": 0,
+    "lost": 0,
+    "queued_left": 0,
+    "refused": 0,
+    "rejected": 0,
+    "same_value": 0,
+    "sent": 0,
+    "speculative": 0,
+    "stale_gen": 0
+   },
+   "intent_mismatch_s": 0,
+   "mixed_config_s": 0,
    "n_obligations": 189,
    "not_applicable": {
-    "config_mismatch_s": "\u6700\u5c0f\u5b9e\u4f8b\u6ca1\u6709\u5916\u90e8\u914d\u7f6e\u8981\u6c42\uff0c\u65e0\u6cd5\u5b9a\u4e49'\u9519\u8bef\u914d\u7f6e'\uff1b\u8fd4\u56de None \u800c\u4e0d\u662f 0\u3002"
+    "config_mismatch_s": "最小实例没有外部配置要求，无法定义'错误配置'；返回 None 而不是 0。",
+    "mixed_config_s": "计数器在 Instance.mixed_config_ticks 上，本函数只拿到 log、取不到；**不返回恒定值的假列**。需要这一列请从 Instance 取。"
    },
    "observation_window": {
     "censored_total": 0,
-    "note": "\u5220\u5931 = \u8fd0\u884c\u7ed3\u675f\u65f6\u8be5\u4e49\u52a1\u7684\u89c2\u5bdf\u622a\u6b62\u8fd8\u6ca1\u5230\uff1b\u65e2\u4e0d\u7b97\u6210\u529f\u4e5f\u4e0d\u7b97\u5931\u8d25\uff0c\u7559\u5728\u5206\u6bcd\u91cc\u3002",
+    "note": "删失 = 运行结束时该义务的观察截止还没到；既不算成功也不算失败，留在分母里。",
     "run_hours": 13,
     "tail_s": 3600,
     "task_hours": 12
@@ -4083,7 +4897,7 @@
     "knowledge_latency_p90_s": 0,
     "known_to_center": 7,
     "n_triggers": 7,
-    "note": "\u672c\u5b9e\u4f8b\u6ca1\u6709\u7b2c\u4e8c\u6761\u83b7\u77e5\u6e20\u9053\uff0c\u56e0\u6b64'\u4e2d\u5fc3\u83b7\u77e5\u4e8b\u4ef6'\u4e0e'\u4e2d\u5fc3\u62ff\u5230\u9996\u4efd\u65b0\u6570\u636e'\u540c\u4e00\u65f6\u523b\uff1b\u4e24\u8005\u7684\u5dee\u672a\u88ab\u6d4b\u8fc7\u3002"
+    "note": "本实例没有第二条获知渠道，因此'中心获知事件'与'中心拿到首份新数据'同一时刻；两者的差未被测过。"
    },
    "recovery": {
     "backlog_recovered": 42,
@@ -4092,7 +4906,7 @@
     "missing_collection": 0,
     "missing_delivery": 14,
     "n_obligations_in_window": 56,
-    "note": "\u91c7\u96c6\u7f3a\u5931\u5728\u6062\u590d\u540e\u8865\u4e0d\u56de\u6765\uff08\u4e0d\u8865\u9020\u5f53\u65f6\u672a\u91c7\u5230\u7684\u8bfb\u6570\uff09\uff1b\u4ea4\u4ed8\u7f3a\u5931\u5355\u5217\uff0c\u56e0\u4e3a\u5b83\u53ef\u7531\u81ea\u52a8\u8865\u53d1\u8ffd\u56de\u3002",
+    "note": "采集缺失在恢复后补不回来（不补造当时未采到的读数）；交付缺失单列，因为它可由自动补发追回。",
     "outage_hours": 3.0,
     "outage_s": [
      14400,
@@ -4101,7 +4915,7 @@
     "recovery_observation_s": 3600
    },
    "routine": {
-    "aoi_mean_s": 1981.3241758241759,
+    "aoi_mean_s": 5869.2191011235955,
     "censored": 0,
     "delivered": 132,
     "latency_mean_s": 2127.2727272727275,
@@ -4109,11 +4923,15 @@
     "missing_collection": 0,
     "missing_delivery": 36,
     "n": 168,
-    "no_observation_s": 0
+    "no_observation_s": 14400
    },
    "seed": 15
   },
   {
+   "access_blocked": 0,
+   "arm": "local",
+   "autonomy_margin": Infinity,
+   "autonomy_margin_min": Infinity,
    "by_kind": {
     "event": {
      "censored": 0,
@@ -4132,6 +4950,17 @@
      "n": 168
     }
    },
+   "command_counters": {
+    "commands_delivered": 0,
+    "commands_refused": 0,
+    "commands_sent": 0,
+    "deduplicated": 0,
+    "fenced": 0,
+    "stale_generation_dropped": 0,
+    "writes_changed": 0,
+    "writes_same_value": 0,
+    "writes_speculative": 0
+   },
    "communication": {
     "airtime_downlink_h": 0.0,
     "airtime_uplink_h": 0.012483982222222237,
@@ -4141,6 +4970,9 @@
     "uplinks": 169,
     "uplinks_heard": 120
    },
+   "delivery_oracle": 106,
+   "delivery_oracle_free_tx": 112,
+   "delivery_oracle_mid": 112,
    "deployment": {
     "best_sf": {
      "n00": 7,
@@ -4185,119 +5017,120 @@
     "n_reachable": 13,
     "n_slope_nodes": 16
    },
+   "dynamic_oracle": null,
    "energy": {
     "per_node": {
      "gw0": {
-      "consumed_wh": 0.0006800000000000005,
+      "consumed_wh": 0.01598,
       "dead_at_s": null,
       "deficit_s": 0,
-      "harvested_wh": 0.0006799999999742568,
-      "soc_final_wh": 40.0,
-      "soc_initial_wh": 40.0
+      "harvested_wh": 0.01597999999999994,
+      "soc_final_wh": 0.05,
+      "soc_initial_wh": 0.05
      },
      "n00": {
-      "consumed_wh": 0.0006979738880000003,
+      "consumed_wh": 0.006547973887999999,
       "dead_at_s": null,
       "deficit_s": 0,
-      "harvested_wh": 0.0006979738879948627,
-      "soc_final_wh": 40.0,
-      "soc_initial_wh": 40.0
+      "harvested_wh": 0.006547973887999985,
+      "soc_final_wh": 0.05,
+      "soc_initial_wh": 0.05
      },
      "n01": {
-      "consumed_wh": 0.000690764928,
+      "consumed_wh": 0.006540764928,
       "dead_at_s": null,
       "deficit_s": 0,
-      "harvested_wh": 0.0006907649279881412,
-      "soc_final_wh": 40.0,
-      "soc_initial_wh": 40.0
+      "harvested_wh": 0.00654076492799998,
+      "soc_final_wh": 0.05,
+      "soc_initial_wh": 0.05
      },
      "n02": {
-      "consumed_wh": 0.0007042817280000001,
+      "consumed_wh": 0.006554281728,
       "dead_at_s": null,
       "deficit_s": 0,
-      "harvested_wh": 0.0007042817279909741,
-      "soc_final_wh": 40.0,
-      "soc_initial_wh": 40.0
+      "harvested_wh": 0.006554281727999975,
+      "soc_final_wh": 0.05,
+      "soc_initial_wh": 0.05
      },
      "n03": {
-      "consumed_wh": 0.0006934682880000001,
+      "consumed_wh": 0.006543468288,
       "dead_at_s": null,
       "deficit_s": 0,
-      "harvested_wh": 0.0006934682879915499,
-      "soc_final_wh": 40.0,
-      "soc_initial_wh": 40.0
+      "harvested_wh": 0.006543468287999982,
+      "soc_final_wh": 0.05,
+      "soc_initial_wh": 0.05
      },
      "n04": {
-      "consumed_wh": 0.000692567168,
+      "consumed_wh": 0.006542567167999999,
       "dead_at_s": null,
       "deficit_s": 0,
-      "harvested_wh": 0.0006925671679880452,
-      "soc_final_wh": 40.0,
-      "soc_initial_wh": 40.0
+      "harvested_wh": 0.006542567167999981,
+      "soc_final_wh": 0.05,
+      "soc_initial_wh": 0.05
      },
      "n05": {
-      "consumed_wh": 0.000714194048,
+      "consumed_wh": 0.006564194048,
       "dead_at_s": null,
       "deficit_s": 0,
-      "harvested_wh": 0.000714194047993999,
-      "soc_final_wh": 40.0,
-      "soc_initial_wh": 40.0
+      "harvested_wh": 0.006564194047999981,
+      "soc_final_wh": 0.05,
+      "soc_initial_wh": 0.05
      },
      "n06": {
-      "consumed_wh": 0.0006934682880000001,
+      "consumed_wh": 0.006543468288,
       "dead_at_s": null,
       "deficit_s": 0,
-      "harvested_wh": 0.0006934682879915499,
-      "soc_final_wh": 40.0,
-      "soc_initial_wh": 40.0
+      "harvested_wh": 0.006543468287999982,
+      "soc_final_wh": 0.05,
+      "soc_initial_wh": 0.05
      },
      "n07": {
-      "consumed_wh": 0.0006934682880000001,
+      "consumed_wh": 0.006543468288,
       "dead_at_s": null,
       "deficit_s": 0,
-      "harvested_wh": 0.0006934682879915499,
-      "soc_final_wh": 40.0,
-      "soc_initial_wh": 40.0
+      "harvested_wh": 0.006543468287999982,
+      "soc_final_wh": 0.05,
+      "soc_initial_wh": 0.05
      },
      "n10": {
-      "consumed_wh": 0.0006952705280000002,
+      "consumed_wh": 0.006545270527999999,
       "dead_at_s": null,
       "deficit_s": 0,
-      "harvested_wh": 0.000695270527991454,
-      "soc_final_wh": 40.0,
-      "soc_initial_wh": 40.0
+      "harvested_wh": 0.006545270527999983,
+      "soc_final_wh": 0.05,
+      "soc_initial_wh": 0.05
      },
      "n11": {
-      "consumed_wh": 0.0006934682880000002,
+      "consumed_wh": 0.006543468288,
       "dead_at_s": null,
       "deficit_s": 0,
-      "harvested_wh": 0.0006934682879915499,
-      "soc_final_wh": 40.0,
-      "soc_initial_wh": 40.0
+      "harvested_wh": 0.006543468287999982,
+      "soc_final_wh": 0.05,
+      "soc_initial_wh": 0.05
      },
      "n13": {
-      "consumed_wh": 0.0007015783680000002,
+      "consumed_wh": 0.006551578367999999,
       "dead_at_s": null,
       "deficit_s": 0,
-      "harvested_wh": 0.0007015783679946708,
-      "soc_final_wh": 40.0,
-      "soc_initial_wh": 40.0
+      "harvested_wh": 0.006551578367999987,
+      "soc_final_wh": 0.05,
+      "soc_initial_wh": 0.05
      },
      "n15": {
-      "consumed_wh": 0.0007159962880000001,
+      "consumed_wh": 0.006565996288,
       "dead_at_s": null,
       "deficit_s": 0,
-      "harvested_wh": 0.000715996287993903,
-      "soc_final_wh": 40.0,
-      "soc_initial_wh": 40.0
+      "harvested_wh": 0.0065659962879999825,
+      "soc_final_wh": 0.05,
+      "soc_initial_wh": 0.05
      },
      "n16": {
-      "consumed_wh": 0.0006889626880000001,
+      "consumed_wh": 0.0065389626880000004,
       "dead_at_s": null,
       "deficit_s": 0,
-      "harvested_wh": 0.0006889626879882371,
-      "soc_final_wh": 40.0,
-      "soc_initial_wh": 40.0
+      "harvested_wh": 0.006538962687999979,
+      "soc_final_wh": 0.05,
+      "soc_initial_wh": 0.05
      }
     }
    },
@@ -4306,10 +5139,10 @@
     "deliver_rate": 0.7142857142857143,
     "delivery_cdf": {
      "0": 0.7142857142857143,
-     "300": 0.7142857142857143,
-     "600": 0.7142857142857143,
      "1800": 0.7142857142857143,
-     "3600": 0.7142857142857143
+     "300": 0.7142857142857143,
+     "3600": 0.7142857142857143,
+     "600": 0.7142857142857143
     },
     "delivery_latency_mean_s": 0.0,
     "delivery_latency_p90_s": 0,
@@ -4318,13 +5151,37 @@
     "slots_delivered": 15,
     "slots_matched_by_collection": 21
    },
+   "exec_layer": "naive",
+   "hazard": {
+    "hold_every": 0,
+    "hold_s": 0
+   },
+   "intent_ledger": {
+    "change": 0,
+    "dedup": 0,
+    "expired": 0,
+    "fenced": 0,
+    "generated": 0,
+    "landed": 0,
+    "lost": 0,
+    "queued_left": 0,
+    "refused": 0,
+    "rejected": 0,
+    "same_value": 0,
+    "sent": 0,
+    "speculative": 0,
+    "stale_gen": 0
+   },
+   "intent_mismatch_s": 0,
+   "mixed_config_s": 0,
    "n_obligations": 189,
    "not_applicable": {
-    "config_mismatch_s": "\u6700\u5c0f\u5b9e\u4f8b\u6ca1\u6709\u5916\u90e8\u914d\u7f6e\u8981\u6c42\uff0c\u65e0\u6cd5\u5b9a\u4e49'\u9519\u8bef\u914d\u7f6e'\uff1b\u8fd4\u56de None \u800c\u4e0d\u662f 0\u3002"
+    "config_mismatch_s": "最小实例没有外部配置要求，无法定义'错误配置'；返回 None 而不是 0。",
+    "mixed_config_s": "计数器在 Instance.mixed_config_ticks 上，本函数只拿到 log、取不到；**不返回恒定值的假列**。需要这一列请从 Instance 取。"
    },
    "observation_window": {
     "censored_total": 0,
-    "note": "\u5220\u5931 = \u8fd0\u884c\u7ed3\u675f\u65f6\u8be5\u4e49\u52a1\u7684\u89c2\u5bdf\u622a\u6b62\u8fd8\u6ca1\u5230\uff1b\u65e2\u4e0d\u7b97\u6210\u529f\u4e5f\u4e0d\u7b97\u5931\u8d25\uff0c\u7559\u5728\u5206\u6bcd\u91cc\u3002",
+    "note": "删失 = 运行结束时该义务的观察截止还没到；既不算成功也不算失败，留在分母里。",
     "run_hours": 13,
     "tail_s": 3600,
     "task_hours": 12
@@ -4338,7 +5195,7 @@
     "knowledge_latency_p90_s": 18780,
     "known_to_center": 7,
     "n_triggers": 7,
-    "note": "\u672c\u5b9e\u4f8b\u6ca1\u6709\u7b2c\u4e8c\u6761\u83b7\u77e5\u6e20\u9053\uff0c\u56e0\u6b64'\u4e2d\u5fc3\u83b7\u77e5\u4e8b\u4ef6'\u4e0e'\u4e2d\u5fc3\u62ff\u5230\u9996\u4efd\u65b0\u6570\u636e'\u540c\u4e00\u65f6\u523b\uff1b\u4e24\u8005\u7684\u5dee\u672a\u88ab\u6d4b\u8fc7\u3002"
+    "note": "本实例没有第二条获知渠道，因此'中心获知事件'与'中心拿到首份新数据'同一时刻；两者的差未被测过。"
    },
    "recovery": {
     "backlog_recovered": 42,
@@ -4347,7 +5204,7 @@
     "missing_collection": 0,
     "missing_delivery": 16,
     "n_obligations_in_window": 56,
-    "note": "\u91c7\u96c6\u7f3a\u5931\u5728\u6062\u590d\u540e\u8865\u4e0d\u56de\u6765\uff08\u4e0d\u8865\u9020\u5f53\u65f6\u672a\u91c7\u5230\u7684\u8bfb\u6570\uff09\uff1b\u4ea4\u4ed8\u7f3a\u5931\u5355\u5217\uff0c\u56e0\u4e3a\u5b83\u53ef\u7531\u81ea\u52a8\u8865\u53d1\u8ffd\u56de\u3002",
+    "note": "采集缺失在恢复后补不回来（不补造当时未采到的读数）；交付缺失单列，因为它可由自动补发追回。",
     "outage_hours": 3.0,
     "outage_s": [
      14400,
@@ -4356,7 +5213,7 @@
     "recovery_observation_s": 3600
    },
    "routine": {
-    "aoi_mean_s": 1803.3021978021977,
+    "aoi_mean_s": 8224.25,
     "censored": 0,
     "delivered": 106,
     "latency_mean_s": 2818.867924528302,
@@ -4364,11 +5221,15 @@
     "missing_collection": 0,
     "missing_delivery": 62,
     "n": 168,
-    "no_observation_s": 0
+    "no_observation_s": 50400
    },
    "seed": 16
   },
   {
+   "access_blocked": 0,
+   "arm": "local",
+   "autonomy_margin": Infinity,
+   "autonomy_margin_min": Infinity,
    "by_kind": {
     "event": {
      "censored": 0,
@@ -4387,6 +5248,17 @@
      "n": 168
     }
    },
+   "command_counters": {
+    "commands_delivered": 0,
+    "commands_refused": 0,
+    "commands_sent": 0,
+    "deduplicated": 0,
+    "fenced": 0,
+    "stale_generation_dropped": 0,
+    "writes_changed": 0,
+    "writes_same_value": 0,
+    "writes_speculative": 0
+   },
    "communication": {
     "airtime_downlink_h": 0.0,
     "airtime_uplink_h": 0.010197048888888898,
@@ -4396,6 +5268,9 @@
     "uplinks": 169,
     "uplinks_heard": 128
    },
+   "delivery_oracle": 131,
+   "delivery_oracle_free_tx": 140,
+   "delivery_oracle_mid": 140,
    "deployment": {
     "best_sf": {
      "n00": 7,
@@ -4440,119 +5315,120 @@
     "n_reachable": 13,
     "n_slope_nodes": 16
    },
+   "dynamic_oracle": null,
    "energy": {
     "per_node": {
      "gw0": {
-      "consumed_wh": 0.0006800000000000005,
+      "consumed_wh": 0.01598,
       "dead_at_s": null,
       "deficit_s": 0,
-      "harvested_wh": 0.0006799999999742568,
-      "soc_final_wh": 40.0,
-      "soc_initial_wh": 40.0
+      "harvested_wh": 0.01597999999999994,
+      "soc_final_wh": 0.05,
+      "soc_initial_wh": 0.05
      },
      "n00": {
-      "consumed_wh": 0.0006619290880000002,
+      "consumed_wh": 0.006511929088000001,
       "dead_at_s": null,
       "deficit_s": 0,
-      "harvested_wh": 0.0006619290879825712,
-      "soc_final_wh": 40.0,
-      "soc_initial_wh": 40.0
+      "harvested_wh": 0.006511929087999975,
+      "soc_final_wh": 0.05,
+      "soc_initial_wh": 0.05
      },
      "n01": {
-      "consumed_wh": 0.000665533568,
+      "consumed_wh": 0.006515533568,
       "dead_at_s": null,
       "deficit_s": 0,
-      "harvested_wh": 0.0006655335679823793,
-      "soc_final_wh": 40.0,
-      "soc_initial_wh": 40.0
+      "harvested_wh": 0.00651553356799997,
+      "soc_final_wh": 0.05,
+      "soc_initial_wh": 0.05
      },
      "n02": {
-      "consumed_wh": 0.0006655335680000001,
+      "consumed_wh": 0.006515533568,
       "dead_at_s": null,
       "deficit_s": 0,
-      "harvested_wh": 0.0006655335679823793,
-      "soc_final_wh": 40.0,
-      "soc_initial_wh": 40.0
+      "harvested_wh": 0.00651553356799997,
+      "soc_final_wh": 0.05,
+      "soc_initial_wh": 0.05
      },
      "n03": {
-      "consumed_wh": 0.0006619290880000002,
+      "consumed_wh": 0.006511929088000001,
       "dead_at_s": null,
       "deficit_s": 0,
-      "harvested_wh": 0.0006619290879825712,
-      "soc_final_wh": 40.0,
-      "soc_initial_wh": 40.0
+      "harvested_wh": 0.006511929087999975,
+      "soc_final_wh": 0.05,
+      "soc_initial_wh": 0.05
      },
      "n04": {
-      "consumed_wh": 0.0006637313280000001,
+      "consumed_wh": 0.0065137313280000005,
       "dead_at_s": null,
       "deficit_s": 0,
-      "harvested_wh": 0.0006637313279824752,
-      "soc_final_wh": 40.0,
-      "soc_initial_wh": 40.0
+      "harvested_wh": 0.006513731327999969,
+      "soc_final_wh": 0.05,
+      "soc_initial_wh": 0.05
      },
      "n05": {
-      "consumed_wh": 0.0006637313280000001,
+      "consumed_wh": 0.0065137313280000005,
       "dead_at_s": null,
       "deficit_s": 0,
-      "harvested_wh": 0.0006637313279824752,
-      "soc_final_wh": 40.0,
-      "soc_initial_wh": 40.0
+      "harvested_wh": 0.006513731327999976,
+      "soc_final_wh": 0.05,
+      "soc_initial_wh": 0.05
      },
      "n06": {
-      "consumed_wh": 0.0006772481280000002,
+      "consumed_wh": 0.006527248128000001,
       "dead_at_s": null,
       "deficit_s": 0,
-      "harvested_wh": 0.0006772481279853082,
-      "soc_final_wh": 40.0,
-      "soc_initial_wh": 40.0
+      "harvested_wh": 0.006527248127999978,
+      "soc_final_wh": 0.05,
+      "soc_initial_wh": 0.05
      },
      "n07": {
-      "consumed_wh": 0.0006700391680000002,
+      "consumed_wh": 0.006520039167999999,
       "dead_at_s": null,
       "deficit_s": 0,
-      "harvested_wh": 0.0006700391679856921,
-      "soc_final_wh": 40.0,
-      "soc_initial_wh": 40.0
+      "harvested_wh": 0.006520039167999973,
+      "soc_final_wh": 0.05,
+      "soc_initial_wh": 0.05
      },
      "n10": {
-      "consumed_wh": 0.000665533568,
+      "consumed_wh": 0.006515533568,
       "dead_at_s": null,
       "deficit_s": 0,
-      "harvested_wh": 0.0006655335679823793,
-      "soc_final_wh": 40.0,
-      "soc_initial_wh": 40.0
+      "harvested_wh": 0.00651553356799997,
+      "soc_final_wh": 0.05,
+      "soc_initial_wh": 0.05
      },
      "n11": {
-      "consumed_wh": 0.0006673358080000003,
+      "consumed_wh": 0.006517335807999999,
       "dead_at_s": null,
       "deficit_s": 0,
-      "harvested_wh": 0.0006673358079822833,
-      "soc_final_wh": 40.0,
-      "soc_initial_wh": 40.0
+      "harvested_wh": 0.006517335807999972,
+      "soc_final_wh": 0.05,
+      "soc_initial_wh": 0.05
      },
      "n13": {
-      "consumed_wh": 0.000679951488,
+      "consumed_wh": 0.006529951488000001,
       "dead_at_s": null,
       "deficit_s": 0,
-      "harvested_wh": 0.000679951487988717,
-      "soc_final_wh": 40.0,
-      "soc_initial_wh": 40.0
+      "harvested_wh": 0.00652995148799998,
+      "soc_final_wh": 0.05,
+      "soc_initial_wh": 0.05
      },
      "n15": {
-      "consumed_wh": 0.0006655335680000002,
+      "consumed_wh": 0.006515533568000001,
       "dead_at_s": null,
       "deficit_s": 0,
-      "harvested_wh": 0.0006655335679823793,
-      "soc_final_wh": 40.0,
-      "soc_initial_wh": 40.0
+      "harvested_wh": 0.00651553356799997,
+      "soc_final_wh": 0.05,
+      "soc_initial_wh": 0.05
      },
      "n16": {
-      "consumed_wh": 0.0007051828480000002,
+      "consumed_wh": 0.006555182848000001,
       "dead_at_s": null,
       "deficit_s": 0,
-      "harvested_wh": 0.0007051828479873734,
-      "soc_final_wh": 40.0,
-      "soc_initial_wh": 40.0
+      "harvested_wh": 0.006555182847999982,
+      "soc_final_wh": 0.05,
+      "soc_initial_wh": 0.05
      }
     }
    },
@@ -4561,10 +5437,10 @@
     "deliver_rate": 1.0,
     "delivery_cdf": {
      "0": 1.0,
-     "300": 1.0,
-     "600": 1.0,
      "1800": 1.0,
-     "3600": 1.0
+     "300": 1.0,
+     "3600": 1.0,
+     "600": 1.0
     },
     "delivery_latency_mean_s": 0.0,
     "delivery_latency_p90_s": 0,
@@ -4573,13 +5449,37 @@
     "slots_delivered": 21,
     "slots_matched_by_collection": 21
    },
+   "exec_layer": "naive",
+   "hazard": {
+    "hold_every": 0,
+    "hold_s": 0
+   },
+   "intent_ledger": {
+    "change": 0,
+    "dedup": 0,
+    "expired": 0,
+    "fenced": 0,
+    "generated": 0,
+    "landed": 0,
+    "lost": 0,
+    "queued_left": 0,
+    "refused": 0,
+    "rejected": 0,
+    "same_value": 0,
+    "sent": 0,
+    "speculative": 0,
+    "stale_gen": 0
+   },
+   "intent_mismatch_s": 0,
+   "mixed_config_s": 0,
    "n_obligations": 189,
    "not_applicable": {
-    "config_mismatch_s": "\u6700\u5c0f\u5b9e\u4f8b\u6ca1\u6709\u5916\u90e8\u914d\u7f6e\u8981\u6c42\uff0c\u65e0\u6cd5\u5b9a\u4e49'\u9519\u8bef\u914d\u7f6e'\uff1b\u8fd4\u56de None \u800c\u4e0d\u662f 0\u3002"
+    "config_mismatch_s": "最小实例没有外部配置要求，无法定义'错误配置'；返回 None 而不是 0。",
+    "mixed_config_s": "计数器在 Instance.mixed_config_ticks 上，本函数只拿到 log、取不到；**不返回恒定值的假列**。需要这一列请从 Instance 取。"
    },
    "observation_window": {
     "censored_total": 0,
-    "note": "\u5220\u5931 = \u8fd0\u884c\u7ed3\u675f\u65f6\u8be5\u4e49\u52a1\u7684\u89c2\u5bdf\u622a\u6b62\u8fd8\u6ca1\u5230\uff1b\u65e2\u4e0d\u7b97\u6210\u529f\u4e5f\u4e0d\u7b97\u5931\u8d25\uff0c\u7559\u5728\u5206\u6bcd\u91cc\u3002",
+    "note": "删失 = 运行结束时该义务的观察截止还没到；既不算成功也不算失败，留在分母里。",
     "run_hours": 13,
     "tail_s": 3600,
     "task_hours": 12
@@ -4593,7 +5493,7 @@
     "knowledge_latency_p90_s": 0,
     "known_to_center": 7,
     "n_triggers": 7,
-    "note": "\u672c\u5b9e\u4f8b\u6ca1\u6709\u7b2c\u4e8c\u6761\u83b7\u77e5\u6e20\u9053\uff0c\u56e0\u6b64'\u4e2d\u5fc3\u83b7\u77e5\u4e8b\u4ef6'\u4e0e'\u4e2d\u5fc3\u62ff\u5230\u9996\u4efd\u65b0\u6570\u636e'\u540c\u4e00\u65f6\u523b\uff1b\u4e24\u8005\u7684\u5dee\u672a\u88ab\u6d4b\u8fc7\u3002"
+    "note": "本实例没有第二条获知渠道，因此'中心获知事件'与'中心拿到首份新数据'同一时刻；两者的差未被测过。"
    },
    "recovery": {
     "backlog_recovered": 42,
@@ -4602,7 +5502,7 @@
     "missing_collection": 0,
     "missing_delivery": 28,
     "n_obligations_in_window": 56,
-    "note": "\u91c7\u96c6\u7f3a\u5931\u5728\u6062\u590d\u540e\u8865\u4e0d\u56de\u6765\uff08\u4e0d\u8865\u9020\u5f53\u65f6\u672a\u91c7\u5230\u7684\u8bfb\u6570\uff09\uff1b\u4ea4\u4ed8\u7f3a\u5931\u5355\u5217\uff0c\u56e0\u4e3a\u5b83\u53ef\u7531\u81ea\u52a8\u8865\u53d1\u8ffd\u56de\u3002",
+    "note": "采集缺失在恢复后补不回来（不补造当时未采到的读数）；交付缺失单列，因为它可由自动补发追回。",
     "outage_hours": 3.0,
     "outage_s": [
      14400,
@@ -4611,7 +5511,7 @@
     "recovery_observation_s": 3600
    },
    "routine": {
-    "aoi_mean_s": 2198.9065934065934,
+    "aoi_mean_s": 5874.892045454545,
     "censored": 0,
     "delivered": 131,
     "latency_mean_s": 1648.854961832061,
@@ -4619,11 +5519,15 @@
     "missing_collection": 0,
     "missing_delivery": 37,
     "n": 168,
-    "no_observation_s": 0
+    "no_observation_s": 21600
    },
    "seed": 17
   },
   {
+   "access_blocked": 0,
+   "arm": "local",
+   "autonomy_margin": Infinity,
+   "autonomy_margin_min": Infinity,
    "by_kind": {
     "event": {
      "censored": 0,
@@ -4642,6 +5546,17 @@
      "n": 168
     }
    },
+   "command_counters": {
+    "commands_delivered": 0,
+    "commands_refused": 0,
+    "commands_sent": 0,
+    "deduplicated": 0,
+    "fenced": 0,
+    "stale_generation_dropped": 0,
+    "writes_changed": 0,
+    "writes_same_value": 0,
+    "writes_speculative": 0
+   },
    "communication": {
     "airtime_downlink_h": 0.0,
     "airtime_uplink_h": 0.009417671111111121,
@@ -4651,6 +5566,9 @@
     "uplinks": 169,
     "uplinks_heard": 130
    },
+   "delivery_oracle": 149,
+   "delivery_oracle_free_tx": 154,
+   "delivery_oracle_mid": 154,
    "deployment": {
     "best_sf": {
      "n00": 7,
@@ -4695,119 +5613,120 @@
     "n_reachable": 13,
     "n_slope_nodes": 16
    },
+   "dynamic_oracle": null,
    "energy": {
     "per_node": {
      "gw0": {
-      "consumed_wh": 0.0006800000000000005,
+      "consumed_wh": 0.01598,
       "dead_at_s": null,
       "deficit_s": 0,
-      "harvested_wh": 0.0006799999999742568,
-      "soc_final_wh": 40.0,
-      "soc_initial_wh": 40.0
+      "harvested_wh": 0.01597999999999994,
+      "soc_final_wh": 0.05,
+      "soc_initial_wh": 0.05
      },
      "n00": {
-      "consumed_wh": 0.0006610279680000003,
+      "consumed_wh": 0.006511027968,
       "dead_at_s": null,
       "deficit_s": 0,
-      "harvested_wh": 0.0006610279679861719,
-      "soc_final_wh": 40.0,
-      "soc_initial_wh": 40.0
+      "harvested_wh": 0.006511027967999981,
+      "soc_final_wh": 0.05,
+      "soc_initial_wh": 0.05
      },
      "n01": {
-      "consumed_wh": 0.000668236928,
+      "consumed_wh": 0.006518236928,
       "dead_at_s": null,
       "deficit_s": 0,
-      "harvested_wh": 0.000668236927985788,
-      "soc_final_wh": 40.0,
-      "soc_initial_wh": 40.0
+      "harvested_wh": 0.006518236927999979,
+      "soc_final_wh": 0.05,
+      "soc_initial_wh": 0.05
      },
      "n02": {
-      "consumed_wh": 0.0006655335680000002,
+      "consumed_wh": 0.006515533568,
       "dead_at_s": null,
       "deficit_s": 0,
-      "harvested_wh": 0.0006655335679823793,
-      "soc_final_wh": 40.0,
-      "soc_initial_wh": 40.0
+      "harvested_wh": 0.006515533567999977,
+      "soc_final_wh": 0.05,
+      "soc_initial_wh": 0.05
      },
      "n03": {
-      "consumed_wh": 0.0006610279680000003,
+      "consumed_wh": 0.006511027968,
       "dead_at_s": null,
       "deficit_s": 0,
-      "harvested_wh": 0.0006610279679861719,
-      "soc_final_wh": 40.0,
-      "soc_initial_wh": 40.0
+      "harvested_wh": 0.006511027967999974,
+      "soc_final_wh": 0.05,
+      "soc_initial_wh": 0.05
      },
      "n04": {
-      "consumed_wh": 0.0006655335680000002,
+      "consumed_wh": 0.006515533568000001,
       "dead_at_s": null,
       "deficit_s": 0,
-      "harvested_wh": 0.0006655335679823793,
-      "soc_final_wh": 40.0,
-      "soc_initial_wh": 40.0
+      "harvested_wh": 0.006515533567999977,
+      "soc_final_wh": 0.05,
+      "soc_initial_wh": 0.05
      },
      "n05": {
-      "consumed_wh": 0.0006547201280000003,
+      "consumed_wh": 0.006504720128000001,
       "dead_at_s": null,
       "deficit_s": 0,
-      "harvested_wh": 0.0006547201279829551,
-      "soc_final_wh": 40.0,
-      "soc_initial_wh": 40.0
+      "harvested_wh": 0.006504720127999977,
+      "soc_final_wh": 0.05,
+      "soc_initial_wh": 0.05
      },
      "n06": {
-      "consumed_wh": 0.0006565223680000001,
+      "consumed_wh": 0.006506522368,
       "dead_at_s": null,
       "deficit_s": 0,
-      "harvested_wh": 0.0006565223679828591,
-      "soc_final_wh": 40.0,
-      "soc_initial_wh": 40.0
+      "harvested_wh": 0.006506522367999978,
+      "soc_final_wh": 0.05,
+      "soc_initial_wh": 0.05
      },
      "n07": {
-      "consumed_wh": 0.000667335808,
+      "consumed_wh": 0.006517335808,
       "dead_at_s": null,
       "deficit_s": 0,
-      "harvested_wh": 0.0006673358079822833,
-      "soc_final_wh": 40.0,
-      "soc_initial_wh": 40.0
+      "harvested_wh": 0.0065173358079999785,
+      "soc_final_wh": 0.05,
+      "soc_initial_wh": 0.05
      },
      "n10": {
-      "consumed_wh": 0.0006547201280000003,
+      "consumed_wh": 0.006504720128000001,
       "dead_at_s": null,
       "deficit_s": 0,
-      "harvested_wh": 0.0006547201279829551,
-      "soc_final_wh": 40.0,
-      "soc_initial_wh": 40.0
+      "harvested_wh": 0.006504720127999977,
+      "soc_final_wh": 0.05,
+      "soc_initial_wh": 0.05
      },
      "n11": {
-      "consumed_wh": 0.0006565223680000001,
+      "consumed_wh": 0.006506522368,
       "dead_at_s": null,
       "deficit_s": 0,
-      "harvested_wh": 0.0006565223679828591,
-      "soc_final_wh": 40.0,
-      "soc_initial_wh": 40.0
+      "harvested_wh": 0.006506522367999978,
+      "soc_final_wh": 0.05,
+      "soc_initial_wh": 0.05
      },
      "n13": {
-      "consumed_wh": 0.0006610279680000003,
+      "consumed_wh": 0.006511027968,
       "dead_at_s": null,
       "deficit_s": 0,
-      "harvested_wh": 0.0006610279679861719,
-      "soc_final_wh": 40.0,
-      "soc_initial_wh": 40.0
+      "harvested_wh": 0.006511027967999981,
+      "soc_final_wh": 0.05,
+      "soc_initial_wh": 0.05
      },
      "n15": {
-      "consumed_wh": 0.0006592257280000001,
+      "consumed_wh": 0.006509225728,
       "dead_at_s": null,
       "deficit_s": 0,
-      "harvested_wh": 0.0006592257279862679,
-      "soc_final_wh": 40.0,
-      "soc_initial_wh": 40.0
+      "harvested_wh": 0.00650922572799998,
+      "soc_final_wh": 0.05,
+      "soc_initial_wh": 0.05
      },
      "n16": {
-      "consumed_wh": 0.0006583246080000002,
+      "consumed_wh": 0.0065083246079999995,
       "dead_at_s": null,
       "deficit_s": 0,
-      "harvested_wh": 0.0006583246079827632,
-      "soc_final_wh": 40.0,
-      "soc_initial_wh": 40.0
+      "harvested_wh": 0.006508324607999973,
+      "soc_final_wh": 0.05,
+      "soc_initial_wh": 0.05
      }
     }
    },
@@ -4816,10 +5735,10 @@
     "deliver_rate": 1.0,
     "delivery_cdf": {
      "0": 1.0,
-     "300": 1.0,
-     "600": 1.0,
      "1800": 1.0,
-     "3600": 1.0
+     "300": 1.0,
+     "3600": 1.0,
+     "600": 1.0
     },
     "delivery_latency_mean_s": 0.0,
     "delivery_latency_p90_s": 0,
@@ -4828,13 +5747,37 @@
     "slots_delivered": 21,
     "slots_matched_by_collection": 21
    },
+   "exec_layer": "naive",
+   "hazard": {
+    "hold_every": 0,
+    "hold_s": 0
+   },
+   "intent_ledger": {
+    "change": 0,
+    "dedup": 0,
+    "expired": 0,
+    "fenced": 0,
+    "generated": 0,
+    "landed": 0,
+    "lost": 0,
+    "queued_left": 0,
+    "refused": 0,
+    "rejected": 0,
+    "same_value": 0,
+    "sent": 0,
+    "speculative": 0,
+    "stale_gen": 0
+   },
+   "intent_mismatch_s": 0,
+   "mixed_config_s": 0,
    "n_obligations": 189,
    "not_applicable": {
-    "config_mismatch_s": "\u6700\u5c0f\u5b9e\u4f8b\u6ca1\u6709\u5916\u90e8\u914d\u7f6e\u8981\u6c42\uff0c\u65e0\u6cd5\u5b9a\u4e49'\u9519\u8bef\u914d\u7f6e'\uff1b\u8fd4\u56de None \u800c\u4e0d\u662f 0\u3002"
+    "config_mismatch_s": "最小实例没有外部配置要求，无法定义'错误配置'；返回 None 而不是 0。",
+    "mixed_config_s": "计数器在 Instance.mixed_config_ticks 上，本函数只拿到 log、取不到；**不返回恒定值的假列**。需要这一列请从 Instance 取。"
    },
    "observation_window": {
     "censored_total": 0,
-    "note": "\u5220\u5931 = \u8fd0\u884c\u7ed3\u675f\u65f6\u8be5\u4e49\u52a1\u7684\u89c2\u5bdf\u622a\u6b62\u8fd8\u6ca1\u5230\uff1b\u65e2\u4e0d\u7b97\u6210\u529f\u4e5f\u4e0d\u7b97\u5931\u8d25\uff0c\u7559\u5728\u5206\u6bcd\u91cc\u3002",
+    "note": "删失 = 运行结束时该义务的观察截止还没到；既不算成功也不算失败，留在分母里。",
     "run_hours": 13,
     "tail_s": 3600,
     "task_hours": 12
@@ -4848,7 +5791,7 @@
     "knowledge_latency_p90_s": 0,
     "known_to_center": 7,
     "n_triggers": 7,
-    "note": "\u672c\u5b9e\u4f8b\u6ca1\u6709\u7b2c\u4e8c\u6761\u83b7\u77e5\u6e20\u9053\uff0c\u56e0\u6b64'\u4e2d\u5fc3\u83b7\u77e5\u4e8b\u4ef6'\u4e0e'\u4e2d\u5fc3\u62ff\u5230\u9996\u4efd\u65b0\u6570\u636e'\u540c\u4e00\u65f6\u523b\uff1b\u4e24\u8005\u7684\u5dee\u672a\u88ab\u6d4b\u8fc7\u3002"
+    "note": "本实例没有第二条获知渠道，因此'中心获知事件'与'中心拿到首份新数据'同一时刻；两者的差未被测过。"
    },
    "recovery": {
     "backlog_recovered": 42,
@@ -4857,7 +5800,7 @@
     "missing_collection": 0,
     "missing_delivery": 15,
     "n_obligations_in_window": 56,
-    "note": "\u91c7\u96c6\u7f3a\u5931\u5728\u6062\u590d\u540e\u8865\u4e0d\u56de\u6765\uff08\u4e0d\u8865\u9020\u5f53\u65f6\u672a\u91c7\u5230\u7684\u8bfb\u6570\uff09\uff1b\u4ea4\u4ed8\u7f3a\u5931\u5355\u5217\uff0c\u56e0\u4e3a\u5b83\u53ef\u7531\u81ea\u52a8\u8865\u53d1\u8ffd\u56de\u3002",
+    "note": "采集缺失在恢复后补不回来（不补造当时未采到的读数）；交付缺失单列，因为它可由自动补发追回。",
     "outage_hours": 3.0,
     "outage_s": [
      14400,
@@ -4866,7 +5809,7 @@
     "recovery_observation_s": 3600
    },
    "routine": {
-    "aoi_mean_s": 1842.8626373626373,
+    "aoi_mean_s": 4495.06043956044,
     "censored": 0,
     "delivered": 149,
     "latency_mean_s": 1787.9194630872482,
@@ -4879,6 +5822,10 @@
    "seed": 18
   },
   {
+   "access_blocked": 0,
+   "arm": "local",
+   "autonomy_margin": Infinity,
+   "autonomy_margin_min": Infinity,
    "by_kind": {
     "event": {
      "censored": 0,
@@ -4897,6 +5844,17 @@
      "n": 168
     }
    },
+   "command_counters": {
+    "commands_delivered": 0,
+    "commands_refused": 0,
+    "commands_sent": 0,
+    "deduplicated": 0,
+    "fenced": 0,
+    "stale_generation_dropped": 0,
+    "writes_changed": 0,
+    "writes_same_value": 0,
+    "writes_speculative": 0
+   },
    "communication": {
     "airtime_downlink_h": 0.0,
     "airtime_uplink_h": 0.009821582222222229,
@@ -4906,6 +5864,9 @@
     "uplinks": 169,
     "uplinks_heard": 121
    },
+   "delivery_oracle": 146,
+   "delivery_oracle_free_tx": 154,
+   "delivery_oracle_mid": 154,
    "deployment": {
     "best_sf": {
      "n00": 7,
@@ -4950,119 +5911,120 @@
     "n_reachable": 13,
     "n_slope_nodes": 16
    },
+   "dynamic_oracle": null,
    "energy": {
     "per_node": {
      "gw0": {
-      "consumed_wh": 0.0006800000000000005,
+      "consumed_wh": 0.01598,
       "dead_at_s": null,
       "deficit_s": 0,
-      "harvested_wh": 0.0006799999999742568,
-      "soc_final_wh": 40.0,
-      "soc_initial_wh": 40.0
+      "harvested_wh": 0.01597999999999994,
+      "soc_final_wh": 0.05,
+      "soc_initial_wh": 0.05
      },
      "n00": {
-      "consumed_wh": 0.0006583246080000002,
+      "consumed_wh": 0.006508324608,
       "dead_at_s": null,
       "deficit_s": 0,
-      "harvested_wh": 0.0006583246079827632,
-      "soc_final_wh": 40.0,
-      "soc_initial_wh": 40.0
+      "harvested_wh": 0.006508324607999973,
+      "soc_final_wh": 0.05,
+      "soc_initial_wh": 0.05
      },
      "n01": {
-      "consumed_wh": 0.0006673358080000002,
+      "consumed_wh": 0.0065173358079999985,
       "dead_at_s": null,
       "deficit_s": 0,
-      "harvested_wh": 0.0006673358079893887,
-      "soc_final_wh": 40.0,
-      "soc_initial_wh": 40.0
+      "harvested_wh": 0.0065173358079999785,
+      "soc_final_wh": 0.05,
+      "soc_initial_wh": 0.05
      },
      "n02": {
-      "consumed_wh": 0.0006583246080000001,
+      "consumed_wh": 0.0065083246079999995,
       "dead_at_s": null,
       "deficit_s": 0,
-      "harvested_wh": 0.0006583246079827632,
-      "soc_final_wh": 40.0,
-      "soc_initial_wh": 40.0
+      "harvested_wh": 0.006508324607999973,
+      "soc_final_wh": 0.05,
+      "soc_initial_wh": 0.05
      },
      "n03": {
-      "consumed_wh": 0.000673643648,
+      "consumed_wh": 0.006523643647999999,
       "dead_at_s": null,
       "deficit_s": 0,
-      "harvested_wh": 0.0006736436479926056,
-      "soc_final_wh": 40.0,
-      "soc_initial_wh": 40.0
+      "harvested_wh": 0.006523643647999983,
+      "soc_final_wh": 0.05,
+      "soc_initial_wh": 0.05
      },
      "n04": {
-      "consumed_wh": 0.000667335808,
+      "consumed_wh": 0.006517335807999999,
       "dead_at_s": null,
       "deficit_s": 0,
-      "harvested_wh": 0.0006673358079822833,
-      "soc_final_wh": 40.0,
-      "soc_initial_wh": 40.0
+      "harvested_wh": 0.0065173358079999785,
+      "soc_final_wh": 0.05,
+      "soc_initial_wh": 0.05
      },
      "n05": {
-      "consumed_wh": 0.0006565223680000001,
+      "consumed_wh": 0.006506522368,
       "dead_at_s": null,
       "deficit_s": 0,
-      "harvested_wh": 0.0006565223679828591,
-      "soc_final_wh": 40.0,
-      "soc_initial_wh": 40.0
+      "harvested_wh": 0.0065065223679999715,
+      "soc_final_wh": 0.05,
+      "soc_initial_wh": 0.05
      },
      "n06": {
-      "consumed_wh": 0.0006583246080000001,
+      "consumed_wh": 0.0065083246079999995,
       "dead_at_s": null,
       "deficit_s": 0,
-      "harvested_wh": 0.0006583246079827632,
-      "soc_final_wh": 40.0,
-      "soc_initial_wh": 40.0
+      "harvested_wh": 0.006508324607999973,
+      "soc_final_wh": 0.05,
+      "soc_initial_wh": 0.05
      },
      "n07": {
-      "consumed_wh": 0.000686259328,
+      "consumed_wh": 0.006536259328,
       "dead_at_s": null,
       "deficit_s": 0,
-      "harvested_wh": 0.0006862593279919338,
-      "soc_final_wh": 40.0,
-      "soc_initial_wh": 40.0
+      "harvested_wh": 0.006536259327999977,
+      "soc_final_wh": 0.05,
+      "soc_initial_wh": 0.05
      },
      "n10": {
-      "consumed_wh": 0.0006601268480000001,
+      "consumed_wh": 0.006510126847999999,
       "dead_at_s": null,
       "deficit_s": 0,
-      "harvested_wh": 0.0006601268479826672,
-      "soc_final_wh": 40.0,
-      "soc_initial_wh": 40.0
+      "harvested_wh": 0.006510126847999974,
+      "soc_final_wh": 0.05,
+      "soc_initial_wh": 0.05
      },
      "n11": {
-      "consumed_wh": 0.0006646324480000001,
+      "consumed_wh": 0.006514632447999999,
       "dead_at_s": null,
       "deficit_s": 0,
-      "harvested_wh": 0.00066463244798598,
-      "soc_final_wh": 40.0,
-      "soc_initial_wh": 40.0
+      "harvested_wh": 0.006514632447999984,
+      "soc_final_wh": 0.05,
+      "soc_initial_wh": 0.05
      },
      "n13": {
-      "consumed_wh": 0.000667335808,
+      "consumed_wh": 0.006517335808,
       "dead_at_s": null,
       "deficit_s": 0,
-      "harvested_wh": 0.0006673358079893887,
-      "soc_final_wh": 40.0,
-      "soc_initial_wh": 40.0
+      "harvested_wh": 0.0065173358079999785,
+      "soc_final_wh": 0.05,
+      "soc_initial_wh": 0.05
      },
      "n15": {
-      "consumed_wh": 0.000661027968,
+      "consumed_wh": 0.0065110279679999996,
       "dead_at_s": null,
       "deficit_s": 0,
-      "harvested_wh": 0.0006610279679861719,
-      "soc_final_wh": 40.0,
-      "soc_initial_wh": 40.0
+      "harvested_wh": 0.006511027967999974,
+      "soc_final_wh": 0.05,
+      "soc_initial_wh": 0.05
      },
      "n16": {
-      "consumed_wh": 0.000674544768,
+      "consumed_wh": 0.006524544768,
       "dead_at_s": null,
       "deficit_s": 0,
-      "harvested_wh": 0.0006745447679890049,
-      "soc_final_wh": 40.0,
-      "soc_initial_wh": 40.0
+      "harvested_wh": 0.006524544767999969,
+      "soc_final_wh": 0.05,
+      "soc_initial_wh": 0.05
      }
     }
    },
@@ -5071,10 +6033,10 @@
     "deliver_rate": 0.9523809523809523,
     "delivery_cdf": {
      "0": 0.8571428571428571,
-     "300": 0.9047619047619048,
-     "600": 0.9523809523809523,
      "1800": 0.9523809523809523,
-     "3600": 0.9523809523809523
+     "300": 0.9047619047619048,
+     "3600": 0.9523809523809523,
+     "600": 0.9523809523809523
     },
     "delivery_latency_mean_s": 45.0,
     "delivery_latency_p90_s": 0,
@@ -5083,13 +6045,37 @@
     "slots_delivered": 20,
     "slots_matched_by_collection": 21
    },
+   "exec_layer": "naive",
+   "hazard": {
+    "hold_every": 0,
+    "hold_s": 0
+   },
+   "intent_ledger": {
+    "change": 0,
+    "dedup": 0,
+    "expired": 0,
+    "fenced": 0,
+    "generated": 0,
+    "landed": 0,
+    "lost": 0,
+    "queued_left": 0,
+    "refused": 0,
+    "rejected": 0,
+    "same_value": 0,
+    "sent": 0,
+    "speculative": 0,
+    "stale_gen": 0
+   },
+   "intent_mismatch_s": 0,
+   "mixed_config_s": 0,
    "n_obligations": 189,
    "not_applicable": {
-    "config_mismatch_s": "\u6700\u5c0f\u5b9e\u4f8b\u6ca1\u6709\u5916\u90e8\u914d\u7f6e\u8981\u6c42\uff0c\u65e0\u6cd5\u5b9a\u4e49'\u9519\u8bef\u914d\u7f6e'\uff1b\u8fd4\u56de None \u800c\u4e0d\u662f 0\u3002"
+    "config_mismatch_s": "最小实例没有外部配置要求，无法定义'错误配置'；返回 None 而不是 0。",
+    "mixed_config_s": "计数器在 Instance.mixed_config_ticks 上，本函数只拿到 log、取不到；**不返回恒定值的假列**。需要这一列请从 Instance 取。"
    },
    "observation_window": {
     "censored_total": 0,
-    "note": "\u5220\u5931 = \u8fd0\u884c\u7ed3\u675f\u65f6\u8be5\u4e49\u52a1\u7684\u89c2\u5bdf\u622a\u6b62\u8fd8\u6ca1\u5230\uff1b\u65e2\u4e0d\u7b97\u6210\u529f\u4e5f\u4e0d\u7b97\u5931\u8d25\uff0c\u7559\u5728\u5206\u6bcd\u91cc\u3002",
+    "note": "删失 = 运行结束时该义务的观察截止还没到；既不算成功也不算失败，留在分母里。",
     "run_hours": 13,
     "tail_s": 3600,
     "task_hours": 12
@@ -5103,7 +6089,7 @@
     "knowledge_latency_p90_s": 0,
     "known_to_center": 7,
     "n_triggers": 7,
-    "note": "\u672c\u5b9e\u4f8b\u6ca1\u6709\u7b2c\u4e8c\u6761\u83b7\u77e5\u6e20\u9053\uff0c\u56e0\u6b64'\u4e2d\u5fc3\u83b7\u77e5\u4e8b\u4ef6'\u4e0e'\u4e2d\u5fc3\u62ff\u5230\u9996\u4efd\u65b0\u6570\u636e'\u540c\u4e00\u65f6\u523b\uff1b\u4e24\u8005\u7684\u5dee\u672a\u88ab\u6d4b\u8fc7\u3002"
+    "note": "本实例没有第二条获知渠道，因此'中心获知事件'与'中心拿到首份新数据'同一时刻；两者的差未被测过。"
    },
    "recovery": {
     "backlog_recovered": 42,
@@ -5112,7 +6098,7 @@
     "missing_collection": 0,
     "missing_delivery": 19,
     "n_obligations_in_window": 56,
-    "note": "\u91c7\u96c6\u7f3a\u5931\u5728\u6062\u590d\u540e\u8865\u4e0d\u56de\u6765\uff08\u4e0d\u8865\u9020\u5f53\u65f6\u672a\u91c7\u5230\u7684\u8bfb\u6570\uff09\uff1b\u4ea4\u4ed8\u7f3a\u5931\u5355\u5217\uff0c\u56e0\u4e3a\u5b83\u53ef\u7531\u81ea\u52a8\u8865\u53d1\u8ffd\u56de\u3002",
+    "note": "采集缺失在恢复后补不回来（不补造当时未采到的读数）；交付缺失单列，因为它可由自动补发追回。",
     "outage_hours": 3.0,
     "outage_s": [
      14400,
@@ -5121,7 +6107,7 @@
     "recovery_observation_s": 3600
    },
    "routine": {
-    "aoi_mean_s": 1783.521978021978,
+    "aoi_mean_s": 4922.748571428571,
     "censored": 0,
     "delivered": 146,
     "latency_mean_s": 2367.123287671233,
@@ -5129,7 +6115,7 @@
     "missing_collection": 0,
     "missing_delivery": 22,
     "n": 168,
-    "no_observation_s": 0
+    "no_observation_s": 25200
    },
    "seed": 19
   }

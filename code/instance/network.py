@@ -72,6 +72,14 @@ class DeviceProfile:
     upload_on_event: bool = True
     #: 有限缓存。容量按**记录条数**计，溢出丢最老，并计数（v1.1 §5.3 要求公开溢出策略）。
     cache_slots: int = 240
+    #: 缓存被取走的**服务次序**，即"一次上报机会该花在哪几条记录上"。
+    #: - `fifo`：最老优先（设备既有的自动补发语义；v1.1 §5.3、§6 把它定为**各方法共享的既有能力**）；
+    #: - `lifo`：最新优先取一批，**旧记录仍留在缓存里**（因此载荷一直满）；
+    #: - `latest_only`：只留最新一条，旧记录**丢弃**（AoI 文献的标准队列纪律：
+    #:   新记录抢占、旧记录不再重传）。载荷最小、能耗最低，代价是旧义务永久放弃。
+    #: **这是实例属性，不是策略动作。** 动作面仍然只有 `sampling interval` 与 `report period`
+    #: 两个字段；换服务次序等于换一个实例，**所有臂必须在同一取值下重跑**才构成公平对照。
+    cache_service: str = "fifo"
     #: 单次采样周期的能量代价（Wh）。**取自实测剖面**：活跃窗口约 15 s、平均 35.7 mA、母线 3.3 V
     #: → 约 4.9e-4 Wh/周期（Ragnoli 等, *JLPEA* 12(3):47, 2022）。减去 `RadioEnergy` 另计的空口
     #: 部分后取 4.7e-4。**原先默认 2e-5 比它低约 25 倍**，那使能量约束在整轮实验里都没有被触到
@@ -311,15 +319,34 @@ class Node:
         return self.event_upload_pending > 0 or t_s % self.report_period_s == 0
 
     def batch(self, t_s: int, max_slots: int = 32) -> list[Sample]:
-        """取本周期要发的记录。**自动补发**：缓存里全是未确认记录，因此天然按最老优先重传。
+        """取本周期要发的记录。**自动补发**：缓存里全是未确认记录，按 `cache_service` 决定次序。
 
-        这是设备既有能力，**所有基线共享**（v1.1 §5.3、§6）；中心的显式区间／游标／预算补传是
-        另一件事，属于扩展项，本模块不实现。
+        `fifo`（默认）＝最老优先重传：这是设备既有能力，**所有基线共享**（v1.1 §5.3、§6）。
+        `lifo` ＝最新优先：一次机会只花在最新的记录上。两者是**同一个实例的两个取值**，
+        不是两个策略——中心的动作面在两种取值下完全相同。
+
+        中心的显式区间／游标／预算补传是另一件事，属于扩展项，本模块不实现。
         """
         if not self.alive or not self.cache:
             return []
         if self.event_upload_pending > 0:
             self.event_upload_pending -= 1
+        if self.p.cache_service == "lifo":
+            # 最新优先：取最新的一批，并按"最新在前"排列。一次上报里整批同时到达，
+            # 因此批内次序不影响读数，取序只决定**哪些记录占掉这次机会**。
+            # 注意：旧记录**留在缓存里**，于是此后每次机会都带着满批载荷——空口时间与能耗
+            # 因此居高不下。这正是 AoI 文献里"只保留最新"要避免的那件事，见 `latest_only`。
+            return self.cache[-max_slots:][::-1]
+        if self.p.cache_service == "latest_only":
+            # **只留最新**：AoI 文献的标准队列纪律（新记录抢占、旧记录丢弃）。
+            # 它把载荷压到最小（一条记录），因此每次机会的空口时间与能耗都最低；
+            # 代价是被丢掉的旧义务永久拿不回来。**丢弃要记账**，否则缓存溢出计数会失真。
+            newest = self.cache[-1]
+            for old in self.cache[:-1]:
+                self.transit[old.sample_id].dropped_at = t_s
+                self.dropped += 1
+            self.cache = [newest]
+            return [newest]
         return self.cache[:max_slots]
 
     def ack(self, sample_ids) -> None:
