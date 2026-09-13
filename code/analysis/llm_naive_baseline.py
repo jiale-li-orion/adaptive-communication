@@ -146,8 +146,19 @@ def brief(view, max_nodes: int | None = None) -> dict:
         a = _n.get("soc_age_s")
         _n["aoi_s"] = a
         _n["desired_target"] = 300 if (a is None or a > 3600) else 900
-        _n["pending_age_s"] = (None if not _n.get("pending_effect")
-                               else _penda.get(_n["id"]))
+        # **v3 的 pending 语义 = desired 与 confirmed 不一致**（比 `in_flight` 更贴 target contract），
+        # 并在 `brief()` 内维护 pending_age，**不依赖外部调用点**（上一轮就是因为找不到调用点锚点而整次没写盘）。
+        _conf = _n.get("report_period")
+        # ⚠ **键名必须与 system prompt 一致**：prompt 里说的是 `confirmed_target`，
+        # 而状态原先只有 `report_period` ⇒ **模型被指向一个不存在的键**（仪器缺陷，已修）。
+        _n["confirmed_target"] = _conf
+        _n["pending_effect"] = (_conf is not None and _conf != _n["desired_target"])
+        if _n["pending_effect"]:
+            _penda.setdefault(_n["id"], view.t_s)
+            _n["pending_age_s"] = view.t_s - _penda[_n["id"]]
+        else:
+            _penda.pop(_n["id"], None)
+            _n["pending_age_s"] = None
     if "desired_target" in (STATE_SCHEMA.get("node_fields") or []):
         return {"time_s": view.t_s, "nodes": nodes,
                 "last_tool_outcome": _LAST["result"]}
@@ -218,6 +229,13 @@ class LLMNaiPolicy(C.CenterPolicy):
         self.overdue_max = 0
         #: **必须分开**：`stale` = 听到过、但证据老了（真正的"该动而没动"）；
         #: `unseen` = 从未听到（可能是节点刚上线/一直没通）。混在一起会夸大前者。
+        #: **v3 关键计数**：`agree/disagree` = target agreement（必须单独报，
+        #: 否则 amplification 高可能只是模型乱改目标）；`same_target_unresolved` =
+        #: **最直接的 planning-amplification 事件**（desired 未变、旧 effect 仍 unresolved 时又提同 target）。
+        self.agree = 0
+        self.disagree = 0
+        self.same_target_unresolved = 0
+        _penda.clear()
         self.stale_epochs = 0
         self.stale_max = 0
         self.unseen_epochs = 0
@@ -267,6 +285,20 @@ class LLMNaiPolicy(C.CenterPolicy):
         except (TypeError, ValueError):
             self.bad += 1
             return []
+        # 只计数，不干预行为
+        _dz = None
+        _pend = False
+        for _n in st.get("nodes", ()):
+            if _n.get("id") == nid:
+                _dz, _pend = _n.get("desired_target"), bool(_n.get("pending_effect"))
+                break
+        if a == "set_report_period" and _dz is not None:
+            if val == _dz:
+                self.agree += 1
+                if _pend:
+                    self.same_target_unresolved += 1
+            else:
+                self.disagree += 1
         if a == "set_sampling_interval":
             out = [(nid, self.stamp(nid, op=C.OP_SET_SAMPLING_INTERVAL, interval_s=val))]
         elif a == "set_report_period":
@@ -321,6 +353,8 @@ def run(tag: str, seed: int, budget: Budget, call_limit: int | None = None) -> d
             "actions": pol.actions, "noop": pol.noop, "bad": pol.bad,
             "rejects": pol.rejects, "raw_sample": pol.raw_sample,
             "overdue_epochs": pol.overdue_epochs, "overdue_max": pol.overdue_max,
+            "agree": pol.agree, "disagree": pol.disagree,
+            "same_target_unresolved": pol.same_target_unresolved,
             "stale_epochs": pol.stale_epochs, "stale_max": pol.stale_max,
             "unseen_epochs": pol.unseen_epochs,
             "node_ids_sample": sorted(d["_trace"][0][1:2]) if d["_trace"] else [],
@@ -386,6 +420,9 @@ def main() -> int:
         print(f"  actions = {r['actions']}；noop={r['noop']}；解析失败={r['bad']}")
         print(f"  **未下达动作的原因分类 = {r['rejects']}**")
         print(f"  原始输出采样 = {r['raw_sample']}")
+        print("  **target agreement = " + str(r["agree"]) + " 次一致 / "
+              + str(r["disagree"]) + " 次不一致**；**same-target unresolved replan = "
+              + str(r["same_target_unresolved"]) + " 次**")
         print("  **其中「听到过但证据老化」的 epoch 数 = " + str(r["stale_epochs"])
               + "（最多 " + str(r["stale_max"]) + " 个）**"
               + "；「从未听到」出现的 epoch 数 = " + str(r["unseen_epochs"]))

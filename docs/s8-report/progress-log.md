@@ -3945,3 +3945,39 @@ LLM 跑的是 **1 个种子**（协议 `env_seed=0`），而我一直在用 **3 
 补 `target agreement` / `same_target_unresolved` 计数与 `pending_age_s` 维护 → 跑
 **`adm_noout × seed0 × 200 epoch` 仪器闸门**（只查：target agreement 是否正常、semantic episodes 是否非零）
 → **两项都过才**启动 `adm_noout / adm_out3 / polar_c0.05 × seed0 × 720 epoch`。
+
+---
+
+## §7.101 v3 接线完成、查出一个真实的仪器缺陷；**闸门尚未跑完**
+
+**已修的两处仪器问题（都在本轮查出）**：
+
+1. **`pending_age_s` 未接线**（上轮遗留）⇒ 改为**在 `brief()` 内维护**（desired≠confirmed 时开始计时），
+   **不再依赖外部调用点**——上一轮就是因为找不到调用点锚点而整次 patch 没写盘。
+2. **prompt 引用了状态里不存在的键**：system prompt 让模型看 `confirmed_target`，
+   而状态里只有 `report_period` ⇒ **模型被指向一个不存在的字段**。已修（状态加 `confirmed_target`）。
+   **这是本轮唯一查出的实质仪器缺陷。**
+
+**patch 方式已改**：这次**先校验全部 5 个锚点，全部匹配才写盘**（上次是逐个 assert、第 5 个失败⇒整次没写）。
+已核实 `计数已写入: True`。
+
+**v3 状态渲染已用桩对象逐个核对**（零 API 花费），例如：
+
+```
+{"time_s":7200,"nodes":[{"id":"n00","seen":true,"last_heard_age_s":3600,
+ "report_period":3600,"desired_target":900,"confirmed_target":3600,
+ "pending_effect":true,"pending_age_s":0,"aoi_s":3600}]}
+```
+
+⇒ **状态确实把"desired 与 confirmed 不一致且仍 unresolved"作为事实摆出来了**，没有隐藏。
+
+**闸门结果（如实记，尚未通过）**：
+
+| 尝试 | 结果 |
+|---|---|
+| 修 `confirmed_target` **之前**的 200 epoch | **200/200 noop**、`target agreement 0/0`、`episodes 0` ⇒ **闸门不通过**；但那次 prompt 指向了不存在的键，**只能算"键名错版"的读数** |
+| 修 **之后**的 200 epoch | **未跑完**：v3 状态更大（**843 输入 token/次**，原 327），200 次超出我单次命令的 560 s 上限 |
+| 修之后 3 次探针 | 管道正常：3/3 noop、零解析失败、计数与键名都在 |
+
+⇒ **按规矩：闸门两项（target agreement 正常、semantic episodes 非零）都还没有在"键名正确版"上取到，
+所以不启动全量 3 × 720。** 下一轮把闸门改成**后台作业**跑（预计 8–12 min，约 ¥0.5）。
