@@ -227,3 +227,4 @@ python3 code/analysis/steady_gap.py --seeds 20 --tag q3_dpu2 --downlink-per-upli
 | `llm_naive_v4_gate.log` | 协议 `llm_naive_v4` **仪器闸门**原始日志（`adm_noout × seed0 × 200 epoch`）：`need_action_epochs 200/200`、`actions {noop:196, set_report_period:4}`、`target agreement 4/0`、`same-target unresolved replan 0`、episodes 4。**日志不是读数** |
 | `llm_naive_v4_full.log` | 同上协议的三条件全量（`adm_noout/adm_out3/polar_c0.05`）——**该跑被主动中止**（它在跑一个 prompt 措辞仍有缺陷的版本，见 `27-...` 与 README 顶部）。**仅 2 行，无读数** |
 | `llm_naive_v5_gate.log` | 协议 `llm_naive_v5` 仪器闸门原始日志（唯一改动：`pending_effect` 的 prompt 措辞改为描述**传输状态**）。**日志不是读数** |
+| `llm_naive_v5_full.log` | 协议 `llm_naive_v5` 三条件全量原始日志（`adm_noout/adm_out3/polar_c0.05 × seed0 × 720 epoch`）。**窄用途**：只回答"给定目标下的执行行为"，**不回答**规划/调度能力；**不以是否出现坏重试作为筛选模型或 prompt 的标准**（见 `28-...` 交付 1）。**日志不是读数** |
