@@ -3201,3 +3201,27 @@ binding 0.004 ✓、Cleveland ✓（`C=4` ⇒ cadence-infeasible）。
 **② 全量投图（285 文件）构造无效**：分类器用 `cfg["soc"]`，而多数 config 没有这个键 ⇒
 284 个文件落入同一格、跨异质条件池在一起，极差不可比。**如实记为无效构造，不写成结论。**
 有效版本需要：从各自 config/清单取 `soc` 与容量、只在同类条件内比极差、极差用点。
+
+---
+
+## §7.76 闭环改造第 1 步：把 `T_evidence` 变成可测的（只加诊断字段）
+
+新 goal（`goal-993de5d8`）把 `T_ctrl` 从「一条已备好的命令何时落地」改成**闭环**：
+`T_loop = T_evidence + T_return`，并用**条件概率** `A(a) = P(T_loop > T_harm(a) | T_evidence ≤ T_deadline)`
+把 authority failure 从 delivery failure 里分开（无条件那个量把「数据没到」与「到了但救不回来」混成一个数）。
+
+**查清了两条腿的可测性**：
+
+| 腿 | trace 里有吗 | 结论 |
+|---|---|---|
+| `T_return = t_applied − t_plan` | `plan`（含 `op`/值）与 `applied`（含 `field`/值）**两种事件都在** | **可直接测**（按 节点+值 配对）|
+| `T_evidence` | `state` 是**节点侧自己的时刻**；`plan` 只有中心相信的值——**接收侧时刻没有** | **原本测不到** |
+
+**修法（只加诊断，不碰策略、不改条件）**：把 `view.soc_age_s(node_id)` 写进 `plan` 事件。
+`soc_age_s()` 按**源时刻**算（测试 [29] 已覆盖），所以它就是**这次决策所用证据的年龄** = `T_evidence`。
+加了之后**读数逐位不变**（测试 [28] 钉住"开 trace 不改读数"）。
+
+**验证**：`test_instance.py` 30 组**全部通过**、`run_checks.py` **18/18**、容差未动。
+
+**下一轮**：在**已登记条件**上开 trace 重跑（同条件、只加诊断），测出 `T_evidence` / `T_return` 分布，
+再算 `A(a)`（**连条件样本量 n 一起报**）。**那两格新条件一格都不开。**

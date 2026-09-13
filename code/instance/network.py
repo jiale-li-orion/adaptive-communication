@@ -555,9 +555,16 @@ class Instance:
         for node_id, payload in self.policy.plan(view):
             self._note_intent_reason(node_id, payload, view)
             if self.trace:
+                # **诊断字段（不参与判断）**：把中心**这条证据有多旧**一起记下来。
+                # 为什么必须记：闭环的资格先用 `T_loop` 的两条腿衡量，而 `T_evidence`
+                # （新证据真正到中心的时延）在 trace 里**原本测不到**——`state` 是节点侧
+                # 自己的时刻，`plan` 只有中心相信的值，没有接收侧时刻。`soc_age_s()` 按
+                # **源时刻**算（测试 [29] 覆盖），所以它就是这个决策所用证据的年龄。
+                # 只加字段、不改条件、不改策略；加了之后读数逐位不变（测试 [28] 钉住）。
                 self.trace_events.append(
                     (t_s, node_id, "plan", view.soc_of(node_id), payload.get("op"),
-                     payload.get("period_s", payload.get("interval_s"))))
+                     payload.get("period_s", payload.get("interval_s")),
+                     view.soc_age_s(node_id)))
             self._send_command(node_id, payload, t_s)
 
         # 2) 到上报周期的节点发一批（缓存里全是未确认记录 → 自动补发）
