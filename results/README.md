@@ -25,8 +25,10 @@
 |---|---|---|---|
 | `monitoring_trajectories_business2.json` | `--days 3 --seeds 20 --arms local_rules,versioned_config,vtc_style,ours,oracle --tag business2` | 20 | **业务层定稿表**：五条臂 × 七条轨迹（§六、§7.30、§7.32） |
 | `monitoring_trajectories_2x2v3.json` | `--days 3 --seeds 20 --arms rule__naive,rule__contract,llm__naive,llm__contract --tag 2x2v3` | 20 | **2×2 定稿表**：planner 因子与 runtime 因子的分解（§六）。**用 `scripted` 后端** |
-| `monitoring_trajectories_restart20v4.json` | `--days 3 --seeds 20 --arms rule__naive,rule__contract,llm__naive,llm__contract,ours,versioned_config --trajectories coordinator_restart --tag restart20v4` | 20 | **重启定稿表**（§7.30） |
-| `monitoring_trajectories_ablate20.json` | `--days 3 --seeds 20 --arms ours,ours_no_evidence,ours_no_contract,versioned_config,vtc_style --trajectories none,ack_lost,stale_command --tag ablate20` | 20 | 两条只改一处的消融与两条强基线的同批对照（§7.26） |
+| `monitoring_trajectories_restart20v4.json` | `--days 3 --seeds 20 --arms rule__naive,rule__contract,llm__naive,llm__contract,ours,versioned_config --trajectories coordinator_restart --tag restart20v4` | 20 | **重启定稿表**（§7.30）。**该表的重启对照不公平，读数已由 `monitoring_trajectories_fairrestart2.json` 取代，不得再单独引用** |
+| `monitoring_trajectories_fairrestart2.json` | `--days 3 --seeds 20 --arms versioned_config,versioned_config_shadow,versioned_config_version_only,vtc_style,ours,ours_amnesiac,ours_reconstructed,oracle --trajectories none,coordinator_restart --tag fairrestart2` | 20 | **恢复归因定稿表**（§7.33）：给基线合理的持久化之后，重启轴上本文不再领先 |
+| ~~`monitoring_trajectories_ablate20.json`~~ | — | 20 | **已撤下**：该文件由旧代码产出，`ours` 记 63.00 / 下行 682.5，而当前代码在同一臂同一轨迹同一批种子上给 89.07 / 604.8。**覆盖与下行两列都不一致，与主表不可拼接。** 替代文件见下一行 |
+| `monitoring_trajectories_ablate20v2.json` | `--days 3 --seeds 20 --arms ours,ours_no_evidence,ours_no_contract,versioned_config,vtc_style --trajectories none,ack_lost,stale_command --tag ablate20v2` | 20 | 两条只改一处的消融与两条强基线的同批对照（§7.35）。`ours` 在 `none` 上记 89.07、下行 604.8，**与 `business2` 逐位一致**，故与主表可拼接 |
 | `monitoring_trajectories_paths.json` | `--days 3 --seeds 2 --arms rule__contract --trajectories none --paths backhaul:0.62,backup:0.55 --runtime-paths 0,1 --tag paths` | **2** | 独立管理路径对照：runtime 会发现并使用备用回传 |
 | `monitoring_trajectories_paths_primary_only.json` | 同上，`--runtime-paths 0` | **2** | 同部署下只用主路径的对照 |
 
@@ -99,7 +101,24 @@ done
 | `relay_siting_summary.txt`、`relay_run.log` | `code/physics/relay_siting.py`、`code/physics/coverage_map.py` | 见 `code/README.md` | 带高程与坡度约束的中继选址，与无约束版本互为对照 |
 | ~~`relay_availability_sweep.txt`~~、~~`sweeps.log`~~ | — | **已归档**：同上（`method_comparison.py` 的中继可用度扫描）；重跑命令见第二节 |
 
-## 六、已撤销
+## 六、稳态差距归因：`code/analysis/steady_gap.py`
+
+无故障稳态（trajectory `none`）下 `ours` 与 `rule__contract` 之间 5.3 个点的来源归因。
+13 条配置各改一处，同部署、同需求、同能量、同机会额度。结论见
+`docs/s8-report/q3-steady-state-gap.md`。
+
+| 文件 | 命令 | 种子 | 说明什么 |
+|---|---|---|---|
+| `steady_gap_q3_attrib.json` | `--seeds 20 --tag q3_attrib` | 20 | 每条臂的覆盖率/观测空窗/下行次数：参数逐项放宽 + 三条结构性消融（W1 关闭、W3 先于 W1、去 in-flight 否决） |
+| `steady_gap_counters_q3_attrib.json` | `steady_gap_counters.py --seeds 20 --tag q3_attrib` | 20 | 同一 runtime 的逐分支决策计数：`skip/in_flight` 与其中「有 W1 请求未结」的占比 |
+
+```bash
+export PYTHONPATH="$PWD/libs/pylibs"
+python3 code/analysis/steady_gap.py --seeds 20 --tag q3_attrib
+python3 code/analysis/steady_gap_counters.py --seeds 20 --tag q3_attrib
+```
+
+## 七、已撤销
 
 `_withdrawn/MANIFEST.md` 逐条列出被删除的结果文件及其失效原因。被删的文件在 git 历史里
 仍可找回，但**不得**再用作证据。三条撤销主线：
@@ -110,7 +129,7 @@ done
 3. 精确版本 CAS 被做成每次写前必读，违反契约 §7 的公平性要求，据此得出的"更严契约净亏"
    作废。
 
-## 七、未纳入本目录的中间产物
+## 八、未纳入本目录的中间产物
 
 `data/` 是**输入**不是结果。它的来源见 `data/README.md`，逐条复现命令与"跑对了的标志"
 见 `data/REPRODUCE.md`。`libs/` 是第三方依赖。

@@ -157,13 +157,22 @@ class VersionedConfigPolicy:
 
     name = "versioned_config"
 
-    def __init__(self, write_dwell_s: int = DWELL_S, write_ttl_s: int = COMMAND_TTL_S) -> None:
+    def __init__(self, write_dwell_s: int = DWELL_S, write_ttl_s: int = COMMAND_TTL_S,
+                 durability: str = "none") -> None:
         if write_dwell_s < 0:
             raise ValueError("write_dwell_s must not be negative")
         if write_ttl_s <= 0:
             raise ValueError("write_ttl_s must be positive")
+        if durability not in ("none", "shadow", "counter"):
+            raise ValueError(f"unknown durability {durability!r}; "
+                             f"have ('none', 'shadow', 'counter')")
         self.write_dwell_s = write_dwell_s
         self.write_ttl_s = write_ttl_s
+        # Where this center keeps the reconciliation document. `none` is a process that holds it
+        # only in memory; `shadow` is the documented behaviour of a device-shadow platform, where
+        # the document lives in the cloud and the application reads it back after a restart. The
+        # difference is a property of the deployment being modelled, so both are measured.
+        self.durability = durability
 
         # per-node center state: the desired value is absent when the center holds no announcement
         self.desired: dict[str, str] = {}
@@ -194,11 +203,28 @@ class VersionedConfigPolicy:
         from what it can recompute. Leaving them intact would make the restart a non-event for
         every arm that keeps its bookkeeping here, which is exactly the fault this trajectory is
         supposed to exercise.
+
+        With `durability == "shadow"` the reconciliation document survives instead, because it was
+        never in this process: the platform holds it and the restarted application reads it back.
+        What is lost either way is the in-flight bookkeeping -- which commands this process had
+        already put on the wire and when -- because that is application state and not part of the
+        document a shadow platform stores.
         """
         self.restarts += 1
+        survivors = {
+            # The whole reconciliation document, which is what a shadow platform keeps.
+            "shadow": ("desired", "desired_version", "identities", "reported",
+                       "reported_version", "reported_source", "reported_at"),
+            # Only the counters: no record of what a node last reported. This exists to answer
+            # "is persisting the version number enough" separately from "must the whole document
+            # survive", because the answer decides how much the recovery claim actually costs.
+            "counter": ("desired", "desired_version", "identities"),
+        }.get(self.durability, ())
         for name in ("desired", "desired_version", "issued_version", "issued_profile",
                      "issued_at", "deadline", "reported", "reported_version", "reported_source",
                      "reported_at", "identities", "last_decision"):
+            if name in survivors:
+                continue
             getattr(self, name).clear()
 
     # ------------------------------------------------------------------ reading
@@ -382,16 +408,24 @@ class VTCPolicy:
 
     def __init__(self, base_backoff_s: int = VTC_BACKOFF_BASE_S,
                  max_backoff_s: int = VTC_BACKOFF_MAX_S,
-                 command_ttl_s: int = COMMAND_TTL_S) -> None:
+                 command_ttl_s: int = COMMAND_TTL_S,
+                 durability: str = "none") -> None:
         if base_backoff_s < 0:
             raise ValueError("base_backoff_s must not be negative")
         if max_backoff_s < base_backoff_s:
             raise ValueError("max_backoff_s must be at least base_backoff_s")
         if command_ttl_s <= 0:
             raise ValueError("command_ttl_s must be positive")
+        if durability not in ("none", "store"):
+            raise ValueError(f"unknown durability {durability!r}; have ('none', 'store')")
         self.base_backoff_s = base_backoff_s
         self.max_backoff_s = max_backoff_s
         self.command_ttl_s = command_ttl_s
+        # `store` is the same pattern with a durable store behind it: the verdicts, the open
+        # commands and their logical identities survive the process. It is measured so that the
+        # restart table has a verify-then-act arm whose recovery is not decided by whether its
+        # bookkeeping happened to be in a dictionary.
+        self.durability = durability
         self._normal_profile = PROFILE_NORMAL
         self.reset()
 
@@ -417,8 +451,14 @@ class VTCPolicy:
         restart that left them intact would make this arm immune to the fault for a reason that has
         nothing to do with its protocol, and would leave the restart trajectory measuring which
         policies happen not to store state in a dictionary rather than what they can recover.
+
+        With `durability == "store"` the same state survives, because the pattern is implemented
+        against a store rather than against a dictionary. That is the comparison the restart table
+        needs: what the pattern can recover, against what it merely happens to remember.
         """
         self.restarts += 1
+        if self.durability == "store":
+            return
         for name in ("target", "issued", "issued_at", "deadline", "attempts", "verdict",
                      "unknown_streak", "backoff_s", "logical", "issues", "unresponsive",
                      "last_decision"):
@@ -668,7 +708,20 @@ class RuntimePolicy:
     # change to the far-side contract, which stays identical for every arm.
     durable_storage = True
 
-    def on_restart(self, lost=(), unresolved=()) -> None:
+    # What survives the process. `memory` is what this arm used to be by default: nothing is
+    # cleared and nothing is rebuilt, so the restart is survivable only because the same Python
+    # object is still alive. That is not durability and it cannot be evidence for durability, so
+    # the two honest alternatives are measured next to it:
+    #   `amnesia`  the process really died and there is no log: everything this object held is
+    #              gone, and the runtime must re-derive. `durable_storage` is off for this arm, so
+    #              the run does not even hand it a log to recover from.
+    #   `journal`  the process really died and the log really exists: the volatile state is dropped
+    #              and what comes back comes back from the journal, through the same replay a
+    #              restarted process would use. If this arm matches `memory`, the durability claim
+    #              is implemented rather than assumed; if it does not, the claim was the object.
+    durability = "memory"
+
+    def on_restart(self, lost=(), unresolved=(), journal=None) -> None:
         """A restarted coordinator keeps knowledge and loses the right to act on it immediately.
 
         Recovery restores what was in flight; it does not restore the authority to re-send it. Until
@@ -676,10 +729,47 @@ class RuntimePolicy:
         what happened to the last attempt, so re-dispatching is an unauthorised action rather than a
         retry. The unresolved set is recorded so the profile loop can require evidence first.
         """
-        self.restarts += 1
-        self.restart_unresolved += len(unresolved)
-        self.awaiting_reconcile.update(op.split(":")[0] for op in unresolved)
-        self.restart_lost += len(lost)
+        restarts = self.restarts
+        restart_unresolved = self.restart_unresolved + len(unresolved)
+        restart_lost = self.restart_lost + len(lost)
+        reconcile_nodes = set(op.split(":")[0] for op in unresolved)
+
+        if self.durability == "memory":
+            self.restarts = restarts + 1
+            self.restart_unresolved = restart_unresolved
+            self.restart_lost = restart_lost
+            self.awaiting_reconcile.update(reconcile_nodes)
+            return
+
+        # The process died. Rather than clearing the dictionaries by hand -- which leaves the same
+        # object with a wiped state, and would let a field somebody forgets to list quietly live
+        # on -- the object is put back through its own constructor and then rebuilt from the log.
+        # That is what a restarted process is: a new object that has nothing but its durable
+        # storage to go on.
+        kwargs = dict(self._constructed_with)
+        self.__init__(**kwargs)
+        self.restarts = restarts + 1
+        self.restart_unresolved = restart_unresolved
+        self.restart_lost = restart_lost
+        self.awaiting_reconcile = set(reconcile_nodes)
+        self.reconcile_since = None
+
+        if self.durability != "journal" or journal is None:
+            return
+        from operations import replay_contract_state
+        for node_id, state in replay_contract_state(journal).items():
+            # The version is the load-bearing scalar: the far side refuses anything below the
+            # highest version it has already applied, so a sender that starts its counter over has
+            # every subsequent write fenced no matter how correct the value is.
+            self.version[node_id] = int(state["version"])
+            logical = state.get("logical")
+            if isinstance(logical, str) and logical.startswith(f"{node_id}:"):
+                suffix = logical.rsplit(":", 1)[1]
+                if suffix.isdigit():
+                    # The stable identity is the second scalar. Restoring it keeps the far side
+                    # from reading a retry of an operation it already applied as a new one; without
+                    # it the retry still lands, it is just applied twice.
+                    self.logical[node_id] = int(suffix)
 
     def __init__(self, dwell_s: int = DWELL_S, ttl_s: int = COMMAND_TTL_S,
                  retry_budget: int = 3) -> None:
@@ -689,6 +779,11 @@ class RuntimePolicy:
             raise ValueError("ttl_s must be positive")
         self.dwell_s = dwell_s
         self.ttl_s = ttl_s
+        # What to rebuild this object with after a restart. Recorded here so that recovery puts the
+        # runtime back through its own constructor instead of hand-wiping a list of dictionaries,
+        # which is the difference between "a new process with a log" and "the same process with
+        # amnesia": only the first one is evidence about durability.
+        self._constructed_with = {"dwell_s": dwell_s, "ttl_s": ttl_s, "retry_budget": retry_budget}
 
         self.desired: dict[str, str] = {}
         self.logical: dict[str, int] = {}       # moves only when the desired value moves
@@ -1090,14 +1185,89 @@ class RuntimeNoContractPolicy(RuntimePolicy):
                            if k not in ("version", "logical")})
                 for node_id, payload in out]
 
-# Every arm the business layer compares, in the order the result tables report them. The runtime
-# is listed with the baselines because a comparison that omits it cannot say anything about it,
-# which is what the first P1 round did.
+
+# ---------------------------------------------------------------------- recovery arms
+# These are not extra methods. They are the same four methods with the one deployment property
+# that decides the restart table made explicit: where the coordinator's bookkeeping lives. The
+# first round of this comparison varied it silently -- the measured arm kept its state in a live
+# Python object while both baselines threw theirs away -- and then reported the difference as a
+# property of the methods.
+
+class ShadowDurableConfigPolicy(VersionedConfigPolicy):
+    """版本化配置臂，配一台真的设备影子：调和文档在平台上，重启后读回来。
+
+    这是 AWS IoT Device Shadow 的文档语义，不是本文对它的加强。基线原来的行为是"影子只存在
+    协调者进程的内存里"，那不是设备影子的恢复上限，而是一个没有持久化的自实现配置客户端。
+    """
+
+    name = "versioned_config_shadow"
+
+    def __init__(self, **kwargs) -> None:
+        kwargs["durability"] = "shadow"
+        super().__init__(**kwargs)
+
+
+class CounterOnlyDurableConfigPolicy(VersionedConfigPolicy):
+    """版本化配置臂，只保住版本计数器，不留"节点报了什么"。
+
+    与 `versioned_config_shadow` 的差别只有一处，问题也只有一处：恢复一个会被远端 fence 的
+    发送方，究竟需要持久化整份影子文档，还是只需要那个单调计数器。
+    """
+
+    name = "versioned_config_version_only"
+
+    def __init__(self, **kwargs) -> None:
+        kwargs["durability"] = "counter"
+        super().__init__(**kwargs)
+
+
+class StoreDurableVTCPolicy(VTCPolicy):
+    """verify-then-act 臂，背后是一个持久存储：判定、未决命令与逻辑身份都活过进程。"""
+
+    name = "vtc_style_durable"
+
+    def __init__(self, **kwargs) -> None:
+        kwargs["durability"] = "store"
+        super().__init__(**kwargs)
+
+
+class RuntimeAmnesiacPolicy(RuntimePolicy):
+    """本文 runtime，进程真的死了，而且没有日志。
+
+    与 `ours` 的差别只有一处：重启后不保留任何内存状态，也不重建。它回答的是"89.07 究竟是
+    runtime 的性质，还是同一个 Python 对象还活着的性质"。`durable_storage = False` 让运行本身
+    也不给它日志，因此这条臂拿到的能力不比另外两条基线多。
+    """
+
+    name = "ours_amnesiac"
+    durable_storage = False
+    durability = "amnesia"
+
+
+class RuntimeReconstructedPolicy(RuntimePolicy):
+    """本文 runtime，进程真的死了，但日志真的在。
+
+    重启后内存状态全部丢弃，只从 journal 回放重建。回放取的是远端据以 fence 的两个标量：
+    每个节点用过的最高契约版本，以及那条版本携带的稳定逻辑身份。若这条臂与 `ours` 读数相同，
+    持久性主张就是被实现过的；若不同，那 14 个点买的不是恢复能力，而是对象还活着。
+    """
+
+    name = "ours_reconstructed"
+    durable_storage = True
+    durability = "journal"
+
+
+# Every arm the business layer compares, in the order the result tables report them.
 BUSINESS_ARMS: dict[str, str] = {
     "local_rules": "runner:LocalRulesPolicy",
     VersionedConfigPolicy.name: "policies:VersionedConfigPolicy",
+    ShadowDurableConfigPolicy.name: "policies:ShadowDurableConfigPolicy",
+    CounterOnlyDurableConfigPolicy.name: "policies:CounterOnlyDurableConfigPolicy",
     VTCPolicy.name: "policies:VTCPolicy",
+    StoreDurableVTCPolicy.name: "policies:StoreDurableVTCPolicy",
     RuntimePolicy.name: "policies:RuntimePolicy",
+    RuntimeAmnesiacPolicy.name: "policies:RuntimeAmnesiacPolicy",
+    RuntimeReconstructedPolicy.name: "policies:RuntimeReconstructedPolicy",
     RuntimeNoEvidencePolicy.name: "policies:RuntimeNoEvidencePolicy",
     RuntimeNoContractPolicy.name: "policies:RuntimeNoContractPolicy",
     "oracle": "runner:OraclePolicy",

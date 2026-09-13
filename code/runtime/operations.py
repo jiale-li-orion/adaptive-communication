@@ -171,9 +171,15 @@ class JournalError(RuntimeError):
 # The field set is declared exactly, in both directions, so that a field added on the write side
 # and unknown on the read side fails at startup instead of producing a plausible wrong operation.
 JOURNAL_SCHEMA: dict[str, tuple[int, frozenset[str]]] = {
-    "register": (1, frozenset({"incarnation", "operation_id", "entity_id", "capability",
+    # v2 adds the two fields the far side actually fences on. They are not derivable from the rest
+    # of the entry: `operation_id` is the per-attempt identity the interface mints, while
+    # `contract_logical` is the stable identity the sender chose, and `arguments_hash` covers the
+    # interface arguments rather than the wire version. A log written before v2 therefore cannot
+    # reconstruct a sender's fencing state at all, which is why this is a version bump and not an
+    # optional field: a v1 log must be refused, never silently replayed into a wrong recovery.
+    "register": (2, frozenset({"incarnation", "operation_id", "entity_id", "capability",
                                "arguments_hash", "logical_intent", "epoch", "side_effect",
-                               "at"})),
+                               "contract_logical", "contract_version", "at"})),
     "dispatched": (1, frozenset({"operation_id", "attempts", "at"})),
     "observe": (1, frozenset({"operation_id", "observation"})),
     "settle": (1, frozenset({"operation_id", "outcome", "detail", "at"})),
@@ -384,12 +390,19 @@ class OperationRegistry:
     # ------------------------------------------------------------------ identity
     def register(self, entity_id: str, capability: str, arguments: dict,
                  logical_intent: str, tick: int, side_effect: bool,
-                 epoch: int | None = None) -> Operation:
+                 epoch: int | None = None, contract_logical: str | None = None,
+                 contract_version: int | None = None) -> Operation:
         """Durably record the operation BEFORE anything is sent.
 
         Sending first and recording second leaves a window where the coordinator can crash
         having dispatched an effect it has no record of: a ghost operation that may run, may
         have run, and can never be reconciled. There is no such window here.
+
+        `contract_logical` and `contract_version` are the fields the sender put on the wire for
+        the far side's dedup and fencing. They are recorded here rather than derived later
+        because that is the only way a restarted coordinator can know which values it has
+        already used; a log without them replays into a sender whose version counter starts
+        over, and the far side fences everything it then sends.
         """
         self._n += 1
         self._epoch = self._epoch + 1 if epoch is None else max(epoch, self._epoch + 1)
@@ -412,7 +425,9 @@ class OperationRegistry:
                                 entity_id=entity_id, capability=capability,
                                 arguments_hash=op.arguments_hash,
                                 logical_intent=logical_intent, epoch=op.epoch,
-                                side_effect=side_effect, at=tick)
+                                side_effect=side_effect,
+                                contract_logical=contract_logical,
+                                contract_version=contract_version, at=tick)
         return op
 
     def bump(self, key: str, n: int = 1) -> None:
@@ -664,6 +679,35 @@ def recover(journal: Journal) -> OperationRegistry:  # noqa: D401
                 op.settled_at = e["at"]
                 op.detail = e.get("detail", "")
     return reg
+
+
+def replay_contract_state(journal: Journal) -> dict[str, dict]:
+    """Rebuild, from the journal alone, what each entity last saw on the wire.
+
+    Returns `{entity_id: {"logical": str | None, "version": int}}`, where `version` is the highest
+    contract version this coordinator ever dispatched for that entity and `logical` is the stable
+    identity that version carried. Those two values are exactly what the far side fences on, so a
+    coordinator that can restore them can go on writing; one that cannot has to start its counter
+    over and will have every write refused as older than what the entity already applied.
+
+    The counter is a high-water mark, not a history. Nothing here needs the order of past
+    operations or their outcomes -- which is the point: the durability a fencing-aware sender
+    requires is two scalars per entity, and a claim that it needs the full operation history is
+    not supported by what replay actually consumes.
+    """
+    journal.validate()
+    state: dict[str, dict] = {}
+    for e in journal.entries:
+        if e["kind"] != "register":
+            continue
+        version = e["contract_version"]
+        if version is None:
+            continue
+        entity = e["entity_id"]
+        current = state.get(entity)
+        if current is None or int(version) > current["version"]:
+            state[entity] = {"logical": e["contract_logical"], "version": int(version)}
+    return state
 
 
 def unresolved_intents(reg: OperationRegistry) -> dict[str, Operation]:

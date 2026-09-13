@@ -47,6 +47,7 @@ CHECKS = {
         ("experiments/test_supply.py", "供电模型与可达性耦合"),
         ("experiments/test_faults.py", "六类诊断故障注入"),
         ("experiments/test_policies.py", "强基线：版本化配置与 VTC 风格恢复"),
+        ("experiments/test_recovery.py", "恢复归因：从日志重建 runtime 的两个标量"),
         ("experiments/audit_fairness.py", "业务层公平性审计"),
     ],
 }

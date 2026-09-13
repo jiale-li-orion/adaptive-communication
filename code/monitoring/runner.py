@@ -35,6 +35,7 @@ for _p in (_HERE, *(_os.path.join(_CODE, d) for d in ("physics", "runtime",
 # -----------------------------------------------------------------------------
 
 from dataclasses import dataclass, field
+import inspect
 
 from task_generator import (build_deployment, build_demand, profile_for_hour,
                             RISK_WINDOWS_H, PROFILE_NORMAL)
@@ -133,17 +134,30 @@ class OraclePolicy(Policy):
         return out
 
 
-def _after_coordinator_restart(policy, lost=(), unresolved=()):
+def _after_coordinator_restart(policy, lost=(), unresolved=(), journal=None):
     """Give a policy the chance to forget what it kept only in memory.
 
     The run does not decide what a runtime loses on restart; it only guarantees the restart
     happened. A policy that keeps durable state across the restart simply does not implement the
     hook, and one that holds it in memory does. Without this the restart fault would be a no-op and
     would measure nothing.
+
+    A policy that declares a journal is handed the log, because that is the only thing a restarted
+    process can legitimately recover from. Handing it the policy object's own live dictionaries
+    instead is what makes a restart look survivable for a reason that has nothing to do with
+    durability. The journal is passed only to hooks that ask for it, so every existing arm keeps
+    its declared behaviour.
     """
     hook = getattr(policy, "on_restart", None)
-    if callable(hook):
-        hook(lost=list(lost), unresolved=list(unresolved))
+    if not callable(hook):
+        return policy
+    kwargs = {"lost": list(lost), "unresolved": list(unresolved)}
+    try:
+        if "journal" in inspect.signature(hook).parameters:
+            kwargs["journal"] = journal
+    except (TypeError, ValueError):
+        pass
+    hook(**kwargs)
     return policy
 
 
@@ -177,6 +191,14 @@ def run_episode(policy: Policy, hours: int = 72, seed: int = 0,
 
     in_flight: dict[str, PendingCommand] = {}
     view_in_flight: frozenset = frozenset()
+    # The center's belief about which nodes have a command outstanding. This is deliberately NOT
+    # the same thing as `in_flight`, which is the network's bookkeeping: a command sitting in the
+    # gateway is still undelivered after the coordinator has died, but a coordinator without
+    # durable storage does not know it ever sent it. Exposing `in_flight` directly told every arm
+    # what a durable center would have known, which is a capability the fault is supposed to
+    # remove -- and it removed it for the arms that keep state in an object while leaving it for
+    # the arm that was being measured.
+    center_belief: set[str] = set()
     # Every command the center issues goes through the interface layer, so the run leaves an
     # auditable trail of what was asked, what was observed, and what is in force.
     # Durable storage is a capability of the center. `journal` is the only thing that differs
@@ -425,8 +447,14 @@ def run_episode(policy: Policy, hours: int = 72, seed: int = 0,
                     restart_unresolved += len(iface.recovered_unresolved)
                 else:
                     restart_lost += len(lost)
+                    # The belief goes with the memory. The commands themselves stay in the
+                    # network -- the gateway still holds them and may still deliver them -- but a
+                    # center that kept no record cannot claim to know they are outstanding, and
+                    # telling it so would hand back the capability the restart just removed.
+                    center_belief.clear()
                 policy = _after_coordinator_restart(policy, lost=lost,
-                                                    unresolved=iface.recovered_unresolved)
+                                                    unresolved=iface.recovered_unresolved,
+                                                    journal=journal)
 
         # ---- what the scenario demands, disclosed to the policy only if it is granted ----
         # The center knows the whole schedule once it holds the announcement, including when the
@@ -463,7 +491,8 @@ def run_episode(policy: Policy, hours: int = 72, seed: int = 0,
                 record = iface.set_monitoring_profile(
                     node_id, payload["profile"], generation=command_seq,
                     expires_at=t_s + 6 * 3600, now_s=t_s,
-                    path=int(payload.get("path", 0)))
+                    path=int(payload.get("path", 0)),
+                    logical=payload.get("logical"), version=payload.get("version"))
             elif op == OP_REQUEST_MEASUREMENT:
                 record = iface.request_measurement(
                     node_id, payload["request_id"], payload["deadline"], now_s=t_s)
@@ -498,6 +527,7 @@ def run_episode(policy: Policy, hours: int = 72, seed: int = 0,
                 in_flight[record.identity] = PendingCommand(
                     identity=record.identity, node_id=node_id, payload=payload, issued_at=t_s,
                     expires_at=record.deadline)
+                center_belief.add(node_id)
 
         # Commands the network held are released here, possibly long after a newer one landed.
         still_held = []
@@ -557,7 +587,7 @@ def run_episode(policy: Policy, hours: int = 72, seed: int = 0,
             for identity in awaiting_observation.pop(item.node_id, ()):
                 iface.note_observed(identity, t_s)
 
-        view_in_flight = frozenset(c.node_id for c in in_flight.values())
+        view_in_flight = frozenset(center_belief & {c.node_id for c in in_flight.values()})
 
         # ---- nodes sample, upload, and receive whatever the window carries ----
         for node_id, rt in runtimes.items():

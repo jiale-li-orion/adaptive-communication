@@ -155,7 +155,9 @@ class AgentInterface:
         """
         self.passive_status[node_id] = (at_s, dict(payload))
 
-    def _enqueue(self, record: ActionRecord, payload_bytes: int, ttl_s: int) -> ActionRecord:
+    def _enqueue(self, record: ActionRecord, payload_bytes: int, ttl_s: int,
+                 contract_logical: str | None = None,
+                 contract_version: int | None = None) -> ActionRecord:
         message = DownlinkMessage(identity=record.identity, kind=record.kind,
                                   payload_bytes=payload_bytes, enqueued_at=record.issued_at,
                                   expires_at=(record.deadline if record.deadline is not None
@@ -177,11 +179,15 @@ class AgentInterface:
         if self.journal is not None:
             # Registered before it is sent, and sent means dispatched. The order matters: an
             # operation written after its dispatch is one a crash can lose while its effect stands.
+            # The two contract fields the far side fences on are part of the record; without them
+            # a replay cannot tell a restarted sender which versions it has already used, and the
+            # counter it rebuilds starts over against a far side that still remembers.
             self.journal.record("register", incarnation="c0", operation_id=record.identity,
                                 entity_id=record.node_id, capability=record.kind,
                                 arguments_hash=str(sorted(record.parameters.items())),
                                 logical_intent=record.identity, epoch=record.attempts,
-                                side_effect=True, at=record.issued_at)
+                                side_effect=True, contract_logical=contract_logical,
+                                contract_version=contract_version, at=record.issued_at)
             self.journal.record("dispatched", operation_id=record.identity,
                                 attempts=record.attempts, at=record.issued_at)
         return record
@@ -310,11 +316,17 @@ class AgentInterface:
 
     def set_monitoring_profile(self, node_id: str, profile: str, generation: int,
                                expires_at: int | None, now_s: int,
-                               path: int = 0) -> ActionRecord:
+                               path: int = 0, logical: str | None = None,
+                               version: int | None = None) -> ActionRecord:
         """Assign a monitoring profile. A versioned assignment in the profile conflict domain.
 
         Re-sending the same value costs an opportunity and is not harmful: applying a profile twice
         leaves the same schedule in force. That is why it is scored as cost and not as a fault.
+
+        `logical` and `version` are the fields the sender chose to put on the wire for the far
+        side's receipt and fencing. They are passed in rather than minted here because they are the
+        sender's contract choices, and they are written to the journal so that a restarted sender
+        can reconstruct the values it has already used.
         """
         identity = self._next_identity(node_id, f"profile:{profile}:g{generation}")
         record = ActionRecord(identity=identity, kind="set_monitoring_profile", node_id=node_id,
@@ -322,7 +334,19 @@ class AgentInterface:
                                           "path": path},
                               conflict_domain=DOMAIN_PROFILE, issued_at=now_s,
                               deadline=expires_at)
-        return self._enqueue(record, payload_bytes=16, ttl_s=6 * 3600)
+        return self._enqueue(record, payload_bytes=16, ttl_s=6 * 3600,
+                             contract_logical=logical, contract_version=version)
+
+    def replay_contract_state(self) -> dict[str, dict]:
+        """What the journal says this coordinator last put on the wire, per node.
+
+        Empty without a journal: a center that kept no durable record cannot answer this, and
+        returning an empty map is the honest answer rather than a guess.
+        """
+        if self.journal is None:
+            return {}
+        from operations import replay_contract_state
+        return replay_contract_state(self.journal)
 
     def request_measurement(self, node_id: str, request_id: str, deadline: int,
                             now_s: int) -> ActionRecord:
