@@ -63,16 +63,23 @@ def episodes(trace: list, deadline_s: int = DEADLINE_S) -> dict:
     # **每次尝试的层**：`sent` 事件存在 ⇒ 过了 layer 1（center→gateway 回传可用）；
     # 不存在 ⇒ 当次尝试就死在 layer 1。epoch 级终局用它来分"死在第 1 层还是第 2 层"。
     sent_keys = {(e[0], e[1], e[4], e[5]) for e in trace if e[2] == "sent"}
-    applied: dict = {}          # (node, op) -> [(t, value)]
+    # 尝试 → 逻辑身份：`sent` 事件带 `logical`，用它把"某一次尝试"与"某一次 applied"对上。
+    sent_logical = {(e[1], e[4], e[5], e[0]): e[3] for e in trace
+                    if e[2] == "sent" and len(e) > 5}
+    # `applied` 池带上 **logical（身份）**：旧 target 的"迟到生效"必须按身份认定，
+    # 按值认定会把"同一目标的重发"也算进去（`aoi` 67% 是重发）。
+    applied: dict = {}          # (node, op) -> [(t, value, logical)]
     for e in trace:
         if e[2] == "applied":
-            applied.setdefault((e[1], e[3]), []).append((e[0], e[4]))
+            applied.setdefault((e[1], e[3]), []).append(
+                (e[0], e[4], e[5] if len(e) > 5 else None))
     plans: dict = {}            # (node, op) -> [(t, value, reason)]
     for e in trace:
         if e[2] == "plan":
             plans.setdefault((e[1], e[4]), []).append(
                 (e[0], e[5], e[7] if len(e) > 7 else None))
 
+    obsolete_ids: set = set()     # 收紧后的 obsolete apply 集合（按身份去重）
     out = []
     for (nid, op), ps in plans.items():
         ps.sort()
@@ -85,6 +92,18 @@ def episodes(trace: list, deadline_s: int = DEADLINE_S) -> dict:
             next_start = segs[k + 1]["start"] if k + 1 < len(segs) else t_end + 1
             ap = [a for a in applied.get((nid, op), ())
                   if sg["start"] <= a[0] <= next_start and a[1] == sg["target"]]
+            # **obsolete apply（收紧判据）**：本段已因"出现新 target"而被 supersede，
+            # 却仍有一个**同身份**的 applied 落在 `next_start` 之后 ⇒ 旧效果迟到生效。
+            # 只在 supersede 成立时才可能发生，所以判据挂在 k+1 < len(segs) 上。
+            if k + 1 < len(segs):
+                # **必须按本段自己的尝试身份**匹配，不能按值：目标若后来回到同一个值，
+                # 属于**后一个 episode** 的 applied 会被误算成前一段的迟到生效（踩过）。
+                my_ids = {sent_logical.get((nid, op, sg["target"], tt))
+                          for tt in sg["attempts"]}
+                my_ids.discard(None)
+                for a in applied.get((nid, op), ()):
+                    if a[2] is not None and a[2] in my_ids and a[0] > next_start:
+                        obsolete_ids.add((nid, op, a[2], sg["target"], sg["start"]))
             rec = {"node": nid, "op": op, "target": sg["target"],
                    "start": sg["start"], "n_attempts": len(sg["attempts"]),
                    "opens": sg["reason"], "n_sent_attempts": 0}
@@ -104,17 +123,9 @@ def episodes(trace: list, deadline_s: int = DEADLINE_S) -> dict:
                 rec.update(terminal=("layer2" if nsent else "layer1"),
                            n_sent_attempts=nsent, settle_s=None)
             out.append(rec)
-    # **obsolete apply**：supersede 之后才生效的旧 target
-    obsolete = 0
-    for (nid, op), ps in plans.items():
-        for i in range(len(ps)):
-            for a in applied.get((nid, op), ()):
-                if a[0] > ps[i][0] and a[1] == ps[i][1]:
-                    later = [p for p in ps if p[0] > ps[i][0] and p[1] != ps[i][1]]
-                    if later and a[0] > later[0][0]:
-                        obsolete += 1
-                    break
-    return {"rows": out, "t_end": t_end, "obsolete_apply": obsolete}
+    return {"rows": out, "t_end": t_end,
+            "obsolete_apply": len(obsolete_ids), "obsolete_detail": sorted(
+                f"{n}:{o}:{v}:start{s}" for n, o, _lg, v, s in obsolete_ids)[:20]}
 
 
 def main() -> int:
@@ -129,7 +140,7 @@ def main() -> int:
         cfg = json.load(open(f"results/instance_{tag}.json", encoding="utf-8"))["config"]
         kw = build_kwargs(dict(cfg))
         kw.pop("trace", None)
-        rows, intent_n, obsolete = [], 0, 0
+        rows, intent_n, obsolete, obsolete_detail = [], 0, 0, []
         for seed in range(args.seeds):
             try:
                 d = one_seed(seed, arm=args.arm, trace=True, **kw)
@@ -139,6 +150,7 @@ def main() -> int:
             ep = episodes(d["_trace"])
             rows.extend(ep["rows"])
             obsolete += ep["obsolete_apply"]
+            obsolete_detail.extend(ep.get("obsolete_detail") or [])
             intent_n += sum(1 for e in d["_trace"] if e[2] == "plan")
         if not rows:
             print(f"== {tag} == 无 episode\n")
@@ -166,7 +178,8 @@ def main() -> int:
                   f"{sum(r['n_attempts'] for r in rows if r['terminal']=='closed')/closed:.1f}")
             print(f"   wasted reasoning per closed effect = "
                   f"{(sum(r['n_attempts'] for r in rows)-closed)/closed:.1f}")
-        print(f"   **obsolete apply（supersede 之后才生效）= {obsolete}**")
+        print(f"   **obsolete apply（按身份、supersede 之后才生效）= {obsolete}**"
+              + (f"  明细例: {obsolete_detail[:3]}" if obsolete_detail else ""))
         print()
     return 0
 
