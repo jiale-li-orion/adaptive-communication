@@ -235,6 +235,8 @@ def main() -> int:
     ap.add_argument("--hours", type=int, default=12, help="任务时长（小时）")
     ap.add_argument("--soc", type=float, default=0.0195, help="初始 SoC（Wh）")
     ap.add_argument("--report-period-s", type=int, default=3600)
+    ap.add_argument("--points", action="store_true",
+                    help="把已登记条件投到两轴上，逐条对已知标签")
     ap.add_argument("--traj", action="store_true",
                     help="算 T_harm^traj（沿来源派生采能轨迹）并与 T_harm^worst 对比")
     ap.add_argument("--peak", type=float, default=PEAK_WH_PER_HOUR,
@@ -247,6 +249,8 @@ def main() -> int:
 
     if args.blind:
         return blind()
+    if args.points:
+        return point_table(args.hours)
     if args.traj:
         return traj_table(args.hours, args.soc, args.seed, args.peak)
 
@@ -269,6 +273,46 @@ def main() -> int:
     for name, (pgb, pbb, pgu, pbu) in regimes().items():
         S = tctrl_survival(pgb, pbb, pgu, pbu, H)
         print(f"{name:<16}" + "".join(f"{S[h]:>8.4f}" for h in (1, 2, 4, 6, 8, 12)))
+    return 0
+
+
+#: 已登记的条件 → (上报周期 s, 业务义务 s, 初始 SoC Wh, 容量 Wh, **已知标签**)。
+#: 标签栏**不参与预测**，只用来事后对答案。SoC/容量取自各条件自己的登记 config。
+POINTS = (
+    ("名义 i.i.d.",      3600, 3600, 0.0195, 0.020, "臂间极差 3.5 点"),
+    ("宽松区 cap0.05",   900,  3600, 0.050,  0.050, "执行语义只剩代价，唯一收益上行 −19.5%"),
+    ("binding cap0.008", 900,  3600, 0.008,  0.008, "action timing 承重：122.2→131.1→132.2"),
+    ("binding cap0.004", 900,  3600, 0.004,  0.004, "同向更强：114.7→122.8→123.0"),
+    ("Cleveland 900s",   3600, 900,  0.0195, 0.020, "cadence 失败，掉 8–18 点"),
+)
+
+
+def predicted(c: float, r_iid: float, r_chirp: float) -> str:
+    """**事先写下的判决规则**（只看两轴，不看标签）。"""
+    if c > 1.0:
+        return "cadence-infeasible（业务等不起）"
+    if r_iid < 0.02:
+        return "control-useful（机会充足，策略差异可期）"
+    if r_iid < 0.20:
+        return "authority-limited（损害风险非零 ⇒ timing 承重）"
+    return "authority-lost（纠正机会基本没有）"
+
+
+def point_table(hours: int) -> int:
+    reg = regimes()
+    print(f"任务 {hours} h；配置取 dense600 的 load_h = {hourly_load(600, 900):.4e} Wh/h\n")
+    print(f"{'条件':<18}{'C':>6}{'T_harm^worst':>13}{'R_iid':>8}{'R_chirp':>9}"
+          f"{'判据预测':<38}{'已知标签':<30}")
+    print("-" * 124)
+    for name, rep, dl, soc, cap, label in POINTS:
+        c = cadence(rep, dl)
+        worst = soc / hourly_load(600, 900)
+        # 采能上界不参与判决（§八：它在最坏处紧、别处极松），判决只用零采能上界
+        r_iid = tctrl_survival(*reg["iid"], hours)[min(int(worst), hours)]
+        r_ch = tctrl_survival(*reg["chirpbox_6.38h"], hours)[min(int(worst), hours)]
+        print(f"{name:<18}{c:>6.2f}{worst:>12.2f}h{r_iid:>8.3f}{r_ch:>9.3f}"
+              f"{predicted(c, r_iid, r_ch):<38}{label:<30}")
+    print("\nR = S(T_harm^worst) = P(在这条配置把节点搞死之前，等不到下一次纠正机会)。")
     return 0
 
 
