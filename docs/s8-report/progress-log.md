@@ -3604,3 +3604,43 @@ return leg 总短于剩余伤害预算。**要让 `A` 非零就得让 `T_harm` �
 
 **`report_period` 方法线关闭**（只买 layer 2）。**agent infra backpressure 反而变强**
 （amplification 3.7–17.6×、wasted/closed 3.4–28.0，且不会把有用 retry 误判成失败）。
+
+---
+
+## §7.89 真实 LLM 闸门验证（goal-0508373d 预备）：**默认在思考，必须先显式关掉**
+
+**不计费口径的验证先做，免得全量跑歪。** 三次检查：
+
+| 检查 | 结果 |
+|---|---|
+| `DEEPSEEK_API_KEY` 在 `~/.bashrc` 里？ | **在**（`export DEEPSEEK_API_KEY=…`），但**当前非交互 shell 里没有**——必须每次 `eval "$(grep … ~/.bashrc)"` 取 |
+| 网络出口 | **通**：`api.deepseek.com/v1/models` 返回 **401**（不是连不上）⇒ 出口没问题 |
+| 鉴权 + 可用模型 | `GET /v1/models` → **200**，模型 = **`deepseek-flash`**、`deepseek-v4-pro` |
+
+**⇒ 用户说的"DeepSeek V4 Flash"对应 model id `deepseek-flash`。**
+
+**关键发现（会改变预算口径）**：`deepseek-flash` **默认开启思考**。首次 smoke test（`max_tokens=64`、`response_format=json_object`）
+的结果是 `reasoning_tokens=64`、`content=''`、`finish_reason='length'`——**64 个输出 token 全被 reasoning 吃掉，一个 JSON 都没吐出来**。
+
+**关掉思考的开关（实测）**：
+
+| 参数 | 结果 |
+|---|---|
+| 无参数 | ❌ reasoning=64，content 空，finish=length |
+| **`{"thinking":{"type":"disabled"}}`** | ✅ **完成 6 token、无 reasoning、finish=stop、content=`{"action":"noop"}`** |
+| `{"enable_thinking":false}` | ❌ 同"无参数" |
+| **`{"reasoning_effort":"none"}`** | ✅ 同 B |
+| `{"reasoning_effort":"minimal"}` | ❌ reasoning=64 |
+
+**⇒ 正式跑用 `thinking={"type":"disabled"}`**（`reasoning_effort:"none"` 等价，作为备选）。
+**若不做这一步，2160 次调用会产出 2160 个空 content**，预算全烧在 reasoning 上。
+
+**成本口径随之确定**：非思考下一次调用 `prompt_tokens ≈ 222`、`completion_tokens ≈ 6`。
+按上限估算（1000 输入 / 64 输出）：2160 × 1000 = 2.16 M 输入、2160 × 64 = 0.138 M 输出，
+与用户给的粗算一致。**至此累计花费 < 0.1 元**（5 次探测调用）。
+
+**下一步（同一 goal 内）**：写 LLM 策略臂 + 硬预算闸门（`max_calls=4500`、
+`max_input_tokens_per_call=1000`、`max_output_tokens_per_call=64`、
+`max_total_input_tokens=4.5M`、`max_total_output_tokens=0.30M`，任一触发即停），
+跑 `adm_noout` / `adm_out3` / `polar_c0.05` × 1 seed，报六个量。
+**未实现任何新 runtime、未做 durable reconciliation。**
