@@ -65,6 +65,8 @@ code/
 | `fit_loss_model.py` | 从 ChirpBox 逐小时快照重构每条有向链路的通断序列，拟合 Gilbert-Elliott 两态链，并与同丢失率的 i.i.d. 模型对照 | `results/loss_model.json` |
 | `fit_outage_distribution.py` | 中断时长的**分布**拟合：指数、对数正态、Weibull 三种的 MLE、KS 距离与 AIC，连同类未删失段的经验分位数 | `results/outage_distribution.json` |
 | `trace_to_episode.py` | 把 IODA 的真实断网轨迹转成 episode 的早期概念验证 | 终端输出 |
+| `steady_gap.py` | 无故障稳态下单体 runtime 与组合式 runtime 的差距归因：14 条配置各改一处（参数逐项放宽 + 三条结构性消融），同部署同需求同能量同机会额度 | `results/steady_gap_<tag>.json` |
+| `steady_gap_counters.py` | 同一 runtime 的逐分支决策计数（`skip/in_flight` 及其中「有 W1 请求未结」的占比），为上面那条归因提供支撑证据 | `results/steady_gap_counters_<tag>.json` |
 
 ## 约定
 

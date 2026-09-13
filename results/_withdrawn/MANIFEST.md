@@ -39,8 +39,11 @@
 | `monitoring_trajectories_restart20.json` | `restart20v4` | 同上 |
 | `monitoring_trajectories_restart20v2.json` | `restart20v4` | 同上（v2 只修了 rule planner，`llm__*` 两格仍带缺陷） |
 | `monitoring_trajectories_restart20v3.json` | `restart20v4` | 同上（v3 仍未用定稿评分器） |
-| `monitoring_trajectories_ablate20.json` | `monitoring_trajectories_ablate20v2.json` | 由旧代码产出：同一臂同一轨迹同一批 20 种子，`ours` 记 63.00 / 下行 682.5，当前代码给 89.07 / 604.8。**两列都不一致，此前被误当成"评分口径不同"**——下行次数同样不同，说明是运行不同而非评分不同。§7.35 |
-| `monitoring_trajectories_restart20v4.json`（仍在 `results/`，但已失效） | `monitoring_trajectories_fairrestart2.json` | §7.33：重启对照不公平——本文臂的状态留在活着的对象里，基线被清空。该文件保留在 `results/` 只为可追溯，**读数不得引用** |
+| `monitoring_trajectories_ablate20.json` | `monitoring_trajectories_ablate20v3.json` | 由旧代码产出：同一臂同一轨迹同一批 20 种子，`ours` 记 63.00 / 下行 682.5，当时代码给 89.07 / 604.8。**两列都不一致，此前被误当成"评分口径不同"**。§7.35 |
+| `monitoring_trajectories_restart20v4.json` | `monitoring_trajectories_fairrestart3.json` | §7.33：重启对照不公平——本文臂的状态留在活着的对象里，基线被清空。据此得出的"跨重启领先 14.1 个点"作废 |
+| `monitoring_trajectories_fairrestart2.json` | `monitoring_trajectories_fairrestart3.json` | §7.34 的下发顺序修正之前产出；`ours` 记 89.07 / 604.8，修正后 94.53 / 628.9 |
+| `monitoring_trajectories_ablate20v2.json` | `monitoring_trajectories_ablate20v3.json` | 同上（§7.34 之前） |
+| `monitoring_trajectories_business2.json` | `monitoring_trajectories_business3.json` | 同上（§7.34 之前）。四条未受影响的臂（`local_rules` / `versioned_config` / `vtc_style` / `oracle`）读数不变 |
 | `method_comparison.json` | `method_comparison_main20.json` | 只有 5 个种子、4 条臂；主表用 20 种子、11 条臂 |
 
 ## 机制层的加热与中继扫描：产出代码已被取代

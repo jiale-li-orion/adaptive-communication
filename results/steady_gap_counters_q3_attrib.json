@@ -1,0 +1,410 @@
+{
+  "config": {
+    "seeds": 20,
+    "hours": 72,
+    "tag": "q3_attrib"
+  },
+  "mean": {
+    "decision/assert": 198.65,
+    "decision/no_evidence_since_write": 5904.0,
+    "decision/report_postdates_write": 54854.25,
+    "decision/retry_budget": 187.5,
+    "decision/skip": 7827.95,
+    "decision/state_right_evidence_absent": 147.65,
+    "dispatch/request_measurement": 96.0,
+    "dispatch/set_monitoring_profile": 198.65,
+    "veto/demand_normal": 3936.55,
+    "veto/demand_risk": 3891.4,
+    "veto/in_flight_with_W1_open": 6676.5,
+    "veto/in_flight_without_W1": 1151.45,
+    "write_for/normal": 144.1,
+    "write_for/risk": 54.55
+  },
+  "runs": [
+    {
+      "seed": 0,
+      "coverage": 84.88372093023256,
+      "counters": {
+        "decision/assert": 236,
+        "write_for/normal": 163,
+        "dispatch/set_monitoring_profile": 236,
+        "decision/no_evidence_since_write": 6615,
+        "decision/report_postdates_write": 53111,
+        "write_for/risk": 73,
+        "dispatch/request_measurement": 96,
+        "decision/skip": 7835,
+        "veto/in_flight_with_W1_open": 7812,
+        "veto/demand_risk": 4343,
+        "veto/in_flight_without_W1": 23,
+        "decision/state_right_evidence_absent": 1094,
+        "veto/demand_normal": 3492,
+        "decision/retry_budget": 229
+      }
+    },
+    {
+      "seed": 1,
+      "coverage": 87.20930232558139,
+      "counters": {
+        "decision/assert": 199,
+        "write_for/normal": 143,
+        "dispatch/set_monitoring_profile": 199,
+        "decision/skip": 8879,
+        "veto/in_flight_without_W1": 1235,
+        "veto/demand_normal": 4967,
+        "decision/report_postdates_write": 55111,
+        "decision/no_evidence_since_write": 4729,
+        "write_for/risk": 56,
+        "dispatch/request_measurement": 96,
+        "veto/in_flight_with_W1_open": 7644,
+        "veto/demand_risk": 3912,
+        "decision/retry_budget": 139,
+        "decision/state_right_evidence_absent": 63
+      }
+    },
+    {
+      "seed": 2,
+      "coverage": 90.0,
+      "counters": {
+        "decision/assert": 135,
+        "write_for/normal": 83,
+        "dispatch/set_monitoring_profile": 135,
+        "decision/skip": 8916,
+        "veto/in_flight_without_W1": 1419,
+        "veto/demand_normal": 4120,
+        "decision/report_postdates_write": 58104,
+        "write_for/risk": 52,
+        "dispatch/request_measurement": 96,
+        "veto/in_flight_with_W1_open": 7497,
+        "veto/demand_risk": 4796,
+        "decision/no_evidence_since_write": 1965
+      }
+    },
+    {
+      "seed": 3,
+      "coverage": 91.62790697674419,
+      "counters": {
+        "decision/assert": 134,
+        "write_for/normal": 84,
+        "dispatch/set_monitoring_profile": 134,
+        "decision/no_evidence_since_write": 6670,
+        "decision/report_postdates_write": 55981,
+        "write_for/risk": 50,
+        "dispatch/request_measurement": 96,
+        "decision/skip": 6273,
+        "veto/in_flight_with_W1_open": 6257,
+        "veto/demand_risk": 3954,
+        "veto/in_flight_without_W1": 16,
+        "veto/demand_normal": 2319,
+        "decision/state_right_evidence_absent": 62
+      }
+    },
+    {
+      "seed": 4,
+      "coverage": 84.88372093023256,
+      "counters": {
+        "decision/assert": 130,
+        "write_for/normal": 62,
+        "dispatch/set_monitoring_profile": 130,
+        "decision/skip": 8072,
+        "veto/in_flight_without_W1": 1418,
+        "veto/demand_normal": 3691,
+        "decision/no_evidence_since_write": 4811,
+        "decision/report_postdates_write": 56098,
+        "write_for/risk": 68,
+        "dispatch/request_measurement": 96,
+        "veto/in_flight_with_W1_open": 6654,
+        "veto/demand_risk": 4381,
+        "decision/state_right_evidence_absent": 9
+      }
+    },
+    {
+      "seed": 5,
+      "coverage": 87.67441860465117,
+      "counters": {
+        "decision/assert": 180,
+        "write_for/normal": 122,
+        "dispatch/set_monitoring_profile": 180,
+        "decision/skip": 8213,
+        "veto/in_flight_without_W1": 1592,
+        "veto/demand_normal": 4300,
+        "decision/no_evidence_since_write": 6952,
+        "decision/report_postdates_write": 53527,
+        "write_for/risk": 58,
+        "dispatch/request_measurement": 96,
+        "veto/in_flight_with_W1_open": 6621,
+        "veto/demand_risk": 3913,
+        "decision/retry_budget": 182,
+        "decision/state_right_evidence_absent": 66
+      }
+    },
+    {
+      "seed": 6,
+      "coverage": 92.09302325581396,
+      "counters": {
+        "decision/assert": 383,
+        "write_for/normal": 335,
+        "dispatch/set_monitoring_profile": 383,
+        "decision/skip": 7688,
+        "veto/in_flight_without_W1": 1287,
+        "veto/demand_normal": 3824,
+        "decision/report_postdates_write": 50928,
+        "write_for/risk": 48,
+        "dispatch/request_measurement": 96,
+        "veto/in_flight_with_W1_open": 6401,
+        "veto/demand_risk": 3864,
+        "decision/no_evidence_since_write": 9120,
+        "decision/retry_budget": 735,
+        "decision/state_right_evidence_absent": 266
+      }
+    },
+    {
+      "seed": 7,
+      "coverage": 89.53488372093024,
+      "counters": {
+        "decision/assert": 119,
+        "write_for/normal": 80,
+        "dispatch/set_monitoring_profile": 119,
+        "decision/skip": 7690,
+        "veto/in_flight_without_W1": 1295,
+        "veto/demand_normal": 3732,
+        "decision/report_postdates_write": 56308,
+        "decision/no_evidence_since_write": 4957,
+        "write_for/risk": 39,
+        "dispatch/request_measurement": 96,
+        "veto/in_flight_with_W1_open": 6395,
+        "veto/demand_risk": 3958,
+        "decision/retry_budget": 45,
+        "decision/state_right_evidence_absent": 1
+      }
+    },
+    {
+      "seed": 8,
+      "coverage": 81.86046511627907,
+      "counters": {
+        "decision/assert": 164,
+        "write_for/normal": 104,
+        "dispatch/set_monitoring_profile": 164,
+        "decision/skip": 7146,
+        "veto/in_flight_without_W1": 1166,
+        "veto/demand_normal": 4213,
+        "decision/report_postdates_write": 53487,
+        "write_for/risk": 60,
+        "dispatch/request_measurement": 96,
+        "decision/no_evidence_since_write": 7957,
+        "veto/in_flight_with_W1_open": 5980,
+        "veto/demand_risk": 2933,
+        "decision/state_right_evidence_absent": 366
+      }
+    },
+    {
+      "seed": 9,
+      "coverage": 94.65116279069767,
+      "counters": {
+        "decision/assert": 163,
+        "write_for/normal": 120,
+        "dispatch/set_monitoring_profile": 163,
+        "decision/skip": 9440,
+        "veto/in_flight_without_W1": 1889,
+        "veto/demand_normal": 5005,
+        "decision/no_evidence_since_write": 6968,
+        "decision/report_postdates_write": 52323,
+        "write_for/risk": 43,
+        "dispatch/request_measurement": 96,
+        "veto/in_flight_with_W1_open": 7551,
+        "veto/demand_risk": 4435,
+        "decision/retry_budget": 46,
+        "decision/state_right_evidence_absent": 180
+      }
+    },
+    {
+      "seed": 10,
+      "coverage": 86.04651162790698,
+      "counters": {
+        "decision/assert": 130,
+        "write_for/normal": 63,
+        "dispatch/set_monitoring_profile": 130,
+        "decision/skip": 6607,
+        "veto/in_flight_without_W1": 1237,
+        "veto/demand_normal": 3331,
+        "decision/no_evidence_since_write": 4425,
+        "decision/report_postdates_write": 57958,
+        "write_for/risk": 67,
+        "dispatch/request_measurement": 96,
+        "veto/in_flight_with_W1_open": 5370,
+        "veto/demand_risk": 3276
+      }
+    },
+    {
+      "seed": 11,
+      "coverage": 87.67441860465117,
+      "counters": {
+        "decision/assert": 143,
+        "write_for/normal": 86,
+        "dispatch/set_monitoring_profile": 143,
+        "decision/skip": 6242,
+        "veto/in_flight_without_W1": 1346,
+        "veto/demand_normal": 3234,
+        "decision/report_postdates_write": 55853,
+        "decision/no_evidence_since_write": 6875,
+        "write_for/risk": 57,
+        "dispatch/request_measurement": 96,
+        "veto/in_flight_with_W1_open": 4896,
+        "veto/demand_risk": 3008,
+        "decision/state_right_evidence_absent": 7
+      }
+    },
+    {
+      "seed": 12,
+      "coverage": 91.86046511627907,
+      "counters": {
+        "decision/assert": 145,
+        "write_for/normal": 91,
+        "dispatch/set_monitoring_profile": 145,
+        "decision/skip": 8203,
+        "veto/in_flight_without_W1": 1167,
+        "veto/demand_normal": 4289,
+        "decision/report_postdates_write": 57706,
+        "write_for/risk": 54,
+        "dispatch/request_measurement": 96,
+        "veto/in_flight_with_W1_open": 7036,
+        "veto/demand_risk": 3914,
+        "decision/no_evidence_since_write": 3066
+      }
+    },
+    {
+      "seed": 13,
+      "coverage": 95.5813953488372,
+      "counters": {
+        "decision/assert": 570,
+        "write_for/normal": 526,
+        "dispatch/set_monitoring_profile": 570,
+        "decision/no_evidence_since_write": 8902,
+        "decision/report_postdates_write": 51376,
+        "write_for/risk": 44,
+        "dispatch/request_measurement": 96,
+        "decision/skip": 6438,
+        "veto/in_flight_with_W1_open": 6428,
+        "veto/demand_risk": 3361,
+        "veto/in_flight_without_W1": 10,
+        "veto/demand_normal": 3077,
+        "decision/state_right_evidence_absent": 337,
+        "decision/retry_budget": 1497
+      }
+    },
+    {
+      "seed": 14,
+      "coverage": 98.13953488372093,
+      "counters": {
+        "decision/assert": 153,
+        "write_for/normal": 101,
+        "dispatch/set_monitoring_profile": 153,
+        "decision/skip": 8441,
+        "veto/in_flight_without_W1": 1288,
+        "veto/demand_normal": 4406,
+        "decision/no_evidence_since_write": 4369,
+        "decision/report_postdates_write": 56048,
+        "write_for/risk": 52,
+        "dispatch/request_measurement": 96,
+        "veto/in_flight_with_W1_open": 7153,
+        "veto/demand_risk": 4035,
+        "decision/state_right_evidence_absent": 62,
+        "decision/retry_budget": 47
+      }
+    },
+    {
+      "seed": 15,
+      "coverage": 90.69767441860465,
+      "counters": {
+        "decision/assert": 133,
+        "write_for/normal": 86,
+        "dispatch/set_monitoring_profile": 133,
+        "decision/skip": 7761,
+        "veto/in_flight_without_W1": 1299,
+        "veto/demand_normal": 3263,
+        "decision/report_postdates_write": 54873,
+        "decision/no_evidence_since_write": 6353,
+        "write_for/risk": 47,
+        "dispatch/request_measurement": 96,
+        "veto/in_flight_with_W1_open": 6462,
+        "veto/demand_risk": 4498
+      }
+    },
+    {
+      "seed": 16,
+      "coverage": 85.34883720930233,
+      "counters": {
+        "decision/assert": 392,
+        "write_for/normal": 330,
+        "dispatch/set_monitoring_profile": 392,
+        "decision/skip": 8413,
+        "veto/in_flight_without_W1": 1652,
+        "veto/demand_normal": 4957,
+        "decision/no_evidence_since_write": 8882,
+        "decision/retry_budget": 736,
+        "decision/state_right_evidence_absent": 318,
+        "decision/report_postdates_write": 50379,
+        "write_for/risk": 62,
+        "dispatch/request_measurement": 96,
+        "veto/in_flight_with_W1_open": 6761,
+        "veto/demand_risk": 3456
+      }
+    },
+    {
+      "seed": 17,
+      "coverage": 76.04651162790698,
+      "counters": {
+        "decision/assert": 161,
+        "write_for/normal": 90,
+        "dispatch/set_monitoring_profile": 161,
+        "decision/skip": 7814,
+        "veto/in_flight_without_W1": 1168,
+        "veto/demand_normal": 4395,
+        "decision/report_postdates_write": 55882,
+        "write_for/risk": 71,
+        "dispatch/request_measurement": 96,
+        "decision/no_evidence_since_write": 5263,
+        "veto/demand_risk": 3419,
+        "veto/in_flight_with_W1_open": 6646
+      }
+    },
+    {
+      "seed": 18,
+      "coverage": 91.86046511627907,
+      "counters": {
+        "decision/assert": 141,
+        "write_for/normal": 101,
+        "dispatch/set_monitoring_profile": 141,
+        "decision/skip": 8202,
+        "veto/in_flight_without_W1": 1288,
+        "veto/demand_normal": 4048,
+        "decision/report_postdates_write": 53626,
+        "write_for/risk": 40,
+        "dispatch/request_measurement": 96,
+        "veto/in_flight_with_W1_open": 6914,
+        "veto/demand_risk": 4154,
+        "decision/no_evidence_since_write": 7030,
+        "decision/state_right_evidence_absent": 121
+      }
+    },
+    {
+      "seed": 19,
+      "coverage": 93.72093023255815,
+      "counters": {
+        "decision/assert": 162,
+        "write_for/normal": 112,
+        "dispatch/set_monitoring_profile": 162,
+        "decision/skip": 8286,
+        "veto/in_flight_without_W1": 1234,
+        "veto/demand_normal": 4068,
+        "decision/report_postdates_write": 58406,
+        "decision/no_evidence_since_write": 2171,
+        "write_for/risk": 50,
+        "dispatch/request_measurement": 96,
+        "veto/in_flight_with_W1_open": 7052,
+        "veto/demand_risk": 4218,
+        "decision/retry_budget": 94,
+        "decision/state_right_evidence_absent": 1
+      }
+    }
+  ]
+}

@@ -1120,6 +1120,22 @@ class RuntimePolicy:
             out.append((node_id, profile_command(wanted, version=version,
                                                  logical=self.identity_of(node_id))))
 
+        # The order of this list is a decision, not an accident. The control plane delivers exactly
+        # one command per uplink opportunity (Class A: one receive window after the node's own
+        # uplink) and it delivers the head of the node's queue, so whatever is put first here is
+        # the only thing that can land this hour; everything else waits a full cadence.
+        #
+        # The profile write goes first because it is the one command that changes how often the
+        # node comes back. Switching a node to the dense profile is what makes the rest of the risk
+        # window observable at all, and the denser schedule also produces the sample the measurement
+        # request was asking for -- so while both are pending, the request is asking for something
+        # the write is about to cause. Putting the request ahead of the write cost 5.47 points of
+        # risk-window coverage and delayed the switch by one normal-cadence period (3600 s),
+        # measured over 20 seeds against the composed runtime, which has them the other way round
+        # (§7.34).
+        priority = {OP_SET_PROFILE: 0, OP_REQUEST_MEASUREMENT: 1, OP_UPLOAD_RECORDS: 2}
+        out.sort(key=lambda item: priority.get(item[1].get("op"), 3))
+
         for node_id, payload in out:
             # Only a profile write carries a version. The W1 and W2 commands are different
             # interfaces with their own identities, and booking them as writes would corrupt the
