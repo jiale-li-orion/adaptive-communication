@@ -58,6 +58,8 @@ Task Contract v1.1 的实例层。**不做方法比较**，只把当前实例在
 | `instance_uncertain015.json` | `--arms local,dense600,dense900,dense1200,dense1800,ea_i600 --capacity-wh 0.015 --tag uncertain015` | 20 | **参数不确定性（关键）**：固定配置按名义容量选点、实际容量 0.015 Wh 时崩到 `local` 以下 |
 | `instance_nominal050.json` | 同上，`--capacity-wh 0.05 --tag nominal050` | 20 | 名义容量下的对照 |
 | `instance_cap0.004.json`、`instance_cap0.008.json`、`instance_cap0.015.json`、`instance_cap0.025.json`、`instance_cap0.05.json`、`instance_cap0.10.json` | `--capacity-wh C --tag capC` | 10 | 电池容量扫描（参数不确定性的核心轴） |
+| `instance_blackout0_0.0.json`、`instance_blackout4_0.3.json`、`instance_blackout4_0.6.json` | `--blackout-start-h H --blackout-frac F --capacity-wh 0.02 --tag blackoutH_F` | 10 | **节点失电**：切断部分站点采能 → 后果是**采集缺失**（不可补回）。本轮最强的一组正面读数 |
+| `instance_outage_eventoverlap.json` | `--access-outage-h 2 --access-outage-start-h 0.5 --tag outage_eventoverlap` | 10 | 中断窗**叠加事件触发** |
 | `instance_lf0.2.json`、`instance_lf0.4.json`、`instance_lf0.6.json`、`instance_lf0.8.json` | `--low-frac F --tag lfF` | 10 | 遮荫比例扫描（对调好的固定配置无影响） |
 | `instance_sens_u0.5_b0.62.json`、`instance_sens_u0.74_b0.4.json`、`instance_sens_u0.74_b0.62.json`、`instance_sens_u0.74_b0.85.json`、`instance_sens_u0.9_b0.62.json` | `--arms local,dense600,ea_i600 --uplink-p-arrive U --backhaul-p-good B --tag sens_uU_bB` | 10 | **敏感性**：上行到达率 0.5/0.74/0.9 × 回传可用率 0.4/0.62/0.85 |
 | `instance_outage_backhaul.json` | `--outage-start-h 4 --outage-hours 3 --tag outage_backhaul` | 10 | 回传中断 3 h |

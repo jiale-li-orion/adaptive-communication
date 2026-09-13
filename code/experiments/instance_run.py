@@ -46,7 +46,9 @@ def one_seed(seed: int, task_hours: float, tail_hours: float,
              harvest_wh_per_hour: float = 3.0, sample_interval_s: int = 3600,
              uplink_p_arrive: float = 0.74, backhaul_p_good: float = 0.62,
              event_spacing_s: int = 300, harvest_mode: str = "uniform",
-             access_outage_h: float = 0.0,
+             access_outage_h: float = 0.0, access_outage_start_h: float = 4.0,
+             blackout_start_h: float = 0.0,
+             blackout_frac: float = 0.0,
              capacity_wh: float = 0.05, low_frac: float = 0.4,
              low_wh_per_hour: float = 0.005) -> dict:
     hours = task_hours + tail_hours
@@ -65,6 +67,18 @@ def one_seed(seed: int, task_hours: float, tail_hours: float,
     else:
         harvest, temp = constant_harvest(nodes.keys(), int(hours),
                                          harvest_wh_per_hour, 10.0)
+    if blackout_frac > 0.0:
+        # **节点失电**：从第 `blackout_start_h` 小时起，一部分站点的采能被切断（积雪掩埋、
+        # 线路受损）。它们仍会照常采样直到电量耗尽，**然后彻底停止**——因此后果是
+        # **采集缺失**，而不是交付缺失。这是与接入/回传中断最本质的区别（v1.1 §5.3）。
+        from deterministic import stable_uniform as _su
+        for nid in nodes:
+            if _su(seed, "blackout", nid) < blackout_frac:
+                cut_at = int(blackout_start_h * 3600)
+                for tt in harvest[nid]:
+                    if tt >= cut_at:
+                        harvest[nid][tt] = 0.0
+
     truth.harvest_wh.update(harvest)
     truth.temp_c.update(temp)
 
@@ -75,7 +89,8 @@ def one_seed(seed: int, task_hours: float, tail_hours: float,
 
     acc = None
     if access_outage_h > 0:
-        lo, hi = 4 * 3600, int((4 + access_outage_h) * 3600)
+        lo = int(access_outage_start_h * 3600)
+        hi = int((access_outage_start_h + access_outage_h) * 3600)
         acc = (lo, hi)
     inst = Instance(nodes, truth, seed=seed, policy=build_policy(arm),
                     send_contract_fields=contract, hold_every=hold_every,
@@ -143,8 +158,12 @@ def main() -> None:
     ap.add_argument("--event-spacing-s", type=int, default=300)
     ap.add_argument("--arms", default="local",
                     help="逗号分隔的中心策略，见 instance/center.py 的 ARMS")
+    ap.add_argument("--blackout-start-h", type=float, default=0.0,
+                    help="从第几小时起切断部分站点的采能（节点失电）")
+    ap.add_argument("--blackout-frac", type=float, default=0.0)
     ap.add_argument("--access-outage-h", type=float, default=0.0,
-                    help="接入中断时长（小时），固定从第 4 小时开始")
+                    help="接入中断时长（小时）")
+    ap.add_argument("--access-outage-start-h", type=float, default=4.0)
     ap.add_argument("--outage-start-h", type=float, default=0.0)
     ap.add_argument("--outage-hours", type=float, default=0.0)
     ap.add_argument("--tag", default="base")
@@ -166,7 +185,10 @@ def main() -> None:
                      harvest_mode=args.harvest_mode, capacity_wh=args.capacity_wh,
                      low_frac=args.low_frac,
                      low_wh_per_hour=args.low_wh_per_hour,
-                     access_outage_h=args.access_outage_h)
+                     access_outage_h=args.access_outage_h,
+                     access_outage_start_h=args.access_outage_start_h,
+                     blackout_start_h=args.blackout_start_h,
+                     blackout_frac=args.blackout_frac)
             for a in arm_names for L in layers for s in range(args.seeds)]
 
     # 聚合：**按臂分组**。分母类用求和天然是整数，时延与比率类用逐种子均值。
