@@ -218,6 +218,17 @@ def run(tag: str, seed: int, budget: Budget, call_limit: int | None = None) -> d
     cfg = json.load(open(f"results/instance_{tag}.json", encoding="utf-8"))["config"]
     kw = build_kwargs(dict(cfg))
     kw.pop("trace", None)
+    # **跑之前把"真实 epoch 数"算出来并对硬上限做断言**。为什么需要：
+    # 协议里那句"最多 2160 次"是按 12 h 算的，而实例实际跑 `task_hours + tail_hours` = 13 h
+    # ⇒ **每条件 780 次、三条件 2340 次**——协议与实跑差了 8%，是我自己的算术错。
+    # 硬上限 4500 没被触及，但**这类漂移必须响亮地失败，而不是静静少算**。
+    epochs = int((float(kw["task_hours"]) + float(kw.get("tail_hours") or 0.0)) * 3600 / 60)
+    if epochs * len(CONDITIONS) > CAPS["max_calls"]:
+        raise BudgetExceeded(
+            f"实际 epoch 预算 {epochs}×{len(CONDITIONS)}={epochs*len(CONDITIONS)} "
+            f"超过硬上限 {CAPS['max_calls']}")
+    print(f"   [{tag}] 实际 epoch={epochs}（task {kw['task_hours']}h + tail "
+          f"{kw.get('tail_hours')}h）⇒ 三条件合计上限 {epochs*len(CONDITIONS)} 次")
     pol = LLMNaiPolicy(budget, call_limit=call_limit)
     C.ARMS["llm_naive"] = lambda: pol          # 注册，**不改任何已提交文件**
     _LAST["result"] = "none_yet"
