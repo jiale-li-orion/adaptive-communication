@@ -217,3 +217,9 @@ python3 code/analysis/steady_gap.py --seeds 20 --tag q3_dpu2 --downlink-per-upli
 `data/` 是**输入**不是结果。它的来源见 `data/README.md`，逐条复现命令与"跑对了的标志"
 见 `data/REPRODUCE.md`。`libs/` 是第三方依赖。
 `results/` 下不再保留构建缓存（原 `.drjit-cache/` 已删除，可重新生成）。
+
+## 真实 LLM naive baseline（阶段一）
+
+| 文件 | 内容 |
+|---|---|
+| `llm_naive_phase1.log` | **真实 LLM（`deepseek-flash`，`thinking` 关闭）naive planner 的原始运行日志**；协议 `code/protocols/llm_naive_v1.json`（`sha256=11a0ce4481756392…`）。跑完后再把末行 JSON 抽成登记的结果文件。**日志本身不是读数**，读数以抽出的结果文件为准 |

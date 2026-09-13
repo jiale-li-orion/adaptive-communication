@@ -79,3 +79,5 @@ code/
 **确定性优先。** 故障类的验证用定向构造而非随机命中；实验用固定种子，可复现。
 - `analysis/regime_map.py`：**两轴结构判据**（`C = T_report/T_deadline` 与 `R = P(T_ctrl > T_harm)`）。`T_ctrl` 生存曲线由两态链吸收式 DP 精确算出、`T_harm^worst` 手算可核。`--selftest` 手算核对、`--blind` 盲测。见 `docs/s7-method/instance-v1/21-...`
 - `analysis/pareto_front.py --with-harm`：把损害（缺采 / 不可供电节点小时）加入目标族重算前沿。**实测 284/285 个文件前沿不变**——见 `docs/s7-method/instance-v1/22-...`
+- `protocols/llm_naive_v1.json`：**真实 LLM naive baseline 的冻结协议**（模型 / prompt 原文 / 状态与动作模式 / 条件与 seed / 预算 caps / 成本模型 / 预注册判据）。**代码不复制其中任何字符串**——`llm_naive_baseline.py` 从它读取并记录 `protocol_sha256`，跑前 `protocol_guard()` 校验未被改动。见 `docs/s7-method/instance-v1/26-...`
+- `analysis/llm_naive_baseline.py`：按上述协议跑真实 LLM 的 **naive** planner（每 60 s epoch 一次调用、`thinking` 显式关闭、硬预算闸门 `max_calls=4500` 等）。`--smoke` 用 `call_limit=3` 只验管道。
