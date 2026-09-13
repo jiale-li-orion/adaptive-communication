@@ -204,7 +204,8 @@ class ControlPlane:
 
     def __init__(self, profile: LoRaProfile, seed: int, downlink_per_uplink: int = 1,
                  rx_window_ms: float = 2000.0, backhaul_p_good: float = 0.62,
-                 uplink_p_arrive: float = 0.74, backhaul_delay_s: int = 0):
+                 uplink_p_arrive: float = 0.74, backhaul_delay_s: int = 0,
+                 burst_p_gb: float | None = None, burst_p_bg: float | None = None):
         if downlink_per_uplink < 1:
             raise ValueError("downlink_per_uplink must be at least 1")
         self.profile = profile
@@ -213,6 +214,17 @@ class ControlPlane:
         self.rx_window_ms = rx_window_ms
         self.backhaul_p_good = backhaul_p_good
         self.uplink_p_arrive = uplink_p_arrive
+        #: **两态马尔可夫回传**（可选）。`None` 表示保持原来的**逐小时独立同分布**。
+        #:
+        #: 为什么要它：仓库自己从 ChirpBox 拟合出平均下行突发 **6.38 h**，而同丢失率下的
+        #: i.i.d. 对照只有 **1.45 h**（**突发度 4.39×**）。但实例里的 `path_available` 一直是
+        #: i.i.d. ——**拟合出来的时间相关性从未被用上**。在一个 residual 主要落在 delivery 侧的
+        #: 实例里，这比"数据弱"更严重：**连已有的拟合都没用**。
+        #:
+        #: 参数取 `(p_gb, p_bg)`，**从平稳分布起链、逐小时递推**，因此状态序列只由
+        #: `(seed, 绝对小时)` 决定，**与策略无关**（跨策略比较的前提）。
+        self.burst_p_gb, self.burst_p_bg = burst_p_gb, burst_p_bg
+        self._burst_series: list[bool] = []
         self.backhaul_gate = None
         # Store-and-forward latency on the gateway-to-center hop. Zero means the gateway forwards
         # as soon as the link is up; a positive value models a batch that leaves on a schedule.
@@ -266,11 +278,30 @@ class ControlPlane:
             # path existed -- the numbers would move and nothing would say why.
             if self.backhaul_gate is not None and not self.backhaul_gate(hour):
                 return False
+            if self.burst_p_gb is not None and self.burst_p_bg is not None:
+                return self._burst_available(hour)
             return stable_uniform(self.seed, "backhaul", hour) < spec.p_good
         # A supplementary path draws on its own key, so it fails on its own schedule rather than
         # with the primary. It shares everything downstream of the gateway, which is what keeps it
         # from being an out-of-band health channel.
         return stable_uniform(self.seed, "path", spec.name, hour) < spec.p_good
+
+    def _burst_available(self, hour: int) -> bool:
+        """两态马尔可夫：坏态以 `p_bg` 转好、好态以 `p_gb` 转坏；首小时从**平稳分布**抽。
+
+        逐小时递推并缓存，所以第 h 小时的状态只由 `(seed, 0..h)` 决定——**与策略无关**。
+        """
+        gb, bg = self.burst_p_gb, self.burst_p_bg
+        while len(self._burst_series) <= hour:
+            h = len(self._burst_series)
+            if h == 0:
+                bad = stable_uniform(self.seed, "burst0", gb, bg) < (gb / (gb + bg))
+                self._burst_series.append(not bad)
+                continue
+            prev_bad = not self._burst_series[h - 1]
+            u = stable_uniform(self.seed, "burst", h)
+            self._burst_series.append(u < bg if prev_bad else not (u < gb))
+        return self._burst_series[hour]
 
     def backhaul_available(self, hour: int) -> bool:
         """Whether the primary path is up. Kept as the name the rest of the model already uses."""

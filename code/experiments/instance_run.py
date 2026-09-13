@@ -70,6 +70,7 @@ def one_seed(seed: int, task_hours: float, tail_hours: float,
              irr_shade_frac: float = 0.0, irr_snow_frac: float = 0.0,
              irr_snow_after_h: int = 0, irr_source_temp: bool = True,
              irr_year: int = 2023,
+             burst_p_gb: float | None = None, burst_p_bg: float | None = None,
              charge_min_c: float | None = 5.0,
              idle_wh_per_tick: float = 0.0,
              energy_scale: float = 1.0) -> dict:
@@ -202,7 +203,8 @@ def one_seed(seed: int, task_hours: float, tail_hours: float,
     inst = Instance(nodes, truth, seed=seed, policy=pol,
                     send_contract_fields=contract, hold_every=hold_every,
                     hold_s=hold_s, access_outage=acc, hold_op=hold_op,
-                    atomic_generation=atomic)
+                    atomic_generation=atomic,
+                    burst_p_gb=burst_p_gb, burst_p_bg=burst_p_bg)
     inst.plane.uplink_p_arrive = uplink_p_arrive
     inst.plane.backhaul_p_good = backhaul_p_good
     for pth in inst.plane.paths:
@@ -305,6 +307,8 @@ def main() -> None:
     ap.add_argument("--dynamic-oracle", action="store_true",
                     help="同时计算真上界（逐节点逐小时离线 DP，读完整未来采能轨迹）")
     ap.add_argument("--oracle-soc-bins", type=int, default=200)
+    ap.add_argument("--backhaul-burst", default="",
+                    help="两态马尔可夫回传 `p_gb,p_bg`；留空 = 逐小时 i.i.d.（原行为）")
     ap.add_argument("--irr-year", type=int, default=2023,
                     choices=[2022, 2023, 2024],
                     help="辐照年份。三年都有；2023 是最冷的一年")
@@ -393,6 +397,10 @@ def main() -> None:
                      irr_snow_after_h=args.irr_snow_after_h,
                      irr_source_temp=not args.irr_no_source_temp,
                      irr_year=args.irr_year,
+                     burst_p_gb=(float(args.backhaul_burst.split(',')[0])
+                                 if args.backhaul_burst else None),
+                     burst_p_bg=(float(args.backhaul_burst.split(',')[1])
+                                 if args.backhaul_burst else None),
                      charge_min_c=(None if args.charge_min_c == 'off'
                                    else float(args.charge_min_c)),
                      idle_wh_per_tick=args.idle_wh_per_tick)
