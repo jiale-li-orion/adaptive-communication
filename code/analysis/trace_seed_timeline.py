@@ -1,23 +1,26 @@
 #!/usr/bin/env python3
-"""把**一次运行**的逐事件时间线拉出来：中心看到什么 → 下了什么 → 何时真的生效 → 节点在跑什么。
+"""把**一次运行**的逐事件时间线拉出来，并**严格重放已登记的结果**。
 
-**为什么需要它。** 结果文件只存聚合量（交付/缺采/缺送/下行/亏空），**存不下这条链**。
-而"配置生效之后中心失去有效控制、加密持续耗电"这类问题**只有把链连起来才答得上**——
-聚合量只能说明"损害发生了"，不能说明"损害是哪一次配置、在哪一刻、经由哪条路径造成的"。
+**为什么需要它。** 结果文件只存聚合量（交付/缺采/缺送/下行/不可供电节点小时），**存不下这条链**：
+中心看到什么 → 为什么跳过 → 下了什么 → 何时真的生效 → 节点在跑什么配置、还剩多少电、何时死。
+"配置生效之后失去有效控制会发生什么"这类问题**只有把链连起来才答得上**。
 
-它做三件事：
-  1. 用**与登记完全相同的参数**重跑一个 seed，并**逐列核对聚合量没有因为开 trace 而改变**
-     （`Instance.__init__(trace=...)` 关闭时一个字节都不记，所以这是必须成立的自检）；
-  2. 打印该 seed 的关键时刻：第一次加密生效、最后一次有效电量反馈、第一次缺采；
-  3. 按节点给出"生效配置段"——每一段是 (起始时刻, 采样间隔, 上报周期, 该段内的真实耗电)。
+**重放纪律（2026-09-13 收紧）。** 第一版把 `contract=True` 写死，去重放 `exec_layers=naive`
+的登记结果——**三个业务数字偶然对上不代表执行路径相同**。现在：
+  * `exec_layer` 从**该 seed/arm 在结果文件里的那一行**读，不是猜的；
+  * `config` 里**每一个影响运行的键都必须映射到 `one_seed` 的形参**，映射不到就**报错退出**
+    （不静默回默认）；
+  * 比较**所有嵌套字段**（业务/能量/通信/执行/账本），排除 `_trace`，逐路径比对，
+    任何一处不同就**非零退出**。
 
 Run:
     export PYTHONPATH="$PWD/libs/pylibs"
-    python3 code/analysis/trace_seed_timeline.py --tag soc2_bias3.0 --seed 7 --arm ea_nb
+    python3 code/analysis/trace_seed_timeline.py --tag contcfg_b1.0_out3 --seed 7 --arm ea_nb
 """
 from __future__ import annotations
 
 import argparse
+import inspect
 import json
 import os
 import sys
@@ -33,24 +36,101 @@ for _p in (os.path.join(ROOT, "code", "experiments"),
 
 from instance_run import one_seed  # noqa: E402
 
-#: `config` 里的键 → `one_seed` 的形参名。**只映射真的影响这一次运行的量**；
-#: 输出标签之类的元数据不在此列（`tag`、`arms`、`exec_layers`、`seeds`）。
-KEYS = ("task_hours", "tail_hours", "outage_start_h", "outage_hours",
-        "hold_every", "hold_s", "harvest_wh_per_hour", "sample_interval_s",
-        "report_period_s", "routine_period_s", "uplink_p_arrive", "backhaul_p_good",
-        "event_spacing_s", "harvest_mode", "access_outage_h",
-        "access_outage_start_h", "blackout_start_h", "blackout_frac",
-        "soc_max_age_s", "soc_noise_wh", "soc_bias", "soc_loss_p", "hold_op",
-        "capacity_wh", "low_frac", "low_wh_per_hour", "oracle_soc_bins",
-        "solar_day_start_h", "solar_peak_wh_per_hour", "solar_cloud_p",
-        "solar_cloud_atten", "solar_snow_frac", "solar_snow_start_h",
-        "solar_shade_frac", "initial_soc", "irr_start_h", "irr_peak_wh_per_hour",
-        "irr_shade_frac", "irr_snow_frac", "irr_snow_after_h", "irr_source_temp",
-        "irr_year", "charge_min_c", "idle_wh_per_tick", "cache_service",
-        "energy_scale")
+#: `config` 里**不影响这一次运行**的键（输出标签、批量扫描的编排参数）。
+#: 这是白名单：任何**不在**里面、又映射不到 `one_seed` 形参的键 → 报错退出。
+IGNORE = {"tag", "arms", "seeds", "exec_layers", "dynamic_oracle", "oracle_soc_bins",
+          "energy_scale"}
+#: 上面逐个手工处理的键（名字与 `one_seed` 形参不同，或需要换算）。
+HANDLED = {"backhaul_burst", "uplink_burst", "no_events", "irr_no_source_temp",
+           "capacity_wh", "low_wh_per_hour", "charge_min_c"}
 
-#: 映射到 `one_seed` 形参名不同的几个键。
-RENAME = {"soc_bias": "soc_bias"}
+
+def build_kwargs(cfg: dict) -> dict:
+    """把登记的 `config` 变成 `one_seed` 的实参。**要么全部映射成功，要么报错退出。**"""
+    sig = inspect.signature(one_seed).parameters
+    kwargs, unmapped = {}, []
+    for k, v in sorted(cfg.items()):
+        if k in IGNORE:
+            continue
+        if k not in sig:
+            # 名字与形参不同的四个键**下面单独处理**，不算未映射。
+            if k not in HANDLED:
+                unmapped.append(k)
+            continue
+        kwargs[k] = v
+    # **四个键在 `main` 里被拆开或取反送进去，必须照抄那一步**——它们的名字与
+    # `one_seed` 的形参不同，第一版就是因为这个静默漏掉了 `backhaul_burst`：
+    # 于是"重放"跑的是 i.i.d. 链路，而登记结果是突发链路。数字对不上才发现。
+    for key, lo, hi in (("backhaul_burst", "burst_p_gb", "burst_p_bg"),
+                        ("uplink_burst", "uplink_burst_p_gb", "uplink_burst_p_bg")):
+        raw = cfg.get(key)
+        if raw:
+            a, b = str(raw).split(",")
+            kwargs[lo], kwargs[hi] = float(a), float(b)
+        else:
+            kwargs[lo], kwargs[hi] = None, None
+    # `--charge-min-c` 在 `main` 里从字符串转成 float，`off` 转成 None。照抄。
+    raw_cmc = cfg.get("charge_min_c")
+    if raw_cmc is not None:
+        kwargs["charge_min_c"] = None if raw_cmc == "off" else float(raw_cmc)
+    if cfg.get("no_events") is not None:
+        kwargs["with_events"] = not cfg["no_events"]
+    if cfg.get("irr_no_source_temp") is not None:
+        kwargs["irr_source_temp"] = not cfg["irr_no_source_temp"]
+    # `main` 把 `--energy-scale` 乘进了这两个量之后才调用；`one_seed` 内部只再乘
+    # `sample_wh` 与 `idle_wh_per_tick`。这里必须与 `main` 完全一致，否则重放的是另一个实例。
+    kwargs["capacity_wh"] = cfg["capacity_wh"] * cfg["energy_scale"]
+    kwargs["low_wh_per_hour"] = cfg["low_wh_per_hour"] * cfg["energy_scale"]
+    if unmapped:
+        raise SystemExit(
+            f"**拒绝静默重放**：config 里这些键在 `one_seed` 里没有对应形参——{unmapped}。\n"
+            f"  它们可能影响运行（例如 burst 参数），静默丢弃会让重放悄悄跑成另一组条件。\n"
+            f"  请把它们接进 `one_seed`，或显式加进本脚本的 IGNORE 白名单并说明理由。")
+    return kwargs
+
+
+def diff_vs_registered(reg, fresh, path=""):
+    """与**登记行**比较：只比"登记里有的键"。
+
+    登记文件可能**缺少后来才加的字段**（`intent_reason`、`skip_reasons` 就是），
+    那是**新增**不是**不一致**。把"新增"当成不一致，会让每一次重放都误报——
+    `rerun_from_config.py` 已经踩过一次同一个坑。
+    """
+    out = []
+    if isinstance(reg, dict) and isinstance(fresh, dict):
+        for k in sorted(set(reg), key=str):
+            if k == "_trace":
+                continue
+            out += diff_vs_registered(reg[k], fresh.get(k), f"{path}.{k}" if path else str(k))
+    elif isinstance(reg, list) and isinstance(fresh, list):
+        if len(reg) != len(fresh):
+            out.append(f"{path}[长度 {len(reg)}→{len(fresh)}]")
+        else:
+            for i, (x, y) in enumerate(zip(reg, fresh)):
+                out += diff_vs_registered(x, y, f"{path}[{i}]")
+    elif reg != fresh:
+        out.append(f"{path}: 登记 {reg!r} ≠ 重放 {fresh!r}")
+    return out
+
+
+def deep_diff(a, b, path=""):
+    """递归比较两个结果，返回所有不同的路径。`_trace` 不参与比较。"""
+    out = []
+    if isinstance(a, dict) and isinstance(b, dict):
+        # 键可能是 `int`（例如按 tick 索引的采能轨迹）与 `str` 混在一起，按 `str` 排序。
+        for k in sorted(set(a) | set(b), key=str):
+            if k == "_trace":
+                continue
+            out += deep_diff(a.get(k), b.get(k), f"{path}.{k}" if path else str(k))
+    elif isinstance(a, list) and isinstance(b, list):
+        if len(a) != len(b):
+            out.append(f"{path}[长度 {len(a)}→{len(b)}]")
+        else:
+            for i, (x, y) in enumerate(zip(a, b)):
+                out += deep_diff(x, y, f"{path}[{i}]")
+    elif a != b:
+        out.append(f"{path}: {a!r} ≠ {b!r}")
+    return out
 
 
 def main() -> int:
@@ -66,51 +146,53 @@ def main() -> int:
     doc = json.load(open(path, encoding="utf-8"))
     cfg = dict(doc["config"])
 
-    kwargs = {}
-    for k in KEYS:
-        if k in cfg and cfg[k] is not None and cfg[k] != "":
-            kwargs[RENAME.get(k, k)] = cfg[k]
-    if kwargs.get("charge_min_c") == "off":
-        kwargs["charge_min_c"] = None
-    else:
-        kwargs["charge_min_c"] = float(kwargs.get("charge_min_c", 5.0))
-    for b in ("dynamic_oracle", "irr_no_source_temp"):
-        kwargs.pop(b, None)
-
-    # 1) 先用**登记时的参数**跑一次（不开 trace），作为逐列核对的基准。
-    plain = one_seed(args.seed, arm=args.arm, contract=True, **kwargs)
-    traced = one_seed(args.seed, arm=args.arm, contract=True, trace=True, **kwargs)
-
-    same, diff = True, []
-    for k, v in plain.items():
-        w = traced.get(k)
-        if isinstance(v, (int, float, str, bool)) or v is None:
-            if v != w:
-                same = False
-                diff.append(f"{k}: {v} vs {w}")
-    print(f"[自检] 开 trace 后聚合量逐列相同: {same}")
-    if not same:
-        print("   差异:", diff[:8])
-
-    # 2) 与已登记的结果文件里同一 (arm, seed) 的那一行对齐。
     rows = [r for r in doc["runs"] if r["arm"] == args.arm and r["seed"] == args.seed]
-    if rows:
-        r0 = rows[0]
-        for label, got, want in (
-                ("周期交付", traced["routine"]["delivered"], r0["routine"]["delivered"]),
-                ("缺采", traced["routine"]["missing_collection"],
-                 r0["routine"]["missing_collection"]),
-                ("缺送", traced["routine"]["missing_delivery"],
-                 r0["routine"]["missing_delivery"])):
-            flag = "✓" if abs(got - want) < 1e-9 else "✗"
-            print(f"[自检] {label}: 重跑 {got} vs 登记 {want} {flag}")
+    if not rows:
+        raise SystemExit(f"{args.tag} 里没有 arm={args.arm} seed={args.seed} 这一行")
+    reg = rows[0]
+    layer = reg.get("exec_layer") or "naive"
+    if layer not in ("naive", "contract", "atomic"):
+        raise SystemExit(f"未知 exec_layer {layer!r}")
 
-    ev = traced.get("_trace") or []
+    kwargs = build_kwargs(cfg)
+    kwargs.pop("trace", None)
+    # **执行层从登记行读，不猜。** `contract` 与 `atomic` 都带契约字段；`atomic` 另开整代生效。
+    kwargs["contract"] = layer in ("contract", "atomic")
+    kwargs["atomic"] = layer == "atomic"
+    kwargs["exec_label"] = layer
+    # 登记时用了 `--dynamic-oracle` 的那些运行带着真上界；重放必须给它一个（空的）记忆化表，
+    # 否则这一列是 None 而登记值是数字——第一版就是这么"报不一致"的。
+    kwargs["oracle_cache"] = {} if cfg.get("dynamic_oracle") else None
+
+    print(f"[重放] tag={args.tag} seed={args.seed} arm={args.arm} exec_layer={layer}"
+          f"（读自登记行）")
+
+    plain = one_seed(args.seed, arm=args.arm, trace=False, **kwargs)
+    traced = one_seed(args.seed, arm=args.arm, trace=True, **kwargs)
+
+    # **先过一遍 JSON。** 登记行是从磁盘读回来的，`int` 键已经变成 `str`、`nan`/`inf` 也已经
+    # 落到字符串上。直接拿内存里的对象去比，会得到一整片假差异（`delivery_cdf` 的键就是这种）。
+    norm = lambda d: json.loads(json.dumps({k: v for k, v in d.items() if k != "_trace"},
+                                           default=str, ensure_ascii=False))
+    a, b = norm(plain), norm(traced)
+    diffs = diff_vs_registered(reg, a)
+    tdiff = deep_diff(a, b)
+    print(f"[核对] 与登记行**逐字段**一致: {not diffs}")
+    for d in diffs[:10]:
+        print("   ", d)
+    print(f"[核对] 开 trace 后逐字段相同: {not tdiff}")
+    for d in tdiff[:10]:
+        print("   ", d)
+    if diffs or tdiff:
+        print("\n**重放不一致——上面的时间线不能用来做因果归因。**")
+        return 1
+
+    ev = traced["_trace"]
     if args.dump:
         with open(args.dump, "w", encoding="utf-8") as fh:
             for e in ev:
                 fh.write(json.dumps(e, ensure_ascii=False) + "\n")
-        print(f"时间线已写 {args.dump}（{len(ev)} 条事件）")
+        print(f"[输出] 时间线 {args.dump}（{len(ev)} 条事件）")
 
     nodes = sorted({e[1] for e in ev})
     if args.node:
@@ -120,7 +202,6 @@ def main() -> int:
         states = [e for e in mine if e[2] == "state"]
         if not states:
             continue
-        # 生效配置段：两个字段**同时**不变的一段算一段。
         segs, cur = [], None
         for e in states:
             key = (e[3], e[4])
@@ -133,17 +214,20 @@ def main() -> int:
                 cur[4] = e[5]
         if cur is not None:
             segs.append(cur)
-        acts = [e for e in mine if e[2] in ("plan", "applied")]
-        obs = [e for e in mine if e[2] == "plan"]
-        print(f"\n=== {nid} ===")
-        print(f"  中心为它生成的意图 {len(obs)} 条、节点侧生效写入 {len([e for e in acts if e[2]=='applied'])} 次")
-        print("  生效配置段（起始 h, 采样 s, 上报 s, 段内 SoC 起→止）:")
+        plans = [e for e in mine if e[2] == "plan"]
+        apps = [e for e in mine if e[2] == "applied"]
+        dead = next((e[0] for e in states if not e[6]), None)
+        print(f"\n=== {nid} ===  意图 {len(plans)} 条、生效写入 {len(apps)} 次、"
+              f"死亡 {'—' if dead is None else str(dead) + 's'}")
+        print("  生效配置段（起–止, 采样 s, 上报 s, 段内 SoC 起→止）:")
         for k, t0, t1, s0, s1 in segs:
-            print(f"     {t0//3600:>3}h–{t1//3600:>3}h  采样 {k[0]:>5}s  上报 {k[1]:>5}s  "
+            print(f"    {t0:>6}s–{t1:>6}s  采样 {k[0]:>5}s  上报 {k[1]:>5}s  "
                   f"SoC {s0:.4f} → {s1:.4f}")
-        last_plan = obs[-1][0] // 3600 if obs else None
-        print(f"  最后一次生成意图: {last_plan}h;  节点最后存活: "
-              f"{'是' if states[-1][6] else '否'}（末状态 {states[-1][3]}s/{states[-1][4]}s）")
+        if plans:
+            print("  意图(时刻, 字段, 值, 中心当时看到的电量):")
+            for e in plans[:24]:
+                v = "—" if e[3] is None else f"{e[3]:.4f}"
+                print(f"    {e[0]:>6}s  {e[4]:<22} {e[5]:>5}  soc_seen={v}")
     return 0
 
 

@@ -303,7 +303,7 @@ def test_backhaul_and_expiry() -> None:
     # An expired command is dropped without spending an opportunity on it.
     plane2 = ControlPlane(LoRaProfile(), seed=12)
     plane2.center_send("r01", DownlinkMessage(identity="op:stale", kind="command",
-                                              payload_bytes=38, enqueued_at=0, expires_at=3),
+                                              payload_bytes=38, enqueued_at=0, expires_at=3 * 3600),
                        hour=0)
     plane2.uplink("r01", hour=99, sf=9, payload_bytes=20)
     check("过期命令不占用机会", plane2.downlink_attempts == 0 and plane2.downlink_expired == 1,
@@ -313,10 +313,10 @@ def test_backhaul_and_expiry() -> None:
     plane3 = ControlPlane(LoRaProfile(), seed=12)
     for i in range(5):
         plane3.center_send("r01", DownlinkMessage(identity=f"op:{i}", kind="command",
-                                                  payload_bytes=38, enqueued_at=0, expires_at=2),
+                                                  payload_bytes=38, enqueued_at=0, expires_at=2 * 3600),
                            hour=0)
     check("五条命令入队", plane3.queued_count("r01") == 5)
-    plane3.prune("r01", hour=10)
+    plane3.prune("r01", now_s=10 * 3600)
     check("过期由时间驱动，无需等待窗口",
           plane3.queued_count("r01") == 0 and plane3.downlink_expired == 5,
           f"queue={plane3.queued_count('r01')} expired={plane3.downlink_expired}")

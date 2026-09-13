@@ -523,6 +523,19 @@ class Instance:
         counters = {"sampled": 0, "uplinks": 0, "heard": 0, "forwarded": 0}
         hour = t_s // 3600
 
+        # 0) **过期的下发命令按时间清理，与投递路径无关。**
+        #
+        # `prune` 的文档写着"过期是时间的性质、不是窗口打开的性质"，但在这之前它**只在
+        # 投递路径里被调用**（`uplink` 与 `_deliver`）。接入中断期间 `tick` 在到达 `uplink`
+        # 之前就 `continue` 了，于是那条规则**一次也没有被执行**：队列既不清空、也不过期。
+        # 而 `CenterView.in_flight` 定义为"该节点队列非空"，所以一次足够长的接入中断会让
+        # **`in_flight` 永久为真**，每条策略都在读电量之前 `continue` 掉该节点——
+        # **中心被永久静音，而日志上看起来像"策略决定不再下发"**。
+        # 这一步把时间驱动真正落实：每个 tick 对每个节点清理一次。
+        for node_id in self.nodes:
+            counters["pruned"] = counters.get("pruned", 0) + \
+                self.plane.prune(node_id, t_s)
+
         # 1) 节点在本地采样（含本地触发）；无电则不产生样本
         for node in self.nodes.values():
             for sample in node.step(t_s, self.truth):
@@ -537,6 +550,8 @@ class Instance:
 
         # 1.5) 中心按**它自己看得见的东西**决定要不要下发。命令经回传进网关队列，等接收窗口。
         view = self._center_view(t_s)
+        # 跳过原因要带时刻；`_skip_t` **只用于记录**，不参与判断。
+        self.policy._skip_t = t_s
         for node_id, payload in self.policy.plan(view):
             self._note_intent_reason(node_id, payload, view)
             if self.trace:

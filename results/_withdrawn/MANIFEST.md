@@ -90,3 +90,9 @@
 （典型字段 `consumed_wh` / `airtime_uplink_h` / `commands_refused` / `dead_nodes_end`）——
 也就是说，**它们登记时的代码与现在不同**。这不是本次修复造成的，是它们早已如此，
 只是此前没有任何检查会发现这一点。逐文件结论见 `regeneration_report.json`。
+
+## 实例层：`prune-unit_2026-09-13/`
+
+| 文件 | 失效原因 |
+|---|---|
+| `instance_contcfg_b{1.0,3.0}_{noout,out0,out3}.json` | 这一批产出时 `ControlPlane.prune` 的**时间单位不一致**（参数按小时、`expires_at` 按秒）⇒ 过期永不触发、`downlink_expired` 恒为 0；且过期只在投递路径里被检查 ⇒ 接入中断期间 `in_flight` 永久为真。两个缺陷都已在 2026-09-13 修好并**重跑同一批**。**业务列变化很小**（缺采在 24 个格子里逐位不变），但 `expired` 一列作废。依据见 `docs/s7-method/instance-v1/17-gate-0-1h-mechanism-closure-2026-09-13.md` §一 |

@@ -1530,6 +1530,88 @@ def test_trace_does_not_change_the_run() -> None:
           f"末状态 {states[-1][3]}s/{states[-1][4]}s")
 
 
+def test_soc_age_uses_source_time_and_skips_are_visible() -> None:
+    """**电量证据的年龄按源时刻算；跳过原因必须能被看见。**
+
+    两条都是为了让"中心为什么不再下发"变成可回答的问题。上一轮把它答错了两次：
+    先归因成"无证据不下发"，后又归因成 `in_flight` 永久为真——**因为四处 `continue`
+    在日志上同形**。这里各钉一条。
+
+    (a) **年龄用源时刻**。`CenterView.report_at` 是**中心收到**的时刻；把它当证据年龄，
+        会把"在路上走了多久"算进去。策略真正要问的是"这条读数描述的是多久以前的状态"。
+        这个区别在断连场景里会大到几十小时，用它做判断会系统性低估陈旧程度。
+    (b) **跳过原因可分辨**。一个从没收到过读数的节点，只能是 `no_soc`；
+        而一个读数正常、目标已达的节点，必须是 `at_target*`，不能是 `in_flight`。
+    """
+    print("\n[29] 电量证据年龄按源时刻；跳过原因可分辨")
+    from center import CenterView, SocObservationModel, build_policy
+
+    # (a) 手工构造一个视图：读数**采集于 0**、**收到于 3600**、当前 7200。
+    view = CenterView(t_s=7200, node_ids=("n00",),
+                      reports={"n00": {"read_at": 0, "soc_wh": 0.01,
+                                       "sample_interval_s": 3600,
+                                       "report_period_s": 3600, "alive": True}},
+                      report_at={"n00": 3600}, newest_taken_at={"n00": 3600},
+                      in_flight=frozenset(), soc_model=SocObservationModel())
+    check("证据年龄 = 当前时刻 − **源时刻**（7200 − 0 = 7200）",
+          view.soc_age_s("n00") == 7200, f"{view.soc_age_s('n00')}s")
+    check("它与「接收到现在」不是一回事（后者 3600 s，只差一半）",
+          view.t_s - view.report_at["n00"] == 3600, "接收年龄 3600s")
+    check("从没有过读数的节点年龄是 None（不得当成 0）",
+          view.soc_age_s("nope") is None, "None")
+
+    # (b) 跳过分枝：没有读数 → no_soc；读数显示已达目标 → at_target。
+    dep = build_deployment(groups=2)
+    hours, cap = 13, 0.05
+    truth = wang_fragment_truth(0, hours, (dep.gateway.sid,))
+    probe = nodes_from(dep)
+    truth.displacement = displacement_series(probe.keys(), hours, 0)
+    _h, _t = hetero_harvest(probe.keys(), hours, 0, low_frac=0.4,
+                            low_wh_per_hour=0.0, high_wh_per_hour=3.0)
+    truth.harvest_wh.update(_h)
+    truth.temp_c.update(_t)
+
+    def run(arm, outage=None):
+        nodes = nodes_from(dep)
+        for n in nodes.values():
+            n.p = DeviceProfile(sample_interval_s=n.p.sample_interval_s,
+                                report_period_s=n.p.report_period_s,
+                                capacity_wh=cap, sample_wh=n.p.sample_wh)
+            n.soc_wh = cap
+            n.power = type(n.power)(soc_initial_wh=cap, soc_wh=cap)
+        pol = build_policy(arm)
+        i = Instance(nodes, truth, seed=1, policy=pol,
+                     send_contract_fields=True, access_outage=outage)
+        i.run(hours)
+        return i, pol
+
+    # 全程接入中断 → 中心一条读数都拿不到 → 只能是 no_soc。
+    inst, pol = run("ea_nb", outage=(0, hours * 3600))
+    sk = pol.skip_report()
+    total_sk = sum(sk.values())
+    # **网关节点是例外，必须排除。** 它自己的传感器没有接入跳（`node.is_gateway` 直接进网关
+    # 缓存），所以接入中断期间中心**照样**收得到它的快照——第一版断言"一条意图都不生成"
+    # 就是漏了这一点，被测试当场抓住。坡面节点才是"完全没有读数"的那一类。
+    gw_intents = [x for x in inst.intent_log if x[1].startswith(dep.gateway.sid + ":")]
+    other_intents = [x for x in inst.intent_log if not x[1].startswith(dep.gateway.sid + ":")]
+    check("全程无接入时，**坡面节点**一条意图都不生成",
+          not other_intents, f"非网关意图 {len(other_intents)} 条")
+    check("`no_soc` 是压倒性主要原因（≥90% 的跳过）",
+          sk.get("no_soc", 0) >= 0.9 * total_sk, f"no_soc={sk.get('no_soc')} / 总 {total_sk}")
+    check("网关节点仍能拿到读数并生成意图（它的接入跳不存在）",
+          len(gw_intents) > 0, f"网关意图 {len(gw_intents)} 条")
+
+    # 正常链路 → 会出现 at_target 族，且不出现 no_soc 之外的原因混淆。
+    inst2, pol2 = run("ea_nb")
+    sk2 = pol2.skip_report()
+    check("正常链路下 `at_target` 族出现（目标已达是主要跳过原因）",
+          sk2.get("at_target", 0) + sk2.get("at_target_evidence_stale", 0) > 0,
+          f"{sk2}")
+    check("`in_flight` 与 `at_target` 是两类不同原因，各自非零",
+          sk2.get("in_flight", 0) > 0 and sk2.get("at_target", 0) > 0,
+          f"in_flight={sk2.get('in_flight')}、at_target={sk2.get('at_target')}")
+
+
 def main() -> int:
     print("实例层验收（Task Contract v1.1）")
     test_denominator_is_exogenous()
@@ -1560,6 +1642,7 @@ def main() -> int:
     test_cache_service_is_an_instance_property()
     test_intent_reasons_close_and_locate_the_waste()
     test_trace_does_not_change_the_run()
+    test_soc_age_uses_source_time_and_skips_are_visible()
     print("\n" + "-" * 74)
     if FAIL:
         print(f"  {len(FAIL)} 项失败: {', '.join(FAIL)}")

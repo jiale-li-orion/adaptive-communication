@@ -7,8 +7,8 @@
     "autonomy_margin_min": null,
     "censored": 0.0,
     "commands_delivered": 6.0,
-    "commands_refused": 81.6,
-    "commands_sent": 35.0,
+    "commands_refused": 26.4,
+    "commands_sent": 18.4,
     "dead_nodes_end": 0.0,
     "deduplicated": 0.0,
     "deficit_h": 0.0,
@@ -21,17 +21,17 @@
     "event_match": 21.0,
     "event_missing_delivery": 4.4,
     "fenced": 0.0,
-    "intent_expired": 17.4,
-    "intent_generated": 116.6,
+    "intent_expired": 0.0,
+    "intent_generated": 44.8,
     "intent_lost": 0.0,
     "intent_mismatch_min": 6403.6,
-    "intent_reason_resend": 4.4,
-    "intent_reason_sent_resend": 0.3,
-    "intent_reason_sent_target_change": 6.5,
-    "intent_reason_sent_unknown_state": 28.2,
-    "intent_reason_target_change": 6.6,
-    "intent_reason_unknown_state": 105.6,
-    "intent_refused": 81.6,
+    "intent_reason_resend": 0.0,
+    "intent_reason_sent_resend": 0.0,
+    "intent_reason_sent_target_change": 4.4,
+    "intent_reason_sent_unknown_state": 14.0,
+    "intent_reason_target_change": 4.4,
+    "intent_reason_unknown_state": 40.4,
+    "intent_refused": 26.4,
     "intent_rejected": 0.0,
     "intent_stale_gen": 0.0,
     "knowledge_latency_mean_s": 1076.142857142857,
@@ -54,8 +54,8 @@
     "autonomy_margin_min": null,
     "censored": 0.0,
     "commands_delivered": 0.0,
-    "commands_refused": 8.4,
-    "commands_sent": 18.4,
+    "commands_refused": 0.0,
+    "commands_sent": 15.8,
     "dead_nodes_end": 0.0,
     "deduplicated": 0.0,
     "deficit_h": 0.0,
@@ -68,17 +68,17 @@
     "event_match": 21.0,
     "event_missing_delivery": 4.4,
     "fenced": 0.0,
-    "intent_expired": 2.8,
-    "intent_generated": 26.8,
+    "intent_expired": 0.0,
+    "intent_generated": 15.8,
     "intent_lost": 0.0,
     "intent_mismatch_min": 2348.2,
     "intent_reason_resend": 7.9,
     "intent_reason_sent_resend": 7.9,
-    "intent_reason_sent_target_change": 10.5,
+    "intent_reason_sent_target_change": 7.9,
     "intent_reason_sent_unknown_state": 0.0,
-    "intent_reason_target_change": 18.9,
+    "intent_reason_target_change": 7.9,
     "intent_reason_unknown_state": 0.0,
-    "intent_refused": 8.4,
+    "intent_refused": 0.0,
     "intent_rejected": 0.0,
     "intent_stale_gen": 0.0,
     "knowledge_latency_mean_s": 1076.142857142857,
@@ -101,8 +101,8 @@
     "autonomy_margin_min": null,
     "censored": 0.0,
     "commands_delivered": 0.0,
-    "commands_refused": 1.4,
-    "commands_sent": 18.4,
+    "commands_refused": 0.0,
+    "commands_sent": 15.8,
     "dead_nodes_end": 0.0,
     "deduplicated": 0.0,
     "deficit_h": 0.0,
@@ -115,17 +115,17 @@
     "event_match": 21.0,
     "event_missing_delivery": 4.4,
     "fenced": 0.0,
-    "intent_expired": 2.8,
-    "intent_generated": 19.8,
+    "intent_expired": 0.0,
+    "intent_generated": 15.8,
     "intent_lost": 0.0,
     "intent_mismatch_min": 2348.2,
     "intent_reason_resend": 7.9,
     "intent_reason_sent_resend": 7.9,
-    "intent_reason_sent_target_change": 10.5,
+    "intent_reason_sent_target_change": 7.9,
     "intent_reason_sent_unknown_state": 0.0,
-    "intent_reason_target_change": 11.9,
+    "intent_reason_target_change": 7.9,
     "intent_reason_unknown_state": 0.0,
-    "intent_refused": 1.4,
+    "intent_refused": 0.0,
     "intent_rejected": 0.0,
     "intent_stale_gen": 0.0,
     "knowledge_latency_mean_s": 1076.142857142857,
@@ -3362,8 +3362,8 @@
    },
    "command_counters": {
     "commands_delivered": 5,
-    "commands_refused": 198,
-    "commands_sent": 28,
+    "commands_refused": 114,
+    "commands_sent": 14,
     "deduplicated": 0,
     "fenced": 0,
     "stale_generation_dropped": 0,
@@ -3569,38 +3569,38 @@
    "intent_ledger": {
     "change": 5,
     "dedup": 0,
-    "expired": 14,
+    "expired": 0,
     "fenced": 0,
-    "generated": 226,
+    "generated": 128,
     "landed": 5,
     "lost": 0,
     "queued_left": 9,
-    "refused": 198,
+    "refused": 114,
     "rejected": 0,
     "same_value": 0,
-    "sent": 28,
+    "sent": 14,
     "speculative": 0,
     "stale_gen": 0
    },
    "intent_mismatch_s": 388800,
    "intent_reason": {
     "generated": {
-     "resend": 6,
-     "target_change": 1,
-     "unknown_state": 219
+     "resend": 0,
+     "target_change": 0,
+     "unknown_state": 128
     },
     "note": "\u751f\u6210\u539f\u56e0\u53ea\u6709\u4e09\u7c7b\uff1a\u65e0\u56de\u6267\uff08unknown_state\uff09/\u76ee\u6807\u53d8\u4e86\uff08target_change\uff09/\u91cd\u53d1\uff08resend\uff09\u3002`refused` \u662f\u6309\u5dee\u989d\u7b97\u7684\uff0c\u56e0\u4e3a\u62ff\u4e0d\u5230\u4e0b\u884c\u673a\u4f1a\u7684\u90a3\u4e9b\u610f\u56fe\u4e0d\u4f1a\u8fdb `sent` \u4fa7\u3002",
     "refused": {
-     "resend": 6,
+     "resend": 0,
      "target_change": 0,
-     "unknown_state": 192
+     "unknown_state": 114
     },
     "sent": {
      "resend": 0,
-     "target_change": 1,
-     "unknown_state": 27
+     "target_change": 0,
+     "unknown_state": 14
     },
-    "total_generated": 226
+    "total_generated": 128
    },
    "mixed_config_s": 0,
    "n_obligations": 189,
@@ -3666,7 +3666,7 @@
    "command_counters": {
     "commands_delivered": 7,
     "commands_refused": 0,
-    "commands_sent": 42,
+    "commands_sent": 21,
     "deduplicated": 0,
     "fenced": 0,
     "stale_generation_dropped": 0,
@@ -3872,25 +3872,25 @@
    "intent_ledger": {
     "change": 7,
     "dedup": 0,
-    "expired": 21,
+    "expired": 0,
     "fenced": 0,
-    "generated": 42,
+    "generated": 21,
     "landed": 7,
     "lost": 0,
     "queued_left": 14,
     "refused": 0,
     "rejected": 0,
     "same_value": 0,
-    "sent": 42,
+    "sent": 21,
     "speculative": 0,
     "stale_gen": 0
    },
    "intent_mismatch_s": 352380,
    "intent_reason": {
     "generated": {
-     "resend": 1,
-     "target_change": 12,
-     "unknown_state": 29
+     "resend": 0,
+     "target_change": 7,
+     "unknown_state": 14
     },
     "note": "\u751f\u6210\u539f\u56e0\u53ea\u6709\u4e09\u7c7b\uff1a\u65e0\u56de\u6267\uff08unknown_state\uff09/\u76ee\u6807\u53d8\u4e86\uff08target_change\uff09/\u91cd\u53d1\uff08resend\uff09\u3002`refused` \u662f\u6309\u5dee\u989d\u7b97\u7684\uff0c\u56e0\u4e3a\u62ff\u4e0d\u5230\u4e0b\u884c\u673a\u4f1a\u7684\u90a3\u4e9b\u610f\u56fe\u4e0d\u4f1a\u8fdb `sent` \u4fa7\u3002",
     "refused": {
@@ -3899,11 +3899,11 @@
      "unknown_state": 0
     },
     "sent": {
-     "resend": 1,
-     "target_change": 12,
-     "unknown_state": 29
+     "resend": 0,
+     "target_change": 7,
+     "unknown_state": 14
     },
-    "total_generated": 42
+    "total_generated": 21
    },
    "mixed_config_s": 0,
    "n_obligations": 189,
@@ -3969,7 +3969,7 @@
    "command_counters": {
     "commands_delivered": 4,
     "commands_refused": 0,
-    "commands_sent": 42,
+    "commands_sent": 18,
     "deduplicated": 0,
     "fenced": 0,
     "stale_generation_dropped": 0,
@@ -4175,25 +4175,25 @@
    "intent_ledger": {
     "change": 4,
     "dedup": 0,
-    "expired": 24,
+    "expired": 0,
     "fenced": 0,
-    "generated": 42,
+    "generated": 18,
     "landed": 4,
     "lost": 0,
     "queued_left": 14,
     "refused": 0,
     "rejected": 0,
     "same_value": 0,
-    "sent": 42,
+    "sent": 18,
     "speculative": 0,
     "stale_gen": 0
    },
    "intent_mismatch_s": 482160,
    "intent_reason": {
     "generated": {
-     "resend": 1,
-     "target_change": 10,
-     "unknown_state": 31
+     "resend": 0,
+     "target_change": 4,
+     "unknown_state": 14
     },
     "note": "\u751f\u6210\u539f\u56e0\u53ea\u6709\u4e09\u7c7b\uff1a\u65e0\u56de\u6267\uff08unknown_state\uff09/\u76ee\u6807\u53d8\u4e86\uff08target_change\uff09/\u91cd\u53d1\uff08resend\uff09\u3002`refused` \u662f\u6309\u5dee\u989d\u7b97\u7684\uff0c\u56e0\u4e3a\u62ff\u4e0d\u5230\u4e0b\u884c\u673a\u4f1a\u7684\u90a3\u4e9b\u610f\u56fe\u4e0d\u4f1a\u8fdb `sent` \u4fa7\u3002",
     "refused": {
@@ -4202,11 +4202,11 @@
      "unknown_state": 0
     },
     "sent": {
-     "resend": 1,
-     "target_change": 10,
-     "unknown_state": 31
+     "resend": 0,
+     "target_change": 4,
+     "unknown_state": 14
     },
-    "total_generated": 42
+    "total_generated": 18
    },
    "mixed_config_s": 0,
    "n_obligations": 189,
@@ -4272,7 +4272,7 @@
    "command_counters": {
     "commands_delivered": 7,
     "commands_refused": 84,
-    "commands_sent": 35,
+    "commands_sent": 21,
     "deduplicated": 0,
     "fenced": 0,
     "stale_generation_dropped": 0,
@@ -4478,16 +4478,16 @@
    "intent_ledger": {
     "change": 7,
     "dedup": 0,
-    "expired": 14,
+    "expired": 0,
     "fenced": 0,
-    "generated": 119,
+    "generated": 105,
     "landed": 7,
     "lost": 0,
     "queued_left": 14,
     "refused": 84,
     "rejected": 0,
     "same_value": 0,
-    "sent": 35,
+    "sent": 21,
     "speculative": 0,
     "stale_gen": 0
    },
@@ -4495,8 +4495,8 @@
    "intent_reason": {
     "generated": {
      "resend": 0,
-     "target_change": 8,
-     "unknown_state": 111
+     "target_change": 7,
+     "unknown_state": 98
     },
     "note": "\u751f\u6210\u539f\u56e0\u53ea\u6709\u4e09\u7c7b\uff1a\u65e0\u56de\u6267\uff08unknown_state\uff09/\u76ee\u6807\u53d8\u4e86\uff08target_change\uff09/\u91cd\u53d1\uff08resend\uff09\u3002`refused` \u662f\u6309\u5dee\u989d\u7b97\u7684\uff0c\u56e0\u4e3a\u62ff\u4e0d\u5230\u4e0b\u884c\u673a\u4f1a\u7684\u90a3\u4e9b\u610f\u56fe\u4e0d\u4f1a\u8fdb `sent` \u4fa7\u3002",
     "refused": {
@@ -4506,10 +4506,10 @@
     },
     "sent": {
      "resend": 0,
-     "target_change": 8,
-     "unknown_state": 27
+     "target_change": 7,
+     "unknown_state": 14
     },
-    "total_generated": 119
+    "total_generated": 105
    },
    "mixed_config_s": 0,
    "n_obligations": 189,
@@ -4574,8 +4574,8 @@
    },
    "command_counters": {
     "commands_delivered": 6,
-    "commands_refused": 84,
-    "commands_sent": 34,
+    "commands_refused": 0,
+    "commands_sent": 20,
     "deduplicated": 0,
     "fenced": 0,
     "stale_generation_dropped": 0,
@@ -4781,38 +4781,38 @@
    "intent_ledger": {
     "change": 6,
     "dedup": 0,
-    "expired": 14,
+    "expired": 0,
     "fenced": 0,
-    "generated": 118,
+    "generated": 20,
     "landed": 6,
     "lost": 0,
     "queued_left": 14,
-    "refused": 84,
+    "refused": 0,
     "rejected": 0,
     "same_value": 0,
-    "sent": 34,
+    "sent": 20,
     "speculative": 0,
     "stale_gen": 0
    },
    "intent_mismatch_s": 395640,
    "intent_reason": {
     "generated": {
-     "resend": 6,
-     "target_change": 7,
-     "unknown_state": 105
+     "resend": 0,
+     "target_change": 6,
+     "unknown_state": 14
     },
     "note": "\u751f\u6210\u539f\u56e0\u53ea\u6709\u4e09\u7c7b\uff1a\u65e0\u56de\u6267\uff08unknown_state\uff09/\u76ee\u6807\u53d8\u4e86\uff08target_change\uff09/\u91cd\u53d1\uff08resend\uff09\u3002`refused` \u662f\u6309\u5dee\u989d\u7b97\u7684\uff0c\u56e0\u4e3a\u62ff\u4e0d\u5230\u4e0b\u884c\u673a\u4f1a\u7684\u90a3\u4e9b\u610f\u56fe\u4e0d\u4f1a\u8fdb `sent` \u4fa7\u3002",
     "refused": {
-     "resend": 6,
+     "resend": 0,
      "target_change": 0,
-     "unknown_state": 78
+     "unknown_state": 0
     },
     "sent": {
      "resend": 0,
-     "target_change": 7,
-     "unknown_state": 27
+     "target_change": 6,
+     "unknown_state": 14
     },
-    "total_generated": 118
+    "total_generated": 20
    },
    "mixed_config_s": 0,
    "n_obligations": 189,
@@ -4877,8 +4877,8 @@
    },
    "command_counters": {
     "commands_delivered": 5,
-    "commands_refused": 114,
-    "commands_sent": 28,
+    "commands_refused": 30,
+    "commands_sent": 14,
     "deduplicated": 0,
     "fenced": 0,
     "stale_generation_dropped": 0,
@@ -5084,38 +5084,38 @@
    "intent_ledger": {
     "change": 5,
     "dedup": 0,
-    "expired": 14,
+    "expired": 0,
     "fenced": 0,
-    "generated": 142,
+    "generated": 44,
     "landed": 5,
     "lost": 0,
     "queued_left": 9,
-    "refused": 114,
+    "refused": 30,
     "rejected": 0,
     "same_value": 0,
-    "sent": 28,
+    "sent": 14,
     "speculative": 0,
     "stale_gen": 0
    },
    "intent_mismatch_s": 421200,
    "intent_reason": {
     "generated": {
-     "resend": 6,
-     "target_change": 1,
-     "unknown_state": 135
+     "resend": 0,
+     "target_change": 0,
+     "unknown_state": 44
     },
     "note": "\u751f\u6210\u539f\u56e0\u53ea\u6709\u4e09\u7c7b\uff1a\u65e0\u56de\u6267\uff08unknown_state\uff09/\u76ee\u6807\u53d8\u4e86\uff08target_change\uff09/\u91cd\u53d1\uff08resend\uff09\u3002`refused` \u662f\u6309\u5dee\u989d\u7b97\u7684\uff0c\u56e0\u4e3a\u62ff\u4e0d\u5230\u4e0b\u884c\u673a\u4f1a\u7684\u90a3\u4e9b\u610f\u56fe\u4e0d\u4f1a\u8fdb `sent` \u4fa7\u3002",
     "refused": {
-     "resend": 6,
+     "resend": 0,
      "target_change": 0,
-     "unknown_state": 108
+     "unknown_state": 30
     },
     "sent": {
      "resend": 0,
-     "target_change": 1,
-     "unknown_state": 27
+     "target_change": 0,
+     "unknown_state": 14
     },
-    "total_generated": 142
+    "total_generated": 44
    },
    "mixed_config_s": 0,
    "n_obligations": 189,
@@ -5181,7 +5181,7 @@
    "command_counters": {
     "commands_delivered": 5,
     "commands_refused": 0,
-    "commands_sent": 42,
+    "commands_sent": 19,
     "deduplicated": 0,
     "fenced": 0,
     "stale_generation_dropped": 0,
@@ -5387,25 +5387,25 @@
    "intent_ledger": {
     "change": 5,
     "dedup": 0,
-    "expired": 23,
+    "expired": 0,
     "fenced": 0,
-    "generated": 42,
+    "generated": 19,
     "landed": 5,
     "lost": 0,
     "queued_left": 14,
     "refused": 0,
     "rejected": 0,
     "same_value": 0,
-    "sent": 42,
+    "sent": 19,
     "speculative": 0,
     "stale_gen": 0
    },
    "intent_mismatch_s": 438900,
    "intent_reason": {
     "generated": {
-     "resend": 1,
-     "target_change": 8,
-     "unknown_state": 33
+     "resend": 0,
+     "target_change": 5,
+     "unknown_state": 14
     },
     "note": "\u751f\u6210\u539f\u56e0\u53ea\u6709\u4e09\u7c7b\uff1a\u65e0\u56de\u6267\uff08unknown_state\uff09/\u76ee\u6807\u53d8\u4e86\uff08target_change\uff09/\u91cd\u53d1\uff08resend\uff09\u3002`refused` \u662f\u6309\u5dee\u989d\u7b97\u7684\uff0c\u56e0\u4e3a\u62ff\u4e0d\u5230\u4e0b\u884c\u673a\u4f1a\u7684\u90a3\u4e9b\u610f\u56fe\u4e0d\u4f1a\u8fdb `sent` \u4fa7\u3002",
     "refused": {
@@ -5414,11 +5414,11 @@
      "unknown_state": 0
     },
     "sent": {
-     "resend": 1,
-     "target_change": 8,
-     "unknown_state": 33
+     "resend": 0,
+     "target_change": 5,
+     "unknown_state": 14
     },
-    "total_generated": 42
+    "total_generated": 19
    },
    "mixed_config_s": 0,
    "n_obligations": 189,
@@ -5483,8 +5483,8 @@
    },
    "command_counters": {
     "commands_delivered": 8,
-    "commands_refused": 168,
-    "commands_sent": 36,
+    "commands_refused": 0,
+    "commands_sent": 22,
     "deduplicated": 0,
     "fenced": 0,
     "stale_generation_dropped": 0,
@@ -5690,38 +5690,38 @@
    "intent_ledger": {
     "change": 8,
     "dedup": 0,
-    "expired": 14,
+    "expired": 0,
     "fenced": 0,
-    "generated": 204,
+    "generated": 22,
     "landed": 8,
     "lost": 0,
     "queued_left": 14,
-    "refused": 168,
+    "refused": 0,
     "rejected": 0,
     "same_value": 0,
-    "sent": 36,
+    "sent": 22,
     "speculative": 0,
     "stale_gen": 0
    },
    "intent_mismatch_s": 309120,
    "intent_reason": {
     "generated": {
-     "resend": 12,
-     "target_change": 9,
-     "unknown_state": 183
+     "resend": 0,
+     "target_change": 8,
+     "unknown_state": 14
     },
     "note": "\u751f\u6210\u539f\u56e0\u53ea\u6709\u4e09\u7c7b\uff1a\u65e0\u56de\u6267\uff08unknown_state\uff09/\u76ee\u6807\u53d8\u4e86\uff08target_change\uff09/\u91cd\u53d1\uff08resend\uff09\u3002`refused` \u662f\u6309\u5dee\u989d\u7b97\u7684\uff0c\u56e0\u4e3a\u62ff\u4e0d\u5230\u4e0b\u884c\u673a\u4f1a\u7684\u90a3\u4e9b\u610f\u56fe\u4e0d\u4f1a\u8fdb `sent` \u4fa7\u3002",
     "refused": {
-     "resend": 12,
+     "resend": 0,
      "target_change": 0,
-     "unknown_state": 156
+     "unknown_state": 0
     },
     "sent": {
      "resend": 0,
-     "target_change": 9,
-     "unknown_state": 27
+     "target_change": 8,
+     "unknown_state": 14
     },
-    "total_generated": 204
+    "total_generated": 22
    },
    "mixed_config_s": 0,
    "n_obligations": 189,
@@ -5786,8 +5786,8 @@
    },
    "command_counters": {
     "commands_delivered": 6,
-    "commands_refused": 84,
-    "commands_sent": 28,
+    "commands_refused": 36,
+    "commands_sent": 14,
     "deduplicated": 0,
     "fenced": 0,
     "stale_generation_dropped": 0,
@@ -5993,38 +5993,38 @@
    "intent_ledger": {
     "change": 6,
     "dedup": 0,
-    "expired": 22,
+    "expired": 0,
     "fenced": 0,
-    "generated": 112,
+    "generated": 50,
     "landed": 6,
     "lost": 0,
-    "queued_left": 0,
-    "refused": 84,
+    "queued_left": 8,
+    "refused": 36,
     "rejected": 0,
     "same_value": 0,
-    "sent": 28,
+    "sent": 14,
     "speculative": 0,
     "stale_gen": 0
    },
    "intent_mismatch_s": 374400,
    "intent_reason": {
     "generated": {
-     "resend": 5,
-     "target_change": 2,
-     "unknown_state": 105
+     "resend": 0,
+     "target_change": 0,
+     "unknown_state": 50
     },
     "note": "\u751f\u6210\u539f\u56e0\u53ea\u6709\u4e09\u7c7b\uff1a\u65e0\u56de\u6267\uff08unknown_state\uff09/\u76ee\u6807\u53d8\u4e86\uff08target_change\uff09/\u91cd\u53d1\uff08resend\uff09\u3002`refused` \u662f\u6309\u5dee\u989d\u7b97\u7684\uff0c\u56e0\u4e3a\u62ff\u4e0d\u5230\u4e0b\u884c\u673a\u4f1a\u7684\u90a3\u4e9b\u610f\u56fe\u4e0d\u4f1a\u8fdb `sent` \u4fa7\u3002",
     "refused": {
-     "resend": 5,
-     "target_change": 1,
-     "unknown_state": 78
+     "resend": 0,
+     "target_change": 0,
+     "unknown_state": 36
     },
     "sent": {
      "resend": 0,
-     "target_change": 1,
-     "unknown_state": 27
+     "target_change": 0,
+     "unknown_state": 14
     },
-    "total_generated": 112
+    "total_generated": 50
    },
    "mixed_config_s": 0,
    "n_obligations": 189,
@@ -6089,8 +6089,8 @@
    },
    "command_counters": {
     "commands_delivered": 7,
-    "commands_refused": 84,
-    "commands_sent": 35,
+    "commands_refused": 0,
+    "commands_sent": 21,
     "deduplicated": 0,
     "fenced": 0,
     "stale_generation_dropped": 0,
@@ -6296,38 +6296,38 @@
    "intent_ledger": {
     "change": 7,
     "dedup": 0,
-    "expired": 14,
+    "expired": 0,
     "fenced": 0,
-    "generated": 119,
+    "generated": 21,
     "landed": 7,
     "lost": 0,
     "queued_left": 14,
-    "refused": 84,
+    "refused": 0,
     "rejected": 0,
     "same_value": 0,
-    "sent": 35,
+    "sent": 21,
     "speculative": 0,
     "stale_gen": 0
    },
    "intent_mismatch_s": 352380,
    "intent_reason": {
     "generated": {
-     "resend": 6,
-     "target_change": 8,
-     "unknown_state": 105
+     "resend": 0,
+     "target_change": 7,
+     "unknown_state": 14
     },
     "note": "\u751f\u6210\u539f\u56e0\u53ea\u6709\u4e09\u7c7b\uff1a\u65e0\u56de\u6267\uff08unknown_state\uff09/\u76ee\u6807\u53d8\u4e86\uff08target_change\uff09/\u91cd\u53d1\uff08resend\uff09\u3002`refused` \u662f\u6309\u5dee\u989d\u7b97\u7684\uff0c\u56e0\u4e3a\u62ff\u4e0d\u5230\u4e0b\u884c\u673a\u4f1a\u7684\u90a3\u4e9b\u610f\u56fe\u4e0d\u4f1a\u8fdb `sent` \u4fa7\u3002",
     "refused": {
-     "resend": 6,
+     "resend": 0,
      "target_change": 0,
-     "unknown_state": 78
+     "unknown_state": 0
     },
     "sent": {
      "resend": 0,
-     "target_change": 8,
-     "unknown_state": 27
+     "target_change": 7,
+     "unknown_state": 14
     },
-    "total_generated": 119
+    "total_generated": 21
    },
    "mixed_config_s": 0,
    "n_obligations": 189,
@@ -6392,8 +6392,8 @@
    },
    "command_counters": {
     "commands_delivered": 0,
-    "commands_refused": 2,
-    "commands_sent": 4,
+    "commands_refused": 0,
+    "commands_sent": 2,
     "deduplicated": 0,
     "fenced": 0,
     "stale_generation_dropped": 0,
@@ -6599,16 +6599,16 @@
    "intent_ledger": {
     "change": 0,
     "dedup": 0,
-    "expired": 2,
+    "expired": 0,
     "fenced": 0,
-    "generated": 6,
+    "generated": 2,
     "landed": 0,
     "lost": 0,
     "queued_left": 2,
-    "refused": 2,
+    "refused": 0,
     "rejected": 0,
     "same_value": 0,
-    "sent": 4,
+    "sent": 2,
     "speculative": 0,
     "stale_gen": 0
    },
@@ -6616,21 +6616,21 @@
    "intent_reason": {
     "generated": {
      "resend": 1,
-     "target_change": 5,
+     "target_change": 1,
      "unknown_state": 0
     },
     "note": "\u751f\u6210\u539f\u56e0\u53ea\u6709\u4e09\u7c7b\uff1a\u65e0\u56de\u6267\uff08unknown_state\uff09/\u76ee\u6807\u53d8\u4e86\uff08target_change\uff09/\u91cd\u53d1\uff08resend\uff09\u3002`refused` \u662f\u6309\u5dee\u989d\u7b97\u7684\uff0c\u56e0\u4e3a\u62ff\u4e0d\u5230\u4e0b\u884c\u673a\u4f1a\u7684\u90a3\u4e9b\u610f\u56fe\u4e0d\u4f1a\u8fdb `sent` \u4fa7\u3002",
     "refused": {
      "resend": 0,
-     "target_change": 2,
+     "target_change": 0,
      "unknown_state": 0
     },
     "sent": {
      "resend": 1,
-     "target_change": 3,
+     "target_change": 1,
      "unknown_state": 0
     },
-    "total_generated": 6
+    "total_generated": 2
    },
    "mixed_config_s": 0,
    "n_obligations": 189,
@@ -6696,7 +6696,7 @@
    "command_counters": {
     "commands_delivered": 0,
     "commands_refused": 0,
-    "commands_sent": 28,
+    "commands_sent": 24,
     "deduplicated": 0,
     "fenced": 0,
     "stale_generation_dropped": 0,
@@ -6902,16 +6902,16 @@
    "intent_ledger": {
     "change": 0,
     "dedup": 0,
-    "expired": 4,
+    "expired": 0,
     "fenced": 0,
-    "generated": 28,
+    "generated": 24,
     "landed": 0,
     "lost": 0,
     "queued_left": 24,
     "refused": 0,
     "rejected": 0,
     "same_value": 0,
-    "sent": 28,
+    "sent": 24,
     "speculative": 0,
     "stale_gen": 0
    },
@@ -6919,7 +6919,7 @@
    "intent_reason": {
     "generated": {
      "resend": 12,
-     "target_change": 16,
+     "target_change": 12,
      "unknown_state": 0
     },
     "note": "\u751f\u6210\u539f\u56e0\u53ea\u6709\u4e09\u7c7b\uff1a\u65e0\u56de\u6267\uff08unknown_state\uff09/\u76ee\u6807\u53d8\u4e86\uff08target_change\uff09/\u91cd\u53d1\uff08resend\uff09\u3002`refused` \u662f\u6309\u5dee\u989d\u7b97\u7684\uff0c\u56e0\u4e3a\u62ff\u4e0d\u5230\u4e0b\u884c\u673a\u4f1a\u7684\u90a3\u4e9b\u610f\u56fe\u4e0d\u4f1a\u8fdb `sent` \u4fa7\u3002",
@@ -6930,10 +6930,10 @@
     },
     "sent": {
      "resend": 12,
-     "target_change": 16,
+     "target_change": 12,
      "unknown_state": 0
     },
-    "total_generated": 28
+    "total_generated": 24
    },
    "mixed_config_s": 0,
    "n_obligations": 189,
@@ -6999,7 +6999,7 @@
    "command_counters": {
     "commands_delivered": 0,
     "commands_refused": 0,
-    "commands_sent": 24,
+    "commands_sent": 20,
     "deduplicated": 0,
     "fenced": 0,
     "stale_generation_dropped": 0,
@@ -7205,16 +7205,16 @@
    "intent_ledger": {
     "change": 0,
     "dedup": 0,
-    "expired": 4,
+    "expired": 0,
     "fenced": 0,
-    "generated": 24,
+    "generated": 20,
     "landed": 0,
     "lost": 0,
     "queued_left": 20,
     "refused": 0,
     "rejected": 0,
     "same_value": 0,
-    "sent": 24,
+    "sent": 20,
     "speculative": 0,
     "stale_gen": 0
    },
@@ -7222,7 +7222,7 @@
    "intent_reason": {
     "generated": {
      "resend": 10,
-     "target_change": 14,
+     "target_change": 10,
      "unknown_state": 0
     },
     "note": "\u751f\u6210\u539f\u56e0\u53ea\u6709\u4e09\u7c7b\uff1a\u65e0\u56de\u6267\uff08unknown_state\uff09/\u76ee\u6807\u53d8\u4e86\uff08target_change\uff09/\u91cd\u53d1\uff08resend\uff09\u3002`refused` \u662f\u6309\u5dee\u989d\u7b97\u7684\uff0c\u56e0\u4e3a\u62ff\u4e0d\u5230\u4e0b\u884c\u673a\u4f1a\u7684\u90a3\u4e9b\u610f\u56fe\u4e0d\u4f1a\u8fdb `sent` \u4fa7\u3002",
@@ -7233,10 +7233,10 @@
     },
     "sent": {
      "resend": 10,
-     "target_change": 14,
+     "target_change": 10,
      "unknown_state": 0
     },
-    "total_generated": 24
+    "total_generated": 20
    },
    "mixed_config_s": 0,
    "n_obligations": 189,
@@ -7302,7 +7302,7 @@
    "command_counters": {
     "commands_delivered": 0,
     "commands_refused": 0,
-    "commands_sent": 24,
+    "commands_sent": 22,
     "deduplicated": 0,
     "fenced": 0,
     "stale_generation_dropped": 0,
@@ -7508,16 +7508,16 @@
    "intent_ledger": {
     "change": 0,
     "dedup": 0,
-    "expired": 2,
+    "expired": 0,
     "fenced": 0,
-    "generated": 24,
+    "generated": 22,
     "landed": 0,
     "lost": 0,
     "queued_left": 22,
     "refused": 0,
     "rejected": 0,
     "same_value": 0,
-    "sent": 24,
+    "sent": 22,
     "speculative": 0,
     "stale_gen": 0
    },
@@ -7525,7 +7525,7 @@
    "intent_reason": {
     "generated": {
      "resend": 11,
-     "target_change": 13,
+     "target_change": 11,
      "unknown_state": 0
     },
     "note": "\u751f\u6210\u539f\u56e0\u53ea\u6709\u4e09\u7c7b\uff1a\u65e0\u56de\u6267\uff08unknown_state\uff09/\u76ee\u6807\u53d8\u4e86\uff08target_change\uff09/\u91cd\u53d1\uff08resend\uff09\u3002`refused` \u662f\u6309\u5dee\u989d\u7b97\u7684\uff0c\u56e0\u4e3a\u62ff\u4e0d\u5230\u4e0b\u884c\u673a\u4f1a\u7684\u90a3\u4e9b\u610f\u56fe\u4e0d\u4f1a\u8fdb `sent` \u4fa7\u3002",
@@ -7536,10 +7536,10 @@
     },
     "sent": {
      "resend": 11,
-     "target_change": 13,
+     "target_change": 11,
      "unknown_state": 0
     },
-    "total_generated": 24
+    "total_generated": 22
    },
    "mixed_config_s": 0,
    "n_obligations": 189,
@@ -7604,8 +7604,8 @@
    },
    "command_counters": {
     "commands_delivered": 0,
-    "commands_refused": 2,
-    "commands_sent": 24,
+    "commands_refused": 0,
+    "commands_sent": 22,
     "deduplicated": 0,
     "fenced": 0,
     "stale_generation_dropped": 0,
@@ -7811,16 +7811,16 @@
    "intent_ledger": {
     "change": 0,
     "dedup": 0,
-    "expired": 2,
+    "expired": 0,
     "fenced": 0,
-    "generated": 26,
+    "generated": 22,
     "landed": 0,
     "lost": 0,
     "queued_left": 22,
-    "refused": 2,
+    "refused": 0,
     "rejected": 0,
     "same_value": 0,
-    "sent": 24,
+    "sent": 22,
     "speculative": 0,
     "stale_gen": 0
    },
@@ -7828,21 +7828,21 @@
    "intent_reason": {
     "generated": {
      "resend": 11,
-     "target_change": 15,
+     "target_change": 11,
      "unknown_state": 0
     },
     "note": "\u751f\u6210\u539f\u56e0\u53ea\u6709\u4e09\u7c7b\uff1a\u65e0\u56de\u6267\uff08unknown_state\uff09/\u76ee\u6807\u53d8\u4e86\uff08target_change\uff09/\u91cd\u53d1\uff08resend\uff09\u3002`refused` \u662f\u6309\u5dee\u989d\u7b97\u7684\uff0c\u56e0\u4e3a\u62ff\u4e0d\u5230\u4e0b\u884c\u673a\u4f1a\u7684\u90a3\u4e9b\u610f\u56fe\u4e0d\u4f1a\u8fdb `sent` \u4fa7\u3002",
     "refused": {
      "resend": 0,
-     "target_change": 2,
+     "target_change": 0,
      "unknown_state": 0
     },
     "sent": {
      "resend": 11,
-     "target_change": 13,
+     "target_change": 11,
      "unknown_state": 0
     },
-    "total_generated": 26
+    "total_generated": 22
    },
    "mixed_config_s": 0,
    "n_obligations": 189,
@@ -7907,8 +7907,8 @@
    },
    "command_counters": {
     "commands_delivered": 0,
-    "commands_refused": 2,
-    "commands_sent": 4,
+    "commands_refused": 0,
+    "commands_sent": 2,
     "deduplicated": 0,
     "fenced": 0,
     "stale_generation_dropped": 0,
@@ -8114,16 +8114,16 @@
    "intent_ledger": {
     "change": 0,
     "dedup": 0,
-    "expired": 2,
+    "expired": 0,
     "fenced": 0,
-    "generated": 6,
+    "generated": 2,
     "landed": 0,
     "lost": 0,
     "queued_left": 2,
-    "refused": 2,
+    "refused": 0,
     "rejected": 0,
     "same_value": 0,
-    "sent": 4,
+    "sent": 2,
     "speculative": 0,
     "stale_gen": 0
    },
@@ -8131,21 +8131,21 @@
    "intent_reason": {
     "generated": {
      "resend": 1,
-     "target_change": 5,
+     "target_change": 1,
      "unknown_state": 0
     },
     "note": "\u751f\u6210\u539f\u56e0\u53ea\u6709\u4e09\u7c7b\uff1a\u65e0\u56de\u6267\uff08unknown_state\uff09/\u76ee\u6807\u53d8\u4e86\uff08target_change\uff09/\u91cd\u53d1\uff08resend\uff09\u3002`refused` \u662f\u6309\u5dee\u989d\u7b97\u7684\uff0c\u56e0\u4e3a\u62ff\u4e0d\u5230\u4e0b\u884c\u673a\u4f1a\u7684\u90a3\u4e9b\u610f\u56fe\u4e0d\u4f1a\u8fdb `sent` \u4fa7\u3002",
     "refused": {
      "resend": 0,
-     "target_change": 2,
+     "target_change": 0,
      "unknown_state": 0
     },
     "sent": {
      "resend": 1,
-     "target_change": 3,
+     "target_change": 1,
      "unknown_state": 0
     },
-    "total_generated": 6
+    "total_generated": 2
    },
    "mixed_config_s": 0,
    "n_obligations": 189,
@@ -8211,7 +8211,7 @@
    "command_counters": {
     "commands_delivered": 0,
     "commands_refused": 0,
-    "commands_sent": 20,
+    "commands_sent": 16,
     "deduplicated": 0,
     "fenced": 0,
     "stale_generation_dropped": 0,
@@ -8417,16 +8417,16 @@
    "intent_ledger": {
     "change": 0,
     "dedup": 0,
-    "expired": 4,
+    "expired": 0,
     "fenced": 0,
-    "generated": 20,
+    "generated": 16,
     "landed": 0,
     "lost": 0,
     "queued_left": 16,
     "refused": 0,
     "rejected": 0,
     "same_value": 0,
-    "sent": 20,
+    "sent": 16,
     "speculative": 0,
     "stale_gen": 0
    },
@@ -8434,7 +8434,7 @@
    "intent_reason": {
     "generated": {
      "resend": 8,
-     "target_change": 12,
+     "target_change": 8,
      "unknown_state": 0
     },
     "note": "\u751f\u6210\u539f\u56e0\u53ea\u6709\u4e09\u7c7b\uff1a\u65e0\u56de\u6267\uff08unknown_state\uff09/\u76ee\u6807\u53d8\u4e86\uff08target_change\uff09/\u91cd\u53d1\uff08resend\uff09\u3002`refused` \u662f\u6309\u5dee\u989d\u7b97\u7684\uff0c\u56e0\u4e3a\u62ff\u4e0d\u5230\u4e0b\u884c\u673a\u4f1a\u7684\u90a3\u4e9b\u610f\u56fe\u4e0d\u4f1a\u8fdb `sent` \u4fa7\u3002",
@@ -8445,10 +8445,10 @@
     },
     "sent": {
      "resend": 8,
-     "target_change": 12,
+     "target_change": 8,
      "unknown_state": 0
     },
-    "total_generated": 20
+    "total_generated": 16
    },
    "mixed_config_s": 0,
    "n_obligations": 189,
@@ -8513,8 +8513,8 @@
    },
    "command_counters": {
     "commands_delivered": 0,
-    "commands_refused": 4,
-    "commands_sent": 28,
+    "commands_refused": 0,
+    "commands_sent": 26,
     "deduplicated": 0,
     "fenced": 0,
     "stale_generation_dropped": 0,
@@ -8720,16 +8720,16 @@
    "intent_ledger": {
     "change": 0,
     "dedup": 0,
-    "expired": 2,
+    "expired": 0,
     "fenced": 0,
-    "generated": 32,
+    "generated": 26,
     "landed": 0,
     "lost": 0,
     "queued_left": 26,
-    "refused": 4,
+    "refused": 0,
     "rejected": 0,
     "same_value": 0,
-    "sent": 28,
+    "sent": 26,
     "speculative": 0,
     "stale_gen": 0
    },
@@ -8737,21 +8737,21 @@
    "intent_reason": {
     "generated": {
      "resend": 13,
-     "target_change": 19,
+     "target_change": 13,
      "unknown_state": 0
     },
     "note": "\u751f\u6210\u539f\u56e0\u53ea\u6709\u4e09\u7c7b\uff1a\u65e0\u56de\u6267\uff08unknown_state\uff09/\u76ee\u6807\u53d8\u4e86\uff08target_change\uff09/\u91cd\u53d1\uff08resend\uff09\u3002`refused` \u662f\u6309\u5dee\u989d\u7b97\u7684\uff0c\u56e0\u4e3a\u62ff\u4e0d\u5230\u4e0b\u884c\u673a\u4f1a\u7684\u90a3\u4e9b\u610f\u56fe\u4e0d\u4f1a\u8fdb `sent` \u4fa7\u3002",
     "refused": {
      "resend": 0,
-     "target_change": 4,
+     "target_change": 0,
      "unknown_state": 0
     },
     "sent": {
      "resend": 13,
-     "target_change": 15,
+     "target_change": 13,
      "unknown_state": 0
     },
-    "total_generated": 32
+    "total_generated": 26
    },
    "mixed_config_s": 0,
    "n_obligations": 189,
@@ -8816,8 +8816,8 @@
    },
    "command_counters": {
     "commands_delivered": 0,
-    "commands_refused": 2,
-    "commands_sent": 4,
+    "commands_refused": 0,
+    "commands_sent": 2,
     "deduplicated": 0,
     "fenced": 0,
     "stale_generation_dropped": 0,
@@ -9023,16 +9023,16 @@
    "intent_ledger": {
     "change": 0,
     "dedup": 0,
-    "expired": 4,
+    "expired": 0,
     "fenced": 0,
-    "generated": 6,
+    "generated": 2,
     "landed": 0,
     "lost": 0,
-    "queued_left": 0,
-    "refused": 2,
+    "queued_left": 2,
+    "refused": 0,
     "rejected": 0,
     "same_value": 0,
-    "sent": 4,
+    "sent": 2,
     "speculative": 0,
     "stale_gen": 0
    },
@@ -9040,21 +9040,21 @@
    "intent_reason": {
     "generated": {
      "resend": 1,
-     "target_change": 5,
+     "target_change": 1,
      "unknown_state": 0
     },
     "note": "\u751f\u6210\u539f\u56e0\u53ea\u6709\u4e09\u7c7b\uff1a\u65e0\u56de\u6267\uff08unknown_state\uff09/\u76ee\u6807\u53d8\u4e86\uff08target_change\uff09/\u91cd\u53d1\uff08resend\uff09\u3002`refused` \u662f\u6309\u5dee\u989d\u7b97\u7684\uff0c\u56e0\u4e3a\u62ff\u4e0d\u5230\u4e0b\u884c\u673a\u4f1a\u7684\u90a3\u4e9b\u610f\u56fe\u4e0d\u4f1a\u8fdb `sent` \u4fa7\u3002",
     "refused": {
      "resend": 0,
-     "target_change": 2,
+     "target_change": 0,
      "unknown_state": 0
     },
     "sent": {
      "resend": 1,
-     "target_change": 3,
+     "target_change": 1,
      "unknown_state": 0
     },
-    "total_generated": 6
+    "total_generated": 2
    },
    "mixed_config_s": 0,
    "n_obligations": 189,
@@ -9119,8 +9119,8 @@
    },
    "command_counters": {
     "commands_delivered": 0,
-    "commands_refused": 2,
-    "commands_sent": 24,
+    "commands_refused": 0,
+    "commands_sent": 22,
     "deduplicated": 0,
     "fenced": 0,
     "stale_generation_dropped": 0,
@@ -9326,16 +9326,16 @@
    "intent_ledger": {
     "change": 0,
     "dedup": 0,
-    "expired": 2,
+    "expired": 0,
     "fenced": 0,
-    "generated": 26,
+    "generated": 22,
     "landed": 0,
     "lost": 0,
     "queued_left": 22,
-    "refused": 2,
+    "refused": 0,
     "rejected": 0,
     "same_value": 0,
-    "sent": 24,
+    "sent": 22,
     "speculative": 0,
     "stale_gen": 0
    },
@@ -9343,21 +9343,21 @@
    "intent_reason": {
     "generated": {
      "resend": 11,
-     "target_change": 15,
+     "target_change": 11,
      "unknown_state": 0
     },
     "note": "\u751f\u6210\u539f\u56e0\u53ea\u6709\u4e09\u7c7b\uff1a\u65e0\u56de\u6267\uff08unknown_state\uff09/\u76ee\u6807\u53d8\u4e86\uff08target_change\uff09/\u91cd\u53d1\uff08resend\uff09\u3002`refused` \u662f\u6309\u5dee\u989d\u7b97\u7684\uff0c\u56e0\u4e3a\u62ff\u4e0d\u5230\u4e0b\u884c\u673a\u4f1a\u7684\u90a3\u4e9b\u610f\u56fe\u4e0d\u4f1a\u8fdb `sent` \u4fa7\u3002",
     "refused": {
      "resend": 0,
-     "target_change": 2,
+     "target_change": 0,
      "unknown_state": 0
     },
     "sent": {
      "resend": 11,
-     "target_change": 13,
+     "target_change": 11,
      "unknown_state": 0
     },
-    "total_generated": 26
+    "total_generated": 22
    },
    "mixed_config_s": 0,
    "n_obligations": 189,
@@ -9422,8 +9422,8 @@
    },
    "command_counters": {
     "commands_delivered": 0,
-    "commands_refused": 12,
-    "commands_sent": 4,
+    "commands_refused": 0,
+    "commands_sent": 2,
     "deduplicated": 0,
     "fenced": 0,
     "stale_generation_dropped": 0,
@@ -9629,16 +9629,16 @@
    "intent_ledger": {
     "change": 0,
     "dedup": 0,
-    "expired": 2,
+    "expired": 0,
     "fenced": 0,
-    "generated": 16,
+    "generated": 2,
     "landed": 0,
     "lost": 0,
     "queued_left": 2,
-    "refused": 12,
+    "refused": 0,
     "rejected": 0,
     "same_value": 0,
-    "sent": 4,
+    "sent": 2,
     "speculative": 0,
     "stale_gen": 0
    },
@@ -9646,21 +9646,21 @@
    "intent_reason": {
     "generated": {
      "resend": 1,
-     "target_change": 15,
+     "target_change": 1,
      "unknown_state": 0
     },
     "note": "\u751f\u6210\u539f\u56e0\u53ea\u6709\u4e09\u7c7b\uff1a\u65e0\u56de\u6267\uff08unknown_state\uff09/\u76ee\u6807\u53d8\u4e86\uff08target_change\uff09/\u91cd\u53d1\uff08resend\uff09\u3002`refused` \u662f\u6309\u5dee\u989d\u7b97\u7684\uff0c\u56e0\u4e3a\u62ff\u4e0d\u5230\u4e0b\u884c\u673a\u4f1a\u7684\u90a3\u4e9b\u610f\u56fe\u4e0d\u4f1a\u8fdb `sent` \u4fa7\u3002",
     "refused": {
      "resend": 0,
-     "target_change": 12,
+     "target_change": 0,
      "unknown_state": 0
     },
     "sent": {
      "resend": 1,
-     "target_change": 3,
+     "target_change": 1,
      "unknown_state": 0
     },
-    "total_generated": 16
+    "total_generated": 2
    },
    "mixed_config_s": 0,
    "n_obligations": 189,
@@ -9726,7 +9726,7 @@
    "command_counters": {
     "commands_delivered": 0,
     "commands_refused": 0,
-    "commands_sent": 28,
+    "commands_sent": 24,
     "deduplicated": 0,
     "fenced": 0,
     "stale_generation_dropped": 0,
@@ -9932,16 +9932,16 @@
    "intent_ledger": {
     "change": 0,
     "dedup": 0,
-    "expired": 4,
+    "expired": 0,
     "fenced": 0,
-    "generated": 28,
+    "generated": 24,
     "landed": 0,
     "lost": 0,
     "queued_left": 24,
     "refused": 0,
     "rejected": 0,
     "same_value": 0,
-    "sent": 28,
+    "sent": 24,
     "speculative": 0,
     "stale_gen": 0
    },
@@ -9949,7 +9949,7 @@
    "intent_reason": {
     "generated": {
      "resend": 12,
-     "target_change": 16,
+     "target_change": 12,
      "unknown_state": 0
     },
     "note": "\u751f\u6210\u539f\u56e0\u53ea\u6709\u4e09\u7c7b\uff1a\u65e0\u56de\u6267\uff08unknown_state\uff09/\u76ee\u6807\u53d8\u4e86\uff08target_change\uff09/\u91cd\u53d1\uff08resend\uff09\u3002`refused` \u662f\u6309\u5dee\u989d\u7b97\u7684\uff0c\u56e0\u4e3a\u62ff\u4e0d\u5230\u4e0b\u884c\u673a\u4f1a\u7684\u90a3\u4e9b\u610f\u56fe\u4e0d\u4f1a\u8fdb `sent` \u4fa7\u3002",
@@ -9960,10 +9960,10 @@
     },
     "sent": {
      "resend": 12,
-     "target_change": 16,
+     "target_change": 12,
      "unknown_state": 0
     },
-    "total_generated": 28
+    "total_generated": 24
    },
    "mixed_config_s": 0,
    "n_obligations": 189,
@@ -10029,7 +10029,7 @@
    "command_counters": {
     "commands_delivered": 0,
     "commands_refused": 0,
-    "commands_sent": 24,
+    "commands_sent": 20,
     "deduplicated": 0,
     "fenced": 0,
     "stale_generation_dropped": 0,
@@ -10235,16 +10235,16 @@
    "intent_ledger": {
     "change": 0,
     "dedup": 0,
-    "expired": 4,
+    "expired": 0,
     "fenced": 0,
-    "generated": 24,
+    "generated": 20,
     "landed": 0,
     "lost": 0,
     "queued_left": 20,
     "refused": 0,
     "rejected": 0,
     "same_value": 0,
-    "sent": 24,
+    "sent": 20,
     "speculative": 0,
     "stale_gen": 0
    },
@@ -10252,7 +10252,7 @@
    "intent_reason": {
     "generated": {
      "resend": 10,
-     "target_change": 14,
+     "target_change": 10,
      "unknown_state": 0
     },
     "note": "\u751f\u6210\u539f\u56e0\u53ea\u6709\u4e09\u7c7b\uff1a\u65e0\u56de\u6267\uff08unknown_state\uff09/\u76ee\u6807\u53d8\u4e86\uff08target_change\uff09/\u91cd\u53d1\uff08resend\uff09\u3002`refused` \u662f\u6309\u5dee\u989d\u7b97\u7684\uff0c\u56e0\u4e3a\u62ff\u4e0d\u5230\u4e0b\u884c\u673a\u4f1a\u7684\u90a3\u4e9b\u610f\u56fe\u4e0d\u4f1a\u8fdb `sent` \u4fa7\u3002",
@@ -10263,10 +10263,10 @@
     },
     "sent": {
      "resend": 10,
-     "target_change": 14,
+     "target_change": 10,
      "unknown_state": 0
     },
-    "total_generated": 24
+    "total_generated": 20
    },
    "mixed_config_s": 0,
    "n_obligations": 189,
@@ -10332,7 +10332,7 @@
    "command_counters": {
     "commands_delivered": 0,
     "commands_refused": 0,
-    "commands_sent": 24,
+    "commands_sent": 22,
     "deduplicated": 0,
     "fenced": 0,
     "stale_generation_dropped": 0,
@@ -10538,16 +10538,16 @@
    "intent_ledger": {
     "change": 0,
     "dedup": 0,
-    "expired": 2,
+    "expired": 0,
     "fenced": 0,
-    "generated": 24,
+    "generated": 22,
     "landed": 0,
     "lost": 0,
     "queued_left": 22,
     "refused": 0,
     "rejected": 0,
     "same_value": 0,
-    "sent": 24,
+    "sent": 22,
     "speculative": 0,
     "stale_gen": 0
    },
@@ -10555,7 +10555,7 @@
    "intent_reason": {
     "generated": {
      "resend": 11,
-     "target_change": 13,
+     "target_change": 11,
      "unknown_state": 0
     },
     "note": "\u751f\u6210\u539f\u56e0\u53ea\u6709\u4e09\u7c7b\uff1a\u65e0\u56de\u6267\uff08unknown_state\uff09/\u76ee\u6807\u53d8\u4e86\uff08target_change\uff09/\u91cd\u53d1\uff08resend\uff09\u3002`refused` \u662f\u6309\u5dee\u989d\u7b97\u7684\uff0c\u56e0\u4e3a\u62ff\u4e0d\u5230\u4e0b\u884c\u673a\u4f1a\u7684\u90a3\u4e9b\u610f\u56fe\u4e0d\u4f1a\u8fdb `sent` \u4fa7\u3002",
@@ -10566,10 +10566,10 @@
     },
     "sent": {
      "resend": 11,
-     "target_change": 13,
+     "target_change": 11,
      "unknown_state": 0
     },
-    "total_generated": 24
+    "total_generated": 22
    },
    "mixed_config_s": 0,
    "n_obligations": 189,
@@ -10634,8 +10634,8 @@
    },
    "command_counters": {
     "commands_delivered": 0,
-    "commands_refused": 12,
-    "commands_sent": 24,
+    "commands_refused": 0,
+    "commands_sent": 22,
     "deduplicated": 0,
     "fenced": 0,
     "stale_generation_dropped": 0,
@@ -10841,16 +10841,16 @@
    "intent_ledger": {
     "change": 0,
     "dedup": 0,
-    "expired": 2,
+    "expired": 0,
     "fenced": 0,
-    "generated": 36,
+    "generated": 22,
     "landed": 0,
     "lost": 0,
     "queued_left": 22,
-    "refused": 12,
+    "refused": 0,
     "rejected": 0,
     "same_value": 0,
-    "sent": 24,
+    "sent": 22,
     "speculative": 0,
     "stale_gen": 0
    },
@@ -10858,21 +10858,21 @@
    "intent_reason": {
     "generated": {
      "resend": 11,
-     "target_change": 25,
+     "target_change": 11,
      "unknown_state": 0
     },
     "note": "\u751f\u6210\u539f\u56e0\u53ea\u6709\u4e09\u7c7b\uff1a\u65e0\u56de\u6267\uff08unknown_state\uff09/\u76ee\u6807\u53d8\u4e86\uff08target_change\uff09/\u91cd\u53d1\uff08resend\uff09\u3002`refused` \u662f\u6309\u5dee\u989d\u7b97\u7684\uff0c\u56e0\u4e3a\u62ff\u4e0d\u5230\u4e0b\u884c\u673a\u4f1a\u7684\u90a3\u4e9b\u610f\u56fe\u4e0d\u4f1a\u8fdb `sent` \u4fa7\u3002",
     "refused": {
      "resend": 0,
-     "target_change": 12,
+     "target_change": 0,
      "unknown_state": 0
     },
     "sent": {
      "resend": 11,
-     "target_change": 13,
+     "target_change": 11,
      "unknown_state": 0
     },
-    "total_generated": 36
+    "total_generated": 22
    },
    "mixed_config_s": 0,
    "n_obligations": 189,
@@ -10937,8 +10937,8 @@
    },
    "command_counters": {
     "commands_delivered": 0,
-    "commands_refused": 12,
-    "commands_sent": 4,
+    "commands_refused": 0,
+    "commands_sent": 2,
     "deduplicated": 0,
     "fenced": 0,
     "stale_generation_dropped": 0,
@@ -11144,16 +11144,16 @@
    "intent_ledger": {
     "change": 0,
     "dedup": 0,
-    "expired": 2,
+    "expired": 0,
     "fenced": 0,
-    "generated": 16,
+    "generated": 2,
     "landed": 0,
     "lost": 0,
     "queued_left": 2,
-    "refused": 12,
+    "refused": 0,
     "rejected": 0,
     "same_value": 0,
-    "sent": 4,
+    "sent": 2,
     "speculative": 0,
     "stale_gen": 0
    },
@@ -11161,21 +11161,21 @@
    "intent_reason": {
     "generated": {
      "resend": 1,
-     "target_change": 15,
+     "target_change": 1,
      "unknown_state": 0
     },
     "note": "\u751f\u6210\u539f\u56e0\u53ea\u6709\u4e09\u7c7b\uff1a\u65e0\u56de\u6267\uff08unknown_state\uff09/\u76ee\u6807\u53d8\u4e86\uff08target_change\uff09/\u91cd\u53d1\uff08resend\uff09\u3002`refused` \u662f\u6309\u5dee\u989d\u7b97\u7684\uff0c\u56e0\u4e3a\u62ff\u4e0d\u5230\u4e0b\u884c\u673a\u4f1a\u7684\u90a3\u4e9b\u610f\u56fe\u4e0d\u4f1a\u8fdb `sent` \u4fa7\u3002",
     "refused": {
      "resend": 0,
-     "target_change": 12,
+     "target_change": 0,
      "unknown_state": 0
     },
     "sent": {
      "resend": 1,
-     "target_change": 3,
+     "target_change": 1,
      "unknown_state": 0
     },
-    "total_generated": 16
+    "total_generated": 2
    },
    "mixed_config_s": 0,
    "n_obligations": 189,
@@ -11241,7 +11241,7 @@
    "command_counters": {
     "commands_delivered": 0,
     "commands_refused": 0,
-    "commands_sent": 20,
+    "commands_sent": 16,
     "deduplicated": 0,
     "fenced": 0,
     "stale_generation_dropped": 0,
@@ -11447,16 +11447,16 @@
    "intent_ledger": {
     "change": 0,
     "dedup": 0,
-    "expired": 4,
+    "expired": 0,
     "fenced": 0,
-    "generated": 20,
+    "generated": 16,
     "landed": 0,
     "lost": 0,
     "queued_left": 16,
     "refused": 0,
     "rejected": 0,
     "same_value": 0,
-    "sent": 20,
+    "sent": 16,
     "speculative": 0,
     "stale_gen": 0
    },
@@ -11464,7 +11464,7 @@
    "intent_reason": {
     "generated": {
      "resend": 8,
-     "target_change": 12,
+     "target_change": 8,
      "unknown_state": 0
     },
     "note": "\u751f\u6210\u539f\u56e0\u53ea\u6709\u4e09\u7c7b\uff1a\u65e0\u56de\u6267\uff08unknown_state\uff09/\u76ee\u6807\u53d8\u4e86\uff08target_change\uff09/\u91cd\u53d1\uff08resend\uff09\u3002`refused` \u662f\u6309\u5dee\u989d\u7b97\u7684\uff0c\u56e0\u4e3a\u62ff\u4e0d\u5230\u4e0b\u884c\u673a\u4f1a\u7684\u90a3\u4e9b\u610f\u56fe\u4e0d\u4f1a\u8fdb `sent` \u4fa7\u3002",
@@ -11475,10 +11475,10 @@
     },
     "sent": {
      "resend": 8,
-     "target_change": 12,
+     "target_change": 8,
      "unknown_state": 0
     },
-    "total_generated": 20
+    "total_generated": 16
    },
    "mixed_config_s": 0,
    "n_obligations": 189,
@@ -11543,8 +11543,8 @@
    },
    "command_counters": {
     "commands_delivered": 0,
-    "commands_refused": 24,
-    "commands_sent": 28,
+    "commands_refused": 0,
+    "commands_sent": 26,
     "deduplicated": 0,
     "fenced": 0,
     "stale_generation_dropped": 0,
@@ -11750,16 +11750,16 @@
    "intent_ledger": {
     "change": 0,
     "dedup": 0,
-    "expired": 2,
+    "expired": 0,
     "fenced": 0,
-    "generated": 52,
+    "generated": 26,
     "landed": 0,
     "lost": 0,
     "queued_left": 26,
-    "refused": 24,
+    "refused": 0,
     "rejected": 0,
     "same_value": 0,
-    "sent": 28,
+    "sent": 26,
     "speculative": 0,
     "stale_gen": 0
    },
@@ -11767,21 +11767,21 @@
    "intent_reason": {
     "generated": {
      "resend": 13,
-     "target_change": 39,
+     "target_change": 13,
      "unknown_state": 0
     },
     "note": "\u751f\u6210\u539f\u56e0\u53ea\u6709\u4e09\u7c7b\uff1a\u65e0\u56de\u6267\uff08unknown_state\uff09/\u76ee\u6807\u53d8\u4e86\uff08target_change\uff09/\u91cd\u53d1\uff08resend\uff09\u3002`refused` \u662f\u6309\u5dee\u989d\u7b97\u7684\uff0c\u56e0\u4e3a\u62ff\u4e0d\u5230\u4e0b\u884c\u673a\u4f1a\u7684\u90a3\u4e9b\u610f\u56fe\u4e0d\u4f1a\u8fdb `sent` \u4fa7\u3002",
     "refused": {
      "resend": 0,
-     "target_change": 24,
+     "target_change": 0,
      "unknown_state": 0
     },
     "sent": {
      "resend": 13,
-     "target_change": 15,
+     "target_change": 13,
      "unknown_state": 0
     },
-    "total_generated": 52
+    "total_generated": 26
    },
    "mixed_config_s": 0,
    "n_obligations": 189,
@@ -11846,8 +11846,8 @@
    },
    "command_counters": {
     "commands_delivered": 0,
-    "commands_refused": 12,
-    "commands_sent": 4,
+    "commands_refused": 0,
+    "commands_sent": 2,
     "deduplicated": 0,
     "fenced": 0,
     "stale_generation_dropped": 0,
@@ -12053,16 +12053,16 @@
    "intent_ledger": {
     "change": 0,
     "dedup": 0,
-    "expired": 4,
+    "expired": 0,
     "fenced": 0,
-    "generated": 16,
+    "generated": 2,
     "landed": 0,
     "lost": 0,
-    "queued_left": 0,
-    "refused": 12,
+    "queued_left": 2,
+    "refused": 0,
     "rejected": 0,
     "same_value": 0,
-    "sent": 4,
+    "sent": 2,
     "speculative": 0,
     "stale_gen": 0
    },
@@ -12070,21 +12070,21 @@
    "intent_reason": {
     "generated": {
      "resend": 1,
-     "target_change": 15,
+     "target_change": 1,
      "unknown_state": 0
     },
     "note": "\u751f\u6210\u539f\u56e0\u53ea\u6709\u4e09\u7c7b\uff1a\u65e0\u56de\u6267\uff08unknown_state\uff09/\u76ee\u6807\u53d8\u4e86\uff08target_change\uff09/\u91cd\u53d1\uff08resend\uff09\u3002`refused` \u662f\u6309\u5dee\u989d\u7b97\u7684\uff0c\u56e0\u4e3a\u62ff\u4e0d\u5230\u4e0b\u884c\u673a\u4f1a\u7684\u90a3\u4e9b\u610f\u56fe\u4e0d\u4f1a\u8fdb `sent` \u4fa7\u3002",
     "refused": {
      "resend": 0,
-     "target_change": 12,
+     "target_change": 0,
      "unknown_state": 0
     },
     "sent": {
      "resend": 1,
-     "target_change": 3,
+     "target_change": 1,
      "unknown_state": 0
     },
-    "total_generated": 16
+    "total_generated": 2
    },
    "mixed_config_s": 0,
    "n_obligations": 189,
@@ -12149,8 +12149,8 @@
    },
    "command_counters": {
     "commands_delivered": 0,
-    "commands_refused": 12,
-    "commands_sent": 24,
+    "commands_refused": 0,
+    "commands_sent": 22,
     "deduplicated": 0,
     "fenced": 0,
     "stale_generation_dropped": 0,
@@ -12356,16 +12356,16 @@
    "intent_ledger": {
     "change": 0,
     "dedup": 0,
-    "expired": 2,
+    "expired": 0,
     "fenced": 0,
-    "generated": 36,
+    "generated": 22,
     "landed": 0,
     "lost": 0,
     "queued_left": 22,
-    "refused": 12,
+    "refused": 0,
     "rejected": 0,
     "same_value": 0,
-    "sent": 24,
+    "sent": 22,
     "speculative": 0,
     "stale_gen": 0
    },
@@ -12373,21 +12373,21 @@
    "intent_reason": {
     "generated": {
      "resend": 11,
-     "target_change": 25,
+     "target_change": 11,
      "unknown_state": 0
     },
     "note": "\u751f\u6210\u539f\u56e0\u53ea\u6709\u4e09\u7c7b\uff1a\u65e0\u56de\u6267\uff08unknown_state\uff09/\u76ee\u6807\u53d8\u4e86\uff08target_change\uff09/\u91cd\u53d1\uff08resend\uff09\u3002`refused` \u662f\u6309\u5dee\u989d\u7b97\u7684\uff0c\u56e0\u4e3a\u62ff\u4e0d\u5230\u4e0b\u884c\u673a\u4f1a\u7684\u90a3\u4e9b\u610f\u56fe\u4e0d\u4f1a\u8fdb `sent` \u4fa7\u3002",
     "refused": {
      "resend": 0,
-     "target_change": 12,
+     "target_change": 0,
      "unknown_state": 0
     },
     "sent": {
      "resend": 11,
-     "target_change": 13,
+     "target_change": 11,
      "unknown_state": 0
     },
-    "total_generated": 36
+    "total_generated": 22
    },
    "mixed_config_s": 0,
    "n_obligations": 189,

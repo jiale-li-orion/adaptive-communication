@@ -85,6 +85,18 @@ class CenterView:
         return self.soc_model.observe(node_id, snap.get("soc_wh"),
                                       self.report_at.get(node_id), self.t_s)
 
+    def soc_age_s(self, node_id: str) -> int | None:
+        """**这条电量证据有多旧**：从它的**源时刻**（节点采到的时刻）算起，不是接收时刻。
+
+        `report_at` 是中心收到的时刻。用它算年龄会把"在路上走了多久"算进证据年龄，
+        而策略真正该问的是"这条读数描述的是多久以前的设备状态"。
+        """
+        snap = self.reports.get(node_id)
+        if not snap:
+            return None
+        src = snap.get("read_at")
+        return None if src is None else self.t_s - int(src)
+
     def aoi_s(self, node_id: str) -> int | None:
         """中心视角的 AoI。**从未收到过任何样本时返回 None**，不得当成 0。"""
         newest = self.newest_taken_at.get(node_id)
@@ -113,6 +125,11 @@ class CenterPolicy:
         #: 命令的所有重发共享一个身份，目标变了才换新身份。这正是远端能识别重复的前提。
         self.target: dict[str, object] = {}
         self.generation: dict[str, int] = {}
+        #: 跳过原因计数与"每台节点最后一次跳过的原因"。**诊断用，不参与任何判断。**
+        self.skip_counts: dict[str, int] = {}
+        self.skip_last: dict[str, tuple[str, int]] = {}
+        #: 由 `plan` 的调用方设置的当前时刻，只用来给 `skip_last` 附一个时刻。
+        self._skip_t: int = 0
 
     def stamp(self, node_id: str, **fields) -> dict:
         """给**单字段**命令盖上世代号。目标没变就不换号。
@@ -150,6 +167,24 @@ class CenterPolicy:
 
     def note_command_sent(self, node_id: str, payload: dict) -> None:
         """中心自己的记账：它发过什么。**这不是回执**，回执只能来自节点上报。"""
+
+    # ------------------------------------------------ 跳过原因（诊断，不改变行为）
+
+    def _skip(self, reason: str, node_id: str | None = None) -> None:
+        """记一次"这台节点这次为什么没被下发"。**纯诊断，不参与任何判断。**
+
+        `plan()` 里有四处 `continue`，它们**在日志上长得一模一样**——都表现为"中心没有生成
+        意图"。而含义完全不同：链路里还有没送达的命令、策略自己的驻留时间没到、根本没有电量
+        证据、目标已经就是那个值。上一轮把"没有生成降档"归因成"无证据不下发"，就是被这个
+        **同形**骗了。
+        """
+        self.skip_counts[reason] = self.skip_counts.get(reason, 0) + 1
+        if node_id is not None:
+            self.skip_last[node_id] = (reason, self._skip_t)
+
+    def skip_report(self) -> dict:
+        """跳过原因汇总。键是原因，值是次数。"""
+        return dict(self.skip_counts)
 
 
 class LocalPolicy(CenterPolicy):
@@ -287,9 +322,11 @@ class DenseSamplingPolicy(CenterPolicy):
         out = []
         for nid in view.node_ids:
             if nid in view.in_flight:
+                self._skip("in_flight", nid)
                 continue
             last = self._last.get(nid)
             if last is not None and view.t_s - last < self.dwell_s:
+                self._skip("dwell", nid)
                 continue
             snap = view.reports.get(nid) or {}
             done = (snap.get("sample_interval_s") == self.interval_s
@@ -344,15 +381,18 @@ class EnergyAwarePolicy(DenseSamplingPolicy):
         out = []
         for nid in view.node_ids:
             if nid in view.in_flight:
+                self._skip("in_flight", nid)
                 continue
             last = self._last.get(nid)
             if last is not None and view.t_s - last < self.dwell_s:
+                self._skip("dwell", nid)
                 continue
             snap = view.reports.get(nid) or {}
             soc = view.soc_of(nid)
             if soc is None:
                 if not self.send_when_unknown:
                     # 等第一份读数再决定。节点保持出厂默认，而默认就是最保守的那一档。
+                    self._skip("no_soc", nid)
                     continue
                 # 从没收到过电量读数 → 保守地退回稀疏配置。**这里也必须发完整世代**：
                 # 只发一个字段，在"整代生效"的执行层下永远凑不齐一对而被丢弃，于是这一整类
@@ -388,6 +428,12 @@ class EnergyAwarePolicy(DenseSamplingPolicy):
             want_p = self.period_s if healthy else self.sparse_period_s
             if (snap.get("sample_interval_s") == want_i
                     and snap.get("report_period_s") == want_p):
+                # **必须与 `at_target` 分开记**：目标已经是那个值，但"那个值"可能是**一条
+                # 过期读数**算出来的。两者在日志上同形，含义却完全不同——后者是
+                # "我按一条过期证据维持了现状"。
+                _age = view.soc_age_s(nid)
+                self._skip("at_target_evidence_stale" if (_age is None or _age > 3600)
+                           else "at_target", nid)
                 continue
             self._last[nid] = view.t_s
             # **一次配置决策 → 一个世代号**，覆盖两个字段。若这里对两个字段各盖一次号，
@@ -441,14 +487,17 @@ class EnergyAoiPolicy(CenterPolicy):
         out = []
         for nid in view.node_ids:
             if nid in view.in_flight:
+                self._skip("in_flight", nid)
                 continue
             last = self._last.get(nid)
             if last is not None and view.t_s - last < self.dwell_s:
+                self._skip("dwell", nid)
                 continue
             soc = view.soc_of(nid)
             if soc is None:
                 # **没有电量读数就不发。** 保守档与出厂默认逐位相同，发出去是值域空操作，
                 # 却要花掉一次下行机会（实测它占了 ea_i600 全部控制流量的一半）。
+                self._skip("no_soc", nid)
                 continue
             # --- 采样间隔：电能反馈 ---
             if self.exit_wh is None:
@@ -522,9 +571,11 @@ class EhAoiPolicy(CenterPolicy):
         out = []
         for nid in view.node_ids:
             if nid in view.in_flight:
+                self._skip("in_flight", nid)
                 continue
             last = self._last.get(nid)
             if last is not None and view.t_s - last < self.dwell_s:
+                self._skip("dwell", nid)
                 continue
             soc = view.soc_of(nid)
             if soc is None:
@@ -568,9 +619,11 @@ class ClairvoyantStaticSelector(DenseSamplingPolicy):
         out = []
         for nid in view.node_ids:
             if nid in view.in_flight:
+                self._skip("in_flight", nid)
                 continue
             last = self._last.get(nid)
             if last is not None and view.t_s - last < self.dwell_s:
+                self._skip("dwell", nid)
                 continue
             snap = view.reports.get(nid) or {}
             sparse = nid in self.constrained

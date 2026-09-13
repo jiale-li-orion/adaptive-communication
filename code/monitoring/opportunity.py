@@ -356,18 +356,28 @@ class ControlPlane:
         return len(self.queued.get(node_id, ()))
 
     # -------------------------------------------------------------- node side
-    def prune(self, node_id: str, hour: int) -> int:
+    def prune(self, node_id: str, now_s: int) -> int:
         """Drop queued messages whose validity has passed. Returns how many were dropped.
 
         Expiry is a property of time, not of a window opening. Pruning only inside the delivery
         path would let a node that never gets heard accumulate expired commands without bound,
         and would make the queue's contents depend on the node's uplink luck rather than on the
         deadlines the center set.
+
+        **`now_s` 是绝对秒，不是小时索引。（2026-09-13 修）** 这个参数此前叫 `hour`，而
+        `DownlinkMessage.expires_at` 在全仓库范围内都是**秒**（`t_s + 6*3600`、`now_s`、
+        `10**9`），只有这里的比较按小时读。于是实例里 `expires_at = t_s + 21600`（例如 25200）
+        与小时索引（0…12）比较，**永远不过期**：`downlink_expired` 恒为 0，是一条结构性死列。
+        后果不止少一列：`CenterView.in_flight` 定义为"该节点队列非空"，而一次接入中断期间
+        投递路径根本不被调用，队列既不清空也不过期，**`in_flight` 永久为真**，于是每一条策略
+        都在读电量之前 `continue` 掉该节点——**中心被永久静音**。
+        旧调用方（`uplink` / `_deliver`）传的是小时索引，现在由它们自己乘 3600 后再传进来；
+        参数改名就是为了让"传小时"这件事**不可能悄悄发生**。
         """
         queue = self.queued.get(node_id)
         if not queue:
             return 0
-        live = [m for m in queue if m.expires_at is None or m.expires_at >= hour]
+        live = [m for m in queue if m.expires_at is None or m.expires_at >= now_s]
         dropped = len(queue) - len(live)
         self.downlink_expired += dropped
         if live:
@@ -426,7 +436,8 @@ class ControlPlane:
         # to poll, which is the opposite of the constraint this module models.
         energy.add_rx(self.rx_window_ms)
 
-        self.prune(node_id, hour)
+        # `uplink` 的 `hour` 是**小时索引**（旧约定，不改签名），`prune` 收绝对秒。
+        self.prune(node_id, hour * 3600)
         if self.uplink_burst_p_gb is not None and self.uplink_burst_p_bg is not None:
             heard = self._ul_burst_state(node_id, hour)
         else:
@@ -454,7 +465,7 @@ class ControlPlane:
 
         delivered: list[Delivery] = []
         for slot in range(self.downlink_per_uplink):
-            self.prune(node_id, hour)
+            self.prune(node_id, hour * 3600)
             queue = self.queued.get(node_id)
             if not queue:
                 break

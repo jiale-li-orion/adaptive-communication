@@ -264,6 +264,9 @@ def one_seed(seed: int, task_hours: float, tail_hours: float,
         "delivery_oracle_mid": _delivery_mid,
         "intent_ledger": inst.intent_ledger(),
         "intent_reason": inst.intent_reasons(),
+        #: **跳过原因**：这台节点这次为什么没被下发。`plan()` 里四处 `continue` 在日志上
+        #: 同形，含义完全不同；不分开记就无法回答"中心为什么不再下发"。
+        "skip_reasons": pol.skip_report(),
         "autonomy_margin": margin_mean,
         "autonomy_margin_min": margin_min,
         "command_counters": dict(inst.counters),
@@ -498,6 +501,9 @@ def main() -> None:
             "intent_stale_gen": mean([r["intent_ledger"]["stale_gen"] for r in rs]),
             "intent_refused": mean([r["intent_ledger"]["refused"] for r in rs]),
             "intent_expired": mean([r["intent_ledger"]["expired"] for r in rs]),
+            **{f"skip_{k}": mean([r["skip_reasons"].get(k, 0) for r in rs])
+               for k in ("in_flight", "dwell", "no_soc", "at_target",
+                         "at_target_evidence_stale")},
             # **生成原因**（轨 C）：三类互斥且完备，`generated[reason] = sent[reason] + refused[reason]`。
             # 结果侧（change/same_value/unknown/stale）说的是"这条意图干了什么"；
             # 原因侧说的是"它为什么会被生成"——**只有原因侧能在生成之前把它消掉**。
