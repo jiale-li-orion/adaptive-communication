@@ -114,6 +114,9 @@ def main() -> int:
                 # **两个口径都要算**：`soc_seen` 是中心**相信**的电量，`state` 是**真实**电量。
                 # `out3` 的机制恰恰是"相信 0.0185 而真实接近死亡"——用信念算 `T_harm` 会偏大、
                 # 从而把 `A` 往 0 压。**主口径用真实 SoC**；信念口径同时报出来，让偏置量可见。
+                # 决策时**在跑的上报周期**：`T_return` 若由"上报周期 + 一次回传"量化决定，
+                # 那么按它分箱就该看到 `T_return` 随上报周期成比例变化。
+                p["report_s"] = st_ev[0][4] if st_ev else None
                 p["t_harm_true_s"] = t_harm_at(st_ev[0][5] if st_ev else None, pair_cfg) * 3600.0
                 p["t_harm_belief_s"] = t_harm_at(p["soc_seen"], pair_cfg) * 3600.0
                 rows.append(p)
@@ -129,6 +132,14 @@ def main() -> int:
             print(f"   T_evidence 秒：中位 {st.median(ev):.0f}  最大 {max(ev):.0f}  n={len(ev)}")
         if rt:
             print(f"   T_return  秒：中位 {st.median(rt):.0f}  最大 {max(rt):.0f}  n={len(rt)}")
+        # **按上报周期分箱**：检验 `T_return` 是不是"上报周期 + 一次回传"的确定性量化。
+        bins: dict = {}
+        for r in matched:
+            bins.setdefault(r.get("report_s"), []).append(r["t_return_s"])
+        print("   T_return 按在跑的上报周期分箱（中位 / n）：")
+        for rep in sorted(b for b in bins if b is not None):
+            v = bins[rep]
+            print(f"     上报周期 {rep:>5} s ⇒ T_return 中位 {st.median(v):>7.0f} s  n={len(v)}")
         cond = [r for r in matched
                 if r["t_evidence_s"] is not None
                 and r["t_evidence_s"] <= args.deadline_s]
