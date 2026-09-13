@@ -483,6 +483,70 @@ class EnergyAoiPolicy(CenterPolicy):
         return out
 
 
+class EhAoiPolicy(CenterPolicy):
+    """**有限电池能量采集下的状态更新**：**（电量, 年龄）二维联合门限**。
+
+    这是**文献结构**，不是本项目的启发式。有限电池 EH 源上最小化 AoI 的最优策略是
+    **同时按电池状态与当前年龄设门限**（Arafa, Baknina, Ulusoy & Ulukus,
+    *Optimal Status Updating with a Finite-Battery Energy Harvesting Source*,
+    [arXiv:1905.06679](https://arxiv.org/abs/1905.06679)）。此前仓里的 `ea_aoi` 只是把
+    「电量门限」与「年龄门限」**各自独立地叠在一起**，那不是文献里的结构，实测也确实没赢过
+    `aoi`——这一次按文献的**联合**形式实现：
+
+        dense  ⟺  (电量 ≥ θ_soc)  **且**  (年龄 > θ_age_dense)
+        fast   ⟺  年龄 > θ_age_fast
+
+    **联合而非独立**是要害：只有"能量付得起"**并且**"数据确实旧了"才值得花能量加密。
+    两个条件各自成立都不构成理由——那正是 `local → aoi` 与 `ea_nb` 各自只吃一半的原因。
+
+    **限定**：文献结论建立在其自身的信道与服务模型上（阈值结构、不可靠信道、AoI 目标），
+    本 instance 的义务口径是"每小时一份有效测值 + 宽限"，不是瞬时 AoI 积分。
+    所以这里引的是**策略结构**，不是它的最优性证明。
+    """
+
+    def __init__(self, soc_th: float = 0.010, age_dense_s: int = 3600,
+                 age_fast_s: int = 3600, dense_interval_s: int = 600,
+                 dense_period_s: int = 900, sparse_interval_s: int = 3600,
+                 sparse_period_s: int = 3600, fast_period_s: int = 300,
+                 slow_period_s: int = 900, dwell_s: int = 600) -> None:
+        super().__init__()
+        self.soc_th, self.age_dense_s, self.age_fast_s = soc_th, age_dense_s, age_fast_s
+        self.dense_interval_s, self.dense_period_s = dense_interval_s, dense_period_s
+        self.sparse_interval_s, self.sparse_period_s = sparse_interval_s, sparse_period_s
+        self.fast_period_s, self.slow_period_s = fast_period_s, slow_period_s
+        self.dwell_s = dwell_s
+        self._last: dict[str, int] = {}
+        self.name = "eh_aoi"
+
+    def plan(self, view: CenterView) -> list[tuple[str, dict]]:
+        out = []
+        for nid in view.node_ids:
+            if nid in view.in_flight:
+                continue
+            last = self._last.get(nid)
+            if last is not None and view.t_s - last < self.dwell_s:
+                continue
+            soc = view.soc_of(nid)
+            if soc is None:
+                continue                   # 无电量读数：不发（保守档等于出厂默认，是空操作）
+            aoi = view.aoi_s(nid)
+            stale = aoi is None or aoi > self.age_dense_s
+            dense = (soc >= self.soc_th) and stale
+            period = self.fast_period_s if (aoi is None or aoi > self.age_fast_s) \
+                else self.slow_period_s
+            ni = self.dense_interval_s if dense else self.sparse_interval_s
+            snap = view.reports.get(nid) or {}
+            if (snap.get("sample_interval_s") == ni
+                    and snap.get("report_period_s") == period):
+                continue
+            self._last[nid] = view.t_s
+            a, b = self.stamp_pair(nid, {"op": OP_SET_SAMPLING_INTERVAL, "interval_s": ni},
+                                   {"op": OP_SET_REPORT_PERIOD, "period_s": period})
+            out.append((nid, a))
+            out.append((nid, b))
+        return out
+
+
 class ClairvoyantStaticSelector(DenseSamplingPolicy):
     """**clairvoyant static selector**：知道部署的真实约束（哪些站点被遮荫／失电），据此逐节点
     在**稀疏与加密两条固定轨迹之间二选一**，选定之后不再变。
@@ -530,6 +594,26 @@ ARMS: dict[str, type[CenterPolicy]] = {
     "fixed300": lambda: FixedPeriodPolicy(300),
     "fixed900": lambda: FixedPeriodPolicy(900),
     "aoi": lambda: AoiPolicy(),
+    # **`aoi` 的前沿**：把同一个 AoI 策略沿三条旋钮展开，画出"传统方法能覆盖的区域"。
+    # 旋钮：`stale_s`（多旧才加密，反应强度）、`fast_s`（加密档的上报周期，激进程度）、
+    # `slow_s`（够新时的上报周期，空闲成本）。全部是**同一个策略结构**的参数取值，
+    # 不是新机制——这一步的目的是知道传统做法的边界在哪里，而不是再发明启发式。
+    "aoi_t900": lambda: AoiPolicy(stale_s=900),
+    "aoi_t1800": lambda: AoiPolicy(stale_s=1800),
+    "aoi_t7200": lambda: AoiPolicy(stale_s=7200),
+    "aoi_t14400": lambda: AoiPolicy(stale_s=14400),
+    "aoi_f600": lambda: AoiPolicy(fast_s=600),
+    "aoi_f900": lambda: AoiPolicy(fast_s=900),
+    "aoi_s1800": lambda: AoiPolicy(slow_s=1800),
+    "aoi_s3600": lambda: AoiPolicy(slow_s=3600),
+    # 端点：`fast_s == slow_s` 时策略退化成**固定周期上报**，于是 frontier 上同时有
+    # "最省的传统做法"与"固定配置"两类参照点。
+    "aoi_const300": lambda: AoiPolicy(fast_s=300, slow_s=300),
+    "aoi_const3600": lambda: AoiPolicy(fast_s=3600, slow_s=3600),
+    # **文献结构**：有限电池 EH 下的 (电量, 年龄) 二维联合门限（见 EhAoiPolicy 文档）。
+    "eh_aoi": lambda: EhAoiPolicy(),
+    "eh_aoi_t1800": lambda: EhAoiPolicy(age_dense_s=1800, age_fast_s=1800),
+    "eh_aoi_s5": lambda: EhAoiPolicy(soc_th=0.005),
     "aoi_link": lambda: AoiLinkPolicy(),
     "dense300": lambda: DenseSamplingPolicy(300, 900),
     "dense600": lambda: DenseSamplingPolicy(600, 900),
