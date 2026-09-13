@@ -359,8 +359,10 @@ class EnergyAwarePolicy(DenseSamplingPolicy):
                 # 节点在任何执行层下都收不到配置，策略与执行层就不可比了。
                 a, b = self.stamp_pair(
                     nid,
-                    {"op": OP_SET_SAMPLING_INTERVAL, "interval_s": self.sparse_interval_s},
-                    {"op": OP_SET_REPORT_PERIOD, "period_s": self.sparse_period_s})
+                    {"op": OP_SET_SAMPLING_INTERVAL, "interval_s": self.sparse_interval_s,
+                     "speculative": True},
+                    {"op": OP_SET_REPORT_PERIOD, "period_s": self.sparse_period_s,
+                     "speculative": True})
                 out.append((nid, a))
                 out.append((nid, b))
                 self._last[nid] = view.t_s

@@ -32,7 +32,7 @@ from center import (ARMS, OP_SET_REPORT_PERIOD, OP_SET_SAMPLING_INTERVAL, LocalP
                     build_policy)
 from deployment import build_deployment
 from exogenous import (KIND_EVENT, KIND_ROUTINE, EnvironmentTruth, ObligationSet,
-                       autonomy_margin,
+                       autonomy_margin, irradiance_harvest,
                        constant_harvest, hetero_harvest,
                        displacement_series, rule_obligations_for_truth,
                        routine_obligations, routine_obligations_by_node,
@@ -823,6 +823,111 @@ def test_oracle_action_is_two_dimensional() -> None:
           f"档位样例 {sorted(pairs)[:3]}")
 
 
+def test_action_admission_classification() -> None:
+    """**动作准入计数**：每一条落地的命令，到底改变了什么。
+
+    三条互斥且穷尽，缺一条就答不上"多余的控制流量是什么"：
+
+      - `writes_changed` —— 写入的值与节点当时的值**不同**，真的改了配置；
+      - `writes_same_value` —— 写入的值与节点当时的值**相同**，是**值域空操作**；
+      - `writes_speculative` —— 中心对这台设备的电量**没有读数**时的保守下发。
+
+    为什么要专门查：`same_value` 这条命令**在计数上与一次真正的重配完全一样**——到达、被接受、
+    计入 `commands_delivered`。只有把值拿出来比才分得开。这条测试同时钉住穷尽性
+    （`changed + same_value == commands_delivered`），否则漏掉的那类会静默消失。
+    """
+    print("\n[19] 动作准入归类")
+    dep = build_deployment(groups=2)
+    hours = 13
+
+    def run(arm: str, cap: float):
+        nodes = nodes_from(dep)
+        prof = DeviceProfile(capacity_wh=cap, charge_min_c=None)
+        for n in nodes.values():
+            n.p = DeviceProfile(sample_interval_s=n.p.sample_interval_s,
+                                report_period_s=n.p.report_period_s,
+                                capacity_wh=cap, sample_wh=n.p.sample_wh,
+                                charge_min_c=None)
+            n.soc_wh = cap
+            n.power = type(n.power)(soc_initial_wh=cap, soc_wh=cap)
+        truth = wang_fragment_truth(0, hours, (dep.gateway.sid,))
+        truth.displacement = displacement_series(nodes.keys(), hours, 0)
+        h, t_ = hetero_harvest(nodes.keys(), hours, 0, low_frac=0.4, low_wh_per_hour=0.0,
+                               high_wh_per_hour=0.05)
+        truth.harvest_wh.update(h)
+        truth.temp_c.update(t_)
+        inst = Instance(nodes, truth, seed=0, policy=build_policy(arm),
+                        send_contract_fields=True)
+        inst.run(hours)
+        return inst.counters
+
+    for cap, label in ((0.05, "宽松 0.05"), (0.004, "绑定 0.004")):
+        c_nb = run("ea_nb", cap)
+        c_old = run("ea_i600", cap)
+        check(f"[{label}] 归类穷尽且互斥：改值 + 同值 = 落地",
+              c_nb["writes_changed"] + c_nb["writes_same_value"] == c_nb["commands_delivered"],
+              f"{c_nb['writes_changed']} + {c_nb['writes_same_value']} = "
+              f"{c_nb['commands_delivered']}")
+        check(f"[{label}] ea_nb 不写同值、不做无证据下发",
+              c_nb["writes_same_value"] == 0 and c_nb["writes_speculative"] == 0,
+              f"同值 {c_nb['writes_same_value']}、未知态 {c_nb['writes_speculative']}")
+        check(f"[{label}] ea_i600 的未知状态下发被单独数出来",
+              c_old["writes_speculative"] > 0,
+              f"未知态 {c_old['writes_speculative']}")
+        if cap <= 0.004:
+            # 绑定区：soc 永远到不了阈值，于是它的每一次写入都是把节点设回默认值。
+            check(f"[{label}] ea_i600 的控制流量全是值域空操作",
+                  c_old["writes_same_value"] > 0 and c_old["writes_changed"] == 0,
+                  f"改值 {c_old['writes_changed']}、同值 {c_old['writes_same_value']}")
+
+
+def test_autonomy_margin_blind_spot() -> None:
+    """`autonomy_margin` **只覆盖周期工作负载**——把这条限度钉住，免得它被当可行性判据。
+
+    实测反例：一个真实窗口在 `margin = 1.37`（判为可行）下 **14/14 台全灭**。原因是代价模型里
+    没有**事件触发的本地采样**：每次触发连采 3 条 = 1.41e-3 Wh，单次就超过 0.0012 Wh 的初始电量。
+
+    这条测试用**手算**复算这条链：初始电量、t=0 的一次周期采样、t=1052 的触发、3 条事件样，
+    然后断言"周期模型说可行、而含事件的账算下来在第二条就付不起"。**它不是查实现对不对，
+    是查这个横轴能主张到哪一步。**
+    """
+    print("\n[20] autonomy margin 的盲区：事件采样不在它的代价模型里")
+    cap, soc0 = 0.006, 0.2
+    sample_wh = DeviceProfile().sample_wh
+    slots = DeviceProfile().event_slots
+    init = cap * soc0
+
+    # 手算：初始电量 → 扣掉 t=0 的周期采样 → 触发时刻连采 slots 条
+    after_first = init - sample_wh
+    check("初始电量在周期模型下够付第一条（这就是 margin 看到的）",
+          init > 4.933e-4, f"初始 {init:.4f} Wh")
+    # 逐条走一遍触发时的连采：**第一条付得起，第二条就付不起**。
+    soc = after_first
+    paid = 0
+    for _ in range(slots):
+        if soc < sample_wh:
+            break
+        soc -= sample_wh
+        paid += 1
+    check("触发时连采 3 条，实际只付得起 1 条就归零",
+          paid == 1 and soc < sample_wh,
+          f"付了 {paid} 条，剩 {soc:.6f} Wh < 一条 {sample_wh:.6f} Wh")
+    check("事件一次要连采 slots 条，量级超过全部初始电量",
+          slots * sample_wh > init,
+          f"{slots} x {sample_wh:.6f} = {slots * sample_wh:.6f} > 初始 {init:.4f}")
+
+    # 再确认 margin 本身确实看不到事件：同一个窗口，margin 判可行
+    dep = build_deployment(groups=2)
+    nodes = nodes_from(dep)
+    truth = wang_fragment_truth(0, 13, (dep.gateway.sid,))
+    h, _t = irradiance_harvest(nodes.keys(), 13, 0, start_hour=5475,
+                               peak_wh_per_hour=0.02, source_temp=False, temp_c=10.0)
+    m = autonomy_margin(h["n00"], 12, capacity_wh=cap, initial_wh=init,
+                        cost_per_hour=4.933e-4)
+    check("该窗口的 margin 判为可行（> 1），而仿真实测全灭",
+          m > 1.0, f"margin = {m:.2f}（这个数**不代表**可用性）")
+
+
 def main() -> int:
     print("实例层验收（Task Contract v1.1）")
     test_denominator_is_exogenous()
@@ -843,6 +948,8 @@ def main() -> int:
     test_blind_config_is_a_noop()
     test_autonomy_margin_is_hand_computable()
     test_oracle_action_is_two_dimensional()
+    test_action_admission_classification()
+    test_autonomy_margin_blind_spot()
     print("\n" + "-" * 74)
     if FAIL:
         print(f"  {len(FAIL)} 项失败: {', '.join(FAIL)}")

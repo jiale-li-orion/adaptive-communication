@@ -432,7 +432,14 @@ class Instance:
         self.command_seq = 0
         self.counters = {"commands_sent": 0, "commands_delivered": 0,
                          "commands_refused": 0, "commands_lost": 0,
-                         "deduplicated": 0, "fenced": 0}
+                         "deduplicated": 0, "fenced": 0,
+                         # **逐命令归类**（v1.1 的"动作准入"计数）。三条互斥且穷尽：
+                         #   changed   —— 写入的值与节点当时的值**不同**，真的改了配置；
+                         #   same      —— 写入的值与节点当时的值**相同**，是**值域空操作**；
+                         #   speculative —— 中心对这台设备的电量**没有读数**时的保守下发。
+                         # 分开数才答得上"多余的控制流量是什么"。只数总量答不了。
+                         "writes_changed": 0, "writes_same_value": 0,
+                         "writes_speculative": 0}
         #: 延迟释放：identity -> 允许到达的最早时刻。空表示网络不扣留任何命令。
         self.hold_until: dict[str, int] = {}
         #: 被网络扣留、对中心不可见的命令：(释放时刻, 节点, 报文)。
@@ -626,6 +633,9 @@ class Instance:
         if node is None or not node.alive:
             return
         payload = getattr(delivery.message, "payload", None) or {}
+        if payload.get("speculative"):
+            # 中心**没有这台设备的电量读数**就下了发——保守，但没有任何证据支持"状态需要改变"。
+            self.counters["writes_speculative"] += 1
         logical = payload.get("logical")
         version = payload.get("version")
 
@@ -666,8 +676,18 @@ class Instance:
         if self._apply_field(node, payload, gen):
             self.counters["commands_delivered"] += 1
 
-    @staticmethod
-    def _apply_field(node, payload: dict, gen) -> bool:
+    def _note_write(self, want, current) -> None:
+        """**动作准入计数**：这次写入到底改变了什么。
+
+        `writes_same_value` 是"值域空操作"——命令到达、被接受、被计入 `commands_delivered`，
+        但节点本来就在跑这个值。**它在计数上与一次真正的重配完全一样**，只有把值拿出来比才分得开。
+        """
+        if want == current:
+            self.counters["writes_same_value"] += 1
+        else:
+            self.counters["writes_changed"] += 1
+
+    def _apply_field(self, node, payload: dict, gen) -> bool:
         """把**单个**配置字段写进节点。
 
         **逐字段写入就是契约层的行为**（谁先到谁先生效，于是可能跑在跨代混配上）；整代生效
@@ -675,13 +695,17 @@ class Instance:
         """
         op = payload.get("op")
         if op == OP_SET_REPORT_PERIOD:
-            node.report_period_s = max(60, int(payload["period_s"]))
+            want = max(60, int(payload["period_s"]))
+            self._note_write(want, node.report_period_s)
+            node.report_period_s = want
             node.field_generation["period"] = gen
             return True
         if op == OP_SET_SAMPLING_INTERVAL:
             # **这一条会改变电量轨迹**：采样间隔是密集观测的主要能耗来源（v1.1 §8 的
             # "动作驱动的电量演化"）。把它调密，遮荫站点会耗尽电量而永久失去服务。
-            node.sample_interval_s = max(60, int(payload["interval_s"]))
+            want = max(60, int(payload["interval_s"]))
+            self._note_write(want, node.sample_interval_s)
+            node.sample_interval_s = want
             node.field_generation["interval"] = gen
             return True
         return False

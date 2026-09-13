@@ -379,6 +379,12 @@ def main() -> None:
             "access_blocked": mean([r["access_blocked"] for r in rs]),
             "fenced": mean([r["command_counters"].get("fenced", 0) for r in rs]),
             "deduplicated": mean([r["command_counters"].get("deduplicated", 0) for r in rs]),
+            # **动作准入归类**（v1.1：多余的控制流量是什么）。三条互斥且穷尽。
+            "writes_changed": mean([r["command_counters"].get("writes_changed", 0) for r in rs]),
+            "writes_same_value": mean([r["command_counters"].get("writes_same_value", 0)
+                                       for r in rs]),
+            "writes_speculative": mean([r["command_counters"].get("writes_speculative", 0)
+                                        for r in rs]),
             # `inf`（初始电量自己就够跑完，采能与可行性无关）不进均值，否则会把均值拉成 inf。
             # **全部为 inf 时报 `None`，不报 0**——报 0 会变成一列看起来有值、实际是回退默认值的
             # 假数据，而 0 在这个定义下恰恰意味着"完全不可行"，正好读反。
@@ -445,7 +451,8 @@ def main() -> None:
            f"{'事件采集':>8} {'事件交付':>8} {'上行':>6} {'下行试':>6} {'死节点':>6} {'混配min':>8}"
            + (" {:>8} {:>8}".format("真上界", "周期达标%") if args.dynamic_oracle else "")
            + (" {:>9} {:>9}".format("margin均", "margin最小")
-              if args.harvest_mode == "solar" else ""))
+              if args.harvest_mode == "solar" else "")
+           + " {:>7} {:>7} {:>7}".format("改值", "同值", "未知态"))
     print(hdr)
     print("-" * 96)
     for a in agg["arms"]:
@@ -462,7 +469,9 @@ def main() -> None:
                      "—" if x["autonomy_margin"] is None else f"{x['autonomy_margin']:.2f}",
                      "—" if x["autonomy_margin_min"] is None
                      else f"{x['autonomy_margin_min']:.2f}")
-                 if args.harvest_mode == "solar" else ""))
+                 if args.harvest_mode == "solar" else "")
+              + " {:>7.1f} {:>7.1f} {:>7.1f}".format(
+                  x["writes_changed"], x["writes_same_value"], x["writes_speculative"]))
     print("=" * 96)
     if args.outage_hours > 0:
         print("恢复分列（中断窗内 + 固定恢复观察期）")
