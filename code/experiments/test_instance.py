@@ -38,7 +38,7 @@ from exogenous import (KIND_EVENT, KIND_ROUTINE, EnvironmentTruth, ObligationSet
                        routine_obligations, routine_obligations_by_node,
                        wang_burst_obligations, wang_fragment_truth)
 from network import DeviceProfile, HopLog, Instance, Node, nodes_from
-from oracle import dynamic_oracle
+from oracle import delivery_oracle, dynamic_oracle
 from scoring import evaluate, event_propagation, recovery_block
 
 FAIL: list[str] = []
@@ -968,6 +968,116 @@ def test_composed_baseline_keeps_both_dimensions() -> None:
           pol2.plan(view2) == [], f"发出 {len(pol2.plan(view2))} 条")
 
 
+def test_delivery_oracle_is_a_bound_and_splits_the_gap() -> None:
+    """**发送调度的上界**：它必须盖住实际交付，而且必须真的松弛了发送侧。
+
+    两条性质，缺一条它就没用：
+
+      1. **上界性**：`delivery_oracle >= 实际周期交付`。第一版在这里翻过车——
+         推进条件写成"时刻是否越过 heard_at"而不是"回传是否可用"，于是样本 heard_at=0、
+         回传 0 点不可用而 1 点才可用的情形被判成不可交付，上界**低于**实际交付
+         （`local` 142.3 < 148.1）。**上界被真实策略突破，属于必须立刻修的那一类。**
+      2. **它确实松弛了发送侧**：至少有一个条件让它严格大于实际交付。否则这一列恒等于
+         实际交付，等于没有信息——本项目对每一列都要求先证明它会动。
+
+    它同时必须与 energy oracle 是**两个不同的问题**：energy oracle 松弛可交付性、
+    问"最多采到几条"；本函数保留实测的 `heard_at` 与回传可用性，问"同样的样本最多送到几条"。
+    """
+    print("\n[22] 发送调度上界：盖住实际交付，且真的松弛了发送侧")
+    dep = build_deployment(groups=2)
+    hours, task, cap = 13, 12, 0.05
+
+    def build_nodes():
+        ns = nodes_from(dep)
+        for n in ns.values():
+            n.p = DeviceProfile(sample_interval_s=n.p.sample_interval_s,
+                                report_period_s=n.p.report_period_s,
+                                capacity_wh=cap, sample_wh=n.p.sample_wh)
+            n.soc_wh = cap
+            n.power = type(n.power)(soc_initial_wh=cap, soc_wh=cap)
+        return ns
+
+    truth = wang_fragment_truth(0, hours, (dep.gateway.sid,))
+    probe = build_nodes()
+    truth.displacement = displacement_series(probe.keys(), hours, 0)
+    h, t_ = hetero_harvest(probe.keys(), hours, 0, low_frac=0.4, low_wh_per_hour=0.0,
+                           high_wh_per_hour=3.0)
+    truth.harvest_wh.update(h)
+    truth.temp_c.update(t_)
+    meas = {k: v.measurand for k, v in probe.items()}
+    obs = ObligationSet(routine_obligations_by_node(meas, task))
+
+    strict = 0
+    for arm in ("local", "aoi", "dense600"):
+        nodes = build_nodes()
+        inst = Instance(nodes, truth, seed=0, policy=build_policy(arm))
+        log = inst.run(hours)
+        res = evaluate(obs, log, hours, nodes.keys(),
+                       battery={k: v.power.to_dict() for k, v in nodes.items()},
+                       plane=inst.plane, task_hours=task)
+        dl = delivery_oracle(obs, log, hours, plane=inst.plane)["total_oracle"]
+        got = res["routine"]["delivered"]
+        check(f"[{arm}] 送达上界不低于实际交付", dl >= got, f"上界 {dl} vs 实际 {got}")
+        if dl > got:
+            strict += 1
+    check("至少一个条件下上界严格大于实际（说明它确实松弛了发送侧，不是恒等列）",
+          strict > 0, f"{strict}/3 个条件严格大于")
+
+
+def test_delivery_ceiling_is_policy_independent() -> None:
+    """**自由发送时刻的送达上界必须与策略无关。**
+
+    它只由「义务窗口 × 潜在链路结果」决定：对每条义务，问窗口内是否存在一个**会被听到**的
+    绝对 tick，且其后第一个回传可用时刻不晚于截止。这里的潜在上行结果按
+    `(node, 绝对 tick)` 固定，所以**换任何臂都不该变**。
+
+    这条性质是本次改动的核心目的：此前的键带全局命令序号，策略 A 多发一个包就会平移
+    策略 B 的后继抽签，跨策略比较因此不成立。实测三条件 × 五臂，自由上界全是 **158.9**
+    —— 一个数与臂无关，正是它该有的样子。同时钉住**转发损与链路损也恒定**，
+    而"择时损"随臂变化（那才是策略真正可控的一维）。
+    """
+    print("\n[23] 自由发送上界与策略无关")
+    dep = build_deployment(groups=2)
+    hours, task, cap = 13, 12, 0.05
+
+    def build_nodes():
+        ns = nodes_from(dep)
+        for n in ns.values():
+            n.p = DeviceProfile(sample_interval_s=n.p.sample_interval_s,
+                                report_period_s=n.p.report_period_s,
+                                capacity_wh=cap, sample_wh=n.p.sample_wh)
+            n.soc_wh = cap
+            n.power = type(n.power)(soc_initial_wh=cap, soc_wh=cap)
+        return ns
+
+    truth = wang_fragment_truth(0, hours, (dep.gateway.sid,))
+    probe = build_nodes()
+    truth.displacement = displacement_series(probe.keys(), hours, 0)
+    h, t_ = hetero_harvest(probe.keys(), hours, 0, low_frac=0.4, low_wh_per_hour=0.0,
+                           high_wh_per_hour=3.0)
+    truth.harvest_wh.update(h)
+    truth.temp_c.update(t_)
+    meas = {k: v.measurand for k, v in probe.items()}
+    obs = ObligationSet(routine_obligations_by_node(meas, task))
+
+    free_vals, fixed_vals = [], []
+    for arm in ("local", "aoi", "dense600", "ea_nb"):
+        nodes = build_nodes()
+        inst = Instance(nodes, truth, seed=0, policy=build_policy(arm))
+        log = inst.run(hours)
+        free_vals.append(delivery_oracle(obs, log, hours, plane=inst.plane,
+                                         free_transmit=True)["total_oracle"])
+        fixed_vals.append(delivery_oracle(obs, log, hours,
+                                          plane=inst.plane)["total_oracle"])
+    check("自由发送上界在四个臂上逐位相同（与策略无关）",
+          len(set(free_vals)) == 1, f"取值 {sorted(set(free_vals))}")
+    check("固定发送时刻的上界随臂变化（它含策略真正影响的那一维）",
+          len(set(fixed_vals)) > 1, f"取值 {sorted(set(fixed_vals))}")
+    check("自由上界不低于固定发送上界（放松得更多，不能更少）",
+          all(f >= x for f, x in zip(free_vals, fixed_vals)),
+          f"自由 {free_vals} vs 固定 {fixed_vals}")
+
+
 def main() -> int:
     print("实例层验收（Task Contract v1.1）")
     test_denominator_is_exogenous()
@@ -991,6 +1101,8 @@ def main() -> int:
     test_action_admission_classification()
     test_autonomy_margin_blind_spot()
     test_composed_baseline_keeps_both_dimensions()
+    test_delivery_oracle_is_a_bound_and_splits_the_gap()
+    test_delivery_ceiling_is_policy_independent()
     print("\n" + "-" * 74)
     if FAIL:
         print(f"  {len(FAIL)} 项失败: {', '.join(FAIL)}")

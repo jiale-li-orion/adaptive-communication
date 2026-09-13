@@ -47,6 +47,113 @@ INTERVAL_TIERS: tuple[int, ...] = (300, 600, 900, 1800, 3600)
 UPLINK_WH = 2.33e-5
 
 
+def delivery_oracle(obligations, log, hours: int, *, plane,
+                    kinds: tuple[str, ...] = (KIND_ROUTINE,),
+                    free_transmit: bool = False) -> dict:
+    """**发送调度的上界**：给定**这次运行真实采集到的那些样本**，在**同一条物理链路**下，
+    最多能交付几条义务。
+
+    **它与 `dynamic_oracle` 回答两个不同问题，缺一不可**：
+
+    | | 问什么 | 松弛什么 |
+    |---|---|---|
+    | `dynamic_oracle`（energy） | 采样调度最多能**采到**几条 | 松弛可交付性（假设一定送得到） |
+    | `delivery_oracle`（本函数） | 同样的样本，发送调度最多能**送到**几条 | 松弛发送调度（队列顺序、过期、转发时机） |
+
+    **保留的两条硬约束**（否则就不是上界而是幻想）：
+
+      - **样本必须真的被网关听到**：用 `Transit.heard_at` 的**实测**值，不假设一定听得到；
+      - **转发必须落在回传可用的时刻**，且不晚于义务截止。
+
+    **为什么需要它。** 实测 `local → aoi` 就能减少缺送（18.5 → 12.2），所以 `缺送` 这个标签
+    **同时**含"物理上送不到"与"当前策略没用好机会"两部分；而 energy oracle 有意松弛交付，
+    分不开这两者。本函数给出的是**在这一次真实链路实现下**可交付的天花板，
+    于是三者的差就是一条精确分解：
+
+        总义务 = 实际交付 + 发送侧损失（可控） + 链路侧损失（不可控）
+
+    **限定**：它读的是**这一次运行**的链路实现，所以"可控"是**沿着这条实现**的可控，
+    不是跨种子的期望可控。要后者需要固定潜在链路过程后重采样，那是另一件事。
+    """
+    hours = int(hours)
+    by_key: dict[tuple[str, str], list] = {}
+    for s in log.samples.values():
+        tr = log.transit.get(s.sample_id)
+        if tr is not None:
+            by_key.setdefault((s.node_id, s.measurand), []).append((s, tr))
+
+    # `free_transmit=True` 时**再放开"什么时候发送"**：节点可以在窗口内任选一个 tick 上行，
+    # 只要那个时刻的**潜在上行结果**（按 `(node, 绝对 tick)` 固定，与策略无关）是被听到的。
+    # 这把"发送时刻的选择"也交给上界，于是三者的差给出完整分解：
+    #     实际交付 → 固定发送时刻上界 = **转发/队列调度**损失
+    #     固定发送时刻上界 → 自由发送时刻上界 = **发送时刻选择**损失（策略真的可控的那一维）
+    #     自由发送时刻上界 → 总义务 = **链路不可控**损失
+    from deterministic import stable_uniform as _su
+
+    def _heard_at(node_id: str, tick_s: int) -> bool:
+        return _su(plane.seed, "ul", node_id, tick_s // 3600,
+                   tick_s // TICK_S) < plane.uplink_p_arrive
+
+    n_ob = n_ok = n_heard = 0
+    per_node: dict[str, dict] = {}
+    for o in obligations.obligations:
+        if o.kind not in kinds:
+            continue
+        n_ob += 1
+        ok = False
+        heard_any = False
+        if free_transmit:
+            lo = max(o.window[0] - o.tolerance_s, o.release_at)
+            hi = o.window[1] + o.tolerance_s
+            for tk in range(((lo + TICK_S - 1) // TICK_S) * TICK_S, hi + 1, TICK_S):
+                if not _heard_at(o.node_id, tk):
+                    continue
+                heard_any = True
+                h = tk // 3600
+                while h <= hours and not plane.backhaul_available(h):
+                    h += 1
+                if h <= hours and max(tk, h * 3600) <= o.deadline:
+                    ok = True
+                    break
+            n_ok += 1 if ok else 0
+            n_heard += 1 if heard_any else 0
+            d = per_node.setdefault(o.node_id, {"n": 0, "ok": 0, "heard": 0})
+            d["n"] += 1
+            d["ok"] += 1 if ok else 0
+            d["heard"] += 1 if heard_any else 0
+            continue
+        for s, tr in by_key.get((o.node_id, o.measurand), ()):
+            if not o.matches(s):
+                continue
+            if tr.heard_at is None:
+                continue                      # 网关没听到：物理上就没进系统
+            heard_any = True
+            # **第一个"不早于 heard_at 且回传可用"的时刻。**
+            # 推进条件必须挂在**回传可用性**上，不能挂在"时刻是否已越过 heard_at"上——
+            # 第一版就是这么写错的：样本 heard_at = 0 而回传在 0 点不可用、1 点才可用，
+            # 循环立刻停下、误判为不可交付，于是上界低于实际交付（`local` 142.3 < 148.1）。
+            # 这属于"上界被真实策略突破"，是必须立刻修的那一类。
+            h = tr.heard_at // 3600
+            while h <= hours and not plane.backhaul_available(h):
+                h += 1
+            if h <= hours and max(tr.heard_at, h * 3600) <= o.deadline:
+                ok = True
+                break
+        n_ok += 1 if ok else 0
+        n_heard += 1 if heard_any else 0
+        d = per_node.setdefault(o.node_id, {"n": 0, "ok": 0, "heard": 0})
+        d["n"] += 1
+        d["ok"] += 1 if ok else 0
+        d["heard"] += 1 if heard_any else 0
+    return {"total_oracle": n_ok, "n_obligations": n_ob,
+            "free_transmit": free_transmit,
+            "heard_but_undeliverable": n_heard - n_ok,
+            "never_heard": n_ob - n_heard, "per_node": per_node,
+            "note": ("发送调度上界：保留'必须被网关听到'与'转发落在回传可用时刻'，"
+                     "松弛队列顺序、过期与转发时机。读的是**这一次运行**的链路实现，"
+                     "所以是沿这条实现的可控上界，不是跨种子期望。")}
+
+
 def dynamic_oracle(obligations, hours: int, harvest_by_node: dict[str, dict[int, float]],
                    node_ids, *, profile, initial_wh: float | None = None,
                    soc_bins: int = 200,

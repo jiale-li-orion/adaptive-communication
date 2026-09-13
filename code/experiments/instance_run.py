@@ -36,7 +36,7 @@ from exogenous import (ObligationSet, autonomy_margin, constant_harvest,
                        wang_fragment_truth)
 from center import ARMS, ClairvoyantStaticSelector, SocObservationModel, build_policy
 from network import DeviceProfile, Instance, nodes_from
-from oracle import dynamic_oracle
+from oracle import delivery_oracle, dynamic_oracle
 from scoring import evaluate
 
 OUT = _os.path.normpath(_os.path.join(_CODE, "..", "results"))
@@ -202,6 +202,12 @@ def one_seed(seed: int, task_hours: float, tail_hours: float,
     inst.soc_model = SocObservationModel(max_age_s=soc_max_age_s, noise_wh=soc_noise_wh,
                                          bias=soc_bias, loss_p=soc_loss_p, seed=seed)
     log = inst.run(int(hours))
+    # **发送侧三分解**：只松弛转发（固定发送时刻）与再松弛"何时发送"（自由发送时刻）。
+    _delivery_total = delivery_oracle(obligations, inst.log, int(hours),
+                                      plane=inst.plane)["total_oracle"]
+    _delivery_free = delivery_oracle(obligations, inst.log, int(hours),
+                                     plane=inst.plane,
+                                     free_transmit=True)["total_oracle"]
     res = evaluate(obligations, log, int(hours), nodes.keys(),
                    battery={k: v.power.to_dict() for k, v in nodes.items()},
                    plane=inst.plane, task_hours=int(task_hours), outage=outage)
@@ -214,6 +220,9 @@ def one_seed(seed: int, task_hours: float, tail_hours: float,
         "intent_mismatch_s": inst.intent_mismatch_s(int(hours)),
         "mixed_config_s": inst.mixed_config_ticks,
         "dynamic_oracle": oracle_total,
+        # **发送调度上界**：同样的样本、同一条实测链路，最多能送到几条。
+        "delivery_oracle": _delivery_total,
+        "delivery_oracle_free_tx": _delivery_free,
         "autonomy_margin": margin_mean,
         "autonomy_margin_min": margin_min,
         "command_counters": dict(inst.counters),
@@ -396,6 +405,9 @@ def main() -> None:
                                           if r["autonomy_margin_min"] != float("inf")])
                                     if any(r["autonomy_margin_min"] != float("inf")
                                            for r in rs) else None),
+            # **发送侧分解**：实际交付 + 发送侧损失（可控）+ 链路侧损失（不可控）= 总义务。
+            "delivery_oracle": mean([r.get("delivery_oracle", 0) for r in rs]),
+            "delivery_oracle_free_tx": mean([r.get("delivery_oracle_free_tx", 0) for r in rs]),
             "dynamic_oracle": mean([r["dynamic_oracle"] for r in rs
                                     if r.get("dynamic_oracle") is not None]) if any(
                 r.get("dynamic_oracle") is not None for r in rs) else None,
@@ -452,7 +464,8 @@ def main() -> None:
            + (" {:>8} {:>8}".format("真上界", "周期达标%") if args.dynamic_oracle else "")
            + (" {:>9} {:>9}".format("margin均", "margin最小")
               if args.harvest_mode == "solar" else "")
-           + " {:>7} {:>7} {:>7}".format("改值", "同值", "未知态"))
+           + " {:>7} {:>7} {:>7}".format("改值", "同值", "未知态")
+           + " {:>9} {:>9} {:>9} {:>9}".format("转发损", "择时损", "链路损", "自由上界"))
     print(hdr)
     print("-" * 96)
     for a in agg["arms"]:
@@ -471,7 +484,12 @@ def main() -> None:
                      else f"{x['autonomy_margin_min']:.2f}")
                  if args.harvest_mode == "solar" else "")
               + " {:>7.1f} {:>7.1f} {:>7.1f}".format(
-                  x["writes_changed"], x["writes_same_value"], x["writes_speculative"]))
+                  x["writes_changed"], x["writes_same_value"], x["writes_speculative"])
+              + " {:>9.1f} {:>9.1f} {:>9.1f} {:>9.1f}".format(
+                  x["delivery_oracle"] - x["routine_delivered"],
+                  x["delivery_oracle_free_tx"] - x["delivery_oracle"],
+                  168.0 - x["delivery_oracle_free_tx"],
+                  x["delivery_oracle_free_tx"]))
     print("=" * 96)
     if args.outage_hours > 0:
         print("恢复分列（中断窗内 + 固定恢复观察期）")
