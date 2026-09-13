@@ -21,6 +21,10 @@
     "event_match": 21.0,
     "event_missing_delivery": 4.4,
     "fenced": 0.0,
+    "gate_accepts": 0.0,
+    "gate_checks": 0.0,
+    "gate_denied": 0.0,
+    "gate_reject_reasons": {},
     "intent_expired": 17.4,
     "intent_generated": 116.6,
     "intent_lost": 0.0,
@@ -42,6 +46,11 @@
     "routine_delivered": 24.9,
     "routine_missing_collection": 0.0,
     "routine_missing_delivery": 143.1,
+    "skip_at_target": 0.0,
+    "skip_at_target_evidence_stale": 0.0,
+    "skip_dwell": 0.0,
+    "skip_in_flight": 0.0,
+    "skip_no_soc": 0.0,
     "uplinks": 30.6,
     "uplinks_heard": 22.4,
     "writes_changed": 6.0,
@@ -68,6 +77,10 @@
     "event_match": 21.0,
     "event_missing_delivery": 4.4,
     "fenced": 0.0,
+    "gate_accepts": 0.0,
+    "gate_checks": 0.0,
+    "gate_denied": 0.0,
+    "gate_reject_reasons": {},
     "intent_expired": 2.8,
     "intent_generated": 26.8,
     "intent_lost": 0.0,
@@ -89,6 +102,11 @@
     "routine_delivered": 24.9,
     "routine_missing_collection": 0.0,
     "routine_missing_delivery": 143.1,
+    "skip_at_target": 0.0,
+    "skip_at_target_evidence_stale": 0.0,
+    "skip_dwell": 37.5,
+    "skip_in_flight": 1123.2,
+    "skip_no_soc": 9745.9,
     "uplinks": 13.0,
     "uplinks_heard": 9.6,
     "writes_changed": 0.0,
@@ -115,6 +133,10 @@
     "event_match": 21.0,
     "event_missing_delivery": 4.4,
     "fenced": 0.0,
+    "gate_accepts": 0.0,
+    "gate_checks": 0.0,
+    "gate_denied": 0.0,
+    "gate_reject_reasons": {},
     "intent_expired": 2.8,
     "intent_generated": 19.8,
     "intent_lost": 0.0,
@@ -136,6 +158,11 @@
     "routine_delivered": 24.9,
     "routine_missing_collection": 0.0,
     "routine_missing_delivery": 143.1,
+    "skip_at_target": 0.0,
+    "skip_at_target_evidence_stale": 0.0,
+    "skip_dwell": 41.0,
+    "skip_in_flight": 1123.2,
+    "skip_no_soc": 9745.9,
     "uplinks": 13.0,
     "uplinks_heard": 9.6,
     "writes_changed": 0.0,
@@ -162,6 +189,10 @@
     "event_match": 21.0,
     "event_missing_delivery": 4.4,
     "fenced": 0.0,
+    "gate_accepts": 0.0,
+    "gate_checks": 0.0,
+    "gate_denied": 0.0,
+    "gate_reject_reasons": {},
     "intent_expired": 0.0,
     "intent_generated": 0.0,
     "intent_lost": 0.0,
@@ -183,6 +214,11 @@
     "routine_delivered": 24.9,
     "routine_missing_collection": 0.0,
     "routine_missing_delivery": 143.1,
+    "skip_at_target": 0.0,
+    "skip_at_target_evidence_stale": 0.0,
+    "skip_dwell": 0.0,
+    "skip_in_flight": 0.0,
+    "skip_no_soc": 0.0,
     "uplinks": 13.0,
     "uplinks_heard": 9.6,
     "writes_changed": 0.0,
@@ -519,10 +555,10 @@
     "deliver_rate": 0.8095238095238095,
     "delivery_cdf": {
      "0": 0.7142857142857143,
-     "300": 0.7619047619047619,
-     "600": 0.8095238095238095,
      "1800": 0.8095238095238095,
-     "3600": 0.8095238095238095
+     "300": 0.7619047619047619,
+     "3600": 0.8095238095238095,
+     "600": 0.8095238095238095
     },
     "delivery_latency_mean_s": 24.705882352941178,
     "delivery_latency_p90_s": 0,
@@ -532,6 +568,7 @@
     "slots_matched_by_collection": 21
    },
    "exec_layer": "naive",
+   "gate": null,
    "hazard": {
     "hold_every": 0,
     "hold_s": 0
@@ -559,7 +596,7 @@
      "target_change": 0,
      "unknown_state": 0
     },
-    "note": "\u751f\u6210\u539f\u56e0\u53ea\u6709\u4e09\u7c7b\uff1a\u65e0\u56de\u6267\uff08unknown_state\uff09/\u76ee\u6807\u53d8\u4e86\uff08target_change\uff09/\u91cd\u53d1\uff08resend\uff09\u3002`refused` \u662f\u6309\u5dee\u989d\u7b97\u7684\uff0c\u56e0\u4e3a\u62ff\u4e0d\u5230\u4e0b\u884c\u673a\u4f1a\u7684\u90a3\u4e9b\u610f\u56fe\u4e0d\u4f1a\u8fdb `sent` \u4fa7\u3002",
+    "note": "生成原因只有三类：无回执（unknown_state）/目标变了（target_change）/重发（resend）。`refused` 是按差额算的，因为拿不到下行机会的那些意图不会进 `sent` 侧。",
     "refused": {
      "resend": 0,
      "target_change": 0,
@@ -575,12 +612,12 @@
    "mixed_config_s": 0,
    "n_obligations": 189,
    "not_applicable": {
-    "config_mismatch_s": "\u6700\u5c0f\u5b9e\u4f8b\u6ca1\u6709\u5916\u90e8\u914d\u7f6e\u8981\u6c42\uff0c\u65e0\u6cd5\u5b9a\u4e49'\u9519\u8bef\u914d\u7f6e'\uff1b\u8fd4\u56de None \u800c\u4e0d\u662f 0\u3002",
-    "mixed_config_s": "\u8ba1\u6570\u5668\u5728 Instance.mixed_config_ticks \u4e0a\uff0c\u672c\u51fd\u6570\u53ea\u62ff\u5230 log\u3001\u53d6\u4e0d\u5230\uff1b**\u4e0d\u8fd4\u56de\u6052\u5b9a\u503c\u7684\u5047\u5217**\u3002\u9700\u8981\u8fd9\u4e00\u5217\u8bf7\u4ece Instance \u53d6\u3002"
+    "config_mismatch_s": "最小实例没有外部配置要求，无法定义'错误配置'；返回 None 而不是 0。",
+    "mixed_config_s": "计数器在 Instance.mixed_config_ticks 上，本函数只拿到 log、取不到；**不返回恒定值的假列**。需要这一列请从 Instance 取。"
    },
    "observation_window": {
     "censored_total": 0,
-    "note": "\u5220\u5931 = \u8fd0\u884c\u7ed3\u675f\u65f6\u8be5\u4e49\u52a1\u7684\u89c2\u5bdf\u622a\u6b62\u8fd8\u6ca1\u5230\uff1b\u65e2\u4e0d\u7b97\u6210\u529f\u4e5f\u4e0d\u7b97\u5931\u8d25\uff0c\u7559\u5728\u5206\u6bcd\u91cc\u3002",
+    "note": "删失 = 运行结束时该义务的观察截止还没到；既不算成功也不算失败，留在分母里。",
     "run_hours": 13,
     "tail_s": 3600,
     "task_hours": 12
@@ -594,7 +631,7 @@
     "knowledge_latency_p90_s": 660,
     "known_to_center": 7,
     "n_triggers": 7,
-    "note": "\u672c\u5b9e\u4f8b\u6ca1\u6709\u7b2c\u4e8c\u6761\u83b7\u77e5\u6e20\u9053\uff0c\u56e0\u6b64'\u4e2d\u5fc3\u83b7\u77e5\u4e8b\u4ef6'\u4e0e'\u4e2d\u5fc3\u62ff\u5230\u9996\u4efd\u65b0\u6570\u636e'\u540c\u4e00\u65f6\u523b\uff1b\u4e24\u8005\u7684\u5dee\u672a\u88ab\u6d4b\u8fc7\u3002"
+    "note": "本实例没有第二条获知渠道，因此'中心获知事件'与'中心拿到首份新数据'同一时刻；两者的差未被测过。"
    },
    "recovery": null,
    "routine": {
@@ -608,7 +645,8 @@
     "n": 168,
     "no_observation_s": 612000
    },
-   "seed": 0
+   "seed": 0,
+   "skip_reasons": {}
   },
   {
    "access_blocked": 156,
@@ -822,10 +860,10 @@
     "deliver_rate": 1.0,
     "delivery_cdf": {
      "0": 1.0,
-     "300": 1.0,
-     "600": 1.0,
      "1800": 1.0,
-     "3600": 1.0
+     "300": 1.0,
+     "3600": 1.0,
+     "600": 1.0
     },
     "delivery_latency_mean_s": 0.0,
     "delivery_latency_p90_s": 0,
@@ -835,6 +873,7 @@
     "slots_matched_by_collection": 21
    },
    "exec_layer": "naive",
+   "gate": null,
    "hazard": {
     "hold_every": 0,
     "hold_s": 0
@@ -862,7 +901,7 @@
      "target_change": 0,
      "unknown_state": 0
     },
-    "note": "\u751f\u6210\u539f\u56e0\u53ea\u6709\u4e09\u7c7b\uff1a\u65e0\u56de\u6267\uff08unknown_state\uff09/\u76ee\u6807\u53d8\u4e86\uff08target_change\uff09/\u91cd\u53d1\uff08resend\uff09\u3002`refused` \u662f\u6309\u5dee\u989d\u7b97\u7684\uff0c\u56e0\u4e3a\u62ff\u4e0d\u5230\u4e0b\u884c\u673a\u4f1a\u7684\u90a3\u4e9b\u610f\u56fe\u4e0d\u4f1a\u8fdb `sent` \u4fa7\u3002",
+    "note": "生成原因只有三类：无回执（unknown_state）/目标变了（target_change）/重发（resend）。`refused` 是按差额算的，因为拿不到下行机会的那些意图不会进 `sent` 侧。",
     "refused": {
      "resend": 0,
      "target_change": 0,
@@ -878,12 +917,12 @@
    "mixed_config_s": 0,
    "n_obligations": 189,
    "not_applicable": {
-    "config_mismatch_s": "\u6700\u5c0f\u5b9e\u4f8b\u6ca1\u6709\u5916\u90e8\u914d\u7f6e\u8981\u6c42\uff0c\u65e0\u6cd5\u5b9a\u4e49'\u9519\u8bef\u914d\u7f6e'\uff1b\u8fd4\u56de None \u800c\u4e0d\u662f 0\u3002",
-    "mixed_config_s": "\u8ba1\u6570\u5668\u5728 Instance.mixed_config_ticks \u4e0a\uff0c\u672c\u51fd\u6570\u53ea\u62ff\u5230 log\u3001\u53d6\u4e0d\u5230\uff1b**\u4e0d\u8fd4\u56de\u6052\u5b9a\u503c\u7684\u5047\u5217**\u3002\u9700\u8981\u8fd9\u4e00\u5217\u8bf7\u4ece Instance \u53d6\u3002"
+    "config_mismatch_s": "最小实例没有外部配置要求，无法定义'错误配置'；返回 None 而不是 0。",
+    "mixed_config_s": "计数器在 Instance.mixed_config_ticks 上，本函数只拿到 log、取不到；**不返回恒定值的假列**。需要这一列请从 Instance 取。"
    },
    "observation_window": {
     "censored_total": 0,
-    "note": "\u5220\u5931 = \u8fd0\u884c\u7ed3\u675f\u65f6\u8be5\u4e49\u52a1\u7684\u89c2\u5bdf\u622a\u6b62\u8fd8\u6ca1\u5230\uff1b\u65e2\u4e0d\u7b97\u6210\u529f\u4e5f\u4e0d\u7b97\u5931\u8d25\uff0c\u7559\u5728\u5206\u6bcd\u91cc\u3002",
+    "note": "删失 = 运行结束时该义务的观察截止还没到；既不算成功也不算失败，留在分母里。",
     "run_hours": 13,
     "tail_s": 3600,
     "task_hours": 12
@@ -897,7 +936,7 @@
     "knowledge_latency_p90_s": 0,
     "known_to_center": 7,
     "n_triggers": 7,
-    "note": "\u672c\u5b9e\u4f8b\u6ca1\u6709\u7b2c\u4e8c\u6761\u83b7\u77e5\u6e20\u9053\uff0c\u56e0\u6b64'\u4e2d\u5fc3\u83b7\u77e5\u4e8b\u4ef6'\u4e0e'\u4e2d\u5fc3\u62ff\u5230\u9996\u4efd\u65b0\u6570\u636e'\u540c\u4e00\u65f6\u523b\uff1b\u4e24\u8005\u7684\u5dee\u672a\u88ab\u6d4b\u8fc7\u3002"
+    "note": "本实例没有第二条获知渠道，因此'中心获知事件'与'中心拿到首份新数据'同一时刻；两者的差未被测过。"
    },
    "recovery": null,
    "routine": {
@@ -911,7 +950,8 @@
     "n": 168,
     "no_observation_s": 568800
    },
-   "seed": 1
+   "seed": 1,
+   "skip_reasons": {}
   },
   {
    "access_blocked": 156,
@@ -1125,10 +1165,10 @@
     "deliver_rate": 0.6666666666666666,
     "delivery_cdf": {
      "0": 0.5714285714285714,
-     "300": 0.6190476190476191,
-     "600": 0.6666666666666666,
      "1800": 0.6666666666666666,
-     "3600": 0.6666666666666666
+     "300": 0.6190476190476191,
+     "3600": 0.6666666666666666,
+     "600": 0.6666666666666666
     },
     "delivery_latency_mean_s": 64.28571428571429,
     "delivery_latency_p90_s": 300,
@@ -1138,6 +1178,7 @@
     "slots_matched_by_collection": 21
    },
    "exec_layer": "naive",
+   "gate": null,
    "hazard": {
     "hold_every": 0,
     "hold_s": 0
@@ -1165,7 +1206,7 @@
      "target_change": 0,
      "unknown_state": 0
     },
-    "note": "\u751f\u6210\u539f\u56e0\u53ea\u6709\u4e09\u7c7b\uff1a\u65e0\u56de\u6267\uff08unknown_state\uff09/\u76ee\u6807\u53d8\u4e86\uff08target_change\uff09/\u91cd\u53d1\uff08resend\uff09\u3002`refused` \u662f\u6309\u5dee\u989d\u7b97\u7684\uff0c\u56e0\u4e3a\u62ff\u4e0d\u5230\u4e0b\u884c\u673a\u4f1a\u7684\u90a3\u4e9b\u610f\u56fe\u4e0d\u4f1a\u8fdb `sent` \u4fa7\u3002",
+    "note": "生成原因只有三类：无回执（unknown_state）/目标变了（target_change）/重发（resend）。`refused` 是按差额算的，因为拿不到下行机会的那些意图不会进 `sent` 侧。",
     "refused": {
      "resend": 0,
      "target_change": 0,
@@ -1181,12 +1222,12 @@
    "mixed_config_s": 0,
    "n_obligations": 189,
    "not_applicable": {
-    "config_mismatch_s": "\u6700\u5c0f\u5b9e\u4f8b\u6ca1\u6709\u5916\u90e8\u914d\u7f6e\u8981\u6c42\uff0c\u65e0\u6cd5\u5b9a\u4e49'\u9519\u8bef\u914d\u7f6e'\uff1b\u8fd4\u56de None \u800c\u4e0d\u662f 0\u3002",
-    "mixed_config_s": "\u8ba1\u6570\u5668\u5728 Instance.mixed_config_ticks \u4e0a\uff0c\u672c\u51fd\u6570\u53ea\u62ff\u5230 log\u3001\u53d6\u4e0d\u5230\uff1b**\u4e0d\u8fd4\u56de\u6052\u5b9a\u503c\u7684\u5047\u5217**\u3002\u9700\u8981\u8fd9\u4e00\u5217\u8bf7\u4ece Instance \u53d6\u3002"
+    "config_mismatch_s": "最小实例没有外部配置要求，无法定义'错误配置'；返回 None 而不是 0。",
+    "mixed_config_s": "计数器在 Instance.mixed_config_ticks 上，本函数只拿到 log、取不到；**不返回恒定值的假列**。需要这一列请从 Instance 取。"
    },
    "observation_window": {
     "censored_total": 0,
-    "note": "\u5220\u5931 = \u8fd0\u884c\u7ed3\u675f\u65f6\u8be5\u4e49\u52a1\u7684\u89c2\u5bdf\u622a\u6b62\u8fd8\u6ca1\u5230\uff1b\u65e2\u4e0d\u7b97\u6210\u529f\u4e5f\u4e0d\u7b97\u5931\u8d25\uff0c\u7559\u5728\u5206\u6bcd\u91cc\u3002",
+    "note": "删失 = 运行结束时该义务的观察截止还没到；既不算成功也不算失败，留在分母里。",
     "run_hours": 13,
     "tail_s": 3600,
     "task_hours": 12
@@ -1200,7 +1241,7 @@
     "knowledge_latency_p90_s": 5340,
     "known_to_center": 7,
     "n_triggers": 7,
-    "note": "\u672c\u5b9e\u4f8b\u6ca1\u6709\u7b2c\u4e8c\u6761\u83b7\u77e5\u6e20\u9053\uff0c\u56e0\u6b64'\u4e2d\u5fc3\u83b7\u77e5\u4e8b\u4ef6'\u4e0e'\u4e2d\u5fc3\u62ff\u5230\u9996\u4efd\u65b0\u6570\u636e'\u540c\u4e00\u65f6\u523b\uff1b\u4e24\u8005\u7684\u5dee\u672a\u88ab\u6d4b\u8fc7\u3002"
+    "note": "本实例没有第二条获知渠道，因此'中心获知事件'与'中心拿到首份新数据'同一时刻；两者的差未被测过。"
    },
    "recovery": null,
    "routine": {
@@ -1214,7 +1255,8 @@
     "n": 168,
     "no_observation_s": 576000
    },
-   "seed": 2
+   "seed": 2,
+   "skip_reasons": {}
   },
   {
    "access_blocked": 156,
@@ -1428,10 +1470,10 @@
     "deliver_rate": 0.6666666666666666,
     "delivery_cdf": {
      "0": 0.5714285714285714,
-     "300": 0.6190476190476191,
-     "600": 0.6666666666666666,
      "1800": 0.6666666666666666,
-     "3600": 0.6666666666666666
+     "300": 0.6190476190476191,
+     "3600": 0.6666666666666666,
+     "600": 0.6666666666666666
     },
     "delivery_latency_mean_s": 30.0,
     "delivery_latency_p90_s": 60,
@@ -1441,6 +1483,7 @@
     "slots_matched_by_collection": 21
    },
    "exec_layer": "naive",
+   "gate": null,
    "hazard": {
     "hold_every": 0,
     "hold_s": 0
@@ -1468,7 +1511,7 @@
      "target_change": 0,
      "unknown_state": 0
     },
-    "note": "\u751f\u6210\u539f\u56e0\u53ea\u6709\u4e09\u7c7b\uff1a\u65e0\u56de\u6267\uff08unknown_state\uff09/\u76ee\u6807\u53d8\u4e86\uff08target_change\uff09/\u91cd\u53d1\uff08resend\uff09\u3002`refused` \u662f\u6309\u5dee\u989d\u7b97\u7684\uff0c\u56e0\u4e3a\u62ff\u4e0d\u5230\u4e0b\u884c\u673a\u4f1a\u7684\u90a3\u4e9b\u610f\u56fe\u4e0d\u4f1a\u8fdb `sent` \u4fa7\u3002",
+    "note": "生成原因只有三类：无回执（unknown_state）/目标变了（target_change）/重发（resend）。`refused` 是按差额算的，因为拿不到下行机会的那些意图不会进 `sent` 侧。",
     "refused": {
      "resend": 0,
      "target_change": 0,
@@ -1484,12 +1527,12 @@
    "mixed_config_s": 0,
    "n_obligations": 189,
    "not_applicable": {
-    "config_mismatch_s": "\u6700\u5c0f\u5b9e\u4f8b\u6ca1\u6709\u5916\u90e8\u914d\u7f6e\u8981\u6c42\uff0c\u65e0\u6cd5\u5b9a\u4e49'\u9519\u8bef\u914d\u7f6e'\uff1b\u8fd4\u56de None \u800c\u4e0d\u662f 0\u3002",
-    "mixed_config_s": "\u8ba1\u6570\u5668\u5728 Instance.mixed_config_ticks \u4e0a\uff0c\u672c\u51fd\u6570\u53ea\u62ff\u5230 log\u3001\u53d6\u4e0d\u5230\uff1b**\u4e0d\u8fd4\u56de\u6052\u5b9a\u503c\u7684\u5047\u5217**\u3002\u9700\u8981\u8fd9\u4e00\u5217\u8bf7\u4ece Instance \u53d6\u3002"
+    "config_mismatch_s": "最小实例没有外部配置要求，无法定义'错误配置'；返回 None 而不是 0。",
+    "mixed_config_s": "计数器在 Instance.mixed_config_ticks 上，本函数只拿到 log、取不到；**不返回恒定值的假列**。需要这一列请从 Instance 取。"
    },
    "observation_window": {
     "censored_total": 0,
-    "note": "\u5220\u5931 = \u8fd0\u884c\u7ed3\u675f\u65f6\u8be5\u4e49\u52a1\u7684\u89c2\u5bdf\u622a\u6b62\u8fd8\u6ca1\u5230\uff1b\u65e2\u4e0d\u7b97\u6210\u529f\u4e5f\u4e0d\u7b97\u5931\u8d25\uff0c\u7559\u5728\u5206\u6bcd\u91cc\u3002",
+    "note": "删失 = 运行结束时该义务的观察截止还没到；既不算成功也不算失败，留在分母里。",
     "run_hours": 13,
     "tail_s": 3600,
     "task_hours": 12
@@ -1503,7 +1546,7 @@
     "knowledge_latency_p90_s": 2520,
     "known_to_center": 7,
     "n_triggers": 7,
-    "note": "\u672c\u5b9e\u4f8b\u6ca1\u6709\u7b2c\u4e8c\u6761\u83b7\u77e5\u6e20\u9053\uff0c\u56e0\u6b64'\u4e2d\u5fc3\u83b7\u77e5\u4e8b\u4ef6'\u4e0e'\u4e2d\u5fc3\u62ff\u5230\u9996\u4efd\u65b0\u6570\u636e'\u540c\u4e00\u65f6\u523b\uff1b\u4e24\u8005\u7684\u5dee\u672a\u88ab\u6d4b\u8fc7\u3002"
+    "note": "本实例没有第二条获知渠道，因此'中心获知事件'与'中心拿到首份新数据'同一时刻；两者的差未被测过。"
    },
    "recovery": null,
    "routine": {
@@ -1517,7 +1560,8 @@
     "n": 168,
     "no_observation_s": 576000
    },
-   "seed": 3
+   "seed": 3,
+   "skip_reasons": {}
   },
   {
    "access_blocked": 156,
@@ -1731,10 +1775,10 @@
     "deliver_rate": 0.8095238095238095,
     "delivery_cdf": {
      "0": 0.7142857142857143,
-     "300": 0.7619047619047619,
-     "600": 0.8095238095238095,
      "1800": 0.8095238095238095,
-     "3600": 0.8095238095238095
+     "300": 0.7619047619047619,
+     "3600": 0.8095238095238095,
+     "600": 0.8095238095238095
     },
     "delivery_latency_mean_s": 38.8235294117647,
     "delivery_latency_p90_s": 0,
@@ -1744,6 +1788,7 @@
     "slots_matched_by_collection": 21
    },
    "exec_layer": "naive",
+   "gate": null,
    "hazard": {
     "hold_every": 0,
     "hold_s": 0
@@ -1771,7 +1816,7 @@
      "target_change": 0,
      "unknown_state": 0
     },
-    "note": "\u751f\u6210\u539f\u56e0\u53ea\u6709\u4e09\u7c7b\uff1a\u65e0\u56de\u6267\uff08unknown_state\uff09/\u76ee\u6807\u53d8\u4e86\uff08target_change\uff09/\u91cd\u53d1\uff08resend\uff09\u3002`refused` \u662f\u6309\u5dee\u989d\u7b97\u7684\uff0c\u56e0\u4e3a\u62ff\u4e0d\u5230\u4e0b\u884c\u673a\u4f1a\u7684\u90a3\u4e9b\u610f\u56fe\u4e0d\u4f1a\u8fdb `sent` \u4fa7\u3002",
+    "note": "生成原因只有三类：无回执（unknown_state）/目标变了（target_change）/重发（resend）。`refused` 是按差额算的，因为拿不到下行机会的那些意图不会进 `sent` 侧。",
     "refused": {
      "resend": 0,
      "target_change": 0,
@@ -1787,12 +1832,12 @@
    "mixed_config_s": 0,
    "n_obligations": 189,
    "not_applicable": {
-    "config_mismatch_s": "\u6700\u5c0f\u5b9e\u4f8b\u6ca1\u6709\u5916\u90e8\u914d\u7f6e\u8981\u6c42\uff0c\u65e0\u6cd5\u5b9a\u4e49'\u9519\u8bef\u914d\u7f6e'\uff1b\u8fd4\u56de None \u800c\u4e0d\u662f 0\u3002",
-    "mixed_config_s": "\u8ba1\u6570\u5668\u5728 Instance.mixed_config_ticks \u4e0a\uff0c\u672c\u51fd\u6570\u53ea\u62ff\u5230 log\u3001\u53d6\u4e0d\u5230\uff1b**\u4e0d\u8fd4\u56de\u6052\u5b9a\u503c\u7684\u5047\u5217**\u3002\u9700\u8981\u8fd9\u4e00\u5217\u8bf7\u4ece Instance \u53d6\u3002"
+    "config_mismatch_s": "最小实例没有外部配置要求，无法定义'错误配置'；返回 None 而不是 0。",
+    "mixed_config_s": "计数器在 Instance.mixed_config_ticks 上，本函数只拿到 log、取不到；**不返回恒定值的假列**。需要这一列请从 Instance 取。"
    },
    "observation_window": {
     "censored_total": 0,
-    "note": "\u5220\u5931 = \u8fd0\u884c\u7ed3\u675f\u65f6\u8be5\u4e49\u52a1\u7684\u89c2\u5bdf\u622a\u6b62\u8fd8\u6ca1\u5230\uff1b\u65e2\u4e0d\u7b97\u6210\u529f\u4e5f\u4e0d\u7b97\u5931\u8d25\uff0c\u7559\u5728\u5206\u6bcd\u91cc\u3002",
+    "note": "删失 = 运行结束时该义务的观察截止还没到；既不算成功也不算失败，留在分母里。",
     "run_hours": 13,
     "tail_s": 3600,
     "task_hours": 12
@@ -1806,7 +1851,7 @@
     "knowledge_latency_p90_s": 780,
     "known_to_center": 7,
     "n_triggers": 7,
-    "note": "\u672c\u5b9e\u4f8b\u6ca1\u6709\u7b2c\u4e8c\u6761\u83b7\u77e5\u6e20\u9053\uff0c\u56e0\u6b64'\u4e2d\u5fc3\u83b7\u77e5\u4e8b\u4ef6'\u4e0e'\u4e2d\u5fc3\u62ff\u5230\u9996\u4efd\u65b0\u6570\u636e'\u540c\u4e00\u65f6\u523b\uff1b\u4e24\u8005\u7684\u5dee\u672a\u88ab\u6d4b\u8fc7\u3002"
+    "note": "本实例没有第二条获知渠道，因此'中心获知事件'与'中心拿到首份新数据'同一时刻；两者的差未被测过。"
    },
    "recovery": null,
    "routine": {
@@ -1820,7 +1865,8 @@
     "n": 168,
     "no_observation_s": 572400
    },
-   "seed": 4
+   "seed": 4,
+   "skip_reasons": {}
   },
   {
    "access_blocked": 156,
@@ -2034,10 +2080,10 @@
     "deliver_rate": 0.5714285714285714,
     "delivery_cdf": {
      "0": 0.5714285714285714,
-     "300": 0.5714285714285714,
-     "600": 0.5714285714285714,
      "1800": 0.5714285714285714,
-     "3600": 0.5714285714285714
+     "300": 0.5714285714285714,
+     "3600": 0.5714285714285714,
+     "600": 0.5714285714285714
     },
     "delivery_latency_mean_s": 0.0,
     "delivery_latency_p90_s": 0,
@@ -2047,6 +2093,7 @@
     "slots_matched_by_collection": 21
    },
    "exec_layer": "naive",
+   "gate": null,
    "hazard": {
     "hold_every": 0,
     "hold_s": 0
@@ -2074,7 +2121,7 @@
      "target_change": 0,
      "unknown_state": 0
     },
-    "note": "\u751f\u6210\u539f\u56e0\u53ea\u6709\u4e09\u7c7b\uff1a\u65e0\u56de\u6267\uff08unknown_state\uff09/\u76ee\u6807\u53d8\u4e86\uff08target_change\uff09/\u91cd\u53d1\uff08resend\uff09\u3002`refused` \u662f\u6309\u5dee\u989d\u7b97\u7684\uff0c\u56e0\u4e3a\u62ff\u4e0d\u5230\u4e0b\u884c\u673a\u4f1a\u7684\u90a3\u4e9b\u610f\u56fe\u4e0d\u4f1a\u8fdb `sent` \u4fa7\u3002",
+    "note": "生成原因只有三类：无回执（unknown_state）/目标变了（target_change）/重发（resend）。`refused` 是按差额算的，因为拿不到下行机会的那些意图不会进 `sent` 侧。",
     "refused": {
      "resend": 0,
      "target_change": 0,
@@ -2090,12 +2137,12 @@
    "mixed_config_s": 0,
    "n_obligations": 189,
    "not_applicable": {
-    "config_mismatch_s": "\u6700\u5c0f\u5b9e\u4f8b\u6ca1\u6709\u5916\u90e8\u914d\u7f6e\u8981\u6c42\uff0c\u65e0\u6cd5\u5b9a\u4e49'\u9519\u8bef\u914d\u7f6e'\uff1b\u8fd4\u56de None \u800c\u4e0d\u662f 0\u3002",
-    "mixed_config_s": "\u8ba1\u6570\u5668\u5728 Instance.mixed_config_ticks \u4e0a\uff0c\u672c\u51fd\u6570\u53ea\u62ff\u5230 log\u3001\u53d6\u4e0d\u5230\uff1b**\u4e0d\u8fd4\u56de\u6052\u5b9a\u503c\u7684\u5047\u5217**\u3002\u9700\u8981\u8fd9\u4e00\u5217\u8bf7\u4ece Instance \u53d6\u3002"
+    "config_mismatch_s": "最小实例没有外部配置要求，无法定义'错误配置'；返回 None 而不是 0。",
+    "mixed_config_s": "计数器在 Instance.mixed_config_ticks 上，本函数只拿到 log、取不到；**不返回恒定值的假列**。需要这一列请从 Instance 取。"
    },
    "observation_window": {
     "censored_total": 0,
-    "note": "\u5220\u5931 = \u8fd0\u884c\u7ed3\u675f\u65f6\u8be5\u4e49\u52a1\u7684\u89c2\u5bdf\u622a\u6b62\u8fd8\u6ca1\u5230\uff1b\u65e2\u4e0d\u7b97\u6210\u529f\u4e5f\u4e0d\u7b97\u5931\u8d25\uff0c\u7559\u5728\u5206\u6bcd\u91cc\u3002",
+    "note": "删失 = 运行结束时该义务的观察截止还没到；既不算成功也不算失败，留在分母里。",
     "run_hours": 13,
     "tail_s": 3600,
     "task_hours": 12
@@ -2109,7 +2156,7 @@
     "knowledge_latency_p90_s": 4380,
     "known_to_center": 6,
     "n_triggers": 7,
-    "note": "\u672c\u5b9e\u4f8b\u6ca1\u6709\u7b2c\u4e8c\u6761\u83b7\u77e5\u6e20\u9053\uff0c\u56e0\u6b64'\u4e2d\u5fc3\u83b7\u77e5\u4e8b\u4ef6'\u4e0e'\u4e2d\u5fc3\u62ff\u5230\u9996\u4efd\u65b0\u6570\u636e'\u540c\u4e00\u65f6\u523b\uff1b\u4e24\u8005\u7684\u5dee\u672a\u88ab\u6d4b\u8fc7\u3002"
+    "note": "本实例没有第二条获知渠道，因此'中心获知事件'与'中心拿到首份新数据'同一时刻；两者的差未被测过。"
    },
    "recovery": null,
    "routine": {
@@ -2123,7 +2170,8 @@
     "n": 168,
     "no_observation_s": 608400
    },
-   "seed": 5
+   "seed": 5,
+   "skip_reasons": {}
   },
   {
    "access_blocked": 156,
@@ -2337,10 +2385,10 @@
     "deliver_rate": 0.7142857142857143,
     "delivery_cdf": {
      "0": 0.7142857142857143,
-     "300": 0.7142857142857143,
-     "600": 0.7142857142857143,
      "1800": 0.7142857142857143,
-     "3600": 0.7142857142857143
+     "300": 0.7142857142857143,
+     "3600": 0.7142857142857143,
+     "600": 0.7142857142857143
     },
     "delivery_latency_mean_s": 0.0,
     "delivery_latency_p90_s": 0,
@@ -2350,6 +2398,7 @@
     "slots_matched_by_collection": 21
    },
    "exec_layer": "naive",
+   "gate": null,
    "hazard": {
     "hold_every": 0,
     "hold_s": 0
@@ -2377,7 +2426,7 @@
      "target_change": 0,
      "unknown_state": 0
     },
-    "note": "\u751f\u6210\u539f\u56e0\u53ea\u6709\u4e09\u7c7b\uff1a\u65e0\u56de\u6267\uff08unknown_state\uff09/\u76ee\u6807\u53d8\u4e86\uff08target_change\uff09/\u91cd\u53d1\uff08resend\uff09\u3002`refused` \u662f\u6309\u5dee\u989d\u7b97\u7684\uff0c\u56e0\u4e3a\u62ff\u4e0d\u5230\u4e0b\u884c\u673a\u4f1a\u7684\u90a3\u4e9b\u610f\u56fe\u4e0d\u4f1a\u8fdb `sent` \u4fa7\u3002",
+    "note": "生成原因只有三类：无回执（unknown_state）/目标变了（target_change）/重发（resend）。`refused` 是按差额算的，因为拿不到下行机会的那些意图不会进 `sent` 侧。",
     "refused": {
      "resend": 0,
      "target_change": 0,
@@ -2393,12 +2442,12 @@
    "mixed_config_s": 0,
    "n_obligations": 189,
    "not_applicable": {
-    "config_mismatch_s": "\u6700\u5c0f\u5b9e\u4f8b\u6ca1\u6709\u5916\u90e8\u914d\u7f6e\u8981\u6c42\uff0c\u65e0\u6cd5\u5b9a\u4e49'\u9519\u8bef\u914d\u7f6e'\uff1b\u8fd4\u56de None \u800c\u4e0d\u662f 0\u3002",
-    "mixed_config_s": "\u8ba1\u6570\u5668\u5728 Instance.mixed_config_ticks \u4e0a\uff0c\u672c\u51fd\u6570\u53ea\u62ff\u5230 log\u3001\u53d6\u4e0d\u5230\uff1b**\u4e0d\u8fd4\u56de\u6052\u5b9a\u503c\u7684\u5047\u5217**\u3002\u9700\u8981\u8fd9\u4e00\u5217\u8bf7\u4ece Instance \u53d6\u3002"
+    "config_mismatch_s": "最小实例没有外部配置要求，无法定义'错误配置'；返回 None 而不是 0。",
+    "mixed_config_s": "计数器在 Instance.mixed_config_ticks 上，本函数只拿到 log、取不到；**不返回恒定值的假列**。需要这一列请从 Instance 取。"
    },
    "observation_window": {
     "censored_total": 0,
-    "note": "\u5220\u5931 = \u8fd0\u884c\u7ed3\u675f\u65f6\u8be5\u4e49\u52a1\u7684\u89c2\u5bdf\u622a\u6b62\u8fd8\u6ca1\u5230\uff1b\u65e2\u4e0d\u7b97\u6210\u529f\u4e5f\u4e0d\u7b97\u5931\u8d25\uff0c\u7559\u5728\u5206\u6bcd\u91cc\u3002",
+    "note": "删失 = 运行结束时该义务的观察截止还没到；既不算成功也不算失败，留在分母里。",
     "run_hours": 13,
     "tail_s": 3600,
     "task_hours": 12
@@ -2412,7 +2461,7 @@
     "knowledge_latency_p90_s": 1740,
     "known_to_center": 7,
     "n_triggers": 7,
-    "note": "\u672c\u5b9e\u4f8b\u6ca1\u6709\u7b2c\u4e8c\u6761\u83b7\u77e5\u6e20\u9053\uff0c\u56e0\u6b64'\u4e2d\u5fc3\u83b7\u77e5\u4e8b\u4ef6'\u4e0e'\u4e2d\u5fc3\u62ff\u5230\u9996\u4efd\u65b0\u6570\u636e'\u540c\u4e00\u65f6\u523b\uff1b\u4e24\u8005\u7684\u5dee\u672a\u88ab\u6d4b\u8fc7\u3002"
+    "note": "本实例没有第二条获知渠道，因此'中心获知事件'与'中心拿到首份新数据'同一时刻；两者的差未被测过。"
    },
    "recovery": null,
    "routine": {
@@ -2426,7 +2475,8 @@
     "n": 168,
     "no_observation_s": 583200
    },
-   "seed": 6
+   "seed": 6,
+   "skip_reasons": {}
   },
   {
    "access_blocked": 156,
@@ -2640,10 +2690,10 @@
     "deliver_rate": 1.0,
     "delivery_cdf": {
      "0": 1.0,
-     "300": 1.0,
-     "600": 1.0,
      "1800": 1.0,
-     "3600": 1.0
+     "300": 1.0,
+     "3600": 1.0,
+     "600": 1.0
     },
     "delivery_latency_mean_s": 0.0,
     "delivery_latency_p90_s": 0,
@@ -2653,6 +2703,7 @@
     "slots_matched_by_collection": 21
    },
    "exec_layer": "naive",
+   "gate": null,
    "hazard": {
     "hold_every": 0,
     "hold_s": 0
@@ -2680,7 +2731,7 @@
      "target_change": 0,
      "unknown_state": 0
     },
-    "note": "\u751f\u6210\u539f\u56e0\u53ea\u6709\u4e09\u7c7b\uff1a\u65e0\u56de\u6267\uff08unknown_state\uff09/\u76ee\u6807\u53d8\u4e86\uff08target_change\uff09/\u91cd\u53d1\uff08resend\uff09\u3002`refused` \u662f\u6309\u5dee\u989d\u7b97\u7684\uff0c\u56e0\u4e3a\u62ff\u4e0d\u5230\u4e0b\u884c\u673a\u4f1a\u7684\u90a3\u4e9b\u610f\u56fe\u4e0d\u4f1a\u8fdb `sent` \u4fa7\u3002",
+    "note": "生成原因只有三类：无回执（unknown_state）/目标变了（target_change）/重发（resend）。`refused` 是按差额算的，因为拿不到下行机会的那些意图不会进 `sent` 侧。",
     "refused": {
      "resend": 0,
      "target_change": 0,
@@ -2696,12 +2747,12 @@
    "mixed_config_s": 0,
    "n_obligations": 189,
    "not_applicable": {
-    "config_mismatch_s": "\u6700\u5c0f\u5b9e\u4f8b\u6ca1\u6709\u5916\u90e8\u914d\u7f6e\u8981\u6c42\uff0c\u65e0\u6cd5\u5b9a\u4e49'\u9519\u8bef\u914d\u7f6e'\uff1b\u8fd4\u56de None \u800c\u4e0d\u662f 0\u3002",
-    "mixed_config_s": "\u8ba1\u6570\u5668\u5728 Instance.mixed_config_ticks \u4e0a\uff0c\u672c\u51fd\u6570\u53ea\u62ff\u5230 log\u3001\u53d6\u4e0d\u5230\uff1b**\u4e0d\u8fd4\u56de\u6052\u5b9a\u503c\u7684\u5047\u5217**\u3002\u9700\u8981\u8fd9\u4e00\u5217\u8bf7\u4ece Instance \u53d6\u3002"
+    "config_mismatch_s": "最小实例没有外部配置要求，无法定义'错误配置'；返回 None 而不是 0。",
+    "mixed_config_s": "计数器在 Instance.mixed_config_ticks 上，本函数只拿到 log、取不到；**不返回恒定值的假列**。需要这一列请从 Instance 取。"
    },
    "observation_window": {
     "censored_total": 0,
-    "note": "\u5220\u5931 = \u8fd0\u884c\u7ed3\u675f\u65f6\u8be5\u4e49\u52a1\u7684\u89c2\u5bdf\u622a\u6b62\u8fd8\u6ca1\u5230\uff1b\u65e2\u4e0d\u7b97\u6210\u529f\u4e5f\u4e0d\u7b97\u5931\u8d25\uff0c\u7559\u5728\u5206\u6bcd\u91cc\u3002",
+    "note": "删失 = 运行结束时该义务的观察截止还没到；既不算成功也不算失败，留在分母里。",
     "run_hours": 13,
     "tail_s": 3600,
     "task_hours": 12
@@ -2715,7 +2766,7 @@
     "knowledge_latency_p90_s": 0,
     "known_to_center": 7,
     "n_triggers": 7,
-    "note": "\u672c\u5b9e\u4f8b\u6ca1\u6709\u7b2c\u4e8c\u6761\u83b7\u77e5\u6e20\u9053\uff0c\u56e0\u6b64'\u4e2d\u5fc3\u83b7\u77e5\u4e8b\u4ef6'\u4e0e'\u4e2d\u5fc3\u62ff\u5230\u9996\u4efd\u65b0\u6570\u636e'\u540c\u4e00\u65f6\u523b\uff1b\u4e24\u8005\u7684\u5dee\u672a\u88ab\u6d4b\u8fc7\u3002"
+    "note": "本实例没有第二条获知渠道，因此'中心获知事件'与'中心拿到首份新数据'同一时刻；两者的差未被测过。"
    },
    "recovery": null,
    "routine": {
@@ -2729,7 +2780,8 @@
     "n": 168,
     "no_observation_s": 565200
    },
-   "seed": 7
+   "seed": 7,
+   "skip_reasons": {}
   },
   {
    "access_blocked": 156,
@@ -2943,10 +2995,10 @@
     "deliver_rate": 0.9523809523809523,
     "delivery_cdf": {
      "0": 0.8571428571428571,
-     "300": 0.9047619047619048,
-     "600": 0.9523809523809523,
      "1800": 0.9523809523809523,
-     "3600": 0.9523809523809523
+     "300": 0.9047619047619048,
+     "3600": 0.9523809523809523,
+     "600": 0.9523809523809523
     },
     "delivery_latency_mean_s": 45.0,
     "delivery_latency_p90_s": 0,
@@ -2956,6 +3008,7 @@
     "slots_matched_by_collection": 21
    },
    "exec_layer": "naive",
+   "gate": null,
    "hazard": {
     "hold_every": 0,
     "hold_s": 0
@@ -2983,7 +3036,7 @@
      "target_change": 0,
      "unknown_state": 0
     },
-    "note": "\u751f\u6210\u539f\u56e0\u53ea\u6709\u4e09\u7c7b\uff1a\u65e0\u56de\u6267\uff08unknown_state\uff09/\u76ee\u6807\u53d8\u4e86\uff08target_change\uff09/\u91cd\u53d1\uff08resend\uff09\u3002`refused` \u662f\u6309\u5dee\u989d\u7b97\u7684\uff0c\u56e0\u4e3a\u62ff\u4e0d\u5230\u4e0b\u884c\u673a\u4f1a\u7684\u90a3\u4e9b\u610f\u56fe\u4e0d\u4f1a\u8fdb `sent` \u4fa7\u3002",
+    "note": "生成原因只有三类：无回执（unknown_state）/目标变了（target_change）/重发（resend）。`refused` 是按差额算的，因为拿不到下行机会的那些意图不会进 `sent` 侧。",
     "refused": {
      "resend": 0,
      "target_change": 0,
@@ -2999,12 +3052,12 @@
    "mixed_config_s": 0,
    "n_obligations": 189,
    "not_applicable": {
-    "config_mismatch_s": "\u6700\u5c0f\u5b9e\u4f8b\u6ca1\u6709\u5916\u90e8\u914d\u7f6e\u8981\u6c42\uff0c\u65e0\u6cd5\u5b9a\u4e49'\u9519\u8bef\u914d\u7f6e'\uff1b\u8fd4\u56de None \u800c\u4e0d\u662f 0\u3002",
-    "mixed_config_s": "\u8ba1\u6570\u5668\u5728 Instance.mixed_config_ticks \u4e0a\uff0c\u672c\u51fd\u6570\u53ea\u62ff\u5230 log\u3001\u53d6\u4e0d\u5230\uff1b**\u4e0d\u8fd4\u56de\u6052\u5b9a\u503c\u7684\u5047\u5217**\u3002\u9700\u8981\u8fd9\u4e00\u5217\u8bf7\u4ece Instance \u53d6\u3002"
+    "config_mismatch_s": "最小实例没有外部配置要求，无法定义'错误配置'；返回 None 而不是 0。",
+    "mixed_config_s": "计数器在 Instance.mixed_config_ticks 上，本函数只拿到 log、取不到；**不返回恒定值的假列**。需要这一列请从 Instance 取。"
    },
    "observation_window": {
     "censored_total": 0,
-    "note": "\u5220\u5931 = \u8fd0\u884c\u7ed3\u675f\u65f6\u8be5\u4e49\u52a1\u7684\u89c2\u5bdf\u622a\u6b62\u8fd8\u6ca1\u5230\uff1b\u65e2\u4e0d\u7b97\u6210\u529f\u4e5f\u4e0d\u7b97\u5931\u8d25\uff0c\u7559\u5728\u5206\u6bcd\u91cc\u3002",
+    "note": "删失 = 运行结束时该义务的观察截止还没到；既不算成功也不算失败，留在分母里。",
     "run_hours": 13,
     "tail_s": 3600,
     "task_hours": 12
@@ -3018,7 +3071,7 @@
     "knowledge_latency_p90_s": 0,
     "known_to_center": 7,
     "n_triggers": 7,
-    "note": "\u672c\u5b9e\u4f8b\u6ca1\u6709\u7b2c\u4e8c\u6761\u83b7\u77e5\u6e20\u9053\uff0c\u56e0\u6b64'\u4e2d\u5fc3\u83b7\u77e5\u4e8b\u4ef6'\u4e0e'\u4e2d\u5fc3\u62ff\u5230\u9996\u4efd\u65b0\u6570\u636e'\u540c\u4e00\u65f6\u523b\uff1b\u4e24\u8005\u7684\u5dee\u672a\u88ab\u6d4b\u8fc7\u3002"
+    "note": "本实例没有第二条获知渠道，因此'中心获知事件'与'中心拿到首份新数据'同一时刻；两者的差未被测过。"
    },
    "recovery": null,
    "routine": {
@@ -3032,7 +3085,8 @@
     "n": 168,
     "no_observation_s": 608400
    },
-   "seed": 8
+   "seed": 8,
+   "skip_reasons": {}
   },
   {
    "access_blocked": 156,
@@ -3246,10 +3300,10 @@
     "deliver_rate": 0.7142857142857143,
     "delivery_cdf": {
      "0": 0.7142857142857143,
-     "300": 0.7142857142857143,
-     "600": 0.7142857142857143,
      "1800": 0.7142857142857143,
-     "3600": 0.7142857142857143
+     "300": 0.7142857142857143,
+     "3600": 0.7142857142857143,
+     "600": 0.7142857142857143
     },
     "delivery_latency_mean_s": 0.0,
     "delivery_latency_p90_s": 0,
@@ -3259,6 +3313,7 @@
     "slots_matched_by_collection": 21
    },
    "exec_layer": "naive",
+   "gate": null,
    "hazard": {
     "hold_every": 0,
     "hold_s": 0
@@ -3286,7 +3341,7 @@
      "target_change": 0,
      "unknown_state": 0
     },
-    "note": "\u751f\u6210\u539f\u56e0\u53ea\u6709\u4e09\u7c7b\uff1a\u65e0\u56de\u6267\uff08unknown_state\uff09/\u76ee\u6807\u53d8\u4e86\uff08target_change\uff09/\u91cd\u53d1\uff08resend\uff09\u3002`refused` \u662f\u6309\u5dee\u989d\u7b97\u7684\uff0c\u56e0\u4e3a\u62ff\u4e0d\u5230\u4e0b\u884c\u673a\u4f1a\u7684\u90a3\u4e9b\u610f\u56fe\u4e0d\u4f1a\u8fdb `sent` \u4fa7\u3002",
+    "note": "生成原因只有三类：无回执（unknown_state）/目标变了（target_change）/重发（resend）。`refused` 是按差额算的，因为拿不到下行机会的那些意图不会进 `sent` 侧。",
     "refused": {
      "resend": 0,
      "target_change": 0,
@@ -3302,12 +3357,12 @@
    "mixed_config_s": 0,
    "n_obligations": 189,
    "not_applicable": {
-    "config_mismatch_s": "\u6700\u5c0f\u5b9e\u4f8b\u6ca1\u6709\u5916\u90e8\u914d\u7f6e\u8981\u6c42\uff0c\u65e0\u6cd5\u5b9a\u4e49'\u9519\u8bef\u914d\u7f6e'\uff1b\u8fd4\u56de None \u800c\u4e0d\u662f 0\u3002",
-    "mixed_config_s": "\u8ba1\u6570\u5668\u5728 Instance.mixed_config_ticks \u4e0a\uff0c\u672c\u51fd\u6570\u53ea\u62ff\u5230 log\u3001\u53d6\u4e0d\u5230\uff1b**\u4e0d\u8fd4\u56de\u6052\u5b9a\u503c\u7684\u5047\u5217**\u3002\u9700\u8981\u8fd9\u4e00\u5217\u8bf7\u4ece Instance \u53d6\u3002"
+    "config_mismatch_s": "最小实例没有外部配置要求，无法定义'错误配置'；返回 None 而不是 0。",
+    "mixed_config_s": "计数器在 Instance.mixed_config_ticks 上，本函数只拿到 log、取不到；**不返回恒定值的假列**。需要这一列请从 Instance 取。"
    },
    "observation_window": {
     "censored_total": 0,
-    "note": "\u5220\u5931 = \u8fd0\u884c\u7ed3\u675f\u65f6\u8be5\u4e49\u52a1\u7684\u89c2\u5bdf\u622a\u6b62\u8fd8\u6ca1\u5230\uff1b\u65e2\u4e0d\u7b97\u6210\u529f\u4e5f\u4e0d\u7b97\u5931\u8d25\uff0c\u7559\u5728\u5206\u6bcd\u91cc\u3002",
+    "note": "删失 = 运行结束时该义务的观察截止还没到；既不算成功也不算失败，留在分母里。",
     "run_hours": 13,
     "tail_s": 3600,
     "task_hours": 12
@@ -3321,7 +3376,7 @@
     "knowledge_latency_p90_s": 11580,
     "known_to_center": 7,
     "n_triggers": 7,
-    "note": "\u672c\u5b9e\u4f8b\u6ca1\u6709\u7b2c\u4e8c\u6761\u83b7\u77e5\u6e20\u9053\uff0c\u56e0\u6b64'\u4e2d\u5fc3\u83b7\u77e5\u4e8b\u4ef6'\u4e0e'\u4e2d\u5fc3\u62ff\u5230\u9996\u4efd\u65b0\u6570\u636e'\u540c\u4e00\u65f6\u523b\uff1b\u4e24\u8005\u7684\u5dee\u672a\u88ab\u6d4b\u8fc7\u3002"
+    "note": "本实例没有第二条获知渠道，因此'中心获知事件'与'中心拿到首份新数据'同一时刻；两者的差未被测过。"
    },
    "recovery": null,
    "routine": {
@@ -3335,7 +3390,8 @@
     "n": 168,
     "no_observation_s": 572400
    },
-   "seed": 9
+   "seed": 9,
+   "skip_reasons": {}
   },
   {
    "access_blocked": 156,
@@ -3549,10 +3605,10 @@
     "deliver_rate": 0.8095238095238095,
     "delivery_cdf": {
      "0": 0.7142857142857143,
-     "300": 0.7619047619047619,
-     "600": 0.8095238095238095,
      "1800": 0.8095238095238095,
-     "3600": 0.8095238095238095
+     "300": 0.7619047619047619,
+     "3600": 0.8095238095238095,
+     "600": 0.8095238095238095
     },
     "delivery_latency_mean_s": 24.705882352941178,
     "delivery_latency_p90_s": 0,
@@ -3562,6 +3618,7 @@
     "slots_matched_by_collection": 21
    },
    "exec_layer": "naive",
+   "gate": null,
    "hazard": {
     "hold_every": 0,
     "hold_s": 0
@@ -3589,7 +3646,7 @@
      "target_change": 1,
      "unknown_state": 219
     },
-    "note": "\u751f\u6210\u539f\u56e0\u53ea\u6709\u4e09\u7c7b\uff1a\u65e0\u56de\u6267\uff08unknown_state\uff09/\u76ee\u6807\u53d8\u4e86\uff08target_change\uff09/\u91cd\u53d1\uff08resend\uff09\u3002`refused` \u662f\u6309\u5dee\u989d\u7b97\u7684\uff0c\u56e0\u4e3a\u62ff\u4e0d\u5230\u4e0b\u884c\u673a\u4f1a\u7684\u90a3\u4e9b\u610f\u56fe\u4e0d\u4f1a\u8fdb `sent` \u4fa7\u3002",
+    "note": "生成原因只有三类：无回执（unknown_state）/目标变了（target_change）/重发（resend）。`refused` 是按差额算的，因为拿不到下行机会的那些意图不会进 `sent` 侧。",
     "refused": {
      "resend": 6,
      "target_change": 0,
@@ -3605,12 +3662,12 @@
    "mixed_config_s": 0,
    "n_obligations": 189,
    "not_applicable": {
-    "config_mismatch_s": "\u6700\u5c0f\u5b9e\u4f8b\u6ca1\u6709\u5916\u90e8\u914d\u7f6e\u8981\u6c42\uff0c\u65e0\u6cd5\u5b9a\u4e49'\u9519\u8bef\u914d\u7f6e'\uff1b\u8fd4\u56de None \u800c\u4e0d\u662f 0\u3002",
-    "mixed_config_s": "\u8ba1\u6570\u5668\u5728 Instance.mixed_config_ticks \u4e0a\uff0c\u672c\u51fd\u6570\u53ea\u62ff\u5230 log\u3001\u53d6\u4e0d\u5230\uff1b**\u4e0d\u8fd4\u56de\u6052\u5b9a\u503c\u7684\u5047\u5217**\u3002\u9700\u8981\u8fd9\u4e00\u5217\u8bf7\u4ece Instance \u53d6\u3002"
+    "config_mismatch_s": "最小实例没有外部配置要求，无法定义'错误配置'；返回 None 而不是 0。",
+    "mixed_config_s": "计数器在 Instance.mixed_config_ticks 上，本函数只拿到 log、取不到；**不返回恒定值的假列**。需要这一列请从 Instance 取。"
    },
    "observation_window": {
     "censored_total": 0,
-    "note": "\u5220\u5931 = \u8fd0\u884c\u7ed3\u675f\u65f6\u8be5\u4e49\u52a1\u7684\u89c2\u5bdf\u622a\u6b62\u8fd8\u6ca1\u5230\uff1b\u65e2\u4e0d\u7b97\u6210\u529f\u4e5f\u4e0d\u7b97\u5931\u8d25\uff0c\u7559\u5728\u5206\u6bcd\u91cc\u3002",
+    "note": "删失 = 运行结束时该义务的观察截止还没到；既不算成功也不算失败，留在分母里。",
     "run_hours": 13,
     "tail_s": 3600,
     "task_hours": 12
@@ -3624,7 +3681,7 @@
     "knowledge_latency_p90_s": 660,
     "known_to_center": 7,
     "n_triggers": 7,
-    "note": "\u672c\u5b9e\u4f8b\u6ca1\u6709\u7b2c\u4e8c\u6761\u83b7\u77e5\u6e20\u9053\uff0c\u56e0\u6b64'\u4e2d\u5fc3\u83b7\u77e5\u4e8b\u4ef6'\u4e0e'\u4e2d\u5fc3\u62ff\u5230\u9996\u4efd\u65b0\u6570\u636e'\u540c\u4e00\u65f6\u523b\uff1b\u4e24\u8005\u7684\u5dee\u672a\u88ab\u6d4b\u8fc7\u3002"
+    "note": "本实例没有第二条获知渠道，因此'中心获知事件'与'中心拿到首份新数据'同一时刻；两者的差未被测过。"
    },
    "recovery": null,
    "routine": {
@@ -3638,7 +3695,8 @@
     "n": 168,
     "no_observation_s": 612000
    },
-   "seed": 0
+   "seed": 0,
+   "skip_reasons": {}
   },
   {
    "access_blocked": 156,
@@ -3852,10 +3910,10 @@
     "deliver_rate": 1.0,
     "delivery_cdf": {
      "0": 1.0,
-     "300": 1.0,
-     "600": 1.0,
      "1800": 1.0,
-     "3600": 1.0
+     "300": 1.0,
+     "3600": 1.0,
+     "600": 1.0
     },
     "delivery_latency_mean_s": 0.0,
     "delivery_latency_p90_s": 0,
@@ -3865,6 +3923,7 @@
     "slots_matched_by_collection": 21
    },
    "exec_layer": "naive",
+   "gate": null,
    "hazard": {
     "hold_every": 0,
     "hold_s": 0
@@ -3892,7 +3951,7 @@
      "target_change": 12,
      "unknown_state": 29
     },
-    "note": "\u751f\u6210\u539f\u56e0\u53ea\u6709\u4e09\u7c7b\uff1a\u65e0\u56de\u6267\uff08unknown_state\uff09/\u76ee\u6807\u53d8\u4e86\uff08target_change\uff09/\u91cd\u53d1\uff08resend\uff09\u3002`refused` \u662f\u6309\u5dee\u989d\u7b97\u7684\uff0c\u56e0\u4e3a\u62ff\u4e0d\u5230\u4e0b\u884c\u673a\u4f1a\u7684\u90a3\u4e9b\u610f\u56fe\u4e0d\u4f1a\u8fdb `sent` \u4fa7\u3002",
+    "note": "生成原因只有三类：无回执（unknown_state）/目标变了（target_change）/重发（resend）。`refused` 是按差额算的，因为拿不到下行机会的那些意图不会进 `sent` 侧。",
     "refused": {
      "resend": 0,
      "target_change": 0,
@@ -3908,12 +3967,12 @@
    "mixed_config_s": 0,
    "n_obligations": 189,
    "not_applicable": {
-    "config_mismatch_s": "\u6700\u5c0f\u5b9e\u4f8b\u6ca1\u6709\u5916\u90e8\u914d\u7f6e\u8981\u6c42\uff0c\u65e0\u6cd5\u5b9a\u4e49'\u9519\u8bef\u914d\u7f6e'\uff1b\u8fd4\u56de None \u800c\u4e0d\u662f 0\u3002",
-    "mixed_config_s": "\u8ba1\u6570\u5668\u5728 Instance.mixed_config_ticks \u4e0a\uff0c\u672c\u51fd\u6570\u53ea\u62ff\u5230 log\u3001\u53d6\u4e0d\u5230\uff1b**\u4e0d\u8fd4\u56de\u6052\u5b9a\u503c\u7684\u5047\u5217**\u3002\u9700\u8981\u8fd9\u4e00\u5217\u8bf7\u4ece Instance \u53d6\u3002"
+    "config_mismatch_s": "最小实例没有外部配置要求，无法定义'错误配置'；返回 None 而不是 0。",
+    "mixed_config_s": "计数器在 Instance.mixed_config_ticks 上，本函数只拿到 log、取不到；**不返回恒定值的假列**。需要这一列请从 Instance 取。"
    },
    "observation_window": {
     "censored_total": 0,
-    "note": "\u5220\u5931 = \u8fd0\u884c\u7ed3\u675f\u65f6\u8be5\u4e49\u52a1\u7684\u89c2\u5bdf\u622a\u6b62\u8fd8\u6ca1\u5230\uff1b\u65e2\u4e0d\u7b97\u6210\u529f\u4e5f\u4e0d\u7b97\u5931\u8d25\uff0c\u7559\u5728\u5206\u6bcd\u91cc\u3002",
+    "note": "删失 = 运行结束时该义务的观察截止还没到；既不算成功也不算失败，留在分母里。",
     "run_hours": 13,
     "tail_s": 3600,
     "task_hours": 12
@@ -3927,7 +3986,7 @@
     "knowledge_latency_p90_s": 0,
     "known_to_center": 7,
     "n_triggers": 7,
-    "note": "\u672c\u5b9e\u4f8b\u6ca1\u6709\u7b2c\u4e8c\u6761\u83b7\u77e5\u6e20\u9053\uff0c\u56e0\u6b64'\u4e2d\u5fc3\u83b7\u77e5\u4e8b\u4ef6'\u4e0e'\u4e2d\u5fc3\u62ff\u5230\u9996\u4efd\u65b0\u6570\u636e'\u540c\u4e00\u65f6\u523b\uff1b\u4e24\u8005\u7684\u5dee\u672a\u88ab\u6d4b\u8fc7\u3002"
+    "note": "本实例没有第二条获知渠道，因此'中心获知事件'与'中心拿到首份新数据'同一时刻；两者的差未被测过。"
    },
    "recovery": null,
    "routine": {
@@ -3941,7 +4000,8 @@
     "n": 168,
     "no_observation_s": 568800
    },
-   "seed": 1
+   "seed": 1,
+   "skip_reasons": {}
   },
   {
    "access_blocked": 156,
@@ -4155,10 +4215,10 @@
     "deliver_rate": 0.6666666666666666,
     "delivery_cdf": {
      "0": 0.5714285714285714,
-     "300": 0.6190476190476191,
-     "600": 0.6666666666666666,
      "1800": 0.6666666666666666,
-     "3600": 0.6666666666666666
+     "300": 0.6190476190476191,
+     "3600": 0.6666666666666666,
+     "600": 0.6666666666666666
     },
     "delivery_latency_mean_s": 64.28571428571429,
     "delivery_latency_p90_s": 300,
@@ -4168,6 +4228,7 @@
     "slots_matched_by_collection": 21
    },
    "exec_layer": "naive",
+   "gate": null,
    "hazard": {
     "hold_every": 0,
     "hold_s": 0
@@ -4195,7 +4256,7 @@
      "target_change": 10,
      "unknown_state": 31
     },
-    "note": "\u751f\u6210\u539f\u56e0\u53ea\u6709\u4e09\u7c7b\uff1a\u65e0\u56de\u6267\uff08unknown_state\uff09/\u76ee\u6807\u53d8\u4e86\uff08target_change\uff09/\u91cd\u53d1\uff08resend\uff09\u3002`refused` \u662f\u6309\u5dee\u989d\u7b97\u7684\uff0c\u56e0\u4e3a\u62ff\u4e0d\u5230\u4e0b\u884c\u673a\u4f1a\u7684\u90a3\u4e9b\u610f\u56fe\u4e0d\u4f1a\u8fdb `sent` \u4fa7\u3002",
+    "note": "生成原因只有三类：无回执（unknown_state）/目标变了（target_change）/重发（resend）。`refused` 是按差额算的，因为拿不到下行机会的那些意图不会进 `sent` 侧。",
     "refused": {
      "resend": 0,
      "target_change": 0,
@@ -4211,12 +4272,12 @@
    "mixed_config_s": 0,
    "n_obligations": 189,
    "not_applicable": {
-    "config_mismatch_s": "\u6700\u5c0f\u5b9e\u4f8b\u6ca1\u6709\u5916\u90e8\u914d\u7f6e\u8981\u6c42\uff0c\u65e0\u6cd5\u5b9a\u4e49'\u9519\u8bef\u914d\u7f6e'\uff1b\u8fd4\u56de None \u800c\u4e0d\u662f 0\u3002",
-    "mixed_config_s": "\u8ba1\u6570\u5668\u5728 Instance.mixed_config_ticks \u4e0a\uff0c\u672c\u51fd\u6570\u53ea\u62ff\u5230 log\u3001\u53d6\u4e0d\u5230\uff1b**\u4e0d\u8fd4\u56de\u6052\u5b9a\u503c\u7684\u5047\u5217**\u3002\u9700\u8981\u8fd9\u4e00\u5217\u8bf7\u4ece Instance \u53d6\u3002"
+    "config_mismatch_s": "最小实例没有外部配置要求，无法定义'错误配置'；返回 None 而不是 0。",
+    "mixed_config_s": "计数器在 Instance.mixed_config_ticks 上，本函数只拿到 log、取不到；**不返回恒定值的假列**。需要这一列请从 Instance 取。"
    },
    "observation_window": {
     "censored_total": 0,
-    "note": "\u5220\u5931 = \u8fd0\u884c\u7ed3\u675f\u65f6\u8be5\u4e49\u52a1\u7684\u89c2\u5bdf\u622a\u6b62\u8fd8\u6ca1\u5230\uff1b\u65e2\u4e0d\u7b97\u6210\u529f\u4e5f\u4e0d\u7b97\u5931\u8d25\uff0c\u7559\u5728\u5206\u6bcd\u91cc\u3002",
+    "note": "删失 = 运行结束时该义务的观察截止还没到；既不算成功也不算失败，留在分母里。",
     "run_hours": 13,
     "tail_s": 3600,
     "task_hours": 12
@@ -4230,7 +4291,7 @@
     "knowledge_latency_p90_s": 5340,
     "known_to_center": 7,
     "n_triggers": 7,
-    "note": "\u672c\u5b9e\u4f8b\u6ca1\u6709\u7b2c\u4e8c\u6761\u83b7\u77e5\u6e20\u9053\uff0c\u56e0\u6b64'\u4e2d\u5fc3\u83b7\u77e5\u4e8b\u4ef6'\u4e0e'\u4e2d\u5fc3\u62ff\u5230\u9996\u4efd\u65b0\u6570\u636e'\u540c\u4e00\u65f6\u523b\uff1b\u4e24\u8005\u7684\u5dee\u672a\u88ab\u6d4b\u8fc7\u3002"
+    "note": "本实例没有第二条获知渠道，因此'中心获知事件'与'中心拿到首份新数据'同一时刻；两者的差未被测过。"
    },
    "recovery": null,
    "routine": {
@@ -4244,7 +4305,8 @@
     "n": 168,
     "no_observation_s": 576000
    },
-   "seed": 2
+   "seed": 2,
+   "skip_reasons": {}
   },
   {
    "access_blocked": 156,
@@ -4458,10 +4520,10 @@
     "deliver_rate": 0.6666666666666666,
     "delivery_cdf": {
      "0": 0.5714285714285714,
-     "300": 0.6190476190476191,
-     "600": 0.6666666666666666,
      "1800": 0.6666666666666666,
-     "3600": 0.6666666666666666
+     "300": 0.6190476190476191,
+     "3600": 0.6666666666666666,
+     "600": 0.6666666666666666
     },
     "delivery_latency_mean_s": 30.0,
     "delivery_latency_p90_s": 60,
@@ -4471,6 +4533,7 @@
     "slots_matched_by_collection": 21
    },
    "exec_layer": "naive",
+   "gate": null,
    "hazard": {
     "hold_every": 0,
     "hold_s": 0
@@ -4498,7 +4561,7 @@
      "target_change": 8,
      "unknown_state": 111
     },
-    "note": "\u751f\u6210\u539f\u56e0\u53ea\u6709\u4e09\u7c7b\uff1a\u65e0\u56de\u6267\uff08unknown_state\uff09/\u76ee\u6807\u53d8\u4e86\uff08target_change\uff09/\u91cd\u53d1\uff08resend\uff09\u3002`refused` \u662f\u6309\u5dee\u989d\u7b97\u7684\uff0c\u56e0\u4e3a\u62ff\u4e0d\u5230\u4e0b\u884c\u673a\u4f1a\u7684\u90a3\u4e9b\u610f\u56fe\u4e0d\u4f1a\u8fdb `sent` \u4fa7\u3002",
+    "note": "生成原因只有三类：无回执（unknown_state）/目标变了（target_change）/重发（resend）。`refused` 是按差额算的，因为拿不到下行机会的那些意图不会进 `sent` 侧。",
     "refused": {
      "resend": 0,
      "target_change": 0,
@@ -4514,12 +4577,12 @@
    "mixed_config_s": 0,
    "n_obligations": 189,
    "not_applicable": {
-    "config_mismatch_s": "\u6700\u5c0f\u5b9e\u4f8b\u6ca1\u6709\u5916\u90e8\u914d\u7f6e\u8981\u6c42\uff0c\u65e0\u6cd5\u5b9a\u4e49'\u9519\u8bef\u914d\u7f6e'\uff1b\u8fd4\u56de None \u800c\u4e0d\u662f 0\u3002",
-    "mixed_config_s": "\u8ba1\u6570\u5668\u5728 Instance.mixed_config_ticks \u4e0a\uff0c\u672c\u51fd\u6570\u53ea\u62ff\u5230 log\u3001\u53d6\u4e0d\u5230\uff1b**\u4e0d\u8fd4\u56de\u6052\u5b9a\u503c\u7684\u5047\u5217**\u3002\u9700\u8981\u8fd9\u4e00\u5217\u8bf7\u4ece Instance \u53d6\u3002"
+    "config_mismatch_s": "最小实例没有外部配置要求，无法定义'错误配置'；返回 None 而不是 0。",
+    "mixed_config_s": "计数器在 Instance.mixed_config_ticks 上，本函数只拿到 log、取不到；**不返回恒定值的假列**。需要这一列请从 Instance 取。"
    },
    "observation_window": {
     "censored_total": 0,
-    "note": "\u5220\u5931 = \u8fd0\u884c\u7ed3\u675f\u65f6\u8be5\u4e49\u52a1\u7684\u89c2\u5bdf\u622a\u6b62\u8fd8\u6ca1\u5230\uff1b\u65e2\u4e0d\u7b97\u6210\u529f\u4e5f\u4e0d\u7b97\u5931\u8d25\uff0c\u7559\u5728\u5206\u6bcd\u91cc\u3002",
+    "note": "删失 = 运行结束时该义务的观察截止还没到；既不算成功也不算失败，留在分母里。",
     "run_hours": 13,
     "tail_s": 3600,
     "task_hours": 12
@@ -4533,7 +4596,7 @@
     "knowledge_latency_p90_s": 2520,
     "known_to_center": 7,
     "n_triggers": 7,
-    "note": "\u672c\u5b9e\u4f8b\u6ca1\u6709\u7b2c\u4e8c\u6761\u83b7\u77e5\u6e20\u9053\uff0c\u56e0\u6b64'\u4e2d\u5fc3\u83b7\u77e5\u4e8b\u4ef6'\u4e0e'\u4e2d\u5fc3\u62ff\u5230\u9996\u4efd\u65b0\u6570\u636e'\u540c\u4e00\u65f6\u523b\uff1b\u4e24\u8005\u7684\u5dee\u672a\u88ab\u6d4b\u8fc7\u3002"
+    "note": "本实例没有第二条获知渠道，因此'中心获知事件'与'中心拿到首份新数据'同一时刻；两者的差未被测过。"
    },
    "recovery": null,
    "routine": {
@@ -4547,7 +4610,8 @@
     "n": 168,
     "no_observation_s": 576000
    },
-   "seed": 3
+   "seed": 3,
+   "skip_reasons": {}
   },
   {
    "access_blocked": 156,
@@ -4761,10 +4825,10 @@
     "deliver_rate": 0.8095238095238095,
     "delivery_cdf": {
      "0": 0.7142857142857143,
-     "300": 0.7619047619047619,
-     "600": 0.8095238095238095,
      "1800": 0.8095238095238095,
-     "3600": 0.8095238095238095
+     "300": 0.7619047619047619,
+     "3600": 0.8095238095238095,
+     "600": 0.8095238095238095
     },
     "delivery_latency_mean_s": 38.8235294117647,
     "delivery_latency_p90_s": 0,
@@ -4774,6 +4838,7 @@
     "slots_matched_by_collection": 21
    },
    "exec_layer": "naive",
+   "gate": null,
    "hazard": {
     "hold_every": 0,
     "hold_s": 0
@@ -4801,7 +4866,7 @@
      "target_change": 7,
      "unknown_state": 105
     },
-    "note": "\u751f\u6210\u539f\u56e0\u53ea\u6709\u4e09\u7c7b\uff1a\u65e0\u56de\u6267\uff08unknown_state\uff09/\u76ee\u6807\u53d8\u4e86\uff08target_change\uff09/\u91cd\u53d1\uff08resend\uff09\u3002`refused` \u662f\u6309\u5dee\u989d\u7b97\u7684\uff0c\u56e0\u4e3a\u62ff\u4e0d\u5230\u4e0b\u884c\u673a\u4f1a\u7684\u90a3\u4e9b\u610f\u56fe\u4e0d\u4f1a\u8fdb `sent` \u4fa7\u3002",
+    "note": "生成原因只有三类：无回执（unknown_state）/目标变了（target_change）/重发（resend）。`refused` 是按差额算的，因为拿不到下行机会的那些意图不会进 `sent` 侧。",
     "refused": {
      "resend": 6,
      "target_change": 0,
@@ -4817,12 +4882,12 @@
    "mixed_config_s": 0,
    "n_obligations": 189,
    "not_applicable": {
-    "config_mismatch_s": "\u6700\u5c0f\u5b9e\u4f8b\u6ca1\u6709\u5916\u90e8\u914d\u7f6e\u8981\u6c42\uff0c\u65e0\u6cd5\u5b9a\u4e49'\u9519\u8bef\u914d\u7f6e'\uff1b\u8fd4\u56de None \u800c\u4e0d\u662f 0\u3002",
-    "mixed_config_s": "\u8ba1\u6570\u5668\u5728 Instance.mixed_config_ticks \u4e0a\uff0c\u672c\u51fd\u6570\u53ea\u62ff\u5230 log\u3001\u53d6\u4e0d\u5230\uff1b**\u4e0d\u8fd4\u56de\u6052\u5b9a\u503c\u7684\u5047\u5217**\u3002\u9700\u8981\u8fd9\u4e00\u5217\u8bf7\u4ece Instance \u53d6\u3002"
+    "config_mismatch_s": "最小实例没有外部配置要求，无法定义'错误配置'；返回 None 而不是 0。",
+    "mixed_config_s": "计数器在 Instance.mixed_config_ticks 上，本函数只拿到 log、取不到；**不返回恒定值的假列**。需要这一列请从 Instance 取。"
    },
    "observation_window": {
     "censored_total": 0,
-    "note": "\u5220\u5931 = \u8fd0\u884c\u7ed3\u675f\u65f6\u8be5\u4e49\u52a1\u7684\u89c2\u5bdf\u622a\u6b62\u8fd8\u6ca1\u5230\uff1b\u65e2\u4e0d\u7b97\u6210\u529f\u4e5f\u4e0d\u7b97\u5931\u8d25\uff0c\u7559\u5728\u5206\u6bcd\u91cc\u3002",
+    "note": "删失 = 运行结束时该义务的观察截止还没到；既不算成功也不算失败，留在分母里。",
     "run_hours": 13,
     "tail_s": 3600,
     "task_hours": 12
@@ -4836,7 +4901,7 @@
     "knowledge_latency_p90_s": 780,
     "known_to_center": 7,
     "n_triggers": 7,
-    "note": "\u672c\u5b9e\u4f8b\u6ca1\u6709\u7b2c\u4e8c\u6761\u83b7\u77e5\u6e20\u9053\uff0c\u56e0\u6b64'\u4e2d\u5fc3\u83b7\u77e5\u4e8b\u4ef6'\u4e0e'\u4e2d\u5fc3\u62ff\u5230\u9996\u4efd\u65b0\u6570\u636e'\u540c\u4e00\u65f6\u523b\uff1b\u4e24\u8005\u7684\u5dee\u672a\u88ab\u6d4b\u8fc7\u3002"
+    "note": "本实例没有第二条获知渠道，因此'中心获知事件'与'中心拿到首份新数据'同一时刻；两者的差未被测过。"
    },
    "recovery": null,
    "routine": {
@@ -4850,7 +4915,8 @@
     "n": 168,
     "no_observation_s": 572400
    },
-   "seed": 4
+   "seed": 4,
+   "skip_reasons": {}
   },
   {
    "access_blocked": 156,
@@ -5064,10 +5130,10 @@
     "deliver_rate": 0.5714285714285714,
     "delivery_cdf": {
      "0": 0.5714285714285714,
-     "300": 0.5714285714285714,
-     "600": 0.5714285714285714,
      "1800": 0.5714285714285714,
-     "3600": 0.5714285714285714
+     "300": 0.5714285714285714,
+     "3600": 0.5714285714285714,
+     "600": 0.5714285714285714
     },
     "delivery_latency_mean_s": 0.0,
     "delivery_latency_p90_s": 0,
@@ -5077,6 +5143,7 @@
     "slots_matched_by_collection": 21
    },
    "exec_layer": "naive",
+   "gate": null,
    "hazard": {
     "hold_every": 0,
     "hold_s": 0
@@ -5104,7 +5171,7 @@
      "target_change": 1,
      "unknown_state": 135
     },
-    "note": "\u751f\u6210\u539f\u56e0\u53ea\u6709\u4e09\u7c7b\uff1a\u65e0\u56de\u6267\uff08unknown_state\uff09/\u76ee\u6807\u53d8\u4e86\uff08target_change\uff09/\u91cd\u53d1\uff08resend\uff09\u3002`refused` \u662f\u6309\u5dee\u989d\u7b97\u7684\uff0c\u56e0\u4e3a\u62ff\u4e0d\u5230\u4e0b\u884c\u673a\u4f1a\u7684\u90a3\u4e9b\u610f\u56fe\u4e0d\u4f1a\u8fdb `sent` \u4fa7\u3002",
+    "note": "生成原因只有三类：无回执（unknown_state）/目标变了（target_change）/重发（resend）。`refused` 是按差额算的，因为拿不到下行机会的那些意图不会进 `sent` 侧。",
     "refused": {
      "resend": 6,
      "target_change": 0,
@@ -5120,12 +5187,12 @@
    "mixed_config_s": 0,
    "n_obligations": 189,
    "not_applicable": {
-    "config_mismatch_s": "\u6700\u5c0f\u5b9e\u4f8b\u6ca1\u6709\u5916\u90e8\u914d\u7f6e\u8981\u6c42\uff0c\u65e0\u6cd5\u5b9a\u4e49'\u9519\u8bef\u914d\u7f6e'\uff1b\u8fd4\u56de None \u800c\u4e0d\u662f 0\u3002",
-    "mixed_config_s": "\u8ba1\u6570\u5668\u5728 Instance.mixed_config_ticks \u4e0a\uff0c\u672c\u51fd\u6570\u53ea\u62ff\u5230 log\u3001\u53d6\u4e0d\u5230\uff1b**\u4e0d\u8fd4\u56de\u6052\u5b9a\u503c\u7684\u5047\u5217**\u3002\u9700\u8981\u8fd9\u4e00\u5217\u8bf7\u4ece Instance \u53d6\u3002"
+    "config_mismatch_s": "最小实例没有外部配置要求，无法定义'错误配置'；返回 None 而不是 0。",
+    "mixed_config_s": "计数器在 Instance.mixed_config_ticks 上，本函数只拿到 log、取不到；**不返回恒定值的假列**。需要这一列请从 Instance 取。"
    },
    "observation_window": {
     "censored_total": 0,
-    "note": "\u5220\u5931 = \u8fd0\u884c\u7ed3\u675f\u65f6\u8be5\u4e49\u52a1\u7684\u89c2\u5bdf\u622a\u6b62\u8fd8\u6ca1\u5230\uff1b\u65e2\u4e0d\u7b97\u6210\u529f\u4e5f\u4e0d\u7b97\u5931\u8d25\uff0c\u7559\u5728\u5206\u6bcd\u91cc\u3002",
+    "note": "删失 = 运行结束时该义务的观察截止还没到；既不算成功也不算失败，留在分母里。",
     "run_hours": 13,
     "tail_s": 3600,
     "task_hours": 12
@@ -5139,7 +5206,7 @@
     "knowledge_latency_p90_s": 4380,
     "known_to_center": 6,
     "n_triggers": 7,
-    "note": "\u672c\u5b9e\u4f8b\u6ca1\u6709\u7b2c\u4e8c\u6761\u83b7\u77e5\u6e20\u9053\uff0c\u56e0\u6b64'\u4e2d\u5fc3\u83b7\u77e5\u4e8b\u4ef6'\u4e0e'\u4e2d\u5fc3\u62ff\u5230\u9996\u4efd\u65b0\u6570\u636e'\u540c\u4e00\u65f6\u523b\uff1b\u4e24\u8005\u7684\u5dee\u672a\u88ab\u6d4b\u8fc7\u3002"
+    "note": "本实例没有第二条获知渠道，因此'中心获知事件'与'中心拿到首份新数据'同一时刻；两者的差未被测过。"
    },
    "recovery": null,
    "routine": {
@@ -5153,7 +5220,8 @@
     "n": 168,
     "no_observation_s": 608400
    },
-   "seed": 5
+   "seed": 5,
+   "skip_reasons": {}
   },
   {
    "access_blocked": 156,
@@ -5367,10 +5435,10 @@
     "deliver_rate": 0.7142857142857143,
     "delivery_cdf": {
      "0": 0.7142857142857143,
-     "300": 0.7142857142857143,
-     "600": 0.7142857142857143,
      "1800": 0.7142857142857143,
-     "3600": 0.7142857142857143
+     "300": 0.7142857142857143,
+     "3600": 0.7142857142857143,
+     "600": 0.7142857142857143
     },
     "delivery_latency_mean_s": 0.0,
     "delivery_latency_p90_s": 0,
@@ -5380,6 +5448,7 @@
     "slots_matched_by_collection": 21
    },
    "exec_layer": "naive",
+   "gate": null,
    "hazard": {
     "hold_every": 0,
     "hold_s": 0
@@ -5407,7 +5476,7 @@
      "target_change": 8,
      "unknown_state": 33
     },
-    "note": "\u751f\u6210\u539f\u56e0\u53ea\u6709\u4e09\u7c7b\uff1a\u65e0\u56de\u6267\uff08unknown_state\uff09/\u76ee\u6807\u53d8\u4e86\uff08target_change\uff09/\u91cd\u53d1\uff08resend\uff09\u3002`refused` \u662f\u6309\u5dee\u989d\u7b97\u7684\uff0c\u56e0\u4e3a\u62ff\u4e0d\u5230\u4e0b\u884c\u673a\u4f1a\u7684\u90a3\u4e9b\u610f\u56fe\u4e0d\u4f1a\u8fdb `sent` \u4fa7\u3002",
+    "note": "生成原因只有三类：无回执（unknown_state）/目标变了（target_change）/重发（resend）。`refused` 是按差额算的，因为拿不到下行机会的那些意图不会进 `sent` 侧。",
     "refused": {
      "resend": 0,
      "target_change": 0,
@@ -5423,12 +5492,12 @@
    "mixed_config_s": 0,
    "n_obligations": 189,
    "not_applicable": {
-    "config_mismatch_s": "\u6700\u5c0f\u5b9e\u4f8b\u6ca1\u6709\u5916\u90e8\u914d\u7f6e\u8981\u6c42\uff0c\u65e0\u6cd5\u5b9a\u4e49'\u9519\u8bef\u914d\u7f6e'\uff1b\u8fd4\u56de None \u800c\u4e0d\u662f 0\u3002",
-    "mixed_config_s": "\u8ba1\u6570\u5668\u5728 Instance.mixed_config_ticks \u4e0a\uff0c\u672c\u51fd\u6570\u53ea\u62ff\u5230 log\u3001\u53d6\u4e0d\u5230\uff1b**\u4e0d\u8fd4\u56de\u6052\u5b9a\u503c\u7684\u5047\u5217**\u3002\u9700\u8981\u8fd9\u4e00\u5217\u8bf7\u4ece Instance \u53d6\u3002"
+    "config_mismatch_s": "最小实例没有外部配置要求，无法定义'错误配置'；返回 None 而不是 0。",
+    "mixed_config_s": "计数器在 Instance.mixed_config_ticks 上，本函数只拿到 log、取不到；**不返回恒定值的假列**。需要这一列请从 Instance 取。"
    },
    "observation_window": {
     "censored_total": 0,
-    "note": "\u5220\u5931 = \u8fd0\u884c\u7ed3\u675f\u65f6\u8be5\u4e49\u52a1\u7684\u89c2\u5bdf\u622a\u6b62\u8fd8\u6ca1\u5230\uff1b\u65e2\u4e0d\u7b97\u6210\u529f\u4e5f\u4e0d\u7b97\u5931\u8d25\uff0c\u7559\u5728\u5206\u6bcd\u91cc\u3002",
+    "note": "删失 = 运行结束时该义务的观察截止还没到；既不算成功也不算失败，留在分母里。",
     "run_hours": 13,
     "tail_s": 3600,
     "task_hours": 12
@@ -5442,7 +5511,7 @@
     "knowledge_latency_p90_s": 1740,
     "known_to_center": 7,
     "n_triggers": 7,
-    "note": "\u672c\u5b9e\u4f8b\u6ca1\u6709\u7b2c\u4e8c\u6761\u83b7\u77e5\u6e20\u9053\uff0c\u56e0\u6b64'\u4e2d\u5fc3\u83b7\u77e5\u4e8b\u4ef6'\u4e0e'\u4e2d\u5fc3\u62ff\u5230\u9996\u4efd\u65b0\u6570\u636e'\u540c\u4e00\u65f6\u523b\uff1b\u4e24\u8005\u7684\u5dee\u672a\u88ab\u6d4b\u8fc7\u3002"
+    "note": "本实例没有第二条获知渠道，因此'中心获知事件'与'中心拿到首份新数据'同一时刻；两者的差未被测过。"
    },
    "recovery": null,
    "routine": {
@@ -5456,7 +5525,8 @@
     "n": 168,
     "no_observation_s": 583200
    },
-   "seed": 6
+   "seed": 6,
+   "skip_reasons": {}
   },
   {
    "access_blocked": 156,
@@ -5670,10 +5740,10 @@
     "deliver_rate": 1.0,
     "delivery_cdf": {
      "0": 1.0,
-     "300": 1.0,
-     "600": 1.0,
      "1800": 1.0,
-     "3600": 1.0
+     "300": 1.0,
+     "3600": 1.0,
+     "600": 1.0
     },
     "delivery_latency_mean_s": 0.0,
     "delivery_latency_p90_s": 0,
@@ -5683,6 +5753,7 @@
     "slots_matched_by_collection": 21
    },
    "exec_layer": "naive",
+   "gate": null,
    "hazard": {
     "hold_every": 0,
     "hold_s": 0
@@ -5710,7 +5781,7 @@
      "target_change": 9,
      "unknown_state": 183
     },
-    "note": "\u751f\u6210\u539f\u56e0\u53ea\u6709\u4e09\u7c7b\uff1a\u65e0\u56de\u6267\uff08unknown_state\uff09/\u76ee\u6807\u53d8\u4e86\uff08target_change\uff09/\u91cd\u53d1\uff08resend\uff09\u3002`refused` \u662f\u6309\u5dee\u989d\u7b97\u7684\uff0c\u56e0\u4e3a\u62ff\u4e0d\u5230\u4e0b\u884c\u673a\u4f1a\u7684\u90a3\u4e9b\u610f\u56fe\u4e0d\u4f1a\u8fdb `sent` \u4fa7\u3002",
+    "note": "生成原因只有三类：无回执（unknown_state）/目标变了（target_change）/重发（resend）。`refused` 是按差额算的，因为拿不到下行机会的那些意图不会进 `sent` 侧。",
     "refused": {
      "resend": 12,
      "target_change": 0,
@@ -5726,12 +5797,12 @@
    "mixed_config_s": 0,
    "n_obligations": 189,
    "not_applicable": {
-    "config_mismatch_s": "\u6700\u5c0f\u5b9e\u4f8b\u6ca1\u6709\u5916\u90e8\u914d\u7f6e\u8981\u6c42\uff0c\u65e0\u6cd5\u5b9a\u4e49'\u9519\u8bef\u914d\u7f6e'\uff1b\u8fd4\u56de None \u800c\u4e0d\u662f 0\u3002",
-    "mixed_config_s": "\u8ba1\u6570\u5668\u5728 Instance.mixed_config_ticks \u4e0a\uff0c\u672c\u51fd\u6570\u53ea\u62ff\u5230 log\u3001\u53d6\u4e0d\u5230\uff1b**\u4e0d\u8fd4\u56de\u6052\u5b9a\u503c\u7684\u5047\u5217**\u3002\u9700\u8981\u8fd9\u4e00\u5217\u8bf7\u4ece Instance \u53d6\u3002"
+    "config_mismatch_s": "最小实例没有外部配置要求，无法定义'错误配置'；返回 None 而不是 0。",
+    "mixed_config_s": "计数器在 Instance.mixed_config_ticks 上，本函数只拿到 log、取不到；**不返回恒定值的假列**。需要这一列请从 Instance 取。"
    },
    "observation_window": {
     "censored_total": 0,
-    "note": "\u5220\u5931 = \u8fd0\u884c\u7ed3\u675f\u65f6\u8be5\u4e49\u52a1\u7684\u89c2\u5bdf\u622a\u6b62\u8fd8\u6ca1\u5230\uff1b\u65e2\u4e0d\u7b97\u6210\u529f\u4e5f\u4e0d\u7b97\u5931\u8d25\uff0c\u7559\u5728\u5206\u6bcd\u91cc\u3002",
+    "note": "删失 = 运行结束时该义务的观察截止还没到；既不算成功也不算失败，留在分母里。",
     "run_hours": 13,
     "tail_s": 3600,
     "task_hours": 12
@@ -5745,7 +5816,7 @@
     "knowledge_latency_p90_s": 0,
     "known_to_center": 7,
     "n_triggers": 7,
-    "note": "\u672c\u5b9e\u4f8b\u6ca1\u6709\u7b2c\u4e8c\u6761\u83b7\u77e5\u6e20\u9053\uff0c\u56e0\u6b64'\u4e2d\u5fc3\u83b7\u77e5\u4e8b\u4ef6'\u4e0e'\u4e2d\u5fc3\u62ff\u5230\u9996\u4efd\u65b0\u6570\u636e'\u540c\u4e00\u65f6\u523b\uff1b\u4e24\u8005\u7684\u5dee\u672a\u88ab\u6d4b\u8fc7\u3002"
+    "note": "本实例没有第二条获知渠道，因此'中心获知事件'与'中心拿到首份新数据'同一时刻；两者的差未被测过。"
    },
    "recovery": null,
    "routine": {
@@ -5759,7 +5830,8 @@
     "n": 168,
     "no_observation_s": 565200
    },
-   "seed": 7
+   "seed": 7,
+   "skip_reasons": {}
   },
   {
    "access_blocked": 156,
@@ -5973,10 +6045,10 @@
     "deliver_rate": 0.9523809523809523,
     "delivery_cdf": {
      "0": 0.8571428571428571,
-     "300": 0.9047619047619048,
-     "600": 0.9523809523809523,
      "1800": 0.9523809523809523,
-     "3600": 0.9523809523809523
+     "300": 0.9047619047619048,
+     "3600": 0.9523809523809523,
+     "600": 0.9523809523809523
     },
     "delivery_latency_mean_s": 45.0,
     "delivery_latency_p90_s": 0,
@@ -5986,6 +6058,7 @@
     "slots_matched_by_collection": 21
    },
    "exec_layer": "naive",
+   "gate": null,
    "hazard": {
     "hold_every": 0,
     "hold_s": 0
@@ -6013,7 +6086,7 @@
      "target_change": 2,
      "unknown_state": 105
     },
-    "note": "\u751f\u6210\u539f\u56e0\u53ea\u6709\u4e09\u7c7b\uff1a\u65e0\u56de\u6267\uff08unknown_state\uff09/\u76ee\u6807\u53d8\u4e86\uff08target_change\uff09/\u91cd\u53d1\uff08resend\uff09\u3002`refused` \u662f\u6309\u5dee\u989d\u7b97\u7684\uff0c\u56e0\u4e3a\u62ff\u4e0d\u5230\u4e0b\u884c\u673a\u4f1a\u7684\u90a3\u4e9b\u610f\u56fe\u4e0d\u4f1a\u8fdb `sent` \u4fa7\u3002",
+    "note": "生成原因只有三类：无回执（unknown_state）/目标变了（target_change）/重发（resend）。`refused` 是按差额算的，因为拿不到下行机会的那些意图不会进 `sent` 侧。",
     "refused": {
      "resend": 5,
      "target_change": 1,
@@ -6029,12 +6102,12 @@
    "mixed_config_s": 0,
    "n_obligations": 189,
    "not_applicable": {
-    "config_mismatch_s": "\u6700\u5c0f\u5b9e\u4f8b\u6ca1\u6709\u5916\u90e8\u914d\u7f6e\u8981\u6c42\uff0c\u65e0\u6cd5\u5b9a\u4e49'\u9519\u8bef\u914d\u7f6e'\uff1b\u8fd4\u56de None \u800c\u4e0d\u662f 0\u3002",
-    "mixed_config_s": "\u8ba1\u6570\u5668\u5728 Instance.mixed_config_ticks \u4e0a\uff0c\u672c\u51fd\u6570\u53ea\u62ff\u5230 log\u3001\u53d6\u4e0d\u5230\uff1b**\u4e0d\u8fd4\u56de\u6052\u5b9a\u503c\u7684\u5047\u5217**\u3002\u9700\u8981\u8fd9\u4e00\u5217\u8bf7\u4ece Instance \u53d6\u3002"
+    "config_mismatch_s": "最小实例没有外部配置要求，无法定义'错误配置'；返回 None 而不是 0。",
+    "mixed_config_s": "计数器在 Instance.mixed_config_ticks 上，本函数只拿到 log、取不到；**不返回恒定值的假列**。需要这一列请从 Instance 取。"
    },
    "observation_window": {
     "censored_total": 0,
-    "note": "\u5220\u5931 = \u8fd0\u884c\u7ed3\u675f\u65f6\u8be5\u4e49\u52a1\u7684\u89c2\u5bdf\u622a\u6b62\u8fd8\u6ca1\u5230\uff1b\u65e2\u4e0d\u7b97\u6210\u529f\u4e5f\u4e0d\u7b97\u5931\u8d25\uff0c\u7559\u5728\u5206\u6bcd\u91cc\u3002",
+    "note": "删失 = 运行结束时该义务的观察截止还没到；既不算成功也不算失败，留在分母里。",
     "run_hours": 13,
     "tail_s": 3600,
     "task_hours": 12
@@ -6048,7 +6121,7 @@
     "knowledge_latency_p90_s": 0,
     "known_to_center": 7,
     "n_triggers": 7,
-    "note": "\u672c\u5b9e\u4f8b\u6ca1\u6709\u7b2c\u4e8c\u6761\u83b7\u77e5\u6e20\u9053\uff0c\u56e0\u6b64'\u4e2d\u5fc3\u83b7\u77e5\u4e8b\u4ef6'\u4e0e'\u4e2d\u5fc3\u62ff\u5230\u9996\u4efd\u65b0\u6570\u636e'\u540c\u4e00\u65f6\u523b\uff1b\u4e24\u8005\u7684\u5dee\u672a\u88ab\u6d4b\u8fc7\u3002"
+    "note": "本实例没有第二条获知渠道，因此'中心获知事件'与'中心拿到首份新数据'同一时刻；两者的差未被测过。"
    },
    "recovery": null,
    "routine": {
@@ -6062,7 +6135,8 @@
     "n": 168,
     "no_observation_s": 608400
    },
-   "seed": 8
+   "seed": 8,
+   "skip_reasons": {}
   },
   {
    "access_blocked": 156,
@@ -6276,10 +6350,10 @@
     "deliver_rate": 0.7142857142857143,
     "delivery_cdf": {
      "0": 0.7142857142857143,
-     "300": 0.7142857142857143,
-     "600": 0.7142857142857143,
      "1800": 0.7142857142857143,
-     "3600": 0.7142857142857143
+     "300": 0.7142857142857143,
+     "3600": 0.7142857142857143,
+     "600": 0.7142857142857143
     },
     "delivery_latency_mean_s": 0.0,
     "delivery_latency_p90_s": 0,
@@ -6289,6 +6363,7 @@
     "slots_matched_by_collection": 21
    },
    "exec_layer": "naive",
+   "gate": null,
    "hazard": {
     "hold_every": 0,
     "hold_s": 0
@@ -6316,7 +6391,7 @@
      "target_change": 8,
      "unknown_state": 105
     },
-    "note": "\u751f\u6210\u539f\u56e0\u53ea\u6709\u4e09\u7c7b\uff1a\u65e0\u56de\u6267\uff08unknown_state\uff09/\u76ee\u6807\u53d8\u4e86\uff08target_change\uff09/\u91cd\u53d1\uff08resend\uff09\u3002`refused` \u662f\u6309\u5dee\u989d\u7b97\u7684\uff0c\u56e0\u4e3a\u62ff\u4e0d\u5230\u4e0b\u884c\u673a\u4f1a\u7684\u90a3\u4e9b\u610f\u56fe\u4e0d\u4f1a\u8fdb `sent` \u4fa7\u3002",
+    "note": "生成原因只有三类：无回执（unknown_state）/目标变了（target_change）/重发（resend）。`refused` 是按差额算的，因为拿不到下行机会的那些意图不会进 `sent` 侧。",
     "refused": {
      "resend": 6,
      "target_change": 0,
@@ -6332,12 +6407,12 @@
    "mixed_config_s": 0,
    "n_obligations": 189,
    "not_applicable": {
-    "config_mismatch_s": "\u6700\u5c0f\u5b9e\u4f8b\u6ca1\u6709\u5916\u90e8\u914d\u7f6e\u8981\u6c42\uff0c\u65e0\u6cd5\u5b9a\u4e49'\u9519\u8bef\u914d\u7f6e'\uff1b\u8fd4\u56de None \u800c\u4e0d\u662f 0\u3002",
-    "mixed_config_s": "\u8ba1\u6570\u5668\u5728 Instance.mixed_config_ticks \u4e0a\uff0c\u672c\u51fd\u6570\u53ea\u62ff\u5230 log\u3001\u53d6\u4e0d\u5230\uff1b**\u4e0d\u8fd4\u56de\u6052\u5b9a\u503c\u7684\u5047\u5217**\u3002\u9700\u8981\u8fd9\u4e00\u5217\u8bf7\u4ece Instance \u53d6\u3002"
+    "config_mismatch_s": "最小实例没有外部配置要求，无法定义'错误配置'；返回 None 而不是 0。",
+    "mixed_config_s": "计数器在 Instance.mixed_config_ticks 上，本函数只拿到 log、取不到；**不返回恒定值的假列**。需要这一列请从 Instance 取。"
    },
    "observation_window": {
     "censored_total": 0,
-    "note": "\u5220\u5931 = \u8fd0\u884c\u7ed3\u675f\u65f6\u8be5\u4e49\u52a1\u7684\u89c2\u5bdf\u622a\u6b62\u8fd8\u6ca1\u5230\uff1b\u65e2\u4e0d\u7b97\u6210\u529f\u4e5f\u4e0d\u7b97\u5931\u8d25\uff0c\u7559\u5728\u5206\u6bcd\u91cc\u3002",
+    "note": "删失 = 运行结束时该义务的观察截止还没到；既不算成功也不算失败，留在分母里。",
     "run_hours": 13,
     "tail_s": 3600,
     "task_hours": 12
@@ -6351,7 +6426,7 @@
     "knowledge_latency_p90_s": 11580,
     "known_to_center": 7,
     "n_triggers": 7,
-    "note": "\u672c\u5b9e\u4f8b\u6ca1\u6709\u7b2c\u4e8c\u6761\u83b7\u77e5\u6e20\u9053\uff0c\u56e0\u6b64'\u4e2d\u5fc3\u83b7\u77e5\u4e8b\u4ef6'\u4e0e'\u4e2d\u5fc3\u62ff\u5230\u9996\u4efd\u65b0\u6570\u636e'\u540c\u4e00\u65f6\u523b\uff1b\u4e24\u8005\u7684\u5dee\u672a\u88ab\u6d4b\u8fc7\u3002"
+    "note": "本实例没有第二条获知渠道，因此'中心获知事件'与'中心拿到首份新数据'同一时刻；两者的差未被测过。"
    },
    "recovery": null,
    "routine": {
@@ -6365,7 +6440,8 @@
     "n": 168,
     "no_observation_s": 572400
    },
-   "seed": 9
+   "seed": 9,
+   "skip_reasons": {}
   },
   {
    "access_blocked": 156,
@@ -6579,10 +6655,10 @@
     "deliver_rate": 0.8095238095238095,
     "delivery_cdf": {
      "0": 0.7142857142857143,
-     "300": 0.7619047619047619,
-     "600": 0.8095238095238095,
      "1800": 0.8095238095238095,
-     "3600": 0.8095238095238095
+     "300": 0.7619047619047619,
+     "3600": 0.8095238095238095,
+     "600": 0.8095238095238095
     },
     "delivery_latency_mean_s": 24.705882352941178,
     "delivery_latency_p90_s": 0,
@@ -6592,6 +6668,7 @@
     "slots_matched_by_collection": 21
    },
    "exec_layer": "naive",
+   "gate": null,
    "hazard": {
     "hold_every": 0,
     "hold_s": 0
@@ -6619,7 +6696,7 @@
      "target_change": 5,
      "unknown_state": 0
     },
-    "note": "\u751f\u6210\u539f\u56e0\u53ea\u6709\u4e09\u7c7b\uff1a\u65e0\u56de\u6267\uff08unknown_state\uff09/\u76ee\u6807\u53d8\u4e86\uff08target_change\uff09/\u91cd\u53d1\uff08resend\uff09\u3002`refused` \u662f\u6309\u5dee\u989d\u7b97\u7684\uff0c\u56e0\u4e3a\u62ff\u4e0d\u5230\u4e0b\u884c\u673a\u4f1a\u7684\u90a3\u4e9b\u610f\u56fe\u4e0d\u4f1a\u8fdb `sent` \u4fa7\u3002",
+    "note": "生成原因只有三类：无回执（unknown_state）/目标变了（target_change）/重发（resend）。`refused` 是按差额算的，因为拿不到下行机会的那些意图不会进 `sent` 侧。",
     "refused": {
      "resend": 0,
      "target_change": 2,
@@ -6635,12 +6712,12 @@
    "mixed_config_s": 0,
    "n_obligations": 189,
    "not_applicable": {
-    "config_mismatch_s": "\u6700\u5c0f\u5b9e\u4f8b\u6ca1\u6709\u5916\u90e8\u914d\u7f6e\u8981\u6c42\uff0c\u65e0\u6cd5\u5b9a\u4e49'\u9519\u8bef\u914d\u7f6e'\uff1b\u8fd4\u56de None \u800c\u4e0d\u662f 0\u3002",
-    "mixed_config_s": "\u8ba1\u6570\u5668\u5728 Instance.mixed_config_ticks \u4e0a\uff0c\u672c\u51fd\u6570\u53ea\u62ff\u5230 log\u3001\u53d6\u4e0d\u5230\uff1b**\u4e0d\u8fd4\u56de\u6052\u5b9a\u503c\u7684\u5047\u5217**\u3002\u9700\u8981\u8fd9\u4e00\u5217\u8bf7\u4ece Instance \u53d6\u3002"
+    "config_mismatch_s": "最小实例没有外部配置要求，无法定义'错误配置'；返回 None 而不是 0。",
+    "mixed_config_s": "计数器在 Instance.mixed_config_ticks 上，本函数只拿到 log、取不到；**不返回恒定值的假列**。需要这一列请从 Instance 取。"
    },
    "observation_window": {
     "censored_total": 0,
-    "note": "\u5220\u5931 = \u8fd0\u884c\u7ed3\u675f\u65f6\u8be5\u4e49\u52a1\u7684\u89c2\u5bdf\u622a\u6b62\u8fd8\u6ca1\u5230\uff1b\u65e2\u4e0d\u7b97\u6210\u529f\u4e5f\u4e0d\u7b97\u5931\u8d25\uff0c\u7559\u5728\u5206\u6bcd\u91cc\u3002",
+    "note": "删失 = 运行结束时该义务的观察截止还没到；既不算成功也不算失败，留在分母里。",
     "run_hours": 13,
     "tail_s": 3600,
     "task_hours": 12
@@ -6654,7 +6731,7 @@
     "knowledge_latency_p90_s": 660,
     "known_to_center": 7,
     "n_triggers": 7,
-    "note": "\u672c\u5b9e\u4f8b\u6ca1\u6709\u7b2c\u4e8c\u6761\u83b7\u77e5\u6e20\u9053\uff0c\u56e0\u6b64'\u4e2d\u5fc3\u83b7\u77e5\u4e8b\u4ef6'\u4e0e'\u4e2d\u5fc3\u62ff\u5230\u9996\u4efd\u65b0\u6570\u636e'\u540c\u4e00\u65f6\u523b\uff1b\u4e24\u8005\u7684\u5dee\u672a\u88ab\u6d4b\u8fc7\u3002"
+    "note": "本实例没有第二条获知渠道，因此'中心获知事件'与'中心拿到首份新数据'同一时刻；两者的差未被测过。"
    },
    "recovery": null,
    "routine": {
@@ -6668,7 +6745,12 @@
     "n": 168,
     "no_observation_s": 612000
    },
-   "seed": 0
+   "seed": 0,
+   "skip_reasons": {
+    "dwell": 59,
+    "in_flight": 657,
+    "no_soc": 10201
+   }
   },
   {
    "access_blocked": 156,
@@ -6882,10 +6964,10 @@
     "deliver_rate": 1.0,
     "delivery_cdf": {
      "0": 1.0,
-     "300": 1.0,
-     "600": 1.0,
      "1800": 1.0,
-     "3600": 1.0
+     "300": 1.0,
+     "3600": 1.0,
+     "600": 1.0
     },
     "delivery_latency_mean_s": 0.0,
     "delivery_latency_p90_s": 0,
@@ -6895,6 +6977,7 @@
     "slots_matched_by_collection": 21
    },
    "exec_layer": "naive",
+   "gate": null,
    "hazard": {
     "hold_every": 0,
     "hold_s": 0
@@ -6922,7 +7005,7 @@
      "target_change": 16,
      "unknown_state": 0
     },
-    "note": "\u751f\u6210\u539f\u56e0\u53ea\u6709\u4e09\u7c7b\uff1a\u65e0\u56de\u6267\uff08unknown_state\uff09/\u76ee\u6807\u53d8\u4e86\uff08target_change\uff09/\u91cd\u53d1\uff08resend\uff09\u3002`refused` \u662f\u6309\u5dee\u989d\u7b97\u7684\uff0c\u56e0\u4e3a\u62ff\u4e0d\u5230\u4e0b\u884c\u673a\u4f1a\u7684\u90a3\u4e9b\u610f\u56fe\u4e0d\u4f1a\u8fdb `sent` \u4fa7\u3002",
+    "note": "生成原因只有三类：无回执（unknown_state）/目标变了（target_change）/重发（resend）。`refused` 是按差额算的，因为拿不到下行机会的那些意图不会进 `sent` 侧。",
     "refused": {
      "resend": 0,
      "target_change": 0,
@@ -6938,12 +7021,12 @@
    "mixed_config_s": 0,
    "n_obligations": 189,
    "not_applicable": {
-    "config_mismatch_s": "\u6700\u5c0f\u5b9e\u4f8b\u6ca1\u6709\u5916\u90e8\u914d\u7f6e\u8981\u6c42\uff0c\u65e0\u6cd5\u5b9a\u4e49'\u9519\u8bef\u914d\u7f6e'\uff1b\u8fd4\u56de None \u800c\u4e0d\u662f 0\u3002",
-    "mixed_config_s": "\u8ba1\u6570\u5668\u5728 Instance.mixed_config_ticks \u4e0a\uff0c\u672c\u51fd\u6570\u53ea\u62ff\u5230 log\u3001\u53d6\u4e0d\u5230\uff1b**\u4e0d\u8fd4\u56de\u6052\u5b9a\u503c\u7684\u5047\u5217**\u3002\u9700\u8981\u8fd9\u4e00\u5217\u8bf7\u4ece Instance \u53d6\u3002"
+    "config_mismatch_s": "最小实例没有外部配置要求，无法定义'错误配置'；返回 None 而不是 0。",
+    "mixed_config_s": "计数器在 Instance.mixed_config_ticks 上，本函数只拿到 log、取不到；**不返回恒定值的假列**。需要这一列请从 Instance 取。"
    },
    "observation_window": {
     "censored_total": 0,
-    "note": "\u5220\u5931 = \u8fd0\u884c\u7ed3\u675f\u65f6\u8be5\u4e49\u52a1\u7684\u89c2\u5bdf\u622a\u6b62\u8fd8\u6ca1\u5230\uff1b\u65e2\u4e0d\u7b97\u6210\u529f\u4e5f\u4e0d\u7b97\u5931\u8d25\uff0c\u7559\u5728\u5206\u6bcd\u91cc\u3002",
+    "note": "删失 = 运行结束时该义务的观察截止还没到；既不算成功也不算失败，留在分母里。",
     "run_hours": 13,
     "tail_s": 3600,
     "task_hours": 12
@@ -6957,7 +7040,7 @@
     "knowledge_latency_p90_s": 0,
     "known_to_center": 7,
     "n_triggers": 7,
-    "note": "\u672c\u5b9e\u4f8b\u6ca1\u6709\u7b2c\u4e8c\u6761\u83b7\u77e5\u6e20\u9053\uff0c\u56e0\u6b64'\u4e2d\u5fc3\u83b7\u77e5\u4e8b\u4ef6'\u4e0e'\u4e2d\u5fc3\u62ff\u5230\u9996\u4efd\u65b0\u6570\u636e'\u540c\u4e00\u65f6\u523b\uff1b\u4e24\u8005\u7684\u5dee\u672a\u88ab\u6d4b\u8fc7\u3002"
+    "note": "本实例没有第二条获知渠道，因此'中心获知事件'与'中心拿到首份新数据'同一时刻；两者的差未被测过。"
    },
    "recovery": null,
    "routine": {
@@ -6971,7 +7054,11 @@
     "n": 168,
     "no_observation_s": 568800
    },
-   "seed": 1
+   "seed": 1,
+   "skip_reasons": {
+    "in_flight": 1414,
+    "no_soc": 9492
+   }
   },
   {
    "access_blocked": 156,
@@ -7185,10 +7272,10 @@
     "deliver_rate": 0.6666666666666666,
     "delivery_cdf": {
      "0": 0.5714285714285714,
-     "300": 0.6190476190476191,
-     "600": 0.6666666666666666,
      "1800": 0.6666666666666666,
-     "3600": 0.6666666666666666
+     "300": 0.6190476190476191,
+     "3600": 0.6666666666666666,
+     "600": 0.6666666666666666
     },
     "delivery_latency_mean_s": 64.28571428571429,
     "delivery_latency_p90_s": 300,
@@ -7198,6 +7285,7 @@
     "slots_matched_by_collection": 21
    },
    "exec_layer": "naive",
+   "gate": null,
    "hazard": {
     "hold_every": 0,
     "hold_s": 0
@@ -7225,7 +7313,7 @@
      "target_change": 14,
      "unknown_state": 0
     },
-    "note": "\u751f\u6210\u539f\u56e0\u53ea\u6709\u4e09\u7c7b\uff1a\u65e0\u56de\u6267\uff08unknown_state\uff09/\u76ee\u6807\u53d8\u4e86\uff08target_change\uff09/\u91cd\u53d1\uff08resend\uff09\u3002`refused` \u662f\u6309\u5dee\u989d\u7b97\u7684\uff0c\u56e0\u4e3a\u62ff\u4e0d\u5230\u4e0b\u884c\u673a\u4f1a\u7684\u90a3\u4e9b\u610f\u56fe\u4e0d\u4f1a\u8fdb `sent` \u4fa7\u3002",
+    "note": "生成原因只有三类：无回执（unknown_state）/目标变了（target_change）/重发（resend）。`refused` 是按差额算的，因为拿不到下行机会的那些意图不会进 `sent` 侧。",
     "refused": {
      "resend": 0,
      "target_change": 0,
@@ -7241,12 +7329,12 @@
    "mixed_config_s": 0,
    "n_obligations": 189,
    "not_applicable": {
-    "config_mismatch_s": "\u6700\u5c0f\u5b9e\u4f8b\u6ca1\u6709\u5916\u90e8\u914d\u7f6e\u8981\u6c42\uff0c\u65e0\u6cd5\u5b9a\u4e49'\u9519\u8bef\u914d\u7f6e'\uff1b\u8fd4\u56de None \u800c\u4e0d\u662f 0\u3002",
-    "mixed_config_s": "\u8ba1\u6570\u5668\u5728 Instance.mixed_config_ticks \u4e0a\uff0c\u672c\u51fd\u6570\u53ea\u62ff\u5230 log\u3001\u53d6\u4e0d\u5230\uff1b**\u4e0d\u8fd4\u56de\u6052\u5b9a\u503c\u7684\u5047\u5217**\u3002\u9700\u8981\u8fd9\u4e00\u5217\u8bf7\u4ece Instance \u53d6\u3002"
+    "config_mismatch_s": "最小实例没有外部配置要求，无法定义'错误配置'；返回 None 而不是 0。",
+    "mixed_config_s": "计数器在 Instance.mixed_config_ticks 上，本函数只拿到 log、取不到；**不返回恒定值的假列**。需要这一列请从 Instance 取。"
    },
    "observation_window": {
     "censored_total": 0,
-    "note": "\u5220\u5931 = \u8fd0\u884c\u7ed3\u675f\u65f6\u8be5\u4e49\u52a1\u7684\u89c2\u5bdf\u622a\u6b62\u8fd8\u6ca1\u5230\uff1b\u65e2\u4e0d\u7b97\u6210\u529f\u4e5f\u4e0d\u7b97\u5931\u8d25\uff0c\u7559\u5728\u5206\u6bcd\u91cc\u3002",
+    "note": "删失 = 运行结束时该义务的观察截止还没到；既不算成功也不算失败，留在分母里。",
     "run_hours": 13,
     "tail_s": 3600,
     "task_hours": 12
@@ -7260,7 +7348,7 @@
     "knowledge_latency_p90_s": 5340,
     "known_to_center": 7,
     "n_triggers": 7,
-    "note": "\u672c\u5b9e\u4f8b\u6ca1\u6709\u7b2c\u4e8c\u6761\u83b7\u77e5\u6e20\u9053\uff0c\u56e0\u6b64'\u4e2d\u5fc3\u83b7\u77e5\u4e8b\u4ef6'\u4e0e'\u4e2d\u5fc3\u62ff\u5230\u9996\u4efd\u65b0\u6570\u636e'\u540c\u4e00\u65f6\u523b\uff1b\u4e24\u8005\u7684\u5dee\u672a\u88ab\u6d4b\u8fc7\u3002"
+    "note": "本实例没有第二条获知渠道，因此'中心获知事件'与'中心拿到首份新数据'同一时刻；两者的差未被测过。"
    },
    "recovery": null,
    "routine": {
@@ -7274,7 +7362,11 @@
     "n": 168,
     "no_observation_s": 576000
    },
-   "seed": 2
+   "seed": 2,
+   "skip_reasons": {
+    "in_flight": 1298,
+    "no_soc": 9610
+   }
   },
   {
    "access_blocked": 156,
@@ -7488,10 +7580,10 @@
     "deliver_rate": 0.6666666666666666,
     "delivery_cdf": {
      "0": 0.5714285714285714,
-     "300": 0.6190476190476191,
-     "600": 0.6666666666666666,
      "1800": 0.6666666666666666,
-     "3600": 0.6666666666666666
+     "300": 0.6190476190476191,
+     "3600": 0.6666666666666666,
+     "600": 0.6666666666666666
     },
     "delivery_latency_mean_s": 30.0,
     "delivery_latency_p90_s": 60,
@@ -7501,6 +7593,7 @@
     "slots_matched_by_collection": 21
    },
    "exec_layer": "naive",
+   "gate": null,
    "hazard": {
     "hold_every": 0,
     "hold_s": 0
@@ -7528,7 +7621,7 @@
      "target_change": 13,
      "unknown_state": 0
     },
-    "note": "\u751f\u6210\u539f\u56e0\u53ea\u6709\u4e09\u7c7b\uff1a\u65e0\u56de\u6267\uff08unknown_state\uff09/\u76ee\u6807\u53d8\u4e86\uff08target_change\uff09/\u91cd\u53d1\uff08resend\uff09\u3002`refused` \u662f\u6309\u5dee\u989d\u7b97\u7684\uff0c\u56e0\u4e3a\u62ff\u4e0d\u5230\u4e0b\u884c\u673a\u4f1a\u7684\u90a3\u4e9b\u610f\u56fe\u4e0d\u4f1a\u8fdb `sent` \u4fa7\u3002",
+    "note": "生成原因只有三类：无回执（unknown_state）/目标变了（target_change）/重发（resend）。`refused` 是按差额算的，因为拿不到下行机会的那些意图不会进 `sent` 侧。",
     "refused": {
      "resend": 0,
      "target_change": 0,
@@ -7544,12 +7637,12 @@
    "mixed_config_s": 0,
    "n_obligations": 189,
    "not_applicable": {
-    "config_mismatch_s": "\u6700\u5c0f\u5b9e\u4f8b\u6ca1\u6709\u5916\u90e8\u914d\u7f6e\u8981\u6c42\uff0c\u65e0\u6cd5\u5b9a\u4e49'\u9519\u8bef\u914d\u7f6e'\uff1b\u8fd4\u56de None \u800c\u4e0d\u662f 0\u3002",
-    "mixed_config_s": "\u8ba1\u6570\u5668\u5728 Instance.mixed_config_ticks \u4e0a\uff0c\u672c\u51fd\u6570\u53ea\u62ff\u5230 log\u3001\u53d6\u4e0d\u5230\uff1b**\u4e0d\u8fd4\u56de\u6052\u5b9a\u503c\u7684\u5047\u5217**\u3002\u9700\u8981\u8fd9\u4e00\u5217\u8bf7\u4ece Instance \u53d6\u3002"
+    "config_mismatch_s": "最小实例没有外部配置要求，无法定义'错误配置'；返回 None 而不是 0。",
+    "mixed_config_s": "计数器在 Instance.mixed_config_ticks 上，本函数只拿到 log、取不到；**不返回恒定值的假列**。需要这一列请从 Instance 取。"
    },
    "observation_window": {
     "censored_total": 0,
-    "note": "\u5220\u5931 = \u8fd0\u884c\u7ed3\u675f\u65f6\u8be5\u4e49\u52a1\u7684\u89c2\u5bdf\u622a\u6b62\u8fd8\u6ca1\u5230\uff1b\u65e2\u4e0d\u7b97\u6210\u529f\u4e5f\u4e0d\u7b97\u5931\u8d25\uff0c\u7559\u5728\u5206\u6bcd\u91cc\u3002",
+    "note": "删失 = 运行结束时该义务的观察截止还没到；既不算成功也不算失败，留在分母里。",
     "run_hours": 13,
     "tail_s": 3600,
     "task_hours": 12
@@ -7563,7 +7656,7 @@
     "knowledge_latency_p90_s": 2520,
     "known_to_center": 7,
     "n_triggers": 7,
-    "note": "\u672c\u5b9e\u4f8b\u6ca1\u6709\u7b2c\u4e8c\u6761\u83b7\u77e5\u6e20\u9053\uff0c\u56e0\u6b64'\u4e2d\u5fc3\u83b7\u77e5\u4e8b\u4ef6'\u4e0e'\u4e2d\u5fc3\u62ff\u5230\u9996\u4efd\u65b0\u6570\u636e'\u540c\u4e00\u65f6\u523b\uff1b\u4e24\u8005\u7684\u5dee\u672a\u88ab\u6d4b\u8fc7\u3002"
+    "note": "本实例没有第二条获知渠道，因此'中心获知事件'与'中心拿到首份新数据'同一时刻；两者的差未被测过。"
    },
    "recovery": null,
    "routine": {
@@ -7577,7 +7670,11 @@
     "n": 168,
     "no_observation_s": 576000
    },
-   "seed": 3
+   "seed": 3,
+   "skip_reasons": {
+    "in_flight": 1297,
+    "no_soc": 9611
+   }
   },
   {
    "access_blocked": 156,
@@ -7791,10 +7888,10 @@
     "deliver_rate": 0.8095238095238095,
     "delivery_cdf": {
      "0": 0.7142857142857143,
-     "300": 0.7619047619047619,
-     "600": 0.8095238095238095,
      "1800": 0.8095238095238095,
-     "3600": 0.8095238095238095
+     "300": 0.7619047619047619,
+     "3600": 0.8095238095238095,
+     "600": 0.8095238095238095
     },
     "delivery_latency_mean_s": 38.8235294117647,
     "delivery_latency_p90_s": 0,
@@ -7804,6 +7901,7 @@
     "slots_matched_by_collection": 21
    },
    "exec_layer": "naive",
+   "gate": null,
    "hazard": {
     "hold_every": 0,
     "hold_s": 0
@@ -7831,7 +7929,7 @@
      "target_change": 15,
      "unknown_state": 0
     },
-    "note": "\u751f\u6210\u539f\u56e0\u53ea\u6709\u4e09\u7c7b\uff1a\u65e0\u56de\u6267\uff08unknown_state\uff09/\u76ee\u6807\u53d8\u4e86\uff08target_change\uff09/\u91cd\u53d1\uff08resend\uff09\u3002`refused` \u662f\u6309\u5dee\u989d\u7b97\u7684\uff0c\u56e0\u4e3a\u62ff\u4e0d\u5230\u4e0b\u884c\u673a\u4f1a\u7684\u90a3\u4e9b\u610f\u56fe\u4e0d\u4f1a\u8fdb `sent` \u4fa7\u3002",
+    "note": "生成原因只有三类：无回执（unknown_state）/目标变了（target_change）/重发（resend）。`refused` 是按差额算的，因为拿不到下行机会的那些意图不会进 `sent` 侧。",
     "refused": {
      "resend": 0,
      "target_change": 2,
@@ -7847,12 +7945,12 @@
    "mixed_config_s": 0,
    "n_obligations": 189,
    "not_applicable": {
-    "config_mismatch_s": "\u6700\u5c0f\u5b9e\u4f8b\u6ca1\u6709\u5916\u90e8\u914d\u7f6e\u8981\u6c42\uff0c\u65e0\u6cd5\u5b9a\u4e49'\u9519\u8bef\u914d\u7f6e'\uff1b\u8fd4\u56de None \u800c\u4e0d\u662f 0\u3002",
-    "mixed_config_s": "\u8ba1\u6570\u5668\u5728 Instance.mixed_config_ticks \u4e0a\uff0c\u672c\u51fd\u6570\u53ea\u62ff\u5230 log\u3001\u53d6\u4e0d\u5230\uff1b**\u4e0d\u8fd4\u56de\u6052\u5b9a\u503c\u7684\u5047\u5217**\u3002\u9700\u8981\u8fd9\u4e00\u5217\u8bf7\u4ece Instance \u53d6\u3002"
+    "config_mismatch_s": "最小实例没有外部配置要求，无法定义'错误配置'；返回 None 而不是 0。",
+    "mixed_config_s": "计数器在 Instance.mixed_config_ticks 上，本函数只拿到 log、取不到；**不返回恒定值的假列**。需要这一列请从 Instance 取。"
    },
    "observation_window": {
     "censored_total": 0,
-    "note": "\u5220\u5931 = \u8fd0\u884c\u7ed3\u675f\u65f6\u8be5\u4e49\u52a1\u7684\u89c2\u5bdf\u622a\u6b62\u8fd8\u6ca1\u5230\uff1b\u65e2\u4e0d\u7b97\u6210\u529f\u4e5f\u4e0d\u7b97\u5931\u8d25\uff0c\u7559\u5728\u5206\u6bcd\u91cc\u3002",
+    "note": "删失 = 运行结束时该义务的观察截止还没到；既不算成功也不算失败，留在分母里。",
     "run_hours": 13,
     "tail_s": 3600,
     "task_hours": 12
@@ -7866,7 +7964,7 @@
     "knowledge_latency_p90_s": 780,
     "known_to_center": 7,
     "n_triggers": 7,
-    "note": "\u672c\u5b9e\u4f8b\u6ca1\u6709\u7b2c\u4e8c\u6761\u83b7\u77e5\u6e20\u9053\uff0c\u56e0\u6b64'\u4e2d\u5fc3\u83b7\u77e5\u4e8b\u4ef6'\u4e0e'\u4e2d\u5fc3\u62ff\u5230\u9996\u4efd\u65b0\u6570\u636e'\u540c\u4e00\u65f6\u523b\uff1b\u4e24\u8005\u7684\u5dee\u672a\u88ab\u6d4b\u8fc7\u3002"
+    "note": "本实例没有第二条获知渠道，因此'中心获知事件'与'中心拿到首份新数据'同一时刻；两者的差未被测过。"
    },
    "recovery": null,
    "routine": {
@@ -7880,7 +7978,12 @@
     "n": 168,
     "no_observation_s": 572400
    },
-   "seed": 4
+   "seed": 4,
+   "skip_reasons": {
+    "dwell": 59,
+    "in_flight": 1297,
+    "no_soc": 9551
+   }
   },
   {
    "access_blocked": 156,
@@ -8094,10 +8197,10 @@
     "deliver_rate": 0.5714285714285714,
     "delivery_cdf": {
      "0": 0.5714285714285714,
-     "300": 0.5714285714285714,
-     "600": 0.5714285714285714,
      "1800": 0.5714285714285714,
-     "3600": 0.5714285714285714
+     "300": 0.5714285714285714,
+     "3600": 0.5714285714285714,
+     "600": 0.5714285714285714
     },
     "delivery_latency_mean_s": 0.0,
     "delivery_latency_p90_s": 0,
@@ -8107,6 +8210,7 @@
     "slots_matched_by_collection": 21
    },
    "exec_layer": "naive",
+   "gate": null,
    "hazard": {
     "hold_every": 0,
     "hold_s": 0
@@ -8134,7 +8238,7 @@
      "target_change": 5,
      "unknown_state": 0
     },
-    "note": "\u751f\u6210\u539f\u56e0\u53ea\u6709\u4e09\u7c7b\uff1a\u65e0\u56de\u6267\uff08unknown_state\uff09/\u76ee\u6807\u53d8\u4e86\uff08target_change\uff09/\u91cd\u53d1\uff08resend\uff09\u3002`refused` \u662f\u6309\u5dee\u989d\u7b97\u7684\uff0c\u56e0\u4e3a\u62ff\u4e0d\u5230\u4e0b\u884c\u673a\u4f1a\u7684\u90a3\u4e9b\u610f\u56fe\u4e0d\u4f1a\u8fdb `sent` \u4fa7\u3002",
+    "note": "生成原因只有三类：无回执（unknown_state）/目标变了（target_change）/重发（resend）。`refused` 是按差额算的，因为拿不到下行机会的那些意图不会进 `sent` 侧。",
     "refused": {
      "resend": 0,
      "target_change": 2,
@@ -8150,12 +8254,12 @@
    "mixed_config_s": 0,
    "n_obligations": 189,
    "not_applicable": {
-    "config_mismatch_s": "\u6700\u5c0f\u5b9e\u4f8b\u6ca1\u6709\u5916\u90e8\u914d\u7f6e\u8981\u6c42\uff0c\u65e0\u6cd5\u5b9a\u4e49'\u9519\u8bef\u914d\u7f6e'\uff1b\u8fd4\u56de None \u800c\u4e0d\u662f 0\u3002",
-    "mixed_config_s": "\u8ba1\u6570\u5668\u5728 Instance.mixed_config_ticks \u4e0a\uff0c\u672c\u51fd\u6570\u53ea\u62ff\u5230 log\u3001\u53d6\u4e0d\u5230\uff1b**\u4e0d\u8fd4\u56de\u6052\u5b9a\u503c\u7684\u5047\u5217**\u3002\u9700\u8981\u8fd9\u4e00\u5217\u8bf7\u4ece Instance \u53d6\u3002"
+    "config_mismatch_s": "最小实例没有外部配置要求，无法定义'错误配置'；返回 None 而不是 0。",
+    "mixed_config_s": "计数器在 Instance.mixed_config_ticks 上，本函数只拿到 log、取不到；**不返回恒定值的假列**。需要这一列请从 Instance 取。"
    },
    "observation_window": {
     "censored_total": 0,
-    "note": "\u5220\u5931 = \u8fd0\u884c\u7ed3\u675f\u65f6\u8be5\u4e49\u52a1\u7684\u89c2\u5bdf\u622a\u6b62\u8fd8\u6ca1\u5230\uff1b\u65e2\u4e0d\u7b97\u6210\u529f\u4e5f\u4e0d\u7b97\u5931\u8d25\uff0c\u7559\u5728\u5206\u6bcd\u91cc\u3002",
+    "note": "删失 = 运行结束时该义务的观察截止还没到；既不算成功也不算失败，留在分母里。",
     "run_hours": 13,
     "tail_s": 3600,
     "task_hours": 12
@@ -8169,7 +8273,7 @@
     "knowledge_latency_p90_s": 4380,
     "known_to_center": 6,
     "n_triggers": 7,
-    "note": "\u672c\u5b9e\u4f8b\u6ca1\u6709\u7b2c\u4e8c\u6761\u83b7\u77e5\u6e20\u9053\uff0c\u56e0\u6b64'\u4e2d\u5fc3\u83b7\u77e5\u4e8b\u4ef6'\u4e0e'\u4e2d\u5fc3\u62ff\u5230\u9996\u4efd\u65b0\u6570\u636e'\u540c\u4e00\u65f6\u523b\uff1b\u4e24\u8005\u7684\u5dee\u672a\u88ab\u6d4b\u8fc7\u3002"
+    "note": "本实例没有第二条获知渠道，因此'中心获知事件'与'中心拿到首份新数据'同一时刻；两者的差未被测过。"
    },
    "recovery": null,
    "routine": {
@@ -8183,7 +8287,12 @@
     "n": 168,
     "no_observation_s": 608400
    },
-   "seed": 5
+   "seed": 5,
+   "skip_reasons": {
+    "dwell": 59,
+    "in_flight": 717,
+    "no_soc": 10141
+   }
   },
   {
    "access_blocked": 156,
@@ -8397,10 +8506,10 @@
     "deliver_rate": 0.7142857142857143,
     "delivery_cdf": {
      "0": 0.7142857142857143,
-     "300": 0.7142857142857143,
-     "600": 0.7142857142857143,
      "1800": 0.7142857142857143,
-     "3600": 0.7142857142857143
+     "300": 0.7142857142857143,
+     "3600": 0.7142857142857143,
+     "600": 0.7142857142857143
     },
     "delivery_latency_mean_s": 0.0,
     "delivery_latency_p90_s": 0,
@@ -8410,6 +8519,7 @@
     "slots_matched_by_collection": 21
    },
    "exec_layer": "naive",
+   "gate": null,
    "hazard": {
     "hold_every": 0,
     "hold_s": 0
@@ -8437,7 +8547,7 @@
      "target_change": 12,
      "unknown_state": 0
     },
-    "note": "\u751f\u6210\u539f\u56e0\u53ea\u6709\u4e09\u7c7b\uff1a\u65e0\u56de\u6267\uff08unknown_state\uff09/\u76ee\u6807\u53d8\u4e86\uff08target_change\uff09/\u91cd\u53d1\uff08resend\uff09\u3002`refused` \u662f\u6309\u5dee\u989d\u7b97\u7684\uff0c\u56e0\u4e3a\u62ff\u4e0d\u5230\u4e0b\u884c\u673a\u4f1a\u7684\u90a3\u4e9b\u610f\u56fe\u4e0d\u4f1a\u8fdb `sent` \u4fa7\u3002",
+    "note": "生成原因只有三类：无回执（unknown_state）/目标变了（target_change）/重发（resend）。`refused` 是按差额算的，因为拿不到下行机会的那些意图不会进 `sent` 侧。",
     "refused": {
      "resend": 0,
      "target_change": 0,
@@ -8453,12 +8563,12 @@
    "mixed_config_s": 0,
    "n_obligations": 189,
    "not_applicable": {
-    "config_mismatch_s": "\u6700\u5c0f\u5b9e\u4f8b\u6ca1\u6709\u5916\u90e8\u914d\u7f6e\u8981\u6c42\uff0c\u65e0\u6cd5\u5b9a\u4e49'\u9519\u8bef\u914d\u7f6e'\uff1b\u8fd4\u56de None \u800c\u4e0d\u662f 0\u3002",
-    "mixed_config_s": "\u8ba1\u6570\u5668\u5728 Instance.mixed_config_ticks \u4e0a\uff0c\u672c\u51fd\u6570\u53ea\u62ff\u5230 log\u3001\u53d6\u4e0d\u5230\uff1b**\u4e0d\u8fd4\u56de\u6052\u5b9a\u503c\u7684\u5047\u5217**\u3002\u9700\u8981\u8fd9\u4e00\u5217\u8bf7\u4ece Instance \u53d6\u3002"
+    "config_mismatch_s": "最小实例没有外部配置要求，无法定义'错误配置'；返回 None 而不是 0。",
+    "mixed_config_s": "计数器在 Instance.mixed_config_ticks 上，本函数只拿到 log、取不到；**不返回恒定值的假列**。需要这一列请从 Instance 取。"
    },
    "observation_window": {
     "censored_total": 0,
-    "note": "\u5220\u5931 = \u8fd0\u884c\u7ed3\u675f\u65f6\u8be5\u4e49\u52a1\u7684\u89c2\u5bdf\u622a\u6b62\u8fd8\u6ca1\u5230\uff1b\u65e2\u4e0d\u7b97\u6210\u529f\u4e5f\u4e0d\u7b97\u5931\u8d25\uff0c\u7559\u5728\u5206\u6bcd\u91cc\u3002",
+    "note": "删失 = 运行结束时该义务的观察截止还没到；既不算成功也不算失败，留在分母里。",
     "run_hours": 13,
     "tail_s": 3600,
     "task_hours": 12
@@ -8472,7 +8582,7 @@
     "knowledge_latency_p90_s": 1740,
     "known_to_center": 7,
     "n_triggers": 7,
-    "note": "\u672c\u5b9e\u4f8b\u6ca1\u6709\u7b2c\u4e8c\u6761\u83b7\u77e5\u6e20\u9053\uff0c\u56e0\u6b64'\u4e2d\u5fc3\u83b7\u77e5\u4e8b\u4ef6'\u4e0e'\u4e2d\u5fc3\u62ff\u5230\u9996\u4efd\u65b0\u6570\u636e'\u540c\u4e00\u65f6\u523b\uff1b\u4e24\u8005\u7684\u5dee\u672a\u88ab\u6d4b\u8fc7\u3002"
+    "note": "本实例没有第二条获知渠道，因此'中心获知事件'与'中心拿到首份新数据'同一时刻；两者的差未被测过。"
    },
    "recovery": null,
    "routine": {
@@ -8486,7 +8596,11 @@
     "n": 168,
     "no_observation_s": 583200
    },
-   "seed": 6
+   "seed": 6,
+   "skip_reasons": {
+    "in_flight": 1182,
+    "no_soc": 9728
+   }
   },
   {
    "access_blocked": 156,
@@ -8700,10 +8814,10 @@
     "deliver_rate": 1.0,
     "delivery_cdf": {
      "0": 1.0,
-     "300": 1.0,
-     "600": 1.0,
      "1800": 1.0,
-     "3600": 1.0
+     "300": 1.0,
+     "3600": 1.0,
+     "600": 1.0
     },
     "delivery_latency_mean_s": 0.0,
     "delivery_latency_p90_s": 0,
@@ -8713,6 +8827,7 @@
     "slots_matched_by_collection": 21
    },
    "exec_layer": "naive",
+   "gate": null,
    "hazard": {
     "hold_every": 0,
     "hold_s": 0
@@ -8740,7 +8855,7 @@
      "target_change": 19,
      "unknown_state": 0
     },
-    "note": "\u751f\u6210\u539f\u56e0\u53ea\u6709\u4e09\u7c7b\uff1a\u65e0\u56de\u6267\uff08unknown_state\uff09/\u76ee\u6807\u53d8\u4e86\uff08target_change\uff09/\u91cd\u53d1\uff08resend\uff09\u3002`refused` \u662f\u6309\u5dee\u989d\u7b97\u7684\uff0c\u56e0\u4e3a\u62ff\u4e0d\u5230\u4e0b\u884c\u673a\u4f1a\u7684\u90a3\u4e9b\u610f\u56fe\u4e0d\u4f1a\u8fdb `sent` \u4fa7\u3002",
+    "note": "生成原因只有三类：无回执（unknown_state）/目标变了（target_change）/重发（resend）。`refused` 是按差额算的，因为拿不到下行机会的那些意图不会进 `sent` 侧。",
     "refused": {
      "resend": 0,
      "target_change": 4,
@@ -8756,12 +8871,12 @@
    "mixed_config_s": 0,
    "n_obligations": 189,
    "not_applicable": {
-    "config_mismatch_s": "\u6700\u5c0f\u5b9e\u4f8b\u6ca1\u6709\u5916\u90e8\u914d\u7f6e\u8981\u6c42\uff0c\u65e0\u6cd5\u5b9a\u4e49'\u9519\u8bef\u914d\u7f6e'\uff1b\u8fd4\u56de None \u800c\u4e0d\u662f 0\u3002",
-    "mixed_config_s": "\u8ba1\u6570\u5668\u5728 Instance.mixed_config_ticks \u4e0a\uff0c\u672c\u51fd\u6570\u53ea\u62ff\u5230 log\u3001\u53d6\u4e0d\u5230\uff1b**\u4e0d\u8fd4\u56de\u6052\u5b9a\u503c\u7684\u5047\u5217**\u3002\u9700\u8981\u8fd9\u4e00\u5217\u8bf7\u4ece Instance \u53d6\u3002"
+    "config_mismatch_s": "最小实例没有外部配置要求，无法定义'错误配置'；返回 None 而不是 0。",
+    "mixed_config_s": "计数器在 Instance.mixed_config_ticks 上，本函数只拿到 log、取不到；**不返回恒定值的假列**。需要这一列请从 Instance 取。"
    },
    "observation_window": {
     "censored_total": 0,
-    "note": "\u5220\u5931 = \u8fd0\u884c\u7ed3\u675f\u65f6\u8be5\u4e49\u52a1\u7684\u89c2\u5bdf\u622a\u6b62\u8fd8\u6ca1\u5230\uff1b\u65e2\u4e0d\u7b97\u6210\u529f\u4e5f\u4e0d\u7b97\u5931\u8d25\uff0c\u7559\u5728\u5206\u6bcd\u91cc\u3002",
+    "note": "删失 = 运行结束时该义务的观察截止还没到；既不算成功也不算失败，留在分母里。",
     "run_hours": 13,
     "tail_s": 3600,
     "task_hours": 12
@@ -8775,7 +8890,7 @@
     "knowledge_latency_p90_s": 0,
     "known_to_center": 7,
     "n_triggers": 7,
-    "note": "\u672c\u5b9e\u4f8b\u6ca1\u6709\u7b2c\u4e8c\u6761\u83b7\u77e5\u6e20\u9053\uff0c\u56e0\u6b64'\u4e2d\u5fc3\u83b7\u77e5\u4e8b\u4ef6'\u4e0e'\u4e2d\u5fc3\u62ff\u5230\u9996\u4efd\u65b0\u6570\u636e'\u540c\u4e00\u65f6\u523b\uff1b\u4e24\u8005\u7684\u5dee\u672a\u88ab\u6d4b\u8fc7\u3002"
+    "note": "本实例没有第二条获知渠道，因此'中心获知事件'与'中心拿到首份新数据'同一时刻；两者的差未被测过。"
    },
    "recovery": null,
    "routine": {
@@ -8789,7 +8904,12 @@
     "n": 168,
     "no_observation_s": 565200
    },
-   "seed": 7
+   "seed": 7,
+   "skip_reasons": {
+    "dwell": 118,
+    "in_flight": 1353,
+    "no_soc": 9433
+   }
   },
   {
    "access_blocked": 156,
@@ -9003,10 +9123,10 @@
     "deliver_rate": 0.9523809523809523,
     "delivery_cdf": {
      "0": 0.8571428571428571,
-     "300": 0.9047619047619048,
-     "600": 0.9523809523809523,
      "1800": 0.9523809523809523,
-     "3600": 0.9523809523809523
+     "300": 0.9047619047619048,
+     "3600": 0.9523809523809523,
+     "600": 0.9523809523809523
     },
     "delivery_latency_mean_s": 45.0,
     "delivery_latency_p90_s": 0,
@@ -9016,6 +9136,7 @@
     "slots_matched_by_collection": 21
    },
    "exec_layer": "naive",
+   "gate": null,
    "hazard": {
     "hold_every": 0,
     "hold_s": 0
@@ -9043,7 +9164,7 @@
      "target_change": 5,
      "unknown_state": 0
     },
-    "note": "\u751f\u6210\u539f\u56e0\u53ea\u6709\u4e09\u7c7b\uff1a\u65e0\u56de\u6267\uff08unknown_state\uff09/\u76ee\u6807\u53d8\u4e86\uff08target_change\uff09/\u91cd\u53d1\uff08resend\uff09\u3002`refused` \u662f\u6309\u5dee\u989d\u7b97\u7684\uff0c\u56e0\u4e3a\u62ff\u4e0d\u5230\u4e0b\u884c\u673a\u4f1a\u7684\u90a3\u4e9b\u610f\u56fe\u4e0d\u4f1a\u8fdb `sent` \u4fa7\u3002",
+    "note": "生成原因只有三类：无回执（unknown_state）/目标变了（target_change）/重发（resend）。`refused` 是按差额算的，因为拿不到下行机会的那些意图不会进 `sent` 侧。",
     "refused": {
      "resend": 0,
      "target_change": 2,
@@ -9059,12 +9180,12 @@
    "mixed_config_s": 0,
    "n_obligations": 189,
    "not_applicable": {
-    "config_mismatch_s": "\u6700\u5c0f\u5b9e\u4f8b\u6ca1\u6709\u5916\u90e8\u914d\u7f6e\u8981\u6c42\uff0c\u65e0\u6cd5\u5b9a\u4e49'\u9519\u8bef\u914d\u7f6e'\uff1b\u8fd4\u56de None \u800c\u4e0d\u662f 0\u3002",
-    "mixed_config_s": "\u8ba1\u6570\u5668\u5728 Instance.mixed_config_ticks \u4e0a\uff0c\u672c\u51fd\u6570\u53ea\u62ff\u5230 log\u3001\u53d6\u4e0d\u5230\uff1b**\u4e0d\u8fd4\u56de\u6052\u5b9a\u503c\u7684\u5047\u5217**\u3002\u9700\u8981\u8fd9\u4e00\u5217\u8bf7\u4ece Instance \u53d6\u3002"
+    "config_mismatch_s": "最小实例没有外部配置要求，无法定义'错误配置'；返回 None 而不是 0。",
+    "mixed_config_s": "计数器在 Instance.mixed_config_ticks 上，本函数只拿到 log、取不到；**不返回恒定值的假列**。需要这一列请从 Instance 取。"
    },
    "observation_window": {
     "censored_total": 0,
-    "note": "\u5220\u5931 = \u8fd0\u884c\u7ed3\u675f\u65f6\u8be5\u4e49\u52a1\u7684\u89c2\u5bdf\u622a\u6b62\u8fd8\u6ca1\u5230\uff1b\u65e2\u4e0d\u7b97\u6210\u529f\u4e5f\u4e0d\u7b97\u5931\u8d25\uff0c\u7559\u5728\u5206\u6bcd\u91cc\u3002",
+    "note": "删失 = 运行结束时该义务的观察截止还没到；既不算成功也不算失败，留在分母里。",
     "run_hours": 13,
     "tail_s": 3600,
     "task_hours": 12
@@ -9078,7 +9199,7 @@
     "knowledge_latency_p90_s": 0,
     "known_to_center": 7,
     "n_triggers": 7,
-    "note": "\u672c\u5b9e\u4f8b\u6ca1\u6709\u7b2c\u4e8c\u6761\u83b7\u77e5\u6e20\u9053\uff0c\u56e0\u6b64'\u4e2d\u5fc3\u83b7\u77e5\u4e8b\u4ef6'\u4e0e'\u4e2d\u5fc3\u62ff\u5230\u9996\u4efd\u65b0\u6570\u636e'\u540c\u4e00\u65f6\u523b\uff1b\u4e24\u8005\u7684\u5dee\u672a\u88ab\u6d4b\u8fc7\u3002"
+    "note": "本实例没有第二条获知渠道，因此'中心获知事件'与'中心拿到首份新数据'同一时刻；两者的差未被测过。"
    },
    "recovery": null,
    "routine": {
@@ -9092,7 +9213,12 @@
     "n": 168,
     "no_observation_s": 608400
    },
-   "seed": 8
+   "seed": 8,
+   "skip_reasons": {
+    "dwell": 56,
+    "in_flight": 720,
+    "no_soc": 10141
+   }
   },
   {
    "access_blocked": 156,
@@ -9306,10 +9432,10 @@
     "deliver_rate": 0.7142857142857143,
     "delivery_cdf": {
      "0": 0.7142857142857143,
-     "300": 0.7142857142857143,
-     "600": 0.7142857142857143,
      "1800": 0.7142857142857143,
-     "3600": 0.7142857142857143
+     "300": 0.7142857142857143,
+     "3600": 0.7142857142857143,
+     "600": 0.7142857142857143
     },
     "delivery_latency_mean_s": 0.0,
     "delivery_latency_p90_s": 0,
@@ -9319,6 +9445,7 @@
     "slots_matched_by_collection": 21
    },
    "exec_layer": "naive",
+   "gate": null,
    "hazard": {
     "hold_every": 0,
     "hold_s": 0
@@ -9346,7 +9473,7 @@
      "target_change": 15,
      "unknown_state": 0
     },
-    "note": "\u751f\u6210\u539f\u56e0\u53ea\u6709\u4e09\u7c7b\uff1a\u65e0\u56de\u6267\uff08unknown_state\uff09/\u76ee\u6807\u53d8\u4e86\uff08target_change\uff09/\u91cd\u53d1\uff08resend\uff09\u3002`refused` \u662f\u6309\u5dee\u989d\u7b97\u7684\uff0c\u56e0\u4e3a\u62ff\u4e0d\u5230\u4e0b\u884c\u673a\u4f1a\u7684\u90a3\u4e9b\u610f\u56fe\u4e0d\u4f1a\u8fdb `sent` \u4fa7\u3002",
+    "note": "生成原因只有三类：无回执（unknown_state）/目标变了（target_change）/重发（resend）。`refused` 是按差额算的，因为拿不到下行机会的那些意图不会进 `sent` 侧。",
     "refused": {
      "resend": 0,
      "target_change": 2,
@@ -9362,12 +9489,12 @@
    "mixed_config_s": 0,
    "n_obligations": 189,
    "not_applicable": {
-    "config_mismatch_s": "\u6700\u5c0f\u5b9e\u4f8b\u6ca1\u6709\u5916\u90e8\u914d\u7f6e\u8981\u6c42\uff0c\u65e0\u6cd5\u5b9a\u4e49'\u9519\u8bef\u914d\u7f6e'\uff1b\u8fd4\u56de None \u800c\u4e0d\u662f 0\u3002",
-    "mixed_config_s": "\u8ba1\u6570\u5668\u5728 Instance.mixed_config_ticks \u4e0a\uff0c\u672c\u51fd\u6570\u53ea\u62ff\u5230 log\u3001\u53d6\u4e0d\u5230\uff1b**\u4e0d\u8fd4\u56de\u6052\u5b9a\u503c\u7684\u5047\u5217**\u3002\u9700\u8981\u8fd9\u4e00\u5217\u8bf7\u4ece Instance \u53d6\u3002"
+    "config_mismatch_s": "最小实例没有外部配置要求，无法定义'错误配置'；返回 None 而不是 0。",
+    "mixed_config_s": "计数器在 Instance.mixed_config_ticks 上，本函数只拿到 log、取不到；**不返回恒定值的假列**。需要这一列请从 Instance 取。"
    },
    "observation_window": {
     "censored_total": 0,
-    "note": "\u5220\u5931 = \u8fd0\u884c\u7ed3\u675f\u65f6\u8be5\u4e49\u52a1\u7684\u89c2\u5bdf\u622a\u6b62\u8fd8\u6ca1\u5230\uff1b\u65e2\u4e0d\u7b97\u6210\u529f\u4e5f\u4e0d\u7b97\u5931\u8d25\uff0c\u7559\u5728\u5206\u6bcd\u91cc\u3002",
+    "note": "删失 = 运行结束时该义务的观察截止还没到；既不算成功也不算失败，留在分母里。",
     "run_hours": 13,
     "tail_s": 3600,
     "task_hours": 12
@@ -9381,7 +9508,7 @@
     "knowledge_latency_p90_s": 11580,
     "known_to_center": 7,
     "n_triggers": 7,
-    "note": "\u672c\u5b9e\u4f8b\u6ca1\u6709\u7b2c\u4e8c\u6761\u83b7\u77e5\u6e20\u9053\uff0c\u56e0\u6b64'\u4e2d\u5fc3\u83b7\u77e5\u4e8b\u4ef6'\u4e0e'\u4e2d\u5fc3\u62ff\u5230\u9996\u4efd\u65b0\u6570\u636e'\u540c\u4e00\u65f6\u523b\uff1b\u4e24\u8005\u7684\u5dee\u672a\u88ab\u6d4b\u8fc7\u3002"
+    "note": "本实例没有第二条获知渠道，因此'中心获知事件'与'中心拿到首份新数据'同一时刻；两者的差未被测过。"
    },
    "recovery": null,
    "routine": {
@@ -9395,7 +9522,12 @@
     "n": 168,
     "no_observation_s": 572400
    },
-   "seed": 9
+   "seed": 9,
+   "skip_reasons": {
+    "dwell": 59,
+    "in_flight": 1297,
+    "no_soc": 9551
+   }
   },
   {
    "access_blocked": 156,
@@ -9609,10 +9741,10 @@
     "deliver_rate": 0.8095238095238095,
     "delivery_cdf": {
      "0": 0.7142857142857143,
-     "300": 0.7619047619047619,
-     "600": 0.8095238095238095,
      "1800": 0.8095238095238095,
-     "3600": 0.8095238095238095
+     "300": 0.7619047619047619,
+     "3600": 0.8095238095238095,
+     "600": 0.8095238095238095
     },
     "delivery_latency_mean_s": 24.705882352941178,
     "delivery_latency_p90_s": 0,
@@ -9622,6 +9754,7 @@
     "slots_matched_by_collection": 21
    },
    "exec_layer": "naive",
+   "gate": null,
    "hazard": {
     "hold_every": 0,
     "hold_s": 0
@@ -9649,7 +9782,7 @@
      "target_change": 15,
      "unknown_state": 0
     },
-    "note": "\u751f\u6210\u539f\u56e0\u53ea\u6709\u4e09\u7c7b\uff1a\u65e0\u56de\u6267\uff08unknown_state\uff09/\u76ee\u6807\u53d8\u4e86\uff08target_change\uff09/\u91cd\u53d1\uff08resend\uff09\u3002`refused` \u662f\u6309\u5dee\u989d\u7b97\u7684\uff0c\u56e0\u4e3a\u62ff\u4e0d\u5230\u4e0b\u884c\u673a\u4f1a\u7684\u90a3\u4e9b\u610f\u56fe\u4e0d\u4f1a\u8fdb `sent` \u4fa7\u3002",
+    "note": "生成原因只有三类：无回执（unknown_state）/目标变了（target_change）/重发（resend）。`refused` 是按差额算的，因为拿不到下行机会的那些意图不会进 `sent` 侧。",
     "refused": {
      "resend": 0,
      "target_change": 12,
@@ -9665,12 +9798,12 @@
    "mixed_config_s": 0,
    "n_obligations": 189,
    "not_applicable": {
-    "config_mismatch_s": "\u6700\u5c0f\u5b9e\u4f8b\u6ca1\u6709\u5916\u90e8\u914d\u7f6e\u8981\u6c42\uff0c\u65e0\u6cd5\u5b9a\u4e49'\u9519\u8bef\u914d\u7f6e'\uff1b\u8fd4\u56de None \u800c\u4e0d\u662f 0\u3002",
-    "mixed_config_s": "\u8ba1\u6570\u5668\u5728 Instance.mixed_config_ticks \u4e0a\uff0c\u672c\u51fd\u6570\u53ea\u62ff\u5230 log\u3001\u53d6\u4e0d\u5230\uff1b**\u4e0d\u8fd4\u56de\u6052\u5b9a\u503c\u7684\u5047\u5217**\u3002\u9700\u8981\u8fd9\u4e00\u5217\u8bf7\u4ece Instance \u53d6\u3002"
+    "config_mismatch_s": "最小实例没有外部配置要求，无法定义'错误配置'；返回 None 而不是 0。",
+    "mixed_config_s": "计数器在 Instance.mixed_config_ticks 上，本函数只拿到 log、取不到；**不返回恒定值的假列**。需要这一列请从 Instance 取。"
    },
    "observation_window": {
     "censored_total": 0,
-    "note": "\u5220\u5931 = \u8fd0\u884c\u7ed3\u675f\u65f6\u8be5\u4e49\u52a1\u7684\u89c2\u5bdf\u622a\u6b62\u8fd8\u6ca1\u5230\uff1b\u65e2\u4e0d\u7b97\u6210\u529f\u4e5f\u4e0d\u7b97\u5931\u8d25\uff0c\u7559\u5728\u5206\u6bcd\u91cc\u3002",
+    "note": "删失 = 运行结束时该义务的观察截止还没到；既不算成功也不算失败，留在分母里。",
     "run_hours": 13,
     "tail_s": 3600,
     "task_hours": 12
@@ -9684,7 +9817,7 @@
     "knowledge_latency_p90_s": 660,
     "known_to_center": 7,
     "n_triggers": 7,
-    "note": "\u672c\u5b9e\u4f8b\u6ca1\u6709\u7b2c\u4e8c\u6761\u83b7\u77e5\u6e20\u9053\uff0c\u56e0\u6b64'\u4e2d\u5fc3\u83b7\u77e5\u4e8b\u4ef6'\u4e0e'\u4e2d\u5fc3\u62ff\u5230\u9996\u4efd\u65b0\u6570\u636e'\u540c\u4e00\u65f6\u523b\uff1b\u4e24\u8005\u7684\u5dee\u672a\u88ab\u6d4b\u8fc7\u3002"
+    "note": "本实例没有第二条获知渠道，因此'中心获知事件'与'中心拿到首份新数据'同一时刻；两者的差未被测过。"
    },
    "recovery": null,
    "routine": {
@@ -9698,7 +9831,12 @@
     "n": 168,
     "no_observation_s": 612000
    },
-   "seed": 0
+   "seed": 0,
+   "skip_reasons": {
+    "dwell": 54,
+    "in_flight": 657,
+    "no_soc": 10201
+   }
   },
   {
    "access_blocked": 156,
@@ -9912,10 +10050,10 @@
     "deliver_rate": 1.0,
     "delivery_cdf": {
      "0": 1.0,
-     "300": 1.0,
-     "600": 1.0,
      "1800": 1.0,
-     "3600": 1.0
+     "300": 1.0,
+     "3600": 1.0,
+     "600": 1.0
     },
     "delivery_latency_mean_s": 0.0,
     "delivery_latency_p90_s": 0,
@@ -9925,6 +10063,7 @@
     "slots_matched_by_collection": 21
    },
    "exec_layer": "naive",
+   "gate": null,
    "hazard": {
     "hold_every": 0,
     "hold_s": 0
@@ -9952,7 +10091,7 @@
      "target_change": 16,
      "unknown_state": 0
     },
-    "note": "\u751f\u6210\u539f\u56e0\u53ea\u6709\u4e09\u7c7b\uff1a\u65e0\u56de\u6267\uff08unknown_state\uff09/\u76ee\u6807\u53d8\u4e86\uff08target_change\uff09/\u91cd\u53d1\uff08resend\uff09\u3002`refused` \u662f\u6309\u5dee\u989d\u7b97\u7684\uff0c\u56e0\u4e3a\u62ff\u4e0d\u5230\u4e0b\u884c\u673a\u4f1a\u7684\u90a3\u4e9b\u610f\u56fe\u4e0d\u4f1a\u8fdb `sent` \u4fa7\u3002",
+    "note": "生成原因只有三类：无回执（unknown_state）/目标变了（target_change）/重发（resend）。`refused` 是按差额算的，因为拿不到下行机会的那些意图不会进 `sent` 侧。",
     "refused": {
      "resend": 0,
      "target_change": 0,
@@ -9968,12 +10107,12 @@
    "mixed_config_s": 0,
    "n_obligations": 189,
    "not_applicable": {
-    "config_mismatch_s": "\u6700\u5c0f\u5b9e\u4f8b\u6ca1\u6709\u5916\u90e8\u914d\u7f6e\u8981\u6c42\uff0c\u65e0\u6cd5\u5b9a\u4e49'\u9519\u8bef\u914d\u7f6e'\uff1b\u8fd4\u56de None \u800c\u4e0d\u662f 0\u3002",
-    "mixed_config_s": "\u8ba1\u6570\u5668\u5728 Instance.mixed_config_ticks \u4e0a\uff0c\u672c\u51fd\u6570\u53ea\u62ff\u5230 log\u3001\u53d6\u4e0d\u5230\uff1b**\u4e0d\u8fd4\u56de\u6052\u5b9a\u503c\u7684\u5047\u5217**\u3002\u9700\u8981\u8fd9\u4e00\u5217\u8bf7\u4ece Instance \u53d6\u3002"
+    "config_mismatch_s": "最小实例没有外部配置要求，无法定义'错误配置'；返回 None 而不是 0。",
+    "mixed_config_s": "计数器在 Instance.mixed_config_ticks 上，本函数只拿到 log、取不到；**不返回恒定值的假列**。需要这一列请从 Instance 取。"
    },
    "observation_window": {
     "censored_total": 0,
-    "note": "\u5220\u5931 = \u8fd0\u884c\u7ed3\u675f\u65f6\u8be5\u4e49\u52a1\u7684\u89c2\u5bdf\u622a\u6b62\u8fd8\u6ca1\u5230\uff1b\u65e2\u4e0d\u7b97\u6210\u529f\u4e5f\u4e0d\u7b97\u5931\u8d25\uff0c\u7559\u5728\u5206\u6bcd\u91cc\u3002",
+    "note": "删失 = 运行结束时该义务的观察截止还没到；既不算成功也不算失败，留在分母里。",
     "run_hours": 13,
     "tail_s": 3600,
     "task_hours": 12
@@ -9987,7 +10126,7 @@
     "knowledge_latency_p90_s": 0,
     "known_to_center": 7,
     "n_triggers": 7,
-    "note": "\u672c\u5b9e\u4f8b\u6ca1\u6709\u7b2c\u4e8c\u6761\u83b7\u77e5\u6e20\u9053\uff0c\u56e0\u6b64'\u4e2d\u5fc3\u83b7\u77e5\u4e8b\u4ef6'\u4e0e'\u4e2d\u5fc3\u62ff\u5230\u9996\u4efd\u65b0\u6570\u636e'\u540c\u4e00\u65f6\u523b\uff1b\u4e24\u8005\u7684\u5dee\u672a\u88ab\u6d4b\u8fc7\u3002"
+    "note": "本实例没有第二条获知渠道，因此'中心获知事件'与'中心拿到首份新数据'同一时刻；两者的差未被测过。"
    },
    "recovery": null,
    "routine": {
@@ -10001,7 +10140,11 @@
     "n": 168,
     "no_observation_s": 568800
    },
-   "seed": 1
+   "seed": 1,
+   "skip_reasons": {
+    "in_flight": 1414,
+    "no_soc": 9492
+   }
   },
   {
    "access_blocked": 156,
@@ -10215,10 +10358,10 @@
     "deliver_rate": 0.6666666666666666,
     "delivery_cdf": {
      "0": 0.5714285714285714,
-     "300": 0.6190476190476191,
-     "600": 0.6666666666666666,
      "1800": 0.6666666666666666,
-     "3600": 0.6666666666666666
+     "300": 0.6190476190476191,
+     "3600": 0.6666666666666666,
+     "600": 0.6666666666666666
     },
     "delivery_latency_mean_s": 64.28571428571429,
     "delivery_latency_p90_s": 300,
@@ -10228,6 +10371,7 @@
     "slots_matched_by_collection": 21
    },
    "exec_layer": "naive",
+   "gate": null,
    "hazard": {
     "hold_every": 0,
     "hold_s": 0
@@ -10255,7 +10399,7 @@
      "target_change": 14,
      "unknown_state": 0
     },
-    "note": "\u751f\u6210\u539f\u56e0\u53ea\u6709\u4e09\u7c7b\uff1a\u65e0\u56de\u6267\uff08unknown_state\uff09/\u76ee\u6807\u53d8\u4e86\uff08target_change\uff09/\u91cd\u53d1\uff08resend\uff09\u3002`refused` \u662f\u6309\u5dee\u989d\u7b97\u7684\uff0c\u56e0\u4e3a\u62ff\u4e0d\u5230\u4e0b\u884c\u673a\u4f1a\u7684\u90a3\u4e9b\u610f\u56fe\u4e0d\u4f1a\u8fdb `sent` \u4fa7\u3002",
+    "note": "生成原因只有三类：无回执（unknown_state）/目标变了（target_change）/重发（resend）。`refused` 是按差额算的，因为拿不到下行机会的那些意图不会进 `sent` 侧。",
     "refused": {
      "resend": 0,
      "target_change": 0,
@@ -10271,12 +10415,12 @@
    "mixed_config_s": 0,
    "n_obligations": 189,
    "not_applicable": {
-    "config_mismatch_s": "\u6700\u5c0f\u5b9e\u4f8b\u6ca1\u6709\u5916\u90e8\u914d\u7f6e\u8981\u6c42\uff0c\u65e0\u6cd5\u5b9a\u4e49'\u9519\u8bef\u914d\u7f6e'\uff1b\u8fd4\u56de None \u800c\u4e0d\u662f 0\u3002",
-    "mixed_config_s": "\u8ba1\u6570\u5668\u5728 Instance.mixed_config_ticks \u4e0a\uff0c\u672c\u51fd\u6570\u53ea\u62ff\u5230 log\u3001\u53d6\u4e0d\u5230\uff1b**\u4e0d\u8fd4\u56de\u6052\u5b9a\u503c\u7684\u5047\u5217**\u3002\u9700\u8981\u8fd9\u4e00\u5217\u8bf7\u4ece Instance \u53d6\u3002"
+    "config_mismatch_s": "最小实例没有外部配置要求，无法定义'错误配置'；返回 None 而不是 0。",
+    "mixed_config_s": "计数器在 Instance.mixed_config_ticks 上，本函数只拿到 log、取不到；**不返回恒定值的假列**。需要这一列请从 Instance 取。"
    },
    "observation_window": {
     "censored_total": 0,
-    "note": "\u5220\u5931 = \u8fd0\u884c\u7ed3\u675f\u65f6\u8be5\u4e49\u52a1\u7684\u89c2\u5bdf\u622a\u6b62\u8fd8\u6ca1\u5230\uff1b\u65e2\u4e0d\u7b97\u6210\u529f\u4e5f\u4e0d\u7b97\u5931\u8d25\uff0c\u7559\u5728\u5206\u6bcd\u91cc\u3002",
+    "note": "删失 = 运行结束时该义务的观察截止还没到；既不算成功也不算失败，留在分母里。",
     "run_hours": 13,
     "tail_s": 3600,
     "task_hours": 12
@@ -10290,7 +10434,7 @@
     "knowledge_latency_p90_s": 5340,
     "known_to_center": 7,
     "n_triggers": 7,
-    "note": "\u672c\u5b9e\u4f8b\u6ca1\u6709\u7b2c\u4e8c\u6761\u83b7\u77e5\u6e20\u9053\uff0c\u56e0\u6b64'\u4e2d\u5fc3\u83b7\u77e5\u4e8b\u4ef6'\u4e0e'\u4e2d\u5fc3\u62ff\u5230\u9996\u4efd\u65b0\u6570\u636e'\u540c\u4e00\u65f6\u523b\uff1b\u4e24\u8005\u7684\u5dee\u672a\u88ab\u6d4b\u8fc7\u3002"
+    "note": "本实例没有第二条获知渠道，因此'中心获知事件'与'中心拿到首份新数据'同一时刻；两者的差未被测过。"
    },
    "recovery": null,
    "routine": {
@@ -10304,7 +10448,11 @@
     "n": 168,
     "no_observation_s": 576000
    },
-   "seed": 2
+   "seed": 2,
+   "skip_reasons": {
+    "in_flight": 1298,
+    "no_soc": 9610
+   }
   },
   {
    "access_blocked": 156,
@@ -10518,10 +10666,10 @@
     "deliver_rate": 0.6666666666666666,
     "delivery_cdf": {
      "0": 0.5714285714285714,
-     "300": 0.6190476190476191,
-     "600": 0.6666666666666666,
      "1800": 0.6666666666666666,
-     "3600": 0.6666666666666666
+     "300": 0.6190476190476191,
+     "3600": 0.6666666666666666,
+     "600": 0.6666666666666666
     },
     "delivery_latency_mean_s": 30.0,
     "delivery_latency_p90_s": 60,
@@ -10531,6 +10679,7 @@
     "slots_matched_by_collection": 21
    },
    "exec_layer": "naive",
+   "gate": null,
    "hazard": {
     "hold_every": 0,
     "hold_s": 0
@@ -10558,7 +10707,7 @@
      "target_change": 13,
      "unknown_state": 0
     },
-    "note": "\u751f\u6210\u539f\u56e0\u53ea\u6709\u4e09\u7c7b\uff1a\u65e0\u56de\u6267\uff08unknown_state\uff09/\u76ee\u6807\u53d8\u4e86\uff08target_change\uff09/\u91cd\u53d1\uff08resend\uff09\u3002`refused` \u662f\u6309\u5dee\u989d\u7b97\u7684\uff0c\u56e0\u4e3a\u62ff\u4e0d\u5230\u4e0b\u884c\u673a\u4f1a\u7684\u90a3\u4e9b\u610f\u56fe\u4e0d\u4f1a\u8fdb `sent` \u4fa7\u3002",
+    "note": "生成原因只有三类：无回执（unknown_state）/目标变了（target_change）/重发（resend）。`refused` 是按差额算的，因为拿不到下行机会的那些意图不会进 `sent` 侧。",
     "refused": {
      "resend": 0,
      "target_change": 0,
@@ -10574,12 +10723,12 @@
    "mixed_config_s": 0,
    "n_obligations": 189,
    "not_applicable": {
-    "config_mismatch_s": "\u6700\u5c0f\u5b9e\u4f8b\u6ca1\u6709\u5916\u90e8\u914d\u7f6e\u8981\u6c42\uff0c\u65e0\u6cd5\u5b9a\u4e49'\u9519\u8bef\u914d\u7f6e'\uff1b\u8fd4\u56de None \u800c\u4e0d\u662f 0\u3002",
-    "mixed_config_s": "\u8ba1\u6570\u5668\u5728 Instance.mixed_config_ticks \u4e0a\uff0c\u672c\u51fd\u6570\u53ea\u62ff\u5230 log\u3001\u53d6\u4e0d\u5230\uff1b**\u4e0d\u8fd4\u56de\u6052\u5b9a\u503c\u7684\u5047\u5217**\u3002\u9700\u8981\u8fd9\u4e00\u5217\u8bf7\u4ece Instance \u53d6\u3002"
+    "config_mismatch_s": "最小实例没有外部配置要求，无法定义'错误配置'；返回 None 而不是 0。",
+    "mixed_config_s": "计数器在 Instance.mixed_config_ticks 上，本函数只拿到 log、取不到；**不返回恒定值的假列**。需要这一列请从 Instance 取。"
    },
    "observation_window": {
     "censored_total": 0,
-    "note": "\u5220\u5931 = \u8fd0\u884c\u7ed3\u675f\u65f6\u8be5\u4e49\u52a1\u7684\u89c2\u5bdf\u622a\u6b62\u8fd8\u6ca1\u5230\uff1b\u65e2\u4e0d\u7b97\u6210\u529f\u4e5f\u4e0d\u7b97\u5931\u8d25\uff0c\u7559\u5728\u5206\u6bcd\u91cc\u3002",
+    "note": "删失 = 运行结束时该义务的观察截止还没到；既不算成功也不算失败，留在分母里。",
     "run_hours": 13,
     "tail_s": 3600,
     "task_hours": 12
@@ -10593,7 +10742,7 @@
     "knowledge_latency_p90_s": 2520,
     "known_to_center": 7,
     "n_triggers": 7,
-    "note": "\u672c\u5b9e\u4f8b\u6ca1\u6709\u7b2c\u4e8c\u6761\u83b7\u77e5\u6e20\u9053\uff0c\u56e0\u6b64'\u4e2d\u5fc3\u83b7\u77e5\u4e8b\u4ef6'\u4e0e'\u4e2d\u5fc3\u62ff\u5230\u9996\u4efd\u65b0\u6570\u636e'\u540c\u4e00\u65f6\u523b\uff1b\u4e24\u8005\u7684\u5dee\u672a\u88ab\u6d4b\u8fc7\u3002"
+    "note": "本实例没有第二条获知渠道，因此'中心获知事件'与'中心拿到首份新数据'同一时刻；两者的差未被测过。"
    },
    "recovery": null,
    "routine": {
@@ -10607,7 +10756,11 @@
     "n": 168,
     "no_observation_s": 576000
    },
-   "seed": 3
+   "seed": 3,
+   "skip_reasons": {
+    "in_flight": 1297,
+    "no_soc": 9611
+   }
   },
   {
    "access_blocked": 156,
@@ -10821,10 +10974,10 @@
     "deliver_rate": 0.8095238095238095,
     "delivery_cdf": {
      "0": 0.7142857142857143,
-     "300": 0.7619047619047619,
-     "600": 0.8095238095238095,
      "1800": 0.8095238095238095,
-     "3600": 0.8095238095238095
+     "300": 0.7619047619047619,
+     "3600": 0.8095238095238095,
+     "600": 0.8095238095238095
     },
     "delivery_latency_mean_s": 38.8235294117647,
     "delivery_latency_p90_s": 0,
@@ -10834,6 +10987,7 @@
     "slots_matched_by_collection": 21
    },
    "exec_layer": "naive",
+   "gate": null,
    "hazard": {
     "hold_every": 0,
     "hold_s": 0
@@ -10861,7 +11015,7 @@
      "target_change": 25,
      "unknown_state": 0
     },
-    "note": "\u751f\u6210\u539f\u56e0\u53ea\u6709\u4e09\u7c7b\uff1a\u65e0\u56de\u6267\uff08unknown_state\uff09/\u76ee\u6807\u53d8\u4e86\uff08target_change\uff09/\u91cd\u53d1\uff08resend\uff09\u3002`refused` \u662f\u6309\u5dee\u989d\u7b97\u7684\uff0c\u56e0\u4e3a\u62ff\u4e0d\u5230\u4e0b\u884c\u673a\u4f1a\u7684\u90a3\u4e9b\u610f\u56fe\u4e0d\u4f1a\u8fdb `sent` \u4fa7\u3002",
+    "note": "生成原因只有三类：无回执（unknown_state）/目标变了（target_change）/重发（resend）。`refused` 是按差额算的，因为拿不到下行机会的那些意图不会进 `sent` 侧。",
     "refused": {
      "resend": 0,
      "target_change": 12,
@@ -10877,12 +11031,12 @@
    "mixed_config_s": 0,
    "n_obligations": 189,
    "not_applicable": {
-    "config_mismatch_s": "\u6700\u5c0f\u5b9e\u4f8b\u6ca1\u6709\u5916\u90e8\u914d\u7f6e\u8981\u6c42\uff0c\u65e0\u6cd5\u5b9a\u4e49'\u9519\u8bef\u914d\u7f6e'\uff1b\u8fd4\u56de None \u800c\u4e0d\u662f 0\u3002",
-    "mixed_config_s": "\u8ba1\u6570\u5668\u5728 Instance.mixed_config_ticks \u4e0a\uff0c\u672c\u51fd\u6570\u53ea\u62ff\u5230 log\u3001\u53d6\u4e0d\u5230\uff1b**\u4e0d\u8fd4\u56de\u6052\u5b9a\u503c\u7684\u5047\u5217**\u3002\u9700\u8981\u8fd9\u4e00\u5217\u8bf7\u4ece Instance \u53d6\u3002"
+    "config_mismatch_s": "最小实例没有外部配置要求，无法定义'错误配置'；返回 None 而不是 0。",
+    "mixed_config_s": "计数器在 Instance.mixed_config_ticks 上，本函数只拿到 log、取不到；**不返回恒定值的假列**。需要这一列请从 Instance 取。"
    },
    "observation_window": {
     "censored_total": 0,
-    "note": "\u5220\u5931 = \u8fd0\u884c\u7ed3\u675f\u65f6\u8be5\u4e49\u52a1\u7684\u89c2\u5bdf\u622a\u6b62\u8fd8\u6ca1\u5230\uff1b\u65e2\u4e0d\u7b97\u6210\u529f\u4e5f\u4e0d\u7b97\u5931\u8d25\uff0c\u7559\u5728\u5206\u6bcd\u91cc\u3002",
+    "note": "删失 = 运行结束时该义务的观察截止还没到；既不算成功也不算失败，留在分母里。",
     "run_hours": 13,
     "tail_s": 3600,
     "task_hours": 12
@@ -10896,7 +11050,7 @@
     "knowledge_latency_p90_s": 780,
     "known_to_center": 7,
     "n_triggers": 7,
-    "note": "\u672c\u5b9e\u4f8b\u6ca1\u6709\u7b2c\u4e8c\u6761\u83b7\u77e5\u6e20\u9053\uff0c\u56e0\u6b64'\u4e2d\u5fc3\u83b7\u77e5\u4e8b\u4ef6'\u4e0e'\u4e2d\u5fc3\u62ff\u5230\u9996\u4efd\u65b0\u6570\u636e'\u540c\u4e00\u65f6\u523b\uff1b\u4e24\u8005\u7684\u5dee\u672a\u88ab\u6d4b\u8fc7\u3002"
+    "note": "本实例没有第二条获知渠道，因此'中心获知事件'与'中心拿到首份新数据'同一时刻；两者的差未被测过。"
    },
    "recovery": null,
    "routine": {
@@ -10910,7 +11064,12 @@
     "n": 168,
     "no_observation_s": 572400
    },
-   "seed": 4
+   "seed": 4,
+   "skip_reasons": {
+    "dwell": 54,
+    "in_flight": 1297,
+    "no_soc": 9551
+   }
   },
   {
    "access_blocked": 156,
@@ -11124,10 +11283,10 @@
     "deliver_rate": 0.5714285714285714,
     "delivery_cdf": {
      "0": 0.5714285714285714,
-     "300": 0.5714285714285714,
-     "600": 0.5714285714285714,
      "1800": 0.5714285714285714,
-     "3600": 0.5714285714285714
+     "300": 0.5714285714285714,
+     "3600": 0.5714285714285714,
+     "600": 0.5714285714285714
     },
     "delivery_latency_mean_s": 0.0,
     "delivery_latency_p90_s": 0,
@@ -11137,6 +11296,7 @@
     "slots_matched_by_collection": 21
    },
    "exec_layer": "naive",
+   "gate": null,
    "hazard": {
     "hold_every": 0,
     "hold_s": 0
@@ -11164,7 +11324,7 @@
      "target_change": 15,
      "unknown_state": 0
     },
-    "note": "\u751f\u6210\u539f\u56e0\u53ea\u6709\u4e09\u7c7b\uff1a\u65e0\u56de\u6267\uff08unknown_state\uff09/\u76ee\u6807\u53d8\u4e86\uff08target_change\uff09/\u91cd\u53d1\uff08resend\uff09\u3002`refused` \u662f\u6309\u5dee\u989d\u7b97\u7684\uff0c\u56e0\u4e3a\u62ff\u4e0d\u5230\u4e0b\u884c\u673a\u4f1a\u7684\u90a3\u4e9b\u610f\u56fe\u4e0d\u4f1a\u8fdb `sent` \u4fa7\u3002",
+    "note": "生成原因只有三类：无回执（unknown_state）/目标变了（target_change）/重发（resend）。`refused` 是按差额算的，因为拿不到下行机会的那些意图不会进 `sent` 侧。",
     "refused": {
      "resend": 0,
      "target_change": 12,
@@ -11180,12 +11340,12 @@
    "mixed_config_s": 0,
    "n_obligations": 189,
    "not_applicable": {
-    "config_mismatch_s": "\u6700\u5c0f\u5b9e\u4f8b\u6ca1\u6709\u5916\u90e8\u914d\u7f6e\u8981\u6c42\uff0c\u65e0\u6cd5\u5b9a\u4e49'\u9519\u8bef\u914d\u7f6e'\uff1b\u8fd4\u56de None \u800c\u4e0d\u662f 0\u3002",
-    "mixed_config_s": "\u8ba1\u6570\u5668\u5728 Instance.mixed_config_ticks \u4e0a\uff0c\u672c\u51fd\u6570\u53ea\u62ff\u5230 log\u3001\u53d6\u4e0d\u5230\uff1b**\u4e0d\u8fd4\u56de\u6052\u5b9a\u503c\u7684\u5047\u5217**\u3002\u9700\u8981\u8fd9\u4e00\u5217\u8bf7\u4ece Instance \u53d6\u3002"
+    "config_mismatch_s": "最小实例没有外部配置要求，无法定义'错误配置'；返回 None 而不是 0。",
+    "mixed_config_s": "计数器在 Instance.mixed_config_ticks 上，本函数只拿到 log、取不到；**不返回恒定值的假列**。需要这一列请从 Instance 取。"
    },
    "observation_window": {
     "censored_total": 0,
-    "note": "\u5220\u5931 = \u8fd0\u884c\u7ed3\u675f\u65f6\u8be5\u4e49\u52a1\u7684\u89c2\u5bdf\u622a\u6b62\u8fd8\u6ca1\u5230\uff1b\u65e2\u4e0d\u7b97\u6210\u529f\u4e5f\u4e0d\u7b97\u5931\u8d25\uff0c\u7559\u5728\u5206\u6bcd\u91cc\u3002",
+    "note": "删失 = 运行结束时该义务的观察截止还没到；既不算成功也不算失败，留在分母里。",
     "run_hours": 13,
     "tail_s": 3600,
     "task_hours": 12
@@ -11199,7 +11359,7 @@
     "knowledge_latency_p90_s": 4380,
     "known_to_center": 6,
     "n_triggers": 7,
-    "note": "\u672c\u5b9e\u4f8b\u6ca1\u6709\u7b2c\u4e8c\u6761\u83b7\u77e5\u6e20\u9053\uff0c\u56e0\u6b64'\u4e2d\u5fc3\u83b7\u77e5\u4e8b\u4ef6'\u4e0e'\u4e2d\u5fc3\u62ff\u5230\u9996\u4efd\u65b0\u6570\u636e'\u540c\u4e00\u65f6\u523b\uff1b\u4e24\u8005\u7684\u5dee\u672a\u88ab\u6d4b\u8fc7\u3002"
+    "note": "本实例没有第二条获知渠道，因此'中心获知事件'与'中心拿到首份新数据'同一时刻；两者的差未被测过。"
    },
    "recovery": null,
    "routine": {
@@ -11213,7 +11373,12 @@
     "n": 168,
     "no_observation_s": 608400
    },
-   "seed": 5
+   "seed": 5,
+   "skip_reasons": {
+    "dwell": 54,
+    "in_flight": 717,
+    "no_soc": 10141
+   }
   },
   {
    "access_blocked": 156,
@@ -11427,10 +11592,10 @@
     "deliver_rate": 0.7142857142857143,
     "delivery_cdf": {
      "0": 0.7142857142857143,
-     "300": 0.7142857142857143,
-     "600": 0.7142857142857143,
      "1800": 0.7142857142857143,
-     "3600": 0.7142857142857143
+     "300": 0.7142857142857143,
+     "3600": 0.7142857142857143,
+     "600": 0.7142857142857143
     },
     "delivery_latency_mean_s": 0.0,
     "delivery_latency_p90_s": 0,
@@ -11440,6 +11605,7 @@
     "slots_matched_by_collection": 21
    },
    "exec_layer": "naive",
+   "gate": null,
    "hazard": {
     "hold_every": 0,
     "hold_s": 0
@@ -11467,7 +11633,7 @@
      "target_change": 12,
      "unknown_state": 0
     },
-    "note": "\u751f\u6210\u539f\u56e0\u53ea\u6709\u4e09\u7c7b\uff1a\u65e0\u56de\u6267\uff08unknown_state\uff09/\u76ee\u6807\u53d8\u4e86\uff08target_change\uff09/\u91cd\u53d1\uff08resend\uff09\u3002`refused` \u662f\u6309\u5dee\u989d\u7b97\u7684\uff0c\u56e0\u4e3a\u62ff\u4e0d\u5230\u4e0b\u884c\u673a\u4f1a\u7684\u90a3\u4e9b\u610f\u56fe\u4e0d\u4f1a\u8fdb `sent` \u4fa7\u3002",
+    "note": "生成原因只有三类：无回执（unknown_state）/目标变了（target_change）/重发（resend）。`refused` 是按差额算的，因为拿不到下行机会的那些意图不会进 `sent` 侧。",
     "refused": {
      "resend": 0,
      "target_change": 0,
@@ -11483,12 +11649,12 @@
    "mixed_config_s": 0,
    "n_obligations": 189,
    "not_applicable": {
-    "config_mismatch_s": "\u6700\u5c0f\u5b9e\u4f8b\u6ca1\u6709\u5916\u90e8\u914d\u7f6e\u8981\u6c42\uff0c\u65e0\u6cd5\u5b9a\u4e49'\u9519\u8bef\u914d\u7f6e'\uff1b\u8fd4\u56de None \u800c\u4e0d\u662f 0\u3002",
-    "mixed_config_s": "\u8ba1\u6570\u5668\u5728 Instance.mixed_config_ticks \u4e0a\uff0c\u672c\u51fd\u6570\u53ea\u62ff\u5230 log\u3001\u53d6\u4e0d\u5230\uff1b**\u4e0d\u8fd4\u56de\u6052\u5b9a\u503c\u7684\u5047\u5217**\u3002\u9700\u8981\u8fd9\u4e00\u5217\u8bf7\u4ece Instance \u53d6\u3002"
+    "config_mismatch_s": "最小实例没有外部配置要求，无法定义'错误配置'；返回 None 而不是 0。",
+    "mixed_config_s": "计数器在 Instance.mixed_config_ticks 上，本函数只拿到 log、取不到；**不返回恒定值的假列**。需要这一列请从 Instance 取。"
    },
    "observation_window": {
     "censored_total": 0,
-    "note": "\u5220\u5931 = \u8fd0\u884c\u7ed3\u675f\u65f6\u8be5\u4e49\u52a1\u7684\u89c2\u5bdf\u622a\u6b62\u8fd8\u6ca1\u5230\uff1b\u65e2\u4e0d\u7b97\u6210\u529f\u4e5f\u4e0d\u7b97\u5931\u8d25\uff0c\u7559\u5728\u5206\u6bcd\u91cc\u3002",
+    "note": "删失 = 运行结束时该义务的观察截止还没到；既不算成功也不算失败，留在分母里。",
     "run_hours": 13,
     "tail_s": 3600,
     "task_hours": 12
@@ -11502,7 +11668,7 @@
     "knowledge_latency_p90_s": 1740,
     "known_to_center": 7,
     "n_triggers": 7,
-    "note": "\u672c\u5b9e\u4f8b\u6ca1\u6709\u7b2c\u4e8c\u6761\u83b7\u77e5\u6e20\u9053\uff0c\u56e0\u6b64'\u4e2d\u5fc3\u83b7\u77e5\u4e8b\u4ef6'\u4e0e'\u4e2d\u5fc3\u62ff\u5230\u9996\u4efd\u65b0\u6570\u636e'\u540c\u4e00\u65f6\u523b\uff1b\u4e24\u8005\u7684\u5dee\u672a\u88ab\u6d4b\u8fc7\u3002"
+    "note": "本实例没有第二条获知渠道，因此'中心获知事件'与'中心拿到首份新数据'同一时刻；两者的差未被测过。"
    },
    "recovery": null,
    "routine": {
@@ -11516,7 +11682,11 @@
     "n": 168,
     "no_observation_s": 583200
    },
-   "seed": 6
+   "seed": 6,
+   "skip_reasons": {
+    "in_flight": 1182,
+    "no_soc": 9728
+   }
   },
   {
    "access_blocked": 156,
@@ -11730,10 +11900,10 @@
     "deliver_rate": 1.0,
     "delivery_cdf": {
      "0": 1.0,
-     "300": 1.0,
-     "600": 1.0,
      "1800": 1.0,
-     "3600": 1.0
+     "300": 1.0,
+     "3600": 1.0,
+     "600": 1.0
     },
     "delivery_latency_mean_s": 0.0,
     "delivery_latency_p90_s": 0,
@@ -11743,6 +11913,7 @@
     "slots_matched_by_collection": 21
    },
    "exec_layer": "naive",
+   "gate": null,
    "hazard": {
     "hold_every": 0,
     "hold_s": 0
@@ -11770,7 +11941,7 @@
      "target_change": 39,
      "unknown_state": 0
     },
-    "note": "\u751f\u6210\u539f\u56e0\u53ea\u6709\u4e09\u7c7b\uff1a\u65e0\u56de\u6267\uff08unknown_state\uff09/\u76ee\u6807\u53d8\u4e86\uff08target_change\uff09/\u91cd\u53d1\uff08resend\uff09\u3002`refused` \u662f\u6309\u5dee\u989d\u7b97\u7684\uff0c\u56e0\u4e3a\u62ff\u4e0d\u5230\u4e0b\u884c\u673a\u4f1a\u7684\u90a3\u4e9b\u610f\u56fe\u4e0d\u4f1a\u8fdb `sent` \u4fa7\u3002",
+    "note": "生成原因只有三类：无回执（unknown_state）/目标变了（target_change）/重发（resend）。`refused` 是按差额算的，因为拿不到下行机会的那些意图不会进 `sent` 侧。",
     "refused": {
      "resend": 0,
      "target_change": 24,
@@ -11786,12 +11957,12 @@
    "mixed_config_s": 0,
    "n_obligations": 189,
    "not_applicable": {
-    "config_mismatch_s": "\u6700\u5c0f\u5b9e\u4f8b\u6ca1\u6709\u5916\u90e8\u914d\u7f6e\u8981\u6c42\uff0c\u65e0\u6cd5\u5b9a\u4e49'\u9519\u8bef\u914d\u7f6e'\uff1b\u8fd4\u56de None \u800c\u4e0d\u662f 0\u3002",
-    "mixed_config_s": "\u8ba1\u6570\u5668\u5728 Instance.mixed_config_ticks \u4e0a\uff0c\u672c\u51fd\u6570\u53ea\u62ff\u5230 log\u3001\u53d6\u4e0d\u5230\uff1b**\u4e0d\u8fd4\u56de\u6052\u5b9a\u503c\u7684\u5047\u5217**\u3002\u9700\u8981\u8fd9\u4e00\u5217\u8bf7\u4ece Instance \u53d6\u3002"
+    "config_mismatch_s": "最小实例没有外部配置要求，无法定义'错误配置'；返回 None 而不是 0。",
+    "mixed_config_s": "计数器在 Instance.mixed_config_ticks 上，本函数只拿到 log、取不到；**不返回恒定值的假列**。需要这一列请从 Instance 取。"
    },
    "observation_window": {
     "censored_total": 0,
-    "note": "\u5220\u5931 = \u8fd0\u884c\u7ed3\u675f\u65f6\u8be5\u4e49\u52a1\u7684\u89c2\u5bdf\u622a\u6b62\u8fd8\u6ca1\u5230\uff1b\u65e2\u4e0d\u7b97\u6210\u529f\u4e5f\u4e0d\u7b97\u5931\u8d25\uff0c\u7559\u5728\u5206\u6bcd\u91cc\u3002",
+    "note": "删失 = 运行结束时该义务的观察截止还没到；既不算成功也不算失败，留在分母里。",
     "run_hours": 13,
     "tail_s": 3600,
     "task_hours": 12
@@ -11805,7 +11976,7 @@
     "knowledge_latency_p90_s": 0,
     "known_to_center": 7,
     "n_triggers": 7,
-    "note": "\u672c\u5b9e\u4f8b\u6ca1\u6709\u7b2c\u4e8c\u6761\u83b7\u77e5\u6e20\u9053\uff0c\u56e0\u6b64'\u4e2d\u5fc3\u83b7\u77e5\u4e8b\u4ef6'\u4e0e'\u4e2d\u5fc3\u62ff\u5230\u9996\u4efd\u65b0\u6570\u636e'\u540c\u4e00\u65f6\u523b\uff1b\u4e24\u8005\u7684\u5dee\u672a\u88ab\u6d4b\u8fc7\u3002"
+    "note": "本实例没有第二条获知渠道，因此'中心获知事件'与'中心拿到首份新数据'同一时刻；两者的差未被测过。"
    },
    "recovery": null,
    "routine": {
@@ -11819,7 +11990,12 @@
     "n": 168,
     "no_observation_s": 565200
    },
-   "seed": 7
+   "seed": 7,
+   "skip_reasons": {
+    "dwell": 108,
+    "in_flight": 1353,
+    "no_soc": 9433
+   }
   },
   {
    "access_blocked": 156,
@@ -12033,10 +12209,10 @@
     "deliver_rate": 0.9523809523809523,
     "delivery_cdf": {
      "0": 0.8571428571428571,
-     "300": 0.9047619047619048,
-     "600": 0.9523809523809523,
      "1800": 0.9523809523809523,
-     "3600": 0.9523809523809523
+     "300": 0.9047619047619048,
+     "3600": 0.9523809523809523,
+     "600": 0.9523809523809523
     },
     "delivery_latency_mean_s": 45.0,
     "delivery_latency_p90_s": 0,
@@ -12046,6 +12222,7 @@
     "slots_matched_by_collection": 21
    },
    "exec_layer": "naive",
+   "gate": null,
    "hazard": {
     "hold_every": 0,
     "hold_s": 0
@@ -12073,7 +12250,7 @@
      "target_change": 15,
      "unknown_state": 0
     },
-    "note": "\u751f\u6210\u539f\u56e0\u53ea\u6709\u4e09\u7c7b\uff1a\u65e0\u56de\u6267\uff08unknown_state\uff09/\u76ee\u6807\u53d8\u4e86\uff08target_change\uff09/\u91cd\u53d1\uff08resend\uff09\u3002`refused` \u662f\u6309\u5dee\u989d\u7b97\u7684\uff0c\u56e0\u4e3a\u62ff\u4e0d\u5230\u4e0b\u884c\u673a\u4f1a\u7684\u90a3\u4e9b\u610f\u56fe\u4e0d\u4f1a\u8fdb `sent` \u4fa7\u3002",
+    "note": "生成原因只有三类：无回执（unknown_state）/目标变了（target_change）/重发（resend）。`refused` 是按差额算的，因为拿不到下行机会的那些意图不会进 `sent` 侧。",
     "refused": {
      "resend": 0,
      "target_change": 12,
@@ -12089,12 +12266,12 @@
    "mixed_config_s": 0,
    "n_obligations": 189,
    "not_applicable": {
-    "config_mismatch_s": "\u6700\u5c0f\u5b9e\u4f8b\u6ca1\u6709\u5916\u90e8\u914d\u7f6e\u8981\u6c42\uff0c\u65e0\u6cd5\u5b9a\u4e49'\u9519\u8bef\u914d\u7f6e'\uff1b\u8fd4\u56de None \u800c\u4e0d\u662f 0\u3002",
-    "mixed_config_s": "\u8ba1\u6570\u5668\u5728 Instance.mixed_config_ticks \u4e0a\uff0c\u672c\u51fd\u6570\u53ea\u62ff\u5230 log\u3001\u53d6\u4e0d\u5230\uff1b**\u4e0d\u8fd4\u56de\u6052\u5b9a\u503c\u7684\u5047\u5217**\u3002\u9700\u8981\u8fd9\u4e00\u5217\u8bf7\u4ece Instance \u53d6\u3002"
+    "config_mismatch_s": "最小实例没有外部配置要求，无法定义'错误配置'；返回 None 而不是 0。",
+    "mixed_config_s": "计数器在 Instance.mixed_config_ticks 上，本函数只拿到 log、取不到；**不返回恒定值的假列**。需要这一列请从 Instance 取。"
    },
    "observation_window": {
     "censored_total": 0,
-    "note": "\u5220\u5931 = \u8fd0\u884c\u7ed3\u675f\u65f6\u8be5\u4e49\u52a1\u7684\u89c2\u5bdf\u622a\u6b62\u8fd8\u6ca1\u5230\uff1b\u65e2\u4e0d\u7b97\u6210\u529f\u4e5f\u4e0d\u7b97\u5931\u8d25\uff0c\u7559\u5728\u5206\u6bcd\u91cc\u3002",
+    "note": "删失 = 运行结束时该义务的观察截止还没到；既不算成功也不算失败，留在分母里。",
     "run_hours": 13,
     "tail_s": 3600,
     "task_hours": 12
@@ -12108,7 +12285,7 @@
     "knowledge_latency_p90_s": 0,
     "known_to_center": 7,
     "n_triggers": 7,
-    "note": "\u672c\u5b9e\u4f8b\u6ca1\u6709\u7b2c\u4e8c\u6761\u83b7\u77e5\u6e20\u9053\uff0c\u56e0\u6b64'\u4e2d\u5fc3\u83b7\u77e5\u4e8b\u4ef6'\u4e0e'\u4e2d\u5fc3\u62ff\u5230\u9996\u4efd\u65b0\u6570\u636e'\u540c\u4e00\u65f6\u523b\uff1b\u4e24\u8005\u7684\u5dee\u672a\u88ab\u6d4b\u8fc7\u3002"
+    "note": "本实例没有第二条获知渠道，因此'中心获知事件'与'中心拿到首份新数据'同一时刻；两者的差未被测过。"
    },
    "recovery": null,
    "routine": {
@@ -12122,7 +12299,12 @@
     "n": 168,
     "no_observation_s": 608400
    },
-   "seed": 8
+   "seed": 8,
+   "skip_reasons": {
+    "dwell": 51,
+    "in_flight": 720,
+    "no_soc": 10141
+   }
   },
   {
    "access_blocked": 156,
@@ -12336,10 +12518,10 @@
     "deliver_rate": 0.7142857142857143,
     "delivery_cdf": {
      "0": 0.7142857142857143,
-     "300": 0.7142857142857143,
-     "600": 0.7142857142857143,
      "1800": 0.7142857142857143,
-     "3600": 0.7142857142857143
+     "300": 0.7142857142857143,
+     "3600": 0.7142857142857143,
+     "600": 0.7142857142857143
     },
     "delivery_latency_mean_s": 0.0,
     "delivery_latency_p90_s": 0,
@@ -12349,6 +12531,7 @@
     "slots_matched_by_collection": 21
    },
    "exec_layer": "naive",
+   "gate": null,
    "hazard": {
     "hold_every": 0,
     "hold_s": 0
@@ -12376,7 +12559,7 @@
      "target_change": 25,
      "unknown_state": 0
     },
-    "note": "\u751f\u6210\u539f\u56e0\u53ea\u6709\u4e09\u7c7b\uff1a\u65e0\u56de\u6267\uff08unknown_state\uff09/\u76ee\u6807\u53d8\u4e86\uff08target_change\uff09/\u91cd\u53d1\uff08resend\uff09\u3002`refused` \u662f\u6309\u5dee\u989d\u7b97\u7684\uff0c\u56e0\u4e3a\u62ff\u4e0d\u5230\u4e0b\u884c\u673a\u4f1a\u7684\u90a3\u4e9b\u610f\u56fe\u4e0d\u4f1a\u8fdb `sent` \u4fa7\u3002",
+    "note": "生成原因只有三类：无回执（unknown_state）/目标变了（target_change）/重发（resend）。`refused` 是按差额算的，因为拿不到下行机会的那些意图不会进 `sent` 侧。",
     "refused": {
      "resend": 0,
      "target_change": 12,
@@ -12392,12 +12575,12 @@
    "mixed_config_s": 0,
    "n_obligations": 189,
    "not_applicable": {
-    "config_mismatch_s": "\u6700\u5c0f\u5b9e\u4f8b\u6ca1\u6709\u5916\u90e8\u914d\u7f6e\u8981\u6c42\uff0c\u65e0\u6cd5\u5b9a\u4e49'\u9519\u8bef\u914d\u7f6e'\uff1b\u8fd4\u56de None \u800c\u4e0d\u662f 0\u3002",
-    "mixed_config_s": "\u8ba1\u6570\u5668\u5728 Instance.mixed_config_ticks \u4e0a\uff0c\u672c\u51fd\u6570\u53ea\u62ff\u5230 log\u3001\u53d6\u4e0d\u5230\uff1b**\u4e0d\u8fd4\u56de\u6052\u5b9a\u503c\u7684\u5047\u5217**\u3002\u9700\u8981\u8fd9\u4e00\u5217\u8bf7\u4ece Instance \u53d6\u3002"
+    "config_mismatch_s": "最小实例没有外部配置要求，无法定义'错误配置'；返回 None 而不是 0。",
+    "mixed_config_s": "计数器在 Instance.mixed_config_ticks 上，本函数只拿到 log、取不到；**不返回恒定值的假列**。需要这一列请从 Instance 取。"
    },
    "observation_window": {
     "censored_total": 0,
-    "note": "\u5220\u5931 = \u8fd0\u884c\u7ed3\u675f\u65f6\u8be5\u4e49\u52a1\u7684\u89c2\u5bdf\u622a\u6b62\u8fd8\u6ca1\u5230\uff1b\u65e2\u4e0d\u7b97\u6210\u529f\u4e5f\u4e0d\u7b97\u5931\u8d25\uff0c\u7559\u5728\u5206\u6bcd\u91cc\u3002",
+    "note": "删失 = 运行结束时该义务的观察截止还没到；既不算成功也不算失败，留在分母里。",
     "run_hours": 13,
     "tail_s": 3600,
     "task_hours": 12
@@ -12411,7 +12594,7 @@
     "knowledge_latency_p90_s": 11580,
     "known_to_center": 7,
     "n_triggers": 7,
-    "note": "\u672c\u5b9e\u4f8b\u6ca1\u6709\u7b2c\u4e8c\u6761\u83b7\u77e5\u6e20\u9053\uff0c\u56e0\u6b64'\u4e2d\u5fc3\u83b7\u77e5\u4e8b\u4ef6'\u4e0e'\u4e2d\u5fc3\u62ff\u5230\u9996\u4efd\u65b0\u6570\u636e'\u540c\u4e00\u65f6\u523b\uff1b\u4e24\u8005\u7684\u5dee\u672a\u88ab\u6d4b\u8fc7\u3002"
+    "note": "本实例没有第二条获知渠道，因此'中心获知事件'与'中心拿到首份新数据'同一时刻；两者的差未被测过。"
    },
    "recovery": null,
    "routine": {
@@ -12425,7 +12608,12 @@
     "n": 168,
     "no_observation_s": 572400
    },
-   "seed": 9
+   "seed": 9,
+   "skip_reasons": {
+    "dwell": 54,
+    "in_flight": 1297,
+    "no_soc": 9551
+   }
   }
  ]
 }

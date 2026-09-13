@@ -6,40 +6,55 @@
     "autonomy_margin": null,
     "autonomy_margin_min": null,
     "censored": 0.0,
-    "commands_delivered": 25.9,
-    "commands_refused": 24.6,
-    "commands_sent": 28.0,
+    "commands_delivered": 26.4,
+    "commands_refused": 26.6,
+    "commands_sent": 32.0,
     "dead_nodes_end": 0.4,
     "deduplicated": 0.0,
     "deficit_h": 32.87,
     "delivery_oracle": 135.2,
     "delivery_oracle_free_tx": 158.2,
     "delivery_oracle_mid": 137.9,
-    "downlink_attempts": 36.4,
+    "downlink_attempts": 37.0,
     "dynamic_oracle": null,
     "event_delivered": 16.6,
     "event_match": 21.0,
     "event_missing_delivery": 4.4,
     "fenced": 0.0,
-    "intent_expired": 0.0,
-    "intent_generated": 52.6,
+    "gate_accepts": 0.0,
+    "gate_checks": 0.0,
+    "gate_denied": 0.0,
+    "gate_reject_reasons": {},
+    "intent_expired": 3.6,
+    "intent_generated": 58.6,
     "intent_lost": 0.0,
     "intent_mismatch_min": 1536.0,
-    "intent_refused": 24.6,
+    "intent_reason_resend": 0.0,
+    "intent_reason_sent_resend": 0.0,
+    "intent_reason_sent_target_change": 4.0,
+    "intent_reason_sent_unknown_state": 28.0,
+    "intent_reason_target_change": 23.6,
+    "intent_reason_unknown_state": 35.0,
+    "intent_refused": 26.6,
     "intent_rejected": 0.0,
     "intent_stale_gen": 0.0,
     "knowledge_latency_mean_s": 1076.142857142857,
     "mixed_config_min": 0.0,
     "n_seeds": 10,
     "oracle_coverage": null,
-    "routine_aoi_mean_s": 4397.909786742729,
+    "routine_aoi_mean_s": 4413.63777646579,
     "routine_delivered": 134.2,
     "routine_missing_collection": 21.8,
     "routine_missing_delivery": 12.0,
-    "uplinks": 430.7,
-    "uplinks_heard": 318.5,
+    "skip_at_target": 0.0,
+    "skip_at_target_evidence_stale": 0.0,
+    "skip_dwell": 784.4,
+    "skip_in_flight": 2967.1,
+    "skip_no_soc": 0.0,
+    "uplinks": 427.4,
+    "uplinks_heard": 315.9,
     "writes_changed": 25.9,
-    "writes_same_value": 0.0,
+    "writes_same_value": 0.5,
     "writes_speculative": 0.0
    },
    "ea_i600": {
@@ -47,41 +62,56 @@
     "autonomy_margin": null,
     "autonomy_margin_min": null,
     "censored": 0.0,
-    "commands_delivered": 59.4,
-    "commands_refused": 41.2,
-    "commands_sent": 66.0,
+    "commands_delivered": 59.1,
+    "commands_refused": 43.8,
+    "commands_sent": 70.0,
     "dead_nodes_end": 0.0,
     "deduplicated": 0.0,
     "deficit_h": 5.268333333333333,
     "delivery_oracle": 151.6,
     "delivery_oracle_free_tx": 158.2,
     "delivery_oracle_mid": 156.3,
-    "downlink_attempts": 83.0,
+    "downlink_attempts": 82.7,
     "dynamic_oracle": null,
     "event_delivered": 16.6,
     "event_match": 21.0,
     "event_missing_delivery": 4.4,
     "fenced": 0.0,
-    "intent_expired": 0.0,
-    "intent_generated": 107.2,
+    "gate_accepts": 0.0,
+    "gate_checks": 0.0,
+    "gate_denied": 0.0,
+    "gate_reject_reasons": {},
+    "intent_expired": 4.5,
+    "intent_generated": 113.8,
     "intent_lost": 0.0,
-    "intent_mismatch_min": 5815.8,
-    "intent_refused": 41.2,
+    "intent_mismatch_min": 6548.8,
+    "intent_reason_resend": 0.0,
+    "intent_reason_sent_resend": 0.0,
+    "intent_reason_sent_target_change": 42.0,
+    "intent_reason_sent_unknown_state": 28.0,
+    "intent_reason_target_change": 78.8,
+    "intent_reason_unknown_state": 35.0,
+    "intent_refused": 43.8,
     "intent_rejected": 0.0,
     "intent_stale_gen": 0.0,
     "knowledge_latency_mean_s": 1076.142857142857,
-    "mixed_config_min": 1663.5,
+    "mixed_config_min": 1680.0,
     "n_seeds": 10,
     "oracle_coverage": null,
-    "routine_aoi_mean_s": 3872.923246959124,
-    "routine_delivered": 149.4,
+    "routine_aoi_mean_s": 3873.8288763056744,
+    "routine_delivered": 149.3,
     "routine_missing_collection": 1.9,
-    "routine_missing_delivery": 16.7,
+    "routine_missing_delivery": 16.8,
+    "skip_at_target": 2744.8,
+    "skip_at_target_evidence_stale": 681.0,
+    "skip_dwell": 1305.7,
+    "skip_in_flight": 6131.6,
+    "skip_no_soc": 0.0,
     "uplinks": 340.2,
-    "uplinks_heard": 252.0,
-    "writes_changed": 33.4,
-    "writes_same_value": 26.0,
-    "writes_speculative": 26.0
+    "uplinks_heard": 252.5,
+    "writes_changed": 33.7,
+    "writes_same_value": 25.4,
+    "writes_speculative": 25.2
    },
    "local": {
     "access_blocked": 0.0,
@@ -103,10 +133,20 @@
     "event_match": 21.0,
     "event_missing_delivery": 4.4,
     "fenced": 0.0,
+    "gate_accepts": 0.0,
+    "gate_checks": 0.0,
+    "gate_denied": 0.0,
+    "gate_reject_reasons": {},
     "intent_expired": 0.0,
     "intent_generated": 0.0,
     "intent_lost": 0.0,
     "intent_mismatch_min": 0.0,
+    "intent_reason_resend": 0.0,
+    "intent_reason_sent_resend": 0.0,
+    "intent_reason_sent_target_change": 0.0,
+    "intent_reason_sent_unknown_state": 0.0,
+    "intent_reason_target_change": 0.0,
+    "intent_reason_unknown_state": 0.0,
     "intent_refused": 0.0,
     "intent_rejected": 0.0,
     "intent_stale_gen": 0.0,
@@ -118,6 +158,11 @@
     "routine_delivered": 148.1,
     "routine_missing_collection": 0.0,
     "routine_missing_delivery": 19.9,
+    "skip_at_target": 0.0,
+    "skip_at_target_evidence_stale": 0.0,
+    "skip_dwell": 0.0,
+    "skip_in_flight": 0.0,
+    "skip_no_soc": 0.0,
     "uplinks": 169.0,
     "uplinks_heard": 125.7,
     "writes_changed": 0.0,
@@ -156,9 +201,12 @@
    "irr_year": 2023,
    "low_frac": 0.4,
    "low_wh_per_hour": 0.0,
+   "no_events": false,
    "oracle_soc_bins": 200,
    "outage_hours": 0.0,
    "outage_start_h": 0.0,
+   "report_period_s": 3600,
+   "routine_period_s": 3600,
    "sample_interval_s": 3600,
    "seeds": 10,
    "soc_bias": 2.0,
@@ -213,9 +261,12 @@
   "irr_year": 2023,
   "low_frac": 0.4,
   "low_wh_per_hour": 0.0,
+  "no_events": false,
   "oracle_soc_bins": 200,
   "outage_hours": 0.0,
   "outage_start_h": 0.0,
+  "report_period_s": 3600,
+  "routine_period_s": 3600,
   "sample_interval_s": 3600,
   "seeds": 10,
   "soc_bias": 2.0,
@@ -461,6 +512,7 @@
     "slots_matched_by_collection": 21
    },
    "exec_layer": "naive",
+   "gate": null,
    "hazard": {
     "hold_every": 0,
     "hold_s": 0
@@ -482,6 +534,25 @@
     "stale_gen": 0
    },
    "intent_mismatch_s": 0,
+   "intent_reason": {
+    "generated": {
+     "resend": 0,
+     "target_change": 0,
+     "unknown_state": 0
+    },
+    "note": "生成原因只有三类：无回执（unknown_state）/目标变了（target_change）/重发（resend）。`refused` 是按差额算的，因为拿不到下行机会的那些意图不会进 `sent` 侧。",
+    "refused": {
+     "resend": 0,
+     "target_change": 0,
+     "unknown_state": 0
+    },
+    "sent": {
+     "resend": 0,
+     "target_change": 0,
+     "unknown_state": 0
+    },
+    "total_generated": 0
+   },
    "mixed_config_s": 0,
    "n_obligations": 189,
    "not_applicable": {
@@ -518,7 +589,8 @@
     "n": 168,
     "no_observation_s": 61200
    },
-   "seed": 0
+   "seed": 0,
+   "skip_reasons": {}
   },
   {
    "access_blocked": 0,
@@ -745,6 +817,7 @@
     "slots_matched_by_collection": 21
    },
    "exec_layer": "naive",
+   "gate": null,
    "hazard": {
     "hold_every": 0,
     "hold_s": 0
@@ -766,6 +839,25 @@
     "stale_gen": 0
    },
    "intent_mismatch_s": 0,
+   "intent_reason": {
+    "generated": {
+     "resend": 0,
+     "target_change": 0,
+     "unknown_state": 0
+    },
+    "note": "生成原因只有三类：无回执（unknown_state）/目标变了（target_change）/重发（resend）。`refused` 是按差额算的，因为拿不到下行机会的那些意图不会进 `sent` 侧。",
+    "refused": {
+     "resend": 0,
+     "target_change": 0,
+     "unknown_state": 0
+    },
+    "sent": {
+     "resend": 0,
+     "target_change": 0,
+     "unknown_state": 0
+    },
+    "total_generated": 0
+   },
    "mixed_config_s": 0,
    "n_obligations": 189,
    "not_applicable": {
@@ -802,7 +894,8 @@
     "n": 168,
     "no_observation_s": 10800
    },
-   "seed": 1
+   "seed": 1,
+   "skip_reasons": {}
   },
   {
    "access_blocked": 0,
@@ -1029,6 +1122,7 @@
     "slots_matched_by_collection": 21
    },
    "exec_layer": "naive",
+   "gate": null,
    "hazard": {
     "hold_every": 0,
     "hold_s": 0
@@ -1050,6 +1144,25 @@
     "stale_gen": 0
    },
    "intent_mismatch_s": 0,
+   "intent_reason": {
+    "generated": {
+     "resend": 0,
+     "target_change": 0,
+     "unknown_state": 0
+    },
+    "note": "生成原因只有三类：无回执（unknown_state）/目标变了（target_change）/重发（resend）。`refused` 是按差额算的，因为拿不到下行机会的那些意图不会进 `sent` 侧。",
+    "refused": {
+     "resend": 0,
+     "target_change": 0,
+     "unknown_state": 0
+    },
+    "sent": {
+     "resend": 0,
+     "target_change": 0,
+     "unknown_state": 0
+    },
+    "total_generated": 0
+   },
    "mixed_config_s": 0,
    "n_obligations": 189,
    "not_applicable": {
@@ -1086,7 +1199,8 @@
     "n": 168,
     "no_observation_s": 28800
    },
-   "seed": 2
+   "seed": 2,
+   "skip_reasons": {}
   },
   {
    "access_blocked": 0,
@@ -1313,6 +1427,7 @@
     "slots_matched_by_collection": 21
    },
    "exec_layer": "naive",
+   "gate": null,
    "hazard": {
     "hold_every": 0,
     "hold_s": 0
@@ -1334,6 +1449,25 @@
     "stale_gen": 0
    },
    "intent_mismatch_s": 0,
+   "intent_reason": {
+    "generated": {
+     "resend": 0,
+     "target_change": 0,
+     "unknown_state": 0
+    },
+    "note": "生成原因只有三类：无回执（unknown_state）/目标变了（target_change）/重发（resend）。`refused` 是按差额算的，因为拿不到下行机会的那些意图不会进 `sent` 侧。",
+    "refused": {
+     "resend": 0,
+     "target_change": 0,
+     "unknown_state": 0
+    },
+    "sent": {
+     "resend": 0,
+     "target_change": 0,
+     "unknown_state": 0
+    },
+    "total_generated": 0
+   },
    "mixed_config_s": 0,
    "n_obligations": 189,
    "not_applicable": {
@@ -1370,7 +1504,8 @@
     "n": 168,
     "no_observation_s": 54000
    },
-   "seed": 3
+   "seed": 3,
+   "skip_reasons": {}
   },
   {
    "access_blocked": 0,
@@ -1597,6 +1732,7 @@
     "slots_matched_by_collection": 21
    },
    "exec_layer": "naive",
+   "gate": null,
    "hazard": {
     "hold_every": 0,
     "hold_s": 0
@@ -1618,6 +1754,25 @@
     "stale_gen": 0
    },
    "intent_mismatch_s": 0,
+   "intent_reason": {
+    "generated": {
+     "resend": 0,
+     "target_change": 0,
+     "unknown_state": 0
+    },
+    "note": "生成原因只有三类：无回执（unknown_state）/目标变了（target_change）/重发（resend）。`refused` 是按差额算的，因为拿不到下行机会的那些意图不会进 `sent` 侧。",
+    "refused": {
+     "resend": 0,
+     "target_change": 0,
+     "unknown_state": 0
+    },
+    "sent": {
+     "resend": 0,
+     "target_change": 0,
+     "unknown_state": 0
+    },
+    "total_generated": 0
+   },
    "mixed_config_s": 0,
    "n_obligations": 189,
    "not_applicable": {
@@ -1654,7 +1809,8 @@
     "n": 168,
     "no_observation_s": 43200
    },
-   "seed": 4
+   "seed": 4,
+   "skip_reasons": {}
   },
   {
    "access_blocked": 0,
@@ -1881,6 +2037,7 @@
     "slots_matched_by_collection": 21
    },
    "exec_layer": "naive",
+   "gate": null,
    "hazard": {
     "hold_every": 0,
     "hold_s": 0
@@ -1902,6 +2059,25 @@
     "stale_gen": 0
    },
    "intent_mismatch_s": 0,
+   "intent_reason": {
+    "generated": {
+     "resend": 0,
+     "target_change": 0,
+     "unknown_state": 0
+    },
+    "note": "生成原因只有三类：无回执（unknown_state）/目标变了（target_change）/重发（resend）。`refused` 是按差额算的，因为拿不到下行机会的那些意图不会进 `sent` 侧。",
+    "refused": {
+     "resend": 0,
+     "target_change": 0,
+     "unknown_state": 0
+    },
+    "sent": {
+     "resend": 0,
+     "target_change": 0,
+     "unknown_state": 0
+    },
+    "total_generated": 0
+   },
    "mixed_config_s": 0,
    "n_obligations": 189,
    "not_applicable": {
@@ -1938,7 +2114,8 @@
     "n": 168,
     "no_observation_s": 10800
    },
-   "seed": 5
+   "seed": 5,
+   "skip_reasons": {}
   },
   {
    "access_blocked": 0,
@@ -2165,6 +2342,7 @@
     "slots_matched_by_collection": 21
    },
    "exec_layer": "naive",
+   "gate": null,
    "hazard": {
     "hold_every": 0,
     "hold_s": 0
@@ -2186,6 +2364,25 @@
     "stale_gen": 0
    },
    "intent_mismatch_s": 0,
+   "intent_reason": {
+    "generated": {
+     "resend": 0,
+     "target_change": 0,
+     "unknown_state": 0
+    },
+    "note": "生成原因只有三类：无回执（unknown_state）/目标变了（target_change）/重发（resend）。`refused` 是按差额算的，因为拿不到下行机会的那些意图不会进 `sent` 侧。",
+    "refused": {
+     "resend": 0,
+     "target_change": 0,
+     "unknown_state": 0
+    },
+    "sent": {
+     "resend": 0,
+     "target_change": 0,
+     "unknown_state": 0
+    },
+    "total_generated": 0
+   },
    "mixed_config_s": 0,
    "n_obligations": 189,
    "not_applicable": {
@@ -2222,7 +2419,8 @@
     "n": 168,
     "no_observation_s": 10800
    },
-   "seed": 6
+   "seed": 6,
+   "skip_reasons": {}
   },
   {
    "access_blocked": 0,
@@ -2449,6 +2647,7 @@
     "slots_matched_by_collection": 21
    },
    "exec_layer": "naive",
+   "gate": null,
    "hazard": {
     "hold_every": 0,
     "hold_s": 0
@@ -2470,6 +2669,25 @@
     "stale_gen": 0
    },
    "intent_mismatch_s": 0,
+   "intent_reason": {
+    "generated": {
+     "resend": 0,
+     "target_change": 0,
+     "unknown_state": 0
+    },
+    "note": "生成原因只有三类：无回执（unknown_state）/目标变了（target_change）/重发（resend）。`refused` 是按差额算的，因为拿不到下行机会的那些意图不会进 `sent` 侧。",
+    "refused": {
+     "resend": 0,
+     "target_change": 0,
+     "unknown_state": 0
+    },
+    "sent": {
+     "resend": 0,
+     "target_change": 0,
+     "unknown_state": 0
+    },
+    "total_generated": 0
+   },
    "mixed_config_s": 0,
    "n_obligations": 189,
    "not_applicable": {
@@ -2506,7 +2724,8 @@
     "n": 168,
     "no_observation_s": 7200
    },
-   "seed": 7
+   "seed": 7,
+   "skip_reasons": {}
   },
   {
    "access_blocked": 0,
@@ -2733,6 +2952,7 @@
     "slots_matched_by_collection": 21
    },
    "exec_layer": "naive",
+   "gate": null,
    "hazard": {
     "hold_every": 0,
     "hold_s": 0
@@ -2754,6 +2974,25 @@
     "stale_gen": 0
    },
    "intent_mismatch_s": 0,
+   "intent_reason": {
+    "generated": {
+     "resend": 0,
+     "target_change": 0,
+     "unknown_state": 0
+    },
+    "note": "生成原因只有三类：无回执（unknown_state）/目标变了（target_change）/重发（resend）。`refused` 是按差额算的，因为拿不到下行机会的那些意图不会进 `sent` 侧。",
+    "refused": {
+     "resend": 0,
+     "target_change": 0,
+     "unknown_state": 0
+    },
+    "sent": {
+     "resend": 0,
+     "target_change": 0,
+     "unknown_state": 0
+    },
+    "total_generated": 0
+   },
    "mixed_config_s": 0,
    "n_obligations": 189,
    "not_applicable": {
@@ -2790,7 +3029,8 @@
     "n": 168,
     "no_observation_s": 10800
    },
-   "seed": 8
+   "seed": 8,
+   "skip_reasons": {}
   },
   {
    "access_blocked": 0,
@@ -3017,6 +3257,7 @@
     "slots_matched_by_collection": 21
    },
    "exec_layer": "naive",
+   "gate": null,
    "hazard": {
     "hold_every": 0,
     "hold_s": 0
@@ -3038,6 +3279,25 @@
     "stale_gen": 0
    },
    "intent_mismatch_s": 0,
+   "intent_reason": {
+    "generated": {
+     "resend": 0,
+     "target_change": 0,
+     "unknown_state": 0
+    },
+    "note": "生成原因只有三类：无回执（unknown_state）/目标变了（target_change）/重发（resend）。`refused` 是按差额算的，因为拿不到下行机会的那些意图不会进 `sent` 侧。",
+    "refused": {
+     "resend": 0,
+     "target_change": 0,
+     "unknown_state": 0
+    },
+    "sent": {
+     "resend": 0,
+     "target_change": 0,
+     "unknown_state": 0
+    },
+    "total_generated": 0
+   },
    "mixed_config_s": 0,
    "n_obligations": 189,
    "not_applicable": {
@@ -3074,7 +3334,8 @@
     "n": 168,
     "no_observation_s": 54000
    },
-   "seed": 9
+   "seed": 9,
+   "skip_reasons": {}
   },
   {
    "access_blocked": 0,
@@ -3100,24 +3361,24 @@
     }
    },
    "command_counters": {
-    "commands_delivered": 26,
-    "commands_refused": 28,
-    "commands_sent": 28,
+    "commands_delivered": 27,
+    "commands_refused": 34,
+    "commands_sent": 32,
     "deduplicated": 0,
     "fenced": 0,
     "stale_generation_dropped": 0,
     "writes_changed": 26,
-    "writes_same_value": 0,
+    "writes_same_value": 1,
     "writes_speculative": 0
    },
    "communication": {
-    "airtime_downlink_h": 0.0015112533333333325,
-    "airtime_uplink_h": 0.031494542222222185,
-    "downlink_attempts": 33,
-    "gateway_forwarded": 341,
+    "airtime_downlink_h": 0.0016028444444444435,
+    "airtime_uplink_h": 0.03136028444444442,
+    "downlink_attempts": 35,
+    "gateway_forwarded": 330,
     "samples_collected": 786,
-    "uplinks": 443,
-    "uplinks_heard": 329
+    "uplinks": 431,
+    "uplinks_heard": 318
    },
    "delivery_oracle": 152,
    "delivery_oracle_free_tx": 168,
@@ -3274,10 +3535,10 @@
       "soc_initial_wh": 0.02
      },
      "n16": {
-      "consumed_wh": 0.023514505728000026,
+      "consumed_wh": 0.02324374732800003,
       "dead_at_s": null,
       "deficit_s": 0,
-      "harvested_wh": 0.02351450572800008,
+      "harvested_wh": 0.023243747328000088,
       "soc_final_wh": 0.02,
       "soc_initial_wh": 0.02
      }
@@ -3301,6 +3562,7 @@
     "slots_matched_by_collection": 21
    },
    "exec_layer": "naive",
+   "gate": null,
    "hazard": {
     "hold_every": 0,
     "hold_s": 0
@@ -3308,20 +3570,39 @@
    "intent_ledger": {
     "change": 26,
     "dedup": 0,
-    "expired": 0,
+    "expired": 3,
     "fenced": 0,
-    "generated": 56,
-    "landed": 26,
+    "generated": 66,
+    "landed": 27,
     "lost": 0,
     "queued_left": 2,
-    "refused": 28,
+    "refused": 34,
     "rejected": 0,
-    "same_value": 0,
-    "sent": 28,
+    "same_value": 1,
+    "sent": 32,
     "speculative": 0,
     "stale_gen": 0
    },
    "intent_mismatch_s": 86400,
+   "intent_reason": {
+    "generated": {
+     "resend": 0,
+     "target_change": 10,
+     "unknown_state": 56
+    },
+    "note": "生成原因只有三类：无回执（unknown_state）/目标变了（target_change）/重发（resend）。`refused` 是按差额算的，因为拿不到下行机会的那些意图不会进 `sent` 侧。",
+    "refused": {
+     "resend": 0,
+     "target_change": 6,
+     "unknown_state": 28
+    },
+    "sent": {
+     "resend": 0,
+     "target_change": 4,
+     "unknown_state": 28
+    },
+    "total_generated": 66
+   },
    "mixed_config_s": 0,
    "n_obligations": 189,
    "not_applicable": {
@@ -3348,17 +3629,21 @@
    },
    "recovery": null,
    "routine": {
-    "aoi_mean_s": 2755.927272727273,
+    "aoi_mean_s": 2817.7454545454543,
     "censored": 0,
     "delivered": 152,
-    "latency_mean_s": 1160.5263157894738,
+    "latency_mean_s": 1178.2894736842106,
     "latency_p90_s": 3600,
     "missing_collection": 14,
     "missing_delivery": 2,
     "n": 168,
     "no_observation_s": 61200
    },
-   "seed": 0
+   "seed": 0,
+   "skip_reasons": {
+    "dwell": 1002,
+    "in_flight": 2937
+   }
   },
   {
    "access_blocked": 0,
@@ -3384,24 +3669,24 @@
     }
    },
    "command_counters": {
-    "commands_delivered": 26,
+    "commands_delivered": 27,
     "commands_refused": 16,
-    "commands_sent": 28,
+    "commands_sent": 34,
     "deduplicated": 0,
     "fenced": 0,
     "stale_generation_dropped": 0,
     "writes_changed": 26,
-    "writes_same_value": 0,
+    "writes_same_value": 1,
     "writes_speculative": 0
    },
    "communication": {
-    "airtime_downlink_h": 0.001877617777777776,
-    "airtime_uplink_h": 0.03783111111111095,
-    "downlink_attempts": 41,
-    "gateway_forwarded": 357,
+    "airtime_downlink_h": 0.0019234133333333315,
+    "airtime_uplink_h": 0.03769287111111095,
+    "downlink_attempts": 42,
+    "gateway_forwarded": 352,
     "samples_collected": 772,
-    "uplinks": 440,
-    "uplinks_heard": 323
+    "uplinks": 434,
+    "uplinks_heard": 318
    },
    "delivery_oracle": 146,
    "delivery_oracle_free_tx": 168,
@@ -3518,11 +3803,11 @@
       "soc_initial_wh": 0.02
      },
      "n07": {
-      "consumed_wh": 0.019700548352000014,
+      "consumed_wh": 0.01955390515200001,
       "dead_at_s": null,
       "deficit_s": 4740,
       "harvested_wh": 0.0,
-      "soc_final_wh": 0.00029945164799998896,
+      "soc_final_wh": 0.0004460948479999884,
       "soc_initial_wh": 0.02
      },
      "n10": {
@@ -3585,6 +3870,7 @@
     "slots_matched_by_collection": 21
    },
    "exec_layer": "naive",
+   "gate": null,
    "hazard": {
     "hold_every": 0,
     "hold_s": 0
@@ -3592,20 +3878,39 @@
    "intent_ledger": {
     "change": 26,
     "dedup": 0,
-    "expired": 0,
+    "expired": 5,
     "fenced": 0,
-    "generated": 44,
-    "landed": 26,
+    "generated": 50,
+    "landed": 27,
     "lost": 0,
     "queued_left": 2,
     "refused": 16,
     "rejected": 0,
-    "same_value": 0,
-    "sent": 28,
+    "same_value": 1,
+    "sent": 34,
     "speculative": 0,
     "stale_gen": 0
    },
    "intent_mismatch_s": 93600,
+   "intent_reason": {
+    "generated": {
+     "resend": 0,
+     "target_change": 22,
+     "unknown_state": 28
+    },
+    "note": "生成原因只有三类：无回执（unknown_state）/目标变了（target_change）/重发（resend）。`refused` 是按差额算的，因为拿不到下行机会的那些意图不会进 `sent` 侧。",
+    "refused": {
+     "resend": 0,
+     "target_change": 16,
+     "unknown_state": 0
+    },
+    "sent": {
+     "resend": 0,
+     "target_change": 6,
+     "unknown_state": 28
+    },
+    "total_generated": 50
+   },
    "mixed_config_s": 0,
    "n_obligations": 189,
    "not_applicable": {
@@ -3632,17 +3937,21 @@
    },
    "recovery": null,
    "routine": {
-    "aoi_mean_s": 3703.078212290503,
+    "aoi_mean_s": 3733.245810055866,
     "censored": 0,
     "delivered": 146,
-    "latency_mean_s": 1571.9178082191781,
+    "latency_mean_s": 1590.4109589041095,
     "latency_p90_s": 3600,
     "missing_collection": 21,
     "missing_delivery": 1,
     "n": 168,
     "no_observation_s": 10800
    },
-   "seed": 1
+   "seed": 1,
+   "skip_reasons": {
+    "dwell": 472,
+    "in_flight": 3116
+   }
   },
   {
    "access_blocked": 0,
@@ -3668,24 +3977,24 @@
     }
    },
    "command_counters": {
-    "commands_delivered": 26,
-    "commands_refused": 14,
-    "commands_sent": 28,
+    "commands_delivered": 27,
+    "commands_refused": 12,
+    "commands_sent": 34,
     "deduplicated": 0,
     "fenced": 0,
     "stale_generation_dropped": 0,
     "writes_changed": 26,
-    "writes_same_value": 0,
+    "writes_same_value": 1,
     "writes_speculative": 0
    },
    "communication": {
-    "airtime_downlink_h": 0.001786026666666665,
-    "airtime_uplink_h": 0.05142670222222218,
-    "downlink_attempts": 39,
-    "gateway_forwarded": 341,
+    "airtime_downlink_h": 0.0018318222222222205,
+    "airtime_uplink_h": 0.050680604444444395,
+    "downlink_attempts": 40,
+    "gateway_forwarded": 338,
     "samples_collected": 746,
-    "uplinks": 417,
-    "uplinks_heard": 307
+    "uplinks": 414,
+    "uplinks_heard": 304
    },
    "delivery_oracle": 126,
    "delivery_oracle_free_tx": 154,
@@ -3786,11 +4095,11 @@
       "soc_initial_wh": 0.02
      },
      "n05": {
-      "consumed_wh": 0.019980482688000012,
+      "consumed_wh": 0.01980355481600001,
       "dead_at_s": null,
       "deficit_s": 10740,
       "harvested_wh": 0.0,
-      "soc_final_wh": 1.9517311999990388e-05,
+      "soc_final_wh": 0.00019644518399999092,
       "soc_initial_wh": 0.02
      },
      "n06": {
@@ -3869,6 +4178,7 @@
     "slots_matched_by_collection": 21
    },
    "exec_layer": "naive",
+   "gate": null,
    "hazard": {
     "hold_every": 0,
     "hold_s": 0
@@ -3876,20 +4186,39 @@
    "intent_ledger": {
     "change": 26,
     "dedup": 0,
-    "expired": 0,
+    "expired": 5,
     "fenced": 0,
-    "generated": 42,
-    "landed": 26,
+    "generated": 46,
+    "landed": 27,
     "lost": 0,
     "queued_left": 2,
-    "refused": 14,
+    "refused": 12,
     "rejected": 0,
-    "same_value": 0,
-    "sent": 28,
+    "same_value": 1,
+    "sent": 34,
     "speculative": 0,
     "stale_gen": 0
    },
    "intent_mismatch_s": 93600,
+   "intent_reason": {
+    "generated": {
+     "resend": 0,
+     "target_change": 18,
+     "unknown_state": 28
+    },
+    "note": "生成原因只有三类：无回执（unknown_state）/目标变了（target_change）/重发（resend）。`refused` 是按差额算的，因为拿不到下行机会的那些意图不会进 `sent` 侧。",
+    "refused": {
+     "resend": 0,
+     "target_change": 12,
+     "unknown_state": 0
+    },
+    "sent": {
+     "resend": 0,
+     "target_change": 6,
+     "unknown_state": 28
+    },
+    "total_generated": 46
+   },
    "mixed_config_s": 0,
    "n_obligations": 189,
    "not_applicable": {
@@ -3926,7 +4255,11 @@
     "n": 168,
     "no_observation_s": 28800
    },
-   "seed": 2
+   "seed": 2,
+   "skip_reasons": {
+    "dwell": 354,
+    "in_flight": 3356
+   }
   },
   {
    "access_blocked": 0,
@@ -3952,24 +4285,24 @@
     }
    },
    "command_counters": {
-    "commands_delivered": 26,
-    "commands_refused": 56,
-    "commands_sent": 28,
+    "commands_delivered": 27,
+    "commands_refused": 52,
+    "commands_sent": 32,
     "deduplicated": 0,
     "fenced": 0,
     "stale_generation_dropped": 0,
     "writes_changed": 26,
-    "writes_same_value": 0,
+    "writes_same_value": 1,
     "writes_speculative": 0
    },
    "communication": {
-    "airtime_downlink_h": 0.001786026666666665,
-    "airtime_uplink_h": 0.045603555555555494,
-    "downlink_attempts": 39,
-    "gateway_forwarded": 316,
+    "airtime_downlink_h": 0.0018318222222222205,
+    "airtime_uplink_h": 0.04383829333333327,
+    "downlink_attempts": 40,
+    "gateway_forwarded": 313,
     "samples_collected": 709,
-    "uplinks": 385,
-    "uplinks_heard": 282
+    "uplinks": 379,
+    "uplinks_heard": 279
    },
    "delivery_oracle": 131,
    "delivery_oracle_free_tx": 154,
@@ -4078,10 +4411,10 @@
       "soc_initial_wh": 0.02
      },
      "n06": {
-      "consumed_wh": 0.030761234304000053,
+      "consumed_wh": 0.03035687078400005,
       "dead_at_s": null,
       "deficit_s": 0,
-      "harvested_wh": 0.030761234304000108,
+      "harvested_wh": 0.030356870784000105,
       "soc_final_wh": 0.02,
       "soc_initial_wh": 0.02
      },
@@ -4153,6 +4486,7 @@
     "slots_matched_by_collection": 21
    },
    "exec_layer": "naive",
+   "gate": null,
    "hazard": {
     "hold_every": 0,
     "hold_s": 0
@@ -4160,20 +4494,39 @@
    "intent_ledger": {
     "change": 26,
     "dedup": 0,
-    "expired": 0,
+    "expired": 3,
     "fenced": 0,
     "generated": 84,
-    "landed": 26,
+    "landed": 27,
     "lost": 0,
     "queued_left": 2,
-    "refused": 56,
+    "refused": 52,
     "rejected": 0,
-    "same_value": 0,
-    "sent": 28,
+    "same_value": 1,
+    "sent": 32,
     "speculative": 0,
     "stale_gen": 0
    },
    "intent_mismatch_s": 86400,
+   "intent_reason": {
+    "generated": {
+     "resend": 0,
+     "target_change": 28,
+     "unknown_state": 56
+    },
+    "note": "生成原因只有三类：无回执（unknown_state）/目标变了（target_change）/重发（resend）。`refused` 是按差额算的，因为拿不到下行机会的那些意图不会进 `sent` 侧。",
+    "refused": {
+     "resend": 0,
+     "target_change": 24,
+     "unknown_state": 28
+    },
+    "sent": {
+     "resend": 0,
+     "target_change": 4,
+     "unknown_state": 28
+    },
+    "total_generated": 84
+   },
    "mixed_config_s": 0,
    "n_obligations": 189,
    "not_applicable": {
@@ -4210,7 +4563,11 @@
     "n": 168,
     "no_observation_s": 54000
    },
-   "seed": 3
+   "seed": 3,
+   "skip_reasons": {
+    "dwell": 1534,
+    "in_flight": 2817
+   }
   },
   {
    "access_blocked": 0,
@@ -4236,24 +4593,24 @@
     }
    },
    "command_counters": {
-    "commands_delivered": 26,
-    "commands_refused": 2,
-    "commands_sent": 28,
+    "commands_delivered": 27,
+    "commands_refused": 8,
+    "commands_sent": 32,
     "deduplicated": 0,
     "fenced": 0,
     "stale_generation_dropped": 0,
     "writes_changed": 26,
-    "writes_same_value": 0,
+    "writes_same_value": 1,
     "writes_speculative": 0
    },
    "communication": {
-    "airtime_downlink_h": 0.0017402311111111097,
-    "airtime_uplink_h": 0.03342279111111106,
-    "downlink_attempts": 38,
-    "gateway_forwarded": 352,
+    "airtime_downlink_h": 0.001786026666666665,
+    "airtime_uplink_h": 0.03385343999999995,
+    "downlink_attempts": 39,
+    "gateway_forwarded": 348,
     "samples_collected": 802,
-    "uplinks": 442,
-    "uplinks_heard": 318
+    "uplinks": 436,
+    "uplinks_heard": 314
    },
    "delivery_oracle": 149,
    "delivery_oracle_free_tx": 168,
@@ -4370,11 +4727,11 @@
       "soc_initial_wh": 0.02
      },
      "n07": {
-      "consumed_wh": 0.02199783987200002,
+      "consumed_wh": 0.021941308672000025,
       "dead_at_s": null,
       "deficit_s": 4740,
       "harvested_wh": 0.002016885760000007,
-      "soc_final_wh": 1.904588799998846e-05,
+      "soc_final_wh": 7.557708799998665e-05,
       "soc_initial_wh": 0.02
      },
      "n10": {
@@ -4437,6 +4794,7 @@
     "slots_matched_by_collection": 21
    },
    "exec_layer": "naive",
+   "gate": null,
    "hazard": {
     "hold_every": 0,
     "hold_s": 0
@@ -4444,20 +4802,39 @@
    "intent_ledger": {
     "change": 26,
     "dedup": 0,
-    "expired": 0,
+    "expired": 3,
     "fenced": 0,
-    "generated": 30,
-    "landed": 26,
+    "generated": 40,
+    "landed": 27,
     "lost": 0,
     "queued_left": 2,
-    "refused": 2,
+    "refused": 8,
     "rejected": 0,
-    "same_value": 0,
-    "sent": 28,
+    "same_value": 1,
+    "sent": 32,
     "speculative": 0,
     "stale_gen": 0
    },
    "intent_mismatch_s": 93600,
+   "intent_reason": {
+    "generated": {
+     "resend": 0,
+     "target_change": 12,
+     "unknown_state": 28
+    },
+    "note": "生成原因只有三类：无回执（unknown_state）/目标变了（target_change）/重发（resend）。`refused` 是按差额算的，因为拿不到下行机会的那些意图不会进 `sent` 侧。",
+    "refused": {
+     "resend": 0,
+     "target_change": 8,
+     "unknown_state": 0
+    },
+    "sent": {
+     "resend": 0,
+     "target_change": 4,
+     "unknown_state": 28
+    },
+    "total_generated": 40
+   },
    "mixed_config_s": 0,
    "n_obligations": 189,
    "not_applicable": {
@@ -4484,17 +4861,21 @@
    },
    "recovery": null,
    "routine": {
-    "aoi_mean_s": 3024.494117647059,
+    "aoi_mean_s": 3089.788235294118,
     "censored": 0,
     "delivered": 149,
-    "latency_mean_s": 1479.8657718120805,
+    "latency_mean_s": 1516.1073825503356,
     "latency_p90_s": 3600,
     "missing_collection": 17,
     "missing_delivery": 2,
     "n": 168,
     "no_observation_s": 43200
    },
-   "seed": 4
+   "seed": 4,
+   "skip_reasons": {
+    "dwell": 236,
+    "in_flight": 3297
+   }
   },
   {
    "access_blocked": 0,
@@ -4521,8 +4902,8 @@
    },
    "command_counters": {
     "commands_delivered": 26,
-    "commands_refused": 20,
-    "commands_sent": 28,
+    "commands_refused": 22,
+    "commands_sent": 30,
     "deduplicated": 0,
     "fenced": 0,
     "stale_generation_dropped": 0,
@@ -4721,6 +5102,7 @@
     "slots_matched_by_collection": 21
    },
    "exec_layer": "naive",
+   "gate": null,
    "hazard": {
     "hold_every": 0,
     "hold_s": 0
@@ -4728,20 +5110,39 @@
    "intent_ledger": {
     "change": 26,
     "dedup": 0,
-    "expired": 0,
+    "expired": 2,
     "fenced": 0,
-    "generated": 48,
+    "generated": 52,
     "landed": 26,
     "lost": 0,
     "queued_left": 2,
-    "refused": 20,
+    "refused": 22,
     "rejected": 0,
     "same_value": 0,
-    "sent": 28,
+    "sent": 30,
     "speculative": 0,
     "stale_gen": 0
    },
    "intent_mismatch_s": 93600,
+   "intent_reason": {
+    "generated": {
+     "resend": 0,
+     "target_change": 24,
+     "unknown_state": 28
+    },
+    "note": "生成原因只有三类：无回执（unknown_state）/目标变了（target_change）/重发（resend）。`refused` 是按差额算的，因为拿不到下行机会的那些意图不会进 `sent` 侧。",
+    "refused": {
+     "resend": 0,
+     "target_change": 22,
+     "unknown_state": 0
+    },
+    "sent": {
+     "resend": 0,
+     "target_change": 2,
+     "unknown_state": 28
+    },
+    "total_generated": 52
+   },
    "mixed_config_s": 0,
    "n_obligations": 189,
    "not_applicable": {
@@ -4778,7 +5179,11 @@
     "n": 168,
     "no_observation_s": 10800
    },
-   "seed": 5
+   "seed": 5,
+   "skip_reasons": {
+    "dwell": 649,
+    "in_flight": 2998
+   }
   },
   {
    "access_blocked": 0,
@@ -4806,7 +5211,7 @@
    "command_counters": {
     "commands_delivered": 26,
     "commands_refused": 0,
-    "commands_sent": 28,
+    "commands_sent": 32,
     "deduplicated": 0,
     "fenced": 0,
     "stale_generation_dropped": 0,
@@ -5005,6 +5410,7 @@
     "slots_matched_by_collection": 21
    },
    "exec_layer": "naive",
+   "gate": null,
    "hazard": {
     "hold_every": 0,
     "hold_s": 0
@@ -5012,20 +5418,39 @@
    "intent_ledger": {
     "change": 26,
     "dedup": 0,
-    "expired": 0,
+    "expired": 4,
     "fenced": 0,
-    "generated": 28,
+    "generated": 32,
     "landed": 26,
     "lost": 0,
     "queued_left": 2,
     "refused": 0,
     "rejected": 0,
     "same_value": 0,
-    "sent": 28,
+    "sent": 32,
     "speculative": 0,
     "stale_gen": 0
    },
    "intent_mismatch_s": 93600,
+   "intent_reason": {
+    "generated": {
+     "resend": 0,
+     "target_change": 4,
+     "unknown_state": 28
+    },
+    "note": "生成原因只有三类：无回执（unknown_state）/目标变了（target_change）/重发（resend）。`refused` 是按差额算的，因为拿不到下行机会的那些意图不会进 `sent` 侧。",
+    "refused": {
+     "resend": 0,
+     "target_change": 0,
+     "unknown_state": 0
+    },
+    "sent": {
+     "resend": 0,
+     "target_change": 4,
+     "unknown_state": 28
+    },
+    "total_generated": 32
+   },
    "mixed_config_s": 0,
    "n_obligations": 189,
    "not_applicable": {
@@ -5062,7 +5487,10 @@
     "n": 168,
     "no_observation_s": 10800
    },
-   "seed": 6
+   "seed": 6,
+   "skip_reasons": {
+    "in_flight": 2457
+   }
   },
   {
    "access_blocked": 0,
@@ -5089,8 +5517,8 @@
    },
    "command_counters": {
     "commands_delivered": 25,
-    "commands_refused": 42,
-    "commands_sent": 28,
+    "commands_refused": 50,
+    "commands_sent": 32,
     "deduplicated": 0,
     "fenced": 0,
     "stale_generation_dropped": 0,
@@ -5289,6 +5717,7 @@
     "slots_matched_by_collection": 21
    },
    "exec_layer": "naive",
+   "gate": null,
    "hazard": {
     "hold_every": 0,
     "hold_s": 0
@@ -5296,20 +5725,39 @@
    "intent_ledger": {
     "change": 25,
     "dedup": 0,
-    "expired": 0,
+    "expired": 3,
     "fenced": 0,
-    "generated": 70,
+    "generated": 82,
     "landed": 25,
     "lost": 0,
-    "queued_left": 3,
-    "refused": 42,
+    "queued_left": 4,
+    "refused": 50,
     "rejected": 0,
     "same_value": 0,
-    "sent": 28,
+    "sent": 32,
     "speculative": 0,
     "stale_gen": 0
    },
    "intent_mismatch_s": 93600,
+   "intent_reason": {
+    "generated": {
+     "resend": 0,
+     "target_change": 54,
+     "unknown_state": 28
+    },
+    "note": "生成原因只有三类：无回执（unknown_state）/目标变了（target_change）/重发（resend）。`refused` 是按差额算的，因为拿不到下行机会的那些意图不会进 `sent` 侧。",
+    "refused": {
+     "resend": 0,
+     "target_change": 50,
+     "unknown_state": 0
+    },
+    "sent": {
+     "resend": 0,
+     "target_change": 4,
+     "unknown_state": 28
+    },
+    "total_generated": 82
+   },
    "mixed_config_s": 0,
    "n_obligations": 189,
    "not_applicable": {
@@ -5346,7 +5794,11 @@
     "n": 168,
     "no_observation_s": 7200
    },
-   "seed": 7
+   "seed": 7,
+   "skip_reasons": {
+    "dwell": 1475,
+    "in_flight": 2936
+   }
   },
   {
    "access_blocked": 0,
@@ -5373,8 +5825,8 @@
    },
    "command_counters": {
     "commands_delivered": 26,
-    "commands_refused": 8,
-    "commands_sent": 28,
+    "commands_refused": 10,
+    "commands_sent": 32,
     "deduplicated": 0,
     "fenced": 0,
     "stale_generation_dropped": 0,
@@ -5573,6 +6025,7 @@
     "slots_matched_by_collection": 21
    },
    "exec_layer": "naive",
+   "gate": null,
    "hazard": {
     "hold_every": 0,
     "hold_s": 0
@@ -5580,20 +6033,39 @@
    "intent_ledger": {
     "change": 26,
     "dedup": 0,
-    "expired": 0,
+    "expired": 6,
     "fenced": 0,
-    "generated": 36,
+    "generated": 42,
     "landed": 26,
     "lost": 0,
-    "queued_left": 2,
-    "refused": 8,
+    "queued_left": 0,
+    "refused": 10,
     "rejected": 0,
     "same_value": 0,
-    "sent": 28,
+    "sent": 32,
     "speculative": 0,
     "stale_gen": 0
    },
    "intent_mismatch_s": 93600,
+   "intent_reason": {
+    "generated": {
+     "resend": 0,
+     "target_change": 14,
+     "unknown_state": 28
+    },
+    "note": "生成原因只有三类：无回执（unknown_state）/目标变了（target_change）/重发（resend）。`refused` 是按差额算的，因为拿不到下行机会的那些意图不会进 `sent` 侧。",
+    "refused": {
+     "resend": 0,
+     "target_change": 10,
+     "unknown_state": 0
+    },
+    "sent": {
+     "resend": 0,
+     "target_change": 4,
+     "unknown_state": 28
+    },
+    "total_generated": 42
+   },
    "mixed_config_s": 0,
    "n_obligations": 189,
    "not_applicable": {
@@ -5630,7 +6102,11 @@
     "n": 168,
     "no_observation_s": 10800
    },
-   "seed": 8
+   "seed": 8,
+   "skip_reasons": {
+    "dwell": 293,
+    "in_flight": 2939
+   }
   },
   {
    "access_blocked": 0,
@@ -5657,8 +6133,8 @@
    },
    "command_counters": {
     "commands_delivered": 26,
-    "commands_refused": 60,
-    "commands_sent": 28,
+    "commands_refused": 62,
+    "commands_sent": 30,
     "deduplicated": 0,
     "fenced": 0,
     "stale_generation_dropped": 0,
@@ -5857,6 +6333,7 @@
     "slots_matched_by_collection": 21
    },
    "exec_layer": "naive",
+   "gate": null,
    "hazard": {
     "hold_every": 0,
     "hold_s": 0
@@ -5864,20 +6341,39 @@
    "intent_ledger": {
     "change": 26,
     "dedup": 0,
-    "expired": 0,
+    "expired": 2,
     "fenced": 0,
-    "generated": 88,
+    "generated": 92,
     "landed": 26,
     "lost": 0,
     "queued_left": 2,
-    "refused": 60,
+    "refused": 62,
     "rejected": 0,
     "same_value": 0,
-    "sent": 28,
+    "sent": 30,
     "speculative": 0,
     "stale_gen": 0
    },
    "intent_mismatch_s": 93600,
+   "intent_reason": {
+    "generated": {
+     "resend": 0,
+     "target_change": 50,
+     "unknown_state": 42
+    },
+    "note": "生成原因只有三类：无回执（unknown_state）/目标变了（target_change）/重发（resend）。`refused` 是按差额算的，因为拿不到下行机会的那些意图不会进 `sent` 侧。",
+    "refused": {
+     "resend": 0,
+     "target_change": 48,
+     "unknown_state": 14
+    },
+    "sent": {
+     "resend": 0,
+     "target_change": 2,
+     "unknown_state": 28
+    },
+    "total_generated": 92
+   },
    "mixed_config_s": 0,
    "n_obligations": 189,
    "not_applicable": {
@@ -5914,7 +6410,11 @@
     "n": 168,
     "no_observation_s": 54000
    },
-   "seed": 9
+   "seed": 9,
+   "skip_reasons": {
+    "dwell": 1829,
+    "in_flight": 2818
+   }
   },
   {
    "access_blocked": 0,
@@ -5933,31 +6433,31 @@
     "routine": {
      "censored": 0,
      "collected": 168,
-     "delivered": 162,
+     "delivered": 161,
      "missing_collection": 0,
-     "missing_delivery": 6,
+     "missing_delivery": 7,
      "n": 168
     }
    },
    "command_counters": {
     "commands_delivered": 60,
-    "commands_refused": 36,
-    "commands_sent": 64,
+    "commands_refused": 44,
+    "commands_sent": 70,
     "deduplicated": 0,
     "fenced": 0,
     "stale_generation_dropped": 0,
     "writes_changed": 34,
     "writes_same_value": 26,
-    "writes_speculative": 26
+    "writes_speculative": 25
    },
    "communication": {
     "airtime_downlink_h": 0.003892622222222215,
-    "airtime_uplink_h": 0.02361571555555558,
+    "airtime_uplink_h": 0.023625386666666692,
     "downlink_attempts": 85,
-    "gateway_forwarded": 243,
+    "gateway_forwarded": 241,
     "samples_collected": 597,
-    "uplinks": 324,
-    "uplinks_heard": 232
+    "uplinks": 318,
+    "uplinks_heard": 230
    },
    "delivery_oracle": 163,
    "delivery_oracle_free_tx": 168,
@@ -6090,10 +6590,10 @@
       "soc_initial_wh": 0.02
      },
      "n11": {
-      "consumed_wh": 0.018677729792000015,
+      "consumed_wh": 0.01855451571200001,
       "dead_at_s": null,
       "deficit_s": 0,
-      "harvested_wh": 0.018677729792000056,
+      "harvested_wh": 0.018554515712000064,
       "soc_final_wh": 0.02,
       "soc_initial_wh": 0.02
      },
@@ -6114,10 +6614,10 @@
       "soc_initial_wh": 0.02
      },
      "n16": {
-      "consumed_wh": 0.016153241984000002,
+      "consumed_wh": 0.016145987968,
       "dead_at_s": null,
       "deficit_s": 0,
-      "harvested_wh": 0.01615324198400006,
+      "harvested_wh": 0.016145987968000063,
       "soc_final_wh": 0.02,
       "soc_initial_wh": 0.02
      }
@@ -6141,6 +6641,7 @@
     "slots_matched_by_collection": 21
    },
    "exec_layer": "naive",
+   "gate": null,
    "hazard": {
     "hold_every": 0,
     "hold_s": 0
@@ -6148,21 +6649,40 @@
    "intent_ledger": {
     "change": 34,
     "dedup": 0,
-    "expired": 0,
+    "expired": 6,
     "fenced": 0,
-    "generated": 100,
+    "generated": 114,
     "landed": 60,
     "lost": 0,
     "queued_left": 4,
-    "refused": 36,
+    "refused": 44,
     "rejected": 0,
     "same_value": 26,
-    "sent": 64,
-    "speculative": 26,
+    "sent": 70,
+    "speculative": 25,
     "stale_gen": 0
    },
-   "intent_mismatch_s": 434520,
-   "mixed_config_s": 119700,
+   "intent_mismatch_s": 470400,
+   "intent_reason": {
+    "generated": {
+     "resend": 0,
+     "target_change": 58,
+     "unknown_state": 56
+    },
+    "note": "生成原因只有三类：无回执（unknown_state）/目标变了（target_change）/重发（resend）。`refused` 是按差额算的，因为拿不到下行机会的那些意图不会进 `sent` 侧。",
+    "refused": {
+     "resend": 0,
+     "target_change": 16,
+     "unknown_state": 28
+    },
+    "sent": {
+     "resend": 0,
+     "target_change": 42,
+     "unknown_state": 28
+    },
+    "total_generated": 114
+   },
+   "mixed_config_s": 116100,
    "n_obligations": 189,
    "not_applicable": {
     "config_mismatch_s": "最小实例没有外部配置要求，无法定义'错误配置'；返回 None 而不是 0。",
@@ -6188,17 +6708,23 @@
    },
    "recovery": null,
    "routine": {
-    "aoi_mean_s": 2928.6545454545453,
+    "aoi_mean_s": 2976.836363636364,
     "censored": 0,
-    "delivered": 162,
-    "latency_mean_s": 1344.4444444444443,
+    "delivered": 161,
+    "latency_mean_s": 1347.2049689440994,
     "latency_p90_s": 3600,
     "missing_collection": 0,
-    "missing_delivery": 6,
+    "missing_delivery": 7,
     "n": 168,
     "no_observation_s": 61200
    },
-   "seed": 0
+   "seed": 0,
+   "skip_reasons": {
+    "at_target": 2670,
+    "at_target_evidence_stale": 309,
+    "dwell": 1321,
+    "in_flight": 6563
+   }
   },
   {
    "access_blocked": 0,
@@ -6224,24 +6750,24 @@
     }
    },
    "command_counters": {
-    "commands_delivered": 60,
-    "commands_refused": 24,
-    "commands_sent": 70,
+    "commands_delivered": 61,
+    "commands_refused": 22,
+    "commands_sent": 74,
     "deduplicated": 0,
     "fenced": 0,
     "stale_generation_dropped": 0,
-    "writes_changed": 34,
-    "writes_same_value": 26,
-    "writes_speculative": 26
+    "writes_changed": 36,
+    "writes_same_value": 25,
+    "writes_speculative": 25
    },
    "communication": {
     "airtime_downlink_h": 0.003892622222222215,
-    "airtime_uplink_h": 0.0248982755555556,
+    "airtime_uplink_h": 0.02475576888888894,
     "downlink_attempts": 85,
-    "gateway_forwarded": 302,
-    "samples_collected": 626,
-    "uplinks": 353,
-    "uplinks_heard": 268
+    "gateway_forwarded": 300,
+    "samples_collected": 627,
+    "uplinks": 352,
+    "uplinks_heard": 266
    },
    "delivery_oracle": 164,
    "delivery_oracle_free_tx": 168,
@@ -6358,11 +6884,11 @@
       "soc_initial_wh": 0.02
      },
      "n07": {
-      "consumed_wh": 0.016338723456000005,
+      "consumed_wh": 0.016764150400000004,
       "dead_at_s": null,
       "deficit_s": 0,
       "harvested_wh": 0.0,
-      "soc_final_wh": 0.003661276543999988,
+      "soc_final_wh": 0.003235849599999986,
       "soc_initial_wh": 0.02
      },
      "n10": {
@@ -6425,27 +6951,47 @@
     "slots_matched_by_collection": 21
    },
    "exec_layer": "naive",
+   "gate": null,
    "hazard": {
     "hold_every": 0,
     "hold_s": 0
    },
    "intent_ledger": {
-    "change": 34,
+    "change": 36,
     "dedup": 0,
-    "expired": 0,
+    "expired": 5,
     "fenced": 0,
-    "generated": 94,
-    "landed": 60,
+    "generated": 96,
+    "landed": 61,
     "lost": 0,
-    "queued_left": 10,
-    "refused": 24,
+    "queued_left": 8,
+    "refused": 22,
     "rejected": 0,
-    "same_value": 26,
-    "sent": 70,
-    "speculative": 26,
+    "same_value": 25,
+    "sent": 74,
+    "speculative": 25,
     "stale_gen": 0
    },
-   "intent_mismatch_s": 362400,
+   "intent_mismatch_s": 394680,
+   "intent_reason": {
+    "generated": {
+     "resend": 0,
+     "target_change": 68,
+     "unknown_state": 28
+    },
+    "note": "生成原因只有三类：无回执（unknown_state）/目标变了（target_change）/重发（resend）。`refused` 是按差额算的，因为拿不到下行机会的那些意图不会进 `sent` 侧。",
+    "refused": {
+     "resend": 0,
+     "target_change": 22,
+     "unknown_state": 0
+    },
+    "sent": {
+     "resend": 0,
+     "target_change": 46,
+     "unknown_state": 28
+    },
+    "total_generated": 96
+   },
    "mixed_config_s": 106200,
    "n_obligations": 189,
    "not_applicable": {
@@ -6472,7 +7018,7 @@
    },
    "recovery": null,
    "routine": {
-    "aoi_mean_s": 2882.6871508379886,
+    "aoi_mean_s": 2877.6592178770948,
     "censored": 0,
     "delivered": 164,
     "latency_mean_s": 1640.8536585365853,
@@ -6482,7 +7028,13 @@
     "n": 168,
     "no_observation_s": 10800
    },
-   "seed": 1
+   "seed": 1,
+   "skip_reasons": {
+    "at_target": 3741,
+    "at_target_evidence_stale": 195,
+    "dwell": 679,
+    "in_flight": 6257
+   }
   },
   {
    "access_blocked": 0,
@@ -6508,23 +7060,23 @@
     }
    },
    "command_counters": {
-    "commands_delivered": 56,
+    "commands_delivered": 55,
     "commands_refused": 32,
-    "commands_sent": 64,
+    "commands_sent": 70,
     "deduplicated": 0,
     "fenced": 0,
     "stale_generation_dropped": 0,
     "writes_changed": 30,
-    "writes_same_value": 26,
-    "writes_speculative": 26
+    "writes_same_value": 25,
+    "writes_speculative": 25
    },
    "communication": {
-    "airtime_downlink_h": 0.003663644444444438,
-    "airtime_uplink_h": 0.04112469333333326,
-    "downlink_attempts": 80,
+    "airtime_downlink_h": 0.0037094399999999935,
+    "airtime_uplink_h": 0.04129564444444438,
+    "downlink_attempts": 81,
     "gateway_forwarded": 298,
-    "samples_collected": 612,
-    "uplinks": 359,
+    "samples_collected": 629,
+    "uplinks": 360,
     "uplinks_heard": 264
    },
    "delivery_oracle": 142,
@@ -6594,11 +7146,11 @@
       "soc_initial_wh": 0.02
      },
      "n01": {
-      "consumed_wh": 0.017000681728000004,
+      "consumed_wh": 0.018437016704000008,
       "dead_at_s": null,
       "deficit_s": 0,
       "harvested_wh": 0.0,
-      "soc_final_wh": 0.0029993182719999867,
+      "soc_final_wh": 0.0015629832959999873,
       "soc_initial_wh": 0.02
      },
      "n02": {
@@ -6626,11 +7178,11 @@
       "soc_initial_wh": 0.02
      },
      "n05": {
-      "consumed_wh": 0.011375655551999998,
+      "consumed_wh": 0.017985653248000007,
       "dead_at_s": null,
       "deficit_s": 0,
       "harvested_wh": 0.0,
-      "soc_final_wh": 0.00862434444799999,
+      "soc_final_wh": 0.0020143467519999902,
       "soc_initial_wh": 0.02
      },
      "n06": {
@@ -6709,6 +7261,7 @@
     "slots_matched_by_collection": 21
    },
    "exec_layer": "naive",
+   "gate": null,
    "hazard": {
     "hold_every": 0,
     "hold_s": 0
@@ -6716,21 +7269,40 @@
    "intent_ledger": {
     "change": 30,
     "dedup": 0,
-    "expired": 0,
+    "expired": 6,
     "fenced": 0,
-    "generated": 96,
-    "landed": 56,
+    "generated": 102,
+    "landed": 55,
     "lost": 0,
-    "queued_left": 8,
+    "queued_left": 9,
     "refused": 32,
     "rejected": 0,
-    "same_value": 26,
-    "sent": 64,
-    "speculative": 26,
+    "same_value": 25,
+    "sent": 70,
+    "speculative": 25,
     "stale_gen": 0
    },
-   "intent_mismatch_s": 382560,
-   "mixed_config_s": 72000,
+   "intent_mismatch_s": 395040,
+   "intent_reason": {
+    "generated": {
+     "resend": 0,
+     "target_change": 74,
+     "unknown_state": 28
+    },
+    "note": "生成原因只有三类：无回执（unknown_state）/目标变了（target_change）/重发（resend）。`refused` 是按差额算的，因为拿不到下行机会的那些意图不会进 `sent` 侧。",
+    "refused": {
+     "resend": 0,
+     "target_change": 32,
+     "unknown_state": 0
+    },
+    "sent": {
+     "resend": 0,
+     "target_change": 42,
+     "unknown_state": 28
+    },
+    "total_generated": 102
+   },
+   "mixed_config_s": 85500,
    "n_obligations": 189,
    "not_applicable": {
     "config_mismatch_s": "最小实例没有外部配置要求，无法定义'错误配置'；返回 None 而不是 0。",
@@ -6756,7 +7328,7 @@
    },
    "recovery": null,
    "routine": {
-    "aoi_mean_s": 4723.390804597701,
+    "aoi_mean_s": 4719.942528735633,
     "censored": 0,
     "delivered": 142,
     "latency_mean_s": 2516.1971830985917,
@@ -6766,7 +7338,13 @@
     "n": 168,
     "no_observation_s": 28800
    },
-   "seed": 2
+   "seed": 2,
+   "skip_reasons": {
+    "at_target": 2332,
+    "at_target_evidence_stale": 1050,
+    "dwell": 944,
+    "in_flight": 6543
+   }
   },
   {
    "access_blocked": 0,
@@ -6792,24 +7370,24 @@
     }
    },
    "command_counters": {
-    "commands_delivered": 55,
-    "commands_refused": 92,
-    "commands_sent": 72,
+    "commands_delivered": 56,
+    "commands_refused": 88,
+    "commands_sent": 74,
     "deduplicated": 0,
     "fenced": 0,
     "stale_generation_dropped": 0,
-    "writes_changed": 29,
-    "writes_same_value": 26,
-    "writes_speculative": 26
+    "writes_changed": 31,
+    "writes_same_value": 25,
+    "writes_speculative": 25
    },
    "communication": {
-    "airtime_downlink_h": 0.0036178488888888825,
-    "airtime_uplink_h": 0.03713450666666668,
-    "downlink_attempts": 79,
-    "gateway_forwarded": 278,
-    "samples_collected": 554,
-    "uplinks": 311,
-    "uplinks_heard": 244
+    "airtime_downlink_h": 0.003663644444444438,
+    "airtime_uplink_h": 0.037510826666666684,
+    "downlink_attempts": 80,
+    "gateway_forwarded": 281,
+    "samples_collected": 569,
+    "uplinks": 314,
+    "uplinks_heard": 247
    },
    "delivery_oracle": 149,
    "delivery_oracle_free_tx": 154,
@@ -6918,10 +7496,10 @@
       "soc_initial_wh": 0.02
      },
      "n06": {
-      "consumed_wh": 0.006568113919999999,
+      "consumed_wh": 0.013750977023999997,
       "dead_at_s": null,
       "deficit_s": 0,
-      "harvested_wh": 0.0065681139200000176,
+      "harvested_wh": 0.013750977024000043,
       "soc_final_wh": 0.02,
       "soc_initial_wh": 0.02
      },
@@ -6993,27 +7571,47 @@
     "slots_matched_by_collection": 21
    },
    "exec_layer": "naive",
+   "gate": null,
    "hazard": {
     "hold_every": 0,
     "hold_s": 0
    },
    "intent_ledger": {
-    "change": 29,
+    "change": 31,
     "dedup": 0,
-    "expired": 0,
+    "expired": 3,
     "fenced": 0,
-    "generated": 164,
-    "landed": 55,
+    "generated": 162,
+    "landed": 56,
     "lost": 0,
-    "queued_left": 17,
-    "refused": 92,
+    "queued_left": 15,
+    "refused": 88,
     "rejected": 0,
-    "same_value": 26,
-    "sent": 72,
-    "speculative": 26,
+    "same_value": 25,
+    "sent": 74,
+    "speculative": 25,
     "stale_gen": 0
    },
-   "intent_mismatch_s": 198240,
+   "intent_mismatch_s": 277560,
+   "intent_reason": {
+    "generated": {
+     "resend": 0,
+     "target_change": 106,
+     "unknown_state": 56
+    },
+    "note": "生成原因只有三类：无回执（unknown_state）/目标变了（target_change）/重发（resend）。`refused` 是按差额算的，因为拿不到下行机会的那些意图不会进 `sent` 侧。",
+    "refused": {
+     "resend": 0,
+     "target_change": 60,
+     "unknown_state": 28
+    },
+    "sent": {
+     "resend": 0,
+     "target_change": 46,
+     "unknown_state": 28
+    },
+    "total_generated": 162
+   },
    "mixed_config_s": 88200,
    "n_obligations": 189,
    "not_applicable": {
@@ -7040,7 +7638,7 @@
    },
    "recovery": null,
    "routine": {
-    "aoi_mean_s": 4581.664670658683,
+    "aoi_mean_s": 4574.479041916167,
     "censored": 0,
     "delivered": 149,
     "latency_mean_s": 2724.1610738255035,
@@ -7050,7 +7648,13 @@
     "n": 168,
     "no_observation_s": 54000
    },
-   "seed": 3
+   "seed": 3,
+   "skip_reasons": {
+    "at_target": 1435,
+    "at_target_evidence_stale": 869,
+    "dwell": 2626,
+    "in_flight": 5909
+   }
   },
   {
    "access_blocked": 0,
@@ -7076,24 +7680,24 @@
     }
    },
    "command_counters": {
-    "commands_delivered": 57,
-    "commands_refused": 12,
-    "commands_sent": 66,
+    "commands_delivered": 56,
+    "commands_refused": 20,
+    "commands_sent": 74,
     "deduplicated": 0,
     "fenced": 0,
     "stale_generation_dropped": 0,
     "writes_changed": 31,
-    "writes_same_value": 26,
-    "writes_speculative": 26
+    "writes_same_value": 25,
+    "writes_speculative": 25
    },
    "communication": {
-    "airtime_downlink_h": 0.004213191111111104,
-    "airtime_uplink_h": 0.026055395555555555,
-    "downlink_attempts": 92,
-    "gateway_forwarded": 267,
-    "samples_collected": 593,
-    "uplinks": 321,
-    "uplinks_heard": 233
+    "airtime_downlink_h": 0.004167395555555548,
+    "airtime_uplink_h": 0.02718264888888889,
+    "downlink_attempts": 91,
+    "gateway_forwarded": 269,
+    "samples_collected": 603,
+    "uplinks": 324,
+    "uplinks_heard": 235
    },
    "delivery_oracle": 157,
    "delivery_oracle_free_tx": 168,
@@ -7178,10 +7782,10 @@
       "soc_initial_wh": 0.02
      },
      "n03": {
-      "consumed_wh": 0.006561806080000001,
+      "consumed_wh": 0.0065545520640000006,
       "dead_at_s": null,
       "deficit_s": 0,
-      "harvested_wh": 0.006561806080000024,
+      "harvested_wh": 0.006554552064000026,
       "soc_final_wh": 0.02,
       "soc_initial_wh": 0.02
      },
@@ -7210,11 +7814,11 @@
       "soc_initial_wh": 0.02
      },
      "n07": {
-      "consumed_wh": 0.013809813119999998,
+      "consumed_wh": 0.018754370048000013,
       "dead_at_s": null,
       "deficit_s": 0,
       "harvested_wh": 0.002016885760000007,
-      "soc_final_wh": 0.008207072639999993,
+      "soc_final_wh": 0.0032625157119999916,
       "soc_initial_wh": 0.02
      },
      "n10": {
@@ -7277,6 +7881,7 @@
     "slots_matched_by_collection": 21
    },
    "exec_layer": "naive",
+   "gate": null,
    "hazard": {
     "hold_every": 0,
     "hold_s": 0
@@ -7284,21 +7889,40 @@
    "intent_ledger": {
     "change": 31,
     "dedup": 0,
-    "expired": 0,
+    "expired": 6,
     "fenced": 0,
-    "generated": 78,
-    "landed": 57,
+    "generated": 94,
+    "landed": 56,
     "lost": 0,
-    "queued_left": 9,
-    "refused": 12,
+    "queued_left": 12,
+    "refused": 20,
     "rejected": 0,
-    "same_value": 26,
-    "sent": 66,
-    "speculative": 26,
+    "same_value": 25,
+    "sent": 74,
+    "speculative": 25,
     "stale_gen": 0
    },
-   "intent_mismatch_s": 380280,
-   "mixed_config_s": 132300,
+   "intent_mismatch_s": 419640,
+   "intent_reason": {
+    "generated": {
+     "resend": 0,
+     "target_change": 66,
+     "unknown_state": 28
+    },
+    "note": "生成原因只有三类：无回执（unknown_state）/目标变了（target_change）/重发（resend）。`refused` 是按差额算的，因为拿不到下行机会的那些意图不会进 `sent` 侧。",
+    "refused": {
+     "resend": 0,
+     "target_change": 20,
+     "unknown_state": 0
+    },
+    "sent": {
+     "resend": 0,
+     "target_change": 46,
+     "unknown_state": 28
+    },
+    "total_generated": 94
+   },
+   "mixed_config_s": 128700,
    "n_obligations": 189,
    "not_applicable": {
     "config_mismatch_s": "最小实例没有外部配置要求，无法定义'错误配置'；返回 None 而不是 0。",
@@ -7334,7 +7958,13 @@
     "n": 168,
     "no_observation_s": 43200
    },
-   "seed": 4
+   "seed": 4,
+   "skip_reasons": {
+    "at_target": 2617,
+    "at_target_evidence_stale": 240,
+    "dwell": 605,
+    "in_flight": 7411
+   }
   },
   {
    "access_blocked": 0,
@@ -7361,8 +7991,8 @@
    },
    "command_counters": {
     "commands_delivered": 53,
-    "commands_refused": 56,
-    "commands_sent": 56,
+    "commands_refused": 66,
+    "commands_sent": 58,
     "deduplicated": 0,
     "fenced": 0,
     "stale_generation_dropped": 0,
@@ -7371,9 +8001,9 @@
     "writes_speculative": 26
    },
    "communication": {
-    "airtime_downlink_h": 0.0036178488888888825,
+    "airtime_downlink_h": 0.003572053333333327,
     "airtime_uplink_h": 0.04323356444444448,
-    "downlink_attempts": 79,
+    "downlink_attempts": 78,
     "gateway_forwarded": 179,
     "samples_collected": 620,
     "uplinks": 333,
@@ -7518,11 +8148,11 @@
       "soc_initial_wh": 0.02
      },
      "n13": {
-      "consumed_wh": 0.019736288768000015,
+      "consumed_wh": 0.019729034752000014,
       "dead_at_s": null,
       "deficit_s": 7140,
       "harvested_wh": 0.0,
-      "soc_final_wh": 0.0002637112319999893,
+      "soc_final_wh": 0.00027096524799998916,
       "soc_initial_wh": 0.02
      },
      "n15": {
@@ -7561,6 +8191,7 @@
     "slots_matched_by_collection": 21
    },
    "exec_layer": "naive",
+   "gate": null,
    "hazard": {
     "hold_every": 0,
     "hold_s": 0
@@ -7568,20 +8199,39 @@
    "intent_ledger": {
     "change": 27,
     "dedup": 0,
-    "expired": 0,
+    "expired": 3,
     "fenced": 0,
-    "generated": 112,
+    "generated": 124,
     "landed": 53,
     "lost": 0,
-    "queued_left": 3,
-    "refused": 56,
+    "queued_left": 2,
+    "refused": 66,
     "rejected": 0,
     "same_value": 26,
-    "sent": 56,
+    "sent": 58,
     "speculative": 26,
     "stale_gen": 0
    },
-   "intent_mismatch_s": 155280,
+   "intent_mismatch_s": 198360,
+   "intent_reason": {
+    "generated": {
+     "resend": 0,
+     "target_change": 96,
+     "unknown_state": 28
+    },
+    "note": "生成原因只有三类：无回执（unknown_state）/目标变了（target_change）/重发（resend）。`refused` 是按差额算的，因为拿不到下行机会的那些意图不会进 `sent` 侧。",
+    "refused": {
+     "resend": 0,
+     "target_change": 66,
+     "unknown_state": 0
+    },
+    "sent": {
+     "resend": 0,
+     "target_change": 30,
+     "unknown_state": 28
+    },
+    "total_generated": 124
+   },
    "mixed_config_s": 108900,
    "n_obligations": 189,
    "not_applicable": {
@@ -7618,7 +8268,13 @@
     "n": 168,
     "no_observation_s": 10800
    },
-   "seed": 5
+   "seed": 5,
+   "skip_reasons": {
+    "at_target": 1635,
+    "at_target_evidence_stale": 1687,
+    "dwell": 1926,
+    "in_flight": 5610
+   }
   },
   {
    "access_blocked": 0,
@@ -7645,23 +8301,23 @@
    },
    "command_counters": {
     "commands_delivered": 62,
-    "commands_refused": 4,
-    "commands_sent": 64,
+    "commands_refused": 6,
+    "commands_sent": 70,
     "deduplicated": 0,
     "fenced": 0,
     "stale_generation_dropped": 0,
-    "writes_changed": 36,
-    "writes_same_value": 26,
+    "writes_changed": 35,
+    "writes_same_value": 27,
     "writes_speculative": 26
    },
    "communication": {
-    "airtime_downlink_h": 0.003663644444444438,
-    "airtime_uplink_h": 0.028318435555555504,
-    "downlink_attempts": 80,
-    "gateway_forwarded": 343,
+    "airtime_downlink_h": 0.0037094399999999935,
+    "airtime_uplink_h": 0.027866453333333294,
+    "downlink_attempts": 81,
+    "gateway_forwarded": 339,
     "samples_collected": 723,
-    "uplinks": 417,
-    "uplinks_heard": 309
+    "uplinks": 408,
+    "uplinks_heard": 305
    },
    "delivery_oracle": 166,
    "delivery_oracle_free_tx": 168,
@@ -7810,10 +8466,10 @@
       "soc_initial_wh": 0.02
      },
      "n15": {
-      "consumed_wh": 0.030461251456000045,
+      "consumed_wh": 0.03019891148800005,
       "dead_at_s": null,
       "deficit_s": 0,
-      "harvested_wh": 0.030461251456000107,
+      "harvested_wh": 0.03019891148800011,
       "soc_final_wh": 0.02,
       "soc_initial_wh": 0.02
      },
@@ -7845,28 +8501,48 @@
     "slots_matched_by_collection": 21
    },
    "exec_layer": "naive",
+   "gate": null,
    "hazard": {
     "hold_every": 0,
     "hold_s": 0
    },
    "intent_ledger": {
-    "change": 36,
+    "change": 35,
     "dedup": 0,
-    "expired": 0,
+    "expired": 5,
     "fenced": 0,
-    "generated": 68,
+    "generated": 76,
     "landed": 62,
     "lost": 0,
-    "queued_left": 2,
-    "refused": 4,
+    "queued_left": 3,
+    "refused": 6,
     "rejected": 0,
-    "same_value": 26,
-    "sent": 64,
+    "same_value": 27,
+    "sent": 70,
     "speculative": 26,
     "stale_gen": 0
    },
-   "intent_mismatch_s": 260160,
-   "mixed_config_s": 86400,
+   "intent_mismatch_s": 342720,
+   "intent_reason": {
+    "generated": {
+     "resend": 0,
+     "target_change": 48,
+     "unknown_state": 28
+    },
+    "note": "生成原因只有三类：无回执（unknown_state）/目标变了（target_change）/重发（resend）。`refused` 是按差额算的，因为拿不到下行机会的那些意图不会进 `sent` 侧。",
+    "refused": {
+     "resend": 0,
+     "target_change": 6,
+     "unknown_state": 0
+    },
+    "sent": {
+     "resend": 0,
+     "target_change": 42,
+     "unknown_state": 28
+    },
+    "total_generated": 76
+   },
+   "mixed_config_s": 97200,
    "n_obligations": 189,
    "not_applicable": {
     "config_mismatch_s": "最小实例没有外部配置要求，无法定义'错误配置'；返回 None 而不是 0。",
@@ -7892,7 +8568,7 @@
    },
    "recovery": null,
    "routine": {
-    "aoi_mean_s": 1914.9162011173185,
+    "aoi_mean_s": 1945.0837988826815,
     "censored": 0,
     "delivered": 166,
     "latency_mean_s": 704.8192771084338,
@@ -7902,7 +8578,13 @@
     "n": 168,
     "no_observation_s": 10800
    },
-   "seed": 6
+   "seed": 6,
+   "skip_reasons": {
+    "at_target": 4836,
+    "at_target_evidence_stale": 702,
+    "dwell": 252,
+    "in_flight": 5092
+   }
   },
   {
    "access_blocked": 0,
@@ -7928,20 +8610,20 @@
     }
    },
    "command_counters": {
-    "commands_delivered": 65,
-    "commands_refused": 62,
-    "commands_sent": 68,
+    "commands_delivered": 64,
+    "commands_refused": 68,
+    "commands_sent": 70,
     "deduplicated": 0,
     "fenced": 0,
     "stale_generation_dropped": 0,
     "writes_changed": 39,
-    "writes_same_value": 26,
-    "writes_speculative": 26
+    "writes_same_value": 25,
+    "writes_speculative": 25
    },
    "communication": {
-    "airtime_downlink_h": 0.00384682666666666,
+    "airtime_downlink_h": 0.0038010311111111045,
     "airtime_uplink_h": 0.028603164444444353,
-    "downlink_attempts": 84,
+    "downlink_attempts": 83,
     "gateway_forwarded": 293,
     "samples_collected": 570,
     "uplinks": 338,
@@ -8094,11 +8776,11 @@
       "soc_initial_wh": 0.02
      },
      "n15": {
-      "consumed_wh": 0.011373853311999998,
+      "consumed_wh": 0.011366599295999999,
       "dead_at_s": null,
       "deficit_s": 0,
       "harvested_wh": 0.0,
-      "soc_final_wh": 0.00862614668799999,
+      "soc_final_wh": 0.008633400703999991,
       "soc_initial_wh": 0.02
      },
      "n16": {
@@ -8129,6 +8811,7 @@
     "slots_matched_by_collection": 21
    },
    "exec_layer": "naive",
+   "gate": null,
    "hazard": {
     "hold_every": 0,
     "hold_s": 0
@@ -8136,21 +8819,40 @@
    "intent_ledger": {
     "change": 39,
     "dedup": 0,
-    "expired": 0,
+    "expired": 3,
     "fenced": 0,
-    "generated": 130,
-    "landed": 65,
+    "generated": 138,
+    "landed": 64,
     "lost": 0,
     "queued_left": 3,
-    "refused": 62,
+    "refused": 68,
     "rejected": 0,
-    "same_value": 26,
-    "sent": 68,
-    "speculative": 26,
+    "same_value": 25,
+    "sent": 70,
+    "speculative": 25,
     "stale_gen": 0
    },
-   "intent_mismatch_s": 481320,
-   "mixed_config_s": 89100,
+   "intent_mismatch_s": 517200,
+   "intent_reason": {
+    "generated": {
+     "resend": 0,
+     "target_change": 110,
+     "unknown_state": 28
+    },
+    "note": "生成原因只有三类：无回执（unknown_state）/目标变了（target_change）/重发（resend）。`refused` 是按差额算的，因为拿不到下行机会的那些意图不会进 `sent` 侧。",
+    "refused": {
+     "resend": 0,
+     "target_change": 68,
+     "unknown_state": 0
+    },
+    "sent": {
+     "resend": 0,
+     "target_change": 42,
+     "unknown_state": 28
+    },
+    "total_generated": 138
+   },
+   "mixed_config_s": 85500,
    "n_obligations": 189,
    "not_applicable": {
     "config_mismatch_s": "最小实例没有外部配置要求，无法定义'错误配置'；返回 None 而不是 0。",
@@ -8186,7 +8888,13 @@
     "n": 168,
     "no_observation_s": 7200
    },
-   "seed": 7
+   "seed": 7,
+   "skip_reasons": {
+    "at_target": 3093,
+    "at_target_evidence_stale": 150,
+    "dwell": 2006,
+    "in_flight": 5602
+   }
   },
   {
    "access_blocked": 0,
@@ -8212,24 +8920,24 @@
     }
    },
    "command_counters": {
-    "commands_delivered": 62,
-    "commands_refused": 30,
-    "commands_sent": 68,
+    "commands_delivered": 60,
+    "commands_refused": 26,
+    "commands_sent": 70,
     "deduplicated": 0,
     "fenced": 0,
     "stale_generation_dropped": 0,
     "writes_changed": 36,
-    "writes_same_value": 26,
-    "writes_speculative": 26
+    "writes_same_value": 24,
+    "writes_speculative": 24
    },
    "communication": {
-    "airtime_downlink_h": 0.004030008888888882,
-    "airtime_uplink_h": 0.03263004444444445,
-    "downlink_attempts": 88,
-    "gateway_forwarded": 237,
-    "samples_collected": 579,
-    "uplinks": 335,
-    "uplinks_heard": 240
+    "airtime_downlink_h": 0.003892622222222215,
+    "airtime_uplink_h": 0.03292273777777778,
+    "downlink_attempts": 85,
+    "gateway_forwarded": 245,
+    "samples_collected": 594,
+    "uplinks": 344,
+    "uplinks_heard": 248
    },
    "delivery_oracle": 160,
    "delivery_oracle_free_tx": 168,
@@ -8306,10 +9014,10 @@
       "soc_initial_wh": 0.02
      },
      "n02": {
-      "consumed_wh": 0.013974808191999998,
+      "consumed_wh": 0.021247408768000017,
       "dead_at_s": null,
       "deficit_s": 0,
-      "harvested_wh": 0.013974808192000043,
+      "harvested_wh": 0.021247408768000058,
       "soc_final_wh": 0.02,
       "soc_initial_wh": 0.02
      },
@@ -8413,6 +9121,7 @@
     "slots_matched_by_collection": 21
    },
    "exec_layer": "naive",
+   "gate": null,
    "hazard": {
     "hold_every": 0,
     "hold_s": 0
@@ -8420,21 +9129,40 @@
    "intent_ledger": {
     "change": 36,
     "dedup": 0,
-    "expired": 0,
+    "expired": 6,
     "fenced": 0,
-    "generated": 98,
-    "landed": 62,
+    "generated": 96,
+    "landed": 60,
     "lost": 0,
-    "queued_left": 6,
-    "refused": 30,
+    "queued_left": 4,
+    "refused": 26,
     "rejected": 0,
-    "same_value": 26,
-    "sent": 68,
-    "speculative": 26,
+    "same_value": 24,
+    "sent": 70,
+    "speculative": 24,
     "stale_gen": 0
    },
-   "intent_mismatch_s": 355200,
-   "mixed_config_s": 97200,
+   "intent_mismatch_s": 391080,
+   "intent_reason": {
+    "generated": {
+     "resend": 0,
+     "target_change": 68,
+     "unknown_state": 28
+    },
+    "note": "生成原因只有三类：无回执（unknown_state）/目标变了（target_change）/重发（resend）。`refused` 是按差额算的，因为拿不到下行机会的那些意图不会进 `sent` 侧。",
+    "refused": {
+     "resend": 0,
+     "target_change": 26,
+     "unknown_state": 0
+    },
+    "sent": {
+     "resend": 0,
+     "target_change": 42,
+     "unknown_state": 28
+    },
+    "total_generated": 96
+   },
+   "mixed_config_s": 93600,
    "n_obligations": 189,
    "not_applicable": {
     "config_mismatch_s": "最小实例没有外部配置要求，无法定义'错误配置'；返回 None 而不是 0。",
@@ -8460,7 +9188,7 @@
    },
    "recovery": null,
    "routine": {
-    "aoi_mean_s": 3698.217877094972,
+    "aoi_mean_s": 3644.586592178771,
     "censored": 0,
     "delivered": 149,
     "latency_mean_s": 1655.03355704698,
@@ -8470,7 +9198,13 @@
     "n": 168,
     "no_observation_s": 10800
    },
-   "seed": 8
+   "seed": 8,
+   "skip_reasons": {
+    "at_target": 2445,
+    "at_target_evidence_stale": 1443,
+    "dwell": 751,
+    "in_flight": 6233
+   }
   },
   {
    "access_blocked": 0,
@@ -8497,8 +9231,8 @@
    },
    "command_counters": {
     "commands_delivered": 64,
-    "commands_refused": 64,
-    "commands_sent": 68,
+    "commands_refused": 66,
+    "commands_sent": 70,
     "deduplicated": 0,
     "fenced": 0,
     "stale_generation_dropped": 0,
@@ -8697,6 +9431,7 @@
     "slots_matched_by_collection": 21
    },
    "exec_layer": "naive",
+   "gate": null,
    "hazard": {
     "hold_every": 0,
     "hold_s": 0
@@ -8704,20 +9439,39 @@
    "intent_ledger": {
     "change": 38,
     "dedup": 0,
-    "expired": 0,
+    "expired": 2,
     "fenced": 0,
-    "generated": 132,
+    "generated": 136,
     "landed": 64,
     "lost": 0,
     "queued_left": 4,
-    "refused": 64,
+    "refused": 66,
     "rejected": 0,
     "same_value": 26,
-    "sent": 68,
+    "sent": 70,
     "speculative": 26,
     "stale_gen": 0
    },
-   "intent_mismatch_s": 479520,
+   "intent_mismatch_s": 522600,
+   "intent_reason": {
+    "generated": {
+     "resend": 0,
+     "target_change": 94,
+     "unknown_state": 42
+    },
+    "note": "生成原因只有三类：无回执（unknown_state）/目标变了（target_change）/重发（resend）。`refused` 是按差额算的，因为拿不到下行机会的那些意图不会进 `sent` 侧。",
+    "refused": {
+     "resend": 0,
+     "target_change": 52,
+     "unknown_state": 14
+    },
+    "sent": {
+     "resend": 0,
+     "target_change": 42,
+     "unknown_state": 28
+    },
+    "total_generated": 136
+   },
    "mixed_config_s": 98100,
    "n_obligations": 189,
    "not_applicable": {
@@ -8754,7 +9508,13 @@
     "n": 168,
     "no_observation_s": 54000
    },
-   "seed": 9
+   "seed": 9,
+   "skip_reasons": {
+    "at_target": 2644,
+    "at_target_evidence_stale": 165,
+    "dwell": 1947,
+    "in_flight": 6096
+   }
   }
  ]
 }
