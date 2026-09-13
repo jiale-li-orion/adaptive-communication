@@ -22,6 +22,45 @@ OP_SET_SAMPLING_INTERVAL = "set_sampling_interval"
 
 
 @dataclass
+class SocObservationModel:
+    """**攻击方法唯一依赖的那个信息。** 反馈策略读的是节点上报的 `soc_wh`；现实中这个量会
+    延迟、量化、有偏，报告本身也会丢。本结构把这四件事参数化，用来做反证测试。
+
+    - `max_age_s`：超过这个年龄的观测视为**不可用**（返回 None，策略必须按"不知道"处理）；
+    - `noise_wh`：均匀噪声幅度（确定性，由 seed 与节点、观测时刻寻址）；
+    - `bias`：乘性偏置（例如电量估计系统性高估）；
+    - `loss_p`：报告丢失概率。
+
+    `noise/bias/loss` 都用 `stable_uniform` 寻址，因此同一 (seed, 节点, 观测时刻) 永远给出同一结果，
+    实验可复现。默认全零 = 完美观测。
+    """
+
+    max_age_s: int | None = None
+    noise_wh: float = 0.0
+    bias: float = 1.0
+    loss_p: float = 0.0
+    seed: int = 0
+
+    def observe(self, node_id: str, raw_soc: float | None, observed_at: int | None,
+                now_s: int):
+        """返回策略**看到**的 SoC；None 表示这份观测不可用。"""
+        if raw_soc is None or observed_at is None:
+            return None
+        if self.loss_p > 0.0:
+            from deterministic import stable_uniform
+            if stable_uniform(self.seed, "socdrop", node_id, observed_at) < self.loss_p:
+                return None
+        if self.max_age_s is not None and now_s - observed_at > self.max_age_s:
+            return None
+        value = raw_soc * self.bias
+        if self.noise_wh > 0.0:
+            from deterministic import stable_uniform
+            u = stable_uniform(self.seed, "socnoise", node_id, observed_at)
+            value += (u - 0.5) * 2.0 * self.noise_wh
+        return max(0.0, value)
+
+
+@dataclass
 class CenterView:
     """中心在 t 时刻**合法知道**的一切。除此之外它什么都不知道。"""
 
@@ -35,6 +74,16 @@ class CenterView:
     newest_taken_at: dict[str, int] = field(default_factory=dict)
     #: 已经排在网关队列里、还没送达的节点。中心不该对同一个节点重复下单。
     in_flight: frozenset = frozenset()
+    #: **状态观测模型**。默认完美；做反证测试时把它调坏。
+    soc_model: SocObservationModel = field(default_factory=SocObservationModel)
+
+    def soc_of(self, node_id: str) -> float | None:
+        """策略**看到**的电量。它可能比真实值旧、脏、偏，或者干脆没到。"""
+        snap = self.reports.get(node_id)
+        if not snap:
+            return None
+        return self.soc_model.observe(node_id, snap.get("soc_wh"),
+                                      self.report_at.get(node_id), self.t_s)
 
     def aoi_s(self, node_id: str) -> int | None:
         """中心视角的 AoI。**从未收到过任何样本时返回 None**，不得当成 0。"""
@@ -257,7 +306,7 @@ class EnergyAwarePolicy(DenseSamplingPolicy):
             if last is not None and view.t_s - last < self.dwell_s:
                 continue
             snap = view.reports.get(nid) or {}
-            soc = snap.get("soc_wh")
+            soc = view.soc_of(nid)
             if soc is None:
                 out.append((nid, self.stamp(nid, op=OP_SET_REPORT_PERIOD,
                                             period_s=self.sparse_period_s)))

@@ -433,6 +433,9 @@ class Instance:
         #: 中心下发的**意图**日志：(t_s, node_id, 目标周期)。用于算"中心自己的意图有没有在位"。
         #: 它与"外部配置要求"不同——v1.1 §9 只对后者算错配时长，这里是意图达成度，不是正确性。
         self.intent_log: list[tuple[int, str, int]] = []
+        #: 状态观测模型，由 runner 注入。默认完美观测。
+        from center import SocObservationModel as _SocModel
+        self.soc_model = _SocModel()
         self.held_dispatched = 0
 
     # -------------------------------------------------- 一个 tick
@@ -538,7 +541,7 @@ class Instance:
             nid for nid in self.nodes if self.plane.queued_count(nid) > 0)
         return CenterView(t_s=t_s, node_ids=tuple(self.nodes), reports=self.center.reports,
                           report_at=self.center.report_at, newest_taken_at=newest,
-                          in_flight=in_flight)
+                          in_flight=in_flight, soc_model=self.soc_model)
 
     def _send_command(self, node_id: str, payload: dict, t_s: int) -> None:
         """把一条意图放进回传。**它此刻还没有到达任何地方。**

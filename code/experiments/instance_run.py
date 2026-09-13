@@ -32,7 +32,7 @@ from deployment import build_deployment
 from exogenous import (ObligationSet, constant_harvest, displacement_series, hetero_harvest,
                        rule_obligations_for_truth, routine_obligations_by_node,
                        wang_fragment_truth)
-from center import ARMS, ClairvoyantStaticSelector, build_policy
+from center import ARMS, ClairvoyantStaticSelector, SocObservationModel, build_policy
 from network import DeviceProfile, Instance, nodes_from
 from scoring import evaluate
 
@@ -49,6 +49,8 @@ def one_seed(seed: int, task_hours: float, tail_hours: float,
              access_outage_h: float = 0.0, access_outage_start_h: float = 4.0,
              blackout_start_h: float = 0.0,
              blackout_frac: float = 0.0,
+             soc_max_age_s: int | None = None, soc_noise_wh: float = 0.0,
+             soc_bias: float = 1.0, soc_loss_p: float = 0.0,
              capacity_wh: float = 0.05, low_frac: float = 0.4,
              low_wh_per_hour: float = 0.005) -> dict:
     hours = task_hours + tail_hours
@@ -132,6 +134,8 @@ def one_seed(seed: int, task_hours: float, tail_hours: float,
         lo, hi = int(outage_start_h), int(outage_start_h + outage_hours)
         inst.plane.backhaul_gate = lambda hour, _lo=lo, _hi=hi: not (_lo <= hour < _hi)
         outage = (lo * 3600, hi * 3600)
+    inst.soc_model = SocObservationModel(max_age_s=soc_max_age_s, noise_wh=soc_noise_wh,
+                                         bias=soc_bias, loss_p=soc_loss_p, seed=seed)
     log = inst.run(int(hours))
     res = evaluate(obligations, log, int(hours), nodes.keys(),
                    battery={k: v.power.to_dict() for k, v in nodes.items()},
@@ -185,6 +189,10 @@ def main() -> None:
     ap.add_argument("--event-spacing-s", type=int, default=300)
     ap.add_argument("--arms", default="local",
                     help="逗号分隔的中心策略，见 instance/center.py 的 ARMS")
+    ap.add_argument("--soc-max-age-s", type=int, default=None)
+    ap.add_argument("--soc-noise-wh", type=float, default=0.0)
+    ap.add_argument("--soc-bias", type=float, default=1.0)
+    ap.add_argument("--soc-loss-p", type=float, default=0.0)
     ap.add_argument("--blackout-start-h", type=float, default=0.0,
                     help="从第几小时起切断部分站点的采能（节点失电）")
     ap.add_argument("--blackout-frac", type=float, default=0.0)
@@ -215,7 +223,9 @@ def main() -> None:
                      access_outage_h=args.access_outage_h,
                      access_outage_start_h=args.access_outage_start_h,
                      blackout_start_h=args.blackout_start_h,
-                     blackout_frac=args.blackout_frac)
+                     blackout_frac=args.blackout_frac,
+                     soc_max_age_s=args.soc_max_age_s, soc_noise_wh=args.soc_noise_wh,
+                     soc_bias=args.soc_bias, soc_loss_p=args.soc_loss_p)
             for a in arm_names for L in layers for s in range(args.seeds)]
 
     # 聚合：**按臂分组**。分母类用求和天然是整数，时延与比率类用逐种子均值。
