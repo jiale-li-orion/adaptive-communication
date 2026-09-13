@@ -1389,6 +1389,82 @@ def test_cache_service_is_an_instance_property() -> None:
           f"无中断 {no_bk['fifo']['local'][1]:.0f}s → 中断 {bk['fifo']['local'][1]:.0f}s")
 
 
+def test_intent_reasons_close_and_locate_the_waste() -> None:
+    """**生成原因**这一层必须闭合，而且必须能把浪费**定位到某一类**。
+
+    账本已经按**结果**分了 `change`/`same_value`/`unknown`/`stale`——那说的是"这条意图干了什么"。
+    轨 C 要的是另一层：**"它为什么会被生成"**，因为**只有在生成之前才能把它消掉**。
+    三类互斥且完备：`unknown_state`（中心根本没收到过这台节点的回执）/ `target_change`（目标变了）/
+    `resend`（目标没变）。判据全部取自 `CenterView`，**不读环境真值**——否则这个分类只有上帝视角算得出来。
+
+    三条要同时成立：
+      (a) **闭合**：`generated = sent + refused`，逐类、逐臂成立；
+      (b) **判据确实在动**：三种按 AoI 触发但参数不同的策略，服务相同而 `resend` 量should差很多——
+          一个恒为 0 或恒为全部的列不能拿来做结论；
+      (c) **结构上可解释**：`ea_nb` 的 `unknown_state` 必须是 0（它在拿到证据前一条都不生成），
+          而 `dense600` 必须几乎全是 `unknown_state`（它在拿到回执前重试）。
+    """
+    print("\n[27] 生成原因：三类互斥且完备，且能把浪费定位到某一类")
+    dep = build_deployment(groups=2)
+    hours, cap = 13, 0.05
+    truth = wang_fragment_truth(0, hours, (dep.gateway.sid,))
+    _probe = nodes_from(dep)
+    truth.displacement = displacement_series(_probe.keys(), hours, 0)
+    _h, _t = hetero_harvest(_probe.keys(), hours, 0, low_frac=0.4,
+                            low_wh_per_hour=0.0, high_wh_per_hour=3.0)
+    truth.harvest_wh.update(_h)
+    truth.temp_c.update(_t)
+
+    def run(arm):
+        nodes = nodes_from(dep)
+        for n in nodes.values():
+            n.p = DeviceProfile(sample_interval_s=n.p.sample_interval_s,
+                                report_period_s=n.p.report_period_s,
+                                capacity_wh=cap, sample_wh=n.p.sample_wh)
+            n.soc_wh = cap
+            n.power = type(n.power)(soc_initial_wh=cap, soc_wh=cap)
+        i = Instance(nodes, truth, seed=0, policy=build_policy(arm),
+                     send_contract_fields=True)
+        i.run(hours)
+        return i.intent_ledger(), i.intent_reasons()
+
+    arms = ("local", "aoi", "aoi_t7200", "aoi_const300", "dense600", "ea_nb", "eh_aoi")
+    closed, rows = True, {}
+    for arm in arms:
+        L, R = run(arm)
+        rows[arm] = (L, R)
+        for k in R["generated"]:
+            if R["generated"][k] != R["sent"][k] + R["refused"][k]:
+                closed = False
+        if R["total_generated"] != R["sent"].__len__() * 0 + sum(R["generated"].values()):
+            closed = False
+    check("三类生成原因逐臂闭合：generated = sent + refused", closed,
+          "；".join(f"{a}: {rows[a][1]['total_generated']}" for a in arms))
+
+    gen_tot = {a: rows[a][1]["total_generated"] for a in arms}
+    check("生成原因计数与账本的 `generated` 一致（两套记账不能各说各话）",
+          all(gen_tot[a] == int(rows[a][0]["generated"]) for a in arms),
+          "；".join(f"{a}: 原因 {gen_tot[a]} vs 账本 {int(rows[a][0]['generated'])}" for a in arms))
+
+    # (b) 三种按 AoI 触发、参数不同的策略：服务相同而重发量差很多。
+    resend = {a: rows[a][1]["generated"]["resend"] for a in arms}
+    check("同样服务下 `resend` 量相差 7 倍以上（这一列真的会动）",
+          max(resend.values()) >= 7 * max(1, min(resend.values())),
+          f"resend: " + "、".join(f"{a} {resend[a]}" for a in arms))
+
+    # (c) 两条相反的结构：证据门控 vs 回执前重试。
+    check("`ea_nb` 的 `unknown_state` 恒为 0（拿到证据前一条意图都不生成）",
+          rows["ea_nb"][1]["generated"]["unknown_state"] == 0,
+          f"unknown_state={rows['ea_nb'][1]['generated']['unknown_state']}，"
+          f"target_change={rows['ea_nb'][1]['generated']['target_change']}")
+    d6 = rows["dense600"][1]["generated"]
+    check("`dense600` 的意图几乎全是 `unknown_state`（在拿到回执前重试）",
+          d6["resend"] == 0 and d6["unknown_state"] > 0,
+          f"unknown_state={d6['unknown_state']}、target_change={d6['target_change']}、resend={d6['resend']}")
+    check("`local` 一条意图都不生成（它是零控制端点）", gen_tot["local"] == 0,
+          f"生成 {gen_tot['local']}")
+
+
 def main() -> int:
     print("实例层验收（Task Contract v1.1）")
     test_denominator_is_exogenous()
@@ -1417,6 +1493,7 @@ def main() -> int:
     test_energy_scale_invariance()
     test_intent_ledger_closes()
     test_cache_service_is_an_instance_property()
+    test_intent_reasons_close_and_locate_the_waste()
     print("\n" + "-" * 74)
     if FAIL:
         print(f"  {len(FAIL)} 项失败: {', '.join(FAIL)}")

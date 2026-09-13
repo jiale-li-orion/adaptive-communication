@@ -263,6 +263,7 @@ def one_seed(seed: int, task_hours: float, tail_hours: float,
         "delivery_oracle_free_tx": _delivery_free,
         "delivery_oracle_mid": _delivery_mid,
         "intent_ledger": inst.intent_ledger(),
+        "intent_reason": inst.intent_reasons(),
         "autonomy_margin": margin_mean,
         "autonomy_margin_min": margin_min,
         "command_counters": dict(inst.counters),
@@ -495,6 +496,13 @@ def main() -> None:
             "intent_stale_gen": mean([r["intent_ledger"]["stale_gen"] for r in rs]),
             "intent_refused": mean([r["intent_ledger"]["refused"] for r in rs]),
             "intent_expired": mean([r["intent_ledger"]["expired"] for r in rs]),
+            # **生成原因**（轨 C）：三类互斥且完备，`generated[reason] = sent[reason] + refused[reason]`。
+            # 结果侧（change/same_value/unknown/stale）说的是"这条意图干了什么"；
+            # 原因侧说的是"它为什么会被生成"——**只有原因侧能在生成之前把它消掉**。
+            **{f"intent_reason_{k}": mean([r["intent_reason"]["generated"][k] for r in rs])
+               for k in ("unknown_state", "target_change", "resend")},
+            **{f"intent_reason_sent_{k}": mean([r["intent_reason"]["sent"][k] for r in rs])
+               for k in ("unknown_state", "target_change", "resend")},
             # `inf`（初始电量自己就够跑完，采能与可行性无关）不进均值，否则会把均值拉成 inf。
             # **全部为 inf 时报 `None`，不报 0**——报 0 会变成一列看起来有值、实际是回退默认值的
             # 假数据，而 0 在这个定义下恰恰意味着"完全不可行"，正好读反。

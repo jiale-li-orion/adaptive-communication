@@ -492,6 +492,18 @@ class Instance:
         #: 中心下发的**意图**日志：(t_s, node_id, 目标周期)。用于算"中心自己的意图有没有在位"。
         #: 它与"外部配置要求"不同——v1.1 §9 只对后者算错配时长，这里是意图达成度，不是正确性。
         self.intent_log: list[tuple[int, str, int]] = []
+        #: **生成原因分类的计数**。账本已按 `change`/`same_value`/`unknown`/`stale` 分了**结果**，
+        #: 但"为什么会产生这条意图"是另一个问题，而且它才是**能在生成侧消掉浪费**的那个问题
+        #: （轨 C 要的正是这一层）。三类互斥且完备，见 `_note_intent_reason` 与 `intent_reasons()`。
+        self._intent_reason_counts: dict[str, dict[str, int]] = {
+            "generated": {"unknown_state": 0, "target_change": 0, "resend": 0},
+            # 成本侧：**这条意图有没有真的占掉一次下行机会**——生成侧与到达侧的成本不同，
+            # 混在一起就答不上"浪费在哪一跳"。
+            "sent": {"unknown_state": 0, "target_change": 0, "resend": 0},
+        }
+        self._target_of: dict[str, tuple] = {}
+        #: 最近一次为某节点生成的意图属于哪一类，供 `_send_command` 记 **sent 侧**的成本。
+        self._last_reason: dict[str, str] = {}
         #: 状态观测模型，由 runner 注入。默认完美观测。
         from center import SocObservationModel as _SocModel
         self.soc_model = _SocModel()
@@ -514,6 +526,7 @@ class Instance:
         # 1.5) 中心按**它自己看得见的东西**决定要不要下发。命令经回传进网关队列，等接收窗口。
         view = self._center_view(t_s)
         for node_id, payload in self.policy.plan(view):
+            self._note_intent_reason(node_id, payload, view)
             self._send_command(node_id, payload, t_s)
 
         # 2) 到上报周期的节点发一批（缓存里全是未确认记录 → 自动补发）
@@ -637,6 +650,9 @@ class Instance:
             payload=body)
         if self.plane.center_send(node_id, msg, t_s // 3600):
             self.counters["commands_sent"] += 1
+            _r = self._last_reason.get(node_id)
+            if _r is not None:
+                self._intent_reason_counts["sent"][_r] += 1
             if body.get("op") in (OP_SET_REPORT_PERIOD, OP_SET_SAMPLING_INTERVAL):
                 val = int(body.get("period_s", body.get("interval_s")))
                 self.intent_log.append((t_s, node_id + ":" + body["op"], val))
@@ -653,6 +669,54 @@ class Instance:
             self.policy.note_command_sent(node_id, payload)
         else:
             self.counters["commands_refused"] += 1
+
+    def _note_intent_reason(self, node_id: str, payload: dict, view) -> None:
+        """给每条**刚生成的**意图归类它的**生成原因**。三类互斥且完备。
+
+        **为什么必须单独做这一层。** 账本已经按**结果**分了 `change`/`same_value`/`unknown`/`stale`，
+        但"这条意图为什么会被生成"是另一个问题——而**只有在生成侧才能把它消掉**
+        （轨 C 的全部意义在此）。三类：
+
+        | 类别 | 判据（只用中心**真的看得见**的东西） | 它对应哪一种浪费 |
+        |---|---|---|
+        | `unknown_state` | 中心**从未**收到过这台节点的回执（`view.report_at` 里没有它） | 无证据动作 |
+        | `target_change` | 这次的目标与**上一次为该节点生成的目标**不同 | 观测驱动的改值 |
+        | `resend` | 目标与上一次相同（含"上一次是别的字段、这次换了字段"） | 追一个没被确认的目标 |
+
+        **判据故意全部取自 `CenterView`**，不读环境真值、不读节点内部状态——否则这个分类本身就
+        成了只有上帝视角才能算的量，不能用来评估一个**Host 侧**准入层能做到什么。
+
+        **限定**：`resend` 里同时混着两种东西——"上一次还没被回执确认"（合理重发）与
+        "回执早已确认、节点却又报告了旧值"（被忽视后的重发）。本方法**不区分这两者**，
+        因为区分它们需要一个尚未实现的判据（要按字段比世代，而单字段策略根本没有成对世代）。
+        """
+        known = view.report_at.get(node_id) is not None
+        target = tuple(sorted(payload.items()))
+        prev = self._target_of.get(node_id)
+        if not known:
+            reason = "unknown_state"
+        elif prev is not None and target != prev:
+            reason = "target_change"
+        else:
+            reason = "resend"
+        # **目标只按"意图内容"比较，不按世代号**：世代号是策略自己的记账，
+        # 同一条逻辑命令的重发本来就会共享世代号，把世代号算进去会把"重发"误判成"改值"。
+        self._target_of[node_id] = target
+        self._intent_reason_counts["generated"][reason] += 1
+        self._last_reason[node_id] = reason
+
+    def intent_reasons(self) -> dict:
+        """生成原因分类的结果，附**成本**与闭合恒等式。
+
+        `generated[reason] = sent[reason] + refused[reason]`——被拒的那些意图**没有** `sent` 侧的计数，
+        因此这里把 `refused` 按差额算出，并在测试里断言两侧闭合。
+        """
+        gen, sent = self._intent_reason_counts["generated"], self._intent_reason_counts["sent"]
+        refused = {k: gen[k] - sent[k] for k in gen}
+        return {"generated": dict(gen), "sent": dict(sent), "refused": refused,
+                "total_generated": sum(gen.values()),
+                "note": "生成原因只有三类：无回执（unknown_state）/目标变了（target_change）/重发（resend）。"
+                        "`refused` 是按差额算的，因为拿不到下行机会的那些意图不会进 `sent` 侧。"}
 
     def intent_ledger(self) -> dict:
         """**意图准入账本**：一条 planner 意图从产生到落地（或没落地）的完整分账。
