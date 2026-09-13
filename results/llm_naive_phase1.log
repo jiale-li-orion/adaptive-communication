@@ -1,0 +1,12 @@
+协议 llm_naive_v1  sha256=11a0ce4481756392  model=deepseek-flash  thinking={'type': 'disabled'}
+== adm_noout ==
+  planner invocations = 778
+  semantic episodes   = 0（closed 0）
+Traceback (most recent call last):
+  File "/home/orion/Communications/应急通信/project1/agentic communication/code/analysis/llm_naive_baseline.py", line 298, in <module>
+    results.append(r)
+         ^^^^^^
+  File "/home/orion/Communications/应急通信/project1/agentic communication/code/analysis/llm_naive_baseline.py", line 281, in main
+    # 只验"prompt 组装 + 调用 + 解析 + 动作落地"这条管道，**不构成任何结论**
+                                  ^^^^^^^^^^^^^^^^^^
+TypeError: unsupported format string passed to NoneType.__format__

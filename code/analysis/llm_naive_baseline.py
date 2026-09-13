@@ -74,6 +74,12 @@ def protocol_guard() -> None:
                            "一个 protocol_id 对应一次实验，请新建 protocol_id")
 
 
+def _fmt(v, nd: int = 2) -> str:
+    """`None` 明确的占位符。**`None` 上直接 `:.2f` 会 TypeError**——第一版就这么崩在第一个条件之后，
+    把 `adm_noout` 的结果细节（动作分布、service、tokens）全丢在崩掉的进程内存里。"""
+    return "—" if v is None else f"{v:.{nd}f}"
+
+
 class BudgetExceeded(RuntimeError):
     """任一硬上限触发即停——**不允许"再跑一次看看"**。"""
 
@@ -155,6 +161,7 @@ def ask(state: dict, budget: Budget) -> dict:
                   int(u.get("completion_tokens") or 0))
     budget.per_epoch.append({"in": u.get("prompt_tokens"), "out": u.get("completion_tokens")})
     txt = (doc["choices"][0]["message"].get("content") or "").strip()
+    _LAST["raw"] = txt[:200]
     try:
         return json.loads(txt) if txt else {"action": "noop", "_parse": "empty"}
     except json.JSONDecodeError:
@@ -175,6 +182,9 @@ class LLMNaiPolicy(C.CenterPolicy):
         self.actions: dict = {}
         self.noop = 0
         self.bad = 0
+        #: 原始输出采样：**用来回答"零动作是模型克制，还是我的接口把它判成非法"**
+        self.raw_sample: list = []
+        self.rejects: dict = {}
 
     def plan(self, view):
         if self.call_limit is not None and self.budget.calls >= self.call_limit:
@@ -194,8 +204,15 @@ class LLMNaiPolicy(C.CenterPolicy):
         self.actions[a] = self.actions.get(a, 0) + 1
         nid = act.get("node")
         val = act.get("value")
+        if len(self.raw_sample) < 5:
+            self.raw_sample.append(_LAST.get("raw"))
         if a == "noop" or not nid or nid not in view.node_ids or val is None:
             self.noop += 1
+            why = ("action_noop" if a == "noop" else
+                   "no_node" if not nid else
+                   f"node_not_in_view({nid!r})" if nid not in view.node_ids else
+                   "no_value")
+            self.rejects[why] = self.rejects.get(why, 0) + 1
             _LAST["result"] = "ok_noop" if a == "noop" else f"rejected:{a}"
             return []
         try:
@@ -255,6 +272,8 @@ def run(tag: str, seed: int, budget: Budget, call_limit: int | None = None) -> d
             "terminal": {t: sum(1 for r in rows if r["terminal"] == t)
                          for t in {r["terminal"] for r in rows}},
             "actions": pol.actions, "noop": pol.noop, "bad": pol.bad,
+            "rejects": pol.rejects, "raw_sample": pol.raw_sample,
+            "node_ids_sample": sorted(d["_trace"][0][1:2]) if d["_trace"] else [],
             "routine_delivered": d["routine"]["delivered"],
             "routine_aoi_mean_s": d["routine"]["aoi_mean_s"],
             "in_tok": budget.in_tok, "out_tok": budget.out_tok}
@@ -296,25 +315,29 @@ def main() -> int:
             print(f"⛔ 预算闸门触发（{tag}）：{exc} —— 立即停")
             break
         results.append(r)
+        n_ep = r["episodes"]
         print(f"== {tag} ==")
         print(f"  planner invocations = {r['invocations']}")
         print(f"  semantic episodes   = {r['episodes']}（closed {r['closed']}）")
         _ai = r["amp_intents"]
         _av = r["amp_invocations"]
+        if n_ep == 0:
+            print("  ⚠ **0 个 semantic episode** ⇒ 比值无定义（0/0）。"
+                  "**先查动作分布与原始输出，不要直接解读成\"LLM 克制\"**")
         _wi = r["wasted_intents_per_closed"]
         _wv = r["wasted_invocations_per_closed"]
         print("  **planning amplification（#意图/#episode，与 scripted 可比）= "
-              + ("—" if _ai is None else f"{_ai:.2f}") + "×**"
-              + "（scripted 参照 3.70/4.04/17.56）")
+              + _fmt(_ai) + "×**（单种子参照 3.66/5.42/78.00；3种子汇总 3.70/4.04/17.56）")
         print("  planning amplification（#调用/#episode，含 noop，成本侧）= "
-              + ("—" if _av is None else f"{_av:.2f}") + "×")
-        print("  **wasted per closed effect = 意图侧 "
-              + ("—" if _wi is None else f"{_wi:.2f}") + " / 调用侧 "
-              + ("—" if _wv is None else f"{_wv:.2f}") + "**")
+              + _fmt(_av) + "×")
+        print("  **wasted per closed effect = 意图侧 " + _fmt(_wi)
+              + " / 调用侧 " + _fmt(_wv) + "**")
         print(f"  terminal = {r['terminal']}")
         print(f"  actions = {r['actions']}；noop={r['noop']}；解析失败={r['bad']}")
-        print(f"  service = {r['routine_delivered']:.1f}/168"
-              f"；AoI = {r['routine_aoi_mean_s']:.0f} s（**确认没靠少做事作弊**）")
+        print(f"  **未下达动作的原因分类 = {r['rejects']}**")
+        print(f"  原始输出采样 = {r['raw_sample']}")
+        print(f"  service = {_fmt(r['routine_delivered'],1)}/168"
+              f"；AoI = {_fmt(r['routine_aoi_mean_s'],0)} s（**确认没靠少做事作弊**）")
         print(f"  tokens in/out = {r['in_tok']}/{r['out_tok']}  "
               f"（粗算 ¥{r['in_tok']/1e6*3 + r['out_tok']/1e6*9:.2f} 峰值价）\n")
     if results:
