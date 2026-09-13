@@ -32,7 +32,7 @@ from deployment import build_deployment
 from exogenous import (ObligationSet, constant_harvest, displacement_series, hetero_harvest,
                        rule_obligations_for_truth, routine_obligations_by_node,
                        wang_fragment_truth)
-from center import ARMS, build_policy
+from center import ARMS, OracleDeployPolicy, build_policy
 from network import DeviceProfile, Instance, nodes_from
 from scoring import evaluate
 
@@ -92,7 +92,34 @@ def one_seed(seed: int, task_hours: float, tail_hours: float,
         lo = int(access_outage_start_h * 3600)
         hi = int((access_outage_start_h + access_outage_h) * 3600)
         acc = (lo, hi)
-    inst = Instance(nodes, truth, seed=seed, policy=build_policy(arm),
+    # 上界参考需要知道哪些站点受约束（遮荫或失电）。它读环境真值，**不是可实现策略**，
+    # 只作参照；因此它由 runner 直接构造，不放进 ARMS 供一般调用。
+    if arm == "oracle_deploy":
+        # **上界参考必须是真正可行的判据。** 前两版都错了，而且错法本身有信息量：
+        #   · 第一版按"历史最大采能"判 → 失电从第 4 h 才切断，被切断的节点看起来仍健康；
+        #   · 第二版按"全程采能总和"判 → 0.02 Wh 的电池**存不下** 4 小时采到的 0.2 Wh，
+        #     早段电池满了、采能白白溢出，晚段照样饿死。
+        # 也就是说：**从静态参数推不出正确的逐节点间隔**——那是一个把采能时序、电池容量与
+        # 消耗率耦合起来的动态可行性问题。所以参考必须**逐节点模拟一遍稀疏/加密两条轨迹**，
+        # 取可行的那条。这不是"知道参数"，这是"知道参数并且算过"。
+        feasible = set()
+        for nid in nodes:
+            soc = prof.capacity_wh
+            ok = True
+            for t_s in range(0, int(hours) * 3600, 60):
+                soc = min(prof.capacity_wh, soc + harvest.get(nid, {}).get(t_s, 0.0))
+                if t_s % 300 == 0:
+                    soc -= prof.sample_wh
+                if soc <= 0:
+                    ok = False
+                    break
+            if ok:
+                feasible.add(nid)
+        constrained = frozenset(nid for nid in nodes if nid not in feasible)
+        pol = OracleDeployPolicy(constrained)
+    else:
+        pol = build_policy(arm)
+    inst = Instance(nodes, truth, seed=seed, policy=pol,
                     send_contract_fields=contract, hold_every=hold_every,
                     hold_s=hold_s, access_outage=acc)
     inst.plane.uplink_p_arrive = uplink_p_arrive
@@ -171,8 +198,8 @@ def main() -> None:
 
     arm_names = [a.strip() for a in args.arms.split(",") if a.strip()]
     for a in arm_names:
-        if a not in ARMS:
-            raise SystemExit(f"unknown arm {a!r}; have {sorted(ARMS)}")
+        if a not in ARMS and a != "oracle_deploy":
+            raise SystemExit(f"unknown arm {a!r}; have {sorted(ARMS)} + oracle_deploy")
     layers = [x.strip() for x in args.exec_layers.split(",") if x.strip()]
     runs = [one_seed(s, args.task_hours, args.tail_hours,
                      args.outage_start_h, args.outage_hours, a,

@@ -277,6 +277,43 @@ class EnergyAwarePolicy(DenseSamplingPolicy):
         return out
 
 
+class OracleDeployPolicy(DenseSamplingPolicy):
+    """**上界参考**：知道部署的真实约束（哪些站点被遮荫／失电），据此逐节点设定。
+
+    它读的是**环境真值**，因此**不是一条可实现的策略**，只是"如果完全知道参数，最好能做到
+    什么"的参照。它存在的唯一目的是回答：自适应策略从节点上报里推断出的东西，离"全知"还有多远。
+    """
+
+    def __init__(self, constrained: frozenset, interval_s: int = 300, period_s: int = 900,
+                 sparse_interval_s: int = 3600, sparse_period_s: int = 3600, **kw) -> None:
+        super().__init__(interval_s=interval_s, period_s=period_s, **kw)
+        self.constrained = frozenset(constrained)
+        self.sparse_interval_s = sparse_interval_s
+        self.sparse_period_s = sparse_period_s
+        self.name = "oracle_deploy"
+
+    def plan(self, view: CenterView) -> list[tuple[str, dict]]:
+        out = []
+        for nid in view.node_ids:
+            if nid in view.in_flight:
+                continue
+            last = self._last.get(nid)
+            if last is not None and view.t_s - last < self.dwell_s:
+                continue
+            snap = view.reports.get(nid) or {}
+            sparse = nid in self.constrained
+            want_i = self.sparse_interval_s if sparse else self.interval_s
+            want_p = self.sparse_period_s if sparse else self.period_s
+            if (snap.get("sample_interval_s") == want_i
+                    and snap.get("report_period_s") == want_p):
+                continue
+            self._last[nid] = view.t_s
+            out.append((nid, self.stamp(nid, op=OP_SET_SAMPLING_INTERVAL,
+                                        interval_s=want_i)))
+            out.append((nid, self.stamp(nid, op=OP_SET_REPORT_PERIOD, period_s=want_p)))
+        return out
+
+
 #: 第一轮的对照集合。**四条共享同一套现场自治、硬件与能量**，差别只在中心怎么花机会。
 ARMS: dict[str, type[CenterPolicy]] = {
     "local": LocalPolicy,
