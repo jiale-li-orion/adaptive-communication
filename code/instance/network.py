@@ -432,6 +432,7 @@ class Instance:
                  hold_every: int = 0, hold_s: int = 0, hold_op: str | None = None,
                  atomic_generation: bool = False,
                  access_outage: tuple[int, int] | None = None,
+                 placement: str = "center",
                  trace: bool = False) -> None:
         # 节点是**每次运行的状态**：缓存与传递台账都属于这一次运行。把同一批节点交给两个
         # Instance 会在第二次运行里看到上一次残留的缓存，而 `sample_id` 是按时刻命名的，
@@ -462,6 +463,22 @@ class Instance:
         self.atomic_generation = atomic_generation
         self.center = Center()
         self.log = HopLog()
+        #: **执行位置**（v1.1 §4 的"每个执行位置只能看到它真正收到的"）。
+        #:   `center`  —— 现状：策略读中心收到的遥测，命令经回传进网关队列（默认，逐位不变）。
+        #:   `gateway` —— 位置对照臂：**同一个策略对象、同一套规则**，改由网关用它自己**真正听到**
+        #:                的遥测来求值，命令直接从网关进节点队列（不经回传）。
+        #: 其余一切（空口机会、节点队列、接收窗口、能耗、策略参数）两处完全相同——
+        #: 只允许读取各位置实际可见的信息，这正是 §31 第 53 行要求的对照条件。
+        if placement not in ("center", "gateway"):
+            raise ValueError(f"placement must be 'center' or 'gateway', got {placement!r}")
+        self.placement = placement
+        #: **网关自己保存的遥测**：它听到过的每台节点的最近一份状态快照与听到时刻。
+        #: 必须独立于 `plane.gateway_pending` 存——因为 `backhaul_forward()` 会把已转发的条目
+        #: 从 `gateway_pending` 里**移走**，网关若只靠那张表就会被"转发"这个动作抹掉记忆。
+        #: 现实中网关当然记得自己收到过什么；这里只是把它如实建出来。
+        self.gateway_reports: dict[str, dict] = {}
+        self.gateway_report_at: dict[str, int] = {}
+        self.gateway_newest_taken_at: dict[str, int] = {}
         self._radio_wh_seen: dict[str, float] = {}
         self.command_seq = 0
         self.counters = {"commands_sent": 0, "commands_delivered": 0,
@@ -548,8 +565,12 @@ class Instance:
                     (t_s, node.node_id, "state", node.sample_interval_s,
                      node.report_period_s, round(node.soc_wh, 8), node.alive))
 
-        # 1.5) 中心按**它自己看得见的东西**决定要不要下发。命令经回传进网关队列，等接收窗口。
-        view = self._center_view(t_s)
+        # 1.5) 策略按**它所处位置看得见的东西**决定要不要下发。
+        #      `center` —— 读中心收到的遥测，命令经回传进网关队列，等接收窗口（默认，逐位不变）。
+        #      `gateway` —— **同一个策略对象、同一套规则**，改读网关自己真正听到的遥测；
+        #                   命令直接进网关队列（位置在下游，命令不必再经回传）。
+        view = (self._gateway_view(t_s) if self.placement == "gateway"
+                else self._center_view(t_s))
         # 跳过原因要带时刻；`_skip_t` **只用于记录**，不参与判断。
         self.policy._skip_t = t_s
         for node_id, payload in self.policy.plan(view):
@@ -570,7 +591,7 @@ class Instance:
                      # episode 聚合要按"同一个 target 的所有重试属于同一 episode"来切，
                      # 而切分依据正是这三类语义——**复用现有语义，不新造一套**。
                      self._last_reason.get(node_id)))
-            self._send_command(node_id, payload, t_s)
+            self._send_command(node_id, payload, t_s, origin=self.placement)
 
         # 2) 到上报周期的节点发一批（缓存里全是未确认记录 → 自动补发）
         for node in self.nodes.values():
@@ -584,6 +605,7 @@ class Instance:
                 counters["heard"] += 1
                 for sample in batch:
                     self.log.transit[sample.sample_id].heard_at = t_s
+                self._note_gateway_heard(node, t_s, batch)
                 self.plane.gateway_ingest(node.node_id, t_s,
                                           [s.sample_id for s in batch],
                                           node.snapshot(t_s), payload=list(batch))
@@ -620,6 +642,7 @@ class Instance:
             counters["heard"] += 1
             for sample in batch:
                 self.log.transit[sample.sample_id].heard_at = t_s
+            self._note_gateway_heard(node, t_s, batch)
             self.plane.gateway_ingest(node.node_id, t_s,
                                       [s.sample_id for s in batch],
                                       node.snapshot(t_s), payload=list(batch))
@@ -667,7 +690,46 @@ class Instance:
                           report_at=self.center.report_at, newest_taken_at=newest,
                           in_flight=in_flight, soc_model=self.soc_model)
 
-    def _send_command(self, node_id: str, payload: dict, t_s: int) -> None:
+    def _note_gateway_heard(self, node, t_s: int, batch) -> None:
+        """把"网关此刻真正听到了什么"记进**网关自己的**台账。
+
+        **必须与 `plane.gateway_ingest` 分开记。** 那张 `gateway_pending` 是"还没转交给中心"
+        的待发表，`backhaul_forward()` 一旦转发就会把条目**移走**；网关若只靠它，
+        "转发"这个动作会把网关对自己收到过什么的记忆抹掉——那是伪造出来的失忆，
+        不是任何真实设备的行为。
+        """
+        self.gateway_reports[node.node_id] = node.snapshot(t_s)
+        self.gateway_report_at[node.node_id] = t_s
+        newest = self.gateway_newest_taken_at.get(node.node_id)
+        for sample in batch:
+            if newest is None or sample.taken_at > newest:
+                newest = sample.taken_at
+        if newest is not None:
+            self.gateway_newest_taken_at[node.node_id] = newest
+
+    def _gateway_view(self, t_s: int) -> CenterView:
+        """网关在 t 时刻**合法知道**的一切——严格来自它自己听到的上行。
+
+        **不读环境真值、不读节点缓存、不读中心收到的东西。** 返回的是与 `_center_view`
+        **同一个 `CenterView` 结构**，于是**同一个策略对象**在两处读的是同一种接口，
+        两处之差只剩"数据来源"这一个变量——这正是 §31 第 53 行"只允许读取各位置实际可见的
+        信息"要隔离的东西。
+
+        **一处已知的建模简化（必须在论文里声明）**：`in_flight` 在 `_center_view` 里本来就是
+        按"网关队列非空"算的，也就是**中心被赋予了对网关队列的可见性**——这是本仓库既有的
+        建模选择，不是本次改动引入的。这里对网关用**同一个表达式**，因此它不会给网关侧带来
+        相对优势；但它确实让"中心不知道队列"这一更严格的读法没有被测到。
+        """
+        in_flight = frozenset(
+            nid for nid in self.nodes if self.plane.queued_count(nid) > 0)
+        return CenterView(t_s=t_s, node_ids=tuple(self.nodes),
+                          reports=self.gateway_reports,
+                          report_at=self.gateway_report_at,
+                          newest_taken_at=self.gateway_newest_taken_at,
+                          in_flight=in_flight, soc_model=self.soc_model)
+
+    def _send_command(self, node_id: str, payload: dict, t_s: int,
+                      origin: str = "center") -> None:
         """把一条意图放进回传。**它此刻还没有到达任何地方。**
 
         契约字段由**臂**决定发不发：`send_contract_fields=True` 时随报文带上稳定逻辑身份与单调
@@ -691,8 +753,18 @@ class Instance:
             enqueued_at=t_s,
             expires_at=t_s + 6 * 3600,
             payload=body)
-        if self.plane.center_send(node_id, msg, t_s // 3600):
+        if origin == "gateway":
+            # **网关自己产生命令**：没有回传跳，因此不会被 `path_available` 拒绝。
+            # 下游完全不变——同一个节点队列、同一个接收窗口、同一份空口能耗、同样会丢。
+            ok = self.plane.gateway_send(node_id, msg)
+        else:
+            ok = self.plane.center_send(node_id, msg, t_s // 3600)
+        if ok:
             self.counters["commands_sent"] += 1
+            if origin == "gateway":
+                # 通信量必须能按**来源**分列，否则"网关位置省了多少下行"答不上来。
+                self.counters["commands_sent_by_gateway"] = \
+                    self.counters.get("commands_sent_by_gateway", 0) + 1
             if self.trace:
                 # **诊断字段**：把这条命令的**逻辑身份**记下来，闭环诊断才能**按身份**配对
                 # 而不是按"同节点同值"。`aoi` 有 67% 的 intent 是重发（§6.24），按值配对会让

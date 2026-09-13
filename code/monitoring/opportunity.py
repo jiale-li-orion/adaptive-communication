@@ -247,6 +247,9 @@ class ControlPlane:
         # Store-and-forward at the gateway. Nothing here is visible to the center yet.
         self.gateway_pending: list[GatewayItem] = []
         self.backhaul_forwarded = 0
+        #: **网关自己发起的命令条数**（A 层网关软件执行能力的位置对照臂）。
+        #: 与 `backhaul_accepted` 分开计：那一条走"中心→回传→网关队列"，这一条**没有回传跳**。
+        self.gateway_sent = 0
         self.backhaul_backlog_peak = 0
         self.energy: dict[str, RadioEnergy] = {}
 
@@ -350,6 +353,21 @@ class ControlPlane:
         self.queued.setdefault(node_id, []).append(message)
         self.path_accepted[path] = self.path_accepted.get(path, 0) + 1
         self.backhaul_accepted += 1
+        return True
+
+    def gateway_send(self, node_id: str, message: DownlinkMessage) -> bool:
+        """**网关自己产生一条命令**，直接进该节点的队列。
+
+        这是位置对照臂新增的 **A 层网关软件执行能力**：远端的条件判断发生在网关，因此命令
+        **不经过回传跳**，也就不会被 `path_available` 拒绝。**下游一点没变**——还是进同一个
+        节点队列、等同一个接收窗口、付同一份空口能耗、同样可能丢。所以位置对照改变的只有
+        "谁在什么时候根据什么证据生成命令"，不是信道容量。
+
+        与 `center_send` 的差别必须写清楚：`center_send` 返回"网关收下了没有"（可能因回传不可用
+        而拒绝），本函数**不会因链路被拒**——网关已经在本地了。
+        """
+        self.queued.setdefault(node_id, []).append(message)
+        self.gateway_sent += 1
         return True
 
     def queued_count(self, node_id: str) -> int:

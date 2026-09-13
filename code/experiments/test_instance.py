@@ -1667,6 +1667,71 @@ def test_admission_gate_is_hand_checkable_and_monotone() -> None:
               (not b) or a, f"轻 {a}、重 {b}")
 
 
+def test_placement_isolates_the_two_instruments() -> None:
+    """**位置对照的仪器不变量**（§31 候选 1 第一项判别）。
+
+    位置对照只被允许说明一件事：**谁在什么时候、根据什么证据生成命令**。
+    因此三件事必须钉住，否则"收益"可以是仪器漏出来的：
+
+      1. `placement="center"` **就是原路径**——显式传它与不传必须逐位相同（改动不许悄悄改变现状）；
+      2. **网关的观点只来自它自己听到的上行**：整段接入中断里它什么都听不到，于是
+         `gateway_reports` 必须为空、策略读不到电量证据、一条命令也发不出（它没失忆，是没听到）；
+      3. **网关命令不过回传**：`backhaul_accepted` 保持 0，命令只走 `gateway_sent`。
+         下游仍共用同一个节点队列与接收窗口——**位置对照不许白拿一次机会**。
+    """
+    print("\n[32] 位置对照的仪器不变量（中心/网关只差求值位置与命令来源）")
+    dp = DeviceProfile(report_period_s=3600)
+
+    def _run(placement, access_outage=None):
+        nodes = {NODE: Node(NODE, "rainfall", dp, initial_wh=None)}
+        truth = wang_fragment_truth(0, HOURS, (NODE,))
+        harvest, temp = constant_harvest((NODE,), HOURS, 2.0, 10.0)
+        truth.harvest_wh, truth.temp_c = harvest, temp
+        kw = {} if placement is None else {"placement": placement}
+        inst = Instance(nodes, truth, seed=0, policy=build_policy("aoi"),
+                        access_outage=access_outage, **kw)
+        log = inst.run(HOURS)
+        return inst, log
+
+    def _sig(inst, log):
+        return (dict(inst.counters), list(inst.intent_log), inst.mixed_config_ticks,
+                sorted((sid, s.taken_at, s.node_id) for sid, s in log.samples.items()),
+                sorted((sid, getattr(t, "heard_at", None), getattr(t, "received_at", None))
+                       for sid, t in log.transit.items()))
+
+    _i_def, _l_def = _run(None)
+    _i_cen, _l_cen = _run("center")
+    check("显式 center 与默认路径逐位相同",
+          _sig(_i_def, _l_def) == _sig(_i_cen, _l_cen),
+          "现状没有被位置参数悄悄改动")
+
+    # 2) 整段接入中断：网关听不到任何东西，因此它的证据表必须为空。
+    i_blind, _l = _run("gateway", access_outage=(0, HOURS * 3600))
+    check("接入中断期间网关的证据表为空（它不是失忆，是没听到）",
+          i_blind.gateway_reports == {} and i_blind.gateway_newest_taken_at == {},
+          f"gateway_reports={len(i_blind.gateway_reports)} 条")
+    # **注意这里断言的不是"不发命令"。** 一条没有证据的策略**本来就会动**——`AoiPolicy` 对此
+    # 有写明的一支：「从没收到过，先加密看能不能收到」（`aoi_s` 为 None ⇒ `want = fast_s`）。
+    # 中心在同样"从没收到过"时走的是同一支，因此这不是位置带来的权力，而是策略自身的行为。
+    # 要钉住的是**它只能走那一支**：证据表为空 ⇒ `soc_of()` 必为 None ⇒ 不存在任何由证据驱动的判断。
+    _blind_vals = {v for _t, _k, v in i_blind.intent_log}
+    _blind_ops = {_k.split(":", 1)[1] for _t, _k, _v in i_blind.intent_log}
+    check("它只走策略写明的「从没听到过 → 先加密」那一支，没有证据驱动的判断",
+          _blind_vals <= {build_policy("aoi").fast_s},
+          f"下发值={sorted(_blind_vals)}（fast_s={build_policy('aoi').fast_s}）"
+          f" 字段={sorted(_blind_ops)}")
+
+    # 3) 无中断：网关确实发命令，且**一次回传都没占**。
+    i_gw, _l = _run("gateway")
+    check("网关命令走 gateway_sent、不占回传",
+          i_gw.plane.gateway_sent > 0 and i_gw.plane.backhaul_accepted == 0,
+          f"gateway_sent={i_gw.plane.gateway_sent} backhaul_accepted={i_gw.plane.backhaul_accepted}")
+    _gw_ops = {_k.split(":", 1)[1] for _t, _k, _v in i_gw.intent_log}
+    check("位置对照不新增任何动作种类（仍只有原来两个可用字段）",
+          _gw_ops <= {OP_SET_REPORT_PERIOD, OP_SET_SAMPLING_INTERVAL},
+          f"用到的字段={sorted(_gw_ops)}")
+
+
 def main() -> int:
     print("实例层验收（Task Contract v1.1）")
     test_denominator_is_exogenous()
@@ -1699,6 +1764,7 @@ def main() -> int:
     test_trace_does_not_change_the_run()
     test_soc_age_uses_source_time_and_skips_are_visible()
     test_admission_gate_is_hand_checkable_and_monotone()
+    test_placement_isolates_the_two_instruments()
     print("\n" + "-" * 74)
     if FAIL:
         print(f"  {len(FAIL)} 项失败: {', '.join(FAIL)}")

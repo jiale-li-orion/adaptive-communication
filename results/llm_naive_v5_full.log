@@ -36,3 +36,22 @@
   tokens in/out = 594016/4801  （粗算 ¥1.83 峰值价）
 
    [polar_c0.05] 实际 epoch=780（task 12.0h + tail 1.0h）⇒ 三条件合计上限 2340 次
+== polar_c0.05 ==
+  planner invocations = 779
+  semantic episodes   = 0（closed 0）
+  ⚠ **0 个 semantic episode** ⇒ 比值无定义（0/0）。**先查动作分布与原始输出，不要直接解读成"LLM 克制"**
+  **planning amplification（#意图/#episode，与 scripted 可比）= —×**（单种子参照 3.66/5.42/78.00；3种子汇总 3.70/4.04/17.56）
+  planning amplification（#调用/#episode，含 noop，成本侧）= —×
+  **wasted per closed effect = 意图侧 — / 调用侧 —**
+  terminal = {}
+  actions = {'noop': 779}；noop=779；解析失败=1
+  **未下达动作的原因分类 = {'action_noop': 779}**
+  原始输出采样 = ['{"action":"noop"}', '{"action":"noop"}', '{"action":"noop"}', '{"action":"noop"}', '{"action":"noop"}']
+  **need_action_epochs（desired != confirmed 且无 pending）= 780**
+  **target agreement = 0 次一致 / 0 次不一致**；**same-target unresolved replan = 0 次**
+  **其中「听到过但证据老化」的 epoch 数 = 0（最多 0 个）**；「从未听到」出现的 epoch 数 = 780
+  **状态里有超期节点的 epoch 数 = 780**（最多一次 14 个节点超期）  ← 若为 0，则 noop 是「目标已满足」，不是失败
+  service = 0.0/168；AoI = — s（**确认没靠少做事作弊**）
+  tokens in/out = 567098/4674  （粗算 ¥1.74 峰值价）
+
+[{"protocol_id": "llm_naive_v5", "protocol_sha256": "fcefd02b2d73130032fd4932a84df30f32c57f9fc5d2f0f9709768dbd47bbd0b", "tag": "adm_noout", "seed": 0, "invocations": 778, "intents": 52, "episodes": 18, "closed": 17, "amp_intents": 2.888888888888889, "amp_invocations": 43.22222222222222, "wasted_intents_per_closed": 2.0588235294117645, "wasted_invocations_per_closed": 44.76470588235294, "terminal": {"layer2": 1, "closed": 17}, "actions": {"noop": 726, "set_report_period": 52}, "noop": 726, "bad": 2, "rejects": {"action_noop": 726}, "raw_sample": ["{\"action\":\"noop\"}", "{\"action\":\"noop\"}", "{\"action\":\"noop\"}", "{\"action\":\"noop\"}", "{\"action\":\"noop\"}"], "overdue_epochs": 780, "overdue_max": 14, "need_action_epochs": 780, "agree": 52, "disagree": 0, "same_target_unresolved": 0, "stale_epochs": 0, "stale_max": 0, "unseen_epochs": 780, "node_ids_sample": ["gw0"], "routine_delivered": 167, "routine_aoi_mean_s": 2987.7454545454543, "in_tok": 588931, "out_tok": 5240}, {"protocol_id": "llm_naive_v5", "protocol_sha256": "fcefd02b2d73130032fd4932a84df30f32c57f9fc5d2f0f9709768dbd47bbd0b", "tag": "adm_out3", "seed": 0, "invocations": 780, "intents": 11, "episodes": 6, "closed": 3, "amp_intents": 1.8333333333333333, "amp_invocations": 130.0, "wasted_intents_per_closed": 2.6666666666666665, "wasted_invocations_per_closed": 259.0, "terminal": {"layer2": 3, "closed": 3}, "actions": {"noop": 769, "set_report_period": 11}, "noop": 769, "bad": 0, "rejects": {"action_noop": 769}, "raw_sample": ["{\"action\":\"noop\"}", "{\"action\":\"noop\"}", "{\"action\":\"noop\"}", "{\"action\":\"noop\"}", "{\"action\":\"noop\"}"], "overdue_epochs": 780, "overdue_max": 14, "need_action_epochs": 780, "agree": 11, "disagree": 0, "same_target_unresolved": 0, "stale_epochs": 0, "stale_max": 0, "unseen_epochs": 780, "node_ids_sample": ["gw0"], "routine_delivered": 45, "routine_aoi_mean_s": 18006.309677419355, "in_tok": 594016, "out_tok": 4801}, {"protocol_id": "llm_naive_v5", "protocol_sha256": "fcefd02b2d73130032fd4932a84df30f32c57f9fc5d2f0f9709768dbd47bbd0b", "tag": "polar_c0.05", "seed": 0, "invocations": 779, "intents": 0, "episodes": 0, "closed": 0, "amp_intents": null, "amp_invocations": null, "wasted_intents_per_closed": null, "wasted_invocations_per_closed": null, "terminal": {}, "actions": {"noop": 779}, "noop": 779, "bad": 1, "rejects": {"action_noop": 779}, "raw_sample": ["{\"action\":\"noop\"}", "{\"action\":\"noop\"}", "{\"action\":\"noop\"}", "{\"action\":\"noop\"}", "{\"action\":\"noop\"}"], "overdue_epochs": 780, "overdue_max": 14, "need_action_epochs": 780, "agree": 0, "disagree": 0, "same_target_unresolved": 0, "stale_epochs": 0, "stale_max": 0, "unseen_epochs": 780, "node_ids_sample": ["gw0"], "routine_delivered": 0, "routine_aoi_mean_s": null, "in_tok": 567098, "out_tok": 4674}]

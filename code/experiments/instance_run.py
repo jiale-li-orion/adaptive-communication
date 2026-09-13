@@ -59,6 +59,7 @@ def one_seed(seed: int, task_hours: float, tail_hours: float,
              soc_max_age_s: int | None = None, soc_noise_wh: float = 0.0,
              soc_bias: float = 1.0, soc_loss_p: float = 0.0, hold_op: str | None = None,
              atomic: bool = False, exec_label: str | None = None,
+             placement: str = "center",
              capacity_wh: float = 0.05, low_frac: float = 0.4,
              low_wh_per_hour: float = 0.005,
              oracle_cache: dict | None = None,
@@ -231,7 +232,8 @@ def one_seed(seed: int, task_hours: float, tail_hours: float,
                     atomic_generation=atomic,
                     burst_p_gb=burst_p_gb, burst_p_bg=burst_p_bg,
                     uplink_burst_p_gb=uplink_burst_p_gb,
-                    uplink_burst_p_bg=uplink_burst_p_bg, trace=trace)
+                    uplink_burst_p_bg=uplink_burst_p_bg, trace=trace,
+                     placement=placement)
     inst.plane.uplink_p_arrive = uplink_p_arrive
     inst.plane.backhaul_p_good = backhaul_p_good
     for pth in inst.plane.paths:
@@ -262,6 +264,9 @@ def one_seed(seed: int, task_hours: float, tail_hours: float,
     return {
         "seed": seed,
         "arm": arm,
+        #: **执行位置**：`center`（现状）或 `gateway`（位置对照臂）。同一个策略对象、同一套参数，
+        #: 只有"在哪求值、命令从哪产生"不同。结果必须带着这一列，否则两种放置的读数会被混读。
+        "placement": placement,
         "exec_layer": exec_label or ("contract" if contract else "naive"),
         "hazard": {"hold_every": hold_every, "hold_s": hold_s},
         "intent_mismatch_s": inst.intent_mismatch_s(int(hours)),
@@ -401,6 +406,9 @@ def main() -> None:
     ap.add_argument("--solar-shade-frac", type=float, default=0.0)
     ap.add_argument("--energy-scale", type=float, default=1.0,
                     help="把**整套能量系统**（采样能耗、电池容量、空口母线、采能、上界上行能耗）同时乘以 λ。配合 base 值取 C/λ、H/λ 即可检验尺度不变性")
+    ap.add_argument("--placement", choices=("center", "gateway"), default="center",
+                    help="执行位置对照（§31 候选 1 第一项判别）：center=现状；"
+                         "gateway=同一个策略改由网关用本地可见遥测求值、命令不经回传")
     ap.add_argument("--tag", default="base")
     args = ap.parse_args()
 
@@ -428,7 +436,7 @@ def main() -> None:
     runs = [one_seed(s, args.task_hours, args.tail_hours,
                      args.outage_start_h, args.outage_hours, a,
                      contract=(L in ("contract", "atomic")), hold_every=args.hold_every,
-                     atomic=(L == "atomic"), exec_label=L,
+                     atomic=(L == "atomic"), exec_label=L, placement=args.placement,
                      hold_s=args.hold_s, harvest_wh_per_hour=args.harvest_wh_per_hour,
                      sample_interval_s=args.sample_interval_s,
                      report_period_s=args.report_period_s,
