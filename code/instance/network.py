@@ -431,7 +431,7 @@ class Instance:
         self._radio_wh_seen: dict[str, float] = {}
         self.command_seq = 0
         self.counters = {"commands_sent": 0, "commands_delivered": 0,
-                         "commands_refused": 0, "commands_lost": 0,
+                         "commands_refused": 0,
                          "deduplicated": 0, "fenced": 0,
                          # **逐命令归类**（v1.1 的"动作准入"计数）。三条互斥且穷尽：
                          #   changed   —— 写入的值与节点当时的值**不同**，真的改了配置；
@@ -439,7 +439,7 @@ class Instance:
                          #   speculative —— 中心对这台设备的电量**没有读数**时的保守下发。
                          # 分开数才答得上"多余的控制流量是什么"。只数总量答不了。
                          "writes_changed": 0, "writes_same_value": 0,
-                         "writes_speculative": 0}
+                         "writes_speculative": 0, "stale_generation_dropped": 0}
         #: 延迟释放：identity -> 允许到达的最早时刻。空表示网络不扣留任何命令。
         self.hold_until: dict[str, int] = {}
         #: 被网络扣留、对中心不可见的命令：(释放时刻, 节点, 报文)。
@@ -620,6 +620,55 @@ class Instance:
             self.policy.note_command_sent(node_id, payload)
         else:
             self.counters["commands_refused"] += 1
+
+    def intent_ledger(self) -> dict:
+        """**意图准入账本**：一条 planner 意图从产生到落地（或没落地）的完整分账。
+
+        分**生成端**与**到达端**两侧记，因为两侧的失效原因完全不同，混在一起就答不上
+        「多余的控制流量是什么」：
+
+        | 侧 | 类别 | 含义 |
+        |---|---|---|
+        | 生成端 | `refused` | 连下行机会都没拿到（机会额度用尽） |
+        | 生成端 | `sent` | 真的发出去了 |
+        | 到达端 | `landed` | 到了节点并被接受 |
+        | 到达端 | `lost` | 发出去了但没到（链路丢） |
+        | 到达端 | `dedup` | 同一条逻辑身份已经生效过 → 拒 |
+        | 到达端 | `fenced` | 版本比节点已生效的更旧 → 拒 |
+        | 到达端 | `stale_gen` | **整代**比节点已生效的更旧 → 拒（只有原子层会有） |
+
+        落地的那些再按**值域**分：`change`（真的改了配置）/ `same_value`（值域空操作）/
+        `speculative`（中心当时没有这台设备的电量读数——**这是生成端的无证据标记**，
+        与它最终改了还是没改无关，所以与前两类**正交**，不是互斥的一类）。
+
+        **恒等式**（两侧各自闭合）：`generated = refused + sent`；
+        `sent = landed + lost + dedup + fenced + stale_gen`；`landed = change + same_value`。
+        """
+        c, pl = self.counters, self.plane
+        sent = c["commands_sent"]
+        landed = c["commands_delivered"]
+        dedup, fenced = c["deduplicated"], c["fenced"]
+        stale = c.get("stale_generation_dropped", 0)
+        expired = getattr(pl, "downlink_expired", 0)
+        queued = sum(len(v) for v in getattr(pl, "queued", {}).values())
+        # **`lost` 是算出来的，不是一个自增计数。** 原先 `counters["commands_lost"]`
+        # 被初始化成 0、**从来没有被增加过**——一列死列（"看起来有值、永远不动"是本项目
+        # 反复抓过的那一类）。真正的去向分散在 `plane` 上：过期、滞留队列、上行/回传丢。
+        lost = sent - landed - dedup - fenced - stale - expired - queued
+        return {
+            "generated": sent + c["commands_refused"],
+            "refused": c["commands_refused"],
+            "sent": sent,
+            "landed": landed,
+            "lost": lost,
+            "expired": expired,
+            "queued_left": queued,
+            "dedup": dedup, "fenced": fenced, "stale_gen": stale,
+            "rejected": dedup + fenced + stale,
+            "change": c["writes_changed"],
+            "same_value": c["writes_same_value"],
+            "speculative": c["writes_speculative"],
+        }
 
     def _apply_delivery(self, delivery, t_s: int) -> None:
         """命令真的到了节点。到这一步才算生效——之前都只是意图。

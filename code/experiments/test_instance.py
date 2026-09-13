@@ -1144,6 +1144,73 @@ def test_energy_scale_invariance() -> None:
               f"不一致的臂 {diff}" if diff else f"四项读数 x {len(arms)} 臂全同")
 
 
+def test_intent_ledger_closes() -> None:
+    """**意图准入账本必须两侧都闭合。**
+
+    生成端：`generated = refused + sent`；到达端：`sent = landed + rejected + expired + queued_left + lost`；
+    落地端：`landed = change + same_value`。**三条恒等式任一不成立，就有一类意图不知去向**——
+    而"某一类去向不明"正是这个账本存在的理由。
+
+    **实现里踩过一个坑，记在这里**：`counters["commands_lost"]` 被初始化成 0、
+    **从来没有被增加过**，是一列死列。真正的去向分散在 `ControlPlane` 上（`downlink_expired`、
+    队列滞留、上行/回传丢）。所以 `lost` 现在是**算出来的**，不是读一个自增计数。
+    第一版账本因此差了 219.6 条对不上（`aoi` 发出 274.2、落地 54.6、中间全是空的）。
+    """
+    print("\n[25] 意图准入账本两侧闭合")
+    dep = build_deployment(groups=2)
+    hours, task, cap = 13, 12, 0.008
+
+    def build_nodes():
+        ns = nodes_from(dep)
+        for n in ns.values():
+            n.p = DeviceProfile(sample_interval_s=n.p.sample_interval_s,
+                                report_period_s=n.p.report_period_s,
+                                capacity_wh=cap, sample_wh=n.p.sample_wh)
+            n.soc_wh = cap
+            n.power = type(n.power)(soc_initial_wh=cap, soc_wh=cap)
+        return ns
+
+    truth = wang_fragment_truth(0, hours, (dep.gateway.sid,))
+    probe = build_nodes()
+    truth.displacement = displacement_series(probe.keys(), hours, 0)
+    h, t_ = hetero_harvest(probe.keys(), hours, 0, low_frac=0.4, low_wh_per_hour=0.0,
+                           high_wh_per_hour=3.0)
+    truth.harvest_wh.update(h)
+    truth.temp_c.update(t_)
+
+    for arm in ("local", "aoi", "ea_i600", "ea_nb"):
+        inst = Instance(build_nodes(), truth, seed=0, policy=build_policy(arm),
+                        send_contract_fields=True)
+        inst.run(hours)
+        L = inst.intent_ledger()
+        gen_ok = L["generated"] == L["refused"] + L["sent"]
+        arr_ok = L["sent"] == (L["landed"] + L["rejected"] + L["expired"]
+                               + L["queued_left"] + L["lost"])
+        land_ok = L["landed"] == L["change"] + L["same_value"]
+        check(f"[{arm}] 生成端闭合 generated = refused + sent", gen_ok,
+              f"{L['generated']} = {L['refused']} + {L['sent']}")
+        check(f"[{arm}] 到达端闭合 sent = landed + rejected + expired + queued + lost", arr_ok,
+              f"{L['sent']} = {L['landed']}+{L['rejected']}+{L['expired']}"
+              f"+{L['queued_left']}+{L['lost']}")
+        check(f"[{arm}] 落地端闭合 landed = change + same_value", land_ok,
+              f"{L['landed']} = {L['change']} + {L['same_value']}")
+
+    # 两种结构不同的浪费模式：aoi 是"无信道"，ea_i600 是"同值写入"。
+    def ledger(arm):
+        i = Instance(build_nodes(), truth, seed=0, policy=build_policy(arm),
+                     send_contract_fields=True)
+        i.run(hours)
+        return i.intent_ledger()
+    a, e, n = ledger("aoi"), ledger("ea_i600"), ledger("ea_nb")
+    check("aoi 的主要浪费是「无信道」（生成速率超过信道容量）",
+          a["refused"] > a["landed"], f"无信道 {a['refused']} > 落地 {a['landed']}")
+    check("ea_i600 的主要浪费是「同值写入」（落地里全是值域空操作）",
+          e["same_value"] > 0 and e["change"] == 0,
+          f"同值 {e['same_value']}、改值 {e['change']}")
+    check("ea_nb 一条意图都不生成（无证据就不生成）", n["generated"] == 0,
+          f"生成 {n['generated']}")
+
+
 def main() -> int:
     print("实例层验收（Task Contract v1.1）")
     test_denominator_is_exogenous()
@@ -1170,6 +1237,7 @@ def main() -> int:
     test_delivery_oracle_is_a_bound_and_splits_the_gap()
     test_delivery_ceiling_is_policy_independent()
     test_energy_scale_invariance()
+    test_intent_ledger_closes()
     print("\n" + "-" * 74)
     if FAIL:
         print(f"  {len(FAIL)} 项失败: {', '.join(FAIL)}")

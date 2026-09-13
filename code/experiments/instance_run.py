@@ -242,6 +242,7 @@ def one_seed(seed: int, task_hours: float, tail_hours: float,
         "delivery_oracle": _delivery_total,
         "delivery_oracle_free_tx": _delivery_free,
         "delivery_oracle_mid": _delivery_mid,
+        "intent_ledger": inst.intent_ledger(),
         "autonomy_margin": margin_mean,
         "autonomy_margin_min": margin_min,
         "command_counters": dict(inst.counters),
@@ -435,6 +436,13 @@ def main() -> None:
                                        for r in rs]),
             "writes_speculative": mean([r["command_counters"].get("writes_speculative", 0)
                                         for r in rs]),
+            # **意图准入账本**两侧合计
+            "intent_generated": mean([r["intent_ledger"]["generated"] for r in rs]),
+            "intent_lost": mean([r["intent_ledger"]["lost"] for r in rs]),
+            "intent_rejected": mean([r["intent_ledger"]["rejected"] for r in rs]),
+            "intent_stale_gen": mean([r["intent_ledger"]["stale_gen"] for r in rs]),
+            "intent_refused": mean([r["intent_ledger"]["refused"] for r in rs]),
+            "intent_expired": mean([r["intent_ledger"]["expired"] for r in rs]),
             # `inf`（初始电量自己就够跑完，采能与可行性无关）不进均值，否则会把均值拉成 inf。
             # **全部为 inf 时报 `None`，不报 0**——报 0 会变成一列看起来有值、实际是回退默认值的
             # 假数据，而 0 在这个定义下恰恰意味着"完全不可行"，正好读反。
@@ -508,7 +516,8 @@ def main() -> None:
               if args.harvest_mode == "solar" else "")
            + " {:>7} {:>7} {:>7}".format("改值", "同值", "未知态")
            + " {:>8} {:>8} {:>8} {:>8} {:>8}".format(
-               "转发损", "择时损", "采集损", "链路损", "自由上界"))
+               "转发损", "择时损", "采集损", "链路损", "自由上界")
+           + " {:>7} {:>7} {:>6} {:>6}".format("意图生成", "无信道", "丢失", "被拒"))
     print(hdr)
     print("-" * 96)
     for a in agg["arms"]:
@@ -533,7 +542,10 @@ def main() -> None:
                   x["delivery_oracle_mid"] - x["delivery_oracle"],
                   x["delivery_oracle_free_tx"] - x["delivery_oracle_mid"],
                   168.0 - x["delivery_oracle_free_tx"],
-                  x["delivery_oracle_free_tx"]))
+                  x["delivery_oracle_free_tx"])
+              + " {:>7.1f} {:>7.1f} {:>6.1f} {:>6.1f}".format(
+                  x["intent_generated"], x["intent_refused"], x["intent_lost"],
+                  x["intent_rejected"]))
     print("=" * 96)
     if args.outage_hours > 0:
         print("恢复分列（中断窗内 + 固定恢复观察期）")
