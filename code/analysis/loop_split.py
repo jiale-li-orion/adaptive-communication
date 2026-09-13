@@ -52,40 +52,93 @@ DEFAULT_DEADLINE_S = 3600
 
 
 def pairs(trace: list) -> tuple[list[dict], dict]:
-    """把 `plan` 与 `applied` 配对，算两条腿。**贪心一对一 + 右删失标注。**
+    """按**逻辑身份**把 `plan → sent → applied` 串起来，算两条腿。
 
-    为什么不能按「同节点 + 同值 + 之后第一个 `applied`」直接配：`aoi` 有 **67% 的 intent 是重发**
-    （§6.24），同一个节点会连续产生多条 `period=300`。旧写法下 `plan₁` 与 `plan₂` **都会认领同一次
-    `applied`**，既污染 `T_return`，也把"哪条 intent 从未落地"搞错。
+    为什么要身份。按「同节点 + 同值」配对时，`aoi` 的 67% 重发（§6.24）会让多条 plan
+    **认领同一次 `applied`**，既污染 `T_return` 也把"哪条 intent 从未落地"搞错。
+    身份由 `network.py` 写进 trace 的三个事件：`plan`（决策）→ `sent`（带 `logical`）→
+    `applied`（带 `logical`）。`logical = f"{node}:{op}:{generation}"`，与节点侧
+    `applied_logicals` 去重用的是同一个串。
 
-    现在**每个 `applied` 只被认领一次**，归给时间上最早的那条未认领 `plan`。
-    ⚠ **这只是贪心，不是真身份。** 真身份要用 `logical = f"{node_id}:{op}:{generation}"`
-    （repo 已有，且节点侧用 `applied_logicals` 去重）进入 trace——那需要改 `network.py` 的 trace 载荷。
-    `applied_unclaimed` 与"从未落地的 plan"两个计数一并报出，用来暴露贪心配对残留的不确定性。
+    **三种结局在逐 intent 级就分开了**（这正是四层归因要的）：
+    - **没找到 `sent`** ⇒ 这条意图**被第一层拒了**（`center_send` 时回传路径不可用）；
+    - 有 `sent` 但没有同身份的 `applied` ⇒ **发出去了但没落地**（第二/三层）；
+    - 有 `applied` ⇒ 落地，`T_return = t_applied − t_plan`。
+
+    向后兼容：trace 里没有 `sent` 事件（旧 dump）时退回**贪心一对一**，并报出用了哪种。
     """
-    applied: dict[str, list] = {}
+    has_identity = any(e[2] == "sent" for e in trace)
+    applied_by_logical: dict = {}
     for e in trace:
-        if e[2] == "applied":
-            applied.setdefault(e[1], []).append([e, False])       # [事件, 是否已被认领]
+        if e[2] == "applied" and len(e) > 5 and e[5]:
+            applied_by_logical.setdefault(e[5], [e, False])
+    sent_pool: dict = {}
+    for e in trace:
+        if e[2] == "sent":
+            sent_pool.setdefault(e[1], []).append([e, False])
     out = []
     for e in trace:
         if e[2] != "plan":
             continue
         t_s, nid, _k, soc_seen, op, value, age = (list(e) + [None] * 7)[:7]
-        hit = None
-        for slot in applied.get(nid, ()):
-            if (not slot[1]) and slot[0][0] > t_s and slot[0][4] == value:
-                slot[1] = True
-                hit = slot[0][0]
-                break
+        t_ret, refused, logical, found_sent = None, False, None, False
+        if has_identity:
+            for slot in sent_pool.get(nid, ()):
+                se = slot[0]
+                if (not slot[1]) and se[0] == t_s and se[4] == op and se[5] == value:
+                    slot[1] = True
+                    logical = se[3]
+                    found_sent = True
+                    break
+            if not found_sent:
+                refused = True                      # 第一层：根本没发出去
+            elif logical is not None:
+                hit = applied_by_logical.get(logical)
+                if hit and not hit[1]:
+                    hit[1] = True
+                    t_ret = hit[0][0] - t_s
+            else:
+                # ⚠ `send_contract_fields=False`（如 naive 执行层）时报文里**根本没有** `logical`，
+                # 这时身份不存在，只能退回**贪心一对一**。**"没有身份"与"没找到 sent"是两件事**，
+                # 第一版把两者都写成 `logical is None`，于是所有落地都被判成"从未落地"（落地 0）。
+                t_ret = _greedy_one(trace, nid, t_s, value)
+        else:                                        # 旧 trace：贪心一对一（按值）
+            t_ret = _greedy_one(trace, nid, t_s, value)
         out.append({"t": t_s, "node": nid, "soc_seen": soc_seen,
-                    "t_evidence_s": age,
-                    "t_return_s": None if hit is None else hit - t_s})
-    stats = {"t_end": max((e[0] for e in trace), default=0),
-             "applied_total": sum(len(v) for v in applied.values()),
-             "applied_unclaimed": sum(1 for v in applied.values() for s in v if not s[1]),
-             "plans": len(out)}
+                    "t_evidence_s": age, "t_return_s": t_ret,
+                    "refused": refused, "logical": logical})
+    stats = {"t_end": max((e[0] for e in trace), default=0), "plans": len(out),
+             "has_identity": has_identity,
+             "refused": sum(1 for r in out if r["refused"]),
+             "sent_no_apply": sum(1 for r in out
+                                  if (not r["refused"]) and r["t_return_s"] is None),
+             "applied": sum(1 for r in out if r["t_return_s"] is not None),
+             "applied_unclaimed": sum(1 for v in applied_by_logical.values() if not v[1])}
     return out, stats
+
+
+def _greedy_one(trace: list, nid: str, t_s: int, value):
+    """按值的一对一贪心：同节点、同值、`t_s` 之后**最早未被认领**的 `applied`。"""
+    for slot in _legacy_applied(trace, nid):
+        if (not slot[1]) and slot[0][0] > t_s and slot[0][4] == value:
+            slot[1] = True
+            return slot[0][0] - t_s
+    return None
+
+
+_LEGACY: dict = {}
+
+
+def _legacy_applied(trace: list, nid: str) -> list:
+    """旧 trace 的 applied 池（按 `(节点, 值)` 贪心一对一）。只在没有 `sent` 事件时用。"""
+    key = id(trace)
+    if key not in _LEGACY:
+        pool: dict = {}
+        for e in trace:
+            if e[2] == "applied":
+                pool.setdefault(e[1], []).append([e, False])
+        _LEGACY[key] = pool
+    return _LEGACY[key].get(nid, ())
 
 
 def t_harm_at(soc: float, cfg_pair: tuple[int, int]) -> float:
@@ -120,7 +173,16 @@ def main() -> int:
             # 节点侧真实配置（用最后一条 state 事件推此刻在跑什么）
             _pairs, st_ = pairs(d["_trace"])
             t_end = st_["t_end"]
-            stats_by_tag[tag] = st_
+            # **累加而不是覆盖**：`st_` 是**单种子**的，而下面报的 `决策 n` 是跨种子汇总的。
+            # 覆盖会让印出的"落地/被拒"只反映最后一个种子，与 n 不同口径（踩过）。
+            acc = stats_by_tag.setdefault(tag, {})
+            for k, v in st_.items():
+                if isinstance(v, bool):
+                    acc[k] = v
+                elif k == "t_end":
+                    acc[k] = max(acc.get(k, 0), v)
+                else:
+                    acc[k] = acc.get(k, 0) + v
             for p in _pairs:
                 st_ev = [e for e in d["_trace"]
                          if e[2] == "state" and e[1] == p["node"] and e[0] == p["t"]]
@@ -142,9 +204,11 @@ def main() -> int:
         rt = [r["t_return_s"] for r in matched]
         print(f"== {tag} ==")
         st_ = stats_by_tag.get(tag, {})
-        print(f"   决策数 n={n}；配到 applied 的 n={len(matched)}"
-              f"（**从未落地 {n - len(matched)}**）；"
-              f"applied 共 {st_.get('applied_total')}，**贪心后未被认领 {st_.get('applied_unclaimed')}**")
+        mode = "**真身份**" if st_.get("has_identity") else "贪心一对一（旧 trace）"
+        print(f"   决策 n={n}｜{mode}｜落地 {st_.get('applied')}"
+              f"｜**被第一层拒 {st_.get('refused')}**"
+              f"｜**发出但未落地 {st_.get('sent_no_apply')}**"
+              f"｜未被认领的 applied {st_.get('applied_unclaimed')}")
         if ev:
             print(f"   T_evidence 秒：中位 {st.median(ev):.0f}  最大 {max(ev):.0f}  n={len(ev)}")
         if rt:

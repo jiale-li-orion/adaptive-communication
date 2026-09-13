@@ -688,6 +688,14 @@ class Instance:
             payload=body)
         if self.plane.center_send(node_id, msg, t_s // 3600):
             self.counters["commands_sent"] += 1
+            if self.trace:
+                # **诊断字段**：把这条命令的**逻辑身份**记下来，闭环诊断才能**按身份**配对
+                # 而不是按"同节点同值"。`aoi` 有 67% 的 intent 是重发（§6.24），按值配对会让
+                # 多条 plan 认领同一次 `applied`。身份由上面的 `body["logical"]` 定义
+                # （`{node}:{op}:{generation}`），节点侧用 `applied_logicals` 去重，是同一个串。
+                self.trace_events.append(
+                    (t_s, node_id, "sent", body.get("logical"), body.get("op"),
+                     body.get("period_s", body.get("interval_s"))))
             _r = self._last_reason.get(node_id)
             if _r is not None:
                 self._intent_reason_counts["sent"][_r] += 1
@@ -855,7 +863,8 @@ class Instance:
                     if self.trace:
                         self.trace_events.append(
                             (t_s, node.node_id, "applied", f,
-                             slot[f].get("period_s", slot[f].get("interval_s"))))
+                             slot[f].get("period_s", slot[f].get("interval_s")),
+                             slot[f].get("logical")))
                 node.config_generation = int(gen)
                 node.pending_fields = {k: v for k, v in node.pending_fields.items()
                                        if k > int(gen)}
@@ -866,7 +875,8 @@ class Instance:
             if self.trace:
                 self.trace_events.append(
                     (t_s, node.node_id, "applied", payload.get("op"),
-                     payload.get("period_s", payload.get("interval_s"))))
+                     payload.get("period_s", payload.get("interval_s")),
+                     payload.get("logical")))
 
     def _note_write(self, want, current) -> None:
         """**动作准入计数**：这次写入到底改变了什么。
