@@ -1,4 +1,10 @@
+# 收益被成熟设备管理消除，后期收益又受到本地自治和可达机会的限制。
+
+
 我重新把 repo 从早期 runtime、三轮公平化、Task pivot、instance closure、第二阶段三轨、一直读到这次五小时 STOP。
+
+
+
 
 现在这条实验史逐渐逼出了一条很统一的东西。只是我们一直在拿不同名字碰它：`runtime correctness`、energy-aware、AoI、burstiness、stale evidence、continuous config admission。
 

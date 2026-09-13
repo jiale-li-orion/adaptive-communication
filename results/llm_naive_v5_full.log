@@ -1,2 +1,20 @@
 协议 llm_naive_v5  sha256=fcefd02b2d731300  model=deepseek-flash  thinking={'type': 'disabled'}
    [adm_noout] 实际 epoch=780（task 12.0h + tail 1.0h）⇒ 三条件合计上限 2340 次
+== adm_noout ==
+  planner invocations = 778
+  semantic episodes   = 18（closed 17）
+  **planning amplification（#意图/#episode，与 scripted 可比）= 2.89×**（单种子参照 3.66/5.42/78.00；3种子汇总 3.70/4.04/17.56）
+  planning amplification（#调用/#episode，含 noop，成本侧）= 43.22×
+  **wasted per closed effect = 意图侧 2.06 / 调用侧 44.76**
+  terminal = {'layer2': 1, 'closed': 17}
+  actions = {'noop': 726, 'set_report_period': 52}；noop=726；解析失败=2
+  **未下达动作的原因分类 = {'action_noop': 726}**
+  原始输出采样 = ['{"action":"noop"}', '{"action":"noop"}', '{"action":"noop"}', '{"action":"noop"}', '{"action":"noop"}']
+  **need_action_epochs（desired != confirmed 且无 pending）= 780**
+  **target agreement = 52 次一致 / 0 次不一致**；**same-target unresolved replan = 0 次**
+  **其中「听到过但证据老化」的 epoch 数 = 0（最多 0 个）**；「从未听到」出现的 epoch 数 = 780
+  **状态里有超期节点的 epoch 数 = 780**（最多一次 14 个节点超期）  ← 若为 0，则 noop 是「目标已满足」，不是失败
+  service = 167.0/168；AoI = 2988 s（**确认没靠少做事作弊**）
+  tokens in/out = 588931/5240  （粗算 ¥1.81 峰值价）
+
+   [adm_out3] 实际 epoch=780（task 12.0h + tail 1.0h）⇒ 三条件合计上限 2340 次

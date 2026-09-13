@@ -4212,3 +4212,37 @@ v4 的 `"whether an effect is still unresolved (pending_effect)"` ⇒ v5 的
 全部有效决策，就如实结束这条 agent 方法假说"。**⇒ 建议不再为"找 agent 错误"追加实验；
 交付 4 在交付 3 未通过的前提下按 §28 规定不启动。**
 文档 `30-discriminative-decision-cases-2026-09-14.md`（已含修正与撤回记录）。
+
+---
+
+## §7.108 交付 1 第一批（`adm_noout`，780 epoch 全量）：**n=52 次动作，同目标未决重规划仍为 0**
+
+窄用途：**只回答「给定配置目标下的执行行为」**，不回答规划/调度能力；
+**不以是否出现坏重试筛选模型或 prompt**。
+
+| 量 | 200-epoch 闸门 | **780-epoch（条件 1 完成）** |
+|---|---:|---:|
+| `need_action_epochs` | 200 / 200 | **780 / 780** |
+| `actions` | 8 | **52**（`{noop:726, set_report_period:52}`） |
+| **`target agreement`** | 8 / 0 | **52 / 0** |
+| **`same-target unresolved replan`** | 3（n=8） | **0（n=52）** |
+| semantic episodes | 5（closed 4） | **18（closed 17）** |
+| `amp_intents` | 1.6 | **52/18 ≈ 2.9** |
+| service / AoI | 164.0 / 3199 s | **167.0 / 168 ；2988 s** |
+| 解析失败 | 0 | **2**（780 次里） |
+| 成本 | ¥0.46 | **¥1.81** |
+
+**三点必须一起读**：
+
+1. **样本从 8 涨到 52 之后，`same-target unresolved replan` 仍然是 0。**
+   ⇒ 200-epoch 那个"3 次"是**小样本波动**，不是稳定现象。**这是本轮最实质的一条。**
+2. **`amp_intents ≈ 2.9`**，而 scripted `aoi` 在同条件 seed 0 是 **3.66×**
+   ⇒ **真实 LLM 反而比脚本策略更省**（52 次意图完成 18 个语义 episode）。
+3. **`target agreement = 52/0`**：它**每一次动手目标都对**，从未改错值。
+   ⇒ **不能归因于"它没读懂任务"**。
+
+⚠ **一处口径必须写明**：episode 是按 **target 值变化**切段的，所以 `amp_intents = 2.9`
+意味着有些 episode 内有多次同目标意图。但那些**发生在 `pending = false` 时**
+（即上一跳已不在队列里）——按用户的定义，
+**amplification 事件要求 `pending = true` 时同目标重提**，而那一类**恰为 0**。
+⇒ **"没人在做时再提一次"与"有人在做了还反复提"必须分开读**，混在一起会把前者误算成放大。
