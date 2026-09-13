@@ -21,7 +21,7 @@
 >
 > ---
 >
-> ### 当前状态（2026-09-14）：**关闭的是三个具名候选，不是「agent 方法」这一类**
+> ### 当前状态（2026-09-14）：**关闭的是具名子假说，不是「agent 方法」这一类**
 >
 > [`28-global-research-direction-review-2026-09-14.md`](docs/s7-method/instance-v1/28-global-research-direction-review-2026-09-14.md)
 > ｜[`29-wirelessagent-adaptation-diff`](docs/s7-method/instance-v1/29-wirelessagent-adaptation-diff-2026-09-14.md)
@@ -58,7 +58,7 @@
 > **缺采恒 0、缺送才是全部损失 ⇒ 滞留全在交付侧，而交付容量与"在哪儿求值"无关。**
 > 负对照（接入中断）按字面**报警**，事后诊断为**控制设计错误**（残差来自回传跳，无中断档已存在 +0.30），
 > 已如实记录、**未回改预注册**；仪器不变量已固化为测试 [32]。
-> **判别 B 尚未开始。**
+> **判别 B 见 ③**（候选 2 **不关闭**，但增益已被普通静态选值与普通滚动搜索拿完）。
 >
 > **不依赖这条假说、仍然保留的**：source-grounded benchmark；burstiness / cadence / energy 的 failure analysis；
 > **episode-vs-intent 的测量层次**；以及三个硬否定（`A=0` 否掉 authority-latency；
