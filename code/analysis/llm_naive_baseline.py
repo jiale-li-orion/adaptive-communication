@@ -52,7 +52,8 @@ from episode_lifecycle import episodes                  # noqa: E402
 # 为什么这样写：文档与实跑两处各写一份必然漂移（本 repo 反复栽在"同一件事两处写法不一致"）。
 # 所以代码**不复制**协议里的任何字符串；并且把协议哈希记进每个结果，事后可核对跑的是哪一版。
 import hashlib
-PROTOCOL_PATH = os.path.join(_HERE, "..", "protocols", "llm_naive_v1.json")
+PROTOCOL_ID = os.environ.get("LLM_PROTOCOL", "llm_naive_v2")
+PROTOCOL_PATH = os.path.join(_HERE, "..", "protocols", f"{PROTOCOL_ID}.json")
 _PROTO_BYTES = open(PROTOCOL_PATH, "rb").read()
 PROTOCOL_SHA = hashlib.sha256(_PROTO_BYTES).hexdigest()
 PROTO = json.loads(_PROTO_BYTES)
@@ -61,6 +62,8 @@ MODEL = PROTO["model"]["model_id"]
 URL = PROTO["model"]["endpoint"]
 SYSTEM = PROTO["system_prompt"]
 CAPS = PROTO["budget_caps"]
+#: 常规义务周期（秒）。与 `episode_lifecycle.DEADLINE_S`、实例 `ROUTINE_PERIOD_S` 同源。
+OBLIGATION_S = 3600
 CONDITIONS = PROTO["conditions"]
 ENV_SEED = PROTO["env_seed"]
 STATE_SCHEMA = PROTO["state_schema"]
@@ -112,12 +115,15 @@ def brief(view, max_nodes: int | None = None) -> dict:
     nodes = []
     for nid in sorted(view.node_ids)[:max_nodes]:
         rep = view.reports.get(nid)
+        heard_at = view.report_at.get(nid)
+        age_heard = None if heard_at is None else view.t_s - heard_at
         if rep is None:
-            nodes.append({"id": nid, "seen": False})
+            nodes.append({"id": nid, "seen": False, "last_heard_age_s": age_heard})
             continue
         nodes.append({
             "id": nid,
             "seen": True,
+            "last_heard_age_s": age_heard,
             "sampling_interval": rep.get("sampling_interval_s"),
             "report_period": rep.get("report_period_s"),
             "soc_seen": (None if rep.get("soc_wh") is None
@@ -126,8 +132,13 @@ def brief(view, max_nodes: int | None = None) -> dict:
             # **不隐藏 pending**：`in_flight` 就是"该节点队列非空"，即已有动作未落地。
             "pending_effect": bool(nid in view.in_flight),
         })
+    # **v2 的唯一改动**：把义务写成可判定的。`last_heard_age_s` = 中心上次**收到**该节点
+    # 报文距今多久（用 `report_at`，不是 `taken_at`——义务问的是"有没有听到"）。
+    # **超期与否由模型自己比**，我不替它算 `overdue` 布尔量（那才是加智慧）。
     return {"time_s": view.t_s,
-            "obligation": "one routine report per 3600 s per node",
+            "obligation_period_s": OBLIGATION_S,
+            "overdue_rule": STATE_SCHEMA.get(
+                "overdue_rule", "a node is overdue if last_heard_age_s > obligation_period_s"),
             "nodes": nodes,
             "last_tool_result": _LAST["result"]}
 
