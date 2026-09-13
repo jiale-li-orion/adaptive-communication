@@ -60,6 +60,11 @@
 > 不可供电 14.22 对 0 节点小时）⇒ 论文级 evaluation finding：
 > **在 persistent actuation 系统里，只看 service 的评测会把 destructive adaptation 当成有效控制。**
 >
+> **进度（2026-09-13）**：判据已落地并做了盲测——**排序 5 档全对（i.i.d. 极差 3.5 → 南极 0.0），
+> 但充分性不成立**：同一条突发度阶梯上「纠正机会消失」与「交付被打穿」由同一参数驱动、**分不开**，
+> 且第 5 档量级预测偏高 1.7 点。**记作部分通过，方法不从它长出来**，直到把那两格分开。
+> 见 [`21-regime-map-partial-pass-2026-09-13.md`](docs/s7-method/instance-v1/21-regime-map-partial-pass-2026-09-13.md)。
+>
 > **本阶段不做**：不造新策略；不用平均 `T_ctrl`；**不把来源时间结构 prior 写成藏东南站点实测恢复分布**；
 > 不把端侧 lease 塞进 core benchmark；不扫 `ε` 或 `D` 去赢。
 >
