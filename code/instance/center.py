@@ -686,6 +686,10 @@ ARMS: dict[str, type[CenterPolicy]] = {
     "ea_hyst3": lambda: EnergyAwarePolicy(0.010, 600, 900, exit_wh=0.002, confirm_n=4),
     # 省掉"未知状态时的保守配置"那一代（它与出厂默认相同，是空操作）。
     "ea_nb": lambda: EnergyAwarePolicy(0.010, 600, 900, send_when_unknown=False),
+    #: **竞争解释臂**：只把电量阈值抬高，不加入任何准入。计划允许预先声明至多三个阈值候选，
+    #: 这三档（0.010 / 0.015 / 0.018）就是全部，**不扫参**。
+    "ea_nb_t15": lambda: EnergyAwarePolicy(0.015, 600, 900, send_when_unknown=False),
+    "ea_nb_t18": lambda: EnergyAwarePolicy(0.018, 600, 900, send_when_unknown=False),
     "ea_nb_hyst": lambda: EnergyAwarePolicy(0.010, 600, 900, exit_wh=0.006, confirm_n=2,
                                             send_when_unknown=False),
     # **最强传统基线**：能源反馈（采样间隔）+ AoI 反馈（上报周期），成对下发、无读数不发。

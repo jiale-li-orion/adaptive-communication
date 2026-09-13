@@ -1612,6 +1612,50 @@ def test_soc_age_uses_source_time_and_skips_are_visible() -> None:
           f"in_flight={sk2.get('in_flight')}、at_target={sk2.get('at_target')}")
 
 
+def test_admission_gate_is_hand_checkable_and_monotone() -> None:
+    """**准入判据必须手工能算，而且必须单调。**
+
+    (a) 每小时负载：加密档（采样 600 s、上报 900 s）应等于
+        `6×4.7e-4 + 4×(2.33e-5 + 2.2e-5) = 3.0012e-3 Wh/h`，稀疏档
+        `1×4.7e-4 + 1×4.53e-5 = 5.153e-4 Wh/h`。**两个字段各自贡献，不能合成一个周期。**
+    (b) 不可行点可手算：0.0195 Wh 在加密档下 `0.0195 / 3.0012e-3 = 6.5` ⇒ **第 7 小时不可行**。
+        实测拒绝原因正是 `infeasible_at_7h`——这条把"门在算什么"钉死。
+    (c) **单调**：负载更轻的配置永远比更重的先被接受。门若违反单调，"准入"就没有意义。
+    """
+    print("\n[30] 准入判据：手工可算 + 单调")
+    from admission import RX_WH, SPARSE, ResourceGate, hourly_load
+    from oracle import UPLINK_WH
+
+    dense = hourly_load(600, 900, 4.7e-4)
+    sparse = hourly_load(*SPARSE, 4.7e-4)
+    check("加密档每小时负载 = 6×sample + 4×(ul+rx) = 3.0012e-3 Wh/h",
+          abs(dense - (6 * 4.7e-4 + 4 * (UPLINK_WH + RX_WH))) < 1e-15,
+          f"{dense:.6e}（手算 {6 * 4.7e-4 + 4 * (UPLINK_WH + RX_WH):.6e}）")
+    check("稀疏档每小时负载 = 1×sample + 1×(ul+rx) = 5.153e-4 Wh/h",
+          abs(sparse - (4.7e-4 + UPLINK_WH + RX_WH)) < 1e-15, f"{sparse:.6e}")
+    check("RX_WH 与 `RadioEnergy.add_rx` 逐位一致（3.6 V × 11 mA × 2 s / 3600）",
+          abs(RX_WH - 3.6 * 0.011 * 2.0 / 3600.0) < 1e-15, f"{RX_WH:.6e}")
+
+    g_inf = ResourceGate(sample_wh=4.7e-4, capacity_wh=0.02, horizon_s=12 * 3600,
+                         correction_s=None)
+    ok, why = g_inf.check(0.0195, (600, 900))
+    check("0.0195 Wh 在「不再假设能改」下于**第 7 小时**不可行（手算 0.0195/3.0012e-3 = 6.5）",
+          (not ok) and why.startswith("infeasible_at_7h"), why)
+    ok2, _ = g_inf.check(0.0195, SPARSE)
+    check("同一电量下稀疏档可行（5.153e-4 × 12 = 6.2e-3 < 0.0195）", ok2, f"{ok2}")
+
+    g_3h = ResourceGate(sample_wh=4.7e-4, capacity_wh=0.02, horizon_s=12 * 3600,
+                        correction_s=3 * 3600)
+    ok3, _ = g_3h.check(0.0195, (600, 900))
+    check("同一电量下、若相信 3 h 后还能改，则可行——**这就是 D 的作用**", ok3, f"{ok3}")
+
+    for soc in (0.004, 0.008, 0.0195):
+        a = g_inf.check(soc, (1200, 1800))[0]
+        b = g_inf.check(soc, (600, 900))[0]
+        check(f"单调：负载更轻的 (1200,1800) 不比 (600,900) 更晚被接受（soc={soc}）",
+              (not b) or a, f"轻 {a}、重 {b}")
+
+
 def main() -> int:
     print("实例层验收（Task Contract v1.1）")
     test_denominator_is_exogenous()
@@ -1643,6 +1687,7 @@ def main() -> int:
     test_intent_reasons_close_and_locate_the_waste()
     test_trace_does_not_change_the_run()
     test_soc_age_uses_source_time_and_skips_are_visible()
+    test_admission_gate_is_hand_checkable_and_monotone()
     print("\n" + "-" * 74)
     if FAIL:
         print(f"  {len(FAIL)} 项失败: {', '.join(FAIL)}")

@@ -28,6 +28,9 @@
 > - **两条论文级 finding 可独立引用**：相位锁定抽样、以及**中心 AoI 实现缺陷**
 >   （按采集时刻而非接收时刻推进，见 §6.22）——后者是"先证明坐标轴会动、再拿它下结论"的又一个实例。
 > - **收盘解析**：[`09-phase2-synthesis-2026-09-13.md`](docs/s7-method/instance-v1/09-phase2-synthesis-2026-09-13.md)
+> - **五小时计划 · 准入候选判定 = STOP**：[`19-admission-result-and-stop-2026-09-13.md`](docs/s7-method/instance-v1/19-admission-result-and-stop-2026-09-13.md)（规格 [`18-...`](docs/s7-method/instance-v1/18-method-spec-continuous-config-admission-2026-09-13.md)）
+>   —— 持续配置的资源准入在开发集上**逐位等于 `local`**（放行 0 次、拒绝 171.9 次），`D=3h` 的鲁棒臂与原 `ea_nb` 逐位相同 ⇒ **是标准方法适配，不是新机制**；
+>   结构性原因：加密抽干约 6.5 h 而保护时域 12–13 h，判据只有「全接受 / 全拒绝」两端。
 > - **五小时计划 · 0–1h 闸门（机制闭合与复现修复）**：[`17-gate-0-1h-mechanism-closure-2026-09-13.md`](docs/s7-method/instance-v1/17-gate-0-1h-mechanism-closure-2026-09-13.md)
 >   —— 两个真缺陷（`prune` 单位不一致使过期列结构性死亡；过期只在投递路径里检查使
 >   `in_flight` 可永久为真）、跳过原因账本、严格重放；并**撤销**"没有生成降档是因为

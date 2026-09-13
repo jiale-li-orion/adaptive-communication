@@ -215,7 +215,12 @@ def one_seed(seed: int, task_hours: float, tail_hours: float,
         constrained = frozenset(nid for nid in nodes if nid not in feasible)
         pol = ClairvoyantStaticSelector(constrained)
     else:
-        pol = build_policy(arm)
+        # **准入层在 `one_seed` 里套**，因为门需要实例声明的量（采样能耗、容量、保护时域），
+        # 而 `center.py` 的 `build_policy(name)` 拿不到它们。表外的臂返回 None。
+        from admission import build_gated
+        pol = build_gated(arm, sample_wh=prof.sample_wh,
+                          capacity_wh=prof.capacity_wh,
+                          horizon_s=int(hours) * 3600) or build_policy(arm)
     inst = Instance(nodes, truth, seed=seed, policy=pol,
                     send_contract_fields=contract, hold_every=hold_every,
                     hold_s=hold_s, access_outage=acc, hold_op=hold_op,
@@ -267,6 +272,9 @@ def one_seed(seed: int, task_hours: float, tail_hours: float,
         #: **跳过原因**：这台节点这次为什么没被下发。`plan()` 里四处 `continue` 在日志上
         #: 同形，含义完全不同；不分开记就无法回答"中心为什么不再下发"。
         "skip_reasons": pol.skip_report(),
+        #: 准入层的账本（只有带门的臂非空）：检查次数、放行、**被拒的数量与原因**。
+        #: 计划要求报告"被拒但原本有益"，那需要配对的反事实回放，本轮**未识别**。
+        "gate": (pol.gate_report() if hasattr(pol, "gate_report") else None),
         "autonomy_margin": margin_mean,
         "autonomy_margin_min": margin_min,
         "command_counters": dict(inst.counters),
@@ -387,8 +395,9 @@ def main() -> None:
         _oracle.UPLINK_WH = _ES_SAVED[1] * lam
 
     arm_names = [a.strip() for a in args.arms.split(",") if a.strip()]
+    from admission import GATED_ARMS
     for a in arm_names:
-        if a not in ARMS and a != "clairvoyant_static":
+        if a not in ARMS and a not in GATED_ARMS and a != "clairvoyant_static":
             raise SystemExit(f"unknown arm {a!r}; have {sorted(ARMS)} + clairvoyant_static")
     layers = [x.strip() for x in args.exec_layers.split(",") if x.strip()]
     for L in layers:
