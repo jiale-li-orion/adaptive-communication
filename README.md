@@ -63,7 +63,27 @@
 > 替代表述：**189 个文件里前沿上确实坐着有缺采的臂**（`cap0.008` 前沿 `{dense1800, local}` 缺采同为 21.3）
 > ⇒ 成立的是「**Pareto 前沿本身不是安全性陈述，把『在前沿上』读成『安全』才是错误**」。
 >
-> ### 闭环测量（2026-09-13 修正后最终）：`A(a) = 0`，**真正的损失死在第一层**
+> ### 逐 episode 聚合（2026-09-13 最终）：**Agent 没有失去控制，只是为同一动作喊了太多遍**
+>
+> [`25-episode-lifecycle-2026-09-13.md`](docs/s7-method/instance-v1/25-episode-lifecycle-2026-09-13.md)
+> —— episode = **一次语义状态改变需求**（`target_change` 开新 episode、`resend` 留在旧、`unknown_state` 看 target 变没变）；`superseded` 与 `censored` **不算 failure**。
+>
+> | 条件 | episode n | **closure rate** | **amplification** | **terminal layer1 / layer2** |
+> |---|---:|---:|---:|---:|
+> | `adm_noout` | 198 | **91.2%** | 3.70× | 7 / 9 |
+> | `adm_out3`（9 h 接入中断） | 113 | **80.0%** | 4.04× | **0** / 18 |
+> | `polar_c0.05` | 66 | **62.5%** | **17.56×** | 14 / 10 |
+>
+> - **§7.83 那个「layer 1 拒了 97%」绝不等于控制失败**——被拒的绝大多数是**同一 episode 的重复敲门**。
+>   `out3` 下 9 h 接入中断里 **80% 的语义状态改变最终仍然完成**，平均喊 4.9 次。
+> - ⇒ **预注册分支 1 主导**：**authority failure 收掉**；转 **planning / intent economy**，
+>   但**必须先与成熟 durable reconciliation / device shadow 对比**，不得硬包装成新 runtime。
+> - **`report_period` 方法线关闭**（只买 layer 2；layer 2 只在 `out3` 有 18 个 episode 的立足点）。
+> - **agent infra backpressure 反而变强**：`planning amplification` 3.7–17.6×、
+>   `wasted reasoning per closed effect` 3.4–28.0——**不会把有用的 retry 误判成失败**。
+> - 分支 2 只在 `polar` 有 14 个 episode、分支 3 只在 `out3` 有 18 个、**分支 4 不适用**（`node_dead` 全 0）。
+>
+> ### 闭环测量（2026-09-13 修正后）：`A(a) = 0`，损失死在第一层
 >
 > [`24-closed-loop-measurement-corrected-2026-09-13.md`](docs/s7-method/instance-v1/24-closed-loop-measurement-corrected-2026-09-13.md)
 > —— **取代 §7.81–§7.82 的 `A` 数值**。那两节的数不可承重：测量对象有三处定义缺陷
