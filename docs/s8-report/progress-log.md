@@ -3560,3 +3560,27 @@ return leg 总短于剩余伤害预算。**要让 `A` 非零就得让 `T_harm` �
 **目标七项状态**：1（identity 配对，含真身份）✅、2（time-origin）✅、3（右删失）✅、
 4（重跑 + 判定）✅、5（逐 intent 归因接四层）✅、6（G5 第二次收紧）✅、7（文档与位置）✅。
 **新条件一格未开。**
+
+---
+
+## §7.87 逐 episode 聚合：**closure 高、amplification 高** ⇒ 预注册分支 1
+
+新脚本 `code/analysis/episode_lifecycle.py`。`plan` 事件的 `intent_reason` 已作**诊断字段**进 trace
+（只加字段，`test_instance.py` 30 组仍全通过）。episode = 一次语义状态改变需求，所有为该 target 的
+重试算同一 episode；`superseded` 与 `censored` **不算 failure**。
+
+| 条件 | intent n | **episode n** | **amplification** | **closure rate** | attempts/closed | wasted/closed | obsolete apply |
+|---|---:|---:|---:|---:|---:|---:|---:|
+| `adm_noout` | 732 | 198 | 3.70× | **91.2%** | 3.7 | 3.4 | 41 |
+| `adm_out3` | 457 | 113 | 4.04× | **80.0%** | 4.9 | 5.3 | 13 |
+| **`polar_c0.05`** | 1159 | 66 | **17.56×** | **62.5%** | 1.0 | **28.0** | 0 |
+
+**`out3` 下 closure 仍有 80.0%**（9 h 接入中断）⇒ **§7.83 的"layer 1 拒 97%"绝不等于控制失败**，
+被拒的绝大多数是**同一 episode 的重复敲门**。**用户的预判分叉成立。**
+后果：**authority failure 关掉**，转 planning/intent economy，**并拿成熟 durable reconciliation 做强基线**。
+
+**未做到**：`terminal layer` 只做了 `deadline/node_dead/censored/superseded`，
+**没有"最后一次尝试死在第 1 层还是第 2 层"** ⇒ **分支 2、3 尚不能对号入座**，下一轮补。
+另：`adm_noout` 与 `burst_iid_c0.05` 四数逐位相同，疑 `build_kwargs` 未传 burst 键，未查证；
+`obsolete_apply` 判据偏松（`noout` 41 / `out3` 13），是 execution-layer stale effect 的首个非零证据。
+文档 `25-episode-lifecycle-2026-09-13.md`。

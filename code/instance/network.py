@@ -564,7 +564,12 @@ class Instance:
                 self.trace_events.append(
                     (t_s, node_id, "plan", view.soc_of(node_id), payload.get("op"),
                      payload.get("period_s", payload.get("interval_s")),
-                     view.soc_age_s(node_id)))
+                     view.soc_age_s(node_id),
+                     # **诊断字段**：本条意图的**生成原因**（`unknown_state`/`target_change`/`resend`，
+                     # 由上面刚调用的 `_note_intent_reason` 写在 `_last_reason` 上）。
+                     # episode 聚合要按"同一个 target 的所有重试属于同一 episode"来切，
+                     # 而切分依据正是这三类语义——**复用现有语义，不新造一套**。
+                     self._last_reason.get(node_id)))
             self._send_command(node_id, payload, t_s)
 
         # 2) 到上报周期的节点发一批（缓存里全是未确认记录 → 自动补发）
