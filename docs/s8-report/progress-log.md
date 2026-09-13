@@ -3736,3 +3736,37 @@ tokens `981/18` ⇒ **≈327 输入 / 6 输出 token/次**。
 **实际影响**：硬上限 `max_calls=4500` **未被触及**（2340 < 4500）；
 按非思考口径（≈327 输入 / 6 输出 token 每次）2340 次 ≈ **¥2.4**，**仍远低于 8 元上限**。
 **即：错的只是我写在协议里的那个叙述数字，不是预算安全性。** 但纪律上必须记。
+
+---
+
+## §7.94 主指标定义缺陷：**"意图数"与"调用数"是两个分子**（已分开报）
+
+`episode_lifecycle.py` 算 scripted 的 amplification 用的是
+
+```
+amplification = #plan 事件 / #semantic episodes
+```
+
+而 `plan` 事件**只在 `policy.plan()` 返回非空时产生**（返回 `[]` 时不写）⇒ 它是**"真正提出动作"的次数**。
+scripted 参照 **3.70 / 4.04 / 17.56** 就是这个定义。
+
+**但我在 LLM 脚本里第一版用的是 `budget.calls / n`——而 `budget.calls` 是"每个 epoch 都付一次的调用数"（含 `noop`）。**
+⇒ **拿"调用数"去比"意图数"，指标不可比。** 如果 LLM 大量 `noop`，这个比值会被 system 性抬高，
+看起来像"amplification 很大"，其实只是"它多数时候不动手"。
+
+**已修**：分开报四个数，并把定义写在输出里——
+
+| 量 | 定义 | 用途 |
+|---|---|---|
+| `amp_intents` | `#plan 事件 / #episodes` | **与 scripted 3.70/4.04/17.56 可比**（主指标） |
+| `amp_invocations` | `#调用 / #episodes` | 成本侧：每个 semantic episode 付了几次推理 |
+| `wasted_intents_per_closed` | `(#意图 − #closed)/#closed` | 用户给的原始定义 |
+| `wasted_invocations_per_closed` | `(#调用 − #closed)/#closed` | 花钱口径 |
+
+**⚠ 对正在跑的那次实验的影响**：那个进程加载的是**旧脚本**，输出里只有 `amplification`（= 调用数/n）
+与 `wasted_per_closed`。**它的 `intents` 可由 `invocations − noop` 反算**（`noop` 计的就是
+"没下达可执行动作"的那些调用），跑完后我会**两个口径都报并注明是反算的**，不会把调用数当意图数。
+
+**另外**：本轮我在修打印语句时把嵌套 f-string 的引号写崩了、**文件一度是语法错的**——
+当场发现并用行号定位重建修好（中途一次 `str.index` 定位失败也没写盘，所以没有落下一个坏状态）。
+**教训：嵌套 f-string 里再嵌引号是没必要冒的险，改成中间变量。**

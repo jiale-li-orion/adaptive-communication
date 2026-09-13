@@ -237,11 +237,21 @@ def run(tag: str, seed: int, budget: Budget, call_limit: int | None = None) -> d
     rows = ep["rows"]
     closed = sum(1 for r in rows if r["terminal"] == "closed")
     n = len(rows)
+    # ⚠ **两个分子不是一回事，必须分开报**：
+    # - `intents` = `plan` 事件数 = **真正提出动作**的次数（脚本策略的 `plan()` 返回 `[]` 时
+    #   不产生 `plan` 事件）。**只有它才与 scripted 参照 3.70/4.04/17.56 可比。**
+    # - `invocations` = 每个 epoch 都付了一次推理成本（含 `noop`）。
+    # 第一版只用 `budget.calls / n` 当 amplification ⇒ **拿"调用数"比"意图数"，指标不可比**。
+    intents = sum(1 for e in d["_trace"] if e[2] == "plan")
     return {"protocol_id": PROTO["protocol_id"], "protocol_sha256": PROTOCOL_SHA,
-            "tag": tag, "seed": seed, "invocations": budget.calls,
+            "tag": tag, "seed": seed,
+            "invocations": budget.calls, "intents": intents,
             "episodes": n, "closed": closed,
-            "amplification": (budget.calls / n) if n else None,
-            "wasted_per_closed": ((budget.calls - closed) / closed) if closed else None,
+            "amp_intents": (intents / n) if n else None,
+            "amp_invocations": (budget.calls / n) if n else None,
+            "wasted_intents_per_closed": ((intents - closed) / closed) if closed else None,
+            "wasted_invocations_per_closed":
+                ((budget.calls - closed) / closed) if closed else None,
             "terminal": {t: sum(1 for r in rows if r["terminal"] == t)
                          for t in {r["terminal"] for r in rows}},
             "actions": pol.actions, "noop": pol.noop, "bad": pol.bad,
@@ -289,11 +299,18 @@ def main() -> int:
         print(f"== {tag} ==")
         print(f"  planner invocations = {r['invocations']}")
         print(f"  semantic episodes   = {r['episodes']}（closed {r['closed']}）")
-        print(f"  **planning amplification = {r['amplification']:.2f}×**"
-              f"（scripted 参照 3.70/4.04/17.56）")
-        wp = r["wasted_per_closed"]
-        print(f"  **wasted reasoning per closed effect = "
-              f"{'—' if wp is None else f'{wp:.2f}'}**")
+        _ai = r["amp_intents"]
+        _av = r["amp_invocations"]
+        _wi = r["wasted_intents_per_closed"]
+        _wv = r["wasted_invocations_per_closed"]
+        print("  **planning amplification（#意图/#episode，与 scripted 可比）= "
+              + ("—" if _ai is None else f"{_ai:.2f}") + "×**"
+              + "（scripted 参照 3.70/4.04/17.56）")
+        print("  planning amplification（#调用/#episode，含 noop，成本侧）= "
+              + ("—" if _av is None else f"{_av:.2f}") + "×")
+        print("  **wasted per closed effect = 意图侧 "
+              + ("—" if _wi is None else f"{_wi:.2f}") + " / 调用侧 "
+              + ("—" if _wv is None else f"{_wv:.2f}") + "**")
         print(f"  terminal = {r['terminal']}")
         print(f"  actions = {r['actions']}；noop={r['noop']}；解析失败={r['bad']}")
         print(f"  service = {r['routine_delivered']:.1f}/168"
