@@ -51,6 +51,7 @@ def dynamic_oracle(obligations, hours: int, harvest_by_node: dict[str, dict[int,
                    node_ids, *, profile, initial_wh: float | None = None,
                    soc_bins: int = 200,
                    intervals: tuple[int, ...] = INTERVAL_TIERS,
+                   report_periods: tuple[int, ...] = INTERVAL_TIERS,
                    kinds: tuple[str, ...] = (KIND_ROUTINE,),
                    tail_hours: int = 0) -> dict:
     """**真上界**：逐节点、逐小时的离线动态规划，读完整未来的采能轨迹。
@@ -60,9 +61,19 @@ def dynamic_oracle(obligations, hours: int, harvest_by_node: dict[str, dict[int,
 
         V[h][s] = max_a { reward(h, a) + V[h+1][ clip(s + H(h) - cost(a)) ] }
 
-    其中 `cost(a) = (3600/a) * (sample_wh + UPLINK_WH)`（采样间隔与上报周期成对，报一次走一次
-    空口；`idle_wh_per_tick` 为 0，所以没有静息项）。`s + H(h) < cost(a)` 表示这一档真跑不起，
-    该动作不可行。收益按义务的 `window` 与该档位能否在窗内落下一条样计算。
+    **动作是两个字段，不是一个。** 采样间隔与上报周期是**独立字段**（E：重庆 `0045`/`0042`），
+    节点还有缓存（`cache_slots`），所以"采得密、报得稀"是允许的。因此：
+
+        cost(a_i, a_p) = (3600/a_i) * sample_wh + (3600/a_p) * UPLINK_WH
+        reward         = 只看 a_i（服务义务靠**采样**，不靠上报频率）
+
+    第一版把动作写成一维、并按"每采一条报一条"计能，于是**高估了密集采样的能耗**
+    （`dense300` 采 300 s / 报 900 s 的真实能耗是 `12*4.7e-4 + 4*2.33e-5`，而它按
+    `12*(4.7e-4+2.33e-5)` 计）——**低估能耗会让上界偏低，偏低的上界不再是上界**。
+    测试 [18] 用一条"采得密、报得稀"的臂把这条钉住。
+
+    `s + H(h) < cost` 表示这一档真跑不起，该动作不可行。收益按义务的 `window` 与该档位能否在
+    窗内落下一条样计算。
 
     **只覆盖 `kinds` 里的义务，默认只算周期义务。** 这不是图省事，是两条硬理由：
 
@@ -124,7 +135,9 @@ def dynamic_oracle(obligations, hours: int, harvest_by_node: dict[str, dict[int,
                 r[a] = float(got)
             reward.append(r)
 
-        cost = {a: (3600 / a) * (profile.sample_wh + UPLINK_WH) for a in intervals}
+        # 两个字段各自的单位小时能耗。采样决定服务，上报只花钱。
+        cost_sample = {a: (3600 / a) * profile.sample_wh for a in intervals}
+        cost_uplink = {p: (3600 / p) * UPLINK_WH for p in report_periods}
         # 加上"本小时不采样"这个动作（代价 0、收益 0）。它不是可有可无的：
         # 没有它，电量耗尽的节点会让**整条轨迹**看起来不可行（`V_next` 为 NEG、
         # `reward + (-inf) = -inf` 而 `-inf > -inf` 为假，档位留在 None），于是 DP 强迫节点
@@ -132,8 +145,12 @@ def dynamic_oracle(obligations, hours: int, harvest_by_node: dict[str, dict[int,
         # （实测：0.004 Wh 的节点能采 8 小时，却被报成 0 条义务）。
         # 物理上节点耗尽就是**停止采样**，所以"不采样"必须是一个动作。
         # 它同时是松弛（真实策略不能任意跳过整点），因此不破坏上界性质。
-        actions: list[int | None] = [*intervals, None]
-        cost[None] = 0.0
+        # 动作 = (采样间隔, 上报周期)；`None` 表示本小时不采样、不上报（代价 0）。
+        actions: list[tuple[int | None, int | None]] = [
+            (a, p) for a in intervals for p in report_periods] + [(None, None)]
+        cost = {(a, p): cost_sample[a] + cost_uplink[p]
+                for a in intervals for p in report_periods}
+        cost[(None, None)] = 0.0
 
         NEG = float("-inf")
         V_next = [0.0] * (n_bins + 1)
@@ -142,15 +159,15 @@ def dynamic_oracle(obligations, hours: int, harvest_by_node: dict[str, dict[int,
             V = [NEG] * (n_bins + 1)
             for b in range(n_bins + 1):
                 soc = b * step
-                for a in actions:
-                    avail = soc + h_wh[h] - cost[a]
+                for act in actions:
+                    avail = soc + h_wh[h] - cost[act]
                     if avail < 0:
                         continue                       # 这一档跑不起
                     nb = min(n_bins, int(avail / step))
-                    v = (0.0 if a is None else reward[h][a]) + V_next[nb]
+                    v = (0.0 if act[0] is None else reward[h][act[0]]) + V_next[nb]
                     if v > V[b]:
                         V[b] = v
-                        choice[h][b] = a
+                        choice[h][b] = act
             V_next = V
         start = min(n_bins, int(init / step))
         best = V[start]
@@ -161,7 +178,7 @@ def dynamic_oracle(obligations, hours: int, harvest_by_node: dict[str, dict[int,
         for h in range(hours):
             a = choice[h][b]
             schedule.append(a)
-            if a is None:
+            if a is None or a[0] is None:
                 socs.append(soc)
                 continue
             soc = min(cap, soc + h_wh[h] - cost[a])
@@ -175,10 +192,10 @@ def dynamic_oracle(obligations, hours: int, harvest_by_node: dict[str, dict[int,
             "oracle": best_int,
             "schedule": schedule,
             "soc_wh": [round(x, 6) for x in socs],
-            "hours_sampled": sum(1 for a in schedule if a is not None),
+            "hours_sampled": sum(1 for a in schedule if a is not None and a[0] is not None),
         }
     return {"total_oracle": total, "per_node": per_node, "soc_bins": n_bins,
-            "intervals": list(intervals),
+            "intervals": list(intervals), "report_periods": list(report_periods),
             "note": ("真上界：松弛可交付性（假设一定送得到）、按标称容量算、每义务取最优采样相位；"
                      "不松弛档位离散性与能量的小时耦合。逐小时收益由义务窗与该档位能否在窗内"
                      "落样决定，故它同时反映'加密才拿得到事件义务'与'加密会耗死电池'这对取舍。")}

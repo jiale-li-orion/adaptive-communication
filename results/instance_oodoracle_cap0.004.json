@@ -3,6 +3,8 @@
   "arms": {
    "dense1200": {
     "access_blocked": 0.0,
+    "autonomy_margin": 174.98065072879118,
+    "autonomy_margin_min": 0.0,
     "censored": 0.0,
     "commands_delivered": 24.55,
     "commands_refused": 23.8,
@@ -30,6 +32,8 @@
    },
    "dense1800": {
     "access_blocked": 0.0,
+    "autonomy_margin": 174.98065072879118,
+    "autonomy_margin_min": 0.0,
     "censored": 0.0,
     "commands_delivered": 25.25,
     "commands_refused": 25.0,
@@ -57,6 +61,8 @@
    },
    "dense300": {
     "access_blocked": 0.0,
+    "autonomy_margin": 174.98065072879118,
+    "autonomy_margin_min": 0.0,
     "censored": 0.0,
     "commands_delivered": 20.85,
     "commands_refused": 16.8,
@@ -84,6 +90,8 @@
    },
    "dense600": {
     "access_blocked": 0.0,
+    "autonomy_margin": 174.98065072879118,
+    "autonomy_margin_min": 0.0,
     "censored": 0.0,
     "commands_delivered": 22.75,
     "commands_refused": 19.1,
@@ -111,6 +119,8 @@
    },
    "dense900": {
     "access_blocked": 0.0,
+    "autonomy_margin": 174.98065072879118,
+    "autonomy_margin_min": 0.0,
     "censored": 0.0,
     "commands_delivered": 23.35,
     "commands_refused": 20.8,
@@ -138,6 +148,8 @@
    },
    "ea_i600": {
     "access_blocked": 0.0,
+    "autonomy_margin": 174.98065072879118,
+    "autonomy_margin_min": 0.0,
     "censored": 0.0,
     "commands_delivered": 25.65,
     "commands_refused": 5.9,
@@ -165,6 +177,8 @@
    },
    "ea_nb": {
     "access_blocked": 0.0,
+    "autonomy_margin": 174.98065072879118,
+    "autonomy_margin_min": 0.0,
     "censored": 0.0,
     "commands_delivered": 0.0,
     "commands_refused": 0.0,
@@ -192,6 +206,8 @@
    },
    "local": {
     "access_blocked": 0.0,
+    "autonomy_margin": 174.98065072879118,
+    "autonomy_margin_min": 0.0,
     "censored": 0.0,
     "commands_delivered": 0.0,
     "commands_refused": 0.0,
@@ -221,6 +237,8 @@
   "best_fixed_posthoc": {
    "_which": "dense1800",
    "access_blocked": 0.0,
+   "autonomy_margin": 174.98065072879118,
+   "autonomy_margin_min": 0.0,
    "censored": 0.0,
    "commands_delivered": 25.25,
    "commands_refused": 25.0,
@@ -262,6 +280,7 @@
    "hold_every": 0,
    "hold_op": null,
    "hold_s": 0,
+   "initial_soc": 1.0,
    "low_frac": 0.4,
    "low_wh_per_hour": 0.0,
    "oracle_soc_bins": 200,
@@ -273,6 +292,13 @@
    "soc_loss_p": 0.0,
    "soc_max_age_s": null,
    "soc_noise_wh": 0.0,
+   "solar_cloud_atten": 0.25,
+   "solar_cloud_p": 0.35,
+   "solar_day_start_h": 6.0,
+   "solar_peak_wh_per_hour": 0.06,
+   "solar_shade_frac": 0.0,
+   "solar_snow_frac": 0.0,
+   "solar_snow_start_h": 8.0,
    "tag": "oodoracle_cap0.004",
    "tail_hours": 1.0,
    "task_hours": 12.0,
@@ -298,6 +324,7 @@
   "hold_every": 0,
   "hold_op": null,
   "hold_s": 0,
+  "initial_soc": 1.0,
   "low_frac": 0.4,
   "low_wh_per_hour": 0.0,
   "oracle_soc_bins": 200,
@@ -309,6 +336,13 @@
   "soc_loss_p": 0.0,
   "soc_max_age_s": null,
   "soc_noise_wh": 0.0,
+  "solar_cloud_atten": 0.25,
+  "solar_cloud_p": 0.35,
+  "solar_day_start_h": 6.0,
+  "solar_peak_wh_per_hour": 0.06,
+  "solar_shade_frac": 0.0,
+  "solar_snow_frac": 0.0,
+  "solar_snow_start_h": 8.0,
   "tag": "oodoracle_cap0.004",
   "tail_hours": 1.0,
   "task_hours": 12.0,
@@ -318,6 +352,8 @@
   {
    "access_blocked": 0,
    "arm": "local",
+   "autonomy_margin": 184.19015866188542,
+   "autonomy_margin_min": 0.0,
    "by_kind": {
     "event": {
      "censored": 0,
@@ -578,6 +614,8 @@
   {
    "access_blocked": 0,
    "arm": "local",
+   "autonomy_margin": 163.7245854772315,
+   "autonomy_margin_min": 0.0,
    "by_kind": {
     "event": {
      "censored": 0,
@@ -838,6 +876,8 @@
   {
    "access_blocked": 0,
    "arm": "local",
+   "autonomy_margin": 163.7245854772315,
+   "autonomy_margin_min": 0.0,
    "by_kind": {
     "event": {
      "censored": 0,
@@ -1098,6 +1138,8 @@
   {
    "access_blocked": 0,
    "arm": "local",
+   "autonomy_margin": 143.25901229257755,
+   "autonomy_margin_min": 0.0,
    "by_kind": {
     "event": {
      "censored": 0,
@@ -1358,6 +1400,8 @@
   {
    "access_blocked": 0,
    "arm": "local",
+   "autonomy_margin": 204.65573184653937,
+   "autonomy_margin_min": 0.0,
    "by_kind": {
     "event": {
      "censored": 0,
@@ -1618,6 +1662,8 @@
   {
    "access_blocked": 0,
    "arm": "local",
+   "autonomy_margin": 184.19015866188542,
+   "autonomy_margin_min": 0.0,
    "by_kind": {
     "event": {
      "censored": 0,
@@ -1878,6 +1924,8 @@
   {
    "access_blocked": 0,
    "arm": "local",
+   "autonomy_margin": 204.65573184653937,
+   "autonomy_margin_min": 0.0,
    "by_kind": {
     "event": {
      "censored": 0,
@@ -2138,6 +2186,8 @@
   {
    "access_blocked": 0,
    "arm": "local",
+   "autonomy_margin": 204.65573184653937,
+   "autonomy_margin_min": 0.0,
    "by_kind": {
     "event": {
      "censored": 0,
@@ -2398,6 +2448,8 @@
   {
    "access_blocked": 0,
    "arm": "local",
+   "autonomy_margin": 122.79343910792362,
+   "autonomy_margin_min": 0.0,
    "by_kind": {
     "event": {
      "censored": 0,
@@ -2658,6 +2710,8 @@
   {
    "access_blocked": 0,
    "arm": "local",
+   "autonomy_margin": 163.7245854772315,
+   "autonomy_margin_min": 0.0,
    "by_kind": {
     "event": {
      "censored": 0,
@@ -2918,6 +2972,8 @@
   {
    "access_blocked": 0,
    "arm": "local",
+   "autonomy_margin": 143.25901229257755,
+   "autonomy_margin_min": 0.0,
    "by_kind": {
     "event": {
      "censored": 0,
@@ -3178,6 +3234,8 @@
   {
    "access_blocked": 0,
    "arm": "local",
+   "autonomy_margin": 266.0524514005012,
+   "autonomy_margin_min": 0.0,
    "by_kind": {
     "event": {
      "censored": 0,
@@ -3438,6 +3496,8 @@
   {
    "access_blocked": 0,
    "arm": "local",
+   "autonomy_margin": 204.65573184653937,
+   "autonomy_margin_min": 0.0,
    "by_kind": {
     "event": {
      "censored": 0,
@@ -3698,6 +3758,8 @@
   {
    "access_blocked": 0,
    "arm": "local",
+   "autonomy_margin": 163.7245854772315,
+   "autonomy_margin_min": 0.0,
    "by_kind": {
     "event": {
      "censored": 0,
@@ -3958,6 +4020,8 @@
   {
    "access_blocked": 0,
    "arm": "local",
+   "autonomy_margin": 163.7245854772315,
+   "autonomy_margin_min": 0.0,
    "by_kind": {
     "event": {
      "censored": 0,
@@ -4218,6 +4282,8 @@
   {
    "access_blocked": 0,
    "arm": "local",
+   "autonomy_margin": 163.7245854772315,
+   "autonomy_margin_min": 0.0,
    "by_kind": {
     "event": {
      "censored": 0,
@@ -4478,6 +4544,8 @@
   {
    "access_blocked": 0,
    "arm": "local",
+   "autonomy_margin": 204.65573184653937,
+   "autonomy_margin_min": 0.0,
    "by_kind": {
     "event": {
      "censored": 0,
@@ -4738,6 +4806,8 @@
   {
    "access_blocked": 0,
    "arm": "local",
+   "autonomy_margin": 143.25901229257755,
+   "autonomy_margin_min": 0.0,
    "by_kind": {
     "event": {
      "censored": 0,
@@ -4998,6 +5068,8 @@
   {
    "access_blocked": 0,
    "arm": "local",
+   "autonomy_margin": 122.79343910792362,
+   "autonomy_margin_min": 0.0,
    "by_kind": {
     "event": {
      "censored": 0,
@@ -5258,6 +5330,8 @@
   {
    "access_blocked": 0,
    "arm": "local",
+   "autonomy_margin": 184.19015866188542,
+   "autonomy_margin_min": 0.0,
    "by_kind": {
     "event": {
      "censored": 0,
@@ -5518,6 +5592,8 @@
   {
    "access_blocked": 0,
    "arm": "dense300",
+   "autonomy_margin": 184.19015866188542,
+   "autonomy_margin_min": 0.0,
    "by_kind": {
     "event": {
      "censored": 0,
@@ -5778,6 +5854,8 @@
   {
    "access_blocked": 0,
    "arm": "dense300",
+   "autonomy_margin": 163.7245854772315,
+   "autonomy_margin_min": 0.0,
    "by_kind": {
     "event": {
      "censored": 0,
@@ -6038,6 +6116,8 @@
   {
    "access_blocked": 0,
    "arm": "dense300",
+   "autonomy_margin": 163.7245854772315,
+   "autonomy_margin_min": 0.0,
    "by_kind": {
     "event": {
      "censored": 0,
@@ -6298,6 +6378,8 @@
   {
    "access_blocked": 0,
    "arm": "dense300",
+   "autonomy_margin": 143.25901229257755,
+   "autonomy_margin_min": 0.0,
    "by_kind": {
     "event": {
      "censored": 0,
@@ -6558,6 +6640,8 @@
   {
    "access_blocked": 0,
    "arm": "dense300",
+   "autonomy_margin": 204.65573184653937,
+   "autonomy_margin_min": 0.0,
    "by_kind": {
     "event": {
      "censored": 0,
@@ -6818,6 +6902,8 @@
   {
    "access_blocked": 0,
    "arm": "dense300",
+   "autonomy_margin": 184.19015866188542,
+   "autonomy_margin_min": 0.0,
    "by_kind": {
     "event": {
      "censored": 0,
@@ -7078,6 +7164,8 @@
   {
    "access_blocked": 0,
    "arm": "dense300",
+   "autonomy_margin": 204.65573184653937,
+   "autonomy_margin_min": 0.0,
    "by_kind": {
     "event": {
      "censored": 0,
@@ -7338,6 +7426,8 @@
   {
    "access_blocked": 0,
    "arm": "dense300",
+   "autonomy_margin": 204.65573184653937,
+   "autonomy_margin_min": 0.0,
    "by_kind": {
     "event": {
      "censored": 0,
@@ -7598,6 +7688,8 @@
   {
    "access_blocked": 0,
    "arm": "dense300",
+   "autonomy_margin": 122.79343910792362,
+   "autonomy_margin_min": 0.0,
    "by_kind": {
     "event": {
      "censored": 0,
@@ -7858,6 +7950,8 @@
   {
    "access_blocked": 0,
    "arm": "dense300",
+   "autonomy_margin": 163.7245854772315,
+   "autonomy_margin_min": 0.0,
    "by_kind": {
     "event": {
      "censored": 0,
@@ -8118,6 +8212,8 @@
   {
    "access_blocked": 0,
    "arm": "dense300",
+   "autonomy_margin": 143.25901229257755,
+   "autonomy_margin_min": 0.0,
    "by_kind": {
     "event": {
      "censored": 0,
@@ -8378,6 +8474,8 @@
   {
    "access_blocked": 0,
    "arm": "dense300",
+   "autonomy_margin": 266.0524514005012,
+   "autonomy_margin_min": 0.0,
    "by_kind": {
     "event": {
      "censored": 0,
@@ -8638,6 +8736,8 @@
   {
    "access_blocked": 0,
    "arm": "dense300",
+   "autonomy_margin": 204.65573184653937,
+   "autonomy_margin_min": 0.0,
    "by_kind": {
     "event": {
      "censored": 0,
@@ -8898,6 +8998,8 @@
   {
    "access_blocked": 0,
    "arm": "dense300",
+   "autonomy_margin": 163.7245854772315,
+   "autonomy_margin_min": 0.0,
    "by_kind": {
     "event": {
      "censored": 0,
@@ -9158,6 +9260,8 @@
   {
    "access_blocked": 0,
    "arm": "dense300",
+   "autonomy_margin": 163.7245854772315,
+   "autonomy_margin_min": 0.0,
    "by_kind": {
     "event": {
      "censored": 0,
@@ -9418,6 +9522,8 @@
   {
    "access_blocked": 0,
    "arm": "dense300",
+   "autonomy_margin": 163.7245854772315,
+   "autonomy_margin_min": 0.0,
    "by_kind": {
     "event": {
      "censored": 0,
@@ -9678,6 +9784,8 @@
   {
    "access_blocked": 0,
    "arm": "dense300",
+   "autonomy_margin": 204.65573184653937,
+   "autonomy_margin_min": 0.0,
    "by_kind": {
     "event": {
      "censored": 0,
@@ -9938,6 +10046,8 @@
   {
    "access_blocked": 0,
    "arm": "dense300",
+   "autonomy_margin": 143.25901229257755,
+   "autonomy_margin_min": 0.0,
    "by_kind": {
     "event": {
      "censored": 0,
@@ -10198,6 +10308,8 @@
   {
    "access_blocked": 0,
    "arm": "dense300",
+   "autonomy_margin": 122.79343910792362,
+   "autonomy_margin_min": 0.0,
    "by_kind": {
     "event": {
      "censored": 0,
@@ -10458,6 +10570,8 @@
   {
    "access_blocked": 0,
    "arm": "dense300",
+   "autonomy_margin": 184.19015866188542,
+   "autonomy_margin_min": 0.0,
    "by_kind": {
     "event": {
      "censored": 0,
@@ -10718,6 +10832,8 @@
   {
    "access_blocked": 0,
    "arm": "dense600",
+   "autonomy_margin": 184.19015866188542,
+   "autonomy_margin_min": 0.0,
    "by_kind": {
     "event": {
      "censored": 0,
@@ -10978,6 +11094,8 @@
   {
    "access_blocked": 0,
    "arm": "dense600",
+   "autonomy_margin": 163.7245854772315,
+   "autonomy_margin_min": 0.0,
    "by_kind": {
     "event": {
      "censored": 0,
@@ -11238,6 +11356,8 @@
   {
    "access_blocked": 0,
    "arm": "dense600",
+   "autonomy_margin": 163.7245854772315,
+   "autonomy_margin_min": 0.0,
    "by_kind": {
     "event": {
      "censored": 0,
@@ -11498,6 +11618,8 @@
   {
    "access_blocked": 0,
    "arm": "dense600",
+   "autonomy_margin": 143.25901229257755,
+   "autonomy_margin_min": 0.0,
    "by_kind": {
     "event": {
      "censored": 0,
@@ -11758,6 +11880,8 @@
   {
    "access_blocked": 0,
    "arm": "dense600",
+   "autonomy_margin": 204.65573184653937,
+   "autonomy_margin_min": 0.0,
    "by_kind": {
     "event": {
      "censored": 0,
@@ -12018,6 +12142,8 @@
   {
    "access_blocked": 0,
    "arm": "dense600",
+   "autonomy_margin": 184.19015866188542,
+   "autonomy_margin_min": 0.0,
    "by_kind": {
     "event": {
      "censored": 0,
@@ -12278,6 +12404,8 @@
   {
    "access_blocked": 0,
    "arm": "dense600",
+   "autonomy_margin": 204.65573184653937,
+   "autonomy_margin_min": 0.0,
    "by_kind": {
     "event": {
      "censored": 0,
@@ -12538,6 +12666,8 @@
   {
    "access_blocked": 0,
    "arm": "dense600",
+   "autonomy_margin": 204.65573184653937,
+   "autonomy_margin_min": 0.0,
    "by_kind": {
     "event": {
      "censored": 0,
@@ -12798,6 +12928,8 @@
   {
    "access_blocked": 0,
    "arm": "dense600",
+   "autonomy_margin": 122.79343910792362,
+   "autonomy_margin_min": 0.0,
    "by_kind": {
     "event": {
      "censored": 0,
@@ -13058,6 +13190,8 @@
   {
    "access_blocked": 0,
    "arm": "dense600",
+   "autonomy_margin": 163.7245854772315,
+   "autonomy_margin_min": 0.0,
    "by_kind": {
     "event": {
      "censored": 0,
@@ -13318,6 +13452,8 @@
   {
    "access_blocked": 0,
    "arm": "dense600",
+   "autonomy_margin": 143.25901229257755,
+   "autonomy_margin_min": 0.0,
    "by_kind": {
     "event": {
      "censored": 0,
@@ -13578,6 +13714,8 @@
   {
    "access_blocked": 0,
    "arm": "dense600",
+   "autonomy_margin": 266.0524514005012,
+   "autonomy_margin_min": 0.0,
    "by_kind": {
     "event": {
      "censored": 0,
@@ -13838,6 +13976,8 @@
   {
    "access_blocked": 0,
    "arm": "dense600",
+   "autonomy_margin": 204.65573184653937,
+   "autonomy_margin_min": 0.0,
    "by_kind": {
     "event": {
      "censored": 0,
@@ -14098,6 +14238,8 @@
   {
    "access_blocked": 0,
    "arm": "dense600",
+   "autonomy_margin": 163.7245854772315,
+   "autonomy_margin_min": 0.0,
    "by_kind": {
     "event": {
      "censored": 0,
@@ -14358,6 +14500,8 @@
   {
    "access_blocked": 0,
    "arm": "dense600",
+   "autonomy_margin": 163.7245854772315,
+   "autonomy_margin_min": 0.0,
    "by_kind": {
     "event": {
      "censored": 0,
@@ -14618,6 +14762,8 @@
   {
    "access_blocked": 0,
    "arm": "dense600",
+   "autonomy_margin": 163.7245854772315,
+   "autonomy_margin_min": 0.0,
    "by_kind": {
     "event": {
      "censored": 0,
@@ -14878,6 +15024,8 @@
   {
    "access_blocked": 0,
    "arm": "dense600",
+   "autonomy_margin": 204.65573184653937,
+   "autonomy_margin_min": 0.0,
    "by_kind": {
     "event": {
      "censored": 0,
@@ -15138,6 +15286,8 @@
   {
    "access_blocked": 0,
    "arm": "dense600",
+   "autonomy_margin": 143.25901229257755,
+   "autonomy_margin_min": 0.0,
    "by_kind": {
     "event": {
      "censored": 0,
@@ -15398,6 +15548,8 @@
   {
    "access_blocked": 0,
    "arm": "dense600",
+   "autonomy_margin": 122.79343910792362,
+   "autonomy_margin_min": 0.0,
    "by_kind": {
     "event": {
      "censored": 0,
@@ -15658,6 +15810,8 @@
   {
    "access_blocked": 0,
    "arm": "dense600",
+   "autonomy_margin": 184.19015866188542,
+   "autonomy_margin_min": 0.0,
    "by_kind": {
     "event": {
      "censored": 0,
@@ -15918,6 +16072,8 @@
   {
    "access_blocked": 0,
    "arm": "dense900",
+   "autonomy_margin": 184.19015866188542,
+   "autonomy_margin_min": 0.0,
    "by_kind": {
     "event": {
      "censored": 0,
@@ -16178,6 +16334,8 @@
   {
    "access_blocked": 0,
    "arm": "dense900",
+   "autonomy_margin": 163.7245854772315,
+   "autonomy_margin_min": 0.0,
    "by_kind": {
     "event": {
      "censored": 0,
@@ -16438,6 +16596,8 @@
   {
    "access_blocked": 0,
    "arm": "dense900",
+   "autonomy_margin": 163.7245854772315,
+   "autonomy_margin_min": 0.0,
    "by_kind": {
     "event": {
      "censored": 0,
@@ -16698,6 +16858,8 @@
   {
    "access_blocked": 0,
    "arm": "dense900",
+   "autonomy_margin": 143.25901229257755,
+   "autonomy_margin_min": 0.0,
    "by_kind": {
     "event": {
      "censored": 0,
@@ -16958,6 +17120,8 @@
   {
    "access_blocked": 0,
    "arm": "dense900",
+   "autonomy_margin": 204.65573184653937,
+   "autonomy_margin_min": 0.0,
    "by_kind": {
     "event": {
      "censored": 0,
@@ -17218,6 +17382,8 @@
   {
    "access_blocked": 0,
    "arm": "dense900",
+   "autonomy_margin": 184.19015866188542,
+   "autonomy_margin_min": 0.0,
    "by_kind": {
     "event": {
      "censored": 0,
@@ -17478,6 +17644,8 @@
   {
    "access_blocked": 0,
    "arm": "dense900",
+   "autonomy_margin": 204.65573184653937,
+   "autonomy_margin_min": 0.0,
    "by_kind": {
     "event": {
      "censored": 0,
@@ -17738,6 +17906,8 @@
   {
    "access_blocked": 0,
    "arm": "dense900",
+   "autonomy_margin": 204.65573184653937,
+   "autonomy_margin_min": 0.0,
    "by_kind": {
     "event": {
      "censored": 0,
@@ -17998,6 +18168,8 @@
   {
    "access_blocked": 0,
    "arm": "dense900",
+   "autonomy_margin": 122.79343910792362,
+   "autonomy_margin_min": 0.0,
    "by_kind": {
     "event": {
      "censored": 0,
@@ -18258,6 +18430,8 @@
   {
    "access_blocked": 0,
    "arm": "dense900",
+   "autonomy_margin": 163.7245854772315,
+   "autonomy_margin_min": 0.0,
    "by_kind": {
     "event": {
      "censored": 0,
@@ -18518,6 +18692,8 @@
   {
    "access_blocked": 0,
    "arm": "dense900",
+   "autonomy_margin": 143.25901229257755,
+   "autonomy_margin_min": 0.0,
    "by_kind": {
     "event": {
      "censored": 0,
@@ -18778,6 +18954,8 @@
   {
    "access_blocked": 0,
    "arm": "dense900",
+   "autonomy_margin": 266.0524514005012,
+   "autonomy_margin_min": 0.0,
    "by_kind": {
     "event": {
      "censored": 0,
@@ -19038,6 +19216,8 @@
   {
    "access_blocked": 0,
    "arm": "dense900",
+   "autonomy_margin": 204.65573184653937,
+   "autonomy_margin_min": 0.0,
    "by_kind": {
     "event": {
      "censored": 0,
@@ -19298,6 +19478,8 @@
   {
    "access_blocked": 0,
    "arm": "dense900",
+   "autonomy_margin": 163.7245854772315,
+   "autonomy_margin_min": 0.0,
    "by_kind": {
     "event": {
      "censored": 0,
@@ -19558,6 +19740,8 @@
   {
    "access_blocked": 0,
    "arm": "dense900",
+   "autonomy_margin": 163.7245854772315,
+   "autonomy_margin_min": 0.0,
    "by_kind": {
     "event": {
      "censored": 0,
@@ -19818,6 +20002,8 @@
   {
    "access_blocked": 0,
    "arm": "dense900",
+   "autonomy_margin": 163.7245854772315,
+   "autonomy_margin_min": 0.0,
    "by_kind": {
     "event": {
      "censored": 0,
@@ -20078,6 +20264,8 @@
   {
    "access_blocked": 0,
    "arm": "dense900",
+   "autonomy_margin": 204.65573184653937,
+   "autonomy_margin_min": 0.0,
    "by_kind": {
     "event": {
      "censored": 0,
@@ -20338,6 +20526,8 @@
   {
    "access_blocked": 0,
    "arm": "dense900",
+   "autonomy_margin": 143.25901229257755,
+   "autonomy_margin_min": 0.0,
    "by_kind": {
     "event": {
      "censored": 0,
@@ -20598,6 +20788,8 @@
   {
    "access_blocked": 0,
    "arm": "dense900",
+   "autonomy_margin": 122.79343910792362,
+   "autonomy_margin_min": 0.0,
    "by_kind": {
     "event": {
      "censored": 0,
@@ -20858,6 +21050,8 @@
   {
    "access_blocked": 0,
    "arm": "dense900",
+   "autonomy_margin": 184.19015866188542,
+   "autonomy_margin_min": 0.0,
    "by_kind": {
     "event": {
      "censored": 0,
@@ -21118,6 +21312,8 @@
   {
    "access_blocked": 0,
    "arm": "dense1200",
+   "autonomy_margin": 184.19015866188542,
+   "autonomy_margin_min": 0.0,
    "by_kind": {
     "event": {
      "censored": 0,
@@ -21378,6 +21574,8 @@
   {
    "access_blocked": 0,
    "arm": "dense1200",
+   "autonomy_margin": 163.7245854772315,
+   "autonomy_margin_min": 0.0,
    "by_kind": {
     "event": {
      "censored": 0,
@@ -21638,6 +21836,8 @@
   {
    "access_blocked": 0,
    "arm": "dense1200",
+   "autonomy_margin": 163.7245854772315,
+   "autonomy_margin_min": 0.0,
    "by_kind": {
     "event": {
      "censored": 0,
@@ -21898,6 +22098,8 @@
   {
    "access_blocked": 0,
    "arm": "dense1200",
+   "autonomy_margin": 143.25901229257755,
+   "autonomy_margin_min": 0.0,
    "by_kind": {
     "event": {
      "censored": 0,
@@ -22158,6 +22360,8 @@
   {
    "access_blocked": 0,
    "arm": "dense1200",
+   "autonomy_margin": 204.65573184653937,
+   "autonomy_margin_min": 0.0,
    "by_kind": {
     "event": {
      "censored": 0,
@@ -22418,6 +22622,8 @@
   {
    "access_blocked": 0,
    "arm": "dense1200",
+   "autonomy_margin": 184.19015866188542,
+   "autonomy_margin_min": 0.0,
    "by_kind": {
     "event": {
      "censored": 0,
@@ -22678,6 +22884,8 @@
   {
    "access_blocked": 0,
    "arm": "dense1200",
+   "autonomy_margin": 204.65573184653937,
+   "autonomy_margin_min": 0.0,
    "by_kind": {
     "event": {
      "censored": 0,
@@ -22938,6 +23146,8 @@
   {
    "access_blocked": 0,
    "arm": "dense1200",
+   "autonomy_margin": 204.65573184653937,
+   "autonomy_margin_min": 0.0,
    "by_kind": {
     "event": {
      "censored": 0,
@@ -23198,6 +23408,8 @@
   {
    "access_blocked": 0,
    "arm": "dense1200",
+   "autonomy_margin": 122.79343910792362,
+   "autonomy_margin_min": 0.0,
    "by_kind": {
     "event": {
      "censored": 0,
@@ -23458,6 +23670,8 @@
   {
    "access_blocked": 0,
    "arm": "dense1200",
+   "autonomy_margin": 163.7245854772315,
+   "autonomy_margin_min": 0.0,
    "by_kind": {
     "event": {
      "censored": 0,
@@ -23718,6 +23932,8 @@
   {
    "access_blocked": 0,
    "arm": "dense1200",
+   "autonomy_margin": 143.25901229257755,
+   "autonomy_margin_min": 0.0,
    "by_kind": {
     "event": {
      "censored": 0,
@@ -23978,6 +24194,8 @@
   {
    "access_blocked": 0,
    "arm": "dense1200",
+   "autonomy_margin": 266.0524514005012,
+   "autonomy_margin_min": 0.0,
    "by_kind": {
     "event": {
      "censored": 0,
@@ -24238,6 +24456,8 @@
   {
    "access_blocked": 0,
    "arm": "dense1200",
+   "autonomy_margin": 204.65573184653937,
+   "autonomy_margin_min": 0.0,
    "by_kind": {
     "event": {
      "censored": 0,
@@ -24498,6 +24718,8 @@
   {
    "access_blocked": 0,
    "arm": "dense1200",
+   "autonomy_margin": 163.7245854772315,
+   "autonomy_margin_min": 0.0,
    "by_kind": {
     "event": {
      "censored": 0,
@@ -24758,6 +24980,8 @@
   {
    "access_blocked": 0,
    "arm": "dense1200",
+   "autonomy_margin": 163.7245854772315,
+   "autonomy_margin_min": 0.0,
    "by_kind": {
     "event": {
      "censored": 0,
@@ -25018,6 +25242,8 @@
   {
    "access_blocked": 0,
    "arm": "dense1200",
+   "autonomy_margin": 163.7245854772315,
+   "autonomy_margin_min": 0.0,
    "by_kind": {
     "event": {
      "censored": 0,
@@ -25278,6 +25504,8 @@
   {
    "access_blocked": 0,
    "arm": "dense1200",
+   "autonomy_margin": 204.65573184653937,
+   "autonomy_margin_min": 0.0,
    "by_kind": {
     "event": {
      "censored": 0,
@@ -25538,6 +25766,8 @@
   {
    "access_blocked": 0,
    "arm": "dense1200",
+   "autonomy_margin": 143.25901229257755,
+   "autonomy_margin_min": 0.0,
    "by_kind": {
     "event": {
      "censored": 0,
@@ -25798,6 +26028,8 @@
   {
    "access_blocked": 0,
    "arm": "dense1200",
+   "autonomy_margin": 122.79343910792362,
+   "autonomy_margin_min": 0.0,
    "by_kind": {
     "event": {
      "censored": 0,
@@ -26058,6 +26290,8 @@
   {
    "access_blocked": 0,
    "arm": "dense1200",
+   "autonomy_margin": 184.19015866188542,
+   "autonomy_margin_min": 0.0,
    "by_kind": {
     "event": {
      "censored": 0,
@@ -26318,6 +26552,8 @@
   {
    "access_blocked": 0,
    "arm": "dense1800",
+   "autonomy_margin": 184.19015866188542,
+   "autonomy_margin_min": 0.0,
    "by_kind": {
     "event": {
      "censored": 0,
@@ -26578,6 +26814,8 @@
   {
    "access_blocked": 0,
    "arm": "dense1800",
+   "autonomy_margin": 163.7245854772315,
+   "autonomy_margin_min": 0.0,
    "by_kind": {
     "event": {
      "censored": 0,
@@ -26838,6 +27076,8 @@
   {
    "access_blocked": 0,
    "arm": "dense1800",
+   "autonomy_margin": 163.7245854772315,
+   "autonomy_margin_min": 0.0,
    "by_kind": {
     "event": {
      "censored": 0,
@@ -27098,6 +27338,8 @@
   {
    "access_blocked": 0,
    "arm": "dense1800",
+   "autonomy_margin": 143.25901229257755,
+   "autonomy_margin_min": 0.0,
    "by_kind": {
     "event": {
      "censored": 0,
@@ -27358,6 +27600,8 @@
   {
    "access_blocked": 0,
    "arm": "dense1800",
+   "autonomy_margin": 204.65573184653937,
+   "autonomy_margin_min": 0.0,
    "by_kind": {
     "event": {
      "censored": 0,
@@ -27618,6 +27862,8 @@
   {
    "access_blocked": 0,
    "arm": "dense1800",
+   "autonomy_margin": 184.19015866188542,
+   "autonomy_margin_min": 0.0,
    "by_kind": {
     "event": {
      "censored": 0,
@@ -27878,6 +28124,8 @@
   {
    "access_blocked": 0,
    "arm": "dense1800",
+   "autonomy_margin": 204.65573184653937,
+   "autonomy_margin_min": 0.0,
    "by_kind": {
     "event": {
      "censored": 0,
@@ -28138,6 +28386,8 @@
   {
    "access_blocked": 0,
    "arm": "dense1800",
+   "autonomy_margin": 204.65573184653937,
+   "autonomy_margin_min": 0.0,
    "by_kind": {
     "event": {
      "censored": 0,
@@ -28398,6 +28648,8 @@
   {
    "access_blocked": 0,
    "arm": "dense1800",
+   "autonomy_margin": 122.79343910792362,
+   "autonomy_margin_min": 0.0,
    "by_kind": {
     "event": {
      "censored": 0,
@@ -28658,6 +28910,8 @@
   {
    "access_blocked": 0,
    "arm": "dense1800",
+   "autonomy_margin": 163.7245854772315,
+   "autonomy_margin_min": 0.0,
    "by_kind": {
     "event": {
      "censored": 0,
@@ -28918,6 +29172,8 @@
   {
    "access_blocked": 0,
    "arm": "dense1800",
+   "autonomy_margin": 143.25901229257755,
+   "autonomy_margin_min": 0.0,
    "by_kind": {
     "event": {
      "censored": 0,
@@ -29178,6 +29434,8 @@
   {
    "access_blocked": 0,
    "arm": "dense1800",
+   "autonomy_margin": 266.0524514005012,
+   "autonomy_margin_min": 0.0,
    "by_kind": {
     "event": {
      "censored": 0,
@@ -29438,6 +29696,8 @@
   {
    "access_blocked": 0,
    "arm": "dense1800",
+   "autonomy_margin": 204.65573184653937,
+   "autonomy_margin_min": 0.0,
    "by_kind": {
     "event": {
      "censored": 0,
@@ -29698,6 +29958,8 @@
   {
    "access_blocked": 0,
    "arm": "dense1800",
+   "autonomy_margin": 163.7245854772315,
+   "autonomy_margin_min": 0.0,
    "by_kind": {
     "event": {
      "censored": 0,
@@ -29958,6 +30220,8 @@
   {
    "access_blocked": 0,
    "arm": "dense1800",
+   "autonomy_margin": 163.7245854772315,
+   "autonomy_margin_min": 0.0,
    "by_kind": {
     "event": {
      "censored": 0,
@@ -30218,6 +30482,8 @@
   {
    "access_blocked": 0,
    "arm": "dense1800",
+   "autonomy_margin": 163.7245854772315,
+   "autonomy_margin_min": 0.0,
    "by_kind": {
     "event": {
      "censored": 0,
@@ -30478,6 +30744,8 @@
   {
    "access_blocked": 0,
    "arm": "dense1800",
+   "autonomy_margin": 204.65573184653937,
+   "autonomy_margin_min": 0.0,
    "by_kind": {
     "event": {
      "censored": 0,
@@ -30738,6 +31006,8 @@
   {
    "access_blocked": 0,
    "arm": "dense1800",
+   "autonomy_margin": 143.25901229257755,
+   "autonomy_margin_min": 0.0,
    "by_kind": {
     "event": {
      "censored": 0,
@@ -30998,6 +31268,8 @@
   {
    "access_blocked": 0,
    "arm": "dense1800",
+   "autonomy_margin": 122.79343910792362,
+   "autonomy_margin_min": 0.0,
    "by_kind": {
     "event": {
      "censored": 0,
@@ -31258,6 +31530,8 @@
   {
    "access_blocked": 0,
    "arm": "dense1800",
+   "autonomy_margin": 184.19015866188542,
+   "autonomy_margin_min": 0.0,
    "by_kind": {
     "event": {
      "censored": 0,
@@ -31518,6 +31792,8 @@
   {
    "access_blocked": 0,
    "arm": "ea_i600",
+   "autonomy_margin": 184.19015866188542,
+   "autonomy_margin_min": 0.0,
    "by_kind": {
     "event": {
      "censored": 0,
@@ -31778,6 +32054,8 @@
   {
    "access_blocked": 0,
    "arm": "ea_i600",
+   "autonomy_margin": 163.7245854772315,
+   "autonomy_margin_min": 0.0,
    "by_kind": {
     "event": {
      "censored": 0,
@@ -32038,6 +32316,8 @@
   {
    "access_blocked": 0,
    "arm": "ea_i600",
+   "autonomy_margin": 163.7245854772315,
+   "autonomy_margin_min": 0.0,
    "by_kind": {
     "event": {
      "censored": 0,
@@ -32298,6 +32578,8 @@
   {
    "access_blocked": 0,
    "arm": "ea_i600",
+   "autonomy_margin": 143.25901229257755,
+   "autonomy_margin_min": 0.0,
    "by_kind": {
     "event": {
      "censored": 0,
@@ -32558,6 +32840,8 @@
   {
    "access_blocked": 0,
    "arm": "ea_i600",
+   "autonomy_margin": 204.65573184653937,
+   "autonomy_margin_min": 0.0,
    "by_kind": {
     "event": {
      "censored": 0,
@@ -32818,6 +33102,8 @@
   {
    "access_blocked": 0,
    "arm": "ea_i600",
+   "autonomy_margin": 184.19015866188542,
+   "autonomy_margin_min": 0.0,
    "by_kind": {
     "event": {
      "censored": 0,
@@ -33078,6 +33364,8 @@
   {
    "access_blocked": 0,
    "arm": "ea_i600",
+   "autonomy_margin": 204.65573184653937,
+   "autonomy_margin_min": 0.0,
    "by_kind": {
     "event": {
      "censored": 0,
@@ -33338,6 +33626,8 @@
   {
    "access_blocked": 0,
    "arm": "ea_i600",
+   "autonomy_margin": 204.65573184653937,
+   "autonomy_margin_min": 0.0,
    "by_kind": {
     "event": {
      "censored": 0,
@@ -33598,6 +33888,8 @@
   {
    "access_blocked": 0,
    "arm": "ea_i600",
+   "autonomy_margin": 122.79343910792362,
+   "autonomy_margin_min": 0.0,
    "by_kind": {
     "event": {
      "censored": 0,
@@ -33858,6 +34150,8 @@
   {
    "access_blocked": 0,
    "arm": "ea_i600",
+   "autonomy_margin": 163.7245854772315,
+   "autonomy_margin_min": 0.0,
    "by_kind": {
     "event": {
      "censored": 0,
@@ -34118,6 +34412,8 @@
   {
    "access_blocked": 0,
    "arm": "ea_i600",
+   "autonomy_margin": 143.25901229257755,
+   "autonomy_margin_min": 0.0,
    "by_kind": {
     "event": {
      "censored": 0,
@@ -34378,6 +34674,8 @@
   {
    "access_blocked": 0,
    "arm": "ea_i600",
+   "autonomy_margin": 266.0524514005012,
+   "autonomy_margin_min": 0.0,
    "by_kind": {
     "event": {
      "censored": 0,
@@ -34638,6 +34936,8 @@
   {
    "access_blocked": 0,
    "arm": "ea_i600",
+   "autonomy_margin": 204.65573184653937,
+   "autonomy_margin_min": 0.0,
    "by_kind": {
     "event": {
      "censored": 0,
@@ -34898,6 +35198,8 @@
   {
    "access_blocked": 0,
    "arm": "ea_i600",
+   "autonomy_margin": 163.7245854772315,
+   "autonomy_margin_min": 0.0,
    "by_kind": {
     "event": {
      "censored": 0,
@@ -35158,6 +35460,8 @@
   {
    "access_blocked": 0,
    "arm": "ea_i600",
+   "autonomy_margin": 163.7245854772315,
+   "autonomy_margin_min": 0.0,
    "by_kind": {
     "event": {
      "censored": 0,
@@ -35418,6 +35722,8 @@
   {
    "access_blocked": 0,
    "arm": "ea_i600",
+   "autonomy_margin": 163.7245854772315,
+   "autonomy_margin_min": 0.0,
    "by_kind": {
     "event": {
      "censored": 0,
@@ -35678,6 +35984,8 @@
   {
    "access_blocked": 0,
    "arm": "ea_i600",
+   "autonomy_margin": 204.65573184653937,
+   "autonomy_margin_min": 0.0,
    "by_kind": {
     "event": {
      "censored": 0,
@@ -35938,6 +36246,8 @@
   {
    "access_blocked": 0,
    "arm": "ea_i600",
+   "autonomy_margin": 143.25901229257755,
+   "autonomy_margin_min": 0.0,
    "by_kind": {
     "event": {
      "censored": 0,
@@ -36198,6 +36508,8 @@
   {
    "access_blocked": 0,
    "arm": "ea_i600",
+   "autonomy_margin": 122.79343910792362,
+   "autonomy_margin_min": 0.0,
    "by_kind": {
     "event": {
      "censored": 0,
@@ -36458,6 +36770,8 @@
   {
    "access_blocked": 0,
    "arm": "ea_i600",
+   "autonomy_margin": 184.19015866188542,
+   "autonomy_margin_min": 0.0,
    "by_kind": {
     "event": {
      "censored": 0,
@@ -36718,6 +37032,8 @@
   {
    "access_blocked": 0,
    "arm": "ea_nb",
+   "autonomy_margin": 184.19015866188542,
+   "autonomy_margin_min": 0.0,
    "by_kind": {
     "event": {
      "censored": 0,
@@ -36978,6 +37294,8 @@
   {
    "access_blocked": 0,
    "arm": "ea_nb",
+   "autonomy_margin": 163.7245854772315,
+   "autonomy_margin_min": 0.0,
    "by_kind": {
     "event": {
      "censored": 0,
@@ -37238,6 +37556,8 @@
   {
    "access_blocked": 0,
    "arm": "ea_nb",
+   "autonomy_margin": 163.7245854772315,
+   "autonomy_margin_min": 0.0,
    "by_kind": {
     "event": {
      "censored": 0,
@@ -37498,6 +37818,8 @@
   {
    "access_blocked": 0,
    "arm": "ea_nb",
+   "autonomy_margin": 143.25901229257755,
+   "autonomy_margin_min": 0.0,
    "by_kind": {
     "event": {
      "censored": 0,
@@ -37758,6 +38080,8 @@
   {
    "access_blocked": 0,
    "arm": "ea_nb",
+   "autonomy_margin": 204.65573184653937,
+   "autonomy_margin_min": 0.0,
    "by_kind": {
     "event": {
      "censored": 0,
@@ -38018,6 +38342,8 @@
   {
    "access_blocked": 0,
    "arm": "ea_nb",
+   "autonomy_margin": 184.19015866188542,
+   "autonomy_margin_min": 0.0,
    "by_kind": {
     "event": {
      "censored": 0,
@@ -38278,6 +38604,8 @@
   {
    "access_blocked": 0,
    "arm": "ea_nb",
+   "autonomy_margin": 204.65573184653937,
+   "autonomy_margin_min": 0.0,
    "by_kind": {
     "event": {
      "censored": 0,
@@ -38538,6 +38866,8 @@
   {
    "access_blocked": 0,
    "arm": "ea_nb",
+   "autonomy_margin": 204.65573184653937,
+   "autonomy_margin_min": 0.0,
    "by_kind": {
     "event": {
      "censored": 0,
@@ -38798,6 +39128,8 @@
   {
    "access_blocked": 0,
    "arm": "ea_nb",
+   "autonomy_margin": 122.79343910792362,
+   "autonomy_margin_min": 0.0,
    "by_kind": {
     "event": {
      "censored": 0,
@@ -39058,6 +39390,8 @@
   {
    "access_blocked": 0,
    "arm": "ea_nb",
+   "autonomy_margin": 163.7245854772315,
+   "autonomy_margin_min": 0.0,
    "by_kind": {
     "event": {
      "censored": 0,
@@ -39318,6 +39652,8 @@
   {
    "access_blocked": 0,
    "arm": "ea_nb",
+   "autonomy_margin": 143.25901229257755,
+   "autonomy_margin_min": 0.0,
    "by_kind": {
     "event": {
      "censored": 0,
@@ -39578,6 +39914,8 @@
   {
    "access_blocked": 0,
    "arm": "ea_nb",
+   "autonomy_margin": 266.0524514005012,
+   "autonomy_margin_min": 0.0,
    "by_kind": {
     "event": {
      "censored": 0,
@@ -39838,6 +40176,8 @@
   {
    "access_blocked": 0,
    "arm": "ea_nb",
+   "autonomy_margin": 204.65573184653937,
+   "autonomy_margin_min": 0.0,
    "by_kind": {
     "event": {
      "censored": 0,
@@ -40098,6 +40438,8 @@
   {
    "access_blocked": 0,
    "arm": "ea_nb",
+   "autonomy_margin": 163.7245854772315,
+   "autonomy_margin_min": 0.0,
    "by_kind": {
     "event": {
      "censored": 0,
@@ -40358,6 +40700,8 @@
   {
    "access_blocked": 0,
    "arm": "ea_nb",
+   "autonomy_margin": 163.7245854772315,
+   "autonomy_margin_min": 0.0,
    "by_kind": {
     "event": {
      "censored": 0,
@@ -40618,6 +40962,8 @@
   {
    "access_blocked": 0,
    "arm": "ea_nb",
+   "autonomy_margin": 163.7245854772315,
+   "autonomy_margin_min": 0.0,
    "by_kind": {
     "event": {
      "censored": 0,
@@ -40878,6 +41224,8 @@
   {
    "access_blocked": 0,
    "arm": "ea_nb",
+   "autonomy_margin": 204.65573184653937,
+   "autonomy_margin_min": 0.0,
    "by_kind": {
     "event": {
      "censored": 0,
@@ -41138,6 +41486,8 @@
   {
    "access_blocked": 0,
    "arm": "ea_nb",
+   "autonomy_margin": 143.25901229257755,
+   "autonomy_margin_min": 0.0,
    "by_kind": {
     "event": {
      "censored": 0,
@@ -41398,6 +41748,8 @@
   {
    "access_blocked": 0,
    "arm": "ea_nb",
+   "autonomy_margin": 122.79343910792362,
+   "autonomy_margin_min": 0.0,
    "by_kind": {
     "event": {
      "censored": 0,
@@ -41658,6 +42010,8 @@
   {
    "access_blocked": 0,
    "arm": "ea_nb",
+   "autonomy_margin": 184.19015866188542,
+   "autonomy_margin_min": 0.0,
    "by_kind": {
     "event": {
      "censored": 0,

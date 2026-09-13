@@ -28,10 +28,11 @@ for _p in (_HERE, *(_os.path.join(_CODE, d) for d in ("physics", "runtime", "exp
     if _p not in _sys.path:
         _sys.path.insert(0, _p)
 
-from center import (OP_SET_REPORT_PERIOD, OP_SET_SAMPLING_INTERVAL, LocalPolicy,
+from center import (ARMS, OP_SET_REPORT_PERIOD, OP_SET_SAMPLING_INTERVAL, LocalPolicy,
                     build_policy)
 from deployment import build_deployment
 from exogenous import (KIND_EVENT, KIND_ROUTINE, EnvironmentTruth, ObligationSet,
+                       autonomy_margin,
                        constant_harvest, hetero_harvest,
                        displacement_series, rule_obligations_for_truth,
                        routine_obligations, routine_obligations_by_node,
@@ -712,6 +713,116 @@ def test_blind_config_is_a_noop() -> None:
           f"ea_nb 最晚 {max(fs)}s vs ea_i600 最晚 {max(fb)}s")
 
 
+def test_autonomy_margin_is_hand_computable() -> None:
+    """横轴换成 autonomy margin 的理由，必须由这条测试承担。
+
+    定义：`λ*` = 把采能轨迹整体缩小到多少倍时，**每一个小时**都还买得起该小时要采的样。
+    `λ* = 1` 恰好够，`> 1` 有富余，`< 1` 本来就差多少。
+
+    两条必须成立的性质：
+
+      1. **手算对得上**：恒定采能 `h`（Wh/h）、消耗 `c`（Wh/h）、初始电量 0、容量充裕时
+         `margin = h / c`，取 `h = c` 得恰好 1、取 `h = 2c` 得 2。
+      2. **它抓到的是时序，不只是总量**：两条**总量相同**的轨迹，一条平摊到全程、一条只在后半段
+         到来，前者的 `λ*` 明显更高。**只看绝对 Wh 会把这两条判成一样**，而它们在现场完全是
+         两回事（白天进电与夜里进电）。这正是本项要求"横轴不用绝对 Wh"的技术理由。
+
+    第 2 条如果失败，说明这个横轴退化成了总量轴，换与不换没有区别。
+    """
+    print("\n[17] autonomy margin：手算值，以及时序与总量的区分")
+    c = 4.933e-4
+    step = 60.0
+    hours = 12
+
+    def const(wh_per_hour: float) -> dict[int, float]:
+        return {t: wh_per_hour / 60.0 for t in range(0, hours * 3600, 60)}
+
+    lam = autonomy_margin(const(c), hours, capacity_wh=10.0, initial_wh=0.0,
+                          cost_per_hour=c)
+    check("恒定采能恰好等于消耗时 margin = 1（手算值）", abs(lam - 1.0) < 1e-2,
+          f"margin = {lam:.4f}，期望 1.0")
+    lam2 = autonomy_margin(const(2 * c), hours, capacity_wh=10.0, initial_wh=0.0,
+                           cost_per_hour=c)
+    check("采能是消耗的两倍时 margin = 2（手算值：能掉一半）", abs(lam2 - 2.0) < 1e-2,
+          f"margin = {lam2:.4f}，期望 2.0")
+
+    # 总量相同：平摊 12 h 各 h=2c ↔ 只在后 6 h 到来，每小时 4c。
+    spread = const(2 * c)
+    late = {t: 0.0 for t in range(0, hours * 3600, 60)}
+    for t in range(6 * 3600, hours * 3600, 60):
+        late[t] = 4 * c / 60.0
+    tot_s = round(sum(spread.values()), 9)
+    tot_l = round(sum(late.values()), 9)
+    check("两条轨迹总量逐位相同（所以差异只能来自时序）", tot_s == tot_l,
+          f"总量均为 {tot_s} Wh")
+    lam_s = autonomy_margin(spread, hours, capacity_wh=10.0, initial_wh=0.0,
+                            cost_per_hour=c)
+    lam_l = autonomy_margin(late, hours, capacity_wh=10.0, initial_wh=0.0,
+                            cost_per_hour=c)
+    check("时序不同则 margin 不同，且起始无输入的轨迹判为不可行",
+          lam_l < lam_s - 0.1 and lam_l == 0.0,
+          f"平摊 margin={lam_s:.3f} vs 后段集中 margin={lam_l:.3f}")
+
+
+def test_oracle_action_is_two_dimensional() -> None:
+    """上界的动作必须是**两个字段**，不能按"每采一条报一条"计能。
+
+    采样间隔与上报周期是独立字段（E：重庆 `0045`/`0042`），设备还有缓存，所以"**采得密、
+    报得稀**"是允许的。上界如果按 `cost = (3600/a) * (sample_wh + UPLINK_WH)` 计，
+    就**高估了密集采样的能耗**——而低估能耗会让上界偏低，**偏低的上界不再是上界**。
+
+    实测在 `dense300`（采 300 s、报 900 s）上确实差着：真实每小时能耗
+    `12*4.7e-4 + 4*2.33e-5`，而一维写法按 `12*(4.7e-4 + 2.33e-5)` 计。
+
+    这条测试用一条**采报解耦**的真实臂去撞上界：`dense300` 必须是够得到上界的。
+    当年 `oracle_deploy` 被真实策略超过过一次，那次的教训是"能被超过的东西不是上界"；
+    这里用同一条判据，但撞的是**动作空间**而不是参数知识。
+    """
+    print("\n[18] 上界的动作是两个字段")
+    dep = build_deployment(groups=2)
+    hours = 12
+    cap = 0.004
+
+    nodes = nodes_from(dep)
+    prof = DeviceProfile(capacity_wh=cap, initial_soc=1.0)
+    for n in nodes.values():
+        n.p = DeviceProfile(sample_interval_s=n.p.sample_interval_s,
+                            report_period_s=n.p.report_period_s,
+                            capacity_wh=cap, sample_wh=n.p.sample_wh)
+        n.soc_wh = cap
+        n.power = type(n.power)(soc_initial_wh=cap, soc_wh=cap)
+    truth = wang_fragment_truth(0, hours, (dep.gateway.sid,))
+    truth.displacement = displacement_series(nodes.keys(), hours, 0)
+    h, t_ = hetero_harvest(nodes.keys(), hours, 0, low_frac=0.4, low_wh_per_hour=0.0)
+    truth.harvest_wh.update(h)
+    truth.temp_c.update(t_)
+    meas = {k: v.measurand for k, v in nodes.items()}
+    obs = ObligationSet(routine_obligations_by_node(meas, hours))
+
+    arm = ARMS["dense300"]()
+    check("这条臂确实是采报解耦的（采样间隔 ≠ 上报周期）",
+          arm.interval_s != arm.period_s, f"采 {arm.interval_s}s / 报 {arm.period_s}s")
+
+    do = dynamic_oracle(obs, hours, truth.harvest_wh, nodes.keys(), profile=prof,
+                        initial_wh=cap)
+    inst = Instance(nodes, truth, seed=0, policy=build_policy("dense300"))
+    log = inst.run(hours)
+    res = evaluate(obs, log, hours, nodes.keys(),
+                   battery={k: v.power.to_dict() for k, v in nodes.items()},
+                   plane=inst.plane, task_hours=hours)
+    got = res["routine"]["delivered"]
+    check("采报解耦的真实臂不超过上界（上界不能低估密集采样的能耗）",
+          got <= do["total_oracle"],
+          f"dense300 周期交付 {got} ≤ 上界 {do['total_oracle']}")
+
+    # 上界必须真的把两个字段分开算：把上报周期独立抽出来，成本函数里必须留有它的维度。
+    per = do["per_node"][sorted(do["per_node"])[0]]["schedule"]
+    pairs = {tuple(x) for x in per if x is not None and x[0] is not None}
+    check("最优档位是 (采样间隔, 上报周期) 二元组，不是一维档位",
+          bool(pairs) and all(isinstance(p, tuple) and len(p) == 2 for p in pairs),
+          f"档位样例 {sorted(pairs)[:3]}")
+
+
 def main() -> int:
     print("实例层验收（Task Contract v1.1）")
     test_denominator_is_exogenous()
@@ -730,6 +841,8 @@ def main() -> int:
     test_config_generation_identity()
     test_dynamic_oracle_is_a_bound()
     test_blind_config_is_a_noop()
+    test_autonomy_margin_is_hand_computable()
+    test_oracle_action_is_two_dimensional()
     print("\n" + "-" * 74)
     if FAIL:
         print(f"  {len(FAIL)} 项失败: {', '.join(FAIL)}")

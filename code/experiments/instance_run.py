@@ -29,7 +29,8 @@ for _p in (_HERE, *(_os.path.join(_CODE, d) for d in ("physics", "runtime", "exp
         _sys.path.insert(0, _p)
 
 from deployment import build_deployment
-from exogenous import (ObligationSet, constant_harvest, displacement_series, hetero_harvest,
+from exogenous import (ObligationSet, autonomy_margin, constant_harvest,
+                       displacement_series, hetero_harvest, solar_harvest,
                        rule_obligations_for_truth, routine_obligations_by_node,
                        wang_fragment_truth)
 from center import ARMS, ClairvoyantStaticSelector, SocObservationModel, build_policy
@@ -56,16 +57,29 @@ def one_seed(seed: int, task_hours: float, tail_hours: float,
              capacity_wh: float = 0.05, low_frac: float = 0.4,
              low_wh_per_hour: float = 0.005,
              oracle_cache: dict | None = None,
-             oracle_soc_bins: int = 200) -> dict:
+             oracle_soc_bins: int = 200,
+             solar_day_start_h: float = 6.0, solar_peak_wh_per_hour: float = 0.06,
+             solar_cloud_p: float = 0.35, solar_cloud_atten: float = 0.25,
+             solar_snow_frac: float = 0.0, solar_snow_start_h: float = 8.0,
+             solar_shade_frac: float = 0.0,
+             initial_soc: float = 1.0) -> dict:
     hours = task_hours + tail_hours
     dep = build_deployment(groups=2)
     prof = DeviceProfile(sample_interval_s=sample_interval_s,
                          event_interval_s=event_spacing_s,
-                         capacity_wh=capacity_wh)
+                         capacity_wh=capacity_wh, initial_soc=initial_soc)
     nodes = nodes_from(dep, profile=prof)
     truth = wang_fragment_truth(0, int(hours), (dep.gateway.sid,))
     truth.displacement = displacement_series(nodes.keys(), int(hours), seed)
-    if harvest_mode == "hetero":
+    if harvest_mode == "solar":
+        # **合成**日照时间过程（A 层）。形状是研究选择，不是拟合值——结论只能读作
+        # "在这个形状下如何"。见 `solar_harvest` 的文档。
+        harvest, temp = solar_harvest(
+            nodes.keys(), int(hours), seed, day_start_hour=solar_day_start_h,
+            peak_wh_per_hour=solar_peak_wh_per_hour, cloud_p=solar_cloud_p,
+            cloud_atten=solar_cloud_atten, snow_frac=solar_snow_frac,
+            snow_start_h=solar_snow_start_h, shade_frac=solar_shade_frac)
+    elif harvest_mode == "hetero":
         harvest, temp = hetero_harvest(nodes.keys(), int(hours), seed,
                                        low_frac=low_frac,
                                        low_wh_per_hour=low_wh_per_hour,
@@ -88,6 +102,19 @@ def one_seed(seed: int, task_hours: float, tail_hours: float,
     truth.harvest_wh.update(harvest)
     truth.temp_c.update(temp)
 
+    # **autonomy margin**：把采能轨迹整体缩小到多少倍时，每小时的义务还服务得起。
+    # 基准工作负载 = 每小时一条样（`sample_wh + UPLINK_WH`）。1 是天然分界，跨任务可比。
+    # **必须与实例用同一个初始电量**，否则这个横轴描述的是另一个系统。`initial_soc=1.0`
+    # （满格启动）会让 margin 恒为无穷——初始电量自己就能跑完整个任务时，采能与可行性无关，
+    # 那个横轴没有任何信息量。扫 margin 时必须配一个需要采能的初始电量。
+    _cost_h = (prof.sample_wh + 2.33e-5)
+    margins = [autonomy_margin(harvest[nid], int(task_hours),
+                               capacity_wh=capacity_wh,
+                               initial_wh=initial_soc * capacity_wh,
+                               cost_per_hour=_cost_h) for nid in nodes]
+    margin_mean = sum(margins) / len(margins) if margins else 0.0
+    margin_min = min(margins) if margins else 0.0
+
     meas = {k: v.measurand for k, v in nodes.items()}
     obligations = ObligationSet(
         routine_obligations_by_node(meas, int(task_hours))
@@ -97,13 +124,19 @@ def one_seed(seed: int, task_hours: float, tail_hours: float,
     # (种子, 条件) 记忆化——否则每个臂都会重算一遍同一个值。
     oracle_total = None
     if oracle_cache is not None:
-        okey = (seed, int(task_hours), capacity_wh, low_frac, low_wh_per_hour,
-                harvest_wh_per_hour, harvest_mode, blackout_start_h, blackout_frac,
-                event_spacing_s, oracle_soc_bins)
+        okey = (seed, int(task_hours), capacity_wh, initial_soc, low_frac,
+                low_wh_per_hour, harvest_wh_per_hour, harvest_mode, blackout_start_h,
+                blackout_frac, event_spacing_s, solar_day_start_h,
+                solar_peak_wh_per_hour, solar_cloud_p, solar_cloud_atten,
+                solar_snow_frac, solar_shade_frac, oracle_soc_bins)
         if okey not in oracle_cache:
+            # **上界必须与实例用同一个初始电量。** 不传时 `dynamic_oracle` 默认取满容量，于是
+            # `--initial-soc 0.2` 的实例被拿去比一个"满格开局"的上界——那仍然是上界（电更多只会
+            # 更可行），但它放宽的正好是本轮要扫的那一维，会把 regret 系统性报小。
             oracle_cache[okey] = dynamic_oracle(
                 obligations, int(task_hours), truth.harvest_wh, nodes.keys(),
-                profile=prof, soc_bins=oracle_soc_bins)["total_oracle"]
+                profile=prof, initial_wh=initial_soc * capacity_wh,
+                soc_bins=oracle_soc_bins)["total_oracle"]
         oracle_total = oracle_cache[okey]
 
     acc = None
@@ -167,6 +200,8 @@ def one_seed(seed: int, task_hours: float, tail_hours: float,
         "intent_mismatch_s": inst.intent_mismatch_s(int(hours)),
         "mixed_config_s": inst.mixed_config_ticks,
         "dynamic_oracle": oracle_total,
+        "autonomy_margin": margin_mean,
+        "autonomy_margin_min": margin_min,
         "command_counters": dict(inst.counters),
         "deployment": dep.summary(),
         "n_obligations": res["n_obligations"],
@@ -201,7 +236,7 @@ def main() -> None:
     ap.add_argument("--hold-op", default=None,
                     help="只扣留某一类字段命令，用于构造跨代混配（例如 set_sampling_interval）")
     ap.add_argument("--harvest-wh-per-hour", type=float, default=0.05)
-    ap.add_argument("--harvest-mode", default="uniform", choices=["uniform", "hetero"])
+    ap.add_argument("--harvest-mode", default="uniform", choices=["uniform", "hetero", "solar"])
     ap.add_argument("--capacity-wh", type=float, default=0.05)
     ap.add_argument("--low-frac", type=float, default=0.4)
     ap.add_argument("--low-wh-per-hour", type=float, default=0.005)
@@ -226,6 +261,16 @@ def main() -> None:
     ap.add_argument("--dynamic-oracle", action="store_true",
                     help="同时计算真上界（逐节点逐小时离线 DP，读完整未来采能轨迹）")
     ap.add_argument("--oracle-soc-bins", type=int, default=200)
+    ap.add_argument("--initial-soc", type=float, default=1.0,
+                    help="初始电量比例。扫 autonomy margin 时要用小于 1 的值")
+    ap.add_argument("--solar-day-start-h", type=float, default=6.0,
+                    help="运行起点对应的绝对钟点，决定 12h 窗口落在白天还是夜里")
+    ap.add_argument("--solar-peak-wh-per-hour", type=float, default=0.06)
+    ap.add_argument("--solar-cloud-p", type=float, default=0.35)
+    ap.add_argument("--solar-cloud-atten", type=float, default=0.25)
+    ap.add_argument("--solar-snow-frac", type=float, default=0.0)
+    ap.add_argument("--solar-snow-start-h", type=float, default=8.0)
+    ap.add_argument("--solar-shade-frac", type=float, default=0.0)
     ap.add_argument("--tag", default="base")
     args = ap.parse_args()
 
@@ -258,7 +303,15 @@ def main() -> None:
                      soc_bias=args.soc_bias, soc_loss_p=args.soc_loss_p,
                      hold_op=args.hold_op,
                      oracle_cache=(_oracle_cache if args.dynamic_oracle else None),
-                     oracle_soc_bins=args.oracle_soc_bins)
+                     oracle_soc_bins=args.oracle_soc_bins,
+                     solar_day_start_h=args.solar_day_start_h,
+                     solar_peak_wh_per_hour=args.solar_peak_wh_per_hour,
+                     solar_cloud_p=args.solar_cloud_p,
+                     solar_cloud_atten=args.solar_cloud_atten,
+                     solar_snow_frac=args.solar_snow_frac,
+                     solar_snow_start_h=args.solar_snow_start_h,
+                     solar_shade_frac=args.solar_shade_frac,
+                     initial_soc=args.initial_soc)
             for a in arm_names for L in layers for s in range(args.seeds)]
 
     # 聚合：**按臂分组**。分母类用求和天然是整数，时延与比率类用逐种子均值。
@@ -293,6 +346,17 @@ def main() -> None:
             "access_blocked": mean([r["access_blocked"] for r in rs]),
             "fenced": mean([r["command_counters"].get("fenced", 0) for r in rs]),
             "deduplicated": mean([r["command_counters"].get("deduplicated", 0) for r in rs]),
+            # `inf`（初始电量自己就够跑完，采能与可行性无关）不进均值，否则会把均值拉成 inf。
+            # **全部为 inf 时报 `None`，不报 0**——报 0 会变成一列看起来有值、实际是回退默认值的
+            # 假数据，而 0 在这个定义下恰恰意味着"完全不可行"，正好读反。
+            "autonomy_margin": (mean([r["autonomy_margin"] for r in rs
+                                      if r["autonomy_margin"] != float("inf")])
+                                if any(r["autonomy_margin"] != float("inf") for r in rs)
+                                else None),
+            "autonomy_margin_min": (mean([r["autonomy_margin_min"] for r in rs
+                                          if r["autonomy_margin_min"] != float("inf")])
+                                    if any(r["autonomy_margin_min"] != float("inf")
+                                           for r in rs) else None),
             "dynamic_oracle": mean([r["dynamic_oracle"] for r in rs
                                     if r.get("dynamic_oracle") is not None]) if any(
                 r.get("dynamic_oracle") is not None for r in rs) else None,
@@ -346,7 +410,9 @@ def main() -> None:
     print("=" * 96)
     hdr = (f"{'arm':<18} {'周期交付':>9} {'缺采':>5} {'缺送':>6} {'AoI s':>7} "
            f"{'事件采集':>8} {'事件交付':>8} {'上行':>6} {'下行试':>6} {'死节点':>6} {'混配min':>8}"
-           + (" {:>8} {:>8}".format("真上界", "周期达标%") if args.dynamic_oracle else ""))
+           + (" {:>8} {:>8}".format("真上界", "周期达标%") if args.dynamic_oracle else "")
+           + (" {:>9} {:>9}".format("margin均", "margin最小")
+              if args.harvest_mode == "solar" else ""))
     print(hdr)
     print("-" * 96)
     for a in agg["arms"]:
@@ -358,7 +424,12 @@ def main() -> None:
               f"{x['dead_nodes_end']:>6.1f} {x['mixed_config_min']:>8.0f}"
               + (" {:>8.1f} {:>7.1f}%".format(x["dynamic_oracle"] or 0.0,
                                               100.0 * (x["oracle_coverage"] or 0.0))
-                 if args.dynamic_oracle else ""))
+                 if args.dynamic_oracle else "")
+              + (" {:>9} {:>9}".format(
+                     "—" if x["autonomy_margin"] is None else f"{x['autonomy_margin']:.2f}",
+                     "—" if x["autonomy_margin_min"] is None
+                     else f"{x['autonomy_margin_min']:.2f}")
+                 if args.harvest_mode == "solar" else ""))
     print("=" * 96)
     if args.outage_hours > 0:
         print("恢复分列（中断窗内 + 固定恢复观察期）")

@@ -18,6 +18,8 @@ Task Contract v1.1 §4 的三分对象在这里实现：
 
 from __future__ import annotations
 
+import math
+
 # --- module resolution -------------------------------------------------------
 import os as _os, sys as _sys
 _HERE = _os.path.dirname(_os.path.abspath(__file__))
@@ -324,6 +326,118 @@ def hetero_harvest(node_ids, hours: int, seed: int, low_frac: float = 0.4,
         if temp_c is not None:
             temp[node_id] = {t: temp_c for t in range(0, hours * 3600, TICK_S)}
     return harvest, temp
+
+
+#: 日出钟点（A 层研究取值）。日照窗为 `[SUNRISE_H, SUNRISE_H + daylight_h]`。
+SUNRISE_H = 6.0
+
+
+def solar_harvest(node_ids, hours: int, seed: int, *,
+                  day_start_hour: float = 6.0, peak_wh_per_hour: float = 0.06,
+                  daylight_h: float = 12.0, cloud_p: float = 0.35,
+                  cloud_atten: float = 0.25, snow_frac: float = 0.0,
+                  snow_start_h: float = 8.0, shade_frac: float = 0.0,
+                  shade_atten: float = 0.1, temp_c: float | None = 10.0) -> tuple[dict, dict]:
+    """**合成**的日照采能时间过程 `H_i(t)`（A 层研究取值，**不来自任何实测站点**）。
+
+    为什么必须从"两个独立标量"换成时间过程：`capacity_wh × wh_per_hour` 这两个标量把能量问题
+    压成了一个**总量**问题——只要总量够就能跑完，于是"什么时候有电"完全不进入模型。而现场的真实
+    困难恰恰是时间的：**日照有昼夜节律，夜里没有输入，电池必须在白天把夜里的份额存下来**；
+    云遮是短时的、随机的；积雪是**持续一段时间的零输入**。这三件事都只能由 `H_i(t)` 表达。
+
+    **必须标明的限定**：本函数是**合成曲线**，形状（正弦日照窗 + 逐小时云遮衰减 + 积雪归零）是
+    A 层研究选择，参数是可扫描的旋钮而非拟合值。用它做出来的结论**只能读作"在这个形状下如何"**，
+    不能读作"实际站点如何"。任何引用处必须同时引用这一句。
+
+    参数：`day_start_hour` 是运行起点对应的**绝对钟点**（决定 12 h 窗口落在白天还是夜里）；
+    `cloud_p` 是逐节点逐小时的云遮概率，`cloud_atten` 是云遮时的产能比例；`snow_frac` 比例的
+    站点从 `snow_start_h` 起被积雪完全覆盖；`shade_frac` 比例的站点被地形长期遮蔽。
+    """
+    harvest, temp = {}, {}
+    for node_id in node_ids:
+        shaded = stable_uniform(seed, "solar_shade", node_id) < shade_frac
+        snowy = stable_uniform(seed, "solar_snow", node_id) < snow_frac
+        series: dict[int, float] = {}
+        for t in range(0, hours * 3600, TICK_S):
+            # **日出固定在钟面 06:00，运行窗在钟面上滑动。**
+            # 第一版把"正午"写成随 `day_start_hour` 平移的量，于是 `hod - noon` 里两项同步
+            # 平移、差值抵消，`day_start_hour` 成了**空参数**——起 0/6/12/18 点四条曲线逐位相同
+            # （实测确认）。参数必须证明它会动，这是本项目对每一列的要求，对参数同样适用。
+            hod = (day_start_hour + t / 3600.0) % 24.0
+            rel = (hod - SUNRISE_H) % 24.0          # 距日出的时长
+            if rel <= daylight_h:
+                sun = max(0.0, math.sin(math.pi * rel / daylight_h))
+            else:
+                sun = 0.0
+            wh = peak_wh_per_hour * sun
+            if wh > 0.0 and stable_uniform(seed, "cloud", node_id, t) < cloud_p:
+                wh *= cloud_atten
+            if shaded:
+                wh *= shade_atten
+            if snowy and t >= int(snow_start_h * 3600):
+                wh = 0.0
+            series[t] = wh / 60.0
+        harvest[node_id] = series
+        if temp_c is not None:
+            temp[node_id] = {t: temp_c for t in range(0, hours * 3600, TICK_S)}
+    return harvest, temp
+
+
+def autonomy_margin(harvest_wh: dict[int, float], hours: int, *,
+                    capacity_wh: float, initial_wh: float, cost_per_hour: float,
+                    hi: float = 64.0, iters: int = 50) -> float:
+    """**autonomy margin**：这条采能轨迹还能被削减多少倍，才轮到每小时的义务服务不起。
+
+    定义（手算可核）：`λ_min` = 最小的 `λ`，使得采能取 `λ · H(t)` 时**每一个小时**都还买得起
+    该小时需要的采样能耗。返回 **`1 / λ_min`**：
+
+    - `= 1`：**恰好够**，一点富余都没有；
+    - `> 1`：有富余，值就是"采能可以掉到原来的几分之一还能撑住"（2 表示能掉一半）；
+    - `< 1`：**原本就不够**，值表示还差多少；
+    - `= 0`：无论放多大都不可行（例如头几个小时完全没有输入而初始电量又是 0）。
+
+    **单调性方向容易搞反，这里写下来**：容量不受限时采能越多越可行，所以"最大可行 λ"是发散的、
+    没有信息。有信息的是**可行 λ 的下确界**——它量的是"离不可行边界还有多远"。第一版按"最大可行
+    λ"写，结果每一条都返回上界 8.0，是测试 [17] 抓到的。
+
+    为什么用这个当横轴而不是绝对 Wh：绝对容量（或绝对采能）比较的是两个**标量**，换一个任务时长
+    或换一档采样间隔就不可比；而 margin 是**相对这条工作负载、这条采能轨迹**的余量，**1 是天然
+    分界**，不同任务、不同间隔下的读数可以放在同一张图上。这正是本项要求"横轴不用绝对 Wh"。
+
+    **逐小时**而不是看总量，是这个定义的关键：总量够而某一个小时不够，仍然不可行——这正是
+    日照曲线才暴露得出来的失败模式（白天充满、夜里耗光）。测试 [17] 用两条**总量逐位相同**、
+    时序不同的轨迹把这一条钉住。
+
+    二分求下确界：`feasible(λ)` 关于 `λ` 单调不减，所以二分是精确的，不是启发式。
+    """
+    per_hour = [sum(v for tt, v in harvest_wh.items() if tt // 3600 == h)
+                for h in range(hours)]
+
+    def feasible(lam: float) -> bool:
+        soc = initial_wh
+        for h in range(hours):
+            soc = min(capacity_wh, soc + lam * per_hour[h])
+            if soc < cost_per_hour:
+                return False
+            soc -= cost_per_hour
+        return True
+
+    if feasible(0.0):
+        # 一点采能都不需要（初始电量自己就够跑完）：余量**无上界**。
+        # 这不是"很大"，是"这条轨迹的采能与可行性无关"，必须如实报无穷而不是报一个由二分
+        # 迭代次数决定的大数（第一版返回 1.76e16，那个数字只反映 `iters`，不反映任何物理量）。
+        return float("inf")
+    if not feasible(hi):
+        return 0.0                     # 连放大 `hi` 倍都不行：真的不可行
+    lo, hi_ = 0.0, hi                  # `lo` 不可行或恰好可行，`hi_` 可行
+    for _ in range(iters):
+        mid = (lo + hi_) / 2.0
+        if feasible(mid):
+            hi_ = mid
+        else:
+            lo = mid
+    lam_min = hi_
+    return float("inf") if lam_min <= 0.0 else 1.0 / lam_min
 
 
 def wang_fragment_truth(day_offset_s: int = 36 * 3600, hours: int = 24,
