@@ -1,0 +1,20 @@
+协议 llm_naive_v5  sha256=fcefd02b2d731300  model=deepseek-flash  thinking={'type': 'disabled'}
+   [adm_noout] 实际 epoch=780（task 12.0h + tail 1.0h）⇒ 三条件合计上限 2340 次
+== adm_noout ==
+  planner invocations = 200
+  semantic episodes   = 5（closed 4）
+  **planning amplification（#意图/#episode，与 scripted 可比）= 1.60×**（单种子参照 3.66/5.42/78.00；3种子汇总 3.70/4.04/17.56）
+  planning amplification（#调用/#episode，含 noop，成本侧）= 40.00×
+  **wasted per closed effect = 意图侧 1.00 / 调用侧 49.00**
+  terminal = {'layer2': 1, 'closed': 4}
+  actions = {'noop': 192, 'set_report_period': 8}；noop=192；解析失败=0
+  **未下达动作的原因分类 = {'action_noop': 192}**
+  原始输出采样 = ['{"action":"noop"}', '{"action":"noop"}', '{"action":"noop"}', '{"action":"noop"}', '{"action":"noop"}']
+  **need_action_epochs（desired != confirmed 且无 pending）= 200**
+  **target agreement = 8 次一致 / 0 次不一致**；**same-target unresolved replan = 3 次**
+  **其中「听到过但证据老化」的 epoch 数 = 0（最多 0 个）**；「从未听到」出现的 epoch 数 = 200
+  **状态里有超期节点的 epoch 数 = 200**（最多一次 14 个节点超期）  ← 若为 0，则 noop 是「目标已满足」，不是失败
+  service = 164.0/168；AoI = 3199 s（**确认没靠少做事作弊**）
+  tokens in/out = 149736/1288  （粗算 ¥0.46 峰值价）
+
+[{"protocol_id": "llm_naive_v5", "protocol_sha256": "fcefd02b2d73130032fd4932a84df30f32c57f9fc5d2f0f9709768dbd47bbd0b", "tag": "adm_noout", "seed": 0, "invocations": 200, "intents": 8, "episodes": 5, "closed": 4, "amp_intents": 1.6, "amp_invocations": 40.0, "wasted_intents_per_closed": 1.0, "wasted_invocations_per_closed": 49.0, "terminal": {"layer2": 1, "closed": 4}, "actions": {"noop": 192, "set_report_period": 8}, "noop": 192, "bad": 0, "rejects": {"action_noop": 192}, "raw_sample": ["{\"action\":\"noop\"}", "{\"action\":\"noop\"}", "{\"action\":\"noop\"}", "{\"action\":\"noop\"}", "{\"action\":\"noop\"}"], "overdue_epochs": 200, "overdue_max": 14, "need_action_epochs": 200, "agree": 8, "disagree": 0, "same_target_unresolved": 3, "stale_epochs": 0, "stale_max": 0, "unseen_epochs": 200, "node_ids_sample": ["gw0"], "routine_delivered": 164, "routine_aoi_mean_s": 3198.6545454545453, "in_tok": 149736, "out_tok": 1288}]

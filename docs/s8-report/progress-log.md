@@ -4111,3 +4111,42 @@ LLM 跑的是 **1 个种子**（协议 `env_seed=0`），而我一直在用 **3 
 ⇒ **`amplification = 1.0`：一个 semantic episode 恰好一个 intent。**
 按用户给的判据，**"同 target 在 unresolved 下自然产生重复 planning"没有发生**
 ⇒ **真实 LLM 没有把 transport 失败变成新的 planning problem**；这条线可以收。
+
+---
+
+## §7.105 v5（只改 `pending_effect` 一句措辞）：**那一句就是压制源**——`same-target unresolved replan` 从 0 变 3
+
+**v5（`sha256=fcefd02b2d731300…`，`derives_from` v4）只改 system prompt 里一句**：
+v4 的 `"whether an effect is still unresolved (pending_effect)"` ⇒ v5 的
+`"whether a command for this node is currently queued at the gateway and not yet confirmed (pending_effect)"`。
+**其余（状态来源、6 键、上限、条件、seed、cadence、动作面）逐字不动**；**仍不写任何"pending 时该怎么办"的提示**。
+
+| 量 | v4 | **v5** |
+|---|---|---|
+| `actions` | `{noop:196, set_report_period:4}` | **`{noop:192, set_report_period:8}`** |
+| **`target agreement`** | 4 / 4（0 不一致） | **8 / 8（0 不一致）** |
+| **`same-target unresolved replan`** | **0** | **3** |
+| semantic episodes | 4（closed 3） | 5（closed 4） |
+| `amp_intents` | 1.0 | **1.6** |
+| service / AoI | 161.0 / 168 ；3426 s | **164.0 / 168 ；3199 s** |
+| 输入 token | 783/次 | 749/次；零解析失败 |
+
+**⇒ 我上一轮的怀疑被证实**：v4 的「0 次重复」**是被那句错误措辞压住的**——
+`pending_effect` 被描述成"效果还没解决"，而它实际是"命令在网关队列里"，
+模型据此可能推断"没什么未决"。**改掉措辞后，动作翻倍、且那个事件真的出现了。**
+
+**但按预注册四条 Agent-failure gate 逐条对：**
+
+1. semantic target 明确且正确 ⇒ **✓**（8/8 一致、0 不一致）
+2. 同 target 在 unresolved 下**自然产生重复 planning** ⇒ **✓**（3 次）
+3. **这种重复没有提高 episode closure / service / AoI** ⇒ **✗ 不成立**：service **161→164**、
+   AoI **3426→3199**（都变好）
+4. amplification 显著高于 1 ⇒ **1.6×，边缘**（远低于单种子 scripted 参照 3.66×）
+
+**⇒ 四条缺两条，按预注册判据「Agent failure」目前不成立。** 重复在这里看起来**是有用的**，不是浪费。
+
+**必须声明的局限**：v4 与 v5 是**两个不同的 prompt**，所以 service/AoI 的差异是"两个策略之别"，
+**不能读成"重复导致业务变好"**；而且只有 **1 个条件 × 1 个 seed × 200 of 720 epoch、8 次动作**。
+⇒ 这才需要全量 3 × 720（约 ¥1.5–2，25–30 min）给出真答案。
+
+**闸门两项都过**（target agreement 正常、episodes 非零）⇒ 按计划启动全量。

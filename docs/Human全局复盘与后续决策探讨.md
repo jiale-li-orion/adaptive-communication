@@ -381,3 +381,4 @@ agent runtime 负责告诉 planner“哪些 action 当前值得 reasoning、哪�
 一个 Agent 在什么条件下应该被允许改变远端系统状态？
 
 如果这个问题能被我们从 T_obs / T_ctrl / T_harm / T_deadline 推出一套可测的判据，再用现有 benchmark + real LLM 去验证，那就真的开始像一篇完整论文了。
+

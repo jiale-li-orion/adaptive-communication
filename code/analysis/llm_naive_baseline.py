@@ -52,7 +52,7 @@ from episode_lifecycle import episodes                  # noqa: E402
 # 为什么这样写：文档与实跑两处各写一份必然漂移（本 repo 反复栽在"同一件事两处写法不一致"）。
 # 所以代码**不复制**协议里的任何字符串；并且把协议哈希记进每个结果，事后可核对跑的是哪一版。
 import hashlib
-PROTOCOL_ID = os.environ.get("LLM_PROTOCOL", "llm_naive_v4")
+PROTOCOL_ID = os.environ.get("LLM_PROTOCOL", "llm_naive_v5")
 PROTOCOL_PATH = os.path.join(_HERE, "..", "protocols", f"{PROTOCOL_ID}.json")
 _PROTO_BYTES = open(PROTOCOL_PATH, "rb").read()
 PROTOCOL_SHA = hashlib.sha256(_PROTO_BYTES).hexdigest()

@@ -1,0 +1,138 @@
+{
+  "action_schema": {
+    "invalid_handling": "node 不在 view 里 / value 缺 / action 不认识 ⇒ 记 noop 或 bad，不下发",
+    "noop": {
+      "action": "noop"
+    },
+    "others": [
+      "set_sampling_interval",
+      "set_report_period"
+    ],
+    "parse_failure": "content 为空或非 JSON ⇒ 记 bad，按 noop 处理"
+  },
+  "budget_caps": {
+    "max_calls": 4500,
+    "max_input_tokens_per_call": 1000,
+    "max_output_tokens_per_call": 64,
+    "max_total_input_tokens": 4500000,
+    "max_total_output_tokens": 300000
+  },
+  "change_note": "**只改 system prompt 里对 `pending_effect` 的一句描述**，别的全部不动（状态来源、6 个键、上限、条件、seed、cadence、动作面都不变）。v4 原文写的是 \"whether an effect is still unresolved (pending_effect)\"，而代码取的是 `in_flight`（网关队列里真有一条在路上）——**这正是把 v3 判成 instrument invalid 的那个区分，以文字形式残留**：模型若信 \"unresolved\"，看到 `pending_effect=false` 会推断「没什么未决」⇒ 可能系统性 noop。v5 改成描述**传输状态**。**仍然不写任何「pending 时该怎么办」的提示**——那正是要观察的行为。",
+  "conditions": [
+    "adm_noout",
+    "adm_out3",
+    "polar_c0.05"
+  ],
+  "cost_model_cny_per_mtok": {
+    "input_peak": 3.0,
+    "note": "官方峰值价；空闲时段减半；prompt cache 命中更低。账上 24 元且与 DSH 共用。",
+    "output_peak": 9.0
+  },
+  "decision_rule": "若 need_action_epochs > 0 而仍 200/200 noop ⇒ 接受为干净的 conservative-agent observation，该线可收；若出现「需要动时动、pending 后不动/重复」⇒ 才进入原定问题：模型能否区分「还没人做」与「已经做了、只是没结果」",
+  "derives_from": {
+    "protocol_id": "llm_naive_v4",
+    "sha256": "5e36b7b1264f93e7c5fcf5607d861d3c540a2e70cc49a4cba27a5e68e37d71ac"
+  },
+  "env_seed": 0,
+  "epoch_s": 60,
+  "frozen_at": "2026-09-13",
+  "metrics": [
+    "target agreement",
+    "same-target unresolved replans",
+    "need_action_epochs = count(desired != confirmed and pending == False)",
+    "episodes",
+    "intents",
+    "closure",
+    "amplification",
+    "wasted per closed",
+    "service/AoI",
+    "planner calls & tokens",
+    "action validity / parse failure"
+  ],
+  "model": {
+    "api_key_env": "DEEPSEEK_API_KEY",
+    "api_key_note": "在 ~/.bashrc 里；WSL 非交互 shell 每次都要 eval 取出来",
+    "endpoint": "https://api.deepseek.com/chat/completions",
+    "max_tokens": 64,
+    "model_id": "deepseek-flash",
+    "provider": "deepseek",
+    "response_format": {
+      "type": "json_object"
+    },
+    "stream": false,
+    "temperature": 0.0,
+    "thinking": {
+      "type": "disabled"
+    },
+    "thinking_note": "**实测该模型默认开思考**：不关的话 max_tokens=64 会被 reasoning 全吃光、content 为空、finish_reason=length。thinking={type:disabled} 与 reasoning_effort=none 两个开关实测有效，其余写法无效。"
+  },
+  "not_in_scope": [
+    "新 runtime",
+    "durable reconciliation",
+    "新 condition",
+    "改 task",
+    "多模型对比",
+    "模型泛化"
+  ],
+  "one_call_per_epoch": true,
+  "phase_gate": {
+    "phase1": "3 conditions × 1 seed，上限约 8 元",
+    "phase2": "**只有真的看到 repeated intent / unknown-state replan / target oscillation 才加第二个 seed**，两阶段总上限 ≤16 元"
+  },
+  "planner_cadence": "policy.plan() 每 tick 进入 = 60 s 一次，**不降频**（降频＝提前加 backpressure，毁掉要测的东西）",
+  "preregistered_criteria": {
+    "1": "amplification ≲ 1–1.5× ⇒ scripted 发现没有自然迁移，agent-infra 门继续关闭",
+    "2": "出现 3×、10× 级 amplification 而 closure/service 没增加 ⇒ Agent failure 成立",
+    "3": "standard reconciliation 基本吃光 amplification 且不伤 service ⇒ 结论是'真实 Agent 有 failure 但成熟系统抽象已解决'"
+  },
+  "preregistered_criteria_v3": {
+    "agent_failure_gate": [
+      "semantic target 明确且正确（target agreement 正常）",
+      "同 target 在 unresolved 状态下自然产生重复 planning",
+      "这种重复没有提高 episode closure / service / AoI",
+      "amplification 显著高于 1（LLM 只有 2.2x 但几乎全是 unresolved same-target replan 且业务零增益，仍算 failure）"
+    ],
+    "reference_only": "旧 3.70/4.04/17.56x 降为 reference，不再当硬阈值"
+  },
+  "protocol_id": "llm_naive_v5",
+  "purpose": "测真实 LLM 在间歇执行失败后会不会把同一个 semantic episode 重新变成 planning problem（naive baseline）",
+  "reproduce": "python3 code/analysis/llm_naive_baseline.py --smoke   # 先验管道\npython3 code/analysis/llm_naive_baseline.py",
+  "scripted_reference": {
+    "adm_noout": 3.7,
+    "adm_out3": 4.04,
+    "polar_c0.05": 17.56
+  },
+  "state_schema": {
+    "aoi_source": "CenterView.aoi_s(node_id)（与 AoiPolicy 同源）；**不是 soc_age_s**",
+    "confirmed_source": "CenterView.known_report_period(node_id)",
+    "desired_target_rule": "g_i(t) = 300 if aoi_s is null or aoi_s > 3600 else 900",
+    "fields": [
+      "time_s",
+      "nodes[]",
+      "last_tool_outcome"
+    ],
+    "invariants": [
+      "aoi_s == view.aoi_s(node)",
+      "pending_effect == (node in view.in_flight)",
+      "desired_target == target_fn(aoi_s)"
+    ],
+    "max_nodes": 20,
+    "node_fields": [
+      "id",
+      "aoi_s",
+      "desired_target",
+      "confirmed_target",
+      "pending_effect",
+      "soc_evidence_age_s"
+    ],
+    "node_order": "sorted(id)",
+    "note": "只给中心真的能看见的东西；不给 simulator truth、不预告 outage、不隐藏 pending；不塞历史聊天",
+    "overdue_rule": "a node is overdue if last_heard_age_s > obligation_period_s (or seen is false); overdue nodes mean the routine obligation is not being met",
+    "pending_effect_source": "CenterView.in_flight（= 该节点队列非空）——**绝不被 mismatch 覆盖**",
+    "soc_seen_round": 5
+  },
+  "status": "FROZEN — 跑之前定死；任何改动必须新建 protocol_id 并重跑，不得原地改",
+  "system_prompt": "You are the controller for a remote LoRaWAN monitoring network. You are given a compact JSON snapshot of what the CENTER currently knows. Reply with ONLY one JSON action object, no prose.\nAllowed actions:\n{\"action\":\"noop\"}\n{\"action\":\"set_report_period\",\"node\":\"<id>\",\"value\":<300|900|1800|3600>}\nFor each node the snapshot gives the desired_target for report_period, the confirmed_target the node last acknowledged, whether a command for this node is currently queued at the gateway and not yet confirmed (pending_effect), the node's age-of-information (aoi_s), the age of its last energy evidence (soc_evidence_age_s), and the last tool outcome. Decide whether to call the tool now.",
+  "tail_hours": 1,
+  "task_hours": 12
+}
