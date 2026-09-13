@@ -34,7 +34,8 @@ for _p in (_HERE, *(_os.path.join(_CODE, d) for d in ("physics", "runtime",
 
 from dataclasses import dataclass, field
 
-from center import OP_SET_REPORT_PERIOD, CenterPolicy, CenterView, LocalPolicy
+from center import (OP_SET_REPORT_PERIOD, OP_SET_SAMPLING_INTERVAL, CenterPolicy,
+                    CenterView, LocalPolicy)
 from deterministic import stable_uniform
 from opportunity import ControlPlane, DownlinkMessage, LoRaProfile
 
@@ -71,10 +72,15 @@ class DeviceProfile:
     upload_on_event: bool = True
     #: 有限缓存。容量按**记录条数**计，溢出丢最老，并计数（v1.1 §5.3 要求公开溢出策略）。
     cache_slots: int = 240
-    #: 每次采样的能量代价（Wh）。A 层。
-    sample_wh: float = 2.0e-5
+    #: 单次采样周期的能量代价（Wh）。**取自实测剖面**：活跃窗口约 15 s、平均 35.7 mA、母线 3.3 V
+    #: → 约 4.9e-4 Wh/周期（Ragnoli 等, *JLPEA* 12(3):47, 2022）。减去 `RadioEnergy` 另计的空口
+    #: 部分后取 4.7e-4。**原先默认 2e-5 比它低约 25 倍**，那使能量约束在整轮实验里都没有被触到
+    #: （电池恒满、零死节点），能源列因此不携带信息。这是本轮修正的一处 A 层取值。
+    sample_wh: float = 4.7e-4
     #: 电池标称容量（Wh）与初值比例。
-    capacity_wh: float = 40.0
+    #: 电池标称容量（Wh）。0.05 Wh ≈ 13.5 mAh @3.7 V，是**小型现场站**的量级；取大值会让
+    #: "多采一点"与"熬过这个冬天"之间的取舍消失，而那正是本场景要建模的取舍。
+    capacity_wh: float = 0.05
     initial_soc: float = 1.0
     #: 低温闸门：低于此温度不能充电；可用容量按 `capacity_at_cold` 折算到 `cold_ref_c`。
     charge_min_c: float | None = 5.0
@@ -174,6 +180,12 @@ class Node:
         self.next_event_sample_at: int | None = None
         #: 还有几批事件样本等待上报。>0 时上报周期被临时提升为本 tick（本地自治）。
         self.event_upload_pending = 0
+        #: **执行层状态**：远端见过哪些逻辑身份、以及版本高水位。这两样决定"重复能否被识别"
+        #: 与"更旧的写入能否被拒绝"。没有它们时，一条迟到很久的命令会照常生效。
+        self.applied_logicals: set[str] = set()
+        self.applied_version = 0
+        #: 中心最近一次**想**让它跑的上报周期，以及中心认为已经在位的值。用于算配置错配时长。
+        self.wanted_period_s: int | None = None
         # 计数器（供手工核算）
         self.sampled = 0
         self.dropped = 0
@@ -204,7 +216,6 @@ class Node:
         self.power.consumed_wh += self.p.idle_wh_per_tick
         if self.soc_wh <= 0.0:
             self.soc_wh = 0.0
-            self.power.deficit_s += TICK_S
             if self.alive:
                 self.alive = False
                 self.dead_at = t_s
@@ -237,6 +248,10 @@ class Node:
         self._step_power(t_s, truth)
         if not self.alive:
             self.idle_ticks += 1
+            # 缺电时长按"节点不存活"计，**不按 soc<=0 计**：节点也可能因为"剩余电量不够采一条"
+            # 而被判死，那时 soc 并不为 0。只按 soc<=0 计会让这类死亡完全不进账本（实测踩过：
+            # deficit 恒为 0，而节点明明已经死了）。
+            self.power.deficit_s += TICK_S
             return []
         if self._trigger_fires(t_s, truth):
             self.event_left = self.p.event_slots
@@ -374,7 +389,10 @@ class Instance:
                  uplink_p_arrive: float = 0.74,
                  backhaul_p_good: float = 0.62,
                  backhaul_delay_s: int = 0,
-                 policy: CenterPolicy | None = None) -> None:
+                 policy: CenterPolicy | None = None,
+                 send_contract_fields: bool = False,
+                 hold_every: int = 0, hold_s: int = 0,
+                 access_outage: tuple[int, int] | None = None) -> None:
         # 节点是**每次运行的状态**：缓存与传递台账都属于这一次运行。把同一批节点交给两个
         # Instance 会在第二次运行里看到上一次残留的缓存，而 `sample_id` 是按时刻命名的，
         # 于是旧样本会被当成新样本发出去——静默混合两次运行。**响亮地失败，不要静默。**
@@ -393,12 +411,29 @@ class Instance:
                                   backhaul_delay_s=backhaul_delay_s)
         #: 中心策略。默认不下发任何命令——**这是所有方法的共同起点**，现场自治照常工作。
         self.policy: CenterPolicy = policy or LocalPolicy()
+        #: 执行层开关：报文是否携带稳定逻辑身份与单调版本。
+        self.send_contract_fields = send_contract_fields
         self.center = Center()
         self.log = HopLog()
         self._radio_wh_seen: dict[str, float] = {}
         self.command_seq = 0
         self.counters = {"commands_sent": 0, "commands_delivered": 0,
-                         "commands_refused": 0, "commands_lost": 0}
+                         "commands_refused": 0, "commands_lost": 0,
+                         "deduplicated": 0, "fenced": 0}
+        #: 延迟释放：identity -> 允许到达的最早时刻。空表示网络不扣留任何命令。
+        self.hold_until: dict[str, int] = {}
+        #: 被网络扣留、对中心不可见的命令：(释放时刻, 节点, 报文)。
+        self.held: list[tuple[int, str, object]] = []
+        self.hold_every = hold_every
+        self.hold_s = hold_s
+        #: 接入中断窗 (start_s, end_s)：**节点仍有电、仍在采样，只是上行到不了网关**。
+        #: 与回传中断的区别是丢失发生在哪一跳，而这两跳的业务后果不同（v1.1 §5.3）。
+        self.access_outage = access_outage
+        self.access_blocked = 0
+        #: 中心下发的**意图**日志：(t_s, node_id, 目标周期)。用于算"中心自己的意图有没有在位"。
+        #: 它与"外部配置要求"不同——v1.1 §9 只对后者算错配时长，这里是意图达成度，不是正确性。
+        self.intent_log: list[tuple[int, str, int]] = []
+        self.held_dispatched = 0
 
     # -------------------------------------------------- 一个 tick
 
@@ -435,12 +470,31 @@ class Instance:
                                           [s.sample_id for s in batch],
                                           node.snapshot(t_s), payload=list(batch))
                 continue
+            if self.access_outage is not None and \
+                    self.access_outage[0] <= t_s < self.access_outage[1]:
+                # 接入中断：上行根本没到网关。**节点照常采样与缓存**，因此这里的损失全部是
+                # 交付侧，采集侧不受影响——与失电的区别正在于此。
+                self.access_blocked += 1
+                continue
             payload_bytes = max(16, 12 * len(batch))
             rec = self.plane.uplink(node.node_id, hour=hour, sf=9,
                                     payload_bytes=payload_bytes,
                                     attempt_index=t_s // TICK_S)
             counters["uplinks"] += 1
             for delivery in rec.delivered:
+                ident = delivery.message.identity
+                release_at = self.hold_until.get(ident)
+                if release_at is not None:
+                    if t_s < release_at:
+                        # 网络把它扣住了。**关键：它不能留在网关队列里。** 被扣留的命令对中心
+                        # 是不可见的——中心看到网关队列空了，就会认为这条已经了结，于是继续下发
+                        # 新的目标。留在队列里会让 `in_flight` 永远为真、中心永不重发，危险交错
+                        # 根本不可能形成（这是实现里踩过的一个错）。因此扣留件放在**独立的持有表**
+                        # 里，只在释放时刻回到投递路径。
+                        self.held.append((release_at, node.node_id, delivery.message))
+                        self.counters["held_waiting"] = self.counters.get("held_waiting", 0) + 1
+                        continue
+                    self.hold_until.pop(ident, None)
                 self._apply_delivery(delivery, t_s)
             self._charge_radio(node)
             if not rec.arrived:
@@ -454,6 +508,13 @@ class Instance:
 
         # 2.5 命令在接收窗口里送达 → 落到节点上。**送达才是生效**，不是发出。
         # （下发在 uplink 内部完成，此处只统计；应用已在 `_apply_delivery` 里做。）
+
+        # 2.7) 释放到期的扣留件。**迟到到达**：中心早已按新目标下过别的命令。
+        released = [x for x in self.held if x[0] <= t_s]
+        self.held = [x for x in self.held if x[0] > t_s]
+        for _rel, node_id, message in released:
+            self.counters["held_released"] = self.counters.get("held_released", 0) + 1
+            self._apply_delivery(type("D", (), {"node_id": node_id, "message": message})(), t_s)
 
         # 3) 回传可用时，网关把缓存的交给中心
         for item in self.plane.backhaul_forward(t_s):
@@ -480,29 +541,72 @@ class Instance:
                           in_flight=in_flight)
 
     def _send_command(self, node_id: str, payload: dict, t_s: int) -> None:
-        """把一条意图放进回传。**它此刻还没有到达任何地方。**"""
+        """把一条意图放进回传。**它此刻还没有到达任何地方。**
+
+        契约字段由**臂**决定发不发：`send_contract_fields=True` 时随报文带上稳定逻辑身份与单调
+        版本，远端据此能识别重复、拒绝更旧的写入。两条臂用同一条中心策略、同一套动作，差别只在
+        这两个字段——这满足 v1.1 §10"执行层的差异应在同一动作集合下体现"。
+        """
         self.command_seq += 1
+        body = dict(payload)
+        if self.send_contract_fields:
+            body["logical"] = f"{node_id}:period:{payload.get('generation', 0)}"
+            body["version"] = self.command_seq
         msg = DownlinkMessage(
             identity=f"cmd{self.command_seq:05d}",
             kind=payload.get("op", "command"),
             payload_bytes=16,
             enqueued_at=t_s,
             expires_at=t_s + 6 * 3600,
-            payload=dict(payload))
+            payload=body)
         if self.plane.center_send(node_id, msg, t_s // 3600):
             self.counters["commands_sent"] += 1
+            if body.get("op") in (OP_SET_REPORT_PERIOD, OP_SET_SAMPLING_INTERVAL):
+                val = int(body.get("period_s", body.get("interval_s")))
+                self.intent_log.append((t_s, node_id + ":" + body["op"], val))
+            # 延迟释放：按固定步长扣留一部分命令，让它们越过中心后来的目标变更。
+            # **按真实下发武装**，不按时钟时刻武装——按时刻武装会落在什么都不发生的分钟上。
+            if self.hold_every and self.counters["commands_sent"] % self.hold_every == 0:
+                self.hold_until[f"cmd{self.command_seq:05d}"] = t_s + self.hold_s
+                self.counters["held"] = self.counters.get("held", 0) + 1
             self.policy.note_command_sent(node_id, payload)
         else:
             self.counters["commands_refused"] += 1
 
     def _apply_delivery(self, delivery, t_s: int) -> None:
-        """命令真的到了节点。到这一步才算生效——之前都只是意图。"""
+        """命令真的到了节点。到这一步才算生效——之前都只是意图。
+
+        **执行层在这里。** 报文的契约字段（`logical` 稳定身份、`version` 单调版本）决定远端能否
+        认出"这是同一条逻辑命令的重发"以及"这比我已经生效的更旧"。两个字段都缺席时，一条迟到很久
+        的命令会照常生效，把更新的配置覆盖回去——**这是方案属性，不是实现细节**，所以由臂来控制
+        发不发这两个字段，而不是由中心策略控制。
+        """
         node = self.nodes.get(delivery.node_id)
         if node is None or not node.alive:
             return
         payload = getattr(delivery.message, "payload", None) or {}
-        if payload.get("op") == OP_SET_REPORT_PERIOD:
+        logical = payload.get("logical")
+        version = payload.get("version")
+
+        if logical is not None and logical in node.applied_logicals:
+            self.counters["deduplicated"] += 1
+            return
+        if version is not None and version < node.applied_version:
+            self.counters["fenced"] += 1
+            return
+        if logical is not None:
+            node.applied_logicals.add(logical)
+        if version is not None:
+            node.applied_version = version
+
+        op = payload.get("op")
+        if op == OP_SET_REPORT_PERIOD:
             node.report_period_s = max(60, int(payload["period_s"]))
+            self.counters["commands_delivered"] += 1
+        elif op == OP_SET_SAMPLING_INTERVAL:
+            # **这一条会改变电量轨迹**：采样间隔是密集观测的主要能耗来源（v1.1 §8 的
+            # "动作驱动的电量演化"）。把它调密，遮荫站点会耗尽电量而永久失去服务。
+            node.sample_interval_s = max(60, int(payload["interval_s"]))
             self.counters["commands_delivered"] += 1
 
     def _charge_radio(self, node: Node) -> None:
@@ -515,6 +619,31 @@ class Instance:
         self._radio_wh_seen[node.node_id] = total
         if delta > 0:
             node.spend(delta)
+
+    def intent_mismatch_s(self, hours: int) -> int:
+        """节点实际周期与中心**最新意图**不一致的 tick 数（秒）。
+
+        度量的是"中心自己的意图有没有达成"，不是"配置对不对"——v1.1 §9 只对有明确外部配置要求的
+        区间算错配时长，这里的意图是中心自己选的优化值，因此**不得**把它当成正确性错误，只能当代价。
+        """
+        total = 0
+        latest: dict[str, int] = {}
+        by_t: dict[int, list[tuple[str, int]]] = {}
+        for t_s, key, period in self.intent_log:
+            by_t.setdefault(t_s, []).append((key, period))
+        for t_s in range(0, hours * 3600, TICK_S):
+            for nid, period in by_t.get(t_s, ()):
+                latest[nid] = period
+            for key, period in latest.items():
+                nid, _, op = key.partition(":")
+                node = self.nodes.get(nid)
+                if node is None or not node.alive:
+                    continue
+                actual = (node.report_period_s if op == OP_SET_REPORT_PERIOD
+                          else node.sample_interval_s)
+                if actual != period:
+                    total += TICK_S
+        return total
 
     def run(self, hours: int) -> HopLog:
         self.log.truth = self.truth

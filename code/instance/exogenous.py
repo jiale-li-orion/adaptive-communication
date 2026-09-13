@@ -306,6 +306,26 @@ def snap_to_grid(t_s: int, tick_s: int = TICK_S) -> tuple[int, int]:
     return snapped, abs(snapped - t_s)
 
 
+def hetero_harvest(node_ids, hours: int, seed: int, low_frac: float = 0.4,
+                   low_wh_per_hour: float = 0.005, high_wh_per_hour: float = 0.05,
+                   temp_c: float | None = 10.0) -> tuple[dict, dict]:
+    """**异质**采能（A 层）：一部分站点被地形或积雪遮住，采能只有其余站点的十分之一。
+
+    为什么要异质：如果每个节点的机会预算都很宽裕，那么"把所有节点都加密"就是可行解，
+    固定配置自然够用——上一轮实测正是这个结果（`fixed900` 与 `aoi` 逐位相同）。
+    **要让"给谁加密"成为真正的选择，预算必须先成为约束，而且节点之间的预算必须不同。**
+    v1.1 §8 已经写了"各电池的能量不可任意互相转移"，这里落实的是它的前提：各站采能不同。
+    """
+    harvest, temp = {}, {}
+    for node_id in node_ids:
+        low = stable_uniform(seed, "shade", node_id) < low_frac
+        wh = low_wh_per_hour if low else high_wh_per_hour
+        harvest[node_id] = {t: wh / 60.0 for t in range(0, hours * 3600, TICK_S)}
+        if temp_c is not None:
+            temp[node_id] = {t: temp_c for t in range(0, hours * 3600, TICK_S)}
+    return harvest, temp
+
+
 def wang_fragment_truth(day_offset_s: int = 36 * 3600, hours: int = 24,
                         node_ids: tuple[str, ...] = ("EI01",),
                         snap: bool = True) -> EnvironmentTruth:

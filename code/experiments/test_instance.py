@@ -100,12 +100,13 @@ def test_blackout_invents_nothing() -> None:
 
     比"从一开始就没电"强的地方在于：它能同时查出三件事——死亡之后不再产生样本、死亡时刻之前的
     样本照常存在、以及死亡之后的义务**仍留在分母里**（不是"没采就不算"）。
-    电量按**绝对 Wh** 给：0.3 mWh 够采几条就断电。
+    电量按**绝对 Wh** 给：2.5 mWh 够采几条就断电。
     """
     print("\n[2] 失电不补造样本，且义务仍留在分母里")
-    # 0.3 mWh ≈ 够采几条就断电（单条采样 2e-5 Wh、单次上行空口 ~2e-5 Wh）
+    # 2.5 mWh ≈ 够采 5 条就断电（单条采样 4.7e-4 Wh + 单次上行空口 ~2e-5 Wh，
+    # 见 DeviceProfile.sample_wh 的实测出处）。取这个值是为了让它**中途**死，而不是开头就死。
     nodes, truth, inst, log = build(harvest_wh_per_hour=0.0, temp_c=None,
-                                    initial_wh=3e-4)
+                                    initial_wh=2.5e-3)
     node = nodes[NODE]
     D = obligations(truth)
     res = evaluate(D, log, HOURS, nodes.keys(), battery={NODE: node.power.to_dict()},

@@ -59,6 +59,22 @@ class CenterPolicy:
     def plan(self, view: CenterView) -> list[tuple[str, dict]]:
         raise NotImplementedError
 
+    def __init__(self) -> None:
+        #: 每个节点当前的**目标值**与它的世代号。世代号只在目标改变时递增——于是同一条逻辑
+        #: 命令的所有重发共享一个身份，目标变了才换新身份。这正是远端能识别重复的前提。
+        self.target: dict[str, object] = {}
+        self.generation: dict[str, int] = {}
+
+    def stamp(self, node_id: str, **fields) -> dict:
+        """给一条命令盖上世代号。目标没变就不换号。"""
+        key = tuple(sorted(fields.items()))
+        if self.target.get(node_id) != key:
+            self.target[node_id] = key
+            self.generation[node_id] = self.generation.get(node_id, 0) + 1
+        out = dict(fields)
+        out["generation"] = self.generation[node_id]
+        return out
+
     def note_command_sent(self, node_id: str, payload: dict) -> None:
         """中心自己的记账：它发过什么。**这不是回执**，回执只能来自节点上报。"""
 
@@ -85,6 +101,7 @@ class FixedPeriodPolicy(CenterPolicy):
     """
 
     def __init__(self, period_s: int = 300, dwell_s: int = 1800) -> None:
+        super().__init__()
         self.period_s = period_s
         self.dwell_s = dwell_s
         self.name = f"fixed{period_s}"
@@ -101,7 +118,8 @@ class FixedPeriodPolicy(CenterPolicy):
             if last is not None and view.t_s - last < self.dwell_s:
                 continue
             self._last_cmd_at[nid] = view.t_s
-            out.append((nid, {"op": OP_SET_REPORT_PERIOD, "period_s": self.period_s}))
+            out.append((nid, self.stamp(nid, op=OP_SET_REPORT_PERIOD,
+                                        period_s=self.period_s)))
         return out
 
 
@@ -114,6 +132,7 @@ class AoiPolicy(CenterPolicy):
 
     def __init__(self, stale_s: int = 3600, fast_s: int = 300, slow_s: int = 900,
                  dwell_s: int = 600) -> None:
+        super().__init__()
         self.stale_s, self.fast_s, self.slow_s = stale_s, fast_s, slow_s
         self.dwell_s = dwell_s
         self.name = f"aoi{stale_s}"
@@ -139,7 +158,7 @@ class AoiPolicy(CenterPolicy):
             if known == want:
                 continue                                  # 回执已经确认是这个值，不重复下单
             self._last_cmd_at[nid] = view.t_s
-            out.append((nid, {"op": OP_SET_REPORT_PERIOD, "period_s": want}))
+            out.append((nid, self.stamp(nid, op=OP_SET_REPORT_PERIOD, period_s=want)))
         return out
 
 
@@ -172,7 +191,89 @@ class AoiLinkPolicy(AoiPolicy):
             if known == want:
                 continue
             self._last_cmd_at[nid] = view.t_s
-            out.append((nid, {"op": OP_SET_REPORT_PERIOD, "period_s": want}))
+            out.append((nid, self.stamp(nid, op=OP_SET_REPORT_PERIOD, period_s=want)))
+        return out
+
+
+class DenseSamplingPolicy(CenterPolicy):
+    """把所有节点的**采样间隔**改成同一个密集值，之后不再动。
+
+    这是"固定配置"的加强版：它真的会改变电量轨迹，因此在能量绑定的实例里会**把遮荫站点耗死**。
+    一条固定配置一旦要密集观测，就无法兼顾"哪些站点撑得住"——那需要**逐节点的状态**，
+    而中心恰恰能通过节点上报里的 `soc_wh` 看到它。
+    """
+
+    def __init__(self, interval_s: int = 300, period_s: int = 900,
+                 dwell_s: int = 3600) -> None:
+        super().__init__()
+        self.interval_s, self.period_s, self.dwell_s = interval_s, period_s, dwell_s
+        self.name = f"dense{interval_s}"
+        self._last: dict[str, int] = {}
+
+    def plan(self, view: CenterView) -> list[tuple[str, dict]]:
+        out = []
+        for nid in view.node_ids:
+            if nid in view.in_flight:
+                continue
+            last = self._last.get(nid)
+            if last is not None and view.t_s - last < self.dwell_s:
+                continue
+            snap = view.reports.get(nid) or {}
+            done = (snap.get("sample_interval_s") == self.interval_s
+                    and snap.get("report_period_s") == self.period_s)
+            if done:
+                continue
+            self._last[nid] = view.t_s
+            out.append((nid, self.stamp(nid, op=OP_SET_SAMPLING_INTERVAL,
+                                        interval_s=self.interval_s)))
+            out.append((nid, self.stamp(nid, op=OP_SET_REPORT_PERIOD,
+                                        period_s=self.period_s)))
+        return out
+
+
+class EnergyAwarePolicy(DenseSamplingPolicy):
+    """**依据节点报回来的电量**决定要不要加密：电量健康的才加密，不健康的保持稀疏。
+
+    这一条是唯一无法由固定配置表达的决策：目标值取决于**中心收到的状态**，而状态随
+    节点所处地形（遮荫与否）与已消耗的机会而变。中心不读环境真值，只看节点上报里的 `soc_wh`
+    与它自己上次下发的意图。
+    """
+
+    def __init__(self, healthy_wh: float = 0.010, interval_s: int = 300,
+                 period_s: int = 900, sparse_interval_s: int = 3600,
+                 sparse_period_s: int = 3600, **kw) -> None:
+        super().__init__(interval_s=interval_s, period_s=period_s, **kw)
+        self.healthy_wh = healthy_wh
+        self.sparse_interval_s = sparse_interval_s
+        self.sparse_period_s = sparse_period_s
+        self.name = f"energyaware{int(healthy_wh * 1000)}mwh"
+
+    def plan(self, view: CenterView) -> list[tuple[str, dict]]:
+        out = []
+        for nid in view.node_ids:
+            if nid in view.in_flight:
+                continue
+            last = self._last.get(nid)
+            if last is not None and view.t_s - last < self.dwell_s:
+                continue
+            snap = view.reports.get(nid) or {}
+            soc = snap.get("soc_wh")
+            if soc is None:
+                out.append((nid, self.stamp(nid, op=OP_SET_REPORT_PERIOD,
+                                            period_s=self.sparse_period_s)))
+                self._last[nid] = view.t_s
+                continue
+            healthy = soc >= self.healthy_wh
+            want_i = self.interval_s if healthy else self.sparse_interval_s
+            want_p = self.period_s if healthy else self.sparse_period_s
+            if (snap.get("sample_interval_s") == want_i
+                    and snap.get("report_period_s") == want_p):
+                continue
+            self._last[nid] = view.t_s
+            out.append((nid, self.stamp(nid, op=OP_SET_SAMPLING_INTERVAL,
+                                        interval_s=want_i)))
+            out.append((nid, self.stamp(nid, op=OP_SET_REPORT_PERIOD,
+                                        period_s=want_p)))
         return out
 
 
@@ -183,6 +284,17 @@ ARMS: dict[str, type[CenterPolicy]] = {
     "fixed900": lambda: FixedPeriodPolicy(900),
     "aoi": lambda: AoiPolicy(),
     "aoi_link": lambda: AoiLinkPolicy(),
+    "dense300": lambda: DenseSamplingPolicy(300, 900),
+    "dense600": lambda: DenseSamplingPolicy(600, 900),
+    "dense900": lambda: DenseSamplingPolicy(900, 900),
+    "dense1200": lambda: DenseSamplingPolicy(1200, 900),
+    "dense1800": lambda: DenseSamplingPolicy(1800, 900),
+    "energy_aware": lambda: EnergyAwarePolicy(0.010, 300, 900),
+    "ea_h5": lambda: EnergyAwarePolicy(0.005, 300, 900),
+    "ea_h15": lambda: EnergyAwarePolicy(0.015, 300, 900),
+    "ea_h25": lambda: EnergyAwarePolicy(0.025, 300, 900),
+    "ea_i600": lambda: EnergyAwarePolicy(0.010, 600, 900),
+    "ea_i600h5": lambda: EnergyAwarePolicy(0.005, 600, 900),
 }
 
 

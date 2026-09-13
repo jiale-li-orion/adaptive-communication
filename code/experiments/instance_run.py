@@ -29,7 +29,7 @@ for _p in (_HERE, *(_os.path.join(_CODE, d) for d in ("physics", "runtime", "exp
         _sys.path.insert(0, _p)
 
 from deployment import build_deployment
-from exogenous import (ObligationSet, constant_harvest, displacement_series,
+from exogenous import (ObligationSet, constant_harvest, displacement_series, hetero_harvest,
                        rule_obligations_for_truth, routine_obligations_by_node,
                        wang_fragment_truth)
 from center import ARMS, build_policy
@@ -41,22 +41,49 @@ OUT = _os.path.normpath(_os.path.join(_CODE, "..", "results"))
 
 def one_seed(seed: int, task_hours: float, tail_hours: float,
              outage_start_h: float = 0.0, outage_hours: float = 0.0,
-             arm: str = "local") -> dict:
+             arm: str = "local", contract: bool = False,
+             hold_every: int = 0, hold_s: int = 0,
+             harvest_wh_per_hour: float = 3.0, sample_interval_s: int = 3600,
+             uplink_p_arrive: float = 0.74, backhaul_p_good: float = 0.62,
+             event_spacing_s: int = 300, harvest_mode: str = "uniform",
+             access_outage_h: float = 0.0,
+             capacity_wh: float = 0.05, low_frac: float = 0.4,
+             low_wh_per_hour: float = 0.005) -> dict:
     hours = task_hours + tail_hours
     dep = build_deployment(groups=2)
-    nodes = nodes_from(dep)
+    prof = DeviceProfile(sample_interval_s=sample_interval_s,
+                         event_interval_s=event_spacing_s,
+                         capacity_wh=capacity_wh)
+    nodes = nodes_from(dep, profile=prof)
     truth = wang_fragment_truth(0, int(hours), (dep.gateway.sid,))
     truth.displacement = displacement_series(nodes.keys(), int(hours), seed)
-    harvest, temp = constant_harvest(nodes.keys(), int(hours), 3.0, 10.0)
+    if harvest_mode == "hetero":
+        harvest, temp = hetero_harvest(nodes.keys(), int(hours), seed,
+                                       low_frac=low_frac,
+                                       low_wh_per_hour=low_wh_per_hour,
+                                       high_wh_per_hour=harvest_wh_per_hour)
+    else:
+        harvest, temp = constant_harvest(nodes.keys(), int(hours),
+                                         harvest_wh_per_hour, 10.0)
     truth.harvest_wh.update(harvest)
     truth.temp_c.update(temp)
 
     meas = {k: v.measurand for k, v in nodes.items()}
     obligations = ObligationSet(
         routine_obligations_by_node(meas, int(task_hours))
-        + rule_obligations_for_truth(truth))
+        + rule_obligations_for_truth(truth, spacing_s=event_spacing_s))
 
-    inst = Instance(nodes, truth, seed=seed, policy=build_policy(arm))
+    acc = None
+    if access_outage_h > 0:
+        lo, hi = 4 * 3600, int((4 + access_outage_h) * 3600)
+        acc = (lo, hi)
+    inst = Instance(nodes, truth, seed=seed, policy=build_policy(arm),
+                    send_contract_fields=contract, hold_every=hold_every,
+                    hold_s=hold_s, access_outage=acc)
+    inst.plane.uplink_p_arrive = uplink_p_arrive
+    inst.plane.backhaul_p_good = backhaul_p_good
+    for pth in inst.plane.paths:
+        object.__setattr__(pth, "p_good", backhaul_p_good)
     outage = None
     if outage_hours > 0:
         # 回传中断窗。`backhaul_gate` 只能让路径更不可用，因此中断不会给任何一方送好处。
@@ -71,6 +98,9 @@ def one_seed(seed: int, task_hours: float, tail_hours: float,
     return {
         "seed": seed,
         "arm": arm,
+        "exec_layer": "contract" if contract else "naive",
+        "hazard": {"hold_every": hold_every, "hold_s": hold_s},
+        "intent_mismatch_s": inst.intent_mismatch_s(int(hours)),
         "command_counters": dict(inst.counters),
         "deployment": dep.summary(),
         "n_obligations": res["n_obligations"],
@@ -81,6 +111,7 @@ def one_seed(seed: int, task_hours: float, tail_hours: float,
         "communication": res["communication"],
         "propagation": {k: v for k, v in res["propagation"].items() if k != "per_trigger"},
         "recovery": res.get("recovery"),
+        "access_blocked": inst.access_blocked,
         "observation_window": res["observation_window"],
         "not_applicable": res["not_applicable"],
     }
@@ -96,8 +127,24 @@ def main() -> None:
     ap.add_argument("--seeds", type=int, default=20)
     ap.add_argument("--task-hours", type=float, default=12.0)
     ap.add_argument("--tail-hours", type=float, default=1.0)
+    ap.add_argument("--exec-layers", default="naive",
+                    help="逗号分隔：naive(不发契约字段) / contract(发稳定身份与单调版本)")
+    ap.add_argument("--hold-every", type=int, default=0,
+                    help="每 k 条下发扣留一条；0 表示不扣留")
+    ap.add_argument("--hold-s", type=int, default=0)
+    ap.add_argument("--harvest-wh-per-hour", type=float, default=0.05)
+    ap.add_argument("--harvest-mode", default="uniform", choices=["uniform", "hetero"])
+    ap.add_argument("--capacity-wh", type=float, default=0.05)
+    ap.add_argument("--low-frac", type=float, default=0.4)
+    ap.add_argument("--low-wh-per-hour", type=float, default=0.005)
+    ap.add_argument("--sample-interval-s", type=int, default=3600)
+    ap.add_argument("--uplink-p-arrive", type=float, default=0.74)
+    ap.add_argument("--backhaul-p-good", type=float, default=0.62)
+    ap.add_argument("--event-spacing-s", type=int, default=300)
     ap.add_argument("--arms", default="local",
                     help="逗号分隔的中心策略，见 instance/center.py 的 ARMS")
+    ap.add_argument("--access-outage-h", type=float, default=0.0,
+                    help="接入中断时长（小时），固定从第 4 小时开始")
     ap.add_argument("--outage-start-h", type=float, default=0.0)
     ap.add_argument("--outage-hours", type=float, default=0.0)
     ap.add_argument("--tag", default="base")
@@ -107,9 +154,20 @@ def main() -> None:
     for a in arm_names:
         if a not in ARMS:
             raise SystemExit(f"unknown arm {a!r}; have {sorted(ARMS)}")
+    layers = [x.strip() for x in args.exec_layers.split(",") if x.strip()]
     runs = [one_seed(s, args.task_hours, args.tail_hours,
-                     args.outage_start_h, args.outage_hours, a)
-            for a in arm_names for s in range(args.seeds)]
+                     args.outage_start_h, args.outage_hours, a,
+                     contract=(L == "contract"), hold_every=args.hold_every,
+                     hold_s=args.hold_s, harvest_wh_per_hour=args.harvest_wh_per_hour,
+                     sample_interval_s=args.sample_interval_s,
+                     uplink_p_arrive=args.uplink_p_arrive,
+                     backhaul_p_good=args.backhaul_p_good,
+                     event_spacing_s=args.event_spacing_s,
+                     harvest_mode=args.harvest_mode, capacity_wh=args.capacity_wh,
+                     low_frac=args.low_frac,
+                     low_wh_per_hour=args.low_wh_per_hour,
+                     access_outage_h=args.access_outage_h)
+            for a in arm_names for L in layers for s in range(args.seeds)]
 
     # 聚合：**按臂分组**。分母类用求和天然是整数，时延与比率类用逐种子均值。
     def agg_of(rs):
@@ -134,6 +192,14 @@ def main() -> None:
                                         for r in rs]),
             "commands_refused": mean([r["command_counters"]["commands_refused"] for r in rs]),
             "censored": mean([r["observation_window"]["censored_total"] for r in rs]),
+            "intent_mismatch_min": mean([r["intent_mismatch_s"] / 60.0 for r in rs]),
+            "dead_nodes_end": mean([sum(1 for v in r["energy"]["per_node"].values()
+                                        if v["dead_at_s"] is not None) for r in rs]),
+            "deficit_h": mean([sum(v["deficit_s"] for v in r["energy"]["per_node"].values())
+                               / 3600.0 for r in rs]),
+            "access_blocked": mean([r["access_blocked"] for r in rs]),
+            "fenced": mean([r["command_counters"].get("fenced", 0) for r in rs]),
+            "deduplicated": mean([r["command_counters"].get("deduplicated", 0) for r in rs]),
         }
         if args.outage_hours > 0:
             rec = [r["recovery"] for r in rs if r["recovery"]]
@@ -147,9 +213,12 @@ def main() -> None:
         return a
 
     agg = {"n_seeds": args.seeds, "task_hours": args.task_hours,
-           "tail_hours": args.tail_hours, "arms": {}}
+           "tail_hours": args.tail_hours, "config": vars(args), "arms": {}}
     for a in arm_names:
-        agg["arms"][a] = agg_of([r for r in runs if r["arm"] == a])
+        for L in layers:
+            key = a if layers == ["naive"] else f"{a}__{L}"
+            agg["arms"][key] = agg_of([r for r in runs
+                                       if r["arm"] == a and r["exec_layer"] == L])
 
     doc = {"config": vars(args), "aggregate": agg, "runs": runs}
     _os.makedirs(OUT, exist_ok=True)
@@ -160,24 +229,23 @@ def main() -> None:
     w = 30
     print(f"实例读数（{args.seeds} 种子/臂，义务 {args.task_hours}h + 尾部 {args.tail_hours}h）")
     print("=" * 96)
-    hdr = (f"{'arm':<10} {'周期交付':>9} {'缺采':>5} {'缺送':>6} {'AoI s':>7} "
-           f"{'事件采集':>8} {'事件交付':>8} {'获知s':>7} {'上行':>6} {'下行试':>6} {'送达':>5} {'拒':>5}")
+    hdr = (f"{'arm':<18} {'周期交付':>9} {'缺采':>5} {'缺送':>6} {'AoI s':>7} "
+           f"{'事件采集':>8} {'事件交付':>8} {'上行':>6} {'下行试':>6} {'死节点':>6} {'缺电h':>6}")
     print(hdr)
     print("-" * 96)
-    for a in arm_names:
+    for a in agg["arms"]:
         x = agg["arms"][a]
-        print(f"{a:<10} {x['routine_delivered']:>9.1f} {x['routine_missing_collection']:>5.1f} "
+        print(f"{a:<18} {x['routine_delivered']:>9.1f} {x['routine_missing_collection']:>5.1f} "
               f"{x['routine_missing_delivery']:>6.1f} {x['routine_aoi_mean_s']:>7.0f} "
               f"{x['event_match']:>8.1f} {x['event_delivered']:>8.1f} "
-              f"{x['knowledge_latency_mean_s']:>7.0f} {x['uplinks']:>6.1f} "
-              f"{x['downlink_attempts']:>6.1f} {x['commands_delivered']:>5.1f} "
-              f"{x['commands_refused']:>5.1f}")
+              f"{x['uplinks']:>6.1f} {x['downlink_attempts']:>6.1f} "
+              f"{x['dead_nodes_end']:>6.1f} {x['deficit_h']:>6.1f}")
     print("=" * 96)
     if args.outage_hours > 0:
         print("恢复分列（中断窗内 + 固定恢复观察期）")
-        for a in arm_names:
+        for a in agg["arms"]:
             x = agg["arms"][a]
-            print(f"  {a:<10} 义务 {x['recovery_n_obligations']:.0f} 交付 {x['recovery_delivered']:.1f} "
+            print(f"  {a:<18} 义务 {x['recovery_n_obligations']:.0f} 交付 {x['recovery_delivered']:.1f} "
                   f"缺采 {x['recovery_missing_collection']:.1f} 缺送 {x['recovery_missing_delivery']:.1f} "
                   f"补发追回 {x['recovery_backlog_recovered']:.1f}")
     print(f"wrote {path}")

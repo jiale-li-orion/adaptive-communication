@@ -50,6 +50,19 @@ Task Contract v1.1 的实例层。**不做方法比较**，只把当前实例在
 |---|---|---|---|
 | `instance_base.json` | `instance_run.py --seeds 20 --task-hours 12 --tail-hours 1 --tag base` | 20 | 多节点 + 真实地形实例的分列读数：周期新鲜度与完整性、事件采集与交付、传播时延、通信代价、删失 |
 | `instance_arms.json` | `instance_run.py --seeds 20 --task-hours 12 --tail-hours 1 --arms local,fixed300,fixed900,aoi,aoi_link --tag arms` | 20 | **中心策略对照**：现场自治 / 固定周期 / 按 AoI 自适应 / 自适应+跳过静默节点，分列报告业务指标与代价 |
+| `instance_execlayer.json` | `instance_run.py --seeds 20 --task-hours 12 --tail-hours 1 --arms aoi --exec-layers naive,contract --hold-every 2 --hold-s 14400 --tag execlayer` | 20 | **执行机制诊断**：同一中心策略、同能力同预算，只改报文是否携带稳定逻辑身份与单调版本 |
+| `instance_energy_sweep.json` | `instance_run.py --seeds 20 --task-hours 12 --tail-hours 1 --arms local,dense300,…,energy_aware --harvest-mode hetero --low-wh-per-hour 0 --tag energy_sweep` | 20 | **能量绑定的冲突条件**：固定采样间隔扫描 vs 能量感知策略 |
+| `instance_ea_sweep.json` | `instance_run.py --seeds 20 --task-hours 12 --tail-hours 1 --arms dense600,energy_aware,ea_h5,ea_h15,ea_h25,ea_i600,ea_i600h5 --harvest-mode hetero --low-wh-per-hour 0 --tag ea_sweep` | 20 | 自适应阈值扫描（保证固定基线与自适应都被调过参数再比） |
+| `instance_energy.json` | `--harvest-mode hetero --tag energy` | 10 | 异质采能的过渡读数（能量尚未 binding，见 04 解析 §四） |
+| `instance_energy2.json` | `--arms local,dense300,energy_aware --harvest-mode hetero --low-wh-per-hour 0 --tag energy2` | 10 | 同上，接入采样间隔动作之后 |
+| `instance_uncertain015.json` | `--arms local,dense600,dense900,dense1200,dense1800,ea_i600 --capacity-wh 0.015 --tag uncertain015` | 20 | **参数不确定性（关键）**：固定配置按名义容量选点、实际容量 0.015 Wh 时崩到 `local` 以下 |
+| `instance_nominal050.json` | 同上，`--capacity-wh 0.05 --tag nominal050` | 20 | 名义容量下的对照 |
+| `instance_cap0.004.json`、`instance_cap0.008.json`、`instance_cap0.015.json`、`instance_cap0.025.json`、`instance_cap0.05.json`、`instance_cap0.10.json` | `--capacity-wh C --tag capC` | 10 | 电池容量扫描（参数不确定性的核心轴） |
+| `instance_lf0.2.json`、`instance_lf0.4.json`、`instance_lf0.6.json`、`instance_lf0.8.json` | `--low-frac F --tag lfF` | 10 | 遮荫比例扫描（对调好的固定配置无影响） |
+| `instance_sens_u0.5_b0.62.json`、`instance_sens_u0.74_b0.4.json`、`instance_sens_u0.74_b0.62.json`、`instance_sens_u0.74_b0.85.json`、`instance_sens_u0.9_b0.62.json` | `--arms local,dense600,ea_i600 --uplink-p-arrive U --backhaul-p-good B --tag sens_uU_bB` | 10 | **敏感性**：上行到达率 0.5/0.74/0.9 × 回传可用率 0.4/0.62/0.85 |
+| `instance_outage_backhaul.json` | `--outage-start-h 4 --outage-hours 3 --tag outage_backhaul` | 10 | 回传中断 3 h |
+| `instance_outage_access.json` | `--access-outage-h 3 --tag outage_access` | 10 | **接入中断 3 h**（节点有电、照常采样，损失全在交付侧） |
+| `instance_outage_both.json` | 两者同时 `--tag outage_both` | 10 | 接入 + 回传同时中断 |
 | `instance_arms_outage3h.json` | `instance_run.py --seeds 20 --task-hours 12 --tail-hours 1 --outage-start-h 4 --outage-hours 3 --arms local,fixed900,aoi,aoi_link --tag arms_outage3h` | 20 | 同上，外加回传中断 3 h 的恢复分列 |
 | `instance_outage3h.json` | `instance_run.py --seeds 20 --task-hours 12 --tail-hours 1 --outage-start-h 4 --outage-hours 3 --tag outage3h` | 20 | 同上，另加**回传中断 3 h** 的恢复分列：采集缺失与交付缺失分开，以及自动补发追回数 |
 
