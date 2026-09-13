@@ -181,7 +181,9 @@ def t_harm_traj(load_h: float, soc0: float, harvest: dict, hours: int,
         soc = min(capacity_wh, soc + harvest.get(t, 0.0))
         soc -= load_h * (TICK_S / 3600.0)
         if soc <= 0.0:
-            return t / 3600.0
+            # **返回区间末端，不是起点。** 负载按 60 s 整块扣，能量是在这个区间**结束时**耗尽的；
+            # 返回起点会少算一个 tick，使零采能情形给出 6.4833 而不是 6.5（本轮踩过）。
+            return (t + TICK_S) / 3600.0
     return float(hours)
 
 
@@ -364,6 +366,8 @@ def selftest() -> int:
     # 只相等到 tick 分辨率——这本身就是一条要记住的事（上界是连续的，轨迹是量化的）。
     chk("零采能下 T_harm^traj 与 T_harm^worst 相等（到 tick 分辨率 1/60 h）",
         abs(t_harm_traj(lh, 0.0195, {}, 12) - 0.0195 / lh) <= 1.0 / 60 + 1e-9, True)
+    chk("零采能下 traj 恰好是 6.5 h（= 390 个 tick 的整数倍，差一错已修）",
+        t_harm_traj(lh, 0.0195, {}, 12), 6.5, 1e-12)
 
     # cadence
     chk("Cleveland：C = 3600/900 = 4 ⇒ cadence-infeasible", cadence(3600, 900), 4.0)
