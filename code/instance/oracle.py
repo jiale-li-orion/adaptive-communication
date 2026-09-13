@@ -42,7 +42,7 @@ from network import TICK_S
 INTERVAL_TIERS: tuple[int, ...] = (300, 600, 900, 1800, 3600)
 
 #: 每次上行的空口能耗（Wh）。从实例解剖里实测：532 次上行共 0.0124 Wh → 2.33e-5。
-#: **它不是拍出来的常数**，而是 `RadioEnergy` 在 `BUS_V=3.3`、`TX_MA_AT_14DBM` 与
+#: **它不是拍出来的常数**，而是 `RadioEnergy` 在 `BUS_V = 3.6`（见 `opportunity.py`）、`TX_MA_AT_14DBM` 与
 #: 实际 airtime 下的结果；写在这里是把它固定成 oracle 的输入，避免 oracle 与实例各算一遍。
 UPLINK_WH = 2.33e-5
 
