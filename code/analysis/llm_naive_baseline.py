@@ -200,17 +200,27 @@ class LLMNaiPolicy(C.CenterPolicy):
         #: 没有它就无法区分"目标已满足 ⇒ noop 是对的"与"模型无视超期 ⇒ 真是失败"。
         self.overdue_epochs = 0
         self.overdue_max = 0
+        #: **必须分开**：`stale` = 听到过、但证据老了（真正的"该动而没动"）；
+        #: `unseen` = 从未听到（可能是节点刚上线/一直没通）。混在一起会夸大前者。
+        self.stale_epochs = 0
+        self.stale_max = 0
+        self.unseen_epochs = 0
 
     def plan(self, view):
         if self.call_limit is not None and self.budget.calls >= self.call_limit:
             return []                                   # 惰性：不再发请求（也不伪造动作）
         st = brief(view)
-        _od = sum(1 for _n in st["nodes"]
-                  if (not _n.get("seen"))
-                  or (_n.get("last_heard_age_s") or 0) > OBLIGATION_S)
-        self.overdue_max = max(self.overdue_max, _od)
-        if _od:
+        _stale = [n_ for n_ in st["nodes"] if n_.get("seen")
+                  and (n_.get("last_heard_age_s") or 0) > OBLIGATION_S]
+        _unseen = [n_ for n_ in st["nodes"] if not n_.get("seen")]
+        self.overdue_max = max(self.overdue_max, len(_stale) + len(_unseen))
+        if _stale or _unseen:
             self.overdue_epochs += 1
+        if _stale:
+            self.stale_epochs += 1
+            self.stale_max = max(self.stale_max, len(_stale))
+        if _unseen:
+            self.unseen_epochs += 1
         try:
             act = ask(st, self.budget)
         except BudgetExceeded:
@@ -295,6 +305,8 @@ def run(tag: str, seed: int, budget: Budget, call_limit: int | None = None) -> d
             "actions": pol.actions, "noop": pol.noop, "bad": pol.bad,
             "rejects": pol.rejects, "raw_sample": pol.raw_sample,
             "overdue_epochs": pol.overdue_epochs, "overdue_max": pol.overdue_max,
+            "stale_epochs": pol.stale_epochs, "stale_max": pol.stale_max,
+            "unseen_epochs": pol.unseen_epochs,
             "node_ids_sample": sorted(d["_trace"][0][1:2]) if d["_trace"] else [],
             "routine_delivered": d["routine"]["delivered"],
             "routine_aoi_mean_s": d["routine"]["aoi_mean_s"],
@@ -358,6 +370,9 @@ def main() -> int:
         print(f"  actions = {r['actions']}；noop={r['noop']}；解析失败={r['bad']}")
         print(f"  **未下达动作的原因分类 = {r['rejects']}**")
         print(f"  原始输出采样 = {r['raw_sample']}")
+        print("  **其中「听到过但证据老化」的 epoch 数 = " + str(r["stale_epochs"])
+              + "（最多 " + str(r["stale_max"]) + " 个）**"
+              + "；「从未听到」出现的 epoch 数 = " + str(r["unseen_epochs"]))
         print("  **状态里有超期节点的 epoch 数 = " + str(r["overdue_epochs"])
               + "**（最多一次 " + str(r["overdue_max"]) + " 个节点超期）"
               + "  ← 若为 0，则 noop 是「目标已满足」，不是失败")
