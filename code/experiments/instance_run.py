@@ -218,9 +218,13 @@ def one_seed(seed: int, task_hours: float, tail_hours: float,
         # **准入层在 `one_seed` 里套**，因为门需要实例声明的量（采样能耗、容量、保护时域），
         # 而 `center.py` 的 `build_policy(name)` 拿不到它们。表外的臂返回 None。
         from admission import build_gated
+        # **保护边界按任务边界冻结**（不是运行边界）：义务只定义在 `[0, task_hours)` 上，
+        # 尾部的 1 h 只是让"任务末尾发出、还在路上"的样本有机会到达的观察窗，
+        # 那里没有需要通过资源保证来保护的义务。语义冻结在跑之前定，不看结果选。
+        # （取运行边界只会让门**更保守**，因此这个选择不会制造正结果。）
         pol = build_gated(arm, sample_wh=prof.sample_wh,
                           capacity_wh=prof.capacity_wh,
-                          horizon_s=int(hours) * 3600) or build_policy(arm)
+                          end_s=int(task_hours) * 3600) or build_policy(arm)
     inst = Instance(nodes, truth, seed=seed, policy=pol,
                     send_contract_fields=contract, hold_every=hold_every,
                     hold_s=hold_s, access_outage=acc, hold_op=hold_op,

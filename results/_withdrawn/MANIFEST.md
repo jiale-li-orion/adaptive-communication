@@ -96,3 +96,9 @@
 | 文件 | 失效原因 |
 |---|---|
 | `instance_contcfg_b{1.0,3.0}_{noout,out0,out3}.json` | 这一批产出时 `ControlPlane.prune` 的**时间单位不一致**（参数按小时、`expires_at` 按秒）⇒ 过期永不触发、`downlink_expired` 恒为 0；且过期只在投递路径里被检查 ⇒ 接入中断期间 `in_flight` 永久为真。两个缺陷都已在 2026-09-13 修好并**重跑同一批**。**业务列变化很小**（缺采在 24 个格子里逐位不变），但 `expired` 一列作废。依据见 `docs/s7-method/instance-v1/17-gate-0-1h-mechanism-closure-2026-09-13.md` §一 |
+
+## 实例层：`fixed-horizon_2026-09-13/`
+
+| 文件 | 失效原因 |
+|---|---|
+| `instance_adm_{noout,out0,out3}.json` | 这一批产出时 `ResourceGate` 用的是**固定保护时域**（构造时传入、每次 `check` 从 `t=0` 跑满 `task_hours*3600`），而不是规格要求的**剩余时域** `end_s − t`。后果是后期仍在问"你还能再撑 13 h 吗"，把"剩余时域变短 ⇒ 加密变可行"的中间态整个压掉，**伪造出 `accept = 0` 与"候选逐位等于 `local`"**。已修为剩余时域并重跑同一批（`results/instance_adm_*.json`）。依据见 `docs/s7-method/instance-v1/20-remaining-horizon-rerun-2026-09-13.md` |

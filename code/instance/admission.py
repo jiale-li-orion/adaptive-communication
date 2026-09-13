@@ -59,30 +59,38 @@ def hourly_load(sample_interval_s: int, report_period_s: int, sample_wh: float) 
 class ResourceGate:
     """准入判据本体。**它只做一件事：给一个候选配置和一个电量下界，回答撑不撑得住。**"""
 
-    def __init__(self, sample_wh: float, capacity_wh: float, horizon_s: int,
+    def __init__(self, sample_wh: float, capacity_wh: float,
                  correction_s: int | None, reserve_wh: float = 0.0) -> None:
         self.sample_wh = sample_wh
         self.capacity_wh = capacity_wh
-        self.horizon_s = int(horizon_s)
         #: 纠错机会上界（秒）。`None` ⇒ 保护时域内不假设还能再改。
         self.correction_s = None if correction_s is None else int(correction_s)
         self.reserve_wh = reserve_wh
         self.checks = 0
         self.accepts = 0
         self.rejects: dict[str, int] = {}
+        #: 按**绝对小时**统计的判定，用来回答"门是不是只在后期才放行"。
+        self.by_hour: dict[int, list[int]] = {}
 
     def _reject(self, reason: str) -> tuple[bool, str]:
         self.rejects[reason] = self.rejects.get(reason, 0) + 1
         return False, reason
 
-    def check(self, soc_lo_wh: float, config: tuple[int, int]) -> tuple[bool, str]:
-        """`soc_lo_wh` 是**此刻**的电量下界；`config` 是候选的 `(采样间隔, 上报周期)`。
+    def check(self, soc_lo_wh: float, config: tuple[int, int],
+              remaining_s: int) -> tuple[bool, str]:
+        """`soc_lo_wh` 是**此刻**的电量下界；`config` 是候选 `(采样间隔, 上报周期)`；
+        `remaining_s` 是**从此刻到保护边界还剩多少秒**。
 
-        逐时推进到保护时域结束：前 `D` 秒按候选配置的负载算，之后按**退回档（稀疏）**算——
-        这就是"最多 D 小时后还能改回来"的形式化。`D = None` 时全程按候选配置算。
+        **`remaining_s` 必须由调用方按当前时刻给，不能是策略构造时固定的一个常数。**
+        第一版把 `horizon_s` 在构造时一次传入、`check()` 每次从 `t = 0` 跑满它——
+        于是 h1 问的是"你能不能再撑 13 h"，h6 问的**还是**"你能不能再撑 13 h"。
+        规格写的是 `[t, end]`，那是**剩余**时域。这个偏差正好把"后期剩余时域变短、
+        加密变得可行"的中间态整个压掉，制造出 `accept = 0`。
         """
         self.checks += 1
+        self.by_hour.setdefault(remaining_s // 3600, [0, 0])
         if soc_lo_wh <= 0:
+            self.by_hour[remaining_s // 3600][1] += 1
             return self._reject("no_evidence_or_empty")
         load_cand = hourly_load(config[0], config[1], self.sample_wh)
         load_sparse = hourly_load(SPARSE[0], SPARSE[1], self.sample_wh)
@@ -90,8 +98,8 @@ class ResourceGate:
         # 第一版用**按小时推进**的离散上界：一小时内的采能与消耗都按最坏方向取。
         # 采能下界 = 0（`hetero` 下 40% 节点恒为 0，中心分辨不出是哪一台）。
         t = 0
-        while t < self.horizon_s:
-            step = min(3600, self.horizon_s - t)
+        while t < remaining_s:
+            step = min(3600, remaining_s - t)
             if self.correction_s is None or t < self.correction_s:
                 soc -= load_cand * (step / 3600.0)
             else:
@@ -99,16 +107,20 @@ class ResourceGate:
             if soc < self.reserve_wh:
                 # **在保护时域内的哪一段不可行**要能说出来：它决定"是配置太重"还是"时域太长"。
                 fail_at = t + step
+                self.by_hour[remaining_s // 3600][1] += 1
                 return self._reject(
                     f"infeasible_at_{fail_at // 3600}h"
                     f"_correction_{'inf' if self.correction_s is None else self.correction_s // 3600}h")
             t += step
         self.accepts += 1
+        self.by_hour[remaining_s // 3600][0] += 1
         return True, "ok"
 
     def report(self) -> dict:
         return {"checks": self.checks, "accepts": self.accepts,
-                "rejects": dict(self.rejects)}
+                "rejects": dict(self.rejects),
+                # 按"剩余时域还有几小时"分组：能看到门是不是**只在剩余时域变短之后**才放行。
+                "by_remaining_h": {str(k): v for k, v in sorted(self.by_hour.items())}}
 
 
 class GatePolicy(CenterPolicy):
@@ -121,10 +133,13 @@ class GatePolicy(CenterPolicy):
 
     def __init__(self, inner: CenterPolicy, gate: ResourceGate,
                  sample_wh: float, capacity_wh: float, max_age_s: int | None = None,
-                 name: str = "gated") -> None:
+                 end_s: int | None = None, name: str = "gated") -> None:
         super().__init__()
         self.inner = inner
         self.gate = gate
+        #: **保护边界的绝对秒**。`None` ⇒ 不做可行性检查（只隔离新鲜度因素）。
+        #: 每次准入用 `end_s - view.t_s` 作为保护时域。
+        self.end_s = None if end_s is None else int(end_s)
         self.sample_wh = sample_wh
         self.capacity_wh = capacity_wh
         #: 证据新鲜度门槛（秒）。`None` ⇒ 不看年龄。这是**竞争解释**臂用的：
@@ -192,8 +207,12 @@ class GatePolicy(CenterPolicy):
             age = view.soc_age_s(nid)
             if age is None or age > self.max_age_s:
                 return False, "evidence_stale"
+        if self.end_s is None:
+            return True, "no_horizon_check"
         soc = self._soc_lo(view, nid, cur)
-        return self.gate.check(soc, pair)
+        # **剩余**时域，不是固定的任务总长。
+        remaining = max(0, self.end_s - view.t_s)
+        return self.gate.check(soc, pair, remaining)
 
     def _soc_lo(self, view, nid: str, cur: tuple[int, int]) -> float:
         """此刻的电量**下界**：最近一条合法读数，减去"从它的**源时刻**到现在，
@@ -218,8 +237,8 @@ class GatePolicy(CenterPolicy):
                 "gate": self.gate.report()}
 
 
-#: 受准入层管辖的臂 → (inner 臂, 时域用剩多少, 纠错机会上界秒, 证据新鲜度门槛秒)。
-#: `horizon 0` = 不做可行性检查（只用于隔离"新鲜度过滤"这一个因素）。
+#: 受准入层管辖的臂 → (inner 臂, 是否做时域检查, 纠错机会上界秒, 证据新鲜度门槛秒)。
+#: `zero` = 不做可行性检查（只用于隔离"新鲜度过滤"这一个因素）。
 GATED_ARMS = {
     # **阈值臂不在这里**：它们是 `center.ARMS` 里的纯策略（只换 `healthy_wh`，不带门）。
     # 第一版把它们放进了这张表，于是"阈值臂"实际上被套上了完整候选门——测出来的不是阈值。
@@ -233,7 +252,7 @@ GATED_ARMS = {
 
 
 def build_gated(arm: str, *, sample_wh: float, capacity_wh: float,
-                horizon_s: int, inner: CenterPolicy | None = None):
+                end_s: int, inner: CenterPolicy | None = None):
     """按臂名构造带准入的包装。**不在表里的臂返回 `None`**（调用方回退到 `build_policy`）。"""
     spec = GATED_ARMS.get(arm)
     if spec is None:
@@ -242,8 +261,8 @@ def build_gated(arm: str, *, sample_wh: float, capacity_wh: float,
     from center import ARMS
     if inner is None:
         inner = ARMS[inner_arm]()
-    H = 0 if horizon_kind == "zero" else horizon_s
     gate = ResourceGate(sample_wh=sample_wh, capacity_wh=capacity_wh,
-                        horizon_s=H, correction_s=correction_s)
+                        correction_s=correction_s)
     return GatePolicy(inner, gate, sample_wh=sample_wh, capacity_wh=capacity_wh,
-                      max_age_s=max_age, name=arm)
+                      max_age_s=max_age,
+                      end_s=None if horizon_kind == "zero" else end_s, name=arm)

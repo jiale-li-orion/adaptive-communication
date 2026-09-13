@@ -111,8 +111,8 @@
     "autonomy_margin_min": null,
     "censored": 0.0,
     "commands_delivered": 0.0,
-    "commands_refused": 0.0,
-    "commands_sent": 0.0,
+    "commands_refused": 0.4,
+    "commands_sent": 15.6,
     "dead_nodes_end": 0.0,
     "deduplicated": 0.0,
     "deficit_h": 0.0,
@@ -125,17 +125,17 @@
     "event_match": 21.0,
     "event_missing_delivery": 4.4,
     "fenced": 0.0,
-    "intent_expired": 0.0,
-    "intent_generated": 0.0,
+    "intent_expired": 0.8,
+    "intent_generated": 16.0,
     "intent_lost": 0.0,
-    "intent_mismatch_min": 0.0,
-    "intent_reason_resend": 0.0,
-    "intent_reason_sent_resend": 0.0,
-    "intent_reason_sent_target_change": 0.0,
+    "intent_mismatch_min": 1209.2,
+    "intent_reason_resend": 7.4,
+    "intent_reason_sent_resend": 7.3,
+    "intent_reason_sent_target_change": 8.3,
     "intent_reason_sent_unknown_state": 0.0,
-    "intent_reason_target_change": 0.0,
+    "intent_reason_target_change": 8.6,
     "intent_reason_unknown_state": 0.0,
-    "intent_refused": 0.0,
+    "intent_refused": 0.4,
     "intent_rejected": 0.0,
     "intent_stale_gen": 0.0,
     "knowledge_latency_mean_s": 1076.142857142857,
@@ -216,7 +216,7 @@
     "censored": 0.0,
     "commands_delivered": 0.0,
     "commands_refused": 1.2,
-    "commands_sent": 13.2,
+    "commands_sent": 18.4,
     "dead_nodes_end": 0.0,
     "deduplicated": 0.0,
     "deficit_h": 0.0,
@@ -230,14 +230,14 @@
     "event_missing_delivery": 4.4,
     "fenced": 0.0,
     "intent_expired": 2.8,
-    "intent_generated": 14.4,
+    "intent_generated": 19.6,
     "intent_lost": 0.0,
-    "intent_mismatch_min": 2041.4,
-    "intent_reason_resend": 5.3,
-    "intent_reason_sent_resend": 5.3,
-    "intent_reason_sent_target_change": 7.9,
+    "intent_mismatch_min": 2348.2,
+    "intent_reason_resend": 7.9,
+    "intent_reason_sent_resend": 7.9,
+    "intent_reason_sent_target_change": 10.5,
     "intent_reason_sent_unknown_state": 0.0,
-    "intent_reason_target_change": 9.1,
+    "intent_reason_target_change": 11.7,
     "intent_reason_unknown_state": 0.0,
     "intent_refused": 1.2,
     "intent_rejected": 0.0,
@@ -16142,8 +16142,9 @@
     "denied_reasons": {},
     "denied_total": 0,
     "gate": {
-     "accepts": 1,
-     "checks": 1,
+     "accepts": 0,
+     "by_remaining_h": {},
+     "checks": 0,
      "rejects": {}
     }
    },
@@ -16456,8 +16457,9 @@
     "denied_reasons": {},
     "denied_total": 0,
     "gate": {
-     "accepts": 12,
-     "checks": 12,
+     "accepts": 0,
+     "by_remaining_h": {},
+     "checks": 0,
      "rejects": {}
     }
    },
@@ -16770,8 +16772,9 @@
     "denied_reasons": {},
     "denied_total": 0,
     "gate": {
-     "accepts": 10,
-     "checks": 10,
+     "accepts": 0,
+     "by_remaining_h": {},
+     "checks": 0,
      "rejects": {}
     }
    },
@@ -17084,8 +17087,9 @@
     "denied_reasons": {},
     "denied_total": 0,
     "gate": {
-     "accepts": 11,
-     "checks": 11,
+     "accepts": 0,
+     "by_remaining_h": {},
+     "checks": 0,
      "rejects": {}
     }
    },
@@ -17398,8 +17402,9 @@
     "denied_reasons": {},
     "denied_total": 0,
     "gate": {
-     "accepts": 11,
-     "checks": 11,
+     "accepts": 0,
+     "by_remaining_h": {},
+     "checks": 0,
      "rejects": {}
     }
    },
@@ -17712,8 +17717,9 @@
     "denied_reasons": {},
     "denied_total": 0,
     "gate": {
-     "accepts": 1,
-     "checks": 1,
+     "accepts": 0,
+     "by_remaining_h": {},
+     "checks": 0,
      "rejects": {}
     }
    },
@@ -18026,8 +18032,9 @@
     "denied_reasons": {},
     "denied_total": 0,
     "gate": {
-     "accepts": 8,
-     "checks": 8,
+     "accepts": 0,
+     "by_remaining_h": {},
+     "checks": 0,
      "rejects": {}
     }
    },
@@ -18340,8 +18347,9 @@
     "denied_reasons": {},
     "denied_total": 0,
     "gate": {
-     "accepts": 13,
-     "checks": 13,
+     "accepts": 0,
+     "by_remaining_h": {},
+     "checks": 0,
      "rejects": {}
     }
    },
@@ -18654,8 +18662,9 @@
     "denied_reasons": {},
     "denied_total": 0,
     "gate": {
-     "accepts": 1,
-     "checks": 1,
+     "accepts": 0,
+     "by_remaining_h": {},
+     "checks": 0,
      "rejects": {}
     }
    },
@@ -18968,8 +18977,9 @@
     "denied_reasons": {},
     "denied_total": 0,
     "gate": {
-     "accepts": 11,
-     "checks": 11,
+     "accepts": 0,
+     "by_remaining_h": {},
+     "checks": 0,
      "rejects": {}
     }
    },
@@ -19283,6 +19293,12 @@
     "denied_total": 0,
     "gate": {
      "accepts": 1,
+     "by_remaining_h": {
+      "10": [
+       1,
+       0
+      ]
+     },
      "checks": 1,
      "rejects": {}
     }
@@ -19392,7 +19408,7 @@
    "command_counters": {
     "commands_delivered": 0,
     "commands_refused": 0,
-    "commands_sent": 18,
+    "commands_sent": 28,
     "deduplicated": 0,
     "fenced": 0,
     "stale_generation_dropped": 0,
@@ -19592,17 +19608,23 @@
    },
    "exec_layer": "naive",
    "gate": {
-    "denied_nodes": 5,
-    "denied_reasons": {
-     "infeasible_at_13h_correction_3h": 5
-    },
-    "denied_total": 5,
+    "denied_nodes": 0,
+    "denied_reasons": {},
+    "denied_total": 0,
     "gate": {
-     "accepts": 7,
+     "accepts": 12,
+     "by_remaining_h": {
+      "0": [
+       11,
+       0
+      ],
+      "11": [
+       1,
+       0
+      ]
+     },
      "checks": 12,
-     "rejects": {
-      "infeasible_at_13h_correction_3h": 5
-     }
+     "rejects": {}
     }
    },
    "hazard": {
@@ -19614,22 +19636,22 @@
     "dedup": 0,
     "expired": 4,
     "fenced": 0,
-    "generated": 18,
+    "generated": 28,
     "landed": 0,
     "lost": 0,
-    "queued_left": 14,
+    "queued_left": 24,
     "refused": 0,
     "rejected": 0,
     "same_value": 0,
-    "sent": 18,
+    "sent": 28,
     "speculative": 0,
     "stale_gen": 0
    },
-   "intent_mismatch_s": 135960,
+   "intent_mismatch_s": 171360,
    "intent_reason": {
     "generated": {
-     "resend": 7,
-     "target_change": 11,
+     "resend": 12,
+     "target_change": 16,
      "unknown_state": 0
     },
     "note": "\u751f\u6210\u539f\u56e0\u53ea\u6709\u4e09\u7c7b\uff1a\u65e0\u56de\u6267\uff08unknown_state\uff09/\u76ee\u6807\u53d8\u4e86\uff08target_change\uff09/\u91cd\u53d1\uff08resend\uff09\u3002`refused` \u662f\u6309\u5dee\u989d\u7b97\u7684\uff0c\u56e0\u4e3a\u62ff\u4e0d\u5230\u4e0b\u884c\u673a\u4f1a\u7684\u90a3\u4e9b\u610f\u56fe\u4e0d\u4f1a\u8fdb `sent` \u4fa7\u3002",
@@ -19639,11 +19661,11 @@
      "unknown_state": 0
     },
     "sent": {
-     "resend": 7,
-     "target_change": 11,
+     "resend": 12,
+     "target_change": 16,
      "unknown_state": 0
     },
-    "total_generated": 18
+    "total_generated": 28
    },
    "mixed_config_s": 0,
    "n_obligations": 189,
@@ -19682,9 +19704,7 @@
     "no_observation_s": 568800
    },
    "seed": 1,
-   "skip_reasons": {
-    "admission_rejected": 5
-   }
+   "skip_reasons": {}
   },
   {
    "access_blocked": 156,
@@ -19712,7 +19732,7 @@
    "command_counters": {
     "commands_delivered": 0,
     "commands_refused": 0,
-    "commands_sent": 18,
+    "commands_sent": 24,
     "deduplicated": 0,
     "fenced": 0,
     "stale_generation_dropped": 0,
@@ -19912,17 +19932,23 @@
    },
    "exec_layer": "naive",
    "gate": {
-    "denied_nodes": 3,
-    "denied_reasons": {
-     "infeasible_at_13h_correction_3h": 3
-    },
-    "denied_total": 3,
+    "denied_nodes": 0,
+    "denied_reasons": {},
+    "denied_total": 0,
     "gate": {
-     "accepts": 7,
+     "accepts": 10,
+     "by_remaining_h": {
+      "0": [
+       9,
+       0
+      ],
+      "11": [
+       1,
+       0
+      ]
+     },
      "checks": 10,
-     "rejects": {
-      "infeasible_at_13h_correction_3h": 3
-     }
+     "rejects": {}
     }
    },
    "hazard": {
@@ -19934,22 +19960,22 @@
     "dedup": 0,
     "expired": 4,
     "fenced": 0,
-    "generated": 18,
+    "generated": 24,
     "landed": 0,
     "lost": 0,
-    "queued_left": 14,
+    "queued_left": 20,
     "refused": 0,
     "rejected": 0,
     "same_value": 0,
-    "sent": 18,
+    "sent": 24,
     "speculative": 0,
     "stale_gen": 0
    },
-   "intent_mismatch_s": 135960,
+   "intent_mismatch_s": 157200,
    "intent_reason": {
     "generated": {
-     "resend": 7,
-     "target_change": 11,
+     "resend": 10,
+     "target_change": 14,
      "unknown_state": 0
     },
     "note": "\u751f\u6210\u539f\u56e0\u53ea\u6709\u4e09\u7c7b\uff1a\u65e0\u56de\u6267\uff08unknown_state\uff09/\u76ee\u6807\u53d8\u4e86\uff08target_change\uff09/\u91cd\u53d1\uff08resend\uff09\u3002`refused` \u662f\u6309\u5dee\u989d\u7b97\u7684\uff0c\u56e0\u4e3a\u62ff\u4e0d\u5230\u4e0b\u884c\u673a\u4f1a\u7684\u90a3\u4e9b\u610f\u56fe\u4e0d\u4f1a\u8fdb `sent` \u4fa7\u3002",
@@ -19959,11 +19985,11 @@
      "unknown_state": 0
     },
     "sent": {
-     "resend": 7,
-     "target_change": 11,
+     "resend": 10,
+     "target_change": 14,
      "unknown_state": 0
     },
-    "total_generated": 18
+    "total_generated": 24
    },
    "mixed_config_s": 0,
    "n_obligations": 189,
@@ -20002,9 +20028,7 @@
     "no_observation_s": 576000
    },
    "seed": 2,
-   "skip_reasons": {
-    "admission_rejected": 3
-   }
+   "skip_reasons": {}
   },
   {
    "access_blocked": 156,
@@ -20032,7 +20056,7 @@
    "command_counters": {
     "commands_delivered": 0,
     "commands_refused": 0,
-    "commands_sent": 16,
+    "commands_sent": 24,
     "deduplicated": 0,
     "fenced": 0,
     "stale_generation_dropped": 0,
@@ -20232,17 +20256,23 @@
    },
    "exec_layer": "naive",
    "gate": {
-    "denied_nodes": 4,
-    "denied_reasons": {
-     "infeasible_at_13h_correction_3h": 4
-    },
-    "denied_total": 4,
+    "denied_nodes": 0,
+    "denied_reasons": {},
+    "denied_total": 0,
     "gate": {
-     "accepts": 7,
+     "accepts": 11,
+     "by_remaining_h": {
+      "0": [
+       10,
+       0
+      ],
+      "10": [
+       1,
+       0
+      ]
+     },
      "checks": 11,
-     "rejects": {
-      "infeasible_at_13h_correction_3h": 4
-     }
+     "rejects": {}
     }
    },
    "hazard": {
@@ -20254,22 +20284,22 @@
     "dedup": 0,
     "expired": 2,
     "fenced": 0,
-    "generated": 16,
+    "generated": 24,
     "landed": 0,
     "lost": 0,
-    "queued_left": 14,
+    "queued_left": 22,
     "refused": 0,
     "rejected": 0,
     "same_value": 0,
-    "sent": 16,
+    "sent": 24,
     "speculative": 0,
     "stale_gen": 0
    },
-   "intent_mismatch_s": 128760,
+   "intent_mismatch_s": 157080,
    "intent_reason": {
     "generated": {
-     "resend": 7,
-     "target_change": 9,
+     "resend": 11,
+     "target_change": 13,
      "unknown_state": 0
     },
     "note": "\u751f\u6210\u539f\u56e0\u53ea\u6709\u4e09\u7c7b\uff1a\u65e0\u56de\u6267\uff08unknown_state\uff09/\u76ee\u6807\u53d8\u4e86\uff08target_change\uff09/\u91cd\u53d1\uff08resend\uff09\u3002`refused` \u662f\u6309\u5dee\u989d\u7b97\u7684\uff0c\u56e0\u4e3a\u62ff\u4e0d\u5230\u4e0b\u884c\u673a\u4f1a\u7684\u90a3\u4e9b\u610f\u56fe\u4e0d\u4f1a\u8fdb `sent` \u4fa7\u3002",
@@ -20279,11 +20309,11 @@
      "unknown_state": 0
     },
     "sent": {
-     "resend": 7,
-     "target_change": 9,
+     "resend": 11,
+     "target_change": 13,
      "unknown_state": 0
     },
-    "total_generated": 16
+    "total_generated": 24
    },
    "mixed_config_s": 0,
    "n_obligations": 189,
@@ -20322,9 +20352,7 @@
     "no_observation_s": 576000
    },
    "seed": 3,
-   "skip_reasons": {
-    "admission_rejected": 4
-   }
+   "skip_reasons": {}
   },
   {
    "access_blocked": 156,
@@ -20352,7 +20380,7 @@
    "command_counters": {
     "commands_delivered": 0,
     "commands_refused": 2,
-    "commands_sent": 20,
+    "commands_sent": 24,
     "deduplicated": 0,
     "fenced": 0,
     "stale_generation_dropped": 0,
@@ -20552,17 +20580,23 @@
    },
    "exec_layer": "naive",
    "gate": {
-    "denied_nodes": 2,
-    "denied_reasons": {
-     "infeasible_at_13h_correction_3h": 2
-    },
-    "denied_total": 2,
+    "denied_nodes": 0,
+    "denied_reasons": {},
+    "denied_total": 0,
     "gate": {
-     "accepts": 9,
+     "accepts": 11,
+     "by_remaining_h": {
+      "0": [
+       10,
+       0
+      ],
+      "11": [
+       1,
+       0
+      ]
+     },
      "checks": 11,
-     "rejects": {
-      "infeasible_at_13h_correction_3h": 2
-     }
+     "rejects": {}
     }
    },
    "hazard": {
@@ -20574,22 +20608,22 @@
     "dedup": 0,
     "expired": 2,
     "fenced": 0,
-    "generated": 22,
+    "generated": 26,
     "landed": 0,
     "lost": 0,
-    "queued_left": 18,
+    "queued_left": 22,
     "refused": 2,
     "rejected": 0,
     "same_value": 0,
-    "sent": 20,
+    "sent": 24,
     "speculative": 0,
     "stale_gen": 0
    },
-   "intent_mismatch_s": 150120,
+   "intent_mismatch_s": 164280,
    "intent_reason": {
     "generated": {
-     "resend": 9,
-     "target_change": 13,
+     "resend": 11,
+     "target_change": 15,
      "unknown_state": 0
     },
     "note": "\u751f\u6210\u539f\u56e0\u53ea\u6709\u4e09\u7c7b\uff1a\u65e0\u56de\u6267\uff08unknown_state\uff09/\u76ee\u6807\u53d8\u4e86\uff08target_change\uff09/\u91cd\u53d1\uff08resend\uff09\u3002`refused` \u662f\u6309\u5dee\u989d\u7b97\u7684\uff0c\u56e0\u4e3a\u62ff\u4e0d\u5230\u4e0b\u884c\u673a\u4f1a\u7684\u90a3\u4e9b\u610f\u56fe\u4e0d\u4f1a\u8fdb `sent` \u4fa7\u3002",
@@ -20599,11 +20633,11 @@
      "unknown_state": 0
     },
     "sent": {
-     "resend": 9,
-     "target_change": 11,
+     "resend": 11,
+     "target_change": 13,
      "unknown_state": 0
     },
-    "total_generated": 22
+    "total_generated": 26
    },
    "mixed_config_s": 0,
    "n_obligations": 189,
@@ -20642,9 +20676,7 @@
     "no_observation_s": 572400
    },
    "seed": 4,
-   "skip_reasons": {
-    "admission_rejected": 2
-   }
+   "skip_reasons": {}
   },
   {
    "access_blocked": 156,
@@ -20877,6 +20909,12 @@
     "denied_total": 0,
     "gate": {
      "accepts": 1,
+     "by_remaining_h": {
+      "11": [
+       1,
+       0
+      ]
+     },
      "checks": 1,
      "rejects": {}
     }
@@ -20986,7 +21024,7 @@
    "command_counters": {
     "commands_delivered": 0,
     "commands_refused": 0,
-    "commands_sent": 14,
+    "commands_sent": 20,
     "deduplicated": 0,
     "fenced": 0,
     "stale_generation_dropped": 0,
@@ -21186,17 +21224,23 @@
    },
    "exec_layer": "naive",
    "gate": {
-    "denied_nodes": 3,
-    "denied_reasons": {
-     "infeasible_at_13h_correction_3h": 3
-    },
-    "denied_total": 3,
+    "denied_nodes": 0,
+    "denied_reasons": {},
+    "denied_total": 0,
     "gate": {
-     "accepts": 5,
+     "accepts": 8,
+     "by_remaining_h": {
+      "0": [
+       7,
+       0
+      ],
+      "11": [
+       1,
+       0
+      ]
+     },
      "checks": 8,
-     "rejects": {
-      "infeasible_at_13h_correction_3h": 3
-     }
+     "rejects": {}
     }
    },
    "hazard": {
@@ -21208,22 +21252,22 @@
     "dedup": 0,
     "expired": 4,
     "fenced": 0,
-    "generated": 14,
+    "generated": 20,
     "landed": 0,
     "lost": 0,
-    "queued_left": 10,
+    "queued_left": 16,
     "refused": 0,
     "rejected": 0,
     "same_value": 0,
-    "sent": 14,
+    "sent": 20,
     "speculative": 0,
     "stale_gen": 0
    },
-   "intent_mismatch_s": 121800,
+   "intent_mismatch_s": 143040,
    "intent_reason": {
     "generated": {
-     "resend": 5,
-     "target_change": 9,
+     "resend": 8,
+     "target_change": 12,
      "unknown_state": 0
     },
     "note": "\u751f\u6210\u539f\u56e0\u53ea\u6709\u4e09\u7c7b\uff1a\u65e0\u56de\u6267\uff08unknown_state\uff09/\u76ee\u6807\u53d8\u4e86\uff08target_change\uff09/\u91cd\u53d1\uff08resend\uff09\u3002`refused` \u662f\u6309\u5dee\u989d\u7b97\u7684\uff0c\u56e0\u4e3a\u62ff\u4e0d\u5230\u4e0b\u884c\u673a\u4f1a\u7684\u90a3\u4e9b\u610f\u56fe\u4e0d\u4f1a\u8fdb `sent` \u4fa7\u3002",
@@ -21233,11 +21277,11 @@
      "unknown_state": 0
     },
     "sent": {
-     "resend": 5,
-     "target_change": 9,
+     "resend": 8,
+     "target_change": 12,
      "unknown_state": 0
     },
-    "total_generated": 14
+    "total_generated": 20
    },
    "mixed_config_s": 0,
    "n_obligations": 189,
@@ -21276,9 +21320,7 @@
     "no_observation_s": 583200
    },
    "seed": 6,
-   "skip_reasons": {
-    "admission_rejected": 3
-   }
+   "skip_reasons": {}
   },
   {
    "access_blocked": 156,
@@ -21306,7 +21348,7 @@
    "command_counters": {
     "commands_delivered": 0,
     "commands_refused": 4,
-    "commands_sent": 20,
+    "commands_sent": 28,
     "deduplicated": 0,
     "fenced": 0,
     "stale_generation_dropped": 0,
@@ -21506,17 +21548,23 @@
    },
    "exec_layer": "naive",
    "gate": {
-    "denied_nodes": 4,
-    "denied_reasons": {
-     "infeasible_at_13h_correction_3h": 4
-    },
-    "denied_total": 4,
+    "denied_nodes": 0,
+    "denied_reasons": {},
+    "denied_total": 0,
     "gate": {
-     "accepts": 9,
+     "accepts": 13,
+     "by_remaining_h": {
+      "0": [
+       12,
+       0
+      ],
+      "11": [
+       1,
+       0
+      ]
+     },
      "checks": 13,
-     "rejects": {
-      "infeasible_at_13h_correction_3h": 4
-     }
+     "rejects": {}
     }
    },
    "hazard": {
@@ -21528,22 +21576,22 @@
     "dedup": 0,
     "expired": 2,
     "fenced": 0,
-    "generated": 24,
+    "generated": 32,
     "landed": 0,
     "lost": 0,
-    "queued_left": 18,
+    "queued_left": 26,
     "refused": 4,
     "rejected": 0,
     "same_value": 0,
-    "sent": 20,
+    "sent": 28,
     "speculative": 0,
     "stale_gen": 0
    },
-   "intent_mismatch_s": 150120,
+   "intent_mismatch_s": 178440,
    "intent_reason": {
     "generated": {
-     "resend": 9,
-     "target_change": 15,
+     "resend": 13,
+     "target_change": 19,
      "unknown_state": 0
     },
     "note": "\u751f\u6210\u539f\u56e0\u53ea\u6709\u4e09\u7c7b\uff1a\u65e0\u56de\u6267\uff08unknown_state\uff09/\u76ee\u6807\u53d8\u4e86\uff08target_change\uff09/\u91cd\u53d1\uff08resend\uff09\u3002`refused` \u662f\u6309\u5dee\u989d\u7b97\u7684\uff0c\u56e0\u4e3a\u62ff\u4e0d\u5230\u4e0b\u884c\u673a\u4f1a\u7684\u90a3\u4e9b\u610f\u56fe\u4e0d\u4f1a\u8fdb `sent` \u4fa7\u3002",
@@ -21553,11 +21601,11 @@
      "unknown_state": 0
     },
     "sent": {
-     "resend": 9,
-     "target_change": 11,
+     "resend": 13,
+     "target_change": 15,
      "unknown_state": 0
     },
-    "total_generated": 24
+    "total_generated": 32
    },
    "mixed_config_s": 0,
    "n_obligations": 189,
@@ -21596,9 +21644,7 @@
     "no_observation_s": 565200
    },
    "seed": 7,
-   "skip_reasons": {
-    "admission_rejected": 4
-   }
+   "skip_reasons": {}
   },
   {
    "access_blocked": 156,
@@ -21831,6 +21877,12 @@
     "denied_total": 0,
     "gate": {
      "accepts": 1,
+     "by_remaining_h": {
+      "11": [
+       1,
+       0
+      ]
+     },
      "checks": 1,
      "rejects": {}
     }
@@ -21940,7 +21992,7 @@
    "command_counters": {
     "commands_delivered": 0,
     "commands_refused": 2,
-    "commands_sent": 14,
+    "commands_sent": 24,
     "deduplicated": 0,
     "fenced": 0,
     "stale_generation_dropped": 0,
@@ -22140,17 +22192,23 @@
    },
    "exec_layer": "naive",
    "gate": {
-    "denied_nodes": 5,
-    "denied_reasons": {
-     "infeasible_at_13h_correction_3h": 5
-    },
-    "denied_total": 5,
+    "denied_nodes": 0,
+    "denied_reasons": {},
+    "denied_total": 0,
     "gate": {
-     "accepts": 6,
+     "accepts": 11,
+     "by_remaining_h": {
+      "0": [
+       10,
+       0
+      ],
+      "11": [
+       1,
+       0
+      ]
+     },
      "checks": 11,
-     "rejects": {
-      "infeasible_at_13h_correction_3h": 5
-     }
+     "rejects": {}
     }
    },
    "hazard": {
@@ -22162,22 +22220,22 @@
     "dedup": 0,
     "expired": 2,
     "fenced": 0,
-    "generated": 16,
+    "generated": 26,
     "landed": 0,
     "lost": 0,
-    "queued_left": 12,
+    "queued_left": 22,
     "refused": 2,
     "rejected": 0,
     "same_value": 0,
-    "sent": 14,
+    "sent": 24,
     "speculative": 0,
     "stale_gen": 0
    },
-   "intent_mismatch_s": 128880,
+   "intent_mismatch_s": 164280,
    "intent_reason": {
     "generated": {
-     "resend": 6,
-     "target_change": 10,
+     "resend": 11,
+     "target_change": 15,
      "unknown_state": 0
     },
     "note": "\u751f\u6210\u539f\u56e0\u53ea\u6709\u4e09\u7c7b\uff1a\u65e0\u56de\u6267\uff08unknown_state\uff09/\u76ee\u6807\u53d8\u4e86\uff08target_change\uff09/\u91cd\u53d1\uff08resend\uff09\u3002`refused` \u662f\u6309\u5dee\u989d\u7b97\u7684\uff0c\u56e0\u4e3a\u62ff\u4e0d\u5230\u4e0b\u884c\u673a\u4f1a\u7684\u90a3\u4e9b\u610f\u56fe\u4e0d\u4f1a\u8fdb `sent` \u4fa7\u3002",
@@ -22187,11 +22245,11 @@
      "unknown_state": 0
     },
     "sent": {
-     "resend": 6,
-     "target_change": 8,
+     "resend": 11,
+     "target_change": 13,
      "unknown_state": 0
     },
-    "total_generated": 16
+    "total_generated": 26
    },
    "mixed_config_s": 0,
    "n_obligations": 189,
@@ -22230,9 +22288,7 @@
     "no_observation_s": 572400
    },
    "seed": 9,
-   "skip_reasons": {
-    "admission_rejected": 5
-   }
+   "skip_reasons": {}
   },
   {
    "access_blocked": 156,
@@ -22462,16 +22518,52 @@
    "gate": {
     "denied_nodes": 1,
     "denied_reasons": {
-     "infeasible_at_4h_correction_infh": 5,
+     "infeasible_at_3h_correction_infh": 1,
+     "infeasible_at_4h_correction_infh": 4,
      "infeasible_at_5h_correction_infh": 2,
      "infeasible_at_6h_correction_infh": 1
     },
     "denied_total": 8,
     "gate": {
      "accepts": 0,
+     "by_remaining_h": {
+      "10": [
+       0,
+       1
+      ],
+      "3": [
+       0,
+       1
+      ],
+      "4": [
+       0,
+       1
+      ],
+      "5": [
+       0,
+       1
+      ],
+      "6": [
+       0,
+       1
+      ],
+      "7": [
+       0,
+       1
+      ],
+      "8": [
+       0,
+       1
+      ],
+      "9": [
+       0,
+       1
+      ]
+     },
      "checks": 8,
      "rejects": {
-      "infeasible_at_4h_correction_infh": 5,
+      "infeasible_at_3h_correction_infh": 1,
+      "infeasible_at_4h_correction_infh": 4,
       "infeasible_at_5h_correction_infh": 2,
       "infeasible_at_6h_correction_infh": 1
      }
@@ -22584,7 +22676,7 @@
    "command_counters": {
     "commands_delivered": 0,
     "commands_refused": 0,
-    "commands_sent": 0,
+    "commands_sent": 26,
     "deduplicated": 0,
     "fenced": 0,
     "stale_generation_dropped": 0,
@@ -22784,18 +22876,52 @@
    },
    "exec_layer": "naive",
    "gate": {
-    "denied_nodes": 12,
+    "denied_nodes": 1,
     "denied_reasons": {
-     "infeasible_at_5h_correction_infh": 5,
-     "infeasible_at_7h_correction_infh": 19
+     "infeasible_at_6h_correction_infh": 1,
+     "infeasible_at_7h_correction_infh": 5
     },
-    "denied_total": 24,
+    "denied_total": 6,
     "gate": {
-     "accepts": 0,
-     "checks": 24,
+     "accepts": 12,
+     "by_remaining_h": {
+      "0": [
+       11,
+       0
+      ],
+      "10": [
+       0,
+       1
+      ],
+      "11": [
+       0,
+       1
+      ],
+      "5": [
+       1,
+       0
+      ],
+      "6": [
+       0,
+       1
+      ],
+      "7": [
+       0,
+       1
+      ],
+      "8": [
+       0,
+       1
+      ],
+      "9": [
+       0,
+       1
+      ]
+     },
+     "checks": 18,
      "rejects": {
-      "infeasible_at_5h_correction_infh": 5,
-      "infeasible_at_7h_correction_infh": 19
+      "infeasible_at_6h_correction_infh": 1,
+      "infeasible_at_7h_correction_infh": 5
      }
     }
    },
@@ -22806,24 +22932,24 @@
    "intent_ledger": {
     "change": 0,
     "dedup": 0,
-    "expired": 0,
+    "expired": 2,
     "fenced": 0,
-    "generated": 0,
+    "generated": 26,
     "landed": 0,
     "lost": 0,
-    "queued_left": 0,
+    "queued_left": 24,
     "refused": 0,
     "rejected": 0,
     "same_value": 0,
-    "sent": 0,
+    "sent": 26,
     "speculative": 0,
     "stale_gen": 0
    },
-   "intent_mismatch_s": 0,
+   "intent_mismatch_s": 128160,
    "intent_reason": {
     "generated": {
-     "resend": 0,
-     "target_change": 0,
+     "resend": 12,
+     "target_change": 14,
      "unknown_state": 0
     },
     "note": "\u751f\u6210\u539f\u56e0\u53ea\u6709\u4e09\u7c7b\uff1a\u65e0\u56de\u6267\uff08unknown_state\uff09/\u76ee\u6807\u53d8\u4e86\uff08target_change\uff09/\u91cd\u53d1\uff08resend\uff09\u3002`refused` \u662f\u6309\u5dee\u989d\u7b97\u7684\uff0c\u56e0\u4e3a\u62ff\u4e0d\u5230\u4e0b\u884c\u673a\u4f1a\u7684\u90a3\u4e9b\u610f\u56fe\u4e0d\u4f1a\u8fdb `sent` \u4fa7\u3002",
@@ -22833,11 +22959,11 @@
      "unknown_state": 0
     },
     "sent": {
-     "resend": 0,
-     "target_change": 0,
+     "resend": 12,
+     "target_change": 14,
      "unknown_state": 0
     },
-    "total_generated": 0
+    "total_generated": 26
    },
    "mixed_config_s": 0,
    "n_obligations": 189,
@@ -22877,7 +23003,7 @@
    },
    "seed": 1,
    "skip_reasons": {
-    "admission_rejected": 24
+    "admission_rejected": 6
    }
   },
   {
@@ -22906,7 +23032,7 @@
    "command_counters": {
     "commands_delivered": 0,
     "commands_refused": 0,
-    "commands_sent": 0,
+    "commands_sent": 22,
     "deduplicated": 0,
     "fenced": 0,
     "stale_generation_dropped": 0,
@@ -23106,20 +23232,52 @@
    },
    "exec_layer": "naive",
    "gate": {
-    "denied_nodes": 10,
+    "denied_nodes": 1,
     "denied_reasons": {
-     "infeasible_at_5h_correction_infh": 3,
      "infeasible_at_6h_correction_infh": 1,
-     "infeasible_at_7h_correction_infh": 18
+     "infeasible_at_7h_correction_infh": 5
     },
-    "denied_total": 22,
+    "denied_total": 6,
     "gate": {
-     "accepts": 0,
-     "checks": 22,
+     "accepts": 10,
+     "by_remaining_h": {
+      "0": [
+       9,
+       0
+      ],
+      "10": [
+       0,
+       1
+      ],
+      "11": [
+       0,
+       1
+      ],
+      "5": [
+       1,
+       0
+      ],
+      "6": [
+       0,
+       1
+      ],
+      "7": [
+       0,
+       1
+      ],
+      "8": [
+       0,
+       1
+      ],
+      "9": [
+       0,
+       1
+      ]
+     },
+     "checks": 16,
      "rejects": {
-      "infeasible_at_5h_correction_infh": 3,
       "infeasible_at_6h_correction_infh": 1,
-      "infeasible_at_7h_correction_infh": 18
+      "infeasible_at_7h_correction_infh": 5
      }
     }
    },
@@ -23130,24 +23288,24 @@
    "intent_ledger": {
     "change": 0,
     "dedup": 0,
-    "expired": 0,
+    "expired": 2,
     "fenced": 0,
-    "generated": 0,
+    "generated": 22,
     "landed": 0,
     "lost": 0,
-    "queued_left": 0,
+    "queued_left": 20,
     "refused": 0,
     "rejected": 0,
     "same_value": 0,
-    "sent": 0,
+    "sent": 22,
     "speculative": 0,
     "stale_gen": 0
    },
-   "intent_mismatch_s": 0,
+   "intent_mismatch_s": 114000,
    "intent_reason": {
     "generated": {
-     "resend": 0,
-     "target_change": 0,
+     "resend": 10,
+     "target_change": 12,
      "unknown_state": 0
     },
     "note": "\u751f\u6210\u539f\u56e0\u53ea\u6709\u4e09\u7c7b\uff1a\u65e0\u56de\u6267\uff08unknown_state\uff09/\u76ee\u6807\u53d8\u4e86\uff08target_change\uff09/\u91cd\u53d1\uff08resend\uff09\u3002`refused` \u662f\u6309\u5dee\u989d\u7b97\u7684\uff0c\u56e0\u4e3a\u62ff\u4e0d\u5230\u4e0b\u884c\u673a\u4f1a\u7684\u90a3\u4e9b\u610f\u56fe\u4e0d\u4f1a\u8fdb `sent` \u4fa7\u3002",
@@ -23157,11 +23315,11 @@
      "unknown_state": 0
     },
     "sent": {
-     "resend": 0,
-     "target_change": 0,
+     "resend": 10,
+     "target_change": 12,
      "unknown_state": 0
     },
-    "total_generated": 0
+    "total_generated": 22
    },
    "mixed_config_s": 0,
    "n_obligations": 189,
@@ -23201,7 +23359,7 @@
    },
    "seed": 2,
    "skip_reasons": {
-    "admission_rejected": 22
+    "admission_rejected": 6
    }
   },
   {
@@ -23230,7 +23388,7 @@
    "command_counters": {
     "commands_delivered": 0,
     "commands_refused": 0,
-    "commands_sent": 0,
+    "commands_sent": 24,
     "deduplicated": 0,
     "fenced": 0,
     "stale_generation_dropped": 0,
@@ -23430,18 +23588,48 @@
    },
    "exec_layer": "naive",
    "gate": {
-    "denied_nodes": 11,
+    "denied_nodes": 1,
     "denied_reasons": {
-     "infeasible_at_5h_correction_infh": 4,
-     "infeasible_at_7h_correction_infh": 18
+     "infeasible_at_6h_correction_infh": 1,
+     "infeasible_at_7h_correction_infh": 4
     },
-    "denied_total": 22,
+    "denied_total": 5,
     "gate": {
-     "accepts": 0,
-     "checks": 22,
+     "accepts": 11,
+     "by_remaining_h": {
+      "0": [
+       10,
+       0
+      ],
+      "10": [
+       0,
+       1
+      ],
+      "5": [
+       1,
+       0
+      ],
+      "6": [
+       0,
+       1
+      ],
+      "7": [
+       0,
+       1
+      ],
+      "8": [
+       0,
+       1
+      ],
+      "9": [
+       0,
+       1
+      ]
+     },
+     "checks": 16,
      "rejects": {
-      "infeasible_at_5h_correction_infh": 4,
-      "infeasible_at_7h_correction_infh": 18
+      "infeasible_at_6h_correction_infh": 1,
+      "infeasible_at_7h_correction_infh": 4
      }
     }
    },
@@ -23452,24 +23640,24 @@
    "intent_ledger": {
     "change": 0,
     "dedup": 0,
-    "expired": 0,
+    "expired": 2,
     "fenced": 0,
-    "generated": 0,
+    "generated": 24,
     "landed": 0,
     "lost": 0,
-    "queued_left": 0,
+    "queued_left": 22,
     "refused": 0,
     "rejected": 0,
     "same_value": 0,
-    "sent": 0,
+    "sent": 24,
     "speculative": 0,
     "stale_gen": 0
    },
-   "intent_mismatch_s": 0,
+   "intent_mismatch_s": 121080,
    "intent_reason": {
     "generated": {
-     "resend": 0,
-     "target_change": 0,
+     "resend": 11,
+     "target_change": 13,
      "unknown_state": 0
     },
     "note": "\u751f\u6210\u539f\u56e0\u53ea\u6709\u4e09\u7c7b\uff1a\u65e0\u56de\u6267\uff08unknown_state\uff09/\u76ee\u6807\u53d8\u4e86\uff08target_change\uff09/\u91cd\u53d1\uff08resend\uff09\u3002`refused` \u662f\u6309\u5dee\u989d\u7b97\u7684\uff0c\u56e0\u4e3a\u62ff\u4e0d\u5230\u4e0b\u884c\u673a\u4f1a\u7684\u90a3\u4e9b\u610f\u56fe\u4e0d\u4f1a\u8fdb `sent` \u4fa7\u3002",
@@ -23479,11 +23667,11 @@
      "unknown_state": 0
     },
     "sent": {
-     "resend": 0,
-     "target_change": 0,
+     "resend": 11,
+     "target_change": 13,
      "unknown_state": 0
     },
-    "total_generated": 0
+    "total_generated": 24
    },
    "mixed_config_s": 0,
    "n_obligations": 189,
@@ -23523,7 +23711,7 @@
    },
    "seed": 3,
    "skip_reasons": {
-    "admission_rejected": 22
+    "admission_rejected": 5
    }
   },
   {
@@ -23552,7 +23740,7 @@
    "command_counters": {
     "commands_delivered": 0,
     "commands_refused": 0,
-    "commands_sent": 0,
+    "commands_sent": 20,
     "deduplicated": 0,
     "fenced": 0,
     "stale_generation_dropped": 0,
@@ -23752,22 +23940,66 @@
    },
    "exec_layer": "naive",
    "gate": {
-    "denied_nodes": 11,
+    "denied_nodes": 1,
     "denied_reasons": {
-     "infeasible_at_4h_correction_infh": 5,
-     "infeasible_at_5h_correction_infh": 4,
+     "infeasible_at_3h_correction_infh": 1,
+     "infeasible_at_4h_correction_infh": 4,
+     "infeasible_at_5h_correction_infh": 2,
      "infeasible_at_6h_correction_infh": 1,
-     "infeasible_at_7h_correction_infh": 9
+     "infeasible_at_7h_correction_infh": 1
     },
-    "denied_total": 19,
+    "denied_total": 9,
     "gate": {
-     "accepts": 0,
+     "accepts": 10,
+     "by_remaining_h": {
+      "0": [
+       10,
+       0
+      ],
+      "10": [
+       0,
+       1
+      ],
+      "11": [
+       0,
+       1
+      ],
+      "3": [
+       0,
+       1
+      ],
+      "4": [
+       0,
+       1
+      ],
+      "5": [
+       0,
+       1
+      ],
+      "6": [
+       0,
+       1
+      ],
+      "7": [
+       0,
+       1
+      ],
+      "8": [
+       0,
+       1
+      ],
+      "9": [
+       0,
+       1
+      ]
+     },
      "checks": 19,
      "rejects": {
-      "infeasible_at_4h_correction_infh": 5,
-      "infeasible_at_5h_correction_infh": 4,
+      "infeasible_at_3h_correction_infh": 1,
+      "infeasible_at_4h_correction_infh": 4,
+      "infeasible_at_5h_correction_infh": 2,
       "infeasible_at_6h_correction_infh": 1,
-      "infeasible_at_7h_correction_infh": 9
+      "infeasible_at_7h_correction_infh": 1
      }
     }
    },
@@ -23780,22 +24012,22 @@
     "dedup": 0,
     "expired": 0,
     "fenced": 0,
-    "generated": 0,
+    "generated": 20,
     "landed": 0,
     "lost": 0,
-    "queued_left": 0,
+    "queued_left": 20,
     "refused": 0,
     "rejected": 0,
     "same_value": 0,
-    "sent": 0,
+    "sent": 20,
     "speculative": 0,
     "stale_gen": 0
    },
-   "intent_mismatch_s": 0,
+   "intent_mismatch_s": 70800,
    "intent_reason": {
     "generated": {
-     "resend": 0,
-     "target_change": 0,
+     "resend": 10,
+     "target_change": 10,
      "unknown_state": 0
     },
     "note": "\u751f\u6210\u539f\u56e0\u53ea\u6709\u4e09\u7c7b\uff1a\u65e0\u56de\u6267\uff08unknown_state\uff09/\u76ee\u6807\u53d8\u4e86\uff08target_change\uff09/\u91cd\u53d1\uff08resend\uff09\u3002`refused` \u662f\u6309\u5dee\u989d\u7b97\u7684\uff0c\u56e0\u4e3a\u62ff\u4e0d\u5230\u4e0b\u884c\u673a\u4f1a\u7684\u90a3\u4e9b\u610f\u56fe\u4e0d\u4f1a\u8fdb `sent` \u4fa7\u3002",
@@ -23805,11 +24037,11 @@
      "unknown_state": 0
     },
     "sent": {
-     "resend": 0,
-     "target_change": 0,
+     "resend": 10,
+     "target_change": 10,
      "unknown_state": 0
     },
-    "total_generated": 0
+    "total_generated": 20
    },
    "mixed_config_s": 0,
    "n_obligations": 189,
@@ -23849,7 +24081,7 @@
    },
    "seed": 4,
    "skip_reasons": {
-    "admission_rejected": 19
+    "admission_rejected": 9
    }
   },
   {
@@ -24080,7 +24312,8 @@
    "gate": {
     "denied_nodes": 1,
     "denied_reasons": {
-     "infeasible_at_4h_correction_infh": 5,
+     "infeasible_at_3h_correction_infh": 1,
+     "infeasible_at_4h_correction_infh": 4,
      "infeasible_at_5h_correction_infh": 1,
      "infeasible_at_6h_correction_infh": 2,
      "infeasible_at_7h_correction_infh": 1
@@ -24088,9 +24321,48 @@
     "denied_total": 9,
     "gate": {
      "accepts": 0,
+     "by_remaining_h": {
+      "10": [
+       0,
+       1
+      ],
+      "11": [
+       0,
+       1
+      ],
+      "3": [
+       0,
+       1
+      ],
+      "4": [
+       0,
+       1
+      ],
+      "5": [
+       0,
+       1
+      ],
+      "6": [
+       0,
+       1
+      ],
+      "7": [
+       0,
+       1
+      ],
+      "8": [
+       0,
+       1
+      ],
+      "9": [
+       0,
+       1
+      ]
+     },
      "checks": 9,
      "rejects": {
-      "infeasible_at_4h_correction_infh": 5,
+      "infeasible_at_3h_correction_infh": 1,
+      "infeasible_at_4h_correction_infh": 4,
       "infeasible_at_5h_correction_infh": 1,
       "infeasible_at_6h_correction_infh": 2,
       "infeasible_at_7h_correction_infh": 1
@@ -24204,7 +24476,7 @@
    "command_counters": {
     "commands_delivered": 0,
     "commands_refused": 0,
-    "commands_sent": 0,
+    "commands_sent": 18,
     "deduplicated": 0,
     "fenced": 0,
     "stale_generation_dropped": 0,
@@ -24404,18 +24676,52 @@
    },
    "exec_layer": "naive",
    "gate": {
-    "denied_nodes": 8,
+    "denied_nodes": 1,
     "denied_reasons": {
-     "infeasible_at_5h_correction_infh": 3,
-     "infeasible_at_7h_correction_infh": 17
+     "infeasible_at_6h_correction_infh": 1,
+     "infeasible_at_7h_correction_infh": 5
     },
-    "denied_total": 20,
+    "denied_total": 6,
     "gate": {
-     "accepts": 0,
-     "checks": 20,
+     "accepts": 8,
+     "by_remaining_h": {
+      "0": [
+       7,
+       0
+      ],
+      "10": [
+       0,
+       1
+      ],
+      "11": [
+       0,
+       1
+      ],
+      "5": [
+       1,
+       0
+      ],
+      "6": [
+       0,
+       1
+      ],
+      "7": [
+       0,
+       1
+      ],
+      "8": [
+       0,
+       1
+      ],
+      "9": [
+       0,
+       1
+      ]
+     },
+     "checks": 14,
      "rejects": {
-      "infeasible_at_5h_correction_infh": 3,
-      "infeasible_at_7h_correction_infh": 17
+      "infeasible_at_6h_correction_infh": 1,
+      "infeasible_at_7h_correction_infh": 5
      }
     }
    },
@@ -24426,24 +24732,24 @@
    "intent_ledger": {
     "change": 0,
     "dedup": 0,
-    "expired": 0,
+    "expired": 2,
     "fenced": 0,
-    "generated": 0,
+    "generated": 18,
     "landed": 0,
     "lost": 0,
-    "queued_left": 0,
+    "queued_left": 16,
     "refused": 0,
     "rejected": 0,
     "same_value": 0,
-    "sent": 0,
+    "sent": 18,
     "speculative": 0,
     "stale_gen": 0
    },
-   "intent_mismatch_s": 0,
+   "intent_mismatch_s": 99840,
    "intent_reason": {
     "generated": {
-     "resend": 0,
-     "target_change": 0,
+     "resend": 8,
+     "target_change": 10,
      "unknown_state": 0
     },
     "note": "\u751f\u6210\u539f\u56e0\u53ea\u6709\u4e09\u7c7b\uff1a\u65e0\u56de\u6267\uff08unknown_state\uff09/\u76ee\u6807\u53d8\u4e86\uff08target_change\uff09/\u91cd\u53d1\uff08resend\uff09\u3002`refused` \u662f\u6309\u5dee\u989d\u7b97\u7684\uff0c\u56e0\u4e3a\u62ff\u4e0d\u5230\u4e0b\u884c\u673a\u4f1a\u7684\u90a3\u4e9b\u610f\u56fe\u4e0d\u4f1a\u8fdb `sent` \u4fa7\u3002",
@@ -24453,11 +24759,11 @@
      "unknown_state": 0
     },
     "sent": {
-     "resend": 0,
-     "target_change": 0,
+     "resend": 8,
+     "target_change": 10,
      "unknown_state": 0
     },
-    "total_generated": 0
+    "total_generated": 18
    },
    "mixed_config_s": 0,
    "n_obligations": 189,
@@ -24497,7 +24803,7 @@
    },
    "seed": 6,
    "skip_reasons": {
-    "admission_rejected": 20
+    "admission_rejected": 6
    }
   },
   {
@@ -24525,8 +24831,8 @@
    },
    "command_counters": {
     "commands_delivered": 0,
-    "commands_refused": 0,
-    "commands_sent": 0,
+    "commands_refused": 4,
+    "commands_sent": 26,
     "deduplicated": 0,
     "fenced": 0,
     "stale_generation_dropped": 0,
@@ -24726,18 +25032,52 @@
    },
    "exec_layer": "naive",
    "gate": {
-    "denied_nodes": 13,
+    "denied_nodes": 1,
     "denied_reasons": {
-     "infeasible_at_5h_correction_infh": 4,
-     "infeasible_at_7h_correction_infh": 21
+     "infeasible_at_6h_correction_infh": 1,
+     "infeasible_at_7h_correction_infh": 5
     },
-    "denied_total": 25,
+    "denied_total": 6,
     "gate": {
-     "accepts": 0,
-     "checks": 25,
+     "accepts": 13,
+     "by_remaining_h": {
+      "0": [
+       12,
+       0
+      ],
+      "10": [
+       0,
+       1
+      ],
+      "11": [
+       0,
+       1
+      ],
+      "5": [
+       1,
+       0
+      ],
+      "6": [
+       0,
+       1
+      ],
+      "7": [
+       0,
+       1
+      ],
+      "8": [
+       0,
+       1
+      ],
+      "9": [
+       0,
+       1
+      ]
+     },
+     "checks": 19,
      "rejects": {
-      "infeasible_at_5h_correction_infh": 4,
-      "infeasible_at_7h_correction_infh": 21
+      "infeasible_at_6h_correction_infh": 1,
+      "infeasible_at_7h_correction_infh": 5
      }
     }
    },
@@ -24750,36 +25090,36 @@
     "dedup": 0,
     "expired": 0,
     "fenced": 0,
-    "generated": 0,
+    "generated": 30,
     "landed": 0,
     "lost": 0,
-    "queued_left": 0,
-    "refused": 0,
+    "queued_left": 26,
+    "refused": 4,
     "rejected": 0,
     "same_value": 0,
-    "sent": 0,
+    "sent": 26,
     "speculative": 0,
     "stale_gen": 0
    },
-   "intent_mismatch_s": 0,
+   "intent_mismatch_s": 120840,
    "intent_reason": {
     "generated": {
-     "resend": 0,
-     "target_change": 0,
+     "resend": 13,
+     "target_change": 17,
      "unknown_state": 0
     },
     "note": "\u751f\u6210\u539f\u56e0\u53ea\u6709\u4e09\u7c7b\uff1a\u65e0\u56de\u6267\uff08unknown_state\uff09/\u76ee\u6807\u53d8\u4e86\uff08target_change\uff09/\u91cd\u53d1\uff08resend\uff09\u3002`refused` \u662f\u6309\u5dee\u989d\u7b97\u7684\uff0c\u56e0\u4e3a\u62ff\u4e0d\u5230\u4e0b\u884c\u673a\u4f1a\u7684\u90a3\u4e9b\u610f\u56fe\u4e0d\u4f1a\u8fdb `sent` \u4fa7\u3002",
     "refused": {
-     "resend": 0,
-     "target_change": 0,
+     "resend": 1,
+     "target_change": 3,
      "unknown_state": 0
     },
     "sent": {
-     "resend": 0,
-     "target_change": 0,
+     "resend": 12,
+     "target_change": 14,
      "unknown_state": 0
     },
-    "total_generated": 0
+    "total_generated": 30
    },
    "mixed_config_s": 0,
    "n_obligations": 189,
@@ -24819,7 +25159,7 @@
    },
    "seed": 7,
    "skip_reasons": {
-    "admission_rejected": 25
+    "admission_rejected": 6
    }
   },
   {
@@ -25050,7 +25390,8 @@
    "gate": {
     "denied_nodes": 1,
     "denied_reasons": {
-     "infeasible_at_4h_correction_infh": 5,
+     "infeasible_at_3h_correction_infh": 1,
+     "infeasible_at_4h_correction_infh": 4,
      "infeasible_at_5h_correction_infh": 2,
      "infeasible_at_6h_correction_infh": 1,
      "infeasible_at_7h_correction_infh": 1
@@ -25058,9 +25399,48 @@
     "denied_total": 9,
     "gate": {
      "accepts": 0,
+     "by_remaining_h": {
+      "10": [
+       0,
+       1
+      ],
+      "11": [
+       0,
+       1
+      ],
+      "3": [
+       0,
+       1
+      ],
+      "4": [
+       0,
+       1
+      ],
+      "5": [
+       0,
+       1
+      ],
+      "6": [
+       0,
+       1
+      ],
+      "7": [
+       0,
+       1
+      ],
+      "8": [
+       0,
+       1
+      ],
+      "9": [
+       0,
+       1
+      ]
+     },
      "checks": 9,
      "rejects": {
-      "infeasible_at_4h_correction_infh": 5,
+      "infeasible_at_3h_correction_infh": 1,
+      "infeasible_at_4h_correction_infh": 4,
       "infeasible_at_5h_correction_infh": 2,
       "infeasible_at_6h_correction_infh": 1,
       "infeasible_at_7h_correction_infh": 1
@@ -25174,7 +25554,7 @@
    "command_counters": {
     "commands_delivered": 0,
     "commands_refused": 0,
-    "commands_sent": 0,
+    "commands_sent": 20,
     "deduplicated": 0,
     "fenced": 0,
     "stale_generation_dropped": 0,
@@ -25374,22 +25754,64 @@
    },
    "exec_layer": "naive",
    "gate": {
-    "denied_nodes": 11,
+    "denied_nodes": 1,
     "denied_reasons": {
-     "infeasible_at_4h_correction_infh": 4,
-     "infeasible_at_5h_correction_infh": 5,
+     "infeasible_at_3h_correction_infh": 1,
+     "infeasible_at_4h_correction_infh": 3,
      "infeasible_at_6h_correction_infh": 4,
-     "infeasible_at_7h_correction_infh": 6
+     "infeasible_at_7h_correction_infh": 1
     },
-    "denied_total": 19,
+    "denied_total": 9,
     "gate": {
-     "accepts": 0,
+     "accepts": 10,
+     "by_remaining_h": {
+      "0": [
+       10,
+       0
+      ],
+      "10": [
+       0,
+       1
+      ],
+      "11": [
+       0,
+       1
+      ],
+      "3": [
+       0,
+       1
+      ],
+      "4": [
+       0,
+       1
+      ],
+      "5": [
+       0,
+       1
+      ],
+      "6": [
+       0,
+       1
+      ],
+      "7": [
+       0,
+       1
+      ],
+      "8": [
+       0,
+       1
+      ],
+      "9": [
+       0,
+       1
+      ]
+     },
      "checks": 19,
      "rejects": {
-      "infeasible_at_4h_correction_infh": 4,
-      "infeasible_at_5h_correction_infh": 5,
+      "infeasible_at_3h_correction_infh": 1,
+      "infeasible_at_4h_correction_infh": 3,
       "infeasible_at_6h_correction_infh": 4,
-      "infeasible_at_7h_correction_infh": 6
+      "infeasible_at_7h_correction_infh": 1
      }
     }
    },
@@ -25402,22 +25824,22 @@
     "dedup": 0,
     "expired": 0,
     "fenced": 0,
-    "generated": 0,
+    "generated": 20,
     "landed": 0,
     "lost": 0,
-    "queued_left": 0,
+    "queued_left": 20,
     "refused": 0,
     "rejected": 0,
     "same_value": 0,
-    "sent": 0,
+    "sent": 20,
     "speculative": 0,
     "stale_gen": 0
    },
-   "intent_mismatch_s": 0,
+   "intent_mismatch_s": 70800,
    "intent_reason": {
     "generated": {
-     "resend": 0,
-     "target_change": 0,
+     "resend": 10,
+     "target_change": 10,
      "unknown_state": 0
     },
     "note": "\u751f\u6210\u539f\u56e0\u53ea\u6709\u4e09\u7c7b\uff1a\u65e0\u56de\u6267\uff08unknown_state\uff09/\u76ee\u6807\u53d8\u4e86\uff08target_change\uff09/\u91cd\u53d1\uff08resend\uff09\u3002`refused` \u662f\u6309\u5dee\u989d\u7b97\u7684\uff0c\u56e0\u4e3a\u62ff\u4e0d\u5230\u4e0b\u884c\u673a\u4f1a\u7684\u90a3\u4e9b\u610f\u56fe\u4e0d\u4f1a\u8fdb `sent` \u4fa7\u3002",
@@ -25427,11 +25849,11 @@
      "unknown_state": 0
     },
     "sent": {
-     "resend": 0,
-     "target_change": 0,
+     "resend": 10,
+     "target_change": 10,
      "unknown_state": 0
     },
-    "total_generated": 0
+    "total_generated": 20
    },
    "mixed_config_s": 0,
    "n_obligations": 189,
@@ -25471,7 +25893,7 @@
    },
    "seed": 9,
    "skip_reasons": {
-    "admission_rejected": 19
+    "admission_rejected": 9
    }
   }
  ]

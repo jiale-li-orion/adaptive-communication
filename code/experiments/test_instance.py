@@ -1636,22 +1636,33 @@ def test_admission_gate_is_hand_checkable_and_monotone() -> None:
     check("RX_WH 与 `RadioEnergy.add_rx` 逐位一致（3.6 V × 11 mA × 2 s / 3600）",
           abs(RX_WH - 3.6 * 0.011 * 2.0 / 3600.0) < 1e-15, f"{RX_WH:.6e}")
 
-    g_inf = ResourceGate(sample_wh=4.7e-4, capacity_wh=0.02, horizon_s=12 * 3600,
-                         correction_s=None)
-    ok, why = g_inf.check(0.0195, (600, 900))
-    check("0.0195 Wh 在「不再假设能改」下于**第 7 小时**不可行（手算 0.0195/3.0012e-3 = 6.5）",
-          (not ok) and why.startswith("infeasible_at_7h"), why)
-    ok2, _ = g_inf.check(0.0195, SPARSE)
-    check("同一电量下稀疏档可行（5.153e-4 × 12 = 6.2e-3 < 0.0195）", ok2, f"{ok2}")
+    g_inf = ResourceGate(sample_wh=4.7e-4, capacity_wh=0.02, correction_s=None)
+    # **保护时域是"从此刻到边界还剩多少"，不是任务总长。** 第一版把 horizon 在构造时一次传入、
+    # 每次 `check` 都从 `t=0` 跑满它，于是 h6 问的仍是"你还能再撑 13 h 吗"——那会拒绝一切，
+    # 并伪造成"候选退化成 local"的结论。这里把正确语义钉死。
+    ok_far, why_far = g_inf.check(0.0195, (600, 900), 12 * 3600)
+    check("剩余 12 h 时加密不可行，且不可行点在第 7 小时（手算 0.0195/3.0012e-3 = 6.5）",
+          (not ok_far) and why_far.startswith("infeasible_at_7h"), why_far)
+    check("**剩余 6 h 时同一电量、同一配置可行**（6 × 3.0012e-3 = 1.80e-2 < 1.95e-2）",
+          g_inf.check(0.0195, (600, 900), 6 * 3600)[0], "剩余 6h")
+    check("剩余 7 h 时不可行（7 × 3.0012e-3 = 2.10e-2 > 1.95e-2）",
+          not g_inf.check(0.0195, (600, 900), 7 * 3600)[0], "剩余 7h")
+    check("单调：剩余时域变短绝不让判据更难通过",
+          all((not g_inf.check(0.0195, (600, 900), r * 3600)[0])
+              or g_inf.check(0.0195, (600, 900), (r - 1) * 3600)[0]
+              for r in (2, 4, 6, 8, 10)), "逐档检查")
 
-    g_3h = ResourceGate(sample_wh=4.7e-4, capacity_wh=0.02, horizon_s=12 * 3600,
-                        correction_s=3 * 3600)
-    ok3, _ = g_3h.check(0.0195, (600, 900))
-    check("同一电量下、若相信 3 h 后还能改，则可行——**这就是 D 的作用**", ok3, f"{ok3}")
+    g_3h = ResourceGate(sample_wh=4.7e-4, capacity_wh=0.02, correction_s=3 * 3600)
+    check("同一电量下、若相信 3 h 后还能改，则剩余 12 h 也可行——**这就是 D 的作用**",
+          g_3h.check(0.0195, (600, 900), 12 * 3600)[0], "D=3h, 剩余 12h")
+    check("D=3h 与 D=∞ 不是仅有的两个状态：临界 D 由 "
+          "`(soc − H·sparse) / (dense − sparse)` 连续给出",
+          abs((0.0195 - 12 * sparse) / (dense - sparse) - 5.36) < 0.02,
+          f"手算临界 D = {(0.0195 - 12 * sparse) / (dense - sparse):.2f} h")
 
     for soc in (0.004, 0.008, 0.0195):
-        a = g_inf.check(soc, (1200, 1800))[0]
-        b = g_inf.check(soc, (600, 900))[0]
+        a = g_inf.check(soc, (1200, 1800), 12 * 3600)[0]
+        b = g_inf.check(soc, (600, 900), 12 * 3600)[0]
         check(f"单调：负载更轻的 (1200,1800) 不比 (600,900) 更晚被接受（soc={soc}）",
               (not b) or a, f"轻 {a}、重 {b}")
 
