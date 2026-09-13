@@ -641,6 +641,147 @@ class ClairvoyantStaticSelector(DenseSamplingPolicy):
         return out
 
 
+#: **合法配置网格**（两个字段各自独立，E：重庆 `0045`／`0042`）。取值**全部来自仓库已当作合法
+#: 的集合**，没有发明任何新取值——见
+#: `docs/s7-method/instance-v1/34-pre-registration-config-grid-2026-09-14.md` §2。
+GRID_SAMPLING = (300, 600, 900, 1200, 1800, 3600)
+GRID_REPORT = (300, 600, 900, 1800, 3600)
+#: 每周期采样能耗（Wh）。与 `DeviceProfile.sample_wh` 同源
+#: （Ragnoli 等, *JLPEA* 12(3):47, 2022）。
+GRID_SAMPLE_WH = 4.7e-4
+#: 每周期上报能耗（Wh）。与已登记式子 `load_h = (3600/i)·4.7e-4 + (3600/r)·4.53e-5` 同源。
+GRID_REPORT_WH = 4.53e-5
+
+
+class GridConfigPolicy(DenseSamplingPolicy):
+    """**合法配置网格臂**：把一对固定值同时写在两个字段上，之后不再改。
+
+    行为与 `DenseSamplingPolicy` **逐位相同**（同一套 `plan`、同一对字段、同一 dwell），
+    唯一差别是名字把 `report` 那一维也带上了——原臂名字只有 `dense{interval}`，
+    而网格里同一个 sampling 对应多个 report，名字必须区分得开才读得了表。
+
+    **它不是新机制。** `ARMS` 里本来就有 `denseN = DenseSamplingPolicy(N, 900)`，
+    覆盖 `report = 900` 那一行；本类只是把同一件事铺满**其余 20 个合法点**。
+    """
+
+    def __init__(self, interval_s: int, period_s: int, **kw) -> None:
+        super().__init__(interval_s=interval_s, period_s=period_s, **kw)
+        if interval_s not in GRID_SAMPLING or period_s not in GRID_REPORT:
+            raise ValueError(f"({interval_s}, {period_s}) 不在合法网格 {GRID_SAMPLING}×{GRID_REPORT} 上")
+        self.name = f"grid{interval_s}x{period_s}"
+
+
+class RollingConfigSearchPolicy(CenterPolicy):
+    """**普通滚动搜索**（同预测、同观测的普通 MPC）：候选集 = 合法网格 ∪ {保持现状}。
+
+    这是 §31 第 77 行要求的"**简单滚动搜索**参照"，也是第 79 行要求的"具有**相同预测和观测**的
+    普通 MPC"。它**故意是普通的**——用任何现成最优控制教材都能写出这一条，
+    因此它赢下来的东西**不得**记成本项目的方法贡献。
+
+    **它只用在线可得的信息 + 明确声明的模型**（§31 第 67 行）：
+
+      - 观测：`CenterView` 里**该节点已确认的**配置与电量读数（`soc_of`）。**没有回执时绝不按
+        "我要求的配置"扣算能源**——所以"当前配置"取的是快照里的 `sample_interval_s`/
+        `report_period_s`（已确认），不是自己上一次的意图；
+      - 预测：**历史标定的标称采能率**（场景声明的 A 层常量），**不使用任何未来真值**；
+      - 链路：`uplink_p_arrive` 与 `backhaul_p_good` 两个**场景声明**的概率，对所有臂公开。
+
+    **目标**：在剩余时域内最大化**预期按期交付**，先按**可行性**过滤（预测电量不得转负，
+    且计入电池溢出），再排序；同分取**能耗更低**者。**没有任何需要调参的权重。**
+
+    预期交付 = `P(采集) × P(送达)`，其中
+      * `P(采集) = min(1, 义务周期 / 采样间隔)`——**更密不增加交付，只多耗电**（仓库已登记的结论）；
+      * `P(送达) = 1 − (1 − p_uplink·p_backhaul)^(义务周期 / 上报周期)`。
+
+    **它怎么对待"两次字段写入的实际等待与可能的中间配置"**（第 69 行）：
+    一次决策**成对写入**（`stamp_pair`，同一个世代），并且**上一对还在途时不重复下单**
+    （`in_flight` 直接跳过）。跨代混配由实例的 `mixed_config_s` 单列读数核验。
+    """
+
+    GRID_SAMPLING = GRID_SAMPLING
+    GRID_REPORT = GRID_REPORT
+
+    def __init__(self, routine_period_s: int = 3600, horizon_end_s: int = 12 * 3600,
+                 uplink_p: float = 0.74, backhaul_p: float = 0.62,
+                 harvest_wh_per_hour: float = 0.05, capacity_wh: float = 0.05,
+                 dwell_s: int = 600) -> None:
+        super().__init__()
+        self.routine_period_s = int(routine_period_s)
+        self.horizon_end_s = int(horizon_end_s)
+        self.uplink_p, self.backhaul_p = float(uplink_p), float(backhaul_p)
+        self.harvest_wh_per_hour = float(harvest_wh_per_hour)
+        self.capacity_wh = float(capacity_wh)
+        self.dwell_s = int(dwell_s)
+        self._last: dict[str, int] = {}
+        #: **为什么选它 / 为什么不换**：第 69 行要求输出"可行替代配置或保持原配置的原因"。
+        self.reasons: dict[str, int] = {}
+        self.choices: dict[str, tuple] = {}
+        self.name = "rolling_search"
+
+    def _load_h(self, i: int, r: int) -> float:
+        return GRID_SAMPLE_WH * (3600.0 / i) + GRID_REPORT_WH * (3600.0 / r)
+
+    def _search(self, soc_wh: float, t_s: int) -> tuple[tuple[int, int], str]:
+        h_rem = max(0.0, (self.horizon_end_s - t_s) / 3600.0)
+        p_link = self.uplink_p * self.backhaul_p
+        feasible, allc = [], []
+        for i in self.GRID_SAMPLING:
+            for r in self.GRID_REPORT:
+                load = self._load_h(i, r)
+                soc_end = min(soc_wh + self.harvest_wh_per_hour * h_rem, self.capacity_wh) \
+                    - load * h_rem
+                p_collect = min(1.0, self.routine_period_s / i)
+                k = max(1.0, self.routine_period_s / r)
+                p_deliver = 1.0 - (1.0 - p_link) ** k
+                exp_delivered = p_collect * p_deliver
+                allc.append(((i, r), load, exp_delivered, soc_end))
+                if soc_end >= 0.0:
+                    feasible.append(((i, r), load, exp_delivered))
+        if not feasible:
+            # 一个都撑不住 ⇒ 先保命：取能耗最低的一档，而不是继续追交付。
+            cheapest = min(allc, key=lambda x: x[1])
+            return cheapest[0], "infeasible_min_load"
+        feasible.sort(key=lambda x: (-x[2], x[1], -x[0][0], -x[0][1]))
+        return feasible[0][0], "feasible_max_delivered"
+
+    def plan(self, view: CenterView) -> list[tuple[str, dict]]:
+        out = []
+        for nid in view.node_ids:
+            if nid in view.in_flight:
+                self._skip("in_flight", nid)
+                continue
+            last = self._last.get(nid)
+            if last is not None and view.t_s - last < self.dwell_s:
+                self._skip("dwell", nid)
+                continue
+            soc = view.soc_of(nid)
+            if soc is None:
+                # 没有电量证据就不动。保守档与出厂默认逐位相同，发出去是值域空操作却要花一次机会。
+                self._skip("no_soc", nid)
+                continue
+            snap = view.reports.get(nid) or {}
+            current = (snap.get("sample_interval_s"), snap.get("report_period_s"))
+            best, why = self._search(soc, view.t_s)
+            self.reasons[why] = self.reasons.get(why, 0) + 1
+            self.choices[nid] = best
+            if best == current:
+                self._skip("keep_current", nid)
+                continue
+            self._last[nid] = view.t_s
+            a, b = self.stamp_pair(
+                nid,
+                {"op": OP_SET_SAMPLING_INTERVAL, "interval_s": best[0]},
+                {"op": OP_SET_REPORT_PERIOD, "period_s": best[1]})
+            out.append((nid, a))
+            out.append((nid, b))
+        return out
+
+    def search_report(self) -> dict:
+        """第 69 行要求的"可行替代配置或保持原配置的原因"的汇总。"""
+        return {"reasons": dict(self.reasons),
+                "last_choice_per_node": {k: list(v) for k, v in self.choices.items()}}
+
+
 #: 第一轮的对照集合。**四条共享同一套现场自治、硬件与能量**，差别只在中心怎么花机会。
 ARMS: dict[str, type[CenterPolicy]] = {
     "local": LocalPolicy,
@@ -695,6 +836,45 @@ ARMS: dict[str, type[CenterPolicy]] = {
     # **最强传统基线**：能源反馈（采样间隔）+ AoI 反馈（上报周期），成对下发、无读数不发。
     "ea_aoi": lambda: EnergyAoiPolicy(),
     "ea_aoi_h": lambda: EnergyAoiPolicy(exit_wh=0.006, confirm_n=2),
+    # ---------------------------------------------------------------- 判定 B：合法配置网格
+    # **补全 30 个合法点的静态前沿**（§31 第 77 行要求"所有合法配置的静态前沿"）。
+    # 其中 10 个点本来就有臂覆盖（`report=900` 那行由 `dense*`、`sampling=3600` 那列由
+    # `fixed*`/`aoi_const*`/`aoi_f600`/`aoi_s1800`），这里把它们**显式重述**成 `gridIxR`，
+    # 使"所有合法配置"这个名字与实际跑过的集合逐项对齐；另外 20 个内部点是首次跑。
+    # **取值一律来自 `GRID_SAMPLING × GRID_REPORT`，不新增动作面、不改任何既有臂的语义。**
+    "grid300x300": lambda: GridConfigPolicy(300, 300),
+    "grid300x600": lambda: GridConfigPolicy(300, 600),
+    "grid300x900": lambda: GridConfigPolicy(300, 900),
+    "grid300x1800": lambda: GridConfigPolicy(300, 1800),
+    "grid300x3600": lambda: GridConfigPolicy(300, 3600),
+    "grid600x300": lambda: GridConfigPolicy(600, 300),
+    "grid600x600": lambda: GridConfigPolicy(600, 600),
+    "grid600x900": lambda: GridConfigPolicy(600, 900),
+    "grid600x1800": lambda: GridConfigPolicy(600, 1800),
+    "grid600x3600": lambda: GridConfigPolicy(600, 3600),
+    "grid900x300": lambda: GridConfigPolicy(900, 300),
+    "grid900x600": lambda: GridConfigPolicy(900, 600),
+    "grid900x900": lambda: GridConfigPolicy(900, 900),
+    "grid900x1800": lambda: GridConfigPolicy(900, 1800),
+    "grid900x3600": lambda: GridConfigPolicy(900, 3600),
+    "grid1200x300": lambda: GridConfigPolicy(1200, 300),
+    "grid1200x600": lambda: GridConfigPolicy(1200, 600),
+    "grid1200x900": lambda: GridConfigPolicy(1200, 900),
+    "grid1200x1800": lambda: GridConfigPolicy(1200, 1800),
+    "grid1200x3600": lambda: GridConfigPolicy(1200, 3600),
+    "grid1800x300": lambda: GridConfigPolicy(1800, 300),
+    "grid1800x600": lambda: GridConfigPolicy(1800, 600),
+    "grid1800x900": lambda: GridConfigPolicy(1800, 900),
+    "grid1800x1800": lambda: GridConfigPolicy(1800, 1800),
+    "grid1800x3600": lambda: GridConfigPolicy(1800, 3600),
+    "grid3600x300": lambda: GridConfigPolicy(3600, 300),
+    "grid3600x600": lambda: GridConfigPolicy(3600, 600),
+    "grid3600x900": lambda: GridConfigPolicy(3600, 900),
+    "grid3600x1800": lambda: GridConfigPolicy(3600, 1800),
+    "grid3600x3600": lambda: GridConfigPolicy(3600, 3600),
+    # **强对照**：同预测、同观测的普通滚动搜索（判定 B 的"竞争者"，第 77/79 行）。
+    # 默认参数只是占位；实验脚本会按**场景声明的**参数构造它（见 `config_grid_run.py`）。
+    "rolling_search": lambda: RollingConfigSearchPolicy(),
 }
 
 

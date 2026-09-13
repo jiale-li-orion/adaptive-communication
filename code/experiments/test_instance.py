@@ -1732,6 +1732,59 @@ def test_placement_isolates_the_two_instruments() -> None:
           f"用到的字段={sorted(_gw_ops)}")
 
 
+def test_config_grid_and_rolling_search_are_legal() -> None:
+    """**判定 B 的仪器不变量**（§31 候选 2 第一项判别）。
+
+      1. 合法网格**正好**是 6×5 = 30 个点；`GridConfigPolicy` 对表外的点必须**响亮地拒绝**——
+         否则"所有合法配置的静态前沿"这个名字会**悄悄扩到不合法取值**上，而那种错误不会自己报错；
+      2. 两个已登记负载**手算可核**：`(600,900) = 3.0012e-3`、`(600,3600) = 2.8653e-3`，
+         后者只低 **4.5%**（采样占 94.0%）——这正是"空区在物理上有意义"的依据，也是判定 B 的前提；
+      3. 滚动搜索的**候选集含"保持现状"**：已确认配置就是它算出来的那个点时必须**什么都不发**；
+         而**没有电量证据时也一律不发**（不许对未知状态动手——那是"未知状态"型浪费）。
+    """
+    print("\n[33] 判定 B 的仪器不变量（合法网格 30 点 + 普通滚动搜索）")
+    import center as _C
+    check("合法网格正好 30 个点（6 × 5）",
+          len(_C.GRID_SAMPLING) * len(_C.GRID_REPORT) == 30,
+          f"{len(_C.GRID_SAMPLING)}×{len(_C.GRID_REPORT)}")
+    off_grid_ok = False
+    try:
+        _C.GridConfigPolicy(600, 700)
+    except ValueError:
+        off_grid_ok = True
+    check("表外取值被响亮拒绝（(600,700) 不在网格上）", off_grid_ok)
+
+    _p = _C.RollingConfigSearchPolicy()
+    l1, l2 = _p._load_h(600, 900), _p._load_h(600, 3600)
+    check("两个登记负载手算可核", abs(l1 - 3.0012e-3) < 1e-9 and abs(l2 - 2.8653e-3) < 1e-9,
+          f"(600,900)={l1:.6e}  (600,3600)={l2:.6e}")
+    check("空区只低 4.5%（采样占 94.0%）",
+          abs((l1 - l2) / l1 - 0.045) < 0.002,
+          f"降幅 {(l1 - l2) / l1 * 100:.1f}%")
+
+    nid = "EI01"
+    empty = CenterView(t_s=0, node_ids=(nid,))
+    check("没有电量证据时不下发", _p.plan(empty) == [], "未知状态不许动手")
+
+    _best, _why = _p._search(0.05, 0)
+    at_target = CenterView(
+        t_s=0, node_ids=(nid,),
+        reports={nid: {"soc_wh": 0.05, "sample_interval_s": _best[0],
+                       "report_period_s": _best[1], "read_at": 0}},
+        report_at={nid: 0}, newest_taken_at={})
+    check("已确认配置就是它算出的那个点时不发命令（保持现状是候选之一）",
+          _p.plan(at_target) == [], f"搜索选出的点是 {_best}")
+    away = CenterView(
+        t_s=0, node_ids=(nid,),
+        reports={nid: {"soc_wh": 0.05, "sample_interval_s": 3600,
+                       "report_period_s": 3600, "read_at": 0}},
+        report_at={nid: 0}, newest_taken_at={})
+    out = _p.plan(away)
+    check("确认配置与搜索选点不同时成对下发（两个字段同一世代）",
+          len(out) == 2 and out[0][1]["generation"] == out[1][1]["generation"],
+          f"下发 {[x[1].get('op') for x in out]}")
+
+
 def main() -> int:
     print("实例层验收（Task Contract v1.1）")
     test_denominator_is_exogenous()
@@ -1765,6 +1818,7 @@ def main() -> int:
     test_soc_age_uses_source_time_and_skips_are_visible()
     test_admission_gate_is_hand_checkable_and_monotone()
     test_placement_isolates_the_two_instruments()
+    test_config_grid_and_rolling_search_are_legal()
     print("\n" + "-" * 74)
     if FAIL:
         print(f"  {len(FAIL)} 项失败: {', '.join(FAIL)}")
