@@ -60,6 +60,9 @@ def episodes(trace: list, deadline_s: int = DEADLINE_S) -> dict:
     for e in trace:
         if e[2] == "state" and len(e) > 6 and e[6] is False:
             dead_at[e[1]] = min(dead_at.get(e[1], e[0]), e[0])
+    # **每次尝试的层**：`sent` 事件存在 ⇒ 过了 layer 1（center→gateway 回传可用）；
+    # 不存在 ⇒ 当次尝试就死在 layer 1。epoch 级终局用它来分"死在第 1 层还是第 2 层"。
+    sent_keys = {(e[0], e[1], e[4], e[5]) for e in trace if e[2] == "sent"}
     applied: dict = {}          # (node, op) -> [(t, value)]
     for e in trace:
         if e[2] == "applied":
@@ -84,7 +87,7 @@ def episodes(trace: list, deadline_s: int = DEADLINE_S) -> dict:
                   if sg["start"] <= a[0] <= next_start and a[1] == sg["target"]]
             rec = {"node": nid, "op": op, "target": sg["target"],
                    "start": sg["start"], "n_attempts": len(sg["attempts"]),
-                   "opens": sg["reason"]}
+                   "opens": sg["reason"], "n_sent_attempts": 0}
             if ap:
                 rec.update(terminal="closed", settle_s=ap[0][0] - sg["start"])
             elif k + 1 < len(segs):
@@ -94,7 +97,12 @@ def episodes(trace: list, deadline_s: int = DEADLINE_S) -> dict:
             elif nid in dead_at and dead_at[nid] <= sg["start"] + deadline_s:
                 rec.update(terminal="node_dead", settle_s=None)
             else:
-                rec.update(terminal="deadline", settle_s=None)
+                # **终局层**：整条 episode 的尝试里**有没有任何一次**过了 layer 1。
+                # 全被拒 ⇒ layer1（center→gateway 回传不可达）；有过 sent ⇒ layer2（节点侧机会稀缺）。
+                nsent = sum(1 for x in sg["attempts"]
+                            if (x, nid, op, sg["target"]) in sent_keys)
+                rec.update(terminal=("layer2" if nsent else "layer1"),
+                           n_sent_attempts=nsent, settle_s=None)
             out.append(rec)
     # **obsolete apply**：supersede 之后才生效的旧 target
     obsolete = 0

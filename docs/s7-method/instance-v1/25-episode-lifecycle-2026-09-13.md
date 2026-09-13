@@ -58,3 +58,42 @@
 - `obsolete_apply`（supersede 之后才生效）判据偏松：现在是"旧 target 的值在更晚的新 target 之后
   仍出现 applied"。**这是 execution-layer stale effect 的第一个非零证据**（`noout` 41 / `out3` 13），
   但判据要收紧后才可承重。
+
+---
+
+## 十、补齐终局层（第 1 / 第 2 层）与最终分支选择
+
+按"整条 episode 的尝试里**有没有任何一次**过了 layer 1"分：全被拒 ⇒ **layer1**（center→gateway 回传不可达）；
+有过 `sent` ⇒ **layer2**（节点侧机会稀缺）。
+
+| 条件 | episode n | closed | **layer1** | **layer2** | superseded | censored | **closure rate** |
+|---|---:|---:|---:|---:|---:|---:|---:|
+| `adm_noout` | 198 | 165 | **7** | **9** | 3 | 14 | **91.2%** |
+| `adm_out3` | 113 | 72 | **0** | **18** | 5 | 18 | **80.0%** |
+| **`polar_c0.05`** | 66 | 40 | **14** | **10** | 2 | 0 | **62.5%** |
+
+**⇒ 四条预注册判据的对号入座**：
+
+- **分支 1 主导**（closure 高 80–91%、amplification 高 3.7–4.0×）⇒
+  **关掉 authority failure，转向 planning / intent economy，并拿成熟 durable reconciliation 做强基线。**
+- **分支 2 只有一个小立足点**：`polar` 的 layer1 = 14 个 episode（占 66 的 21%），
+  形态是"少量 episode 在有效期内始终进不了网络"。**不主导。**
+- **分支 3 只有一个小立足点**：`out3` 的 layer2 = 18 个 episode（占 113 的 16%），
+  且 `out3` 的 layer1 恰为 **0**。**不主导**，但它与 §7.83 的聚合结论（`out3` 第二层 63.6%）方向一致。
+- **分支 4 不适用**：终局里 `node_dead` = 0（三条件全为 0）。
+
+**⇒ 最终判定：分支 1。** 一句话答案：
+
+> **Agent 没有真的失去控制。它只是为了完成同一个控制动作喊了太多遍。**
+> `out3` 那种 9 小时接入中断下，**80% 的语义状态改变最终仍然完成**，平均喊 4.9 次；
+> `polar` 下 amplification 到 **17.56×**，而**闭合的那些 episode 一次就成**（attempts/closed = 1.0）——
+> 无谓开销集中在**始终没闭合的少数 episode** 上。
+
+**据此，三个原判断的新位置**：
+- **authority failure（"知道了却改变不了世界"）**：按 episode 级证据**不成立**，收掉。
+  它此前看起来成立，是因为把"同一 episode 的重复敲门"数成了失败。
+- **agent infra 的 backpressure**：**反而变强**——`planning amplification` 3.7–17.6×、
+  `wasted reasoning per closed effect` 3.4–28.0 是**不会把有用 retry 误判成失败**的量。
+  但它**必须先与成熟 desired-state reconciliation / device shadow 对比**，
+  否则就是重复已有系统（我早期已被成熟 shadow 教训过一次）。
+- **`report_period` 方法线**：**关闭**。它只买 layer 2，而 layer 2 只在 `out3` 有 18 个 episode 的立足点。

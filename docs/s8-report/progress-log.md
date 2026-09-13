@@ -3584,3 +3584,23 @@ return leg 总短于剩余伤害预算。**要让 `A` 非零就得让 `T_harm` �
 另：`adm_noout` 与 `burst_iid_c0.05` 四数逐位相同，疑 `build_kwargs` 未传 burst 键，未查证；
 `obsolete_apply` 判据偏松（`noout` 41 / `out3` 13），是 execution-layer stale effect 的首个非零证据。
 文档 `25-episode-lifecycle-2026-09-13.md`。
+
+---
+
+## §7.88 终局层补齐与最终分支：**分支 1 主导**；"Agent 没有失去控制，只是喊了太多遍"
+
+按"整条 episode 有没有任何一次过了 layer 1"分终局层：
+
+| 条件 | episode n | closed | **layer1** | **layer2** | superseded | censored | closure rate |
+|---|---:|---:|---:|---:|---:|---:|---:|
+| `adm_noout` | 198 | 165 | 7 | 9 | 3 | 14 | **91.2%** |
+| `adm_out3` | 113 | 72 | **0** | **18** | 5 | 18 | **80.0%** |
+| `polar_c0.05` | 66 | 40 | **14** | **10** | 2 | 0 | **62.5%** |
+
+- **分支 1 主导**（closure 高、amplification 高）⇒ **authority failure 收掉**，转 planning/intent economy，
+  **并必须先与成熟 durable reconciliation / device shadow 对比**。
+- 分支 2 只在 `polar` 有 14 个 episode 的立足点；分支 3 只在 `out3` 有 18 个（且 `out3` 的 layer1 恰为 0）；
+  **分支 4 不适用**（`node_dead` 三条件全 0）。
+
+**`report_period` 方法线关闭**（只买 layer 2）。**agent infra backpressure 反而变强**
+（amplification 3.7–17.6×、wasted/closed 3.4–28.0，且不会把有用 retry 误判成失败）。
