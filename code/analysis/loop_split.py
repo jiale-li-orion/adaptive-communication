@@ -140,19 +140,42 @@ def main() -> int:
         for rep in sorted(b for b in bins if b is not None):
             v = bins[rep]
             print(f"     上报周期 {rep:>5} s ⇒ T_return 中位 {st.median(v):>7.0f} s  n={len(v)}")
-        cond = [r for r in matched
+        # ⚠ **未落地的意图不能丢。** `T_return = None` 意味着"这条纠正到任务结束都没生效"，
+        # 那**本身就是闭环未闭合**——正是要找的 authority failure。原先只在 `matched` 里取条件样本，
+        # 等于把分子和分母同时剔掉了最该算的那些行，**系统性把 A 压向 0**。
+        # 现在：未落地按 `T_return = ∞` 计入（记作 `never`），单列出来。
+        cond = [r for r in rows
                 if r["t_evidence_s"] is not None
                 and r["t_evidence_s"] <= args.deadline_s]
+        for r in cond:
+            r["loop_s"] = (None if r["t_return_s"] is None
+                           else r["t_evidence_s"] + r["t_return_s"])
         if cond:
             ft = [r for r in cond
-                  if (r["t_evidence_s"] + r["t_return_s"]) > r["t_harm_true_s"]]
+                  if r["loop_s"] is None or r["loop_s"] > r["t_harm_true_s"]]
             fb = [r for r in cond
-                  if (r["t_evidence_s"] + r["t_return_s"]) > r["t_harm_belief_s"]]
+                  if r["loop_s"] is None or r["loop_s"] > r["t_harm_belief_s"]]
             print(f"   **条件样本**（T_evidence ≤ deadline）n={len(cond)}")
             print(f"     A（真实 SoC 算 T_harm，主口径）= {len(ft)/len(cond):.3f}  (n_fail={len(ft)})")
             print(f"     A（信念 SoC 算 T_harm，旧口径） = {len(fb)/len(cond):.3f}  (n_fail={len(fb)})")
         else:
             print("   **条件样本 n=0 ⇒ 不许下结论**")
+        # **按 `T_harm` 分箱**：不必造新条件——`T_harm` 是逐决策按当时 SoC 算的，
+        # 所以同一条件内它自然变化。这直接回答"损害窗口逼近时 authority failure 会不会出现"，
+        # 而且把"分母（链路决定）"与"分子（能量决定）"在同一条件里解耦开。
+        if cond:
+            edges = (0, 2 * 3600, 4 * 3600, 8 * 3600, 10 ** 9)
+            print("   按 T_harm 分箱（**同一条件内**，分母与分子在此解耦）：")
+            for lo, hi in zip(edges, edges[1:]):
+                b = [r for r in cond if lo <= r["t_harm_true_s"] < hi]
+                if not b:
+                    continue
+                f = [r for r in b
+                     if r["loop_s"] is None or r["loop_s"] > r["t_harm_true_s"]]
+                nev = sum(1 for r in b if r["loop_s"] is None)
+                lab = (f"{lo//3600}-{hi//3600}h" if hi < 10**8 else f">{lo//3600}h")
+                print(f"     T_harm {lab:<8} n={len(b):<4} n_fail={len(f):<3} "
+                      f"(其中从未落地 {nev}) A={len(f)/len(b):.3f}")
         print()
     return 0
 
