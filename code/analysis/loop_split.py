@@ -111,7 +111,11 @@ def main() -> int:
                 st_ev = [e for e in d["_trace"]
                          if e[2] == "state" and e[1] == p["node"] and e[0] == p["t"]]
                 pair_cfg = (st_ev[0][3], st_ev[0][4]) if st_ev else (3600, 3600)
-                p["t_harm_s"] = t_harm_at(p["soc_seen"], pair_cfg) * 3600.0
+                # **两个口径都要算**：`soc_seen` 是中心**相信**的电量，`state` 是**真实**电量。
+                # `out3` 的机制恰恰是"相信 0.0185 而真实接近死亡"——用信念算 `T_harm` 会偏大、
+                # 从而把 `A` 往 0 压。**主口径用真实 SoC**；信念口径同时报出来，让偏置量可见。
+                p["t_harm_true_s"] = t_harm_at(st_ev[0][5] if st_ev else None, pair_cfg) * 3600.0
+                p["t_harm_belief_s"] = t_harm_at(p["soc_seen"], pair_cfg) * 3600.0
                 rows.append(p)
         all_rows.extend((tag, r) for r in rows)
         n = len(rows)
@@ -128,14 +132,16 @@ def main() -> int:
         cond = [r for r in matched
                 if r["t_evidence_s"] is not None
                 and r["t_evidence_s"] <= args.deadline_s]
-        print(f"   **条件样本**（T_evidence ≤ deadline）n={len(cond)}", end="")
         if cond:
-            fail = [r for r in cond
-                    if (r["t_evidence_s"] + r["t_return_s"]) > r["t_harm_s"]]
-            print(f"；其中 T_loop > T_harm 的 n={len(fail)}"
-                  f" ⇒ **A = {len(fail)/len(cond):.3f}**")
+            ft = [r for r in cond
+                  if (r["t_evidence_s"] + r["t_return_s"]) > r["t_harm_true_s"]]
+            fb = [r for r in cond
+                  if (r["t_evidence_s"] + r["t_return_s"]) > r["t_harm_belief_s"]]
+            print(f"   **条件样本**（T_evidence ≤ deadline）n={len(cond)}")
+            print(f"     A（真实 SoC 算 T_harm，主口径）= {len(ft)/len(cond):.3f}  (n_fail={len(ft)})")
+            print(f"     A（信念 SoC 算 T_harm，旧口径） = {len(fb)/len(cond):.3f}  (n_fail={len(fb)})")
         else:
-            print("（**无样本，不许下结论**）")
+            print("   **条件样本 n=0 ⇒ 不许下结论**")
         print()
     return 0
 
