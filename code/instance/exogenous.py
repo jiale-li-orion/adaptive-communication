@@ -214,6 +214,24 @@ def routine_obligations(node_ids, hours: int, measurand: str = "displacement",
     return out
 
 
+def routine_obligations_by_node(measurands: dict[str, str], hours: int,
+                                period_s: int = ROUTINE_PERIOD_S,
+                                window_s: int | None = None,
+                                grace_s: int | None = None) -> list[Obligation]:
+    """按**每个节点自己的测项**建周期义务。
+
+    存在的理由是一个实测出来的错误：`routine_obligations(node_ids, ...)` 给一份节点名单配**同一个**
+    测项，于是只有雨量的网关也被发了位移义务，而它永远不会采位移——评分器把网关整段时间记成
+    "无观测"，12 小时全段（43200 s）。**一个实体不该被要求提供它没有的测项。**
+    """
+    out: list[Obligation] = []
+    for node_id, measurand in sorted(measurands.items()):
+        out.extend(routine_obligations((node_id,), hours, measurand=measurand,
+                                       period_s=period_s, window_s=window_s,
+                                       grace_s=grace_s))
+    return out
+
+
 # ---------------------------------------------------------------- 环境真值
 
 @dataclass
@@ -230,6 +248,9 @@ class EnvironmentTruth:
     node_ids: tuple[str, ...]
     #: 降雨增量序列：t -> mm。公开片段实例取 Table 3 读数；规则实例由种子生成并标为合成。
     rainfall: dict[int, float] = field(default_factory=dict)
+    #: 位移读数：node_id -> {t: mm}。周期实例用；取值本身不影响投递类指标，但 v1.1 §4 要求
+    #: `Sample` 必须带读数与单位，因此这里必须给出一个可追溯的来源而不是随手填 0。
+    displacement: dict[str, dict[int, float]] = field(default_factory=dict)
     #: 触发时刻（雨量阈值被越过）。
     triggers: list[tuple[int, str]] = field(default_factory=list)
     #: 外生采能：node_id -> {t: Wh 本 tick 获得}。与任何动作无关。
@@ -243,6 +264,12 @@ class EnvironmentTruth:
 
     def rainfall_at(self, t_s: int) -> float:
         return self.rainfall.get(t_s, 0.0)
+
+    def reading_at(self, node_id: str, measurand: str, t_s: int) -> float:
+        """某节点某测项在 t 的读数。**这是环境真值**，只有模拟器与评分器可以读。"""
+        if measurand == "rainfall":
+            return self.rainfall.get(t_s, 0.0)
+        return self.displacement.get(node_id, {}).get(t_s, 0.0)
 
     def harvest_at(self, node_id: str, t_s: int) -> float:
         return self.harvest_wh.get(node_id, {}).get(t_s, 0.0)
@@ -369,3 +396,22 @@ class ObligationSet:
             if any(link_ok(o, o.node_id, t) for t in range(o.window[0], o.window[1] + 1, TICK_S)):
                 keep.append(o)
         return ObligationSet(keep)
+
+
+def displacement_series(node_ids, hours: int, seed: int,
+                        drift_mm_per_day: float = 0.8) -> dict[str, dict[int, float]]:
+    """**合成**的位移过程（A 层）：缓慢漂移 + 有界的逐时抖动。
+
+    存在两个理由：一是 v1.1 §4 要求样本带读数；二是让"值驱动决策"这条路径在实例里**有对象**，
+    即使本轮不用它。取值本身属于合成诊断过程，**不得**当作任何站点的实测形变。
+    """
+    out: dict[str, dict[int, float]] = {}
+    for node_id in node_ids:
+        series: dict[int, float] = {}
+        for i in range(hours):
+            t = i * 3600
+            drift = drift_mm_per_day * i / 24.0
+            jitter = (stable_uniform(seed, "disp", node_id, i) - 0.5) * 0.4
+            series[t] = round(drift + jitter, 3)
+        out[node_id] = series
+    return out

@@ -39,6 +39,8 @@ class ObligationOutcome:
 
     oid: str
     kind: str
+    node_id: str = ""
+    measurand: str = ""
     collected: bool = False          # 有样本落在采集窗内（容差内）
     delivered: bool = False          # 且该样本在观察截止前到达中心
     censored: bool = False           # 到观察期末仍未交付
@@ -66,7 +68,8 @@ def evaluate(obligations: ObligationSet, log, hours: int, node_ids,
 
     outcomes: list[ObligationOutcome] = []
     for o in obligations.obligations:
-        out = ObligationOutcome(oid=o.oid, kind=o.kind)
+        out = ObligationOutcome(oid=o.oid, kind=o.kind,
+                                node_id=o.node_id, measurand=o.measurand)
         for sample, received_at in by_key.get((o.node_id, o.measurand), ()):
             if not o.matches(sample):
                 continue
@@ -134,10 +137,13 @@ def _routine_block(outcomes, log, node_ids, end_s, by_key) -> dict:
     """
     rows = [o for o in outcomes if o.kind == KIND_ROUTINE]
 
-    # AoI 时间平均：按 tick 走一遍中心侧的最新采集时刻
+    # AoI 时间平均：按 tick 走一遍中心侧的最新采集时刻。
+    # **按义务的 (节点, 测项) 分组**，不按实体——网关只有雨量、坡面节点只有位移，
+    # 拿一个实体去算它没有的那个测项，会把整段时间记成"无观测"（实测踩过：43200 s 全段）。
+    pairs = sorted({(o.node_id, o.measurand) for o in rows})
     aoi_sum, aoi_ticks, no_obs_ticks = 0, 0, 0
-    for node_id in sorted(node_ids):
-        stamps = sorted(s.taken_at for s, r in by_key.get((node_id, "displacement"), ())
+    for node_id, measurand in pairs:
+        stamps = sorted(s.taken_at for s, r in by_key.get((node_id, measurand), ())
                         if r is not None)
         if not stamps:
             no_obs_ticks += end_s // TICK_S

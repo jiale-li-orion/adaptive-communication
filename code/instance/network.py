@@ -140,7 +140,8 @@ class Node:
     """一台现场监测节点：本地采样、本地触发、有限缓存、自动补发、动作驱动的电量。"""
 
     def __init__(self, node_id: str, measurand: str, profile: DeviceProfile = DeviceProfile(),
-                 *, initial_soc: float | None = None, initial_wh: float | None = None) -> None:
+                 *, initial_soc: float | None = None, initial_wh: float | None = None,
+                 is_gateway: bool = False) -> None:
         """`initial_soc` 是**比例**，`initial_wh` 是**绝对 Wh**；给后者时它优先。
 
         两个入口都保留是因为它们服务不同的人：manifest 与实例说明按 Wh 说话（"初始 0.3 mWh"），
@@ -149,6 +150,9 @@ class Node:
         """
         self.node_id = node_id
         self.measurand = measurand
+        #: 网关上的雨量计**没有接入跳**：它就是网关，数据直接进网关缓存，只有回传那一跳。
+        #: 这是 S1 的角色事实（EI01 是带雨量计的主节点／网关），不是简化。
+        self.is_gateway = is_gateway
         self.p = profile
         # 配置：本地默认值，可被中心下发的命令改写（改写需要命令到达，不在本模块内假装即时生效）
         self.sample_interval_s = profile.sample_interval_s
@@ -256,8 +260,8 @@ class Node:
             self.dead_at = t_s
             return []
         self.spend(self.p.sample_wh)
-        value = truth.rainfall_at(t_s) if measurand == "rainfall" else 0.0
-        unit = "mm" if measurand == "rainfall" else "mm-displacement"
+        value = truth.reading_at(self.node_id, measurand, t_s)
+        unit = "mm" if measurand == "rainfall" else "mm"
         s = Sample(sample_id=f"{self.node_id}:{measurand}:{t_s}",
                    node_id=self.node_id, measurand=measurand,
                    taken_at=t_s, value=value, unit=unit)
@@ -398,6 +402,15 @@ class Instance:
             batch = node.batch(t_s)
             if not batch:
                 continue
+            if node.is_gateway:
+                # 网关自己的传感器：没有接入跳，直接进网关缓存。`heard_at` 就是采集时刻。
+                counters["heard"] += 1
+                for sample in batch:
+                    self.log.transit[sample.sample_id].heard_at = t_s
+                self.plane.gateway_ingest(node.node_id, t_s,
+                                          [s.sample_id for s in batch],
+                                          node.snapshot(t_s), payload=list(batch))
+                continue
             payload_bytes = max(16, 12 * len(batch))
             rec = self.plane.uplink(node.node_id, hour=hour, sf=9,
                                     payload_bytes=payload_bytes,
@@ -437,3 +450,21 @@ class Instance:
         for t_s in range(0, hours * 3600, TICK_S):
             self.tick(t_s)
         return self.log
+
+
+def nodes_from(deployment, profile: DeviceProfile | None = None,
+               initial_wh: float | None = None) -> dict[str, Node]:
+    """按部署建节点集合。
+
+    **主实例只用非绕射边缘的位点**（`deployment.node_ids`）——那些判定随 1–2 米翻转的位点，
+    其"可达性"是坐标巧合而不是地形事实。排除数在 `deployment.marginal` 里单列。
+    """
+    dp = profile or DeviceProfile()
+    out: dict[str, Node] = {}
+    gw = deployment.gateway
+    out[gw.sid] = Node(gw.sid, gw.measurand, dp, initial_wh=initial_wh, is_gateway=True)
+    for site in deployment.nodes:
+        if site.sid not in deployment.node_ids:
+            continue
+        out[site.sid] = Node(site.sid, site.measurand, dp, initial_wh=initial_wh)
+    return out

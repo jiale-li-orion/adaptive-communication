@@ -28,10 +28,12 @@ for _p in (_HERE, *(_os.path.join(_CODE, d) for d in ("physics", "runtime", "exp
     if _p not in _sys.path:
         _sys.path.insert(0, _p)
 
+from deployment import build_deployment
 from exogenous import (KIND_EVENT, KIND_ROUTINE, ObligationSet, constant_harvest,
-                       rule_obligations_for_truth, routine_obligations,
+                       displacement_series, rule_obligations_for_truth,
+                       routine_obligations, routine_obligations_by_node,
                        wang_burst_obligations, wang_fragment_truth)
-from network import DeviceProfile, Instance, Node
+from network import DeviceProfile, Instance, Node, nodes_from
 from scoring import evaluate
 
 FAIL: list[str] = []
@@ -234,6 +236,87 @@ def test_routine_and_fragment() -> None:
           f"{len(gaps)} 个间隔, {min(gaps)}–{max(gaps)} s（未吸附成理想时钟）")
 
 
+# ------------------------------------------------------------------ 8 多节点与真实地形
+
+def test_multinode_terrain() -> None:
+    """多节点 + 真实地形：可达性是外生事实，且量纲上自洽。
+
+    这一组要查的是**结构**，不是性能：一个实体不该被要求提供它没有的测项；绕射边缘上的位点
+    不该当成地形事实；网关上的雨量计没有接入跳。
+    """
+    print("\n[8] 多节点与真实地形")
+    dep = build_deployment(groups=2)
+    check("排除绕射边缘位点后主实例非空",
+          len(dep.node_ids) > 0, f"主实例 {len(dep.node_ids)} 个，排除 {len(dep.marginal)} 个")
+    check("被排除的位点被单列出来（不是静默丢掉）",
+          all(m in {n.sid for n in dep.nodes} for m in dep.marginal),
+          f"marginal={sorted(dep.marginal)}")
+
+    nodes = nodes_from(dep)
+    check("网关作为独立实体在场，且测项是雨量",
+          dep.gateway.sid in nodes and nodes[dep.gateway.sid].measurand == "rainfall"
+          and nodes[dep.gateway.sid].is_gateway)
+    check("坡面节点是位移测项",
+          all(n.measurand == "displacement" for k, n in nodes.items()
+              if k != dep.gateway.sid))
+
+    meas = {k: v.measurand for k, v in nodes.items()}
+    D = ObligationSet(routine_obligations_by_node(meas, HOURS))
+    asked = {(o.node_id, o.measurand) for o in D.obligations}
+    provided = {(k, v.measurand) for k, v in nodes.items()}
+    check("没有任何实体被要求提供它没有的测项", asked <= provided,
+          f"越界 {sorted(asked - provided)}")
+    check("周期义务数 = 实体数 x 小时数",
+          len(D) == len(nodes) * HOURS, f"{len(D)} = {len(nodes)} x {HOURS}")
+
+
+def test_multinode_run() -> None:
+    """多节点闭环跑一遍：分列读数自洽，且没有整段无观测这种结构性错误。"""
+    print("\n[9] 多节点闭环")
+    dep = build_deployment(groups=2)
+    nodes = nodes_from(dep)
+    truth = wang_fragment_truth(0, HOURS, ("gw0",))
+    truth.displacement = displacement_series(nodes.keys(), HOURS, 0)
+    harvest, temp = constant_harvest(nodes.keys(), HOURS, 3.0, 10.0)
+    truth.harvest_wh.update(harvest)
+    truth.temp_c.update(temp)
+
+    meas = {k: v.measurand for k, v in nodes.items()}
+    D = ObligationSet(routine_obligations_by_node(meas, HOURS)
+                      + rule_obligations_for_truth(truth))
+    inst = Instance(nodes, truth, seed=0)
+    log = inst.run(HOURS)
+    res = evaluate(D, log, HOURS, nodes.keys(),
+                   battery={k: v.power.to_dict() for k, v in nodes.items()},
+                   plane=inst.plane)
+
+    rt = res["routine"]
+    check("周期侧没有任何实体整段无观测", rt["no_observation_s"] == 0,
+          f"aoi_mean={rt['aoi_mean_s']:.0f}s, no_obs={rt['no_observation_s']}s")
+    check("缺采与已采相加等于分母",
+          rt["missing_collection"] + rt["n"] - rt["missing_delivery"] - rt["censored"]
+          == rt["delivered"], f"缺采 {rt['missing_collection']} / 缺送 {rt['missing_delivery']}")
+    check("事件名额全部被采集满足",
+          res["event"]["slots_matched_by_collection"] == res["event"]["n_slots"],
+          f"{res['event']['slots_matched_by_collection']}/{res['event']['n_slots']}")
+
+    # 网关传感器的区别**不是"听到时刻等于采集时刻"**——缓存里更早的样本会在本次上报时被一起
+    # 发出，因此 heard_at 晚于 taken_at 是正常的缓冲行为。真正的区别是**没有接入跳，因此没有接入丢失**：
+    # 网关采到的样本一条都不会丢在接入上（只要缓存没溢出）。
+    gw = dep.gateway.sid
+    gw_samples = [sid for sid, smp in log.samples.items() if smp.node_id == gw]
+    gw_heard = [sid for sid in gw_samples if log.transit[sid].heard_at is not None]
+    check("网关传感器没有接入跳：采到的样本全部进入网关缓存",
+          len(gw_heard) == len(gw_samples),
+          f"{len(gw_heard)}/{len(gw_samples)}（坡面节点会因接入丢失而少于此数）")
+    slope_heard = [sid for sid, smp in log.samples.items()
+                   if smp.node_id != gw and log.transit[sid].heard_at is not None]
+    slope_all = [sid for sid, smp in log.samples.items() if smp.node_id != gw]
+    check("坡面节点确实有接入丢失（否则这一列没有区分力）",
+          len(slope_heard) < len(slope_all),
+          f"坡面听到 {len(slope_heard)}/{len(slope_all)}")
+
+
 def main() -> int:
     print("实例层验收（Task Contract v1.1）")
     test_denominator_is_exogenous()
@@ -243,6 +326,8 @@ def main() -> int:
     test_hand_counted_numbers()
     test_event_column_actually_moves()
     test_routine_and_fragment()
+    test_multinode_terrain()
+    test_multinode_run()
     print("\n" + "-" * 74)
     if FAIL:
         print(f"  {len(FAIL)} 项失败: {', '.join(FAIL)}")
