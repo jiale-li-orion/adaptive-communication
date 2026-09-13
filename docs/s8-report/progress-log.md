@@ -3673,3 +3673,24 @@ tokens `981/18` ⇒ **≈327 输入 / 6 输出 token/次**。
 **已启动**：`nohup python3 code/analysis/llm_naive_baseline.py > results/llm_naive_phase1.log`，
 **进程已确认存活**（PID 207200）。日志 0 字节是 Python 缓冲所致，**退出时才 flush**。
 预计 1–2 h（2160 次调用）。跑完后按协议里的三条预注册判据对号入座，并落 `26-...` 文档。
+
+---
+
+## §7.91 更正：`adm_noout` 与 `burst_iid_c0.05` 数逐位相同**不是 bug**，我上轮的猜测是错的
+
+§7.87 里我标了一句"疑为 `build_kwargs` 未把 burst 键传到该条件，**未查证**"。**现在查了，猜错了。**
+
+| 查了什么 | 结果 |
+|---|---|
+| 两者在 `build_kwargs` 里差几个键 | **只差 `capacity_wh`**（`adm_noout` 0.02、`burst_iid_c0.05` 0.05） |
+| `burst_iid_c0.05` 的 burst 键 | **全是 `None`**——它**按设计就是 i.i.d. 那一档**，本来就没有 burst 参数 |
+| `AoiPolicy` 读不读 SoC | **不读**（`EnergyAwarePolicy` / `EnergyAoiPolicy` 才读） |
+
+⇒ `aoi` 的决策序列**与容量无关** ⇒ intent / applied 序列相同 ⇒ **episode 结构逐位相同是必然而非缺陷**。
+（`bc` 我的表述原先把 `burst_iid_c0.05` 当成"突发度阶梯的一档"，这是**不准确的**——它是 **i.i.d. 基线在 cap 0.05**。）
+
+**由此得到一条要记住的约束**：**对 `aoi` 而言，"名义"与"i.i.d."两个条件其实是同一次实验**
+（只差容量，而容量不影响它的决策）。**不能把它们当作两个独立观测点**放进任何对比，
+否则是**重复计数**——这恰好是本 repo 反复栽的那类错（"看起来是两个点，其实是一个"）。
+
+**同时修正 §7.87 的措辞**：把"疑 `build_kwargs` 未传 burst 键"删掉，改为上述结论。
