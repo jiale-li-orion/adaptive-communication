@@ -49,6 +49,7 @@ Task Contract v1.1 的实例层。**不做方法比较**，只把当前实例在
 | 文件 | 命令 | 种子 | 说明什么 |
 |---|---|---|---|
 | `instance_base.json` | `instance_run.py --seeds 20 --task-hours 12 --tail-hours 1 --tag base` | 20 | 多节点 + 真实地形实例的分列读数：周期新鲜度与完整性、事件采集与交付、传播时延、通信代价、删失 |
+| `instance_outage3h.json` | `instance_run.py --seeds 20 --task-hours 12 --tail-hours 1 --outage-start-h 4 --outage-hours 3 --tag outage3h` | 20 | 同上，另加**回传中断 3 h** 的恢复分列：采集缺失与交付缺失分开，以及自动补发追回数 |
 
 **实例是什么**：一个监测单元 = 网关带雨量计 + 13 个坡面位移测点（真实 SRTM/ITM 布点，绕射边缘上
 的 3 个位点已排除）。业务事件来自 Wang 等 2022 Table 3 的公开片段（7 组触发），常态 1 h 定时。

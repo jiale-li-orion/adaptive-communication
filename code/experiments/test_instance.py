@@ -35,7 +35,7 @@ from exogenous import (KIND_EVENT, KIND_ROUTINE, EnvironmentTruth, ObligationSet
                        routine_obligations, routine_obligations_by_node,
                        wang_burst_obligations, wang_fragment_truth)
 from network import DeviceProfile, HopLog, Instance, Node, nodes_from
-from scoring import evaluate, event_propagation
+from scoring import evaluate, event_propagation, recovery_block
 
 FAIL: list[str] = []
 
@@ -362,6 +362,55 @@ def test_tail_decides_what_may_be_judged() -> None:
           f"run={full['run_hours']}h task={full['task_hours']}h tail={full['tail_s']}s")
 
 
+def test_recovery_splits_lost_from_recoverable() -> None:
+    """中断后的恢复必须把"补不回来的"与"能补回来的"分开报。
+
+    这是 v1.1 §5.3 的核心区分：中断期间**没采到**的读数，恢复后不能按旧时间补造；而**采到了
+    没送到**的，自动补发可以追回。合成一个"丢了多少"会把这两件性质完全不同的事混掉。
+    """
+    print("\n[12] 中断与恢复：采集缺失与交付缺失分开")
+    dep = build_deployment(groups=2)
+    nodes = nodes_from(dep)
+    hours = 12
+    truth = wang_fragment_truth(0, hours, (dep.gateway.sid,))
+    truth.displacement = displacement_series(nodes.keys(), hours, 0)
+    harvest, temp = constant_harvest(nodes.keys(), hours, 3.0, 10.0)
+    truth.harvest_wh.update(harvest)
+    truth.temp_c.update(temp)
+    meas = {k: v.measurand for k, v in nodes.items()}
+    D = ObligationSet(routine_obligations_by_node(meas, hours)
+                      + rule_obligations_for_truth(truth))
+
+    OUT_LO, OUT_HI = 4, 7          # 回传中断 3 小时
+    inst = Instance(nodes, truth, seed=0)
+    inst.plane.backhaul_gate = lambda hour: not (OUT_LO <= hour < OUT_HI)
+    log = inst.run(hours)
+    res = evaluate(D, log, hours, nodes.keys(), plane=inst.plane,
+                   outage=(OUT_LO * 3600, OUT_HI * 3600))
+    rec = res["recovery"]
+
+    check("恢复分列在场且落在中断窗内", rec["n_obligations_in_window"] > 0,
+          f"{rec['n_obligations_in_window']} 条义务落在中断+恢复观察期")
+    check("中断期间节点照常采样，因此采集缺失为 0",
+          rec["missing_collection"] == 0,
+          f"缺采 {rec['missing_collection']}（节点有电）")
+    check("交付缺失大于 0，且与采集缺失分开报",
+          rec["missing_delivery"] > 0, f"缺送 {rec['missing_delivery']}")
+    check("自动补发确实追回了中断期间采集的数据",
+          rec["backlog_recovered"] > 0, f"追回 {rec['backlog_recovered']} 条")
+    check("恢复分列写明采集缺失不可补造",
+          "补不回来" in rec["note"])
+
+    # 中断只延后、不减少：这是 store-and-forward 的性质，值得钉住。
+    # **必须用新节点**：Node 带每次运行的状态，复用会静默混合两次运行（Instance 现在会报错拦住）。
+    nodes2 = nodes_from(dep)
+    inst2 = Instance(nodes2, truth, seed=0)
+    inst2.run(hours)
+    check("store-and-forward 下中断不改总转发数（只改时延）",
+          inst2.plane.backhaul_forwarded == inst.plane.backhaul_forwarded,
+          f"无中断 {inst2.plane.backhaul_forwarded} vs 中断 {inst.plane.backhaul_forwarded}")
+
+
 def main() -> int:
     print("实例层验收（Task Contract v1.1）")
     test_denominator_is_exogenous()
@@ -375,6 +424,7 @@ def main() -> int:
     test_multinode_run()
     test_propagation_splits_the_two_latencies()
     test_tail_decides_what_may_be_judged()
+    test_recovery_splits_lost_from_recoverable()
     print("\n" + "-" * 74)
     if FAIL:
         print(f"  {len(FAIL)} 项失败: {', '.join(FAIL)}")

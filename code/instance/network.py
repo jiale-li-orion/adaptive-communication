@@ -373,6 +373,15 @@ class Instance:
                  uplink_p_arrive: float = 0.74,
                  backhaul_p_good: float = 0.62,
                  backhaul_delay_s: int = 0) -> None:
+        # 节点是**每次运行的状态**：缓存与传递台账都属于这一次运行。把同一批节点交给两个
+        # Instance 会在第二次运行里看到上一次残留的缓存，而 `sample_id` 是按时刻命名的，
+        # 于是旧样本会被当成新样本发出去——静默混合两次运行。**响亮地失败，不要静默。**
+        for nid, node in nodes.items():
+            if node.cache or node.transit:
+                raise ValueError(
+                    f"node {nid!r} is not fresh: cache={len(node.cache)} "
+                    f"transit={len(node.transit)}. Nodes carry per-run state; "
+                    f"build new ones for each Instance (see nodes_from).")
         self.nodes = nodes
         self.truth = truth
         self.seed = seed

@@ -38,7 +38,8 @@ from scoring import evaluate
 OUT = _os.path.normpath(_os.path.join(_CODE, "..", "results"))
 
 
-def one_seed(seed: int, task_hours: float, tail_hours: float) -> dict:
+def one_seed(seed: int, task_hours: float, tail_hours: float,
+             outage_start_h: float = 0.0, outage_hours: float = 0.0) -> dict:
     hours = task_hours + tail_hours
     dep = build_deployment(groups=2)
     nodes = nodes_from(dep)
@@ -54,10 +55,16 @@ def one_seed(seed: int, task_hours: float, tail_hours: float) -> dict:
         + rule_obligations_for_truth(truth))
 
     inst = Instance(nodes, truth, seed=seed)
+    outage = None
+    if outage_hours > 0:
+        # 回传中断窗。`backhaul_gate` 只能让路径更不可用，因此中断不会给任何一方送好处。
+        lo, hi = int(outage_start_h), int(outage_start_h + outage_hours)
+        inst.plane.backhaul_gate = lambda hour, _lo=lo, _hi=hi: not (_lo <= hour < _hi)
+        outage = (lo * 3600, hi * 3600)
     log = inst.run(int(hours))
     res = evaluate(obligations, log, int(hours), nodes.keys(),
                    battery={k: v.power.to_dict() for k, v in nodes.items()},
-                   plane=inst.plane, task_hours=int(task_hours))
+                   plane=inst.plane, task_hours=int(task_hours), outage=outage)
 
     return {
         "seed": seed,
@@ -69,6 +76,7 @@ def one_seed(seed: int, task_hours: float, tail_hours: float) -> dict:
         "energy": res["energy"],
         "communication": res["communication"],
         "propagation": {k: v for k, v in res["propagation"].items() if k != "per_trigger"},
+        "recovery": res.get("recovery"),
         "observation_window": res["observation_window"],
         "not_applicable": res["not_applicable"],
     }
@@ -84,10 +92,13 @@ def main() -> None:
     ap.add_argument("--seeds", type=int, default=20)
     ap.add_argument("--task-hours", type=float, default=12.0)
     ap.add_argument("--tail-hours", type=float, default=1.0)
+    ap.add_argument("--outage-start-h", type=float, default=0.0)
+    ap.add_argument("--outage-hours", type=float, default=0.0)
     ap.add_argument("--tag", default="base")
     args = ap.parse_args()
 
-    runs = [one_seed(s, args.task_hours, args.tail_hours) for s in range(args.seeds)]
+    runs = [one_seed(s, args.task_hours, args.tail_hours,
+                     args.outage_start_h, args.outage_hours) for s in range(args.seeds)]
 
     # 聚合：分母类用求和（它们天然是整数），时延与比率类用逐种子均值
     agg = {
@@ -116,6 +127,15 @@ def main() -> None:
         "gateway_forwarded": mean([r["communication"]["gateway_forwarded"] for r in runs]),
         "censored": mean([r["observation_window"]["censored_total"] for r in runs]),
     }
+    if args.outage_hours > 0:
+        rec = [r["recovery"] for r in runs if r["recovery"]]
+        agg.update({
+            "recovery_n_obligations": mean([x["n_obligations_in_window"] for x in rec]),
+            "recovery_delivered": mean([x["delivered"] for x in rec]),
+            "recovery_missing_collection": mean([x["missing_collection"] for x in rec]),
+            "recovery_missing_delivery": mean([x["missing_delivery"] for x in rec]),
+            "recovery_backlog_recovered": mean([x["backlog_recovered"] for x in rec]),
+        })
 
     doc = {"config": vars(args), "aggregate": agg, "runs": runs}
     _os.makedirs(OUT, exist_ok=True)

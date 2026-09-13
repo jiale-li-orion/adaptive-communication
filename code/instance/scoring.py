@@ -41,6 +41,7 @@ class ObligationOutcome:
     kind: str
     node_id: str = ""
     measurand: str = ""
+    release_at: int = 0
     collected: bool = False          # 有样本落在采集窗内（容差内）
     delivered: bool = False          # 且该样本在观察截止前到达中心
     censored: bool = False           # 到观察期末仍未交付
@@ -61,7 +62,9 @@ def _index_samples(log):
 
 def evaluate(obligations: ObligationSet, log, hours: int, node_ids,
              battery: dict[str, dict] | None = None,
-             plane=None, task_hours: int | None = None) -> dict:
+             plane=None, task_hours: int | None = None,
+             outage: tuple[int, int] | None = None,
+             recovery_s: int = 3600) -> dict:
     """对一次运行评分。返回**分列**的结果字典，不含任何合成分数。
 
     **尾部观察期（v1.1 §9）。** `hours` 是**运行**长度，`task_hours` 是**义务**覆盖的区间；
@@ -81,8 +84,8 @@ def evaluate(obligations: ObligationSet, log, hours: int, node_ids,
 
     outcomes: list[ObligationOutcome] = []
     for o in obligations.obligations:
-        out = ObligationOutcome(oid=o.oid, kind=o.kind,
-                                node_id=o.node_id, measurand=o.measurand)
+        out = ObligationOutcome(oid=o.oid, kind=o.kind, node_id=o.node_id,
+                                measurand=o.measurand, release_at=o.release_at)
         for sample, received_at in by_key.get((o.node_id, o.measurand), ()):
             if not o.matches(sample):
                 continue
@@ -113,6 +116,10 @@ def evaluate(obligations: ObligationSet, log, hours: int, node_ids,
     res["communication"] = _comm_block(log, plane)
 
     # -------------------------------------------------- 不适用项，显式说明原因
+    if outage is not None:
+        res["recovery"] = recovery_block(obligations, outcomes, log, outage,
+                                         run_end_s=end_s, recovery_s=recovery_s)
+
     if getattr(log, "truth", None) is not None:
         res["propagation"] = event_propagation(log.truth, log)
 
@@ -257,6 +264,48 @@ def _comm_block(log, plane) -> dict:
             "airtime_downlink_h": plane.airtime_downlink_ms / 3.6e6,
         })
     return out
+
+
+# ---------------------------------------------------------------- 中断后恢复
+
+def recovery_block(obligations: ObligationSet, outcomes, log, outage: tuple[int, int],
+                   run_end_s: int, recovery_s: int = 3600) -> dict:
+    """中断与恢复分列（v1.1 §9、§5.3）。
+
+    只对**落在中断窗及随后固定恢复观察期内**的义务报数，并且**采集缺失与交付缺失分开**：
+
+      * `missing_collection` —— 中断期间节点侧没有产出（没电、或本地规则没跑）。这部分
+        **补不回来**：v1.1 §5.3 写明"恢复后不能按旧时间补造当时未采到的读数"；
+      * `missing_delivery` —— 采到了但没送到。这部分理论上可由自动补发追回，
+        因此单列，不能与上一条合成一个"丢了多少"。
+
+    另外报 `backlog_recovered`：**中断期间采集、中断之后才到达**的样本数。它是"恢复能力"
+    最直接的读数——自动补发就是干这件事的。
+    """
+    out_s, in_s = outage
+    window_end = min(run_end_s, in_s + recovery_s)
+    rows = [o for o in outcomes if out_s <= o.release_at < window_end]
+    recovered = 0
+    for sid, sample in log.samples.items():
+        tr = log.transit[sid]
+        if tr.received_at is None:
+            continue
+        if out_s <= sample.taken_at < in_s <= tr.received_at:
+            recovered += 1
+    return {
+        "outage_s": [out_s, in_s],
+        "outage_hours": round((in_s - out_s) / 3600.0, 3),
+        "recovery_observation_s": window_end - in_s,
+        "n_obligations_in_window": len(rows),
+        "delivered": sum(o.delivered for o in rows),
+        "missing_collection": sum(not o.collected for o in rows),
+        "missing_delivery": sum(o.collected and not o.delivered and not o.censored
+                                for o in rows),
+        "censored": sum(o.censored for o in rows),
+        "backlog_recovered": recovered,
+        "note": ("采集缺失在恢复后补不回来（不补造当时未采到的读数）；交付缺失单列，"
+                 "因为它可由自动补发追回。"),
+    }
 
 
 # ---------------------------------------------------------------- 事件传播
