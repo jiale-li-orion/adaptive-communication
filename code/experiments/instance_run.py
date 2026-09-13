@@ -49,6 +49,8 @@ def one_seed(seed: int, task_hours: float, tail_hours: float,
              arm: str = "local", contract: bool = False,
              hold_every: int = 0, hold_s: int = 0,
              harvest_wh_per_hour: float = 3.0, sample_interval_s: int = 3600,
+             report_period_s: int = 3600, routine_period_s: int = 3600,
+             with_events: bool = True,
              uplink_p_arrive: float = 0.74, backhaul_p_good: float = 0.62,
              event_spacing_s: int = 300, harvest_mode: str = "uniform",
              access_outage_h: float = 0.0, access_outage_start_h: float = 4.0,
@@ -81,7 +83,11 @@ def one_seed(seed: int, task_hours: float, tail_hours: float,
     dep = build_deployment(groups=2)
     #: `energy_scale` 同时作用于**采样能耗**与**电池容量**（空口母线在 `main` 里按同一 λ 缩放）。
     #: 三者一起缩放才是真正的"把整个能量系统乘以 λ"，否则只是改了比例、不是尺度检验。
+    # **`sample_interval_s` 与 `report_period_s` 是两个独立字段**（E：重庆 `0045`/`0042`），
+    # 因此两个都要能单独设定。此前 `report_period_s` 只能吃 `DeviceProfile` 的默认值，
+    # 于是"换一个业务场景（常态 900 s 上报）"在命令行上根本表达不出来。
     prof = DeviceProfile(sample_interval_s=sample_interval_s,
+                         report_period_s=report_period_s,
                          event_interval_s=event_spacing_s,
                          capacity_wh=capacity_wh, initial_soc=initial_soc,
                          charge_min_c=charge_min_c,
@@ -149,9 +155,14 @@ def one_seed(seed: int, task_hours: float, tail_hours: float,
     margin_min = min(margins) if margins else 0.0
 
     meas = {k: v.measurand for k, v in nodes.items()}
-    obligations = ObligationSet(
-        routine_obligations_by_node(meas, int(task_hours))
-        + rule_obligations_for_truth(truth, spacing_s=event_spacing_s))
+    # **第二业务场景**：`routine_period_s` 是"常态多久要有一条按期记录"，
+    # `with_events` 决定要不要叠上 Wang 片段的事件义务。
+    # 换场景只动这两个量与设备的两个周期字段，**动作面与基线集合原封不动**。
+    _obs = routine_obligations_by_node(meas, int(task_hours),
+                                       period_s=routine_period_s)
+    if with_events:
+        _obs = _obs + rule_obligations_for_truth(truth, spacing_s=event_spacing_s)
+    obligations = ObligationSet(_obs)
 
     # **真上界**：逐节点、逐小时的离线动态规划，读完整未来采能轨迹。它不依赖臂，所以按
     # (种子, 条件) 记忆化——否则每个臂都会重算一遍同一个值。
@@ -159,7 +170,8 @@ def one_seed(seed: int, task_hours: float, tail_hours: float,
     if oracle_cache is not None:
         okey = (seed, int(task_hours), capacity_wh, initial_soc, low_frac,
                 low_wh_per_hour, harvest_wh_per_hour, harvest_mode, blackout_start_h,
-                blackout_frac, event_spacing_s, solar_day_start_h,
+                blackout_frac, event_spacing_s, routine_period_s, with_events,
+                solar_day_start_h,
                 solar_peak_wh_per_hour, solar_cloud_p, solar_cloud_atten,
                 solar_snow_frac, solar_shade_frac, oracle_soc_bins)
         if okey not in oracle_cache:
@@ -330,6 +342,12 @@ def main() -> None:
                     help="不用来源气温（改用 10°C 常数）——用于把时序形状与低温闸门分开")
     ap.add_argument("--idle-wh-per-tick", type=float, default=0.0,
                     help="静息功耗（Wh/tick）。默认 0——**这是一个 A 层取值**，见 manifest")
+    ap.add_argument("--report-period-s", type=int, default=3600,
+                    help="设备本地默认上报周期（s）。**与采样间隔是两个独立字段**")
+    ap.add_argument("--routine-period-s", type=int, default=3600,
+                    help="常态义务的周期（s）：多久必须有一条按期记录。换业务场景时改它")
+    ap.add_argument("--no-events", action="store_true",
+                    help="不叠加 Wang 片段的事件义务（第二业务场景没有事件加密时用）")
     ap.add_argument("--charge-min-c", default="5.0",
                     help="低温充电闸门（°C）；`off` 表示不设闸门")
     ap.add_argument("--cache-service", choices=("fifo", "lifo", "latest_only"), default="fifo",
@@ -377,6 +395,9 @@ def main() -> None:
                      atomic=(L == "atomic"), exec_label=L,
                      hold_s=args.hold_s, harvest_wh_per_hour=args.harvest_wh_per_hour,
                      sample_interval_s=args.sample_interval_s,
+                     report_period_s=args.report_period_s,
+                     routine_period_s=args.routine_period_s,
+                     with_events=not args.no_events,
                      uplink_p_arrive=args.uplink_p_arrive,
                      backhaul_p_good=args.backhaul_p_good,
                      event_spacing_s=args.event_spacing_s,
@@ -431,10 +452,16 @@ def main() -> None:
             "routine_missing_collection": mean([r["routine"]["missing_collection"] for r in rs]),
             "routine_missing_delivery": mean([r["routine"]["missing_delivery"] for r in rs]),
             "routine_aoi_mean_s": mean([r["routine"]["aoi_mean_s"] for r in rs]),
-            "event_match": mean([r["event"]["slots_matched_by_collection"] for r in rs]),
-            "event_delivered": mean([r["event"]["slots_delivered"] for r in rs]),
+            # **第二业务场景没有事件义务**（Cleveland Corral 的交付数据里没有事件加密），
+            # 于是 `by_kind` 里根本没有 `event` 这一项。这里必须返回 `None` 而不是 0——
+            # 0 会被读成"事件全部没送到"，而事实是"这个场景没有事件"。
+            "event_match": mean([r["event"]["slots_matched_by_collection"] for r in rs])
+            if all("event" in r["by_kind"] for r in rs) else None,
+            "event_delivered": mean([r["event"]["slots_delivered"] for r in rs])
+            if all("event" in r["by_kind"] for r in rs) else None,
             "event_missing_delivery": mean([r["by_kind"]["event"]["missing_delivery"]
-                                            for r in rs]),
+                                            for r in rs])
+            if all("event" in r["by_kind"] for r in rs) else None,
             "knowledge_latency_mean_s": mean([r["propagation"]["knowledge_latency_mean_s"]
                                               for r in rs]),
             "uplinks": mean([r["communication"]["uplinks"] for r in rs]),
@@ -531,6 +558,10 @@ def main() -> None:
     with open(path, "w", encoding="utf-8") as fh:
         json.dump(doc, fh, indent=1, sort_keys=True, default=str)
 
+    def _n(v):
+        # 没有事件义务的场景里这些列是 `None`。打印成 `—`，**不打印 0**。
+        return "—" if v is None else f"{v:.1f}"
+
     w = 30
     print(f"实例读数（{args.seeds} 种子/臂，义务 {args.task_hours}h + 尾部 {args.tail_hours}h）")
     print("=" * 96)
@@ -549,7 +580,7 @@ def main() -> None:
         x = agg["arms"][a]
         print(f"{a:<18} {x['routine_delivered']:>9.1f} {x['routine_missing_collection']:>5.1f} "
               f"{x['routine_missing_delivery']:>6.1f} {x['routine_aoi_mean_s']:>7.0f} "
-              f"{x['event_match']:>8.1f} {x['event_delivered']:>8.1f} "
+              f"{_n(x['event_match']):>8} {_n(x['event_delivered']):>8} "
               f"{x['uplinks']:>6.1f} {x['downlink_attempts']:>6.1f} "
               f"{x['dead_nodes_end']:>6.1f} {x['mixed_config_min']:>8.0f}"
               + (" {:>8.1f} {:>7.1f}%".format(x["dynamic_oracle"] or 0.0,
