@@ -48,6 +48,7 @@ CHECKS = {
         ("experiments/test_faults.py", "六类诊断故障注入"),
         ("experiments/test_policies.py", "强基线：版本化配置与 VTC 风格恢复"),
         ("experiments/test_recovery.py", "恢复归因：从日志重建 runtime 的两个标量"),
+        ("experiments/test_instance.py", "实例层验收：Task v1.1 最小闭环的手工可核算性质"),
         ("experiments/audit_fairness.py", "业务层公平性审计"),
     ],
 }

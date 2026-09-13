@@ -99,6 +99,27 @@ class Sample:
 
 
 @dataclass
+class PowerLedger:
+    """一台节点的电量账本。**动作驱动**：采能是外生的，耗电按实际动作累加。
+
+    它存在的意义是让"两个跑不同动作的方法会得到不同的电量轨迹与不同的死亡时刻"这句话可核查，
+    而不是靠一个预生成的存活序列（v1.1 §8）。
+    """
+
+    soc_initial_wh: float
+    soc_wh: float
+    harvested_wh: float = 0.0
+    consumed_wh: float = 0.0
+    deficit_s: int = 0
+    dead_at_s: int | None = None
+
+    def to_dict(self) -> dict:
+        return {"soc_initial_wh": self.soc_initial_wh, "soc_final_wh": self.soc_wh,
+                "harvested_wh": self.harvested_wh, "consumed_wh": self.consumed_wh,
+                "deficit_s": self.deficit_s, "dead_at_s": self.dead_at_s}
+
+
+@dataclass
 class Transit:
     """一个样本的传递台账：三个时刻分开记，**顺序由代码强制**。
 
@@ -119,7 +140,13 @@ class Node:
     """一台现场监测节点：本地采样、本地触发、有限缓存、自动补发、动作驱动的电量。"""
 
     def __init__(self, node_id: str, measurand: str, profile: DeviceProfile = DeviceProfile(),
-                 *, initial_soc: float | None = None) -> None:
+                 *, initial_soc: float | None = None, initial_wh: float | None = None) -> None:
+        """`initial_soc` 是**比例**，`initial_wh` 是**绝对 Wh**；给后者时它优先。
+
+        两个入口都保留是因为它们服务不同的人：manifest 与实例说明按 Wh 说话（"初始 0.3 mWh"），
+        而 `DeviceProfile.initial_soc` 是设备配置的一部分。混用会出错——测试里就犯过一次：
+        把 1e-6 当成 Wh 写下去，实际得到 4e-5 Wh，够采一条样。
+        """
         self.node_id = node_id
         self.measurand = measurand
         self.p = profile
@@ -127,8 +154,12 @@ class Node:
         self.sample_interval_s = profile.sample_interval_s
         self.report_period_s = profile.report_period_s
         # 电量
-        self.soc_wh = profile.capacity_wh * (
-            profile.initial_soc if initial_soc is None else initial_soc)
+        if initial_wh is not None:
+            self.soc_wh = float(initial_wh)
+        else:
+            self.soc_wh = profile.capacity_wh * (
+                profile.initial_soc if initial_soc is None else initial_soc)
+        self.power = PowerLedger(soc_initial_wh=self.soc_wh, soc_wh=self.soc_wh)
         self.alive = True
         # 缓存：只有**未确认**的记录
         self.cache: list[Sample] = []
@@ -160,17 +191,26 @@ class Node:
         temp = truth.temp_at(self.node_id, t_s)
         harvest = truth.harvest_at(self.node_id, t_s)
         can_charge = temp is None or self.p.charge_min_c is None or temp >= self.p.charge_min_c
-        if can_charge:
+        if can_charge and harvest > 0.0:
+            before = self.soc_wh
             self.soc_wh = min(self.usable_capacity_wh(temp), self.soc_wh + harvest)
+            self.power.harvested_wh += self.soc_wh - before
         self.soc_wh -= self.p.idle_wh_per_tick
+        self.power.consumed_wh += self.p.idle_wh_per_tick
         if self.soc_wh <= 0.0:
             self.soc_wh = 0.0
+            self.power.deficit_s += TICK_S
             if self.alive:
                 self.alive = False
                 self.dead_at = t_s
+                self.power.dead_at_s = t_s
+        self.power.soc_wh = self.soc_wh
 
     def spend(self, wh: float) -> None:
+        """扣一次动作能耗并记帐。"""
         self.soc_wh -= wh
+        self.power.consumed_wh += wh
+        self.power.soc_wh = self.soc_wh
 
     # -------------------------------------------------- 采样与本地触发
 
@@ -215,7 +255,7 @@ class Node:
             self.alive = False
             self.dead_at = t_s
             return []
-        self.soc_wh -= self.p.sample_wh
+        self.spend(self.p.sample_wh)
         value = truth.rainfall_at(t_s) if measurand == "rainfall" else 0.0
         unit = "mm" if measurand == "rainfall" else "mm-displacement"
         s = Sample(sample_id=f"{self.node_id}:{measurand}:{t_s}",
