@@ -1,0 +1,389 @@
+{
+ "meta": {
+  "seeds": [
+   0,
+   1,
+   2,
+   3,
+   4,
+   5,
+   6,
+   7,
+   8,
+   9,
+   10,
+   11
+  ],
+  "per_seed": 18,
+  "n": 8,
+  "rho": 0.7,
+  "alpha": 0.5,
+  "B": 200
+ },
+ "summary": {
+  "R": {
+   "arms": {
+    "edf": {
+     "mean": 0.7714,
+     "median": 0.7883
+    },
+    "rule_linear": {
+     "mean": 1.0,
+     "median": 1.0
+    },
+    "rule_keyword": {
+     "mean": 0.9959,
+     "median": 1.0
+    },
+    "rule_tree": {
+     "mean": 0.9961,
+     "median": 1.0
+    },
+    "oracle": {
+     "mean": 1.0,
+     "median": 1.0
+    }
+   },
+   "comparisons": {
+    "oracle-rule_linear": {
+     "n": 216,
+     "mean_diff": 0.0,
+     "bootstrap_lo": 0.0,
+     "bootstrap_hi": 0.0,
+     "bootstrap_excludes_zero": false,
+     "t_lo": 0.0,
+     "t_hi": 0.0,
+     "t_excludes_zero": false,
+     "win_loss_tie": [
+      0,
+      0,
+      216
+     ],
+     "both_exclude_zero": false
+    },
+    "oracle-rule_keyword": {
+     "n": 216,
+     "mean_diff": 0.004117,
+     "bootstrap_lo": 0.003162,
+     "bootstrap_hi": 0.00511,
+     "bootstrap_excludes_zero": true,
+     "t_lo": 0.003133,
+     "t_hi": 0.005102,
+     "t_excludes_zero": true,
+     "win_loss_tie": [
+      85,
+      0,
+      131
+     ],
+     "both_exclude_zero": true
+    },
+    "oracle-rule_tree": {
+     "n": 216,
+     "mean_diff": 0.003898,
+     "bootstrap_lo": 0.002565,
+     "bootstrap_hi": 0.005359,
+     "bootstrap_excludes_zero": true,
+     "t_lo": 0.00249,
+     "t_hi": 0.005306,
+     "t_excludes_zero": true,
+     "win_loss_tie": [
+      38,
+      0,
+      178
+     ],
+     "both_exclude_zero": true
+    },
+    "rule_tree-rule_keyword": {
+     "n": 216,
+     "mean_diff": 0.000219,
+     "bootstrap_lo": -0.001497,
+     "bootstrap_hi": 0.001832,
+     "bootstrap_excludes_zero": false,
+     "t_lo": -0.001473,
+     "t_hi": 0.001911,
+     "t_excludes_zero": false,
+     "win_loss_tie": [
+      72,
+      27,
+      117
+     ],
+     "both_exclude_zero": false
+    },
+    "rule_linear-edf": {
+     "n": 216,
+     "mean_diff": 0.228599,
+     "bootstrap_lo": 0.213458,
+     "bootstrap_hi": 0.24362,
+     "bootstrap_excludes_zero": true,
+     "t_lo": 0.213385,
+     "t_hi": 0.243812,
+     "t_excludes_zero": true,
+     "win_loss_tie": [
+      215,
+      0,
+      1
+     ],
+     "both_exclude_zero": true
+    }
+   },
+   "n": 216
+  },
+  "S": {
+   "arms": {
+    "edf": {
+     "mean": 0.6502,
+     "median": 0.6363
+    },
+    "rule_linear": {
+     "mean": 0.7638,
+     "median": 0.7636
+    },
+    "rule_keyword": {
+     "mean": 0.9336,
+     "median": 0.9426
+    },
+    "rule_tree": {
+     "mean": 0.996,
+     "median": 1.0
+    },
+    "oracle": {
+     "mean": 1.0,
+     "median": 1.0
+    }
+   },
+   "comparisons": {
+    "oracle-rule_linear": {
+     "n": 216,
+     "mean_diff": 0.236166,
+     "bootstrap_lo": 0.234648,
+     "bootstrap_hi": 0.237708,
+     "bootstrap_excludes_zero": true,
+     "t_lo": 0.234614,
+     "t_hi": 0.237718,
+     "t_excludes_zero": true,
+     "win_loss_tie": [
+      216,
+      0,
+      0
+     ],
+     "both_exclude_zero": true
+    },
+    "oracle-rule_keyword": {
+     "n": 216,
+     "mean_diff": 0.066357,
+     "bootstrap_lo": 0.063249,
+     "bootstrap_hi": 0.069745,
+     "bootstrap_excludes_zero": true,
+     "t_lo": 0.063084,
+     "t_hi": 0.069631,
+     "t_excludes_zero": true,
+     "win_loss_tie": [
+      216,
+      0,
+      0
+     ],
+     "both_exclude_zero": true
+    },
+    "oracle-rule_tree": {
+     "n": 216,
+     "mean_diff": 0.003969,
+     "bootstrap_lo": 0.003226,
+     "bootstrap_hi": 0.004727,
+     "bootstrap_excludes_zero": true,
+     "t_lo": 0.003204,
+     "t_hi": 0.004734,
+     "t_excludes_zero": true,
+     "win_loss_tie": [
+      104,
+      0,
+      112
+     ],
+     "both_exclude_zero": true
+    },
+    "rule_tree-rule_keyword": {
+     "n": 216,
+     "mean_diff": 0.062388,
+     "bootstrap_lo": 0.058966,
+     "bootstrap_hi": 0.066054,
+     "bootstrap_excludes_zero": true,
+     "t_lo": 0.058809,
+     "t_hi": 0.065968,
+     "t_excludes_zero": true,
+     "win_loss_tie": [
+      216,
+      0,
+      0
+     ],
+     "both_exclude_zero": true
+    },
+    "rule_linear-edf": {
+     "n": 216,
+     "mean_diff": 0.113631,
+     "bootstrap_lo": 0.092605,
+     "bootstrap_hi": 0.13476,
+     "bootstrap_excludes_zero": true,
+     "t_lo": 0.092621,
+     "t_hi": 0.134641,
+     "t_excludes_zero": true,
+     "win_loss_tie": [
+      158,
+      56,
+      2
+     ],
+     "both_exclude_zero": true
+    }
+   },
+   "n": 216
+  },
+  "H": {
+   "arms": {
+    "edf": {
+     "mean": 0.6695,
+     "median": 0.6691
+    },
+    "rule_linear": {
+     "mean": 0.8394,
+     "median": 0.8417
+    },
+    "rule_keyword": {
+     "mean": 0.9328,
+     "median": 0.9433
+    },
+    "rule_tree": {
+     "mean": 0.9179,
+     "median": 0.9205
+    },
+    "oracle": {
+     "mean": 1.0,
+     "median": 1.0
+    }
+   },
+   "comparisons": {
+    "oracle-rule_linear": {
+     "n": 216,
+     "mean_diff": 0.160595,
+     "bootstrap_lo": 0.156182,
+     "bootstrap_hi": 0.164871,
+     "bootstrap_excludes_zero": true,
+     "t_lo": 0.156272,
+     "t_hi": 0.164918,
+     "t_excludes_zero": true,
+     "win_loss_tie": [
+      216,
+      0,
+      0
+     ],
+     "both_exclude_zero": true
+    },
+    "oracle-rule_keyword": {
+     "n": 216,
+     "mean_diff": 0.067199,
+     "bootstrap_lo": 0.063724,
+     "bootstrap_hi": 0.070809,
+     "bootstrap_excludes_zero": true,
+     "t_lo": 0.06366,
+     "t_hi": 0.070737,
+     "t_excludes_zero": true,
+     "win_loss_tie": [
+      216,
+      0,
+      0
+     ],
+     "both_exclude_zero": true
+    },
+    "oracle-rule_tree": {
+     "n": 216,
+     "mean_diff": 0.08212,
+     "bootstrap_lo": 0.079642,
+     "bootstrap_hi": 0.084824,
+     "bootstrap_excludes_zero": true,
+     "t_lo": 0.07953,
+     "t_hi": 0.08471,
+     "t_excludes_zero": true,
+     "win_loss_tie": [
+      216,
+      0,
+      0
+     ],
+     "both_exclude_zero": true
+    },
+    "rule_tree-rule_keyword": {
+     "n": 216,
+     "mean_diff": -0.014921,
+     "bootstrap_lo": -0.019179,
+     "bootstrap_hi": -0.010688,
+     "bootstrap_excludes_zero": true,
+     "t_lo": -0.019196,
+     "t_hi": -0.010647,
+     "t_excludes_zero": true,
+     "win_loss_tie": [
+      36,
+      176,
+      4
+     ],
+     "both_exclude_zero": true
+    },
+    "rule_linear-edf": {
+     "n": 216,
+     "mean_diff": 0.169941,
+     "bootstrap_lo": 0.149192,
+     "bootstrap_hi": 0.190385,
+     "bootstrap_excludes_zero": true,
+     "t_lo": 0.149192,
+     "t_hi": 0.190689,
+     "t_excludes_zero": true,
+     "win_loss_tie": [
+      184,
+      32,
+      0
+     ],
+     "both_exclude_zero": true
+    }
+   },
+   "n": 216
+  }
+ },
+ "dose_response_H": {
+  "0.00": {
+   "edf": 0.72,
+   "rule_linear": 1.0,
+   "rule_keyword": 0.9857,
+   "rule_tree": 0.9641,
+   "oracle": 1.0
+  },
+  "0.25": {
+   "edf": 0.7129,
+   "rule_linear": 0.9378,
+   "rule_keyword": 0.9824,
+   "rule_tree": 0.9652,
+   "oracle": 1.0
+  },
+  "0.50": {
+   "edf": 0.6695,
+   "rule_linear": 0.8394,
+   "rule_keyword": 0.9328,
+   "rule_tree": 0.9179,
+   "oracle": 1.0
+  },
+  "0.75": {
+   "edf": 0.6144,
+   "rule_linear": 0.7358,
+   "rule_keyword": 0.8709,
+   "rule_tree": 0.8605,
+   "oracle": 1.0
+  }
+ },
+ "gates": {
+  "F1_R_all_rules_to_ceiling": true,
+  "F3_edf_worse_in_H": true,
+  "seen_tree_to_ceiling(gap<=0.04)": true,
+  "seen_linear_headroom": 0.2362,
+  "held_tree_residual": 0.0821,
+  "held_tree_residual_in_0.05_0.25": true
+ },
+ "unbalanced": {
+  "R": "0/216",
+  "S": "0/216",
+  "H": "0/216"
+ }
+}

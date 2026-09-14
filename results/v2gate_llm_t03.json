@@ -1,0 +1,92 @@
+{
+ "meta": {
+  "seeds": [
+   0,
+   1,
+   2
+  ],
+  "per_seed": 12,
+  "n": 8,
+  "rho": 0.7,
+  "alpha": 0.5,
+  "B": 200,
+  "model": "deepseek-flash",
+  "temperature": 0.3
+ },
+ "summary": {
+  "H": {
+   "arms": {
+    "edf": {
+     "mean": 0.6857,
+     "median": 0.6603
+    },
+    "rule_linear": {
+     "mean": 0.8361,
+     "median": 0.834
+    },
+    "rule_keyword": {
+     "mean": 0.9339,
+     "median": 0.9427
+    },
+    "rule_tree": {
+     "mean": 0.9181,
+     "median": 0.9215
+    },
+    "oracle": {
+     "mean": 1.0,
+     "median": 1.0
+    },
+    "llm_flash": {
+     "mean": 0.9205,
+     "median": 0.9428
+    }
+   },
+   "best_rule_arm": "rule_keyword",
+   "best_rule_mean": 0.9339,
+   "llm_vs_best_rule": {
+    "n": 36,
+    "mean_diff": -0.013374,
+    "bootstrap_lo": -0.029305,
+    "bootstrap_hi": 0.000858,
+    "bootstrap_excludes_zero": false,
+    "t_lo": -0.029322,
+    "t_hi": 0.002574,
+    "t_excludes_zero": false,
+    "win_loss_tie": [
+     3,
+     6,
+     27
+    ],
+    "both_exclude_zero": false
+   },
+   "llm_vs_tree": {
+    "n": 36,
+    "mean_diff": 0.002352,
+    "bootstrap_lo": -0.017482,
+    "bootstrap_hi": 0.020161,
+    "bootstrap_excludes_zero": false,
+    "t_lo": -0.017685,
+    "t_hi": 0.022388,
+    "t_excludes_zero": false,
+    "win_loss_tie": [
+     28,
+     8,
+     0
+    ],
+    "both_exclude_zero": false
+   },
+   "capture_vs_best_rule_mean": -0.1939,
+   "n": 36
+  }
+ },
+ "audit": {
+  "H": {
+   "n": 36,
+   "parse_fail": 0,
+   "over_budget": 0,
+   "uncached": 36,
+   "prompt_tokens": 19419,
+   "completion_tokens": 2520
+  }
+ }
+}

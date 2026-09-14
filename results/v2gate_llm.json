@@ -1,0 +1,244 @@
+{
+ "meta": {
+  "seeds": [
+   0,
+   1,
+   2,
+   3,
+   4,
+   5,
+   6,
+   7,
+   8,
+   9,
+   10,
+   11
+  ],
+  "per_seed": 18,
+  "n": 8,
+  "rho": 0.7,
+  "alpha": 0.5,
+  "B": 200,
+  "model": "deepseek-flash"
+ },
+ "summary": {
+  "R": {
+   "arms": {
+    "edf": {
+     "mean": 0.7714,
+     "median": 0.7883
+    },
+    "rule_linear": {
+     "mean": 1.0,
+     "median": 1.0
+    },
+    "rule_keyword": {
+     "mean": 0.9959,
+     "median": 1.0
+    },
+    "rule_tree": {
+     "mean": 0.9961,
+     "median": 1.0
+    },
+    "oracle": {
+     "mean": 1.0,
+     "median": 1.0
+    },
+    "llm_flash": {
+     "mean": 0.9583,
+     "median": 0.9684
+    }
+   },
+   "best_rule_arm": "rule_linear",
+   "best_rule_mean": 1.0,
+   "llm_vs_best_rule": {
+    "n": 216,
+    "mean_diff": -0.041678,
+    "bootstrap_lo": -0.047624,
+    "bootstrap_hi": -0.036099,
+    "bootstrap_excludes_zero": true,
+    "t_lo": -0.047445,
+    "t_hi": -0.035911,
+    "t_excludes_zero": true,
+    "win_loss_tie": [
+     0,
+     174,
+     42
+    ],
+    "both_exclude_zero": true
+   },
+   "llm_vs_tree": {
+    "n": 216,
+    "mean_diff": -0.03778,
+    "bootstrap_lo": -0.043977,
+    "bootstrap_hi": -0.031918,
+    "bootstrap_excludes_zero": true,
+    "t_lo": -0.043804,
+    "t_hi": -0.031756,
+    "t_excludes_zero": true,
+    "win_loss_tie": [
+     13,
+     166,
+     37
+    ],
+    "both_exclude_zero": true
+   },
+   "capture_vs_best_rule_mean": 0.0,
+   "n": 216
+  },
+  "S": {
+   "arms": {
+    "edf": {
+     "mean": 0.6502,
+     "median": 0.6363
+    },
+    "rule_linear": {
+     "mean": 0.7638,
+     "median": 0.7636
+    },
+    "rule_keyword": {
+     "mean": 0.9336,
+     "median": 0.9426
+    },
+    "rule_tree": {
+     "mean": 0.996,
+     "median": 1.0
+    },
+    "oracle": {
+     "mean": 1.0,
+     "median": 1.0
+    },
+    "llm_flash": {
+     "mean": 0.8742,
+     "median": 0.8909
+    }
+   },
+   "best_rule_arm": "rule_tree",
+   "best_rule_mean": 0.996,
+   "llm_vs_best_rule": {
+    "n": 216,
+    "mean_diff": -0.121815,
+    "bootstrap_lo": -0.129428,
+    "bootstrap_hi": -0.114566,
+    "bootstrap_excludes_zero": true,
+    "t_lo": -0.12935,
+    "t_hi": -0.11428,
+    "t_excludes_zero": true,
+    "win_loss_tie": [
+     0,
+     216,
+     0
+    ],
+    "both_exclude_zero": true
+   },
+   "llm_vs_tree": {
+    "n": 216,
+    "mean_diff": -0.121815,
+    "bootstrap_lo": -0.129428,
+    "bootstrap_hi": -0.114566,
+    "bootstrap_excludes_zero": true,
+    "t_lo": -0.12935,
+    "t_hi": -0.11428,
+    "t_excludes_zero": true,
+    "win_loss_tie": [
+     0,
+     216,
+     0
+    ],
+    "both_exclude_zero": true
+   },
+   "capture_vs_best_rule_mean": -169.1549,
+   "n": 216
+  },
+  "H": {
+   "arms": {
+    "edf": {
+     "mean": 0.6695,
+     "median": 0.6691
+    },
+    "rule_linear": {
+     "mean": 0.8394,
+     "median": 0.8417
+    },
+    "rule_keyword": {
+     "mean": 0.9328,
+     "median": 0.9433
+    },
+    "rule_tree": {
+     "mean": 0.9179,
+     "median": 0.9205
+    },
+    "oracle": {
+     "mean": 1.0,
+     "median": 1.0
+    },
+    "llm_flash": {
+     "mean": 0.9189,
+     "median": 0.943
+    }
+   },
+   "best_rule_arm": "rule_keyword",
+   "best_rule_mean": 0.9328,
+   "llm_vs_best_rule": {
+    "n": 216,
+    "mean_diff": -0.013889,
+    "bootstrap_lo": -0.021011,
+    "bootstrap_hi": -0.00737,
+    "bootstrap_excludes_zero": true,
+    "t_lo": -0.020673,
+    "t_hi": -0.007104,
+    "t_excludes_zero": true,
+    "win_loss_tie": [
+     16,
+     36,
+     164
+    ],
+    "both_exclude_zero": true
+   },
+   "llm_vs_tree": {
+    "n": 216,
+    "mean_diff": 0.001033,
+    "bootstrap_lo": -0.007686,
+    "bootstrap_hi": 0.009329,
+    "bootstrap_excludes_zero": false,
+    "t_lo": -0.007515,
+    "t_hi": 0.009581,
+    "t_excludes_zero": false,
+    "win_loss_tie": [
+     173,
+     43,
+     0
+    ],
+    "both_exclude_zero": false
+   },
+   "capture_vs_best_rule_mean": -0.1945,
+   "n": 216
+  }
+ },
+ "audit": {
+  "R": {
+   "n": 216,
+   "parse_fail": 0,
+   "over_budget": 0,
+   "uncached": 212,
+   "prompt_tokens": 114391,
+   "completion_tokens": 14840
+  },
+  "S": {
+   "n": 216,
+   "parse_fail": 0,
+   "over_budget": 0,
+   "uncached": 212,
+   "prompt_tokens": 114366,
+   "completion_tokens": 14840
+  },
+  "H": {
+   "n": 216,
+   "parse_fail": 0,
+   "over_budget": 0,
+   "uncached": 212,
+   "prompt_tokens": 114382,
+   "completion_tokens": 14840
+  }
+ }
+}
