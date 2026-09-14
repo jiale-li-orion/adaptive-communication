@@ -1,0 +1,754 @@
+{
+ "base": "instance_adm_out3",
+ "base_config_used": {
+  "task_hours": 12.0,
+  "capacity_wh": 0.02,
+  "harvest_mode": "hetero",
+  "low_wh_per_hour": 0.0,
+  "sample_interval_s": 3600,
+  "report_period_s": 3600,
+  "routine_period_s": 3600,
+  "seeds": null
+ },
+ "conditions": {
+  "O0_no_outage": {
+   "access_outage_h": 0.0,
+   "access_outage_start_h": 3.0,
+   "outage_hours": 0.0,
+   "outage_start_h": 0.0
+  },
+  "O1_access_outage": {
+   "access_outage_h": 9.0,
+   "access_outage_start_h": 3.0,
+   "outage_hours": 0.0,
+   "outage_start_h": 0.0
+  },
+  "O2_backhaul_outage": {
+   "access_outage_h": 0.0,
+   "access_outage_start_h": 3.0,
+   "outage_hours": 9.0,
+   "outage_start_h": 3.0
+  }
+ },
+ "arms": [
+  "local",
+  "ea_nb"
+ ],
+ "placements": [
+  "center",
+  "gateway"
+ ],
+ "note": "O0 是**配对基准**：两位置在中断前就可能不同，O1/O2 的差必须相对它报告。O2（回传中断 [3h,12h)）是**新声明的因子组合**，不是已登记结果的重放。",
+ "rows": {
+  "O0_no_outage": {
+   "local|center": {
+    "service": 148.1,
+    "denom": 168.0,
+    "missing_collection": 0.0,
+    "missing_delivery": 19.9,
+    "aoi_mean_s": 4592.066977,
+    "energy_consumed_wh": 0.100627,
+    "nodes_dead": 0.0,
+    "soc_final_min_wh": 0.008751,
+    "deficit_s_total": 0.0,
+    "uplinks": 169.0,
+    "downlink_attempts": 0.0,
+    "airtime_uplink_h": 0.009464,
+    "over_payload_ticks": 0.0,
+    "n_config_changes": 0.0,
+    "n_downgrades_after_outage": 0.0,
+    "first_downgrade_t_s": null,
+    "evidence_age_median_s": null,
+    "evidence_age_max_s": null,
+    "seeds": 10
+   },
+   "local|gateway": {
+    "service": 148.1,
+    "denom": 168.0,
+    "missing_collection": 0.0,
+    "missing_delivery": 19.9,
+    "aoi_mean_s": 4592.066977,
+    "energy_consumed_wh": 0.100627,
+    "nodes_dead": 0.0,
+    "soc_final_min_wh": 0.008751,
+    "deficit_s_total": 0.0,
+    "uplinks": 169.0,
+    "downlink_attempts": 0.0,
+    "airtime_uplink_h": 0.009464,
+    "over_payload_ticks": 0.0,
+    "n_config_changes": 0.0,
+    "n_downgrades_after_outage": 0.0,
+    "first_downgrade_t_s": null,
+    "evidence_age_median_s": null,
+    "evidence_age_max_s": null,
+    "seeds": 10
+   },
+   "ea_nb|center": {
+    "service": 150.8,
+    "denom": 168.0,
+    "missing_collection": 0.6,
+    "missing_delivery": 16.6,
+    "aoi_mean_s": 3588.504776,
+    "energy_consumed_wh": 0.356775,
+    "nodes_dead": 0.0,
+    "soc_final_min_wh": 0.002382,
+    "deficit_s_total": 3990.0,
+    "uplinks": 408.1,
+    "downlink_attempts": 49.0,
+    "airtime_uplink_h": 0.040757,
+    "over_payload_ticks": 0.0,
+    "n_config_changes": 35.1,
+    "n_downgrades_after_outage": 9.2,
+    "first_downgrade_t_s": 19230.0,
+    "evidence_age_median_s": 879.0,
+    "evidence_age_max_s": 10176.0,
+    "seeds": 10
+   },
+   "ea_nb|gateway": {
+    "service": 151.4,
+    "denom": 168.0,
+    "missing_collection": 0.0,
+    "missing_delivery": 16.6,
+    "aoi_mean_s": 3548.897945,
+    "energy_consumed_wh": 0.357479,
+    "nodes_dead": 0.0,
+    "soc_final_min_wh": 0.003287,
+    "deficit_s_total": 354.0,
+    "uplinks": 413.4,
+    "downlink_attempts": 48.9,
+    "airtime_uplink_h": 0.040614,
+    "over_payload_ticks": 0.0,
+    "n_config_changes": 35.9,
+    "n_downgrades_after_outage": 10.0,
+    "first_downgrade_t_s": 16890.0,
+    "evidence_age_median_s": 60.0,
+    "evidence_age_max_s": 3018.0,
+    "seeds": 10
+   }
+  },
+  "O1_access_outage": {
+   "local|center": {
+    "service": 56.3,
+    "denom": 168.0,
+    "missing_collection": 0.0,
+    "missing_delivery": 111.7,
+    "aoi_mean_s": 16133.00069,
+    "energy_consumed_wh": 0.097235,
+    "nodes_dead": 0.0,
+    "soc_final_min_wh": 0.008884,
+    "deficit_s_total": 0.0,
+    "uplinks": 52.0,
+    "downlink_attempts": 0.0,
+    "airtime_uplink_h": 0.004302,
+    "over_payload_ticks": 0.0,
+    "n_config_changes": 0.0,
+    "n_downgrades_after_outage": 0.0,
+    "first_downgrade_t_s": null,
+    "evidence_age_median_s": null,
+    "evidence_age_max_s": null,
+    "seeds": 10
+   },
+   "local|gateway": {
+    "service": 56.3,
+    "denom": 168.0,
+    "missing_collection": 0.0,
+    "missing_delivery": 111.7,
+    "aoi_mean_s": 16133.00069,
+    "energy_consumed_wh": 0.097235,
+    "nodes_dead": 0.0,
+    "soc_final_min_wh": 0.008884,
+    "deficit_s_total": 0.0,
+    "uplinks": 52.0,
+    "downlink_attempts": 0.0,
+    "airtime_uplink_h": 0.004302,
+    "over_payload_ticks": 0.0,
+    "n_config_changes": 0.0,
+    "n_downgrades_after_outage": 0.0,
+    "first_downgrade_t_s": null,
+    "evidence_age_median_s": null,
+    "evidence_age_max_s": null,
+    "seeds": 10
+   },
+   "ea_nb|center": {
+    "service": 49.1,
+    "denom": 168.0,
+    "missing_collection": 10.5,
+    "missing_delivery": 108.4,
+    "aoi_mean_s": 16306.253755,
+    "energy_consumed_wh": 0.289174,
+    "nodes_dead": 0.0,
+    "soc_final_min_wh": 8.6e-05,
+    "deficit_s_total": 51180.0,
+    "uplinks": 61.0,
+    "downlink_attempts": 21.0,
+    "airtime_uplink_h": 0.007966,
+    "over_payload_ticks": 2270.7,
+    "n_config_changes": 13.6,
+    "n_downgrades_after_outage": 0.0,
+    "first_downgrade_t_s": null,
+    "evidence_age_median_s": 10191.0,
+    "evidence_age_max_s": 33264.0,
+    "seeds": 10
+   },
+   "ea_nb|gateway": {
+    "service": 48.6,
+    "denom": 168.0,
+    "missing_collection": 11.5,
+    "missing_delivery": 107.9,
+    "aoi_mean_s": 16217.635523,
+    "energy_consumed_wh": 0.300366,
+    "nodes_dead": 0.0,
+    "soc_final_min_wh": 7.3e-05,
+    "deficit_s_total": 55488.0,
+    "uplinks": 64.7,
+    "downlink_attempts": 22.5,
+    "airtime_uplink_h": 0.008907,
+    "over_payload_ticks": 2311.9,
+    "n_config_changes": 14.5,
+    "n_downgrades_after_outage": 0.0,
+    "first_downgrade_t_s": null,
+    "evidence_age_median_s": 171.0,
+    "evidence_age_max_s": 36174.0,
+    "seeds": 10
+   }
+  },
+  "O2_backhaul_outage": {
+   "local|center": {
+    "service": 49.1,
+    "denom": 168.0,
+    "missing_collection": 0.0,
+    "missing_delivery": 118.9,
+    "aoi_mean_s": 17687.335037,
+    "energy_consumed_wh": 0.101977,
+    "nodes_dead": 0.0,
+    "soc_final_min_wh": 0.008703,
+    "deficit_s_total": 0.0,
+    "uplinks": 169.0,
+    "downlink_attempts": 0.0,
+    "airtime_uplink_h": 0.017987,
+    "over_payload_ticks": 0.0,
+    "n_config_changes": 0.0,
+    "n_downgrades_after_outage": 0.0,
+    "first_downgrade_t_s": null,
+    "evidence_age_median_s": null,
+    "evidence_age_max_s": null,
+    "seeds": 10
+   },
+   "local|gateway": {
+    "service": 49.1,
+    "denom": 168.0,
+    "missing_collection": 0.0,
+    "missing_delivery": 118.9,
+    "aoi_mean_s": 17687.335037,
+    "energy_consumed_wh": 0.101977,
+    "nodes_dead": 0.0,
+    "soc_final_min_wh": 0.008703,
+    "deficit_s_total": 0.0,
+    "uplinks": 169.0,
+    "downlink_attempts": 0.0,
+    "airtime_uplink_h": 0.017987,
+    "over_payload_ticks": 0.0,
+    "n_config_changes": 0.0,
+    "n_downgrades_after_outage": 0.0,
+    "first_downgrade_t_s": null,
+    "evidence_age_median_s": null,
+    "evidence_age_max_s": null,
+    "seeds": 10
+   },
+   "ea_nb|center": {
+    "service": 37.8,
+    "denom": 168.0,
+    "missing_collection": 14.8,
+    "missing_delivery": 115.4,
+    "aoi_mean_s": 17932.764697,
+    "energy_consumed_wh": 0.375471,
+    "nodes_dead": 1.1,
+    "soc_final_min_wh": 3.3e-05,
+    "deficit_s_total": 79512.0,
+    "uplinks": 402.0,
+    "downlink_attempts": 32.1,
+    "airtime_uplink_h": 0.142907,
+    "over_payload_ticks": 3213.1,
+    "n_config_changes": 23.7,
+    "n_downgrades_after_outage": 0.0,
+    "first_downgrade_t_s": null,
+    "evidence_age_median_s": 20643.0,
+    "evidence_age_max_s": 38610.0,
+    "seeds": 10
+   },
+   "ea_nb|gateway": {
+    "service": 43.5,
+    "denom": 168.0,
+    "missing_collection": 0.1,
+    "missing_delivery": 124.4,
+    "aoi_mean_s": 17539.212025,
+    "energy_consumed_wh": 0.374041,
+    "nodes_dead": 0.1,
+    "soc_final_min_wh": 0.002849,
+    "deficit_s_total": 1074.0,
+    "uplinks": 416.3,
+    "downlink_attempts": 48.9,
+    "airtime_uplink_h": 0.145664,
+    "over_payload_ticks": 2261.8,
+    "n_config_changes": 35.9,
+    "n_downgrades_after_outage": 10.0,
+    "first_downgrade_t_s": 16890.0,
+    "evidence_age_median_s": 60.0,
+    "evidence_age_max_s": 3018.0,
+    "seeds": 10
+   }
+  }
+ },
+ "paired": {
+  "O0_no_outage": {
+   "local": {
+    "service": {
+     "mean": 0.0,
+     "n_gt0": 0,
+     "n_lt0": 0,
+     "n": 10
+    },
+    "missing_collection": {
+     "mean": 0.0,
+     "n_gt0": 0,
+     "n_lt0": 0,
+     "n": 10
+    },
+    "missing_delivery": {
+     "mean": 0.0,
+     "n_gt0": 0,
+     "n_lt0": 0,
+     "n": 10
+    },
+    "energy_consumed_wh": {
+     "mean": 0.0,
+     "n_gt0": 0,
+     "n_lt0": 0,
+     "n": 10
+    },
+    "nodes_dead": {
+     "mean": 0.0,
+     "n_gt0": 0,
+     "n_lt0": 0,
+     "n": 10
+    },
+    "soc_final_min_wh": {
+     "mean": 0.0,
+     "n_gt0": 0,
+     "n_lt0": 0,
+     "n": 10
+    },
+    "uplinks": {
+     "mean": 0.0,
+     "n_gt0": 0,
+     "n_lt0": 0,
+     "n": 10
+    },
+    "downlink_attempts": {
+     "mean": 0.0,
+     "n_gt0": 0,
+     "n_lt0": 0,
+     "n": 10
+    },
+    "airtime_uplink_h": {
+     "mean": 0.0,
+     "n_gt0": 0,
+     "n_lt0": 0,
+     "n": 10
+    },
+    "evidence_age_median_s": {
+     "mean": null,
+     "n_gt0": 0,
+     "n_lt0": 0,
+     "n": 0
+    },
+    "n_downgrades_after_outage": {
+     "mean": 0.0,
+     "n_gt0": 0,
+     "n_lt0": 0,
+     "n": 10
+    },
+    "first_downgrade_t_s": {
+     "mean": null,
+     "n_gt0": 0,
+     "n_lt0": 0,
+     "n": 0
+    }
+   },
+   "ea_nb": {
+    "service": {
+     "mean": 0.6,
+     "n_gt0": 2,
+     "n_lt0": 2,
+     "n": 10
+    },
+    "missing_collection": {
+     "mean": -0.6,
+     "n_gt0": 0,
+     "n_lt0": 1,
+     "n": 10
+    },
+    "missing_delivery": {
+     "mean": 0.0,
+     "n_gt0": 2,
+     "n_lt0": 1,
+     "n": 10
+    },
+    "energy_consumed_wh": {
+     "mean": 0.000704,
+     "n_gt0": 4,
+     "n_lt0": 4,
+     "n": 10
+    },
+    "nodes_dead": {
+     "mean": 0.0,
+     "n_gt0": 0,
+     "n_lt0": 0,
+     "n": 10
+    },
+    "soc_final_min_wh": {
+     "mean": 0.000905,
+     "n_gt0": 6,
+     "n_lt0": 0,
+     "n": 10
+    },
+    "uplinks": {
+     "mean": 5.3,
+     "n_gt0": 5,
+     "n_lt0": 3,
+     "n": 10
+    },
+    "downlink_attempts": {
+     "mean": -0.1,
+     "n_gt0": 4,
+     "n_lt0": 4,
+     "n": 10
+    },
+    "airtime_uplink_h": {
+     "mean": -0.000143,
+     "n_gt0": 5,
+     "n_lt0": 3,
+     "n": 10
+    },
+    "evidence_age_median_s": {
+     "mean": -819.0,
+     "n_gt0": 0,
+     "n_lt0": 4,
+     "n": 10
+    },
+    "n_downgrades_after_outage": {
+     "mean": 0.8,
+     "n_gt0": 3,
+     "n_lt0": 0,
+     "n": 10
+    },
+    "first_downgrade_t_s": {
+     "mean": -2340.0,
+     "n_gt0": 0,
+     "n_lt0": 6,
+     "n": 10
+    }
+   }
+  },
+  "O1_access_outage": {
+   "local": {
+    "service": {
+     "mean": 0.0,
+     "n_gt0": 0,
+     "n_lt0": 0,
+     "n": 10
+    },
+    "missing_collection": {
+     "mean": 0.0,
+     "n_gt0": 0,
+     "n_lt0": 0,
+     "n": 10
+    },
+    "missing_delivery": {
+     "mean": 0.0,
+     "n_gt0": 0,
+     "n_lt0": 0,
+     "n": 10
+    },
+    "energy_consumed_wh": {
+     "mean": 0.0,
+     "n_gt0": 0,
+     "n_lt0": 0,
+     "n": 10
+    },
+    "nodes_dead": {
+     "mean": 0.0,
+     "n_gt0": 0,
+     "n_lt0": 0,
+     "n": 10
+    },
+    "soc_final_min_wh": {
+     "mean": 0.0,
+     "n_gt0": 0,
+     "n_lt0": 0,
+     "n": 10
+    },
+    "uplinks": {
+     "mean": 0.0,
+     "n_gt0": 0,
+     "n_lt0": 0,
+     "n": 10
+    },
+    "downlink_attempts": {
+     "mean": 0.0,
+     "n_gt0": 0,
+     "n_lt0": 0,
+     "n": 10
+    },
+    "airtime_uplink_h": {
+     "mean": 0.0,
+     "n_gt0": 0,
+     "n_lt0": 0,
+     "n": 10
+    },
+    "evidence_age_median_s": {
+     "mean": null,
+     "n_gt0": 0,
+     "n_lt0": 0,
+     "n": 0
+    },
+    "n_downgrades_after_outage": {
+     "mean": 0.0,
+     "n_gt0": 0,
+     "n_lt0": 0,
+     "n": 10
+    },
+    "first_downgrade_t_s": {
+     "mean": null,
+     "n_gt0": 0,
+     "n_lt0": 0,
+     "n": 0
+    }
+   },
+   "ea_nb": {
+    "service": {
+     "mean": -0.5,
+     "n_gt0": 1,
+     "n_lt0": 2,
+     "n": 10
+    },
+    "missing_collection": {
+     "mean": 1.0,
+     "n_gt0": 3,
+     "n_lt0": 0,
+     "n": 10
+    },
+    "missing_delivery": {
+     "mean": -0.5,
+     "n_gt0": 2,
+     "n_lt0": 2,
+     "n": 10
+    },
+    "energy_consumed_wh": {
+     "mean": 0.011192,
+     "n_gt0": 5,
+     "n_lt0": 0,
+     "n": 10
+    },
+    "nodes_dead": {
+     "mean": 0.0,
+     "n_gt0": 0,
+     "n_lt0": 0,
+     "n": 10
+    },
+    "soc_final_min_wh": {
+     "mean": -1.3e-05,
+     "n_gt0": 0,
+     "n_lt0": 3,
+     "n": 10
+    },
+    "uplinks": {
+     "mean": 3.7,
+     "n_gt0": 2,
+     "n_lt0": 1,
+     "n": 10
+    },
+    "downlink_attempts": {
+     "mean": 1.5,
+     "n_gt0": 5,
+     "n_lt0": 0,
+     "n": 10
+    },
+    "airtime_uplink_h": {
+     "mean": 0.000941,
+     "n_gt0": 4,
+     "n_lt0": 0,
+     "n": 10
+    },
+    "evidence_age_median_s": {
+     "mean": -10020.0,
+     "n_gt0": 0,
+     "n_lt0": 9,
+     "n": 10
+    },
+    "n_downgrades_after_outage": {
+     "mean": 0.0,
+     "n_gt0": 0,
+     "n_lt0": 0,
+     "n": 10
+    },
+    "first_downgrade_t_s": {
+     "mean": null,
+     "n_gt0": 0,
+     "n_lt0": 0,
+     "n": 0
+    }
+   }
+  },
+  "O2_backhaul_outage": {
+   "local": {
+    "service": {
+     "mean": 0.0,
+     "n_gt0": 0,
+     "n_lt0": 0,
+     "n": 10
+    },
+    "missing_collection": {
+     "mean": 0.0,
+     "n_gt0": 0,
+     "n_lt0": 0,
+     "n": 10
+    },
+    "missing_delivery": {
+     "mean": 0.0,
+     "n_gt0": 0,
+     "n_lt0": 0,
+     "n": 10
+    },
+    "energy_consumed_wh": {
+     "mean": 0.0,
+     "n_gt0": 0,
+     "n_lt0": 0,
+     "n": 10
+    },
+    "nodes_dead": {
+     "mean": 0.0,
+     "n_gt0": 0,
+     "n_lt0": 0,
+     "n": 10
+    },
+    "soc_final_min_wh": {
+     "mean": 0.0,
+     "n_gt0": 0,
+     "n_lt0": 0,
+     "n": 10
+    },
+    "uplinks": {
+     "mean": 0.0,
+     "n_gt0": 0,
+     "n_lt0": 0,
+     "n": 10
+    },
+    "downlink_attempts": {
+     "mean": 0.0,
+     "n_gt0": 0,
+     "n_lt0": 0,
+     "n": 10
+    },
+    "airtime_uplink_h": {
+     "mean": 0.0,
+     "n_gt0": 0,
+     "n_lt0": 0,
+     "n": 10
+    },
+    "evidence_age_median_s": {
+     "mean": null,
+     "n_gt0": 0,
+     "n_lt0": 0,
+     "n": 0
+    },
+    "n_downgrades_after_outage": {
+     "mean": 0.0,
+     "n_gt0": 0,
+     "n_lt0": 0,
+     "n": 10
+    },
+    "first_downgrade_t_s": {
+     "mean": null,
+     "n_gt0": 0,
+     "n_lt0": 0,
+     "n": 0
+    }
+   },
+   "ea_nb": {
+    "service": {
+     "mean": 5.7,
+     "n_gt0": 7,
+     "n_lt0": 0,
+     "n": 10
+    },
+    "missing_collection": {
+     "mean": -14.7,
+     "n_gt0": 0,
+     "n_lt0": 10,
+     "n": 10
+    },
+    "missing_delivery": {
+     "mean": 9.0,
+     "n_gt0": 10,
+     "n_lt0": 0,
+     "n": 10
+    },
+    "energy_consumed_wh": {
+     "mean": -0.00143,
+     "n_gt0": 4,
+     "n_lt0": 6,
+     "n": 10
+    },
+    "nodes_dead": {
+     "mean": -1.0,
+     "n_gt0": 0,
+     "n_lt0": 6,
+     "n": 10
+    },
+    "soc_final_min_wh": {
+     "mean": 0.002816,
+     "n_gt0": 9,
+     "n_lt0": 0,
+     "n": 10
+    },
+    "uplinks": {
+     "mean": 14.3,
+     "n_gt0": 6,
+     "n_lt0": 4,
+     "n": 10
+    },
+    "downlink_attempts": {
+     "mean": 16.8,
+     "n_gt0": 10,
+     "n_lt0": 0,
+     "n": 10
+    },
+    "airtime_uplink_h": {
+     "mean": 0.002756,
+     "n_gt0": 5,
+     "n_lt0": 5,
+     "n": 10
+    },
+    "evidence_age_median_s": {
+     "mean": -20583.0,
+     "n_gt0": 0,
+     "n_lt0": 10,
+     "n": 10
+    },
+    "n_downgrades_after_outage": {
+     "mean": 10.0,
+     "n_gt0": 10,
+     "n_lt0": 0,
+     "n": 10
+    },
+    "first_downgrade_t_s": {
+     "mean": null,
+     "n_gt0": 0,
+     "n_lt0": 0,
+     "n": 0
+    }
+   }
+  }
+ }
+}
