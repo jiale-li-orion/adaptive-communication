@@ -549,7 +549,7 @@ class EhAoiPolicy(CenterPolicy):
     """**有限电池能量采集下的状态更新**：**（电量, 年龄）二维联合门限**。
 
     这是**文献结构**，不是本项目的启发式。有限电池 EH 源上最小化 AoI 的最优策略是
-    **同时按电池状态与当前年龄设门限**（Arafa, Baknina, Ulusoy & Ulukus,
+    **同时按电池状态与当前年龄设门限**（Bacinoglu, Sun, Uysal & Mutlu,
     *Optimal Status Updating with a Finite-Battery Energy Harvesting Source*,
     [arXiv:1905.06679](https://arxiv.org/abs/1905.06679)）。此前仓里的 `ea_aoi` 只是把
     「电量门限」与「年龄门限」**各自独立地叠在一起**，那不是文献里的结构，实测也确实没赢过
