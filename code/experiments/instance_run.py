@@ -249,6 +249,19 @@ def one_seed(seed: int, task_hours: float, tail_hours: float,
     inst.soc_model = SocObservationModel(max_age_s=soc_max_age_s, noise_wh=soc_noise_wh,
                                          bias=soc_bias, loss_p=soc_loss_p, seed=seed)
     log = inst.run(int(hours))
+    # **恢复后首次新数据**（doc 48 §5.3）：中断窗结束后，第一条**在窗后采集**的样本
+    # 何时到达**网关**（heard）与何时到达**中心**（received）。两者之差就是"节点上行"
+    # 与"回传"各自造成的延迟——公开这条链才能回答"恢复期额外等待多久"。
+    _ends = [x[1] for x in (outage, acc) if x]
+    _t0 = max(_ends) if _ends else None
+    _fh = _fr = None
+    if _t0 is not None:
+        _hs = [log.transit[sid].heard_at for sid, sm in log.samples.items()
+               if sm.taken_at > _t0 and log.transit[sid].heard_at is not None]
+        _rs = [log.transit[sid].received_at for sid, sm in log.samples.items()
+               if sm.taken_at > _t0 and log.transit[sid].received_at is not None]
+        _fh = min(_hs) if _hs else None
+        _fr = min(_rs) if _rs else None
     # **发送侧三分解**：只松弛转发（固定发送时刻）与再松弛"何时发送"（自由发送时刻）。
     _delivery_total = delivery_oracle(obligations, inst.log, int(hours),
                                       plane=inst.plane)["total_oracle"]
@@ -300,6 +313,11 @@ def one_seed(seed: int, task_hours: float, tail_hours: float,
         "propagation": {k: v for k, v in res["propagation"].items() if k != "per_trigger"},
         "recovery": res.get("recovery"),
         "access_blocked": inst.access_blocked,
+        #: **恢复后的时间链**（doc 48 §5.3）：中断结束 → 首条窗后样本到网关 → 到中心。
+        "post_outage": {
+            "t0_s": _t0, "first_heard_s": _fh, "first_received_s": _fr,
+            "heard_delay_s": (None if (_fh is None or _t0 is None) else _fh - _t0),
+            "received_delay_s": (None if (_fr is None or _t0 is None) else _fr - _t0)}, 
         #: **打包机制的激活量**（§31 §五）：积压是否真的跨过"一次机会能服务的容量"。
         #: 40 h 断链单点不能证明实际部署常见收益，所以这个量要在**每个条件**上量。
         "cache_backlog": {

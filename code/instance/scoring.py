@@ -104,13 +104,27 @@ def evaluate(obligations: ObligationSet, log, hours: int, node_ids,
     res: dict = {"n_obligations": len(outcomes),
                  "by_kind": _split(outcomes)}
     if collect_rows:
+        # **三级定位**（doc 48 §5.3、§3）：把每条义务定位到
+        #   采到（`collected`，样本存在）→ **已到网关**（`heard`，新增）→ 已到中心（`delivered`）。
+        # 这一级是"省下的上行是冗余还是损失"的判据：**已抵达网关的样本不需要节点再次上行**
+        # （`backhaul_forward` 恢复后自行转发），所以只有"未到网关"的那部分才可能是真损失。
+        # 与 `collect_rows` 同开关、默认不记，因此现有读数逐位不变。
+        _heard: dict = {}
+        for _sid, _sm in log.samples.items():
+            if log.transit[_sid].heard_at is not None:
+                _heard.setdefault((_sm.node_id, _sm.measurand), []).append(_sm)
         # **逐义务台账（默认关闭）**：§31 第 109 行要"它增加的是**哪条固定义务**的服务"，
         # 聚合量答不了这个问题。`collect_rows=False` 时一个字节都不多记，读数逐位不变。
-        res["rows"] = [{"oid": o.oid, "kind": o.kind, "node_id": o.node_id,
-                        "release_at": o.release_at, "collected": o.collected,
-                        "delivered": o.delivered, "censored": o.censored,
-                        "delivered_at": o.delivered_at, "latency_s": o.latency_s}
-                       for o in outcomes]
+        # **注意 `heard` 必须问 `Obligation`（有 `matches`），不能问 `ObligationOutcome`**——
+        # 后者只有结局、没有窗口与容差，拿它算会 `AttributeError`（第一版就是这么错的）。
+        # 两者按构造同序（`outcomes` 就是按 `obligations.obligations` 顺序建的），因此可以按序配对。
+        res["rows"] = [{"oid": oc.oid, "kind": oc.kind, "node_id": oc.node_id,
+                        "release_at": oc.release_at, "collected": oc.collected,
+                        "delivered": oc.delivered, "censored": oc.censored,
+                        "delivered_at": oc.delivered_at, "latency_s": oc.latency_s,
+                        "heard": any(ob.matches(s)
+                                     for s in _heard.get((ob.node_id, ob.measurand), ()))}
+                       for ob, oc in zip(obligations.obligations, outcomes)]
 
     # -------------------------------------------------- 周期新鲜度与完整性
     res["routine"] = _routine_block(outcomes, log, node_ids, end_s, by_key)

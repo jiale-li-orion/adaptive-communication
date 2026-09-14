@@ -82,6 +82,9 @@ class CenterView:
     #: 前者是"网关上一次真的把缓存交给中心的时刻"，后者是"网关自己还压着多少条"。
     gateway_last_forward_ok_at: int | None = None
     gateway_pending_depth: int | None = None
+    #: **网关缓存里最老一条待转发记录的年龄（秒）**——同样是网关本地可观测。
+    #: 它是「第二条普通规则族」的输入：**用另一个本地信号判断同一种"回传受阻"**。
+    gateway_oldest_pending_age_s: int | None = None
 
     def soc_of(self, node_id: str) -> float | None:
         """策略**看到**的电量。它可能比真实值旧、脏、偏，或者干脆没到。"""
@@ -666,8 +669,14 @@ class ReportPacingPolicy(CenterPolicy):
 
     def __init__(self, slow_s: int = 3600, fast_s: int = 900, dwell_s: int = 600,
                  block_after_s: int = 1800, hysteresis: bool = False,
-                 confirm_n: int = 2) -> None:
+                 confirm_n: int = 2, mode: str = "forward_blocked",
+                 backlog_age_s: int = 900) -> None:
         super().__init__()
+        #: `forward_blocked`（默认）：按"上一次转发成功距今多久"判受阻；
+        #: `pending_backlog`：按"最老待转发记录的年龄"判受阻——**同一谓词的另一种本地信号**。
+        assert mode in ("forward_blocked", "pending_backlog"), mode
+        self.mode = mode
+        self.backlog_age_s = backlog_age_s
         self.slow_s, self.fast_s, self.dwell_s = slow_s, fast_s, dwell_s
         self.block_after_s = block_after_s
         self.hysteresis = hysteresis
@@ -675,10 +684,19 @@ class ReportPacingPolicy(CenterPolicy):
         self._last: dict[str, int] = {}
         self._slow_mode: dict[str, bool] = {}
         self._streak: dict[str, tuple[bool, int]] = {}
-        self.name = ("pacing_bp_hyst" if hysteresis else "pacing_bp")
+        self.name = (f"pacing_{'backlog' if mode == 'pending_backlog' else 'bp'}"
+                     f"{slow_s}_{fast_s}" + ("_hyst" if hysteresis else ""))
 
     def _blocked(self, view: CenterView) -> bool:
-        """**回传是否看起来受阻**——只用网关本地可观测的两个量。"""
+        """**回传是否看起来受阻**——只用网关本地可观测的量（两条规则族各用一种信号）。"""
+        if self.mode == "pending_backlog":
+            age = view.gateway_oldest_pending_age_s
+            depth = view.gateway_pending_depth
+            if age is None:
+                return False                     # 没有反馈接口 ⇒ 不慢化
+            if depth is not None and depth <= 0:
+                return False                     # 手里没压货
+            return age >= self.backlog_age_s
         depth = view.gateway_pending_depth
         last = view.gateway_last_forward_ok_at
         if depth is None or last is None:

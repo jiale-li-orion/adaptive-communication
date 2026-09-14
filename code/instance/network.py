@@ -787,7 +787,10 @@ class Instance:
                           newest_taken_at=self.gateway_newest_taken_at,
                           in_flight=in_flight, soc_model=self.soc_model,
                           gateway_last_forward_ok_at=self.gateway_last_forward_ok_at,
-                          gateway_pending_depth=len(self.plane.gateway_pending))
+                          gateway_pending_depth=len(self.plane.gateway_pending),
+                          gateway_oldest_pending_age_s=(
+                              t_s - min(i.heard_at_s for i in self.plane.gateway_pending)
+                              if self.plane.gateway_pending else None))
 
     def _send_command(self, node_id: str, payload: dict, t_s: int,
                       origin: str = "center") -> None:
