@@ -109,21 +109,42 @@ def evaluate(obligations: ObligationSet, log, hours: int, node_ids,
         # 这一级是"省下的上行是冗余还是损失"的判据：**已抵达网关的样本不需要节点再次上行**
         # （`backhaul_forward` 恢复后自行转发），所以只有"未到网关"的那部分才可能是真损失。
         # 与 `collect_rows` 同开关、默认不记，因此现有读数逐位不变。
-        _heard: dict = {}
+        # **到达台账（doc 55 §1.1 的更正要害）**：`heard=True` 只表示「运行结束前曾到网关」，
+        # **不表示准时**。这里为每条义务保留**第一次**到网关与到中心的时刻，并给出**固定截止期**，
+        # 于是「准时到网关 / 晚到网关 / 准时到中心」三者可分——这是把「省下的上行是冗余还是损失」
+        # 真正闭合的唯一办法。与 `collect_rows` 同开关、默认不记，现有读数逐位不变。
+        _arr: dict = {}
         for _sid, _sm in log.samples.items():
-            if log.transit[_sid].heard_at is not None:
-                _heard.setdefault((_sm.node_id, _sm.measurand), []).append(_sm)
+            _tr = log.transit[_sid]
+            _arr.setdefault((_sm.node_id, _sm.measurand), []).append(
+                (_sm, _tr.heard_at, _tr.received_at))
         # **逐义务台账（默认关闭）**：§31 第 109 行要"它增加的是**哪条固定义务**的服务"，
         # 聚合量答不了这个问题。`collect_rows=False` 时一个字节都不多记，读数逐位不变。
         # **注意 `heard` 必须问 `Obligation`（有 `matches`），不能问 `ObligationOutcome`**——
         # 后者只有结局、没有窗口与容差，拿它算会 `AttributeError`（第一版就是这么错的）。
         # 两者按构造同序（`outcomes` 就是按 `obligations.obligations` 顺序建的），因此可以按序配对。
-        res["rows"] = [{"oid": oc.oid, "kind": oc.kind, "node_id": oc.node_id,
-                        "release_at": oc.release_at, "collected": oc.collected,
-                        "delivered": oc.delivered, "censored": oc.censored,
-                        "delivered_at": oc.delivered_at, "latency_s": oc.latency_s,
-                        "heard": any(ob.matches(s)
-                                     for s in _heard.get((ob.node_id, ob.measurand), ()))}
+        def _row(ob, oc):
+            cand = [(s, h, r) for (s, h, r) in _arr.get((ob.node_id, ob.measurand), ())
+                    if ob.matches(s)]
+            hs = [h for (_s, h, _r) in cand if h is not None]
+            rs = [r for (_s, _h, r) in cand if r is not None]
+            fh = min(hs) if hs else None
+            fr = min(rs) if rs else None
+            dl = ob.deadline                     # 固定截止期＝窗口末端 + 宽限
+            return {"oid": oc.oid, "kind": oc.kind, "node_id": oc.node_id,
+                    "release_at": oc.release_at, "collected": oc.collected,
+                    "delivered": oc.delivered, "censored": oc.censored,
+                    "delivered_at": oc.delivered_at, "latency_s": oc.latency_s,
+                    # **准时性的三个量**（doc 55 §1.1 指出旧 `heard` 缺的就是它们）
+                    "deadline": dl,
+                    "first_heard_at": fh, "first_received_at": fr,
+                    "heard_on_time": (fh is not None and fh <= dl),
+                    "received_on_time": (fr is not None and fr <= dl),
+                    "n_matching": len(cand), "n_heard": len(hs), "n_received": len(rs),
+                    # 兼容旧字段：**它只表示最终到过，不承担准时归因**
+                    "heard": bool(hs)}
+
+        res["rows"] = [_row(ob, oc)
                        for ob, oc in zip(obligations.obligations, outcomes)]
 
     # -------------------------------------------------- 周期新鲜度与完整性
