@@ -38,8 +38,18 @@ CONDITIONS = {
     "N2_access_outage": "instance_adm_out3",
     "N3_second_source": "instance_ccorral_iid_c0.05",
 }
-#: 现有前沿：`local`（零中心控制）/ `aoi`（AoI 反馈）/ `ea_nb`（电能反馈）/ `eh_aoi`（文献二维门限）。
-FRONTIER = ("local", "aoi", "ea_nb", "eh_aoi")
+#: §31 第 77 行**点名**的四条臂。
+FRONTIER_NAMED = ("local", "aoi", "ea_nb", "eh_aoi")
+#: **真正的"现有前沿"= 全部既有的 38 条臂**（`ARMS` 里除网格臂与滚动搜索以外的全部）。
+#:
+#: **为什么必须用全集。** 第一版只拿了点名的四条，结果漏掉 `aoi_const300`
+#: （`AoiPolicy(fast_s=300, slow_s=300)`）——它在第二来源节奏下拿到 **511.05**，
+#: **高于网格里最好的 509.7**。用四条臂算出来的"非支配"因此是**假的**：
+#: §31 第 79 行的强对照本来就写明要"**调好的 AoI/EH 前沿**"（`aoi_*` 一整族旋钮 + `eh_aoi*` +
+#: `ea_*`），而 `aoi_const300` 正是那一族里的端点。**只报点名四条而不跑全集，
+#: 等于给自己留一条后门。**
+FRONTIER = tuple(sorted(a for a in C.ARMS
+                        if not a.startswith("grid") and a != "rolling_search"))
 #: **所有 30 个合法点**（§31 第 77 行要求"所有合法配置的静态前沿"）。其中 10 个点本来就有臂
 #: 覆盖，这里**显式重述**成 `gridIxR`，使"所有合法配置"与实际跑过的集合逐项对齐。
 GRID_ARMS = [f"grid{i}x{r}" for i in C.GRID_SAMPLING for r in C.GRID_REPORT]
@@ -125,6 +135,10 @@ def main() -> None:
 
         C.ARMS["rolling_search"] = _mk
         arms = list(FRONTIER) + GRID_ARMS + ["rolling_search"]
+        # 点名四条的读数也要留（仅作对照），但它们不参与主判读
+        for extra in FRONTIER_NAMED:
+            if extra not in arms:
+                arms.append(extra)
         rows, search_reasons = {}, {}
         for arm in arms:
             runs = [one_seed(s, arm=arm, **kw) for s in range(seeds)]
@@ -149,36 +163,49 @@ def main() -> None:
 
 
 def _analyse(blk: dict, cond: str) -> None:
-    """按预注册 R1/R2 判定：网格点是否全被现有前沿支配。"""
+    """按预注册 R1/R2 判定：网格点是否全被现有前沿支配。
+
+    **两套前沿都算**：`FRONTIER`（全部 38 条既有臂，主判读）与 `FRONTIER_NAMED`
+    （§31 第 77 行点名的四条，仅作对照）。两者不一致时，**以全集为准**。
+    """
     rows = blk["rows"]
-    front = {a: rows[a] for a in FRONTIER if a in rows}
     grid = {a: rows[a] for a in GRID_ARMS if a in rows}
-    non_dom, dom_by = [], {}
-    for ga, gv in grid.items():
-        killers = [fa for fa, fv in front.items() if dominates(fv, gv)]
-        if killers:
-            dom_by[ga] = killers
-        else:
-            non_dom.append(ga)
-    # 网格内部两两之间也标出非支配点（读者要看的是一条前沿，不是一个布尔值）
+
+    def _vs(front_names):
+        front = {a: rows[a] for a in front_names if a in rows}
+        non_dom, dom_by = [], {}
+        for ga, gv in grid.items():
+            killers = [fa for fa, fv in front.items() if dominates(fv, gv)]
+            if killers:
+                dom_by[ga] = killers
+            else:
+                non_dom.append(ga)
+        return sorted(non_dom), dom_by
+
+    non_dom, dom_by = _vs(FRONTIER)
+    non_dom_named, _ = _vs(FRONTIER_NAMED)
     inner = [ga for ga in grid if not any(dominates(grid[gb], grid[ga])
                                           for gb in grid if gb != ga)]
-    # 全臂（含前沿与滚动搜索）的非支配集
     allrows = dict(rows)
     allfrontier = [a for a in allrows
                    if not any(dominates(allrows[b], allrows[a])
                               for b in allrows if b != a)]
     blk["verdict"] = {
-        "grid_non_dominated_vs_frontier": sorted(non_dom),
+        "frontier_size": len([a for a in FRONTIER if a in rows]),
+        "grid_non_dominated_vs_frontier": non_dom,
         "grid_dominated_by": dom_by,
+        "grid_non_dominated_vs_named4": non_dom_named,
         "grid_inner_non_dominated": sorted(inner),
         "non_dominated_all_arms": sorted(allfrontier),
         "R1_all_grid_points_dominated": len(non_dom) == 0,
+        "R1_named4_all_grid_points_dominated": len(non_dom_named) == 0,
         "rolling_search_dominated_by": sorted(
-            fa for fa, fv in front.items() if dominates(fv, rows["rolling_search"])),
+            fa for fa in FRONTIER if fa in rows and dominates(rows[fa], rows["rolling_search"])),
         "rolling_search_dominates": sorted(
             a for a in allrows
             if a != "rolling_search" and dominates(rows["rolling_search"], allrows[a])),
+        # 谁在业务上最高（服务最大），用于看"网格到底有没有在业务上超过既有臂"
+        "top_by_service": max(allrows.items(), key=lambda kv: kv[1]["service"] or 0)[0],
     }
 
 
