@@ -54,7 +54,7 @@ class DeliveryOpportunisticPolicy(CenterPolicy):
                  fast_s: int = 300, mid_s: int = 900, relaxed_s: int = 1800, slow_s: int = 3600,
                  healthy_wh: float = 0.010, lead_s: int = 900, dwell_s: int = 600,
                  decision_epoch_s: int = 300, hysteresis_s: int = 600,
-                 use_backup_window: bool = True) -> None:
+                 use_backup_window: bool = True, gate_sampling: bool = True) -> None:
         super().__init__()
         self.obs = observer
         self.period_s = period_s
@@ -64,6 +64,9 @@ class DeliveryOpportunisticPolicy(CenterPolicy):
         self.dwell_s, self.decision_epoch_s = dwell_s, decision_epoch_s
         self.hysteresis_s = hysteresis_s
         self.use_backup_window = use_backup_window
+        # gate_sampling=False：只按义务相位门控**上报**（= v1.1 已有 ObligationSlackPolicy 的思路），
+        # 采样恒稀疏。用于证明"只门控上报救不了采样侧能量失稳，必须门控采样"。
+        self.gate_sampling = gate_sampling
         self._last: dict[str, int] = {}
         self._issued: dict[str, tuple[int, int]] = {}
         self._fast: dict[str, bool] = {}        # 快档迟滞状态
@@ -121,6 +124,8 @@ class DeliveryOpportunisticPolicy(CenterPolicy):
                 self._skip("no_soc", nid)
                 continue
             want_sample, want_report = self._want(view, nid)
+            if not self.gate_sampling:
+                want_sample = self.sparse_sample_s     # 只门控上报消融（= 已有 oblig_slack）
             snap = view.reports.get(nid) or {}
             if (snap.get("sample_interval_s") == want_sample
                     and snap.get("report_period_s") == want_report):

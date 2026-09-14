@@ -51,7 +51,8 @@ def run_joint(seed: int = 0, task_hours: int = 12, tail_hours: int = 1,
               backup_bytes: int = 200, backup_header_bytes: int = 20,
               backup_chooser: str = "edf", backup_failover: bool = True,
               backup_suppress: bool = True,
-              cup_use_window: bool = True, cup_lead_s: int = 900,
+              cup_use_window: bool = True, cup_lead_s: int = 900, cup_gate_sampling: bool = True,
+              trace: bool = False,
               collect_rows: bool = False, placement: str = "center"):
     hours = task_hours + tail_hours
     dep = build_deployment(groups=groups, per_group=per_group)
@@ -100,7 +101,7 @@ def run_joint(seed: int = 0, task_hours: int = 12, tail_hours: int = 1,
                                        enable_backup=enable_backup)
         pol = DeliveryOpportunisticPolicy(
             cup_observer, period_s=routine_period_s, lead_s=cup_lead_s,
-            use_backup_window=cup_use_window)
+            use_backup_window=cup_use_window, gate_sampling=cup_gate_sampling)
         placement = "gateway"          # C-up 必须在网关位置才能读到网关本地观测
     elif arm == "ea_aoi_gw":
         # 机制归因：与 ea_aoi 同一条策略，仅放置到网关——其 AoI 自动改用"网关听到"而非"中心收到"
@@ -113,7 +114,8 @@ def run_joint(seed: int = 0, task_hours: int = 12, tail_hours: int = 1,
         acc = (int(access_outage_start_h * 3600),
                int((access_outage_start_h + access_outage_hours) * 3600))
     inst = Instance(nodes, truth, seed=seed, policy=pol, access_outage=acc,
-                    burst_p_gb=burst_p_gb, burst_p_bg=burst_p_bg, placement=placement)
+                    burst_p_gb=burst_p_gb, burst_p_bg=burst_p_bg,
+                    placement=placement, trace=trace)
     inst.plane.uplink_p_arrive = uplink_p_arrive
     inst.plane.backhaul_p_good = backhaul_p_good
     for pth in inst.plane.paths:
