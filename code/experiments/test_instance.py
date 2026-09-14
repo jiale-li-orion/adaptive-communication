@@ -1822,6 +1822,16 @@ def test_cache_packing_disciplines_are_hand_checkable() -> None:
     c = _ids(_fill(_node("obligation_greedy"), seq).batch(0))
     check("采样周期=义务周期时 edf ≡ fifo（到达顺序＝截止期顺序）", a == b,
           f"fifo={a} edf={b}")
+    # 1b) **一般情形：一窗多条时 edf 仍 ≡ fifo。**
+    #     理由是结构的、与"一窗几条"无关：缓存按**到达顺序（`taken_at` 升序）**存放，
+    #     而义务窗口 `taken_at // period` 对 `taken_at` **单调不减** ⇒ EDF 的排序键
+    #     `(window, taken_at)` **就是到达顺序本身**。所以 EDF 在这个实例里**恒等于 FIFO**，
+    #     不是"一窗一条"的巧合（doc 40 §二 更正了 doc 36 原先的措辞）。
+    two_per_window = [0, 600, 3600, 4200, 7200, 7800]
+    f2 = _ids(_fill(_node("fifo"), two_per_window).batch(0))
+    e2 = _ids(_fill(_node("edf"), two_per_window).batch(0))
+    check("一窗多条时 edf 仍 ≡ fifo（恒等，不是巧合）", f2 == e2,
+          f"fifo={f2} edf={e2}")
     check("同一条件下 obligation_greedy 也无对象可去重 ⇒ 也 ≡ fifo", a == c,
           f"greedy={c}")
 

@@ -1,0 +1,418 @@
+{
+ "disciplines": [
+  "fifo",
+  "lifo",
+  "latest_only",
+  "edf",
+  "obligation_greedy"
+ ],
+ "seeds": 10,
+ "conditions": {
+  "E1_multirecord_no_outage": {
+   "source": "results/instance_arms.json",
+   "overrides": {
+    "sample_interval_s": 600
+   },
+   "note": "一窗 6 条 · 无中断",
+   "records_per_window": 6,
+   "arm": "local",
+   "rows": {
+    "fifo": {
+     "service": 147.8,
+     "denom": 168.0,
+     "missing_collection": 0.0,
+     "missing_delivery": 20.2,
+     "aoi_mean_s": 4603.3610949771055,
+     "energy_consumed_wh": 0.528388506,
+     "uplinks": 169.0,
+     "downlink_attempts": 0.0,
+     "airtime_uplink_h": 0.030621866666666712,
+     "over_payload_ticks": 27.1,
+     "over_payload_peak": 11.8,
+     "cache_len_mean": 7.346640000000001,
+     "dropped_total": 0.0
+    },
+    "lifo": {
+     "service": 148.1,
+     "denom": 168.0,
+     "missing_collection": 0.0,
+     "missing_delivery": 19.9,
+     "aoi_mean_s": 4592.066977330047,
+     "energy_consumed_wh": 0.528387064,
+     "uplinks": 169.0,
+     "downlink_attempts": 0.0,
+     "airtime_uplink_h": 0.03061276444444449,
+     "over_payload_ticks": 27.1,
+     "over_payload_peak": 11.8,
+     "cache_len_mean": 7.3401,
+     "dropped_total": 0.0
+    },
+    "latest_only": {
+     "service": 143.5,
+     "denom": 168.0,
+     "missing_collection": 0.0,
+     "missing_delivery": 24.5,
+     "aoi_mean_s": 4592.066977330047,
+     "energy_consumed_wh": 0.52476393,
+     "uplinks": 169.0,
+     "downlink_attempts": 0.0,
+     "airtime_uplink_h": 0.007739448888888907,
+     "over_payload_ticks": 0.0,
+     "over_payload_peak": 0.0,
+     "cache_len_mean": 3.0500599999999998,
+     "dropped_total": 921.0
+    },
+    "edf": {
+     "service": 147.8,
+     "denom": 168.0,
+     "missing_collection": 0.0,
+     "missing_delivery": 20.2,
+     "aoi_mean_s": 4603.3610949771055,
+     "energy_consumed_wh": 0.528388506,
+     "uplinks": 169.0,
+     "downlink_attempts": 0.0,
+     "airtime_uplink_h": 0.030621866666666712,
+     "over_payload_ticks": 27.1,
+     "over_payload_peak": 11.8,
+     "cache_len_mean": 7.346640000000001,
+     "dropped_total": 0.0
+    },
+    "obligation_greedy": {
+     "service": 148.1,
+     "denom": 168.0,
+     "missing_collection": 0.0,
+     "missing_delivery": 19.9,
+     "aoi_mean_s": 4603.348450144256,
+     "energy_consumed_wh": 0.5269022879999999,
+     "uplinks": 169.0,
+     "downlink_attempts": 0.0,
+     "airtime_uplink_h": 0.021239182222222236,
+     "over_payload_ticks": 1340.7,
+     "over_payload_peak": 50.7,
+     "cache_len_mean": 20.141759999999998,
+     "dropped_total": 0.0
+    }
+   },
+   "effect_vs_fifo": {
+    "fifo": {
+     "d_service": 0.0,
+     "d_airtime_uplink_h": 0.0,
+     "d_energy_wh": 0.0,
+     "d_missing_collection": 0,
+     "d_dropped": 0
+    },
+    "lifo": {
+     "d_service": 0.3,
+     "d_airtime_uplink_h": -9e-06,
+     "d_energy_wh": -1e-06,
+     "d_missing_collection": 0,
+     "d_dropped": 0
+    },
+    "latest_only": {
+     "d_service": -4.3,
+     "d_airtime_uplink_h": -0.022882,
+     "d_energy_wh": -0.003625,
+     "d_missing_collection": 0,
+     "d_dropped": 921.0
+    },
+    "edf": {
+     "d_service": 0.0,
+     "d_airtime_uplink_h": 0.0,
+     "d_energy_wh": 0.0,
+     "d_missing_collection": 0,
+     "d_dropped": 0
+    },
+    "obligation_greedy": {
+     "d_service": 0.3,
+     "d_airtime_uplink_h": -0.009383,
+     "d_energy_wh": -0.001486,
+     "d_missing_collection": 0,
+     "d_dropped": 0
+    }
+   },
+   "activation": {
+    "over_payload_ticks": 27.1,
+    "over_payload_peak_max_across_seeds": 58,
+    "cache_len_mean": 7.346640000000001,
+    "payload_slots": 32
+   },
+   "verdict": {
+    "activated": true,
+    "max_abs_d_service_pure": 0.3,
+    "R1_negative_control_ok": false,
+    "best_by_service": "lifo",
+    "best_by_airtime": "latest_only"
+   }
+  },
+  "E2_multirecord_long_outage": {
+   "source": "results/instance_accout40_fifo.json",
+   "overrides": {
+    "sample_interval_s": 600
+   },
+   "note": "一窗 6 条 · 接入中断 40 h（**预期激活**）",
+   "records_per_window": 6,
+   "arm": "local",
+   "rows": {
+    "fifo": {
+     "service": 29.1,
+     "denom": 672.0,
+     "missing_collection": 166.0,
+     "missing_delivery": 476.9,
+     "aoi_mean_s": 68918.18304309779,
+     "energy_consumed_wh": 1.459256501,
+     "uplinks": 72.0,
+     "downlink_attempts": 0.0,
+     "airtime_uplink_h": 0.036884480000000004,
+     "over_payload_ticks": 34064.4,
+     "over_payload_peak": 240.0,
+     "cache_len_mean": 106.4272,
+     "dropped_total": 59.8
+    },
+    "lifo": {
+     "service": 94.2,
+     "denom": 672.0,
+     "missing_collection": 166.0,
+     "missing_delivery": 411.8,
+     "aoi_mean_s": 12838.320354299733,
+     "energy_consumed_wh": 1.459256501,
+     "uplinks": 72.0,
+     "downlink_attempts": 0.0,
+     "airtime_uplink_h": 0.036884480000000004,
+     "over_payload_ticks": 34059.4,
+     "over_payload_peak": 240.0,
+     "cache_len_mean": 105.94494999999999,
+     "dropped_total": 55.6
+    },
+    "latest_only": {
+     "service": 87.4,
+     "denom": 672.0,
+     "missing_collection": 166.0,
+     "missing_delivery": 418.6,
+     "aoi_mean_s": 12838.320354299733,
+     "energy_consumed_wh": 1.453936291,
+     "uplinks": 72.0,
+     "downlink_attempts": 0.0,
+     "airtime_uplink_h": 0.003297279999999995,
+     "over_payload_ticks": 0.0,
+     "over_payload_peak": 0.0,
+     "cache_len_mean": 3.53416,
+     "dropped_total": 2952.4
+    },
+    "edf": {
+     "service": 29.1,
+     "denom": 672.0,
+     "missing_collection": 166.0,
+     "missing_delivery": 476.9,
+     "aoi_mean_s": 68918.18304309779,
+     "energy_consumed_wh": 1.459256501,
+     "uplinks": 72.0,
+     "downlink_attempts": 0.0,
+     "airtime_uplink_h": 0.036884480000000004,
+     "over_payload_ticks": 34064.4,
+     "over_payload_peak": 240.0,
+     "cache_len_mean": 106.4272,
+     "dropped_total": 59.8
+    },
+    "obligation_greedy": {
+     "service": 30.9,
+     "denom": 672.0,
+     "missing_collection": 166.0,
+     "missing_delivery": 475.1,
+     "aoi_mean_s": 34523.08911309213,
+     "energy_consumed_wh": 1.459201352,
+     "uplinks": 72.0,
+     "downlink_attempts": 0.0,
+     "airtime_uplink_h": 0.036536320000000004,
+     "over_payload_ticks": 34261.6,
+     "over_payload_peak": 240.0,
+     "cache_len_mean": 107.39267,
+     "dropped_total": 58.8
+    }
+   },
+   "effect_vs_fifo": {
+    "fifo": {
+     "d_service": 0.0,
+     "d_airtime_uplink_h": 0.0,
+     "d_energy_wh": 0.0,
+     "d_missing_collection": 0.0,
+     "d_dropped": 0.0
+    },
+    "lifo": {
+     "d_service": 65.1,
+     "d_airtime_uplink_h": 0.0,
+     "d_energy_wh": 0.0,
+     "d_missing_collection": 0.0,
+     "d_dropped": -4.2
+    },
+    "latest_only": {
+     "d_service": 58.3,
+     "d_airtime_uplink_h": -0.033587,
+     "d_energy_wh": -0.00532,
+     "d_missing_collection": 0.0,
+     "d_dropped": 2892.6
+    },
+    "edf": {
+     "d_service": 0.0,
+     "d_airtime_uplink_h": 0.0,
+     "d_energy_wh": 0.0,
+     "d_missing_collection": 0.0,
+     "d_dropped": 0.0
+    },
+    "obligation_greedy": {
+     "d_service": 1.8,
+     "d_airtime_uplink_h": -0.000348,
+     "d_energy_wh": -5.5e-05,
+     "d_missing_collection": 0.0,
+     "d_dropped": -1.0
+    }
+   },
+   "activation": {
+    "over_payload_ticks": 34064.4,
+    "over_payload_peak_max_across_seeds": 240,
+    "cache_len_mean": 106.4272,
+    "payload_slots": 32
+   },
+   "verdict": {
+    "activated": true,
+    "max_abs_d_service_pure": 65.1,
+    "R1_negative_control_ok": false,
+    "best_by_service": "lifo",
+    "best_by_airtime": "latest_only"
+   }
+  },
+  "E3_negative_one_per_window": {
+   "source": "results/instance_accout40_fifo.json",
+   "overrides": {},
+   "note": "**负对照**：一窗 1 条（匹配规则必须为空操作）",
+   "records_per_window": 1,
+   "arm": "local",
+   "rows": {
+    "fifo": {
+     "service": 132.3,
+     "denom": 672.0,
+     "missing_collection": 0.0,
+     "missing_delivery": 539.7,
+     "aoi_mean_s": 10630.690256501457,
+     "energy_consumed_wh": 0.338192693,
+     "uplinks": 117.0,
+     "downlink_attempts": 0.0,
+     "airtime_uplink_h": 0.021014471111111127,
+     "over_payload_ticks": 6900.9,
+     "over_payload_peak": 43.4,
+     "cache_len_mean": 16.77147,
+     "dropped_total": 0.0
+    },
+    "lifo": {
+     "service": 151.2,
+     "denom": 672.0,
+     "missing_collection": 0.0,
+     "missing_delivery": 520.8,
+     "aoi_mean_s": 4708.10105230047,
+     "energy_consumed_wh": 0.338167282,
+     "uplinks": 117.0,
+     "downlink_attempts": 0.0,
+     "airtime_uplink_h": 0.02085404444444446,
+     "over_payload_ticks": 6900.9,
+     "over_payload_peak": 43.4,
+     "cache_len_mean": 16.75545,
+     "dropped_total": 0.0
+    },
+    "latest_only": {
+     "service": 139.9,
+     "denom": 672.0,
+     "missing_collection": 0.0,
+     "missing_delivery": 532.1,
+     "aoi_mean_s": 4708.10105230047,
+     "energy_consumed_wh": 0.33571272,
+     "uplinks": 117.0,
+     "downlink_attempts": 0.0,
+     "airtime_uplink_h": 0.005358079999999998,
+     "over_payload_ticks": 0.0,
+     "over_payload_peak": 0.0,
+     "cache_len_mean": 0.89062,
+     "dropped_total": 598.7
+    },
+    "edf": {
+     "service": 132.3,
+     "denom": 672.0,
+     "missing_collection": 0.0,
+     "missing_delivery": 539.7,
+     "aoi_mean_s": 10630.690256501457,
+     "energy_consumed_wh": 0.338192693,
+     "uplinks": 117.0,
+     "downlink_attempts": 0.0,
+     "airtime_uplink_h": 0.021014471111111127,
+     "over_payload_ticks": 6900.9,
+     "over_payload_peak": 43.4,
+     "cache_len_mean": 16.77147,
+     "dropped_total": 0.0
+    },
+    "obligation_greedy": {
+     "service": 132.3,
+     "denom": 672.0,
+     "missing_collection": 0.0,
+     "missing_delivery": 539.7,
+     "aoi_mean_s": 10631.243771951104,
+     "energy_consumed_wh": 0.338192693,
+     "uplinks": 117.0,
+     "downlink_attempts": 0.0,
+     "airtime_uplink_h": 0.021014471111111127,
+     "over_payload_ticks": 6900.9,
+     "over_payload_peak": 43.4,
+     "cache_len_mean": 16.77803,
+     "dropped_total": 0.0
+    }
+   },
+   "effect_vs_fifo": {
+    "fifo": {
+     "d_service": 0.0,
+     "d_airtime_uplink_h": 0.0,
+     "d_energy_wh": 0.0,
+     "d_missing_collection": 0,
+     "d_dropped": 0
+    },
+    "lifo": {
+     "d_service": 18.9,
+     "d_airtime_uplink_h": -0.00016,
+     "d_energy_wh": -2.5e-05,
+     "d_missing_collection": 0,
+     "d_dropped": 0
+    },
+    "latest_only": {
+     "d_service": 7.6,
+     "d_airtime_uplink_h": -0.015656,
+     "d_energy_wh": -0.00248,
+     "d_missing_collection": 0,
+     "d_dropped": 598.7
+    },
+    "edf": {
+     "d_service": 0.0,
+     "d_airtime_uplink_h": 0.0,
+     "d_energy_wh": 0.0,
+     "d_missing_collection": 0,
+     "d_dropped": 0
+    },
+    "obligation_greedy": {
+     "d_service": 0.0,
+     "d_airtime_uplink_h": 0.0,
+     "d_energy_wh": 0.0,
+     "d_missing_collection": 0,
+     "d_dropped": 0
+    }
+   },
+   "activation": {
+    "over_payload_ticks": 6900.9,
+    "over_payload_peak_max_across_seeds": 49,
+    "cache_len_mean": 16.77147,
+    "payload_slots": 32
+   },
+   "verdict": {
+    "activated": true,
+    "max_abs_d_service_pure": 18.9,
+    "R1_negative_control_ok": false,
+    "best_by_service": "lifo",
+    "best_by_airtime": "latest_only"
+   }
+  }
+ }
+}
