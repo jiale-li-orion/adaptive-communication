@@ -22,13 +22,15 @@ for _p in (_HERE, *(_os.path.join(_CODE, d) for d in ("physics", "runtime", "exp
 
 from deployment import build_deployment                       # noqa: E402
 from exogenous import (ObligationSet, constant_harvest,      # noqa: E402
-                       displacement_series,
+                       displacement_series, hetero_harvest, solar_harvest,
+                       irradiance_harvest,
                        rule_obligations_for_truth, routine_obligations_by_node,
                        wang_fragment_truth)
 from center import SocObservationModel, build_policy          # noqa: E402
 from network import DeviceProfile, Instance, nodes_from       # noqa: E402
 from scoring import evaluate                                  # noqa: E402
 from joint_plane import JointControlPlane                     # noqa: E402
+from joint_policy import DeliveryOpportunisticPolicy, GatewayObserver  # noqa: E402
 
 
 def run_joint(seed: int = 0, task_hours: int = 12, tail_hours: int = 1,
@@ -36,7 +38,10 @@ def run_joint(seed: int = 0, task_hours: int = 12, tail_hours: int = 1,
               sample_interval_s: int = 3600, report_period_s: int = 3600,
               routine_period_s: int = 3600, event_spacing_s: int = 300,
               harvest_wh_per_hour: float = 3.0, capacity_wh: float = 0.05,
-              initial_soc: float = 1.0,
+              initial_soc: float = 1.0, harvest_mode: str = "uniform",
+              harvest_peak_wh_per_hour: float = 0.06,
+              blackout_frac: float = 0.0, blackout_start_h: float = 0.0,
+              low_frac: float = 0.4, low_wh_per_hour: float = 0.005,
               uplink_p_arrive: float = 0.74, backhaul_p_good: float = 0.62,
               burst_p_gb: float | None = None, burst_p_bg: float | None = None,
               outage_start_h: float | None = None, outage_hours: float = 0.0,
@@ -46,6 +51,7 @@ def run_joint(seed: int = 0, task_hours: int = 12, tail_hours: int = 1,
               backup_bytes: int = 200, backup_header_bytes: int = 20,
               backup_chooser: str = "edf", backup_failover: bool = True,
               backup_suppress: bool = True,
+              cup_use_window: bool = True, cup_lead_s: int = 900,
               collect_rows: bool = False, placement: str = "center"):
     hours = task_hours + tail_hours
     dep = build_deployment(groups=groups, per_group=per_group)
@@ -60,7 +66,26 @@ def run_joint(seed: int = 0, task_hours: int = 12, tail_hours: int = 1,
     nodes = nodes_from(dep, profile=prof)
     truth = wang_fragment_truth(0, int(hours), (dep.gateway.sid,))
     truth.displacement = displacement_series(nodes.keys(), int(hours), seed)
-    harvest, temp = constant_harvest(nodes.keys(), int(hours), harvest_wh_per_hour, 10.0)
+    if harvest_mode == "solar":
+        harvest, temp = solar_harvest(
+            nodes.keys(), int(hours), seed, peak_wh_per_hour=harvest_peak_wh_per_hour)
+    elif harvest_mode == "irradiance":
+        harvest, temp = irradiance_harvest(
+            nodes.keys(), int(hours), seed, peak_wh_per_hour=harvest_peak_wh_per_hour)
+    elif harvest_mode == "hetero":
+        harvest, temp = hetero_harvest(
+            nodes.keys(), int(hours), seed, low_frac=low_frac,
+            low_wh_per_hour=low_wh_per_hour, high_wh_per_hour=harvest_wh_per_hour)
+    else:
+        harvest, temp = constant_harvest(nodes.keys(), int(hours), harvest_wh_per_hour, 10.0)
+    if blackout_frac > 0.0:
+        from deterministic import stable_uniform as _su
+        for nid in nodes:
+            if _su(seed, "blackout", nid) < blackout_frac:
+                cut = int(blackout_start_h * 3600)
+                for tt in harvest[nid]:
+                    if tt >= cut:
+                        harvest[nid][tt] = 0.0
     truth.harvest_wh.update(harvest)
     truth.temp_c.update(temp)
 
@@ -69,7 +94,20 @@ def run_joint(seed: int = 0, task_hours: int = 12, tail_hours: int = 1,
     obs = obs + rule_obligations_for_truth(truth, spacing_s=event_spacing_s)
     obligations = ObligationSet(obs)
 
-    pol = build_policy(arm)
+    cup_observer = None
+    if arm == "cup":
+        cup_observer = GatewayObserver(backup_rate_s=backup_rate_s,
+                                       enable_backup=enable_backup)
+        pol = DeliveryOpportunisticPolicy(
+            cup_observer, period_s=routine_period_s, lead_s=cup_lead_s,
+            use_backup_window=cup_use_window)
+        placement = "gateway"          # C-up 必须在网关位置才能读到网关本地观测
+    elif arm == "ea_aoi_gw":
+        # 机制归因：与 ea_aoi 同一条策略，仅放置到网关——其 AoI 自动改用"网关听到"而非"中心收到"
+        pol = build_policy("ea_aoi")
+        placement = "gateway"
+    else:
+        pol = build_policy(arm)
     acc = None
     if access_outage_hours > 0:
         acc = (int(access_outage_start_h * 3600),
@@ -95,6 +133,8 @@ def run_joint(seed: int = 0, task_hours: int = 12, tail_hours: int = 1,
         chooser=backup_chooser, failover=backup_failover,
         obligation_period_s=routine_period_s, grace_s=routine_period_s,
         obligations=obligations, suppress_duplicates=backup_suppress)
+    if cup_observer is not None:
+        cup_observer.plane = inst.plane       # 绑定后策略才能读主路状态/备用相位
 
     log = inst.run(int(hours))
     res = evaluate(obligations, log, int(hours), nodes.keys(),
@@ -104,6 +144,13 @@ def run_joint(seed: int = 0, task_hours: int = 12, tail_hours: int = 1,
     res["backup"] = inst.plane.backup_summary()
     res["deployment"] = dep.summary()
     res["command_counters"] = dict(inst.counters)
+    res["survival"] = {
+        "alive": sum(1 for n in nodes.values() if getattr(n, "alive", True)),
+        "n": len(nodes),
+        "mean_final_soc": round(sum(n.soc_wh for n in nodes.values())
+                                / (len(nodes) * prof.capacity_wh), 4),
+        "dead": sorted(nid for nid, n in nodes.items() if not getattr(n, "alive", True)),
+    }
     return res, inst, obligations
 
 

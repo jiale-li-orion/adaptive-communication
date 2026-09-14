@@ -263,3 +263,11 @@ python3 code/analysis/steady_gap.py --seeds 20 --tag q3_dpu2 --downlink-per-upli
 | `v2gate_llm.json` | `python3 code/v2gate/run_llm_gate.py --workers 8` | 12×18=216/档 | **agent gate LLM 主结果（deepseek-flash 零样本 t=0，三档 648 实例）**：LLM 与规则共用同一最优背包器、只出每条 0–100 重要性分（不手搓字节组合）。capture R.958 / S.874 / H.919；H 档对该档最强臂 keyword 配对 Δ=−.0139（bootstrap+t 双 CI[−.021,−.0074] 排除 0、方向为负）⇒ **H0，零样本 LLM 无强规则吃不掉的残差**；分角色归因 hidden_residual 零召回、distractor_lookalike 100% 误选。parse_fail=0。结论与机制见 `docs/s7-method/v1.2/05-agent-gate-result-2026-09-14.md` |
 | `v2gate_llm_t03.json` | `run_llm_gate.py --regime H --seeds 3 --per-seed 12 --temp 0.3 --out results/v2gate_llm_t03.json` | **3×12=36（<20，仅温度变异稳健性，不作主结果）** | H 档 t=0.3 采样变异：llm.920 vs keyword.934，Δ=−.0134、小样本 CI 含 0，但方向与量级同 t=0 全样本，结论对采样温度鲁棒、不翻盘 |
 | `v2gate_llm_cache.json` | 由 `code/v2gate/ds_client.py` 按 sha256(prompt|T|model) 自动维护 | — | **LLM prompt→响应缓存，不是读数、不得作为结果引用**；保证复跑/分角色归因命中缓存不重复扣费，含 t=0 全样本与 t=0.3 子集 |
+
+
+## 二、Task v1.2 第三阶段：主/备分离交付的联合通信执行（`code/v3joint/`）
+
+| 文件 | 命令 | 种子 | 说明什么 |
+|---|---|---|---|
+| `v3joint_baselines.json` | `python3 code/v3joint/run_baselines.py`（评测种子 4–11，选档种子 0–3 分离） | **8（<20，探索性，非主结果）** | 三现成组合 local/fixed900/ea_aoi × 备用档(off/b200/b78/t300/t600) × 中断态 × 规模(5/9/14) 的交付—代价前沿；routine 现成组合已覆盖、ea_aoi 在分离主备下被 Pareto 支配。结论见 `docs/s7-method/v1.2/10、11` |
+| `v3joint_baselines.log` | 同 `run_baselines.py` 的控制台日志 | 8 | 上者逐格运行日志，仅用于复核数字，不单独引用 |

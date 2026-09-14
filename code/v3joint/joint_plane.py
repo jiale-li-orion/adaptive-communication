@@ -68,6 +68,10 @@ class JointControlPlane(ControlPlane):
         obj.backup_records = 0           # 经备用送达中心的样本数
         obj.backup_bytes_sent = 0        # 经备用发出的估算字节
         obj.backup_suppressed = 0        # 因同义务已送而抑制、未占稀缺窗的冗余样本
+        # **主路专属**成功时刻：只在主回传真的交出数据时更新，备用成功不算主路恢复。
+        # Instance 的 gateway_last_forward_ok_at 会把备用返回项也算作"转发成功"，策略要区分
+        # "主路是否健康"时必须用这个干净信号。
+        obj.last_primary_ok_at = 0
         return obj
 
     # ---- 单条 item 的**净荷**字节（不含包头；一个备用包只计一次固定头）----
@@ -112,6 +116,8 @@ class JointControlPlane(ControlPlane):
     # ---- 关键覆写：主回传之后，在同一拍叠加备用腿 ----
     def backhaul_forward(self, t_s: int, delay_s: int = 0) -> list[GatewayItem]:
         primary = super().backhaul_forward(t_s, delay_s)   # 主路 down 时为 []，且保留 pending
+        if primary:
+            self.last_primary_ok_at = t_s                  # 主路专属成功（备用不计入）
         if not self.enable_backup or t_s % self.backup_rate_s != 0:
             return primary
         # delay 未到的项本轮两种路径都不可发，与父类口径一致
