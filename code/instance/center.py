@@ -76,6 +76,12 @@ class CenterView:
     in_flight: frozenset = frozenset()
     #: **状态观测模型**。默认完美；做反证测试时把它调坏。
     soc_model: SocObservationModel = field(default_factory=SocObservationModel)
+    #: —— 以下两个是**网关本地可观测**的转发反馈（doc 48 §4 要求"明确接口和时间戳、同等给所有臂"）。
+    #: `_center_view` **不填**它们（中心在回传那一跳的另一端，看不到网关自己的转发是否成功）；
+    #: 只有 `_gateway_view` 填。**它们不含任何环境真值与未来信息**：
+    #: 前者是"网关上一次真的把缓存交给中心的时刻"，后者是"网关自己还压着多少条"。
+    gateway_last_forward_ok_at: int | None = None
+    gateway_pending_depth: int | None = None
 
     def soc_of(self, node_id: str) -> float | None:
         """策略**看到**的电量。它可能比真实值旧、脏、偏，或者干脆没到。"""
@@ -638,6 +644,78 @@ class ClairvoyantStaticSelector(DenseSamplingPolicy):
                                    {"op": OP_SET_REPORT_PERIOD, "period_s": want_p})
             out.append((nid, a))
             out.append((nid, b))
+        return out
+
+
+class ReportPacingPolicy(CenterPolicy):
+    """**只写上报周期**的节奏策略（交付 2 的「普通背压」与「迟滞背压」）。
+
+    **它只用网关本地可观测的量**（doc 48 §4 要求"明确接口和时间戳、同等给所有臂"）：
+
+      - `gateway_pending_depth`：网关自己还压着多少条缓存；
+      - `gateway_last_forward_ok_at`：网关上一次**真的**把缓存交给中心的时刻——
+        **网关自己知道这次尝试成没成**，这是本地观测；
+      - `node.report_period_s` / `node.newest_sample_taken_at`：既有的合法回执与新鲜度。
+
+    **它不读**环境 `path_available`、**不读**未来恢复时刻、**不读**节点真实未上报缓存、
+    **不读**中心未确认的交付真值。**没有反馈接口时不慢化**（退化成心跳）——
+    不在没有证据时做保守猜测。
+
+    `hysteresis=True` 时要求**连续 `confirm_n` 次**同侧才切换（普通迟滞/切换成本版本）。
+    """
+
+    def __init__(self, slow_s: int = 3600, fast_s: int = 900, dwell_s: int = 600,
+                 block_after_s: int = 1800, hysteresis: bool = False,
+                 confirm_n: int = 2) -> None:
+        super().__init__()
+        self.slow_s, self.fast_s, self.dwell_s = slow_s, fast_s, dwell_s
+        self.block_after_s = block_after_s
+        self.hysteresis = hysteresis
+        self.confirm_n = max(1, int(confirm_n))
+        self._last: dict[str, int] = {}
+        self._slow_mode: dict[str, bool] = {}
+        self._streak: dict[str, tuple[bool, int]] = {}
+        self.name = ("pacing_bp_hyst" if hysteresis else "pacing_bp")
+
+    def _blocked(self, view: CenterView) -> bool:
+        """**回传是否看起来受阻**——只用网关本地可观测的两个量。"""
+        depth = view.gateway_pending_depth
+        last = view.gateway_last_forward_ok_at
+        if depth is None or last is None:
+            return False            # 没有反馈接口 ⇒ 不慢化
+        if depth <= 0:
+            return False            # 手里没压货 ⇒ 谈不上下发受阻
+        return (view.t_s - last) >= self.block_after_s
+
+    def _want(self, nid: str, view: CenterView) -> int:
+        blocked = self._blocked(view)
+        if not self.hysteresis:
+            return self.slow_s if blocked else self.fast_s
+        was = self._slow_mode.get(nid, False)
+        side, n = self._streak.get(nid, (blocked, 0))
+        n = n + 1 if side == blocked else 1
+        self._streak[nid] = (blocked, n)
+        state = blocked if n >= self.confirm_n else was
+        self._slow_mode[nid] = state
+        return self.slow_s if state else self.fast_s
+
+    def plan(self, view: CenterView) -> list[tuple[str, dict]]:
+        out = []
+        for nid in view.node_ids:
+            if nid in view.in_flight:
+                self._skip("in_flight", nid)
+                continue
+            last = self._last.get(nid)
+            if last is not None and view.t_s - last < self.dwell_s:
+                self._skip("dwell", nid)
+                continue
+            want = self._want(nid, view)
+            snap = view.reports.get(nid) or {}
+            if snap.get("report_period_s") == want:
+                self._skip("already_confirmed", nid)
+                continue
+            self._last[nid] = view.t_s
+            out.append((nid, self.stamp(nid, op=OP_SET_REPORT_PERIOD, period_s=want)))
         return out
 
 

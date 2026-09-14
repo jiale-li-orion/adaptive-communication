@@ -517,6 +517,9 @@ class Instance:
         #: **打包机制的激活量**（§31 §五）：积压超过一次载荷容量的 (tick, 节点) 次数峰值，
         #: 以及缓存的平均深度。**必须逐条件量它，不能只挑长中断**——40 h 断链单点
         #: 不能证明实际部署常见收益。
+        #: **网关本地可观测的转发反馈**（doc 48 §4）：上一次 `backhaul_forward` **真的把缓存交给了中心**
+        #: 的时刻。网关自己知道这次尝试成不成功——这是本地观测，不含环境真值、不含未来恢复时刻。
+        self.gateway_last_forward_ok_at: int | None = 0
         self.cache_over_payload_ticks = 0
         self.cache_over_payload_peak = 0
         self.cache_len_sum = 0
@@ -710,7 +713,11 @@ class Instance:
             self._apply_delivery(type("D", (), {"node_id": node_id, "message": message})(), t_s)
 
         # 3) 回传可用时，网关把缓存的交给中心
-        for item in self.plane.backhaul_forward(t_s):
+        _forwarded = self.plane.backhaul_forward(t_s)
+        if _forwarded:
+            # 缓存真的被移动了 ⇒ 这一次转发是成功的（网关的本地观测）。
+            self.gateway_last_forward_ok_at = t_s
+        for item in _forwarded:
             self.center.receive(item, t_s)
             counters["forwarded"] += 1
             for sample in (item.payload or ()):
@@ -778,7 +785,9 @@ class Instance:
                           reports=self.gateway_reports,
                           report_at=self.gateway_report_at,
                           newest_taken_at=self.gateway_newest_taken_at,
-                          in_flight=in_flight, soc_model=self.soc_model)
+                          in_flight=in_flight, soc_model=self.soc_model,
+                          gateway_last_forward_ok_at=self.gateway_last_forward_ok_at,
+                          gateway_pending_depth=len(self.plane.gateway_pending))
 
     def _send_command(self, node_id: str, payload: dict, t_s: int,
                       origin: str = "center") -> None:
