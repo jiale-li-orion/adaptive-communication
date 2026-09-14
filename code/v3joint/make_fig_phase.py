@@ -29,7 +29,7 @@ def heat(ax,M,fmt,title,cbarlabel,cmap="Reds_r",show_abs=False):
 heat(axs[0],ea,lambda v:f"{v:.1f}","(a) Energy-AoI policy\n(SoC-gated dense sampling)","loss (pp)")
 axs[0].set_ylabel("energy-harvest peak (Wh/h)\n(weak → strong)")
 axs[0].set_yticks(range(len(PEAKS)));axs[0].set_yticklabels([f"{p:.3f}" for p in PEAKS])
-im1=heat(axs[1],eh,lambda v:f"{v:.1f}","(b) Joint EH-AoI threshold\n(Arafa-style, literature)","loss (pp)")
+im1=heat(axs[1],eh,lambda v:f"{v:.1f}","(b) Joint EH-AoI threshold\n(finite-battery EH, literature)","loss (pp)")
 im2=heat(axs[2],anchor,lambda v:f"{v:.3f}","(c) Delivery-anchored / open-loop\n(this work)","routine",cmap="Greens",show_abs=True)
 cb=fig.colorbar(im1,ax=axs[:2].tolist(),fraction=0.06,pad=0.10,shrink=0.85,
                 label="routine service loss vs open-loop (pp)")
