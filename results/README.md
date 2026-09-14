@@ -272,4 +272,6 @@ python3 code/analysis/steady_gap.py --seeds 20 --tag q3_dpu2 --downlink-per-upli
 | `v3joint_baselines.json` | `python3 code/v3joint/run_baselines.py`（评测种子 4–11，选档种子 0–3 分离） | **8（<20，探索性，非主结果）** | 三现成组合 local/fixed900/ea_aoi × 备用档(off/b200/b78/t300/t600) × 中断态 × 规模(5/9/14) 的交付—代价前沿；routine 现成组合已覆盖、ea_aoi 在分离主备下被 Pareto 支配。结论见 `docs/s7-method/v1.2/10、11` |
 | `v3joint_baselines.log` | 同 `run_baselines.py` 的控制台日志 | 8 | 上者逐格运行日志，仅用于复核数字，不单独引用 |
 | `v3joint_phase.json` | `python3 code/v3joint/phase_scan.py`（评测种子 0–3） | 4（探索性相图） | 采能强度(5)×回传中断长度(5)×{fixed900,ea_aoi,eh_aoi,anchor} 的 routine/存活/电量/空口；端到端 AoI 闭环损失随中断变长、采能变弱单调，无中断时≈0（因果隔离），eh_aoi 缓解不消除，开环/anchor 全相空间稳健。结论见 `docs/s7-method/v1.2/12、13` |
+| `v3joint_phase.png` | 由 `v3joint_phase.json` 经 `python3 code/v3joint/make_fig_phase.py` 生成 | 4 | 论文图：采能×中断相图三面板（ea 损失/eh 损失/anchor 绝对值），对应 doc12、13 |
+| `v3joint_timeline.png` | `python3 code/v3joint/make_fig_timeline.py`（trace 重跑 seed0/n00） | 1（机制示意，非统计） | 论文图：单节点电量+采样档因果时间线，闭环中断期耗尽永久死亡、开环存活，doc12 §2 |
 | 
