@@ -71,8 +71,11 @@
 > 且**服务与最优/匹配的传统臂完全一致**——`adm_noout` LLM **167** = `aoi` **167**，
 > `adm_out3` LLM **45** = `local`/`ea_aoi` **45**（控制见
 > [`llm_v5_condition_baselines.json`](results/llm_v5_condition_baselines.json)）。
-> **`polar_c0.05` 档五条传统臂也全部 `0/168`（168 缺送、AoI 无定义）⇒ 该档对任何策略都是交付黑洞**，
-> 故 LLM 在该档的「779 次 noop」**是正确规划结果，不得记成推理错误**；该档本身没有判别力，下轮应换掉。
+> **⚠ 更正**：`polar_c0.05` **不是"交付黑洞"，而是双峰的**——平均坏突发 72.5 h ≫ 12 h 任务，
+> 五条传统臂**均值都是 64.6/168，但 20 种子里恰有 10 个为 0**，而**协议冻结的 `env_seed=0` 正是零点**。
+> 所以 v5 该档的「779 次 noop、0/168」是**单种子 × 双峰条件**的读数，
+> **不得**当作"该条件不交付"或"LLM 的 noop 是对的"的证据；该档在单种子下没有判别力，
+> 替换条件见 [`37-polar-condition-disposal`](docs/s7-method/instance-v1/37-polar-condition-disposal-2026-09-14.md)。
 > ② **判别 A 已完成**（候选 1：`placement=center` vs `placement=gateway`，四档条件，20 种子 × 3 臂）
 > ⇒ **候选 1 在本实例关闭**，见上；
 > ③ **判别 B 已完成**（候选 2：**30 个合法点全部跑出** + 普通滚动搜索，三档已登记条件）
