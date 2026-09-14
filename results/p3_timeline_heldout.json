@@ -1,0 +1,310 @@
+{
+ "base": "instance_ccorral_iid_c0.05",
+ "placement": "gateway",
+ "dwell_s": 600,
+ "heldout": {
+  "seeds": [
+   20,
+   21,
+   22,
+   23,
+   24,
+   25,
+   26,
+   27,
+   28,
+   29,
+   30,
+   31,
+   32,
+   33,
+   34,
+   35,
+   36,
+   37,
+   38,
+   39
+  ],
+  "rule": "若在种子 20-39 上 oblig_copies1 相对 pacing_backlog900_300 的服务劣势区间含 0，则 doc 61 §2.3 收窄为开发种子特有",
+  "conditions": {
+   "P0_no_outage": {
+    "fixed300": {
+     "service": 527.85,
+     "uplinks": 1245.75,
+     "missing_collection": 0.0
+    },
+    "pacing_backlog900_300": {
+     "service": 523.75,
+     "uplinks": 893.4,
+     "missing_collection": 0.0
+    },
+    "oblig_copies1": {
+     "service": 516.95,
+     "uplinks": 911.25,
+     "missing_collection": 0.0
+    },
+    "paired_copies1_minus_backlog": {
+     "service": {
+      "mean": -6.8,
+      "ci95": [
+       -8.7,
+       -4.9
+      ],
+      "n_pos": 0,
+      "n_neg": 18
+     },
+     "uplinks": {
+      "mean": 17.85,
+      "ci95": [
+       -14.35,
+       46.85
+      ],
+      "n_pos": 11,
+      "n_neg": 9
+     }
+    },
+    "verdict": "服务劣势在保留种子上**复现**（区间不含 0）"
+   },
+   "P1_backhaul_4h7h": {
+    "fixed300": {
+     "service": 410.4,
+     "uplinks": 1419.25,
+     "missing_collection": 0.0
+    },
+    "pacing_backlog900_300": {
+     "service": 405.65,
+     "uplinks": 854.85,
+     "missing_collection": 0.0
+    },
+    "oblig_copies1": {
+     "service": 400.75,
+     "uplinks": 973.8,
+     "missing_collection": 0.0
+    },
+    "paired_copies1_minus_backlog": {
+     "service": {
+      "mean": -4.9,
+      "ci95": [
+       -6.15,
+       -3.55
+      ],
+      "n_pos": 0,
+      "n_neg": 19
+     },
+     "uplinks": {
+      "mean": 118.95,
+      "ci95": [
+       88.25,
+       150.5
+      ],
+      "n_pos": 19,
+      "n_neg": 1
+     }
+    },
+    "verdict": "服务劣势在保留种子上**复现**（区间不含 0）"
+   },
+   "P2_access_4h7h": {
+    "fixed300": {
+     "service": 422.8,
+     "uplinks": 951.25,
+     "missing_collection": 0.0
+    },
+    "pacing_backlog900_300": {
+     "service": 417.55,
+     "uplinks": 689.35,
+     "missing_collection": 0.0
+    },
+    "oblig_copies1": {
+     "service": 412.05,
+     "uplinks": 696.15,
+     "missing_collection": 0.0
+    },
+    "paired_copies1_minus_backlog": {
+     "service": {
+      "mean": -5.5,
+      "ci95": [
+       -7.0,
+       -3.95
+      ],
+      "n_pos": 1,
+      "n_neg": 17
+     },
+     "uplinks": {
+      "mean": 6.8,
+      "ci95": [
+       -16.6,
+       31.8
+      ],
+      "n_pos": 10,
+      "n_neg": 10
+     }
+    },
+    "verdict": "服务劣势在保留种子上**复现**（区间不含 0）"
+   }
+  }
+ },
+ "timeline": {
+  "seed": 0,
+  "condition": "P1_backhaul_4h7h",
+  "recorder_is_read_only": {
+   "fixed300": true,
+   "pacing_backlog900_300": true,
+   "oblig_copies3": true,
+   "oblig_slack": true,
+   "oblig_copies1": true
+  },
+  "examples": {
+   "positive": {
+    "n_flip_obligations": 5,
+    "oid": "n01:routine:00004",
+    "node": "n01",
+    "release_at": 3600,
+    "deadline": 5400,
+    "window_s": [
+     900,
+     7200
+    ],
+    "obligation_by_arm": {
+     "oblig_copies3": {
+      "release_at": 3600,
+      "deadline": 5400,
+      "first_heard_at": 3900,
+      "first_received_at": 3900,
+      "heard_on_time": true,
+      "received_on_time": true,
+      "delivered": true,
+      "n_heard": 2,
+      "n_received": 2
+     },
+     "pacing_backlog900_300": {
+      "release_at": 3600,
+      "deadline": 5400,
+      "first_heard_at": 6300,
+      "first_received_at": 6300,
+      "heard_on_time": false,
+      "received_on_time": false,
+      "delivered": false,
+      "n_heard": 2,
+      "n_received": 2
+     },
+     "oblig_slack": {
+      "release_at": 3600,
+      "deadline": 5400,
+      "first_heard_at": 6300,
+      "first_received_at": 6300,
+      "heard_on_time": false,
+      "received_on_time": false,
+      "delivered": false,
+      "n_heard": 2,
+      "n_received": 2
+     }
+    },
+    "chain": [
+     {
+      "t_s": 900,
+      "kind": "applied",
+      "field": "set_report_period",
+      "value": 300,
+      "logical": null
+     },
+     {
+      "t_s": 1560,
+      "kind": "plan",
+      "op": "set_report_period",
+      "value": 900,
+      "soc_seen": 0.049969,
+      "soc_age_s": 60,
+      "reason": "target_change"
+     },
+     {
+      "t_s": 1560,
+      "kind": "sent",
+      "logical": null,
+      "op": "set_report_period",
+      "value": 900
+     },
+     {
+      "t_s": 1800,
+      "kind": "applied",
+      "field": "set_report_period",
+      "value": 900,
+      "logical": null
+     },
+     {
+      "t_s": 2160,
+      "kind": "plan",
+      "op": "set_report_period",
+      "value": 300,
+      "soc_seen": 0.049489,
+      "soc_age_s": 360,
+      "reason": "target_change"
+     },
+     {
+      "t_s": 2160,
+      "kind": "sent",
+      "logical": null,
+      "op": "set_report_period",
+      "value": 300
+     },
+     {
+      "t_s": 2700,
+      "kind": "applied",
+      "field": "set_report_period",
+      "value": 300,
+      "logical": null
+     }
+    ],
+    "evidence_read": [
+     {
+      "t_s": 1560,
+      "pending_depth": 46,
+      "oldest_pending_age_s": 1560,
+      "last_forward_ok_at": 0,
+      "copies_in_window": 3,
+      "cmds": [
+       [
+        "n00",
+        900
+       ],
+       [
+        "n01",
+        900
+       ],
+       [
+        "n10",
+        900
+       ],
+       [
+        "n15",
+        900
+       ]
+      ]
+     },
+     {
+      "t_s": 2160,
+      "pending_depth": 62,
+      "oldest_pending_age_s": 2160,
+      "last_forward_ok_at": 0,
+      "copies_in_window": 1,
+      "cmds": [
+       [
+        "n01",
+        300
+       ],
+       [
+        "n05",
+        300
+       ]
+      ]
+     }
+    ],
+    "null_example": {
+     "claim": "同一条义务在 oblig_slack 与 oblig_copies1 下**逐位相同**（doc 61 §3 的退化）：候选的两条区分支在本轮参数下不可达",
+     "slack_equals_copies1_obligations": true,
+     "slack_equals_copies1_routine": true,
+     "slack_equals_copies1_communication": true
+    }
+   }
+  }
+ }
+}

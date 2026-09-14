@@ -1,0 +1,1545 @@
+{
+ "sources": [
+  "pacing_copies",
+  "pacing_fair"
+ ],
+ "denom": 672.0,
+ "tolerances": [
+  0.0,
+  0.01,
+  0.03,
+  0.05
+ ],
+ "main_tolerances": [
+  "0.00%",
+  "1.00%"
+ ],
+ "axes": [
+  "uplinks",
+  "downlink_attempts",
+  "airtime_uplink_h",
+  "energy_consumed_wh",
+  "aoi_mean_s",
+  "missing_collection"
+ ],
+ "conditions": {
+  "P0_no_outage": {
+   "denom": 672.0,
+   "n_arms": 27,
+   "reference_arm": "fixed300",
+   "reference_service": 511.2,
+   "reference_missing_collection": 0.0,
+   "origin": {
+    "fixed300": "pacing_copies",
+    "pacing_backlog900_300": "pacing_copies",
+    "oblig_copies1": "pacing_copies",
+    "oblig_copies2": "pacing_copies",
+    "oblig_copies3": "pacing_copies",
+    "oblig_slack": "pacing_copies",
+    "oblig_slack_no_slack": "pacing_copies",
+    "oblig_slack_no_delay": "pacing_copies",
+    "oblig_slack_no_obligation": "pacing_copies",
+    "local": "pacing_copies",
+    "fixed600": "pacing_copies",
+    "fixed900": "pacing_copies",
+    "fixed1800": "pacing_copies",
+    "fixed3600": "pacing_copies",
+    "aoi": "pacing_copies",
+    "aoi_const300": "pacing_copies",
+    "aoi_f600": "pacing_copies",
+    "aoi_t7200": "pacing_copies",
+    "pacing_bp900_300": "pacing_fair",
+    "pacing_bp1800_300": "pacing_fair",
+    "pacing_backlog1800_300": "pacing_fair",
+    "pacing_bp1800_900": "pacing_fair",
+    "pacing_backlog1800_900": "pacing_fair",
+    "pacing_bp3600_900": "pacing_fair",
+    "pacing_backlog3600_900": "pacing_fair",
+    "pacing_bp900_300_hyst": "pacing_fair",
+    "pacing_backlog900_300_hyst": "pacing_fair"
+   },
+   "points": {
+    "0.00%": {
+     "floor": 511.2,
+     "n_feasible": 2,
+     "cheapest_by_axis": {
+      "uplinks": {
+       "arm": "fixed300",
+       "value": 1254.95,
+       "service": 511.2,
+       "missing_collection": 0.0,
+       "origin": "pacing_copies"
+      },
+      "downlink_attempts": {
+       "arm": "fixed300",
+       "value": 19.2,
+       "service": 511.2,
+       "missing_collection": 0.0,
+       "origin": "pacing_copies"
+      },
+      "airtime_uplink_h": {
+       "arm": "fixed300",
+       "value": 0.099911,
+       "service": 511.2,
+       "missing_collection": 0.0,
+       "origin": "pacing_copies"
+      },
+      "energy_consumed_wh": {
+       "arm": "fixed300",
+       "value": 0.395134,
+       "service": 511.2,
+       "missing_collection": 0.0,
+       "origin": "pacing_copies"
+      },
+      "aoi_mean_s": {
+       "arm": "fixed300",
+       "value": 1979.305145,
+       "service": 511.2,
+       "missing_collection": 0.0,
+       "origin": "pacing_copies"
+      },
+      "missing_collection": {
+       "arm": "fixed300",
+       "value": 0.0,
+       "service": 511.2,
+       "missing_collection": 0.0,
+       "origin": "pacing_copies"
+      }
+     },
+     "violating_missing_collection": []
+    },
+    "1.00%": {
+     "floor": 504.48,
+     "n_feasible": 8,
+     "cheapest_by_axis": {
+      "uplinks": {
+       "arm": "pacing_backlog900_300",
+       "value": 880.35,
+       "service": 508.25,
+       "missing_collection": 0.0,
+       "origin": "pacing_copies"
+      },
+      "downlink_attempts": {
+       "arm": "fixed300",
+       "value": 19.2,
+       "service": 511.2,
+       "missing_collection": 0.0,
+       "origin": "pacing_copies"
+      },
+      "airtime_uplink_h": {
+       "arm": "pacing_backlog900_300",
+       "value": 0.057416,
+       "service": 508.25,
+       "missing_collection": 0.0,
+       "origin": "pacing_copies"
+      },
+      "energy_consumed_wh": {
+       "arm": "pacing_backlog900_300",
+       "value": 0.3808,
+       "service": 508.25,
+       "missing_collection": 0.0,
+       "origin": "pacing_copies"
+      },
+      "aoi_mean_s": {
+       "arm": "fixed300",
+       "value": 1979.305145,
+       "service": 511.2,
+       "missing_collection": 0.0,
+       "origin": "pacing_copies"
+      },
+      "missing_collection": {
+       "arm": "fixed300",
+       "value": 0.0,
+       "service": 511.2,
+       "missing_collection": 0.0,
+       "origin": "pacing_copies"
+      }
+     },
+     "violating_missing_collection": []
+    },
+    "3.00%": {
+     "floor": 491.04,
+     "n_feasible": 19,
+     "cheapest_by_axis": {
+      "uplinks": {
+       "arm": "local",
+       "value": 676.0,
+       "service": 496.2,
+       "missing_collection": 0.0,
+       "origin": "pacing_copies"
+      },
+      "downlink_attempts": {
+       "arm": "local",
+       "value": 0.0,
+       "service": 496.2,
+       "missing_collection": 0.0,
+       "origin": "pacing_copies"
+      },
+      "airtime_uplink_h": {
+       "arm": "local",
+       "value": 0.04981,
+       "service": 496.2,
+       "missing_collection": 0.0,
+       "origin": "pacing_copies"
+      },
+      "energy_consumed_wh": {
+       "arm": "local",
+       "value": 0.374322,
+       "service": 496.2,
+       "missing_collection": 0.0,
+       "origin": "pacing_copies"
+      },
+      "aoi_mean_s": {
+       "arm": "fixed300",
+       "value": 1979.305145,
+       "service": 511.2,
+       "missing_collection": 0.0,
+       "origin": "pacing_copies"
+      },
+      "missing_collection": {
+       "arm": "fixed300",
+       "value": 0.0,
+       "service": 511.2,
+       "missing_collection": 0.0,
+       "origin": "pacing_copies"
+      }
+     },
+     "violating_missing_collection": []
+    },
+    "5.00%": {
+     "floor": 477.6,
+     "n_feasible": 21,
+     "cheapest_by_axis": {
+      "uplinks": {
+       "arm": "local",
+       "value": 676.0,
+       "service": 496.2,
+       "missing_collection": 0.0,
+       "origin": "pacing_copies"
+      },
+      "downlink_attempts": {
+       "arm": "local",
+       "value": 0.0,
+       "service": 496.2,
+       "missing_collection": 0.0,
+       "origin": "pacing_copies"
+      },
+      "airtime_uplink_h": {
+       "arm": "pacing_backlog1800_300",
+       "value": 0.045429,
+       "service": 479.8,
+       "missing_collection": 0.0,
+       "origin": "pacing_fair"
+      },
+      "energy_consumed_wh": {
+       "arm": "local",
+       "value": 0.374322,
+       "service": 496.2,
+       "missing_collection": 0.0,
+       "origin": "pacing_copies"
+      },
+      "aoi_mean_s": {
+       "arm": "fixed300",
+       "value": 1979.305145,
+       "service": 511.2,
+       "missing_collection": 0.0,
+       "origin": "pacing_copies"
+      },
+      "missing_collection": {
+       "arm": "fixed300",
+       "value": 0.0,
+       "service": 511.2,
+       "missing_collection": 0.0,
+       "origin": "pacing_copies"
+      }
+     },
+     "violating_missing_collection": []
+    }
+   },
+   "table": {
+    "fixed300": {
+     "service": 511.2,
+     "missing_collection": 0.0,
+     "missing_delivery": 160.8,
+     "uplinks": 1254.95,
+     "downlink_attempts": 19.2,
+     "airtime_uplink_h": 0.099911,
+     "energy_consumed_wh": 0.395134,
+     "aoi_mean_s": 1979.305145
+    },
+    "aoi_const300": {
+     "service": 511.2,
+     "missing_collection": 0.0,
+     "missing_delivery": 160.8,
+     "uplinks": 1254.95,
+     "downlink_attempts": 19.2,
+     "airtime_uplink_h": 0.099911,
+     "energy_consumed_wh": 0.395134,
+     "aoi_mean_s": 1979.305145
+    },
+    "oblig_copies3": {
+     "service": 510.0,
+     "missing_collection": 0.0,
+     "missing_delivery": 162.0,
+     "uplinks": 1113.8,
+     "downlink_attempts": 175.0,
+     "airtime_uplink_h": 0.084169,
+     "energy_consumed_wh": 0.390665,
+     "aoi_mean_s": 1996.384647
+    },
+    "oblig_copies2": {
+     "service": 509.15,
+     "missing_collection": 0.0,
+     "missing_delivery": 162.85,
+     "uplinks": 1024.7,
+     "downlink_attempts": 243.75,
+     "airtime_uplink_h": 0.074852,
+     "energy_consumed_wh": 0.387728,
+     "aoi_mean_s": 2002.11498
+    },
+    "pacing_bp900_300_hyst": {
+     "service": 508.75,
+     "missing_collection": 0.0,
+     "missing_delivery": 163.25,
+     "uplinks": 939.7,
+     "downlink_attempts": 103.15,
+     "airtime_uplink_h": 0.061092,
+     "energy_consumed_wh": 0.382659,
+     "aoi_mean_s": 2012.998033
+    },
+    "pacing_bp900_300": {
+     "service": 508.7,
+     "missing_collection": 0.0,
+     "missing_delivery": 163.3,
+     "uplinks": 924.35,
+     "downlink_attempts": 103.55,
+     "airtime_uplink_h": 0.060049,
+     "energy_consumed_wh": 0.382159,
+     "aoi_mean_s": 2012.406181
+    },
+    "pacing_backlog900_300_hyst": {
+     "service": 508.5,
+     "missing_collection": 0.0,
+     "missing_delivery": 163.5,
+     "uplinks": 907.0,
+     "downlink_attempts": 105.1,
+     "airtime_uplink_h": 0.058929,
+     "energy_consumed_wh": 0.381611,
+     "aoi_mean_s": 2013.409562
+    },
+    "pacing_backlog900_300": {
+     "service": 508.25,
+     "missing_collection": 0.0,
+     "missing_delivery": 163.75,
+     "uplinks": 880.35,
+     "downlink_attempts": 107.15,
+     "airtime_uplink_h": 0.057416,
+     "energy_consumed_wh": 0.3808,
+     "aoi_mean_s": 2016.051596
+    },
+    "oblig_copies1": {
+     "service": 501.9,
+     "missing_collection": 0.0,
+     "missing_delivery": 170.1,
+     "uplinks": 909.05,
+     "downlink_attempts": 621.8,
+     "airtime_uplink_h": 0.069992,
+     "energy_consumed_wh": 0.387156,
+     "aoi_mean_s": 2100.623177
+    },
+    "oblig_slack": {
+     "service": 501.9,
+     "missing_collection": 0.0,
+     "missing_delivery": 170.1,
+     "uplinks": 909.05,
+     "downlink_attempts": 621.8,
+     "airtime_uplink_h": 0.069992,
+     "energy_consumed_wh": 0.387156,
+     "aoi_mean_s": 2100.623177
+    },
+    "oblig_slack_no_slack": {
+     "service": 501.9,
+     "missing_collection": 0.0,
+     "missing_delivery": 170.1,
+     "uplinks": 909.05,
+     "downlink_attempts": 621.8,
+     "airtime_uplink_h": 0.069992,
+     "energy_consumed_wh": 0.387156,
+     "aoi_mean_s": 2100.623177
+    },
+    "oblig_slack_no_delay": {
+     "service": 501.9,
+     "missing_collection": 0.0,
+     "missing_delivery": 170.1,
+     "uplinks": 909.05,
+     "downlink_attempts": 621.8,
+     "airtime_uplink_h": 0.069992,
+     "energy_consumed_wh": 0.387156,
+     "aoi_mean_s": 2100.623177
+    },
+    "oblig_slack_no_obligation": {
+     "service": 501.9,
+     "missing_collection": 0.0,
+     "missing_delivery": 170.1,
+     "uplinks": 909.05,
+     "downlink_attempts": 621.8,
+     "airtime_uplink_h": 0.069992,
+     "energy_consumed_wh": 0.387156,
+     "aoi_mean_s": 2100.623177
+    },
+    "fixed600": {
+     "service": 498.6,
+     "missing_collection": 0.0,
+     "missing_delivery": 173.4,
+     "uplinks": 841.7,
+     "downlink_attempts": 19.2,
+     "airtime_uplink_h": 0.062709,
+     "energy_consumed_wh": 0.38015,
+     "aoi_mean_s": 2201.868252
+    },
+    "aoi": {
+     "service": 497.15,
+     "missing_collection": 0.0,
+     "missing_delivery": 174.85,
+     "uplinks": 687.25,
+     "downlink_attempts": 42.75,
+     "airtime_uplink_h": 0.05029,
+     "energy_consumed_wh": 0.374955,
+     "aoi_mean_s": 2169.405542
+    },
+    "aoi_t7200": {
+     "service": 497.05,
+     "missing_collection": 0.0,
+     "missing_delivery": 174.95,
+     "uplinks": 685.05,
+     "downlink_attempts": 37.05,
+     "airtime_uplink_h": 0.050075,
+     "energy_consumed_wh": 0.374832,
+     "aoi_mean_s": 2170.094801
+    },
+    "aoi_f600": {
+     "service": 496.55,
+     "missing_collection": 0.0,
+     "missing_delivery": 175.45,
+     "uplinks": 682.45,
+     "downlink_attempts": 42.5,
+     "airtime_uplink_h": 0.050137,
+     "energy_consumed_wh": 0.374824,
+     "aoi_mean_s": 2181.223206
+    },
+    "local": {
+     "service": 496.2,
+     "missing_collection": 0.0,
+     "missing_delivery": 175.8,
+     "uplinks": 676.0,
+     "downlink_attempts": 0.0,
+     "airtime_uplink_h": 0.04981,
+     "energy_consumed_wh": 0.374322,
+     "aoi_mean_s": 2185.65559
+    },
+    "fixed900": {
+     "service": 496.2,
+     "missing_collection": 0.0,
+     "missing_delivery": 175.8,
+     "uplinks": 676.0,
+     "downlink_attempts": 19.2,
+     "airtime_uplink_h": 0.04981,
+     "energy_consumed_wh": 0.374461,
+     "aoi_mean_s": 2185.65559
+    },
+    "pacing_bp1800_300": {
+     "service": 480.25,
+     "missing_collection": 0.0,
+     "missing_delivery": 191.75,
+     "uplinks": 776.1,
+     "downlink_attempts": 103.25,
+     "airtime_uplink_h": 0.048207,
+     "energy_consumed_wh": 0.377019,
+     "aoi_mean_s": 2252.227185
+    },
+    "pacing_backlog1800_300": {
+     "service": 479.8,
+     "missing_collection": 0.0,
+     "missing_delivery": 192.2,
+     "uplinks": 734.0,
+     "downlink_attempts": 100.75,
+     "airtime_uplink_h": 0.045429,
+     "energy_consumed_wh": 0.375635,
+     "aoi_mean_s": 2245.589691
+    },
+    "pacing_bp1800_900": {
+     "service": 471.5,
+     "missing_collection": 0.0,
+     "missing_delivery": 200.5,
+     "uplinks": 558.25,
+     "downlink_attempts": 102.05,
+     "airtime_uplink_h": 0.038914,
+     "energy_consumed_wh": 0.370746,
+     "aoi_mean_s": 2390.672624
+    },
+    "pacing_backlog1800_900": {
+     "service": 470.7,
+     "missing_collection": 0.0,
+     "missing_delivery": 201.3,
+     "uplinks": 554.45,
+     "downlink_attempts": 102.6,
+     "airtime_uplink_h": 0.038611,
+     "energy_consumed_wh": 0.370618,
+     "aoi_mean_s": 2393.313107
+    },
+    "pacing_bp3600_900": {
+     "service": 411.1,
+     "missing_collection": 0.0,
+     "missing_delivery": 260.9,
+     "uplinks": 451.5,
+     "downlink_attempts": 90.45,
+     "airtime_uplink_h": 0.032546,
+     "energy_consumed_wh": 0.367304,
+     "aoi_mean_s": 3038.063762
+    },
+    "pacing_backlog3600_900": {
+     "service": 410.45,
+     "missing_collection": 0.0,
+     "missing_delivery": 261.55,
+     "uplinks": 443.35,
+     "downlink_attempts": 92.0,
+     "airtime_uplink_h": 0.03188,
+     "energy_consumed_wh": 0.367031,
+     "aoi_mean_s": 3044.010869
+    },
+    "fixed1800": {
+     "service": 405.65,
+     "missing_collection": 0.0,
+     "missing_delivery": 266.35,
+     "uplinks": 346.3,
+     "downlink_attempts": 19.2,
+     "airtime_uplink_h": 0.031586,
+     "energy_consumed_wh": 0.364321,
+     "aoi_mean_s": 2996.546756
+    },
+    "fixed3600": {
+     "service": 275.8,
+     "missing_collection": 0.0,
+     "missing_delivery": 396.2,
+     "uplinks": 180.6,
+     "downlink_attempts": 19.2,
+     "airtime_uplink_h": 0.022104,
+     "energy_consumed_wh": 0.359174,
+     "aoi_mean_s": 4446.672806
+    }
+   }
+  },
+  "P1_backhaul_4h7h": {
+   "denom": 672.0,
+   "n_arms": 27,
+   "reference_arm": "fixed300",
+   "reference_service": 404.95,
+   "reference_missing_collection": 0.0,
+   "origin": {
+    "fixed300": "pacing_copies",
+    "pacing_backlog900_300": "pacing_copies",
+    "oblig_copies1": "pacing_copies",
+    "oblig_copies2": "pacing_copies",
+    "oblig_copies3": "pacing_copies",
+    "oblig_slack": "pacing_copies",
+    "oblig_slack_no_slack": "pacing_copies",
+    "oblig_slack_no_delay": "pacing_copies",
+    "oblig_slack_no_obligation": "pacing_copies",
+    "local": "pacing_copies",
+    "fixed600": "pacing_copies",
+    "fixed900": "pacing_copies",
+    "fixed1800": "pacing_copies",
+    "fixed3600": "pacing_copies",
+    "aoi": "pacing_copies",
+    "aoi_const300": "pacing_copies",
+    "aoi_f600": "pacing_copies",
+    "aoi_t7200": "pacing_copies",
+    "pacing_bp900_300": "pacing_fair",
+    "pacing_bp1800_300": "pacing_fair",
+    "pacing_backlog1800_300": "pacing_fair",
+    "pacing_bp1800_900": "pacing_fair",
+    "pacing_backlog1800_900": "pacing_fair",
+    "pacing_bp3600_900": "pacing_fair",
+    "pacing_backlog3600_900": "pacing_fair",
+    "pacing_bp900_300_hyst": "pacing_fair",
+    "pacing_backlog900_300_hyst": "pacing_fair"
+   },
+   "points": {
+    "0.00%": {
+     "floor": 404.95,
+     "n_feasible": 2,
+     "cheapest_by_axis": {
+      "uplinks": {
+       "arm": "fixed300",
+       "value": 1412.1,
+       "service": 404.95,
+       "missing_collection": 0.0,
+       "origin": "pacing_copies"
+      },
+      "downlink_attempts": {
+       "arm": "fixed300",
+       "value": 19.2,
+       "service": 404.95,
+       "missing_collection": 0.0,
+       "origin": "pacing_copies"
+      },
+      "airtime_uplink_h": {
+       "arm": "fixed300",
+       "value": 0.164496,
+       "service": 404.95,
+       "missing_collection": 0.0,
+       "origin": "pacing_copies"
+      },
+      "energy_consumed_wh": {
+       "arm": "fixed300",
+       "value": 0.408822,
+       "service": 404.95,
+       "missing_collection": 0.0,
+       "origin": "pacing_copies"
+      },
+      "aoi_mean_s": {
+       "arm": "fixed300",
+       "value": 3787.870721,
+       "service": 404.95,
+       "missing_collection": 0.0,
+       "origin": "pacing_copies"
+      },
+      "missing_collection": {
+       "arm": "fixed300",
+       "value": 0.0,
+       "service": 404.95,
+       "missing_collection": 0.0,
+       "origin": "pacing_copies"
+      }
+     },
+     "violating_missing_collection": []
+    },
+    "1.00%": {
+     "floor": 398.23,
+     "n_feasible": 8,
+     "cheapest_by_axis": {
+      "uplinks": {
+       "arm": "pacing_backlog900_300",
+       "value": 843.75,
+       "service": 402.05,
+       "missing_collection": 0.0,
+       "origin": "pacing_copies"
+      },
+      "downlink_attempts": {
+       "arm": "fixed300",
+       "value": 19.2,
+       "service": 404.95,
+       "missing_collection": 0.0,
+       "origin": "pacing_copies"
+      },
+      "airtime_uplink_h": {
+       "arm": "pacing_backlog900_300",
+       "value": 0.075693,
+       "service": 402.05,
+       "missing_collection": 0.0,
+       "origin": "pacing_copies"
+      },
+      "energy_consumed_wh": {
+       "arm": "pacing_backlog900_300",
+       "value": 0.382822,
+       "service": 402.05,
+       "missing_collection": 0.0,
+       "origin": "pacing_copies"
+      },
+      "aoi_mean_s": {
+       "arm": "fixed300",
+       "value": 3787.870721,
+       "service": 404.95,
+       "missing_collection": 0.0,
+       "origin": "pacing_copies"
+      },
+      "missing_collection": {
+       "arm": "fixed300",
+       "value": 0.0,
+       "service": 404.95,
+       "missing_collection": 0.0,
+       "origin": "pacing_copies"
+      }
+     },
+     "violating_missing_collection": []
+    },
+    "3.00%": {
+     "floor": 384.79,
+     "n_feasible": 19,
+     "cheapest_by_axis": {
+      "uplinks": {
+       "arm": "local",
+       "value": 676.0,
+       "service": 392.05,
+       "missing_collection": 0.0,
+       "origin": "pacing_copies"
+      },
+      "downlink_attempts": {
+       "arm": "local",
+       "value": 0.0,
+       "service": 392.05,
+       "missing_collection": 0.0,
+       "origin": "pacing_copies"
+      },
+      "airtime_uplink_h": {
+       "arm": "local",
+       "value": 0.069956,
+       "service": 392.05,
+       "missing_collection": 0.0,
+       "origin": "pacing_copies"
+      },
+      "energy_consumed_wh": {
+       "arm": "local",
+       "value": 0.377513,
+       "service": 392.05,
+       "missing_collection": 0.0,
+       "origin": "pacing_copies"
+      },
+      "aoi_mean_s": {
+       "arm": "fixed300",
+       "value": 3787.870721,
+       "service": 404.95,
+       "missing_collection": 0.0,
+       "origin": "pacing_copies"
+      },
+      "missing_collection": {
+       "arm": "fixed300",
+       "value": 0.0,
+       "service": 404.95,
+       "missing_collection": 0.0,
+       "origin": "pacing_copies"
+      }
+     },
+     "violating_missing_collection": []
+    },
+    "5.00%": {
+     "floor": 371.35,
+     "n_feasible": 21,
+     "cheapest_by_axis": {
+      "uplinks": {
+       "arm": "pacing_backlog1800_300",
+       "value": 656.05,
+       "service": 375.9,
+       "missing_collection": 0.0,
+       "origin": "pacing_fair"
+      },
+      "downlink_attempts": {
+       "arm": "local",
+       "value": 0.0,
+       "service": 392.05,
+       "missing_collection": 0.0,
+       "origin": "pacing_copies"
+      },
+      "airtime_uplink_h": {
+       "arm": "pacing_backlog1800_300",
+       "value": 0.052215,
+       "service": 375.9,
+       "missing_collection": 0.0,
+       "origin": "pacing_fair"
+      },
+      "energy_consumed_wh": {
+       "arm": "pacing_backlog1800_300",
+       "value": 0.374951,
+       "service": 375.9,
+       "missing_collection": 0.0,
+       "origin": "pacing_fair"
+      },
+      "aoi_mean_s": {
+       "arm": "fixed300",
+       "value": 3787.870721,
+       "service": 404.95,
+       "missing_collection": 0.0,
+       "origin": "pacing_copies"
+      },
+      "missing_collection": {
+       "arm": "fixed300",
+       "value": 0.0,
+       "service": 404.95,
+       "missing_collection": 0.0,
+       "origin": "pacing_copies"
+      }
+     },
+     "violating_missing_collection": []
+    }
+   },
+   "table": {
+    "fixed300": {
+     "service": 404.95,
+     "missing_collection": 0.0,
+     "missing_delivery": 267.05,
+     "uplinks": 1412.1,
+     "downlink_attempts": 19.2,
+     "airtime_uplink_h": 0.164496,
+     "energy_consumed_wh": 0.408822,
+     "aoi_mean_s": 3787.870721
+    },
+    "aoi_const300": {
+     "service": 404.95,
+     "missing_collection": 0.0,
+     "missing_delivery": 267.05,
+     "uplinks": 1412.1,
+     "downlink_attempts": 19.2,
+     "airtime_uplink_h": 0.164496,
+     "energy_consumed_wh": 0.408822,
+     "aoi_mean_s": 3787.870721
+    },
+    "oblig_copies3": {
+     "service": 403.4,
+     "missing_collection": 0.0,
+     "missing_delivery": 268.6,
+     "uplinks": 1190.1,
+     "downlink_attempts": 237.9,
+     "airtime_uplink_h": 0.130078,
+     "energy_consumed_wh": 0.400072,
+     "aoi_mean_s": 3805.941323
+    },
+    "oblig_copies2": {
+     "service": 402.55,
+     "missing_collection": 0.0,
+     "missing_delivery": 269.45,
+     "uplinks": 1067.8,
+     "downlink_attempts": 325.1,
+     "airtime_uplink_h": 0.11269,
+     "energy_consumed_wh": 0.39526,
+     "aoi_mean_s": 3812.103162
+    },
+    "pacing_bp900_300_hyst": {
+     "service": 402.55,
+     "missing_collection": 0.0,
+     "missing_delivery": 269.45,
+     "uplinks": 899.0,
+     "downlink_attempts": 96.15,
+     "airtime_uplink_h": 0.079108,
+     "energy_consumed_wh": 0.384566,
+     "aoi_mean_s": 3818.837005
+    },
+    "pacing_bp900_300": {
+     "service": 402.35,
+     "missing_collection": 0.0,
+     "missing_delivery": 269.65,
+     "uplinks": 885.0,
+     "downlink_attempts": 96.65,
+     "airtime_uplink_h": 0.078198,
+     "energy_consumed_wh": 0.384118,
+     "aoi_mean_s": 3819.557877
+    },
+    "pacing_backlog900_300_hyst": {
+     "service": 402.25,
+     "missing_collection": 0.0,
+     "missing_delivery": 269.75,
+     "uplinks": 868.75,
+     "downlink_attempts": 98.8,
+     "airtime_uplink_h": 0.077163,
+     "energy_consumed_wh": 0.383612,
+     "aoi_mean_s": 3820.142797
+    },
+    "pacing_backlog900_300": {
+     "service": 402.05,
+     "missing_collection": 0.0,
+     "missing_delivery": 269.95,
+     "uplinks": 843.75,
+     "downlink_attempts": 97.9,
+     "airtime_uplink_h": 0.075693,
+     "energy_consumed_wh": 0.382822,
+     "aoi_mean_s": 3822.703174
+    },
+    "oblig_copies1": {
+     "service": 397.2,
+     "missing_collection": 0.0,
+     "missing_delivery": 274.8,
+     "uplinks": 970.35,
+     "downlink_attempts": 644.6,
+     "airtime_uplink_h": 0.108214,
+     "energy_consumed_wh": 0.394725,
+     "aoi_mean_s": 3912.685123
+    },
+    "oblig_slack": {
+     "service": 397.2,
+     "missing_collection": 0.0,
+     "missing_delivery": 274.8,
+     "uplinks": 970.35,
+     "downlink_attempts": 644.6,
+     "airtime_uplink_h": 0.108214,
+     "energy_consumed_wh": 0.394725,
+     "aoi_mean_s": 3912.685123
+    },
+    "oblig_slack_no_slack": {
+     "service": 397.2,
+     "missing_collection": 0.0,
+     "missing_delivery": 274.8,
+     "uplinks": 970.35,
+     "downlink_attempts": 644.6,
+     "airtime_uplink_h": 0.108214,
+     "energy_consumed_wh": 0.394725,
+     "aoi_mean_s": 3912.685123
+    },
+    "oblig_slack_no_delay": {
+     "service": 397.2,
+     "missing_collection": 0.0,
+     "missing_delivery": 274.8,
+     "uplinks": 970.35,
+     "downlink_attempts": 644.6,
+     "airtime_uplink_h": 0.108214,
+     "energy_consumed_wh": 0.394725,
+     "aoi_mean_s": 3912.685123
+    },
+    "oblig_slack_no_obligation": {
+     "service": 397.2,
+     "missing_collection": 0.0,
+     "missing_delivery": 274.8,
+     "uplinks": 970.35,
+     "downlink_attempts": 644.6,
+     "airtime_uplink_h": 0.108214,
+     "energy_consumed_wh": 0.394725,
+     "aoi_mean_s": 3912.685123
+    },
+    "fixed600": {
+     "service": 394.7,
+     "missing_collection": 0.0,
+     "missing_delivery": 277.3,
+     "uplinks": 876.45,
+     "downlink_attempts": 19.2,
+     "airtime_uplink_h": 0.093673,
+     "energy_consumed_wh": 0.385819,
+     "aoi_mean_s": 4008.443992
+    },
+    "aoi": {
+     "service": 392.95,
+     "missing_collection": 0.0,
+     "missing_delivery": 279.05,
+     "uplinks": 687.45,
+     "downlink_attempts": 42.75,
+     "airtime_uplink_h": 0.070501,
+     "energy_consumed_wh": 0.378161,
+     "aoi_mean_s": 3988.309915
+    },
+    "aoi_t7200": {
+     "service": 392.9,
+     "missing_collection": 0.0,
+     "missing_delivery": 279.1,
+     "uplinks": 685.05,
+     "downlink_attempts": 37.05,
+     "airtime_uplink_h": 0.070197,
+     "energy_consumed_wh": 0.378019,
+     "aoi_mean_s": 3988.624038
+    },
+    "aoi_f600": {
+     "service": 392.35,
+     "missing_collection": 0.0,
+     "missing_delivery": 279.65,
+     "uplinks": 682.7,
+     "downlink_attempts": 42.5,
+     "airtime_uplink_h": 0.070379,
+     "energy_consumed_wh": 0.378036,
+     "aoi_mean_s": 4002.263162
+    },
+    "local": {
+     "service": 392.05,
+     "missing_collection": 0.0,
+     "missing_delivery": 279.95,
+     "uplinks": 676.0,
+     "downlink_attempts": 0.0,
+     "airtime_uplink_h": 0.069956,
+     "energy_consumed_wh": 0.377513,
+     "aoi_mean_s": 4006.176528
+    },
+    "fixed900": {
+     "service": 392.05,
+     "missing_collection": 0.0,
+     "missing_delivery": 279.95,
+     "uplinks": 676.0,
+     "downlink_attempts": 19.2,
+     "airtime_uplink_h": 0.069956,
+     "energy_consumed_wh": 0.377652,
+     "aoi_mean_s": 4006.176528
+    },
+    "pacing_bp1800_300": {
+     "service": 376.05,
+     "missing_collection": 0.0,
+     "missing_delivery": 295.95,
+     "uplinks": 694.1,
+     "downlink_attempts": 94.05,
+     "airtime_uplink_h": 0.054701,
+     "energy_consumed_wh": 0.376177,
+     "aoi_mean_s": 4059.119447
+    },
+    "pacing_backlog1800_300": {
+     "service": 375.9,
+     "missing_collection": 0.0,
+     "missing_delivery": 296.1,
+     "uplinks": 656.05,
+     "downlink_attempts": 94.75,
+     "airtime_uplink_h": 0.052215,
+     "energy_consumed_wh": 0.374951,
+     "aoi_mean_s": 4053.177692
+    },
+    "pacing_bp1800_900": {
+     "service": 368.4,
+     "missing_collection": 0.0,
+     "missing_delivery": 303.6,
+     "uplinks": 513.75,
+     "downlink_attempts": 96.0,
+     "airtime_uplink_h": 0.047137,
+     "energy_consumed_wh": 0.371025,
+     "aoi_mean_s": 4213.684711
+    },
+    "pacing_backlog1800_900": {
+     "service": 367.1,
+     "missing_collection": 0.0,
+     "missing_delivery": 304.9,
+     "uplinks": 510.4,
+     "downlink_attempts": 96.05,
+     "airtime_uplink_h": 0.04686,
+     "energy_consumed_wh": 0.370908,
+     "aoi_mean_s": 4219.727246
+    },
+    "fixed1800": {
+     "service": 318.2,
+     "missing_collection": 0.0,
+     "missing_delivery": 353.8,
+     "uplinks": 346.3,
+     "downlink_attempts": 19.2,
+     "airtime_uplink_h": 0.041998,
+     "energy_consumed_wh": 0.36597,
+     "aoi_mean_s": 4848.735353
+    },
+    "pacing_bp3600_900": {
+     "service": 312.9,
+     "missing_collection": 0.0,
+     "missing_delivery": 359.1,
+     "uplinks": 388.5,
+     "downlink_attempts": 85.6,
+     "airtime_uplink_h": 0.035231,
+     "energy_consumed_wh": 0.366309,
+     "aoi_mean_s": 4941.162298
+    },
+    "pacing_backlog3600_900": {
+     "service": 311.6,
+     "missing_collection": 0.0,
+     "missing_delivery": 360.4,
+     "uplinks": 379.05,
+     "downlink_attempts": 87.3,
+     "airtime_uplink_h": 0.034614,
+     "energy_consumed_wh": 0.366015,
+     "aoi_mean_s": 4956.553976
+    },
+    "fixed3600": {
+     "service": 216.2,
+     "missing_collection": 0.0,
+     "missing_delivery": 455.8,
+     "uplinks": 180.6,
+     "downlink_attempts": 19.2,
+     "airtime_uplink_h": 0.027501,
+     "energy_consumed_wh": 0.360029,
+     "aoi_mean_s": 6357.705179
+    }
+   }
+  },
+  "P2_access_4h7h": {
+   "denom": 672.0,
+   "n_arms": 27,
+   "reference_arm": "fixed300",
+   "reference_service": 413.35,
+   "reference_missing_collection": 0.0,
+   "origin": {
+    "fixed300": "pacing_copies",
+    "pacing_backlog900_300": "pacing_copies",
+    "oblig_copies1": "pacing_copies",
+    "oblig_copies2": "pacing_copies",
+    "oblig_copies3": "pacing_copies",
+    "oblig_slack": "pacing_copies",
+    "oblig_slack_no_slack": "pacing_copies",
+    "oblig_slack_no_delay": "pacing_copies",
+    "oblig_slack_no_obligation": "pacing_copies",
+    "local": "pacing_copies",
+    "fixed600": "pacing_copies",
+    "fixed900": "pacing_copies",
+    "fixed1800": "pacing_copies",
+    "fixed3600": "pacing_copies",
+    "aoi": "pacing_copies",
+    "aoi_const300": "pacing_copies",
+    "aoi_f600": "pacing_copies",
+    "aoi_t7200": "pacing_copies",
+    "pacing_bp900_300": "pacing_fair",
+    "pacing_bp1800_300": "pacing_fair",
+    "pacing_backlog1800_300": "pacing_fair",
+    "pacing_bp1800_900": "pacing_fair",
+    "pacing_backlog1800_900": "pacing_fair",
+    "pacing_bp3600_900": "pacing_fair",
+    "pacing_backlog3600_900": "pacing_fair",
+    "pacing_bp900_300_hyst": "pacing_fair",
+    "pacing_backlog900_300_hyst": "pacing_fair"
+   },
+   "points": {
+    "0.00%": {
+     "floor": 413.35,
+     "n_feasible": 2,
+     "cheapest_by_axis": {
+      "uplinks": {
+       "arm": "fixed300",
+       "value": 944.1,
+       "service": 413.35,
+       "missing_collection": 0.0,
+       "origin": "pacing_copies"
+      },
+      "downlink_attempts": {
+       "arm": "fixed300",
+       "value": 19.2,
+       "service": 413.35,
+       "missing_collection": 0.0,
+       "origin": "pacing_copies"
+      },
+      "airtime_uplink_h": {
+       "arm": "fixed300",
+       "value": 0.082503,
+       "service": 413.35,
+       "missing_collection": 0.0,
+       "origin": "pacing_copies"
+      },
+      "energy_consumed_wh": {
+       "arm": "fixed300",
+       "value": 0.385538,
+       "service": 413.35,
+       "missing_collection": 0.0,
+       "origin": "pacing_copies"
+      },
+      "aoi_mean_s": {
+       "arm": "fixed300",
+       "value": 3251.239347,
+       "service": 413.35,
+       "missing_collection": 0.0,
+       "origin": "pacing_copies"
+      },
+      "missing_collection": {
+       "arm": "fixed300",
+       "value": 0.0,
+       "service": 413.35,
+       "missing_collection": 0.0,
+       "origin": "pacing_copies"
+      }
+     },
+     "violating_missing_collection": []
+    },
+    "1.00%": {
+     "floor": 406.63,
+     "n_feasible": 8,
+     "cheapest_by_axis": {
+      "uplinks": {
+       "arm": "pacing_backlog900_300",
+       "value": 678.95,
+       "service": 410.35,
+       "missing_collection": 0.0,
+       "origin": "pacing_copies"
+      },
+      "downlink_attempts": {
+       "arm": "fixed300",
+       "value": 19.2,
+       "service": 413.35,
+       "missing_collection": 0.0,
+       "origin": "pacing_copies"
+      },
+      "airtime_uplink_h": {
+       "arm": "pacing_backlog900_300",
+       "value": 0.049452,
+       "service": 410.35,
+       "missing_collection": 0.0,
+       "origin": "pacing_copies"
+      },
+      "energy_consumed_wh": {
+       "arm": "pacing_backlog900_300",
+       "value": 0.37506,
+       "service": 410.35,
+       "missing_collection": 0.0,
+       "origin": "pacing_copies"
+      },
+      "aoi_mean_s": {
+       "arm": "fixed300",
+       "value": 3251.239347,
+       "service": 413.35,
+       "missing_collection": 0.0,
+       "origin": "pacing_copies"
+      },
+      "missing_collection": {
+       "arm": "fixed300",
+       "value": 0.0,
+       "service": 413.35,
+       "missing_collection": 0.0,
+       "origin": "pacing_copies"
+      }
+     },
+     "violating_missing_collection": []
+    },
+    "3.00%": {
+     "floor": 393.19,
+     "n_feasible": 19,
+     "cheapest_by_axis": {
+      "uplinks": {
+       "arm": "local",
+       "value": 520.0,
+       "service": 399.75,
+       "missing_collection": 0.0,
+       "origin": "pacing_copies"
+      },
+      "downlink_attempts": {
+       "arm": "local",
+       "value": 0.0,
+       "service": 399.75,
+       "missing_collection": 0.0,
+       "origin": "pacing_copies"
+      },
+      "airtime_uplink_h": {
+       "arm": "local",
+       "value": 0.042083,
+       "service": 399.75,
+       "missing_collection": 0.0,
+       "origin": "pacing_copies"
+      },
+      "energy_consumed_wh": {
+       "arm": "local",
+       "value": 0.369666,
+       "service": 399.75,
+       "missing_collection": 0.0,
+       "origin": "pacing_copies"
+      },
+      "aoi_mean_s": {
+       "arm": "fixed300",
+       "value": 3251.239347,
+       "service": 413.35,
+       "missing_collection": 0.0,
+       "origin": "pacing_copies"
+      },
+      "missing_collection": {
+       "arm": "fixed300",
+       "value": 0.0,
+       "service": 413.35,
+       "missing_collection": 0.0,
+       "origin": "pacing_copies"
+      }
+     },
+     "violating_missing_collection": []
+    },
+    "5.00%": {
+     "floor": 379.75,
+     "n_feasible": 22,
+     "cheapest_by_axis": {
+      "uplinks": {
+       "arm": "pacing_bp1800_900",
+       "value": 436.95,
+       "service": 380.15,
+       "missing_collection": 0.0,
+       "origin": "pacing_fair"
+      },
+      "downlink_attempts": {
+       "arm": "local",
+       "value": 0.0,
+       "service": 399.75,
+       "missing_collection": 0.0,
+       "origin": "pacing_copies"
+      },
+      "airtime_uplink_h": {
+       "arm": "pacing_bp1800_900",
+       "value": 0.034047,
+       "service": 380.15,
+       "missing_collection": 0.0,
+       "origin": "pacing_fair"
+      },
+      "energy_consumed_wh": {
+       "arm": "pacing_bp1800_900",
+       "value": 0.367242,
+       "service": 380.15,
+       "missing_collection": 0.0,
+       "origin": "pacing_fair"
+      },
+      "aoi_mean_s": {
+       "arm": "fixed300",
+       "value": 3251.239347,
+       "service": 413.35,
+       "missing_collection": 0.0,
+       "origin": "pacing_copies"
+      },
+      "missing_collection": {
+       "arm": "fixed300",
+       "value": 0.0,
+       "service": 413.35,
+       "missing_collection": 0.0,
+       "origin": "pacing_copies"
+      }
+     },
+     "violating_missing_collection": []
+    }
+   },
+   "table": {
+    "fixed300": {
+     "service": 413.35,
+     "missing_collection": 0.0,
+     "missing_delivery": 258.65,
+     "uplinks": 944.1,
+     "downlink_attempts": 19.2,
+     "airtime_uplink_h": 0.082503,
+     "energy_consumed_wh": 0.385538,
+     "aoi_mean_s": 3251.239347
+    },
+    "aoi_const300": {
+     "service": 413.35,
+     "missing_collection": 0.0,
+     "missing_delivery": 258.65,
+     "uplinks": 944.1,
+     "downlink_attempts": 19.2,
+     "airtime_uplink_h": 0.082503,
+     "energy_consumed_wh": 0.385538,
+     "aoi_mean_s": 3251.239347
+    },
+    "oblig_copies3": {
+     "service": 411.85,
+     "missing_collection": 0.0,
+     "missing_delivery": 260.15,
+     "uplinks": 843.45,
+     "downlink_attempts": 130.55,
+     "airtime_uplink_h": 0.06977,
+     "energy_consumed_wh": 0.382114,
+     "aoi_mean_s": 3289.014371
+    },
+    "oblig_copies2": {
+     "service": 411.45,
+     "missing_collection": 0.0,
+     "missing_delivery": 260.55,
+     "uplinks": 779.85,
+     "downlink_attempts": 179.05,
+     "airtime_uplink_h": 0.062636,
+     "energy_consumed_wh": 0.379937,
+     "aoi_mean_s": 3303.110155
+    },
+    "pacing_bp900_300_hyst": {
+     "service": 410.95,
+     "missing_collection": 0.0,
+     "missing_delivery": 261.05,
+     "uplinks": 722.8,
+     "downlink_attempts": 98.9,
+     "airtime_uplink_h": 0.052364,
+     "energy_consumed_wh": 0.376474,
+     "aoi_mean_s": 3321.449889
+    },
+    "pacing_bp900_300": {
+     "service": 410.85,
+     "missing_collection": 0.0,
+     "missing_delivery": 261.15,
+     "uplinks": 712.95,
+     "downlink_attempts": 99.3,
+     "airtime_uplink_h": 0.051561,
+     "energy_consumed_wh": 0.376132,
+     "aoi_mean_s": 3324.770123
+    },
+    "pacing_backlog900_300_hyst": {
+     "service": 410.65,
+     "missing_collection": 0.0,
+     "missing_delivery": 261.35,
+     "uplinks": 698.45,
+     "downlink_attempts": 99.3,
+     "airtime_uplink_h": 0.050754,
+     "energy_consumed_wh": 0.375686,
+     "aoi_mean_s": 3325.298653
+    },
+    "pacing_backlog900_300": {
+     "service": 410.35,
+     "missing_collection": 0.0,
+     "missing_delivery": 261.65,
+     "uplinks": 678.95,
+     "downlink_attempts": 100.6,
+     "airtime_uplink_h": 0.049452,
+     "energy_consumed_wh": 0.37506,
+     "aoi_mean_s": 3328.419679
+    },
+    "oblig_copies1": {
+     "service": 405.25,
+     "missing_collection": 0.0,
+     "missing_delivery": 266.75,
+     "uplinks": 692.55,
+     "downlink_attempts": 476.2,
+     "airtime_uplink_h": 0.058826,
+     "energy_consumed_wh": 0.379568,
+     "aoi_mean_s": 3419.270221
+    },
+    "oblig_slack": {
+     "service": 405.25,
+     "missing_collection": 0.0,
+     "missing_delivery": 266.75,
+     "uplinks": 692.55,
+     "downlink_attempts": 476.2,
+     "airtime_uplink_h": 0.058826,
+     "energy_consumed_wh": 0.379568,
+     "aoi_mean_s": 3419.270221
+    },
+    "oblig_slack_no_slack": {
+     "service": 405.25,
+     "missing_collection": 0.0,
+     "missing_delivery": 266.75,
+     "uplinks": 692.55,
+     "downlink_attempts": 476.2,
+     "airtime_uplink_h": 0.058826,
+     "energy_consumed_wh": 0.379568,
+     "aoi_mean_s": 3419.270221
+    },
+    "oblig_slack_no_delay": {
+     "service": 405.25,
+     "missing_collection": 0.0,
+     "missing_delivery": 266.75,
+     "uplinks": 692.55,
+     "downlink_attempts": 476.2,
+     "airtime_uplink_h": 0.058826,
+     "energy_consumed_wh": 0.379568,
+     "aoi_mean_s": 3419.270221
+    },
+    "oblig_slack_no_obligation": {
+     "service": 405.25,
+     "missing_collection": 0.0,
+     "missing_delivery": 266.75,
+     "uplinks": 692.55,
+     "downlink_attempts": 476.2,
+     "airtime_uplink_h": 0.058826,
+     "energy_consumed_wh": 0.379568,
+     "aoi_mean_s": 3419.270221
+    },
+    "fixed600": {
+     "service": 402.35,
+     "missing_collection": 0.0,
+     "missing_delivery": 269.65,
+     "uplinks": 642.45,
+     "downlink_attempts": 19.2,
+     "airtime_uplink_h": 0.052518,
+     "energy_consumed_wh": 0.374152,
+     "aoi_mean_s": 3491.268028
+    },
+    "aoi": {
+     "service": 401.15,
+     "missing_collection": 0.0,
+     "missing_delivery": 270.85,
+     "uplinks": 541.35,
+     "downlink_attempts": 76.45,
+     "airtime_uplink_h": 0.043869,
+     "energy_consumed_wh": 0.370973,
+     "aoi_mean_s": 3493.061729
+    },
+    "aoi_t7200": {
+     "service": 401.1,
+     "missing_collection": 0.0,
+     "missing_delivery": 270.9,
+     "uplinks": 540.55,
+     "downlink_attempts": 73.85,
+     "airtime_uplink_h": 0.043799,
+     "energy_consumed_wh": 0.370926,
+     "aoi_mean_s": 3493.334416
+    },
+    "aoi_f600": {
+     "service": 400.3,
+     "missing_collection": 0.0,
+     "missing_delivery": 271.7,
+     "uplinks": 531.55,
+     "downlink_attempts": 76.5,
+     "airtime_uplink_h": 0.043213,
+     "energy_consumed_wh": 0.370654,
+     "aoi_mean_s": 3510.257692
+    },
+    "local": {
+     "service": 399.75,
+     "missing_collection": 0.0,
+     "missing_delivery": 272.25,
+     "uplinks": 520.0,
+     "downlink_attempts": 0.0,
+     "airtime_uplink_h": 0.042083,
+     "energy_consumed_wh": 0.369666,
+     "aoi_mean_s": 3515.56555
+    },
+    "fixed900": {
+     "service": 399.75,
+     "missing_collection": 0.0,
+     "missing_delivery": 272.25,
+     "uplinks": 520.0,
+     "downlink_attempts": 19.2,
+     "airtime_uplink_h": 0.042083,
+     "energy_consumed_wh": 0.369805,
+     "aoi_mean_s": 3515.56555
+    },
+    "pacing_bp1800_300": {
+     "service": 387.45,
+     "missing_collection": 0.0,
+     "missing_delivery": 284.55,
+     "uplinks": 605.25,
+     "downlink_attempts": 97.25,
+     "airtime_uplink_h": 0.042277,
+     "energy_consumed_wh": 0.372278,
+     "aoi_mean_s": 3637.227152
+    },
+    "pacing_backlog1800_300": {
+     "service": 386.3,
+     "missing_collection": 0.0,
+     "missing_delivery": 285.7,
+     "uplinks": 571.05,
+     "downlink_attempts": 96.05,
+     "airtime_uplink_h": 0.039948,
+     "energy_consumed_wh": 0.371148,
+     "aoi_mean_s": 3635.842766
+    },
+    "pacing_bp1800_900": {
+     "service": 380.15,
+     "missing_collection": 0.0,
+     "missing_delivery": 291.85,
+     "uplinks": 436.95,
+     "downlink_attempts": 93.15,
+     "airtime_uplink_h": 0.034047,
+     "energy_consumed_wh": 0.367242,
+     "aoi_mean_s": 3776.78865
+    },
+    "pacing_backlog1800_900": {
+     "service": 378.9,
+     "missing_collection": 0.0,
+     "missing_delivery": 293.1,
+     "uplinks": 433.05,
+     "downlink_attempts": 92.55,
+     "airtime_uplink_h": 0.033743,
+     "energy_consumed_wh": 0.367103,
+     "aoi_mean_s": 3782.425363
+    },
+    "pacing_bp3600_900": {
+     "service": 335.4,
+     "missing_collection": 0.0,
+     "missing_delivery": 336.6,
+     "uplinks": 360.4,
+     "downlink_attempts": 81.8,
+     "airtime_uplink_h": 0.028928,
+     "energy_consumed_wh": 0.364664,
+     "aoi_mean_s": 4519.613307
+    },
+    "pacing_backlog3600_900": {
+     "service": 330.85,
+     "missing_collection": 0.0,
+     "missing_delivery": 341.15,
+     "uplinks": 348.15,
+     "downlink_attempts": 81.9,
+     "airtime_uplink_h": 0.02812,
+     "energy_consumed_wh": 0.364268,
+     "aoi_mean_s": 4564.940928
+    },
+    "fixed1800": {
+     "service": 325.1,
+     "missing_collection": 0.0,
+     "missing_delivery": 346.9,
+     "uplinks": 268.3,
+     "downlink_attempts": 19.2,
+     "airtime_uplink_h": 0.027543,
+     "energy_consumed_wh": 0.361965,
+     "aoi_mean_s": 4449.7342
+    },
+    "fixed3600": {
+     "service": 223.6,
+     "missing_collection": 0.0,
+     "missing_delivery": 448.4,
+     "uplinks": 141.6,
+     "downlink_attempts": 19.2,
+     "airtime_uplink_h": 0.019739,
+     "energy_consumed_wh": 0.357941,
+     "aoi_mean_s": 6124.154158
+    }
+   }
+  }
+ }
+}
