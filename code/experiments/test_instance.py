@@ -1785,6 +1785,70 @@ def test_config_grid_and_rolling_search_are_legal() -> None:
           f"下发 {[x[1].get('op') for x in out]}")
 
 
+def test_cache_packing_disciplines_are_hand_checkable() -> None:
+    """**备选 3 的仪器不变量**（§31 §五）。
+
+      1. **采样周期 = 义务周期时 `edf` ≡ `fifo`**——这不是巧合而是**结构**：每条义务窗口里
+         恰好一条记录，于是**到达顺序就是截止期顺序**。把这条钉进代码，
+         "为什么 edf 是空操作"就不再依赖任何一次运行；
+      2. **一条义务只花一个名额**：同一窗口内放两条记录，`obligation_greedy` 只返回一条
+         （取**窗内最新**），而 `fifo` 返回两条；
+      3. **`latest_only` 是"主动丢弃"而不是"包内选择"**：它把旧记录真的丢掉（`dropped` 增加），
+         因此**在零积压时也会改变读数**——这正是预注册 R1 按字面被打破的原因，必须钉住；
+      4. 四条纯打包纪律在**未激活**时对同一个缓存给出**完全相同**的取法。
+    """
+    print("\n[34] 备选 3 的仪器不变量（设备缓存/打包纪律）")
+
+    def _node(service):
+        dp = DeviceProfile(report_period_s=3600, cache_service=service,
+                           obligation_period_s=3600)
+        return Node(NODE, "displacement", dp, initial_wh=1.0)
+
+    def _fill(n, taken_list):
+        for i, taken in enumerate(taken_list):
+            s = type("S", (), {"sample_id": f"{NODE}:{i:03d}", "taken_at": taken,
+                              "node_id": NODE, "measurand": "displacement"})()
+            n.cache.append(s)
+            n.transit[s.sample_id] = type("T", (), {"dropped_at": None})()
+        return n
+
+    def _ids(out):
+        return [s.sample_id for s in out]
+
+    # 1) 每窗一条 ⇒ fifo 与 edf 取出同一个序列（逐位相同，不只是同长）
+    seq = [0, 3600, 7200, 10800]
+    a = _ids(_fill(_node("fifo"), seq).batch(0))
+    b = _ids(_fill(_node("edf"), seq).batch(0))
+    c = _ids(_fill(_node("obligation_greedy"), seq).batch(0))
+    check("采样周期=义务周期时 edf ≡ fifo（到达顺序＝截止期顺序）", a == b,
+          f"fifo={a} edf={b}")
+    check("同一条件下 obligation_greedy 也无对象可去重 ⇒ 也 ≡ fifo", a == c,
+          f"greedy={c}")
+
+    # 2) 一个窗口两条 ⇒ 匹配贪心只花一个名额，且取窗内最新
+    two_in_one = [0, 600, 3600]
+    f = _ids(_fill(_node("fifo"), two_in_one).batch(0))
+    g = _ids(_fill(_node("obligation_greedy"), two_in_one).batch(0))
+    check("一块窗口两条记录：fifo 两条都带走，匹配贪心只花一个名额",
+          len(f) == 3 and len(g) == 2, f"fifo={f} greedy={g}")
+    check("匹配贪心在窗内取**最新**那条", g[0].endswith(":001"), f"取到 {g[0]}")
+
+    # 3) latest_only 真的丢弃
+    n_lo = _fill(_node("latest_only"), [0, 3600, 7200])
+    before = len(n_lo.cache)
+    out = n_lo.batch(0)
+    check("latest_only 主动丢弃旧记录（不是包内选择）",
+          len(out) == 1 and n_lo.dropped == before - 1,
+          f"返回 {len(out)} 条、丢弃 {n_lo.dropped} 条")
+
+    # 4) 未激活时四条纯打包纪律取法一致。
+    #    **必须比集合、不能比序列**：`lifo` 返回的是**逆序**，而一次上报里整批同时到达，
+    #    因此**批内次序不影响读数**（见 `Node.batch` 的说明）——取序只决定**哪些记录占掉机会**。
+    same = all(sorted(_ids(_fill(_node(d), seq).batch(0))) == sorted(a)
+               for d in ("fifo", "lifo", "edf", "obligation_greedy"))
+    check("零积压时四条纯打包纪律占用的记录集合一致（R1 想检验的东西）", same, f"基准 {a}")
+
+
 def main() -> int:
     print("实例层验收（Task Contract v1.1）")
     test_denominator_is_exogenous()
@@ -1819,6 +1883,7 @@ def main() -> int:
     test_admission_gate_is_hand_checkable_and_monotone()
     test_placement_isolates_the_two_instruments()
     test_config_grid_and_rolling_search_are_legal()
+    test_cache_packing_disciplines_are_hand_checkable()
     print("\n" + "-" * 74)
     if FAIL:
         print(f"  {len(FAIL)} 项失败: {', '.join(FAIL)}")

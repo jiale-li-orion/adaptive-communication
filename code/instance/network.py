@@ -41,6 +41,11 @@ from opportunity import ControlPlane, DownlinkMessage, LoRaProfile
 
 TICK_S = 60
 
+#: **一次上报机会能服务的记录条数**（`Node.batch` 的 `max_slots` 默认值）。
+#: §31 §五 指出这类缓存/打包机制的**正确激活量**是"积压记录数**超过一次载荷容量**"——
+#: 不是"断链超过 32 个上报周期"（那只在采样与上报周期相同时成立），也不能只看包数或清空率。
+CACHE_PAYLOAD_SLOTS = 32
+
 # ------------------------------------------------------------------ 器件参数（A 层，可整体替换）
 
 @dataclass(frozen=True)
@@ -80,6 +85,14 @@ class DeviceProfile:
     #: **这是实例属性，不是策略动作。** 动作面仍然只有 `sampling interval` 与 `report period`
     #: 两个字段；换服务次序等于换一个实例，**所有臂必须在同一取值下重跑**才构成公平对照。
     cache_service: str = "fifo"
+    #: **监测义务节奏（s）**——打包纪律要把一条记录映射到"它在服务哪条义务"上：
+    #: 窗口 `k = taken_at // obligation_period_s`，该窗口的观察截止是 `(k+2)·period`
+    #: （与 `exogenous.Obligation.deadline` 同定义，见那里的 `window[1] + grace_s`）。
+    #:
+    #: **这是一项显式声明的 A 层设备能力**（§31 §五）：设备的打包软件**知道自己的监测契约节奏**。
+    #: `fifo`/`lifo`/`latest_only` **不使用**它；`edf`/`obligation_greedy` 使用。
+    #: **所有臂在同一取值下跑**，因此它不偏向任何方法——不存在"把更好的固件只给本文"。
+    obligation_period_s: int = 3600
     #: 单次采样周期的能量代价（Wh）。**取自实测剖面**：活跃窗口约 15 s、平均 35.7 mA、母线 3.3 V
     #: → 约 4.9e-4 Wh/周期（Ragnoli 等, *JLPEA* 12(3):47, 2022）。减去 `RadioEnergy` 另计的空口
     #: 部分后取 4.7e-4。**原先默认 2e-5 比它低约 25 倍**，那使能量约束在整轮实验里都没有被触到
@@ -347,6 +360,28 @@ class Node:
                 self.dropped += 1
             self.cache = [newest]
             return [newest]
+        if self.p.cache_service in ("edf", "obligation_greedy"):
+            # **两种"按义务"的纪律**（§31 §五 第一项判别要求加入的两条）。
+            # 它们只用**设备自己知道的东西**：缓存的未确认记录 + 自己的监测契约节奏。
+            # 不需要中心告知"哪些已经被收到"——被收到的记录由 `ack()` 移出缓存（**见限定**：
+            # 本实例的 ack 是中心收到时同步施加的，不占空口，这一简化对所有纪律同等有利）。
+            period = max(1, int(self.p.obligation_period_s))
+            if self.p.cache_service == "edf":
+                # **EDF**：按义务窗口升序（等价于观察截止升序），窗内再按采集时刻升序。
+                # 这是教科书最早截止期优先，**没有任何需要调的权重**。
+                ordered = sorted(self.cache,
+                                 key=lambda s: (s.taken_at // period, s.taken_at))
+                return ordered[:max_slots]
+            # **按有效监测义务匹配的普通贪心**：**一条义务只花一个名额**——
+            # 每个窗口只留**窗内最新**的那条（窗内更新更可取），再按窗口升序取。
+            # 旧记录**不丢弃**（只是不占这次机会），因此不改变后续义务的可得性。
+            newest_in_window: dict[int, Sample] = {}
+            for s in self.cache:
+                k = s.taken_at // period
+                cur = newest_in_window.get(k)
+                if cur is None or s.taken_at > cur.taken_at:
+                    newest_in_window[k] = s
+            return [newest_in_window[k] for k in sorted(newest_in_window)][:max_slots]
         return self.cache[:max_slots]
 
     def ack(self, sample_ids) -> None:
@@ -479,6 +514,13 @@ class Instance:
         self.gateway_reports: dict[str, dict] = {}
         self.gateway_report_at: dict[str, int] = {}
         self.gateway_newest_taken_at: dict[str, int] = {}
+        #: **打包机制的激活量**（§31 §五）：积压超过一次载荷容量的 (tick, 节点) 次数峰值，
+        #: 以及缓存的平均深度。**必须逐条件量它，不能只挑长中断**——40 h 断链单点
+        #: 不能证明实际部署常见收益。
+        self.cache_over_payload_ticks = 0
+        self.cache_over_payload_peak = 0
+        self.cache_len_sum = 0
+        self.cache_len_n = 0
         self._radio_wh_seen: dict[str, float] = {}
         self.command_seq = 0
         self.counters = {"commands_sent": 0, "commands_delivered": 0,
@@ -564,6 +606,16 @@ class Instance:
                 self.trace_events.append(
                     (t_s, node.node_id, "state", node.sample_interval_s,
                      node.report_period_s, round(node.soc_wh, 8), node.alive))
+
+        # 1.4) **量打包机制的激活量**：积压是否真的跨过了"一次机会能服务的容量"。
+        #      只记数，不改任何行为（关掉它读数逐位不变）。
+        for node in self.nodes.values():
+            depth = len(node.cache)
+            self.cache_len_sum += depth
+            self.cache_len_n += 1
+            if depth > CACHE_PAYLOAD_SLOTS:
+                self.cache_over_payload_ticks += 1
+                self.cache_over_payload_peak = max(self.cache_over_payload_peak, depth)
 
         # 1.5) 策略按**它所处位置看得见的东西**决定要不要下发。
         #      `center` —— 读中心收到的遥测，命令经回传进网关队列，等接收窗口（默认，逐位不变）。

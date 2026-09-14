@@ -35,7 +35,7 @@ from exogenous import (ObligationSet, autonomy_margin, constant_harvest,
                        rule_obligations_for_truth, routine_obligations_by_node,
                        wang_fragment_truth)
 from center import ARMS, ClairvoyantStaticSelector, SocObservationModel, build_policy
-from network import DeviceProfile, Instance, nodes_from
+from network import CACHE_PAYLOAD_SLOTS, DeviceProfile, Instance, nodes_from
 import oracle as _oracle
 import opportunity as _opportunity
 from oracle import delivery_oracle, dynamic_oracle
@@ -93,6 +93,7 @@ def one_seed(seed: int, task_hours: float, tail_hours: float,
                          capacity_wh=capacity_wh, initial_soc=initial_soc,
                          charge_min_c=charge_min_c,
                          cache_service=cache_service,
+                         obligation_period_s=routine_period_s,
                          idle_wh_per_tick=idle_wh_per_tick * energy_scale,
                          sample_wh=DeviceProfile().sample_wh * energy_scale)
     nodes = nodes_from(dep, profile=prof)
@@ -297,6 +298,17 @@ def one_seed(seed: int, task_hours: float, tail_hours: float,
         "propagation": {k: v for k, v in res["propagation"].items() if k != "per_trigger"},
         "recovery": res.get("recovery"),
         "access_blocked": inst.access_blocked,
+        #: **打包机制的激活量**（§31 §五）：积压是否真的跨过"一次机会能服务的容量"。
+        #: 40 h 断链单点不能证明实际部署常见收益，所以这个量要在**每个条件**上量。
+        "cache_backlog": {
+            "over_payload_ticks": inst.cache_over_payload_ticks,
+            "over_payload_peak": inst.cache_over_payload_peak,
+            "cache_len_mean": (round(inst.cache_len_sum / inst.cache_len_n, 4)
+                               if inst.cache_len_n else None),
+            "payload_slots": CACHE_PAYLOAD_SLOTS,
+            #: **被丢弃的记录数**：`latest_only` 每次机会都丢旧记录，这是它的代价，必须单列。
+            "dropped_total": sum(int(getattr(n, "dropped", 0)) for n in inst.nodes.values()),
+        },
         "observation_window": res["observation_window"],
         "not_applicable": res["not_applicable"],
         #: **只在 `trace=True` 时非空**。逐事件时间线属于诊断产物，不进结果文件的常规列。
@@ -390,9 +402,13 @@ def main() -> None:
                     help="不叠加 Wang 片段的事件义务（第二业务场景没有事件加密时用）")
     ap.add_argument("--charge-min-c", default="5.0",
                     help="低温充电闸门（°C）；`off` 表示不设闸门")
-    ap.add_argument("--cache-service", choices=("fifo", "lifo", "latest_only"), default="fifo",
+    ap.add_argument("--cache-service",
+                    choices=("fifo", "lifo", "latest_only", "edf", "obligation_greedy"),
+                    default="fifo",
                     help="缓存服务次序：`fifo` 最老优先（设备既有自动补发，默认）；"
-                         "`lifo` 最新优先（AoI 文献的标准服务纪律）。"
+                         "`lifo` 最新优先（AoI 文献的标准服务纪律）；"
+                         "`latest_only` 只留最新（旧记录丢弃）；"
+                         "`edf` 最早截止期优先；`obligation_greedy` 一条义务只花一个名额。"
                          "**这是实例属性，不是策略动作**——换它等于换实例，所有臂必须同值重跑")
     ap.add_argument("--initial-soc", type=float, default=1.0,
                     help="初始电量比例。扫 autonomy margin 时要用小于 1 的值")
