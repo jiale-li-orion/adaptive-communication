@@ -41,7 +41,8 @@ class JointControlPlane(ControlPlane):
               backup_rate_s: int = 120, backup_bytes: int = 200,
               backup_header_bytes: int = 20, chooser: str = "edf",
               failover: bool = True, obligation_period_s: int = 3600,
-              grace_s: int = 3600, sample_bytes: dict | None = None) -> "JointControlPlane":
+              grace_s: int = 3600, sample_bytes: dict | None = None,
+              obligations=None, suppress_duplicates: bool = True) -> "JointControlPlane":
         obj = object.__new__(cls)
         obj.__dict__.update(src.__dict__)          # 同构接管：不丢任何 v1.1 状态
         obj.enable_backup = bool(enable_backup)
@@ -53,12 +54,20 @@ class JointControlPlane(ControlPlane):
         obj.period_s = int(obligation_period_s)
         obj.grace_s = int(grace_s)
         obj.sample_bytes = dict(sample_bytes or DEFAULT_SAMPLE_BYTES)
+        # 义务台账（公开节奏）：chooser='obligation' 时用**真实义务截止期**排序，并抑制同义务重复副本
+        obj._obl_index: dict = {}
+        obj.suppress_duplicates = bool(suppress_duplicates)
+        obj._backed_obl_keys: set = set()           # 已用备用送过至少一条合格样本的义务
+        if obligations is not None:
+            for _o in obligations.obligations:
+                obj._obl_index.setdefault((_o.node_id, _o.measurand), []).append(_o)
         # 备用腿账本（尝试/发出，全部可审计）
         obj.backup_opportunities = 0     # 到达备用发送节拍且有积压的次数
         obj.backup_gated = 0             # failover 下因主路 up 而未启用的次数
         obj.backup_packets = 0           # 实际发出的非具备用包数
         obj.backup_records = 0           # 经备用送达中心的样本数
         obj.backup_bytes_sent = 0        # 经备用发出的估算字节
+        obj.backup_suppressed = 0        # 因同义务已送而抑制、未占稀缺窗的冗余样本
         return obj
 
     # ---- 单条 item 的**净荷**字节（不含包头；一个备用包只计一次固定头）----
@@ -84,6 +93,22 @@ class JointControlPlane(ControlPlane):
         # 默认 EDF：义务截止期早者优先，其次先到网关者
         return sorted(items, key=lambda i: (self._item_deadline(i), i.heard_at_s, i.node_id))
 
+    def _sample_obl(self, s):
+        """样本能满足的最紧义务 `(deadline, 代表oid, 全部匹配oid集合)`；无台账则退化为周期公式。"""
+        lst = self._obl_index.get((s.node_id, s.measurand))
+        if not lst:
+            k = s.taken_at // self.period_s
+            d = (k + 2) * self.period_s
+            return d, None, frozenset()
+        matched = [o for o in lst if o.matches(s)]
+        if not matched:
+            k = s.taken_at // self.period_s
+            d = (k + 2) * self.period_s
+            return d, None, frozenset()
+        dl = min(o.deadline for o in matched)
+        oids = frozenset(o.oid for o in matched)
+        return dl, min(oids), oids
+
     # ---- 关键覆写：主回传之后，在同一拍叠加备用腿 ----
     def backhaul_forward(self, t_s: int, delay_s: int = 0) -> list[GatewayItem]:
         primary = super().backhaul_forward(t_s, delay_s)   # 主路 down 时为 []，且保留 pending
@@ -99,27 +124,45 @@ class JointControlPlane(ControlPlane):
             self.backup_gated += 1
             return primary
         self.backup_opportunities += 1
-        ordered = self._backup_order(candidates)
         cap = self.backup_bytes - self.backup_header_bytes   # 净荷容量（整包只一个固定头）
-        # **样本粒度重装**：RDSS 是网关重新打包，不必保持接入段批次；一个备用包按 EDF/FIFO 顺序
-        # 贪心装样本到容量满。记录每个源 item 被挑走的样本，未挑完的 item 缩成剩余子集留下次。
+        # 展开为**跨节点样本流**：obligation 档按真实义务截止期全局排序（event 600s 自然先于
+        # routine ~2h）；edf 档保留 item 级周期公式，作为"不看真实义务"的消融对照。
+        stream = []
+        for it in candidates:
+            item_dl = self._item_deadline(it)
+            for s in (it.payload or []):
+                dl, _, okeys = self._sample_obl(s)
+                if self.backup_chooser == "obligation":
+                    sk = (dl, it.heard_at_s, it.node_id)
+                elif self.backup_chooser == "fifo":
+                    sk = (it.heard_at_s, dl, it.node_id)
+                elif self.backup_chooser == "latest":
+                    sk = (-it.heard_at_s, dl, it.node_id)
+                else:
+                    sk = (item_dl, it.heard_at_s, it.node_id)
+                stream.append((sk, it, s, okeys))
+        stream.sort(key=lambda x: x[0])
         picked_of: dict[int, tuple[GatewayItem, list]] = {}
         used = 0
-        done = False
-        for it in ordered:
-            payload = it.payload or []
-            for s in payload:
-                b = self.sample_bytes.get(getattr(s, "measurand", "displacement"), 6)
-                if used > 0 and used + b > cap:
-                    done = True
-                    break
-                picked_of.setdefault(id(it), (it, []))[1].append(s)
-                used += b
-            if done:
-                break
-        if used == 0:        # 兜底：payload 缺失时退化为整 item（至少推进一条）
-            it = ordered[0]
-            picked_of = {id(it): (it, list(it.payload or []))}
+        for _, it, s, okeys in stream:
+            # 冗余抑制：该样本能满足的义务都已用备用送过合格样本，就不再占稀缺窗口
+            if (self.backup_chooser == "obligation" and self.suppress_duplicates
+                    and okeys and (self._backed_obl_keys & okeys)):
+                self.backup_suppressed += 1
+                continue
+            b = self.sample_bytes.get(getattr(s, "measurand", "displacement"), 6)
+            if used > 0 and used + b > cap:
+                continue                            # 这条装不下，试后面更小的（4B 雨量）
+            picked_of.setdefault(id(it), (it, []))[1].append(s)
+            used += b
+            if self.backup_chooser == "obligation" and okeys:
+                self._backed_obl_keys |= okeys
+        if used == 0:
+            empty = [it for it in candidates if not it.payload]
+            if not empty:
+                return primary                      # 积压全是已备过的冗余：不发空包、省资费
+            it = empty[0]
+            picked_of = {id(it): (it, [])}
             used = self._item_payload_bytes(it)
         out, remain = [], []
         for it in self.gateway_pending:
@@ -151,5 +194,6 @@ class JointControlPlane(ControlPlane):
         return {"backup_opportunities": self.backup_opportunities,
                 "backup_gated": self.backup_gated, "backup_packets": self.backup_packets,
                 "backup_records": self.backup_records, "backup_bytes_sent": self.backup_bytes_sent,
+                "backup_suppressed": self.backup_suppressed,
                 "backup_rate_s": self.backup_rate_s, "backup_bytes": self.backup_bytes,
                 "backup_chooser": self.backup_chooser, "backup_failover": self.backup_failover}

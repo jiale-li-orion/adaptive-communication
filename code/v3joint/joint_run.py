@@ -45,6 +45,7 @@ def run_joint(seed: int = 0, task_hours: int = 12, tail_hours: int = 1,
               enable_backup: bool = True, backup_rate_s: int = 120,
               backup_bytes: int = 200, backup_header_bytes: int = 20,
               backup_chooser: str = "edf", backup_failover: bool = True,
+              backup_suppress: bool = True,
               collect_rows: bool = False, placement: str = "center"):
     hours = task_hours + tail_hours
     dep = build_deployment(groups=groups, per_group=per_group)
@@ -92,7 +93,8 @@ def run_joint(seed: int = 0, task_hours: int = 12, tail_hours: int = 1,
         inst.plane, enable_backup=enable_backup, backup_rate_s=backup_rate_s,
         backup_bytes=backup_bytes, backup_header_bytes=backup_header_bytes,
         chooser=backup_chooser, failover=backup_failover,
-        obligation_period_s=routine_period_s, grace_s=routine_period_s)
+        obligation_period_s=routine_period_s, grace_s=routine_period_s,
+        obligations=obligations, suppress_duplicates=backup_suppress)
 
     log = inst.run(int(hours))
     res = evaluate(obligations, log, int(hours), nodes.keys(),
