@@ -29,7 +29,8 @@ for _p in (_HERE, *(_os.path.join(_CODE, d) for d in ("physics", "runtime", "exp
         _sys.path.insert(0, _p)
 
 from center import (ARMS, OP_SET_REPORT_PERIOD, OP_SET_SAMPLING_INTERVAL, CenterView,
-                    LocalPolicy, SocObservationModel, build_policy)
+                    LocalPolicy, SocObservationModel, build_policy,
+                    ObligationCopiesPolicy, ObligationSlackPolicy)
 from deployment import build_deployment
 from exogenous import (KIND_EVENT, KIND_ROUTINE, EnvironmentTruth, ObligationSet,
                        autonomy_margin, irradiance_harvest,
@@ -1973,6 +1974,103 @@ def test_conditional_plan_admission_and_faithfulness() -> None:
           not diffs, f"不同的行为字段={diffs}（只允许 arm 名与诊断 skip_reasons 不同）")
 
 
+def test_copy_window_interface_and_candidate_degeneracy() -> None:
+    """**P2 的接口不变式与「候选退化」的解析事实**（doc 60 预注册、doc 61 判决）。
+
+    三件事必须钉进代码，否则 doc 61 的判决就只能依赖某一次运行：
+
+      1. **新接口是「当前窗口」的信号**：`gateway_copies_in_window` 只数**本窗口**内被网关
+         听到的合格样本；跨窗口**必须归零**（旧副本仍留在计数器里，但不算本窗口），
+         节点之间不串，且**窗口归属按 `taken_at`**——晚到的旧样本记回旧窗口，
+         **不充当下一个窗口的副本**。`oblig_copies` 与 `oblig_slack` 读的是**同一个**接口；
+      2. **候选在 N3 的义务定义下退化，这是解析事实而不是测量**：
+         义务截止期 = 窗口末端 + 一个周期 ⇒ 剩余余量
+         `slack(t) = (t//period + 2)*period - t` **恒落在 `(period, 2*period]`** ⇒
+         `slack >= period` **恒真**（「下一窗口仍有余量」永远成立）、
+         `slack < command_delay_s` 在 `command_delay_s <= period` 时**恒假**（「来不及」永不触发）
+         ⇒ 候选的两条区分支**永不执行**、它**逐位等于** `oblig_copies1`。
+         因此 `oblig_slack` 的读数**不构成**对「余量／生效延迟机制」的检验，
+         doc 60 的 R2/R3 对它**不可判读**——这句限定必须由代码来保证，不能靠记忆；
+      3. **退化来自参数而非「机制无用」**：把生效延迟提过 `period` 后「来不及」支**才会**触发。
+         没有这一条，第 2 条会被误读成对该机制类的否证。
+    """
+    print("\n[36] 副本窗口接口不变式与候选退化（解析事实）")
+    dp = DeviceProfile(report_period_s=900, obligation_period_s=900)
+
+    def _fresh():
+        nid2 = "EI02"
+        nodes = {NODE: Node(NODE, "rainfall", dp, initial_wh=None),
+                 nid2: Node(nid2, "rainfall", dp, initial_wh=None)}
+        t = wang_fragment_truth(0, HOURS, (NODE, nid2))
+        harvest, temp = constant_harvest((NODE, nid2), HOURS, 2.0, 10.0)
+        t.harvest_wh, t.temp_c = harvest, temp
+        return Instance(nodes, t, seed=0, policy=build_policy("aoi"),
+                        placement="gateway")
+
+    inst = _fresh()
+
+    def _batch(nid, taken_list):
+        return [type("S", (), {"sample_id": f"{nid}:{t}", "taken_at": t,
+                               "node_id": nid, "measurand": "rainfall"})()
+                for t in taken_list]
+
+    inst._note_gateway_heard(inst.nodes[NODE], 100, _batch(NODE, [0, 300, 600]))
+    inst._note_gateway_heard(inst.nodes["EI02"], 100, _batch("EI02", [0]))
+    v1 = inst._gateway_view(800)
+    check("当前窗口内的副本被逐节点正确计数（3 与 1，节点不串）",
+          v1.gateway_copies_in_window == {NODE: 3, "EI02": 1},
+          f"got {v1.gateway_copies_in_window}")
+    v2 = inst._gateway_view(1000)
+    check("跨窗口必须归零：上一窗口的 3 份不计入本窗口",
+          v2.gateway_copies_in_window == {NODE: 0, "EI02": 0},
+          f"got {v2.gateway_copies_in_window}")
+    inst._note_gateway_heard(inst.nodes[NODE], 1200, _batch(NODE, [900]))
+    v3 = inst._gateway_view(1300)
+    check("本窗口新到的副本计入，且不混入上一窗口",
+          v3.gateway_copies_in_window == {NODE: 1, "EI02": 0},
+          f"got {v3.gateway_copies_in_window}")
+    inst._note_gateway_heard(inst.nodes[NODE], 1500, _batch(NODE, [300]))
+    v4 = inst._gateway_view(1600)
+    check("窗口归属按 taken_at：晚到的旧样本记回旧窗口，不充当下一个窗口的副本",
+          v4.gateway_copies_in_window == {NODE: 1, "EI02": 0},
+          f"got {v4.gateway_copies_in_window}")
+
+    period = 900
+    slacks = [(t // period + 2) * period - t for t in range(1, 48 * 3600)]
+    check("剩余余量恒落在 (period, 2*period]（⇒「下一窗口仍有余量」恒真）",
+          min(slacks) == period + 1 and max(slacks) == 2 * period,
+          f"slack ∈ [{min(slacks)}, {max(slacks)}]")
+
+    def _plan(policy, t_s, copies):
+        view = CenterView(t_s=t_s, node_ids=[NODE], reports={}, in_flight=frozenset(),
+                          gateway_copies_in_window={NODE: copies})
+        return [p for _n, p in policy.plan(view)]
+
+    def _cand(delay):
+        return ObligationSlackPolicy(fast_s=300, slow_s=900, dwell_s=600,
+                                     obligation_period_s=period, command_delay_s=delay)
+
+    times = (1, 901, 1800, 2701, 46000)
+    simple = ObligationCopiesPolicy(k=1, fast_s=300, slow_s=900, dwell_s=600)
+    cand = _cand(600)
+    same = all(_plan(cand, t, c) == _plan(simple, t, c)
+               for t in times for c in (0, 1, 3))
+    check("command_delay_s<=period 时候选 ≡ oblig_copies1（两条区分支永不触发，逐位相同）",
+          same, "本轮参数下 oblig_slack 不是一条独立臂")
+
+    # 3) 退化是**参数**造成的：把生效延迟提过一个周期后，「来不及」支才会触发。
+    #    t=1 在窗口开头，slack=1799 < 1800 ⇒ 判「此刻改配置已来不及」⇒ 不动作。
+    late = _cand(1800)
+    got = _plan(late, 1, 0)
+    check("command_delay_s>period 时「来不及」支才触发（⇒ 退化是参数造成的）",
+          got == [], f"got {got}")
+    # 同一条延迟参数在窗口更晚处（slack 更小）同样不动作，而在充足处才会快报——
+    # 于是「余量/生效延迟」这一支**不是死代码**，只是在本轮参数下不可达。
+    later = _plan(late, 400, 0)      # slack = 1800-400 = 1400 < 1800 ⇒ 仍来不及
+    check("该支随余量连续变化（t=400 时 slack=1400 仍不动作）", later == [],
+          f"got {later}")
+
+
 def main() -> int:
     print("实例层验收（Task Contract v1.1）")
     test_denominator_is_exogenous()
@@ -2009,6 +2107,7 @@ def main() -> int:
     test_config_grid_and_rolling_search_are_legal()
     test_cache_packing_disciplines_are_hand_checkable()
     test_conditional_plan_admission_and_faithfulness()
+    test_copy_window_interface_and_candidate_degeneracy()
     print("\n" + "-" * 74)
     if FAIL:
         print(f"  {len(FAIL)} 项失败: {', '.join(FAIL)}")

@@ -1,0 +1,2693 @@
+{
+ "reference": {
+  "P0_no_outage": {
+   "denom": 672.0,
+   "reference_arm": "aoi_const300",
+   "reference_service": 511.2,
+   "reference_missing_collection": 0.0,
+   "floors": {
+    "0.00%": 511.2,
+    "1.00%": 504.48
+   }
+  },
+  "P1_backhaul_4h7h": {
+   "denom": 672.0,
+   "reference_arm": "aoi_const300",
+   "reference_service": 404.95,
+   "reference_missing_collection": 0.0,
+   "floors": {
+    "0.00%": 404.95,
+    "1.00%": 398.23
+   }
+  },
+  "P2_access_4h7h": {
+   "denom": 672.0,
+   "reference_arm": "aoi_const300",
+   "reference_service": 413.35,
+   "reference_missing_collection": 0.0,
+   "floors": {
+    "0.00%": 413.35,
+    "1.00%": 406.63
+   }
+  }
+ },
+ "conditions": {
+  "P0_no_outage": {
+   "denom": 672.0,
+   "reference_arm": "aoi_const300",
+   "reference_service": 511.2,
+   "reference_ok": false,
+   "r1": {
+    "oblig_copies1@0.00%": {
+     "service": 501.9,
+     "service_ok": false,
+     "missing_collection": 0.0,
+     "missing_collection_ok": true,
+     "cost_ok_by_axis": {
+      "uplinks": false,
+      "downlink_attempts": false,
+      "airtime_uplink_h": false,
+      "energy_consumed_wh": false
+     },
+     "cost_ok": false,
+     "aoi_mean_s": 2100.62,
+     "d_aoi_vs_backlog": 84.57,
+     "nodes_dead": 0.0,
+     "holds": false,
+     "strict_cost_below_on": []
+    },
+    "oblig_copies2@0.00%": {
+     "service": 509.15,
+     "service_ok": true,
+     "missing_collection": 0.0,
+     "missing_collection_ok": true,
+     "cost_ok_by_axis": {
+      "uplinks": false,
+      "downlink_attempts": false,
+      "airtime_uplink_h": false,
+      "energy_consumed_wh": false
+     },
+     "cost_ok": false,
+     "aoi_mean_s": 2002.11,
+     "d_aoi_vs_backlog": -13.94,
+     "nodes_dead": 0.0,
+     "holds": false,
+     "strict_cost_below_on": []
+    },
+    "oblig_copies3@0.00%": {
+     "service": 510.0,
+     "service_ok": true,
+     "missing_collection": 0.0,
+     "missing_collection_ok": true,
+     "cost_ok_by_axis": {
+      "uplinks": false,
+      "downlink_attempts": false,
+      "airtime_uplink_h": false,
+      "energy_consumed_wh": false
+     },
+     "cost_ok": false,
+     "aoi_mean_s": 1996.38,
+     "d_aoi_vs_backlog": -19.67,
+     "nodes_dead": 0.0,
+     "holds": false,
+     "strict_cost_below_on": []
+    },
+    "oblig_copies1@1.00%": {
+     "service": 501.9,
+     "service_ok": true,
+     "missing_collection": 0.0,
+     "missing_collection_ok": true,
+     "cost_ok_by_axis": {
+      "uplinks": false,
+      "downlink_attempts": false,
+      "airtime_uplink_h": false,
+      "energy_consumed_wh": false
+     },
+     "cost_ok": false,
+     "aoi_mean_s": 2100.62,
+     "d_aoi_vs_backlog": 84.57,
+     "nodes_dead": 0.0,
+     "holds": false,
+     "strict_cost_below_on": []
+    },
+    "oblig_copies2@1.00%": {
+     "service": 509.15,
+     "service_ok": true,
+     "missing_collection": 0.0,
+     "missing_collection_ok": true,
+     "cost_ok_by_axis": {
+      "uplinks": false,
+      "downlink_attempts": false,
+      "airtime_uplink_h": false,
+      "energy_consumed_wh": false
+     },
+     "cost_ok": false,
+     "aoi_mean_s": 2002.11,
+     "d_aoi_vs_backlog": -13.94,
+     "nodes_dead": 0.0,
+     "holds": false,
+     "strict_cost_below_on": []
+    },
+    "oblig_copies3@1.00%": {
+     "service": 510.0,
+     "service_ok": true,
+     "missing_collection": 0.0,
+     "missing_collection_ok": true,
+     "cost_ok_by_axis": {
+      "uplinks": false,
+      "downlink_attempts": false,
+      "airtime_uplink_h": false,
+      "energy_consumed_wh": false
+     },
+     "cost_ok": false,
+     "aoi_mean_s": 1996.38,
+     "d_aoi_vs_backlog": -19.67,
+     "nodes_dead": 0.0,
+     "holds": false,
+     "strict_cost_below_on": []
+    }
+   },
+   "r2": {
+    "0.00%": {
+     "service_not_worse_than_all": false,
+     "missing_collection_not_worse_than_all": true,
+     "cost_below_all_with_one_strict": false,
+     "top_rival_feasible": "oblig_copies1",
+     "paired_vs_top_rival": {
+      "uplinks": {
+       "mean_delta": 0.0,
+       "ci95": [
+        0.0,
+        0.0
+       ],
+       "ci_excludes_0": false,
+       "n_pos": 0,
+       "n_neg": 0
+      },
+      "downlink_attempts": {
+       "mean_delta": 0.0,
+       "ci95": [
+        0.0,
+        0.0
+       ],
+       "ci_excludes_0": false,
+       "n_pos": 0,
+       "n_neg": 0
+      },
+      "airtime_uplink_h": {
+       "mean_delta": 0.0,
+       "ci95": [
+        0.0,
+        0.0
+       ],
+       "ci_excludes_0": false,
+       "n_pos": 0,
+       "n_neg": 0
+      },
+      "energy_consumed_wh": {
+       "mean_delta": 0.0,
+       "ci95": [
+        0.0,
+        0.0
+       ],
+       "ci_excludes_0": false,
+       "n_pos": 0,
+       "n_neg": 0
+      },
+      "service": {
+       "mean_delta": 0.0,
+       "ci95": [
+        0.0,
+        0.0
+       ],
+       "ci_excludes_0": false,
+       "n_pos": 0,
+       "n_neg": 0
+      },
+      "missing_collection": {
+       "mean_delta": 0.0,
+       "ci95": [
+        0.0,
+        0.0
+       ],
+       "ci_excludes_0": false,
+       "n_pos": 0,
+       "n_neg": 0
+      }
+     },
+     "cost_axes_ci_excludes_0_lower": [],
+     "holds": false,
+     "per_rival": {
+      "fixed300": {
+       "service_ok": false,
+       "missing_collection_ok": true,
+       "cost_ok": false,
+       "cost_ok_by_axis": {
+        "uplinks": true,
+        "downlink_attempts": false,
+        "airtime_uplink_h": true,
+        "energy_consumed_wh": true
+       },
+       "strictly_lower_on": [
+        "uplinks",
+        "airtime_uplink_h",
+        "energy_consumed_wh"
+       ],
+       "d_service": -9.3,
+       "d_uplinks": -345.9,
+       "d_energy_wh": -0.007978,
+       "d_aoi_s": 121.32,
+       "d_downlink": 602.6
+      },
+      "pacing_backlog900_300": {
+       "service_ok": false,
+       "missing_collection_ok": true,
+       "cost_ok": false,
+       "cost_ok_by_axis": {
+        "uplinks": false,
+        "downlink_attempts": false,
+        "airtime_uplink_h": false,
+        "energy_consumed_wh": false
+       },
+       "strictly_lower_on": [],
+       "d_service": -6.35,
+       "d_uplinks": 28.7,
+       "d_energy_wh": 0.006356,
+       "d_aoi_s": 84.57,
+       "d_downlink": 514.65
+      },
+      "oblig_copies1": {
+       "service_ok": true,
+       "missing_collection_ok": true,
+       "cost_ok": true,
+       "cost_ok_by_axis": {
+        "uplinks": true,
+        "downlink_attempts": true,
+        "airtime_uplink_h": true,
+        "energy_consumed_wh": true
+       },
+       "strictly_lower_on": [],
+       "d_service": 0.0,
+       "d_uplinks": 0.0,
+       "d_energy_wh": 0.0,
+       "d_aoi_s": 0.0,
+       "d_downlink": 0.0
+      },
+      "oblig_copies2": {
+       "service_ok": false,
+       "missing_collection_ok": true,
+       "cost_ok": false,
+       "cost_ok_by_axis": {
+        "uplinks": true,
+        "downlink_attempts": false,
+        "airtime_uplink_h": true,
+        "energy_consumed_wh": true
+       },
+       "strictly_lower_on": [
+        "uplinks",
+        "airtime_uplink_h",
+        "energy_consumed_wh"
+       ],
+       "d_service": -7.25,
+       "d_uplinks": -115.65,
+       "d_energy_wh": -0.000572,
+       "d_aoi_s": 98.51,
+       "d_downlink": 378.05
+      },
+      "oblig_copies3": {
+       "service_ok": false,
+       "missing_collection_ok": true,
+       "cost_ok": false,
+       "cost_ok_by_axis": {
+        "uplinks": true,
+        "downlink_attempts": false,
+        "airtime_uplink_h": true,
+        "energy_consumed_wh": true
+       },
+       "strictly_lower_on": [
+        "uplinks",
+        "airtime_uplink_h",
+        "energy_consumed_wh"
+       ],
+       "d_service": -8.1,
+       "d_uplinks": -204.75,
+       "d_energy_wh": -0.003509,
+       "d_aoi_s": 104.24,
+       "d_downlink": 446.8
+      }
+     }
+    },
+    "1.00%": {
+     "service_not_worse_than_all": false,
+     "missing_collection_not_worse_than_all": true,
+     "cost_below_all_with_one_strict": false,
+     "top_rival_feasible": "pacing_backlog900_300",
+     "paired_vs_top_rival": {
+      "uplinks": {
+       "mean_delta": 28.7,
+       "ci95": [
+        -5.95,
+        62.5
+       ],
+       "ci_excludes_0": false,
+       "n_pos": 12,
+       "n_neg": 8
+      },
+      "downlink_attempts": {
+       "mean_delta": 514.65,
+       "ci95": [
+        501.35,
+        527.1
+       ],
+       "ci_excludes_0": true,
+       "n_pos": 20,
+       "n_neg": 0
+      },
+      "airtime_uplink_h": {
+       "mean_delta": 0.012575,
+       "ci95": [
+        0.0076,
+        0.0186
+       ],
+       "ci_excludes_0": true,
+       "n_pos": 18,
+       "n_neg": 2
+      },
+      "energy_consumed_wh": {
+       "mean_delta": 0.006357,
+       "ci95": [
+        0.0047,
+        0.008
+       ],
+       "ci_excludes_0": true,
+       "n_pos": 20,
+       "n_neg": 0
+      },
+      "service": {
+       "mean_delta": -6.35,
+       "ci95": [
+        -8.15,
+        -4.65
+       ],
+       "ci_excludes_0": true,
+       "n_pos": 0,
+       "n_neg": 19
+      },
+      "missing_collection": {
+       "mean_delta": 0.0,
+       "ci95": [
+        0.0,
+        0.0
+       ],
+       "ci_excludes_0": false,
+       "n_pos": 0,
+       "n_neg": 0
+      }
+     },
+     "cost_axes_ci_excludes_0_lower": [],
+     "holds": false,
+     "per_rival": {
+      "fixed300": {
+       "service_ok": false,
+       "missing_collection_ok": true,
+       "cost_ok": false,
+       "cost_ok_by_axis": {
+        "uplinks": true,
+        "downlink_attempts": false,
+        "airtime_uplink_h": true,
+        "energy_consumed_wh": true
+       },
+       "strictly_lower_on": [
+        "uplinks",
+        "airtime_uplink_h",
+        "energy_consumed_wh"
+       ],
+       "d_service": -9.3,
+       "d_uplinks": -345.9,
+       "d_energy_wh": -0.007978,
+       "d_aoi_s": 121.32,
+       "d_downlink": 602.6
+      },
+      "pacing_backlog900_300": {
+       "service_ok": true,
+       "missing_collection_ok": true,
+       "cost_ok": false,
+       "cost_ok_by_axis": {
+        "uplinks": false,
+        "downlink_attempts": false,
+        "airtime_uplink_h": false,
+        "energy_consumed_wh": false
+       },
+       "strictly_lower_on": [],
+       "d_service": -6.35,
+       "d_uplinks": 28.7,
+       "d_energy_wh": 0.006356,
+       "d_aoi_s": 84.57,
+       "d_downlink": 514.65
+      },
+      "oblig_copies1": {
+       "service_ok": true,
+       "missing_collection_ok": true,
+       "cost_ok": true,
+       "cost_ok_by_axis": {
+        "uplinks": true,
+        "downlink_attempts": true,
+        "airtime_uplink_h": true,
+        "energy_consumed_wh": true
+       },
+       "strictly_lower_on": [],
+       "d_service": 0.0,
+       "d_uplinks": 0.0,
+       "d_energy_wh": 0.0,
+       "d_aoi_s": 0.0,
+       "d_downlink": 0.0
+      },
+      "oblig_copies2": {
+       "service_ok": false,
+       "missing_collection_ok": true,
+       "cost_ok": false,
+       "cost_ok_by_axis": {
+        "uplinks": true,
+        "downlink_attempts": false,
+        "airtime_uplink_h": true,
+        "energy_consumed_wh": true
+       },
+       "strictly_lower_on": [
+        "uplinks",
+        "airtime_uplink_h",
+        "energy_consumed_wh"
+       ],
+       "d_service": -7.25,
+       "d_uplinks": -115.65,
+       "d_energy_wh": -0.000572,
+       "d_aoi_s": 98.51,
+       "d_downlink": 378.05
+      },
+      "oblig_copies3": {
+       "service_ok": false,
+       "missing_collection_ok": true,
+       "cost_ok": false,
+       "cost_ok_by_axis": {
+        "uplinks": true,
+        "downlink_attempts": false,
+        "airtime_uplink_h": true,
+        "energy_consumed_wh": true
+       },
+       "strictly_lower_on": [
+        "uplinks",
+        "airtime_uplink_h",
+        "energy_consumed_wh"
+       ],
+       "d_service": -8.1,
+       "d_uplinks": -204.75,
+       "d_energy_wh": -0.003509,
+       "d_aoi_s": 104.24,
+       "d_downlink": 446.8
+      }
+     }
+    }
+   },
+   "r3": {
+    "oblig_slack_no_slack": {
+     "ablation_name": "oblig_slack_no_slack",
+     "axes": {
+      "uplinks": {
+       "d_cand_minus_ablation": 0.0,
+       "ci95": null,
+       "ci_excludes_0": null
+      },
+      "downlink_attempts": {
+       "d_cand_minus_ablation": 0.0,
+       "ci95": null,
+       "ci_excludes_0": null
+      },
+      "airtime_uplink_h": {
+       "d_cand_minus_ablation": 0.0,
+       "ci95": null,
+       "ci_excludes_0": null
+      },
+      "energy_consumed_wh": {
+       "d_cand_minus_ablation": 0.0,
+       "ci95": null,
+       "ci_excludes_0": null
+      },
+      "service": {
+       "d_cand_minus_ablation": 0.0,
+       "ci95": null,
+       "ci_excludes_0": null
+      },
+      "missing_collection": {
+       "d_cand_minus_ablation": 0.0,
+       "ci95": null,
+       "ci_excludes_0": null
+      },
+      "aoi_mean_s": {
+       "d_cand_minus_ablation": 0.0,
+       "ci95": null,
+       "ci_excludes_0": null
+      }
+     },
+     "indistinguishable_on_costs": true,
+     "explains_gain": false
+    },
+    "oblig_slack_no_delay": {
+     "ablation_name": "oblig_slack_no_delay",
+     "axes": {
+      "uplinks": {
+       "d_cand_minus_ablation": 0.0,
+       "ci95": null,
+       "ci_excludes_0": null
+      },
+      "downlink_attempts": {
+       "d_cand_minus_ablation": 0.0,
+       "ci95": null,
+       "ci_excludes_0": null
+      },
+      "airtime_uplink_h": {
+       "d_cand_minus_ablation": 0.0,
+       "ci95": null,
+       "ci_excludes_0": null
+      },
+      "energy_consumed_wh": {
+       "d_cand_minus_ablation": 0.0,
+       "ci95": null,
+       "ci_excludes_0": null
+      },
+      "service": {
+       "d_cand_minus_ablation": 0.0,
+       "ci95": null,
+       "ci_excludes_0": null
+      },
+      "missing_collection": {
+       "d_cand_minus_ablation": 0.0,
+       "ci95": null,
+       "ci_excludes_0": null
+      },
+      "aoi_mean_s": {
+       "d_cand_minus_ablation": 0.0,
+       "ci95": null,
+       "ci_excludes_0": null
+      }
+     },
+     "indistinguishable_on_costs": true,
+     "explains_gain": false
+    },
+    "oblig_slack_no_obligation": {
+     "ablation_name": "oblig_slack_no_obligation",
+     "axes": {
+      "uplinks": {
+       "d_cand_minus_ablation": 0.0,
+       "ci95": null,
+       "ci_excludes_0": null
+      },
+      "downlink_attempts": {
+       "d_cand_minus_ablation": 0.0,
+       "ci95": null,
+       "ci_excludes_0": null
+      },
+      "airtime_uplink_h": {
+       "d_cand_minus_ablation": 0.0,
+       "ci95": null,
+       "ci_excludes_0": null
+      },
+      "energy_consumed_wh": {
+       "d_cand_minus_ablation": 0.0,
+       "ci95": null,
+       "ci_excludes_0": null
+      },
+      "service": {
+       "d_cand_minus_ablation": 0.0,
+       "ci95": null,
+       "ci_excludes_0": null
+      },
+      "missing_collection": {
+       "d_cand_minus_ablation": 0.0,
+       "ci95": null,
+       "ci_excludes_0": null
+      },
+      "aoi_mean_s": {
+       "d_cand_minus_ablation": 0.0,
+       "ci95": null,
+       "ci_excludes_0": null
+      }
+     },
+     "indistinguishable_on_costs": true,
+     "explains_gain": false
+    }
+   },
+   "per_axis": {},
+   "r1_any_holds": {
+    "0.00%": false,
+    "1.00%": false
+   },
+   "r2_any_holds": false,
+   "table": {
+    "fixed300": {
+     "service": 511.2,
+     "missing_collection": 0.0,
+     "missing_delivery": 160.8,
+     "aoi_mean_s": 1979.305145,
+     "uplinks": 1254.95,
+     "downlink_attempts": 19.2,
+     "airtime_uplink_h": 0.099911,
+     "energy_consumed_wh": 0.395134,
+     "nodes_dead": 0.0,
+     "n_config_changes": 13.0,
+     "on_time_heard": 511.65,
+     "late_heard": 160.35,
+     "never_heard": 0.0,
+     "stuck_at_gateway_hop": 160.8,
+     "delivered": 511.2,
+     "mean_copies_heard": 2.029762
+    },
+    "pacing_backlog900_300": {
+     "service": 508.25,
+     "missing_collection": 0.0,
+     "missing_delivery": 163.75,
+     "aoi_mean_s": 2016.051596,
+     "uplinks": 880.35,
+     "downlink_attempts": 107.15,
+     "airtime_uplink_h": 0.057416,
+     "energy_consumed_wh": 0.3808,
+     "nodes_dead": 0.0,
+     "n_config_changes": 75.65,
+     "on_time_heard": 518.1,
+     "late_heard": 153.9,
+     "never_heard": 0.0,
+     "stuck_at_gateway_hop": 163.75,
+     "delivered": 508.25,
+     "mean_copies_heard": 2.029762
+    },
+    "oblig_copies1": {
+     "service": 501.9,
+     "missing_collection": 0.0,
+     "missing_delivery": 170.1,
+     "aoi_mean_s": 2100.623177,
+     "uplinks": 909.05,
+     "downlink_attempts": 621.8,
+     "airtime_uplink_h": 0.069992,
+     "energy_consumed_wh": 0.387156,
+     "nodes_dead": 0.0,
+     "n_config_changes": 448.85,
+     "on_time_heard": 507.8,
+     "late_heard": 164.2,
+     "never_heard": 0.0,
+     "stuck_at_gateway_hop": 170.1,
+     "delivered": 501.9,
+     "mean_copies_heard": 2.029762
+    },
+    "oblig_copies2": {
+     "service": 509.15,
+     "missing_collection": 0.0,
+     "missing_delivery": 162.85,
+     "aoi_mean_s": 2002.11498,
+     "uplinks": 1024.7,
+     "downlink_attempts": 243.75,
+     "airtime_uplink_h": 0.074852,
+     "energy_consumed_wh": 0.387728,
+     "nodes_dead": 0.0,
+     "n_config_changes": 177.5,
+     "on_time_heard": 515.2,
+     "late_heard": 156.8,
+     "never_heard": 0.0,
+     "stuck_at_gateway_hop": 162.85,
+     "delivered": 509.15,
+     "mean_copies_heard": 2.029762
+    },
+    "oblig_copies3": {
+     "service": 510.0,
+     "missing_collection": 0.0,
+     "missing_delivery": 162.0,
+     "aoi_mean_s": 1996.384647,
+     "uplinks": 1113.8,
+     "downlink_attempts": 175.0,
+     "airtime_uplink_h": 0.084169,
+     "energy_consumed_wh": 0.390665,
+     "nodes_dead": 0.0,
+     "n_config_changes": 125.9,
+     "on_time_heard": 513.4,
+     "late_heard": 158.6,
+     "never_heard": 0.0,
+     "stuck_at_gateway_hop": 162.0,
+     "delivered": 510.0,
+     "mean_copies_heard": 2.029762
+    },
+    "oblig_slack": {
+     "service": 501.9,
+     "missing_collection": 0.0,
+     "missing_delivery": 170.1,
+     "aoi_mean_s": 2100.623177,
+     "uplinks": 909.05,
+     "downlink_attempts": 621.8,
+     "airtime_uplink_h": 0.069992,
+     "energy_consumed_wh": 0.387156,
+     "nodes_dead": 0.0,
+     "n_config_changes": 448.85,
+     "on_time_heard": 507.8,
+     "late_heard": 164.2,
+     "never_heard": 0.0,
+     "stuck_at_gateway_hop": 170.1,
+     "delivered": 501.9,
+     "mean_copies_heard": 2.029762
+    },
+    "oblig_slack_no_slack": {
+     "service": 501.9,
+     "missing_collection": 0.0,
+     "missing_delivery": 170.1,
+     "aoi_mean_s": 2100.623177,
+     "uplinks": 909.05,
+     "downlink_attempts": 621.8,
+     "airtime_uplink_h": 0.069992,
+     "energy_consumed_wh": 0.387156,
+     "nodes_dead": 0.0,
+     "n_config_changes": 448.85,
+     "on_time_heard": 507.8,
+     "late_heard": 164.2,
+     "never_heard": 0.0,
+     "stuck_at_gateway_hop": 170.1,
+     "delivered": 501.9,
+     "mean_copies_heard": 2.029762
+    },
+    "oblig_slack_no_delay": {
+     "service": 501.9,
+     "missing_collection": 0.0,
+     "missing_delivery": 170.1,
+     "aoi_mean_s": 2100.623177,
+     "uplinks": 909.05,
+     "downlink_attempts": 621.8,
+     "airtime_uplink_h": 0.069992,
+     "energy_consumed_wh": 0.387156,
+     "nodes_dead": 0.0,
+     "n_config_changes": 448.85,
+     "on_time_heard": 507.8,
+     "late_heard": 164.2,
+     "never_heard": 0.0,
+     "stuck_at_gateway_hop": 170.1,
+     "delivered": 501.9,
+     "mean_copies_heard": 2.029762
+    },
+    "oblig_slack_no_obligation": {
+     "service": 501.9,
+     "missing_collection": 0.0,
+     "missing_delivery": 170.1,
+     "aoi_mean_s": 2100.623177,
+     "uplinks": 909.05,
+     "downlink_attempts": 621.8,
+     "airtime_uplink_h": 0.069992,
+     "energy_consumed_wh": 0.387156,
+     "nodes_dead": 0.0,
+     "n_config_changes": 448.85,
+     "on_time_heard": 507.8,
+     "late_heard": 164.2,
+     "never_heard": 0.0,
+     "stuck_at_gateway_hop": 170.1,
+     "delivered": 501.9,
+     "mean_copies_heard": 2.029762
+    },
+    "aoi_const300": {
+     "service": 511.2,
+     "missing_collection": 0.0,
+     "missing_delivery": 160.8,
+     "aoi_mean_s": 1979.305145,
+     "uplinks": 1254.95,
+     "downlink_attempts": 19.2,
+     "airtime_uplink_h": 0.099911,
+     "energy_consumed_wh": 0.395134,
+     "nodes_dead": 0.0,
+     "n_config_changes": 13.0,
+     "on_time_heard": 511.65,
+     "late_heard": 160.35,
+     "never_heard": 0.0,
+     "stuck_at_gateway_hop": 160.8,
+     "delivered": 511.2,
+     "mean_copies_heard": 2.029762
+    }
+   },
+   "stuck_vs_backlog": {
+    "fixed300": -2.95,
+    "pacing_backlog900_300": 0.0,
+    "oblig_copies1": 6.35,
+    "oblig_copies2": -0.9,
+    "oblig_copies3": -1.75,
+    "oblig_slack": 6.35,
+    "oblig_slack_no_slack": 6.35,
+    "oblig_slack_no_delay": 6.35,
+    "oblig_slack_no_obligation": 6.35
+   },
+   "stuck_vs_backlog_ci": {
+    "fixed300": {
+     "mean_delta": -2.95,
+     "ci95": [
+      -4.0,
+      -2.05
+     ],
+     "ci_excludes_0": true,
+     "n_pos": 0,
+     "n_neg": 19,
+     "n_seeds": 20
+    },
+    "oblig_copies1": {
+     "mean_delta": 6.35,
+     "ci95": [
+      4.65,
+      8.1
+     ],
+     "ci_excludes_0": true,
+     "n_pos": 19,
+     "n_neg": 0,
+     "n_seeds": 20
+    },
+    "oblig_copies2": {
+     "mean_delta": -0.9,
+     "ci95": [
+      -1.4,
+      -0.5
+     ],
+     "ci_excludes_0": true,
+     "n_pos": 0,
+     "n_neg": 11,
+     "n_seeds": 20
+    },
+    "oblig_copies3": {
+     "mean_delta": -1.75,
+     "ci95": [
+      -2.45,
+      -1.1
+     ],
+     "ci_excludes_0": true,
+     "n_pos": 1,
+     "n_neg": 18,
+     "n_seeds": 20
+    },
+    "oblig_slack": {
+     "mean_delta": 6.35,
+     "ci95": [
+      4.75,
+      8.15
+     ],
+     "ci_excludes_0": true,
+     "n_pos": 19,
+     "n_neg": 0,
+     "n_seeds": 20
+    },
+    "oblig_slack_no_slack": {
+     "mean_delta": 6.35,
+     "ci95": [
+      4.65,
+      8.15
+     ],
+     "ci_excludes_0": true,
+     "n_pos": 19,
+     "n_neg": 0,
+     "n_seeds": 20
+    },
+    "oblig_slack_no_delay": {
+     "mean_delta": 6.35,
+     "ci95": [
+      4.8,
+      8.05
+     ],
+     "ci_excludes_0": true,
+     "n_pos": 19,
+     "n_neg": 0,
+     "n_seeds": 20
+    },
+    "oblig_slack_no_obligation": {
+     "mean_delta": 6.35,
+     "ci95": [
+      4.65,
+      8.1
+     ],
+     "ci_excludes_0": true,
+     "n_pos": 19,
+     "n_neg": 0,
+     "n_seeds": 20
+    }
+   },
+   "reference_floor_note": "参照服务取冻结普通基线最高者 aoi_const300=511.20/672.0（缺采 0.00）；容差 1% 折合 6.72 条义务"
+  },
+  "P1_backhaul_4h7h": {
+   "denom": 672.0,
+   "reference_arm": "aoi_const300",
+   "reference_service": 404.95,
+   "reference_ok": false,
+   "r1": {
+    "oblig_copies1@0.00%": {
+     "service": 397.2,
+     "service_ok": false,
+     "missing_collection": 0.0,
+     "missing_collection_ok": true,
+     "cost_ok_by_axis": {
+      "uplinks": false,
+      "downlink_attempts": false,
+      "airtime_uplink_h": false,
+      "energy_consumed_wh": false
+     },
+     "cost_ok": false,
+     "aoi_mean_s": 3912.69,
+     "d_aoi_vs_backlog": 89.98,
+     "nodes_dead": 0.0,
+     "holds": false,
+     "strict_cost_below_on": []
+    },
+    "oblig_copies2@0.00%": {
+     "service": 402.55,
+     "service_ok": true,
+     "missing_collection": 0.0,
+     "missing_collection_ok": true,
+     "cost_ok_by_axis": {
+      "uplinks": false,
+      "downlink_attempts": false,
+      "airtime_uplink_h": false,
+      "energy_consumed_wh": false
+     },
+     "cost_ok": false,
+     "aoi_mean_s": 3812.1,
+     "d_aoi_vs_backlog": -10.6,
+     "nodes_dead": 0.0,
+     "holds": false,
+     "strict_cost_below_on": []
+    },
+    "oblig_copies3@0.00%": {
+     "service": 403.4,
+     "service_ok": true,
+     "missing_collection": 0.0,
+     "missing_collection_ok": true,
+     "cost_ok_by_axis": {
+      "uplinks": false,
+      "downlink_attempts": false,
+      "airtime_uplink_h": false,
+      "energy_consumed_wh": false
+     },
+     "cost_ok": false,
+     "aoi_mean_s": 3805.94,
+     "d_aoi_vs_backlog": -16.76,
+     "nodes_dead": 0.0,
+     "holds": false,
+     "strict_cost_below_on": []
+    },
+    "oblig_copies1@1.00%": {
+     "service": 397.2,
+     "service_ok": true,
+     "missing_collection": 0.0,
+     "missing_collection_ok": true,
+     "cost_ok_by_axis": {
+      "uplinks": false,
+      "downlink_attempts": false,
+      "airtime_uplink_h": false,
+      "energy_consumed_wh": false
+     },
+     "cost_ok": false,
+     "aoi_mean_s": 3912.69,
+     "d_aoi_vs_backlog": 89.98,
+     "nodes_dead": 0.0,
+     "holds": false,
+     "strict_cost_below_on": []
+    },
+    "oblig_copies2@1.00%": {
+     "service": 402.55,
+     "service_ok": true,
+     "missing_collection": 0.0,
+     "missing_collection_ok": true,
+     "cost_ok_by_axis": {
+      "uplinks": false,
+      "downlink_attempts": false,
+      "airtime_uplink_h": false,
+      "energy_consumed_wh": false
+     },
+     "cost_ok": false,
+     "aoi_mean_s": 3812.1,
+     "d_aoi_vs_backlog": -10.6,
+     "nodes_dead": 0.0,
+     "holds": false,
+     "strict_cost_below_on": []
+    },
+    "oblig_copies3@1.00%": {
+     "service": 403.4,
+     "service_ok": true,
+     "missing_collection": 0.0,
+     "missing_collection_ok": true,
+     "cost_ok_by_axis": {
+      "uplinks": false,
+      "downlink_attempts": false,
+      "airtime_uplink_h": false,
+      "energy_consumed_wh": false
+     },
+     "cost_ok": false,
+     "aoi_mean_s": 3805.94,
+     "d_aoi_vs_backlog": -16.76,
+     "nodes_dead": 0.0,
+     "holds": false,
+     "strict_cost_below_on": []
+    }
+   },
+   "r2": {
+    "0.00%": {
+     "service_not_worse_than_all": false,
+     "missing_collection_not_worse_than_all": true,
+     "cost_below_all_with_one_strict": false,
+     "top_rival_feasible": "oblig_copies1",
+     "paired_vs_top_rival": {
+      "uplinks": {
+       "mean_delta": 0.0,
+       "ci95": [
+        0.0,
+        0.0
+       ],
+       "ci_excludes_0": false,
+       "n_pos": 0,
+       "n_neg": 0
+      },
+      "downlink_attempts": {
+       "mean_delta": 0.0,
+       "ci95": [
+        0.0,
+        0.0
+       ],
+       "ci_excludes_0": false,
+       "n_pos": 0,
+       "n_neg": 0
+      },
+      "airtime_uplink_h": {
+       "mean_delta": 0.0,
+       "ci95": [
+        0.0,
+        0.0
+       ],
+       "ci_excludes_0": false,
+       "n_pos": 0,
+       "n_neg": 0
+      },
+      "energy_consumed_wh": {
+       "mean_delta": 0.0,
+       "ci95": [
+        0.0,
+        0.0
+       ],
+       "ci_excludes_0": false,
+       "n_pos": 0,
+       "n_neg": 0
+      },
+      "service": {
+       "mean_delta": 0.0,
+       "ci95": [
+        0.0,
+        0.0
+       ],
+       "ci_excludes_0": false,
+       "n_pos": 0,
+       "n_neg": 0
+      },
+      "missing_collection": {
+       "mean_delta": 0.0,
+       "ci95": [
+        0.0,
+        0.0
+       ],
+       "ci_excludes_0": false,
+       "n_pos": 0,
+       "n_neg": 0
+      }
+     },
+     "cost_axes_ci_excludes_0_lower": [],
+     "holds": false,
+     "per_rival": {
+      "fixed300": {
+       "service_ok": false,
+       "missing_collection_ok": true,
+       "cost_ok": false,
+       "cost_ok_by_axis": {
+        "uplinks": true,
+        "downlink_attempts": false,
+        "airtime_uplink_h": true,
+        "energy_consumed_wh": true
+       },
+       "strictly_lower_on": [
+        "uplinks",
+        "airtime_uplink_h",
+        "energy_consumed_wh"
+       ],
+       "d_service": -7.75,
+       "d_uplinks": -441.75,
+       "d_energy_wh": -0.014097,
+       "d_aoi_s": 124.81,
+       "d_downlink": 625.4
+      },
+      "pacing_backlog900_300": {
+       "service_ok": false,
+       "missing_collection_ok": true,
+       "cost_ok": false,
+       "cost_ok_by_axis": {
+        "uplinks": false,
+        "downlink_attempts": false,
+        "airtime_uplink_h": false,
+        "energy_consumed_wh": false
+       },
+       "strictly_lower_on": [],
+       "d_service": -4.85,
+       "d_uplinks": 126.6,
+       "d_energy_wh": 0.011903,
+       "d_aoi_s": 89.98,
+       "d_downlink": 546.7
+      },
+      "oblig_copies1": {
+       "service_ok": true,
+       "missing_collection_ok": true,
+       "cost_ok": true,
+       "cost_ok_by_axis": {
+        "uplinks": true,
+        "downlink_attempts": true,
+        "airtime_uplink_h": true,
+        "energy_consumed_wh": true
+       },
+       "strictly_lower_on": [],
+       "d_service": 0.0,
+       "d_uplinks": 0.0,
+       "d_energy_wh": 0.0,
+       "d_aoi_s": 0.0,
+       "d_downlink": 0.0
+      },
+      "oblig_copies2": {
+       "service_ok": false,
+       "missing_collection_ok": true,
+       "cost_ok": false,
+       "cost_ok_by_axis": {
+        "uplinks": true,
+        "downlink_attempts": false,
+        "airtime_uplink_h": true,
+        "energy_consumed_wh": true
+       },
+       "strictly_lower_on": [
+        "uplinks",
+        "airtime_uplink_h",
+        "energy_consumed_wh"
+       ],
+       "d_service": -5.35,
+       "d_uplinks": -97.45,
+       "d_energy_wh": -0.000535,
+       "d_aoi_s": 100.58,
+       "d_downlink": 319.5
+      },
+      "oblig_copies3": {
+       "service_ok": false,
+       "missing_collection_ok": true,
+       "cost_ok": false,
+       "cost_ok_by_axis": {
+        "uplinks": true,
+        "downlink_attempts": false,
+        "airtime_uplink_h": true,
+        "energy_consumed_wh": true
+       },
+       "strictly_lower_on": [
+        "uplinks",
+        "airtime_uplink_h",
+        "energy_consumed_wh"
+       ],
+       "d_service": -6.2,
+       "d_uplinks": -219.75,
+       "d_energy_wh": -0.005347,
+       "d_aoi_s": 106.74,
+       "d_downlink": 406.7
+      }
+     }
+    },
+    "1.00%": {
+     "service_not_worse_than_all": false,
+     "missing_collection_not_worse_than_all": true,
+     "cost_below_all_with_one_strict": false,
+     "top_rival_feasible": "oblig_copies3",
+     "paired_vs_top_rival": {
+      "uplinks": {
+       "mean_delta": -219.75,
+       "ci95": [
+        -231.95,
+        -208.15
+       ],
+       "ci_excludes_0": true,
+       "n_pos": 0,
+       "n_neg": 20
+      },
+      "downlink_attempts": {
+       "mean_delta": 406.7,
+       "ci95": [
+        392.65,
+        420.75
+       ],
+       "ci_excludes_0": true,
+       "n_pos": 20,
+       "n_neg": 0
+      },
+      "airtime_uplink_h": {
+       "mean_delta": -0.021864,
+       "ci95": [
+        -0.0261,
+        -0.018
+       ],
+       "ci_excludes_0": true,
+       "n_pos": 0,
+       "n_neg": 20
+      },
+      "energy_consumed_wh": {
+       "mean_delta": -0.005348,
+       "ci95": [
+        -0.0062,
+        -0.0046
+       ],
+       "ci_excludes_0": true,
+       "n_pos": 0,
+       "n_neg": 20
+      },
+      "service": {
+       "mean_delta": -6.2,
+       "ci95": [
+        -7.85,
+        -4.6
+       ],
+       "ci_excludes_0": true,
+       "n_pos": 1,
+       "n_neg": 19
+      },
+      "missing_collection": {
+       "mean_delta": 0.0,
+       "ci95": [
+        0.0,
+        0.0
+       ],
+       "ci_excludes_0": false,
+       "n_pos": 0,
+       "n_neg": 0
+      }
+     },
+     "cost_axes_ci_excludes_0_lower": [
+      "uplinks",
+      "airtime_uplink_h",
+      "energy_consumed_wh"
+     ],
+     "holds": false,
+     "per_rival": {
+      "fixed300": {
+       "service_ok": false,
+       "missing_collection_ok": true,
+       "cost_ok": false,
+       "cost_ok_by_axis": {
+        "uplinks": true,
+        "downlink_attempts": false,
+        "airtime_uplink_h": true,
+        "energy_consumed_wh": true
+       },
+       "strictly_lower_on": [
+        "uplinks",
+        "airtime_uplink_h",
+        "energy_consumed_wh"
+       ],
+       "d_service": -7.75,
+       "d_uplinks": -441.75,
+       "d_energy_wh": -0.014097,
+       "d_aoi_s": 124.81,
+       "d_downlink": 625.4
+      },
+      "pacing_backlog900_300": {
+       "service_ok": true,
+       "missing_collection_ok": true,
+       "cost_ok": false,
+       "cost_ok_by_axis": {
+        "uplinks": false,
+        "downlink_attempts": false,
+        "airtime_uplink_h": false,
+        "energy_consumed_wh": false
+       },
+       "strictly_lower_on": [],
+       "d_service": -4.85,
+       "d_uplinks": 126.6,
+       "d_energy_wh": 0.011903,
+       "d_aoi_s": 89.98,
+       "d_downlink": 546.7
+      },
+      "oblig_copies1": {
+       "service_ok": true,
+       "missing_collection_ok": true,
+       "cost_ok": true,
+       "cost_ok_by_axis": {
+        "uplinks": true,
+        "downlink_attempts": true,
+        "airtime_uplink_h": true,
+        "energy_consumed_wh": true
+       },
+       "strictly_lower_on": [],
+       "d_service": 0.0,
+       "d_uplinks": 0.0,
+       "d_energy_wh": 0.0,
+       "d_aoi_s": 0.0,
+       "d_downlink": 0.0
+      },
+      "oblig_copies2": {
+       "service_ok": true,
+       "missing_collection_ok": true,
+       "cost_ok": false,
+       "cost_ok_by_axis": {
+        "uplinks": true,
+        "downlink_attempts": false,
+        "airtime_uplink_h": true,
+        "energy_consumed_wh": true
+       },
+       "strictly_lower_on": [
+        "uplinks",
+        "airtime_uplink_h",
+        "energy_consumed_wh"
+       ],
+       "d_service": -5.35,
+       "d_uplinks": -97.45,
+       "d_energy_wh": -0.000535,
+       "d_aoi_s": 100.58,
+       "d_downlink": 319.5
+      },
+      "oblig_copies3": {
+       "service_ok": true,
+       "missing_collection_ok": true,
+       "cost_ok": false,
+       "cost_ok_by_axis": {
+        "uplinks": true,
+        "downlink_attempts": false,
+        "airtime_uplink_h": true,
+        "energy_consumed_wh": true
+       },
+       "strictly_lower_on": [
+        "uplinks",
+        "airtime_uplink_h",
+        "energy_consumed_wh"
+       ],
+       "d_service": -6.2,
+       "d_uplinks": -219.75,
+       "d_energy_wh": -0.005347,
+       "d_aoi_s": 106.74,
+       "d_downlink": 406.7
+      }
+     }
+    }
+   },
+   "r3": {
+    "oblig_slack_no_slack": {
+     "ablation_name": "oblig_slack_no_slack",
+     "axes": {
+      "uplinks": {
+       "d_cand_minus_ablation": 0.0,
+       "ci95": null,
+       "ci_excludes_0": null
+      },
+      "downlink_attempts": {
+       "d_cand_minus_ablation": 0.0,
+       "ci95": null,
+       "ci_excludes_0": null
+      },
+      "airtime_uplink_h": {
+       "d_cand_minus_ablation": 0.0,
+       "ci95": null,
+       "ci_excludes_0": null
+      },
+      "energy_consumed_wh": {
+       "d_cand_minus_ablation": 0.0,
+       "ci95": null,
+       "ci_excludes_0": null
+      },
+      "service": {
+       "d_cand_minus_ablation": 0.0,
+       "ci95": null,
+       "ci_excludes_0": null
+      },
+      "missing_collection": {
+       "d_cand_minus_ablation": 0.0,
+       "ci95": null,
+       "ci_excludes_0": null
+      },
+      "aoi_mean_s": {
+       "d_cand_minus_ablation": 0.0,
+       "ci95": null,
+       "ci_excludes_0": null
+      }
+     },
+     "indistinguishable_on_costs": true,
+     "explains_gain": false
+    },
+    "oblig_slack_no_delay": {
+     "ablation_name": "oblig_slack_no_delay",
+     "axes": {
+      "uplinks": {
+       "d_cand_minus_ablation": 0.0,
+       "ci95": null,
+       "ci_excludes_0": null
+      },
+      "downlink_attempts": {
+       "d_cand_minus_ablation": 0.0,
+       "ci95": null,
+       "ci_excludes_0": null
+      },
+      "airtime_uplink_h": {
+       "d_cand_minus_ablation": 0.0,
+       "ci95": null,
+       "ci_excludes_0": null
+      },
+      "energy_consumed_wh": {
+       "d_cand_minus_ablation": 0.0,
+       "ci95": null,
+       "ci_excludes_0": null
+      },
+      "service": {
+       "d_cand_minus_ablation": 0.0,
+       "ci95": null,
+       "ci_excludes_0": null
+      },
+      "missing_collection": {
+       "d_cand_minus_ablation": 0.0,
+       "ci95": null,
+       "ci_excludes_0": null
+      },
+      "aoi_mean_s": {
+       "d_cand_minus_ablation": 0.0,
+       "ci95": null,
+       "ci_excludes_0": null
+      }
+     },
+     "indistinguishable_on_costs": true,
+     "explains_gain": false
+    },
+    "oblig_slack_no_obligation": {
+     "ablation_name": "oblig_slack_no_obligation",
+     "axes": {
+      "uplinks": {
+       "d_cand_minus_ablation": 0.0,
+       "ci95": null,
+       "ci_excludes_0": null
+      },
+      "downlink_attempts": {
+       "d_cand_minus_ablation": 0.0,
+       "ci95": null,
+       "ci_excludes_0": null
+      },
+      "airtime_uplink_h": {
+       "d_cand_minus_ablation": 0.0,
+       "ci95": null,
+       "ci_excludes_0": null
+      },
+      "energy_consumed_wh": {
+       "d_cand_minus_ablation": 0.0,
+       "ci95": null,
+       "ci_excludes_0": null
+      },
+      "service": {
+       "d_cand_minus_ablation": 0.0,
+       "ci95": null,
+       "ci_excludes_0": null
+      },
+      "missing_collection": {
+       "d_cand_minus_ablation": 0.0,
+       "ci95": null,
+       "ci_excludes_0": null
+      },
+      "aoi_mean_s": {
+       "d_cand_minus_ablation": 0.0,
+       "ci95": null,
+       "ci_excludes_0": null
+      }
+     },
+     "indistinguishable_on_costs": true,
+     "explains_gain": false
+    }
+   },
+   "per_axis": {},
+   "r1_any_holds": {
+    "0.00%": false,
+    "1.00%": false
+   },
+   "r2_any_holds": false,
+   "table": {
+    "fixed300": {
+     "service": 404.95,
+     "missing_collection": 0.0,
+     "missing_delivery": 267.05,
+     "aoi_mean_s": 3787.870721,
+     "uplinks": 1412.1,
+     "downlink_attempts": 19.2,
+     "airtime_uplink_h": 0.164496,
+     "energy_consumed_wh": 0.408822,
+     "nodes_dead": 0.0,
+     "n_config_changes": 13.0,
+     "on_time_heard": 405.3,
+     "late_heard": 266.7,
+     "never_heard": 0.0,
+     "stuck_at_gateway_hop": 267.05,
+     "delivered": 404.95,
+     "mean_copies_heard": 2.029762
+    },
+    "pacing_backlog900_300": {
+     "service": 402.05,
+     "missing_collection": 0.0,
+     "missing_delivery": 269.95,
+     "aoi_mean_s": 3822.703174,
+     "uplinks": 843.75,
+     "downlink_attempts": 97.9,
+     "airtime_uplink_h": 0.075693,
+     "energy_consumed_wh": 0.382822,
+     "nodes_dead": 0.0,
+     "n_config_changes": 70.3,
+     "on_time_heard": 411.65,
+     "late_heard": 260.35,
+     "never_heard": 0.0,
+     "stuck_at_gateway_hop": 269.95,
+     "delivered": 402.05,
+     "mean_copies_heard": 2.029762
+    },
+    "oblig_copies1": {
+     "service": 397.2,
+     "missing_collection": 0.0,
+     "missing_delivery": 274.8,
+     "aoi_mean_s": 3912.685123,
+     "uplinks": 970.35,
+     "downlink_attempts": 644.6,
+     "airtime_uplink_h": 0.108214,
+     "energy_consumed_wh": 0.394725,
+     "nodes_dead": 0.0,
+     "n_config_changes": 464.25,
+     "on_time_heard": 402.65,
+     "late_heard": 269.35,
+     "never_heard": 0.0,
+     "stuck_at_gateway_hop": 274.8,
+     "delivered": 397.2,
+     "mean_copies_heard": 2.029762
+    },
+    "oblig_copies2": {
+     "service": 402.55,
+     "missing_collection": 0.0,
+     "missing_delivery": 269.45,
+     "aoi_mean_s": 3812.103162,
+     "uplinks": 1067.8,
+     "downlink_attempts": 325.1,
+     "airtime_uplink_h": 0.11269,
+     "energy_consumed_wh": 0.39526,
+     "nodes_dead": 0.0,
+     "n_config_changes": 235.35,
+     "on_time_heard": 407.95,
+     "late_heard": 264.05,
+     "never_heard": 0.0,
+     "stuck_at_gateway_hop": 269.45,
+     "delivered": 402.55,
+     "mean_copies_heard": 2.029762
+    },
+    "oblig_copies3": {
+     "service": 403.4,
+     "missing_collection": 0.0,
+     "missing_delivery": 268.6,
+     "aoi_mean_s": 3805.941323,
+     "uplinks": 1190.1,
+     "downlink_attempts": 237.9,
+     "airtime_uplink_h": 0.130078,
+     "energy_consumed_wh": 0.400072,
+     "nodes_dead": 0.0,
+     "n_config_changes": 170.4,
+     "on_time_heard": 406.65,
+     "late_heard": 265.35,
+     "never_heard": 0.0,
+     "stuck_at_gateway_hop": 268.6,
+     "delivered": 403.4,
+     "mean_copies_heard": 2.029762
+    },
+    "oblig_slack": {
+     "service": 397.2,
+     "missing_collection": 0.0,
+     "missing_delivery": 274.8,
+     "aoi_mean_s": 3912.685123,
+     "uplinks": 970.35,
+     "downlink_attempts": 644.6,
+     "airtime_uplink_h": 0.108214,
+     "energy_consumed_wh": 0.394725,
+     "nodes_dead": 0.0,
+     "n_config_changes": 464.25,
+     "on_time_heard": 402.65,
+     "late_heard": 269.35,
+     "never_heard": 0.0,
+     "stuck_at_gateway_hop": 274.8,
+     "delivered": 397.2,
+     "mean_copies_heard": 2.029762
+    },
+    "oblig_slack_no_slack": {
+     "service": 397.2,
+     "missing_collection": 0.0,
+     "missing_delivery": 274.8,
+     "aoi_mean_s": 3912.685123,
+     "uplinks": 970.35,
+     "downlink_attempts": 644.6,
+     "airtime_uplink_h": 0.108214,
+     "energy_consumed_wh": 0.394725,
+     "nodes_dead": 0.0,
+     "n_config_changes": 464.25,
+     "on_time_heard": 402.65,
+     "late_heard": 269.35,
+     "never_heard": 0.0,
+     "stuck_at_gateway_hop": 274.8,
+     "delivered": 397.2,
+     "mean_copies_heard": 2.029762
+    },
+    "oblig_slack_no_delay": {
+     "service": 397.2,
+     "missing_collection": 0.0,
+     "missing_delivery": 274.8,
+     "aoi_mean_s": 3912.685123,
+     "uplinks": 970.35,
+     "downlink_attempts": 644.6,
+     "airtime_uplink_h": 0.108214,
+     "energy_consumed_wh": 0.394725,
+     "nodes_dead": 0.0,
+     "n_config_changes": 464.25,
+     "on_time_heard": 402.65,
+     "late_heard": 269.35,
+     "never_heard": 0.0,
+     "stuck_at_gateway_hop": 274.8,
+     "delivered": 397.2,
+     "mean_copies_heard": 2.029762
+    },
+    "oblig_slack_no_obligation": {
+     "service": 397.2,
+     "missing_collection": 0.0,
+     "missing_delivery": 274.8,
+     "aoi_mean_s": 3912.685123,
+     "uplinks": 970.35,
+     "downlink_attempts": 644.6,
+     "airtime_uplink_h": 0.108214,
+     "energy_consumed_wh": 0.394725,
+     "nodes_dead": 0.0,
+     "n_config_changes": 464.25,
+     "on_time_heard": 402.65,
+     "late_heard": 269.35,
+     "never_heard": 0.0,
+     "stuck_at_gateway_hop": 274.8,
+     "delivered": 397.2,
+     "mean_copies_heard": 2.029762
+    },
+    "aoi_const300": {
+     "service": 404.95,
+     "missing_collection": 0.0,
+     "missing_delivery": 267.05,
+     "aoi_mean_s": 3787.870721,
+     "uplinks": 1412.1,
+     "downlink_attempts": 19.2,
+     "airtime_uplink_h": 0.164496,
+     "energy_consumed_wh": 0.408822,
+     "nodes_dead": 0.0,
+     "n_config_changes": 13.0,
+     "on_time_heard": 405.3,
+     "late_heard": 266.7,
+     "never_heard": 0.0,
+     "stuck_at_gateway_hop": 267.05,
+     "delivered": 404.95,
+     "mean_copies_heard": 2.029762
+    }
+   },
+   "stuck_vs_backlog": {
+    "fixed300": -2.9,
+    "pacing_backlog900_300": 0.0,
+    "oblig_copies1": 4.85,
+    "oblig_copies2": -0.5,
+    "oblig_copies3": -1.35,
+    "oblig_slack": 4.85,
+    "oblig_slack_no_slack": 4.85,
+    "oblig_slack_no_delay": 4.85,
+    "oblig_slack_no_obligation": 4.85
+   },
+   "stuck_vs_backlog_ci": {
+    "fixed300": {
+     "mean_delta": -2.9,
+     "ci95": [
+      -4.0,
+      -1.95
+     ],
+     "ci_excludes_0": true,
+     "n_pos": 0,
+     "n_neg": 18,
+     "n_seeds": 20
+    },
+    "oblig_copies1": {
+     "mean_delta": 4.85,
+     "ci95": [
+      3.35,
+      6.4
+     ],
+     "ci_excludes_0": true,
+     "n_pos": 18,
+     "n_neg": 1,
+     "n_seeds": 20
+    },
+    "oblig_copies2": {
+     "mean_delta": -0.5,
+     "ci95": [
+      -1.0,
+      -0.05
+     ],
+     "ci_excludes_0": true,
+     "n_pos": 2,
+     "n_neg": 8,
+     "n_seeds": 20
+    },
+    "oblig_copies3": {
+     "mean_delta": -1.35,
+     "ci95": [
+      -2.15,
+      -0.7
+     ],
+     "ci_excludes_0": true,
+     "n_pos": 1,
+     "n_neg": 13,
+     "n_seeds": 20
+    },
+    "oblig_slack": {
+     "mean_delta": 4.85,
+     "ci95": [
+      3.4,
+      6.45
+     ],
+     "ci_excludes_0": true,
+     "n_pos": 18,
+     "n_neg": 1,
+     "n_seeds": 20
+    },
+    "oblig_slack_no_slack": {
+     "mean_delta": 4.85,
+     "ci95": [
+      3.4,
+      6.45
+     ],
+     "ci_excludes_0": true,
+     "n_pos": 18,
+     "n_neg": 1,
+     "n_seeds": 20
+    },
+    "oblig_slack_no_delay": {
+     "mean_delta": 4.85,
+     "ci95": [
+      3.35,
+      6.3
+     ],
+     "ci_excludes_0": true,
+     "n_pos": 18,
+     "n_neg": 1,
+     "n_seeds": 20
+    },
+    "oblig_slack_no_obligation": {
+     "mean_delta": 4.85,
+     "ci95": [
+      3.4,
+      6.25
+     ],
+     "ci_excludes_0": true,
+     "n_pos": 18,
+     "n_neg": 1,
+     "n_seeds": 20
+    }
+   },
+   "reference_floor_note": "参照服务取冻结普通基线最高者 aoi_const300=404.95/672.0（缺采 0.00）；容差 1% 折合 6.72 条义务"
+  },
+  "P2_access_4h7h": {
+   "denom": 672.0,
+   "reference_arm": "aoi_const300",
+   "reference_service": 413.35,
+   "reference_ok": false,
+   "r1": {
+    "oblig_copies1@0.00%": {
+     "service": 405.25,
+     "service_ok": false,
+     "missing_collection": 0.0,
+     "missing_collection_ok": true,
+     "cost_ok_by_axis": {
+      "uplinks": false,
+      "downlink_attempts": false,
+      "airtime_uplink_h": false,
+      "energy_consumed_wh": false
+     },
+     "cost_ok": false,
+     "aoi_mean_s": 3419.27,
+     "d_aoi_vs_backlog": 90.85,
+     "nodes_dead": 0.0,
+     "holds": false,
+     "strict_cost_below_on": []
+    },
+    "oblig_copies2@0.00%": {
+     "service": 411.45,
+     "service_ok": true,
+     "missing_collection": 0.0,
+     "missing_collection_ok": true,
+     "cost_ok_by_axis": {
+      "uplinks": false,
+      "downlink_attempts": false,
+      "airtime_uplink_h": false,
+      "energy_consumed_wh": false
+     },
+     "cost_ok": false,
+     "aoi_mean_s": 3303.11,
+     "d_aoi_vs_backlog": -25.31,
+     "nodes_dead": 0.0,
+     "holds": false,
+     "strict_cost_below_on": []
+    },
+    "oblig_copies3@0.00%": {
+     "service": 411.85,
+     "service_ok": true,
+     "missing_collection": 0.0,
+     "missing_collection_ok": true,
+     "cost_ok_by_axis": {
+      "uplinks": false,
+      "downlink_attempts": false,
+      "airtime_uplink_h": false,
+      "energy_consumed_wh": false
+     },
+     "cost_ok": false,
+     "aoi_mean_s": 3289.01,
+     "d_aoi_vs_backlog": -39.41,
+     "nodes_dead": 0.0,
+     "holds": false,
+     "strict_cost_below_on": []
+    },
+    "oblig_copies1@1.00%": {
+     "service": 405.25,
+     "service_ok": true,
+     "missing_collection": 0.0,
+     "missing_collection_ok": true,
+     "cost_ok_by_axis": {
+      "uplinks": false,
+      "downlink_attempts": false,
+      "airtime_uplink_h": false,
+      "energy_consumed_wh": false
+     },
+     "cost_ok": false,
+     "aoi_mean_s": 3419.27,
+     "d_aoi_vs_backlog": 90.85,
+     "nodes_dead": 0.0,
+     "holds": false,
+     "strict_cost_below_on": []
+    },
+    "oblig_copies2@1.00%": {
+     "service": 411.45,
+     "service_ok": true,
+     "missing_collection": 0.0,
+     "missing_collection_ok": true,
+     "cost_ok_by_axis": {
+      "uplinks": false,
+      "downlink_attempts": false,
+      "airtime_uplink_h": false,
+      "energy_consumed_wh": false
+     },
+     "cost_ok": false,
+     "aoi_mean_s": 3303.11,
+     "d_aoi_vs_backlog": -25.31,
+     "nodes_dead": 0.0,
+     "holds": false,
+     "strict_cost_below_on": []
+    },
+    "oblig_copies3@1.00%": {
+     "service": 411.85,
+     "service_ok": true,
+     "missing_collection": 0.0,
+     "missing_collection_ok": true,
+     "cost_ok_by_axis": {
+      "uplinks": false,
+      "downlink_attempts": false,
+      "airtime_uplink_h": false,
+      "energy_consumed_wh": false
+     },
+     "cost_ok": false,
+     "aoi_mean_s": 3289.01,
+     "d_aoi_vs_backlog": -39.41,
+     "nodes_dead": 0.0,
+     "holds": false,
+     "strict_cost_below_on": []
+    }
+   },
+   "r2": {
+    "0.00%": {
+     "service_not_worse_than_all": false,
+     "missing_collection_not_worse_than_all": true,
+     "cost_below_all_with_one_strict": false,
+     "top_rival_feasible": "oblig_copies1",
+     "paired_vs_top_rival": {
+      "uplinks": {
+       "mean_delta": 0.0,
+       "ci95": [
+        0.0,
+        0.0
+       ],
+       "ci_excludes_0": false,
+       "n_pos": 0,
+       "n_neg": 0
+      },
+      "downlink_attempts": {
+       "mean_delta": 0.0,
+       "ci95": [
+        0.0,
+        0.0
+       ],
+       "ci_excludes_0": false,
+       "n_pos": 0,
+       "n_neg": 0
+      },
+      "airtime_uplink_h": {
+       "mean_delta": 0.0,
+       "ci95": [
+        0.0,
+        0.0
+       ],
+       "ci_excludes_0": false,
+       "n_pos": 0,
+       "n_neg": 0
+      },
+      "energy_consumed_wh": {
+       "mean_delta": 0.0,
+       "ci95": [
+        0.0,
+        0.0
+       ],
+       "ci_excludes_0": false,
+       "n_pos": 0,
+       "n_neg": 0
+      },
+      "service": {
+       "mean_delta": 0.0,
+       "ci95": [
+        0.0,
+        0.0
+       ],
+       "ci_excludes_0": false,
+       "n_pos": 0,
+       "n_neg": 0
+      },
+      "missing_collection": {
+       "mean_delta": 0.0,
+       "ci95": [
+        0.0,
+        0.0
+       ],
+       "ci_excludes_0": false,
+       "n_pos": 0,
+       "n_neg": 0
+      }
+     },
+     "cost_axes_ci_excludes_0_lower": [],
+     "holds": false,
+     "per_rival": {
+      "fixed300": {
+       "service_ok": false,
+       "missing_collection_ok": true,
+       "cost_ok": false,
+       "cost_ok_by_axis": {
+        "uplinks": true,
+        "downlink_attempts": false,
+        "airtime_uplink_h": true,
+        "energy_consumed_wh": true
+       },
+       "strictly_lower_on": [
+        "uplinks",
+        "airtime_uplink_h",
+        "energy_consumed_wh"
+       ],
+       "d_service": -8.1,
+       "d_uplinks": -251.55,
+       "d_energy_wh": -0.00597,
+       "d_aoi_s": 168.03,
+       "d_downlink": 457.0
+      },
+      "pacing_backlog900_300": {
+       "service_ok": false,
+       "missing_collection_ok": true,
+       "cost_ok": false,
+       "cost_ok_by_axis": {
+        "uplinks": false,
+        "downlink_attempts": false,
+        "airtime_uplink_h": false,
+        "energy_consumed_wh": false
+       },
+       "strictly_lower_on": [],
+       "d_service": -5.1,
+       "d_uplinks": 13.6,
+       "d_energy_wh": 0.004508,
+       "d_aoi_s": 90.85,
+       "d_downlink": 375.6
+      },
+      "oblig_copies1": {
+       "service_ok": true,
+       "missing_collection_ok": true,
+       "cost_ok": true,
+       "cost_ok_by_axis": {
+        "uplinks": true,
+        "downlink_attempts": true,
+        "airtime_uplink_h": true,
+        "energy_consumed_wh": true
+       },
+       "strictly_lower_on": [],
+       "d_service": 0.0,
+       "d_uplinks": 0.0,
+       "d_energy_wh": 0.0,
+       "d_aoi_s": 0.0,
+       "d_downlink": 0.0
+      },
+      "oblig_copies2": {
+       "service_ok": false,
+       "missing_collection_ok": true,
+       "cost_ok": false,
+       "cost_ok_by_axis": {
+        "uplinks": true,
+        "downlink_attempts": false,
+        "airtime_uplink_h": true,
+        "energy_consumed_wh": true
+       },
+       "strictly_lower_on": [
+        "uplinks",
+        "airtime_uplink_h",
+        "energy_consumed_wh"
+       ],
+       "d_service": -6.2,
+       "d_uplinks": -87.3,
+       "d_energy_wh": -0.000369,
+       "d_aoi_s": 116.16,
+       "d_downlink": 297.15
+      },
+      "oblig_copies3": {
+       "service_ok": false,
+       "missing_collection_ok": true,
+       "cost_ok": false,
+       "cost_ok_by_axis": {
+        "uplinks": true,
+        "downlink_attempts": false,
+        "airtime_uplink_h": true,
+        "energy_consumed_wh": true
+       },
+       "strictly_lower_on": [
+        "uplinks",
+        "airtime_uplink_h",
+        "energy_consumed_wh"
+       ],
+       "d_service": -6.6,
+       "d_uplinks": -150.9,
+       "d_energy_wh": -0.002546,
+       "d_aoi_s": 130.26,
+       "d_downlink": 345.65
+      }
+     }
+    },
+    "1.00%": {
+     "service_not_worse_than_all": false,
+     "missing_collection_not_worse_than_all": true,
+     "cost_below_all_with_one_strict": false,
+     "top_rival_feasible": "oblig_copies3",
+     "paired_vs_top_rival": {
+      "uplinks": {
+       "mean_delta": -150.9,
+       "ci95": [
+        -160.35,
+        -141.4
+       ],
+       "ci_excludes_0": true,
+       "n_pos": 0,
+       "n_neg": 20
+      },
+      "downlink_attempts": {
+       "mean_delta": 345.65,
+       "ci95": [
+        332.65,
+        359.0
+       ],
+       "ci_excludes_0": true,
+       "n_pos": 20,
+       "n_neg": 0
+      },
+      "airtime_uplink_h": {
+       "mean_delta": -0.010944,
+       "ci95": [
+        -0.0129,
+        -0.009
+       ],
+       "ci_excludes_0": true,
+       "n_pos": 0,
+       "n_neg": 20
+      },
+      "energy_consumed_wh": {
+       "mean_delta": -0.002546,
+       "ci95": [
+        -0.0031,
+        -0.002
+       ],
+       "ci_excludes_0": true,
+       "n_pos": 1,
+       "n_neg": 19
+      },
+      "service": {
+       "mean_delta": -6.6,
+       "ci95": [
+        -8.55,
+        -4.75
+       ],
+       "ci_excludes_0": true,
+       "n_pos": 1,
+       "n_neg": 19
+      },
+      "missing_collection": {
+       "mean_delta": 0.0,
+       "ci95": [
+        0.0,
+        0.0
+       ],
+       "ci_excludes_0": false,
+       "n_pos": 0,
+       "n_neg": 0
+      }
+     },
+     "cost_axes_ci_excludes_0_lower": [
+      "uplinks",
+      "airtime_uplink_h",
+      "energy_consumed_wh"
+     ],
+     "holds": false,
+     "per_rival": {
+      "fixed300": {
+       "service_ok": false,
+       "missing_collection_ok": true,
+       "cost_ok": false,
+       "cost_ok_by_axis": {
+        "uplinks": true,
+        "downlink_attempts": false,
+        "airtime_uplink_h": true,
+        "energy_consumed_wh": true
+       },
+       "strictly_lower_on": [
+        "uplinks",
+        "airtime_uplink_h",
+        "energy_consumed_wh"
+       ],
+       "d_service": -8.1,
+       "d_uplinks": -251.55,
+       "d_energy_wh": -0.00597,
+       "d_aoi_s": 168.03,
+       "d_downlink": 457.0
+      },
+      "pacing_backlog900_300": {
+       "service_ok": true,
+       "missing_collection_ok": true,
+       "cost_ok": false,
+       "cost_ok_by_axis": {
+        "uplinks": false,
+        "downlink_attempts": false,
+        "airtime_uplink_h": false,
+        "energy_consumed_wh": false
+       },
+       "strictly_lower_on": [],
+       "d_service": -5.1,
+       "d_uplinks": 13.6,
+       "d_energy_wh": 0.004508,
+       "d_aoi_s": 90.85,
+       "d_downlink": 375.6
+      },
+      "oblig_copies1": {
+       "service_ok": true,
+       "missing_collection_ok": true,
+       "cost_ok": true,
+       "cost_ok_by_axis": {
+        "uplinks": true,
+        "downlink_attempts": true,
+        "airtime_uplink_h": true,
+        "energy_consumed_wh": true
+       },
+       "strictly_lower_on": [],
+       "d_service": 0.0,
+       "d_uplinks": 0.0,
+       "d_energy_wh": 0.0,
+       "d_aoi_s": 0.0,
+       "d_downlink": 0.0
+      },
+      "oblig_copies2": {
+       "service_ok": true,
+       "missing_collection_ok": true,
+       "cost_ok": false,
+       "cost_ok_by_axis": {
+        "uplinks": true,
+        "downlink_attempts": false,
+        "airtime_uplink_h": true,
+        "energy_consumed_wh": true
+       },
+       "strictly_lower_on": [
+        "uplinks",
+        "airtime_uplink_h",
+        "energy_consumed_wh"
+       ],
+       "d_service": -6.2,
+       "d_uplinks": -87.3,
+       "d_energy_wh": -0.000369,
+       "d_aoi_s": 116.16,
+       "d_downlink": 297.15
+      },
+      "oblig_copies3": {
+       "service_ok": true,
+       "missing_collection_ok": true,
+       "cost_ok": false,
+       "cost_ok_by_axis": {
+        "uplinks": true,
+        "downlink_attempts": false,
+        "airtime_uplink_h": true,
+        "energy_consumed_wh": true
+       },
+       "strictly_lower_on": [
+        "uplinks",
+        "airtime_uplink_h",
+        "energy_consumed_wh"
+       ],
+       "d_service": -6.6,
+       "d_uplinks": -150.9,
+       "d_energy_wh": -0.002546,
+       "d_aoi_s": 130.26,
+       "d_downlink": 345.65
+      }
+     }
+    }
+   },
+   "r3": {
+    "oblig_slack_no_slack": {
+     "ablation_name": "oblig_slack_no_slack",
+     "axes": {
+      "uplinks": {
+       "d_cand_minus_ablation": 0.0,
+       "ci95": null,
+       "ci_excludes_0": null
+      },
+      "downlink_attempts": {
+       "d_cand_minus_ablation": 0.0,
+       "ci95": null,
+       "ci_excludes_0": null
+      },
+      "airtime_uplink_h": {
+       "d_cand_minus_ablation": 0.0,
+       "ci95": null,
+       "ci_excludes_0": null
+      },
+      "energy_consumed_wh": {
+       "d_cand_minus_ablation": 0.0,
+       "ci95": null,
+       "ci_excludes_0": null
+      },
+      "service": {
+       "d_cand_minus_ablation": 0.0,
+       "ci95": null,
+       "ci_excludes_0": null
+      },
+      "missing_collection": {
+       "d_cand_minus_ablation": 0.0,
+       "ci95": null,
+       "ci_excludes_0": null
+      },
+      "aoi_mean_s": {
+       "d_cand_minus_ablation": 0.0,
+       "ci95": null,
+       "ci_excludes_0": null
+      }
+     },
+     "indistinguishable_on_costs": true,
+     "explains_gain": false
+    },
+    "oblig_slack_no_delay": {
+     "ablation_name": "oblig_slack_no_delay",
+     "axes": {
+      "uplinks": {
+       "d_cand_minus_ablation": 0.0,
+       "ci95": null,
+       "ci_excludes_0": null
+      },
+      "downlink_attempts": {
+       "d_cand_minus_ablation": 0.0,
+       "ci95": null,
+       "ci_excludes_0": null
+      },
+      "airtime_uplink_h": {
+       "d_cand_minus_ablation": 0.0,
+       "ci95": null,
+       "ci_excludes_0": null
+      },
+      "energy_consumed_wh": {
+       "d_cand_minus_ablation": 0.0,
+       "ci95": null,
+       "ci_excludes_0": null
+      },
+      "service": {
+       "d_cand_minus_ablation": 0.0,
+       "ci95": null,
+       "ci_excludes_0": null
+      },
+      "missing_collection": {
+       "d_cand_minus_ablation": 0.0,
+       "ci95": null,
+       "ci_excludes_0": null
+      },
+      "aoi_mean_s": {
+       "d_cand_minus_ablation": 0.0,
+       "ci95": null,
+       "ci_excludes_0": null
+      }
+     },
+     "indistinguishable_on_costs": true,
+     "explains_gain": false
+    },
+    "oblig_slack_no_obligation": {
+     "ablation_name": "oblig_slack_no_obligation",
+     "axes": {
+      "uplinks": {
+       "d_cand_minus_ablation": 0.0,
+       "ci95": null,
+       "ci_excludes_0": null
+      },
+      "downlink_attempts": {
+       "d_cand_minus_ablation": 0.0,
+       "ci95": null,
+       "ci_excludes_0": null
+      },
+      "airtime_uplink_h": {
+       "d_cand_minus_ablation": 0.0,
+       "ci95": null,
+       "ci_excludes_0": null
+      },
+      "energy_consumed_wh": {
+       "d_cand_minus_ablation": 0.0,
+       "ci95": null,
+       "ci_excludes_0": null
+      },
+      "service": {
+       "d_cand_minus_ablation": 0.0,
+       "ci95": null,
+       "ci_excludes_0": null
+      },
+      "missing_collection": {
+       "d_cand_minus_ablation": 0.0,
+       "ci95": null,
+       "ci_excludes_0": null
+      },
+      "aoi_mean_s": {
+       "d_cand_minus_ablation": 0.0,
+       "ci95": null,
+       "ci_excludes_0": null
+      }
+     },
+     "indistinguishable_on_costs": true,
+     "explains_gain": false
+    }
+   },
+   "per_axis": {},
+   "r1_any_holds": {
+    "0.00%": false,
+    "1.00%": false
+   },
+   "r2_any_holds": false,
+   "table": {
+    "fixed300": {
+     "service": 413.35,
+     "missing_collection": 0.0,
+     "missing_delivery": 258.65,
+     "aoi_mean_s": 3251.239347,
+     "uplinks": 944.1,
+     "downlink_attempts": 19.2,
+     "airtime_uplink_h": 0.082503,
+     "energy_consumed_wh": 0.385538,
+     "nodes_dead": 0.0,
+     "n_config_changes": 13.0,
+     "on_time_heard": 419.65,
+     "late_heard": 252.35,
+     "never_heard": 0.0,
+     "stuck_at_gateway_hop": 258.65,
+     "delivered": 413.35,
+     "mean_copies_heard": 2.029762
+    },
+    "pacing_backlog900_300": {
+     "service": 410.35,
+     "missing_collection": 0.0,
+     "missing_delivery": 261.65,
+     "aoi_mean_s": 3328.419679,
+     "uplinks": 678.95,
+     "downlink_attempts": 100.6,
+     "airtime_uplink_h": 0.049452,
+     "energy_consumed_wh": 0.37506,
+     "nodes_dead": 0.0,
+     "n_config_changes": 71.0,
+     "on_time_heard": 426.9,
+     "late_heard": 245.1,
+     "never_heard": 0.0,
+     "stuck_at_gateway_hop": 261.65,
+     "delivered": 410.35,
+     "mean_copies_heard": 2.029762
+    },
+    "oblig_copies1": {
+     "service": 405.25,
+     "missing_collection": 0.0,
+     "missing_delivery": 266.75,
+     "aoi_mean_s": 3419.270221,
+     "uplinks": 692.55,
+     "downlink_attempts": 476.2,
+     "airtime_uplink_h": 0.058826,
+     "energy_consumed_wh": 0.379568,
+     "nodes_dead": 0.0,
+     "n_config_changes": 343.6,
+     "on_time_heard": 417.05,
+     "late_heard": 254.95,
+     "never_heard": 0.0,
+     "stuck_at_gateway_hop": 266.75,
+     "delivered": 405.25,
+     "mean_copies_heard": 2.029762
+    },
+    "oblig_copies2": {
+     "service": 411.45,
+     "missing_collection": 0.0,
+     "missing_delivery": 260.55,
+     "aoi_mean_s": 3303.110155,
+     "uplinks": 779.85,
+     "downlink_attempts": 179.05,
+     "airtime_uplink_h": 0.062636,
+     "energy_consumed_wh": 0.379937,
+     "nodes_dead": 0.0,
+     "n_config_changes": 129.85,
+     "on_time_heard": 422.95,
+     "late_heard": 249.05,
+     "never_heard": 0.0,
+     "stuck_at_gateway_hop": 260.55,
+     "delivered": 411.45,
+     "mean_copies_heard": 2.029762
+    },
+    "oblig_copies3": {
+     "service": 411.85,
+     "missing_collection": 0.0,
+     "missing_delivery": 260.15,
+     "aoi_mean_s": 3289.014371,
+     "uplinks": 843.45,
+     "downlink_attempts": 130.55,
+     "airtime_uplink_h": 0.06977,
+     "energy_consumed_wh": 0.382114,
+     "nodes_dead": 0.0,
+     "n_config_changes": 93.6,
+     "on_time_heard": 421.8,
+     "late_heard": 250.2,
+     "never_heard": 0.0,
+     "stuck_at_gateway_hop": 260.15,
+     "delivered": 411.85,
+     "mean_copies_heard": 2.029762
+    },
+    "oblig_slack": {
+     "service": 405.25,
+     "missing_collection": 0.0,
+     "missing_delivery": 266.75,
+     "aoi_mean_s": 3419.270221,
+     "uplinks": 692.55,
+     "downlink_attempts": 476.2,
+     "airtime_uplink_h": 0.058826,
+     "energy_consumed_wh": 0.379568,
+     "nodes_dead": 0.0,
+     "n_config_changes": 343.6,
+     "on_time_heard": 417.05,
+     "late_heard": 254.95,
+     "never_heard": 0.0,
+     "stuck_at_gateway_hop": 266.75,
+     "delivered": 405.25,
+     "mean_copies_heard": 2.029762
+    },
+    "oblig_slack_no_slack": {
+     "service": 405.25,
+     "missing_collection": 0.0,
+     "missing_delivery": 266.75,
+     "aoi_mean_s": 3419.270221,
+     "uplinks": 692.55,
+     "downlink_attempts": 476.2,
+     "airtime_uplink_h": 0.058826,
+     "energy_consumed_wh": 0.379568,
+     "nodes_dead": 0.0,
+     "n_config_changes": 343.6,
+     "on_time_heard": 417.05,
+     "late_heard": 254.95,
+     "never_heard": 0.0,
+     "stuck_at_gateway_hop": 266.75,
+     "delivered": 405.25,
+     "mean_copies_heard": 2.029762
+    },
+    "oblig_slack_no_delay": {
+     "service": 405.25,
+     "missing_collection": 0.0,
+     "missing_delivery": 266.75,
+     "aoi_mean_s": 3419.270221,
+     "uplinks": 692.55,
+     "downlink_attempts": 476.2,
+     "airtime_uplink_h": 0.058826,
+     "energy_consumed_wh": 0.379568,
+     "nodes_dead": 0.0,
+     "n_config_changes": 343.6,
+     "on_time_heard": 417.05,
+     "late_heard": 254.95,
+     "never_heard": 0.0,
+     "stuck_at_gateway_hop": 266.75,
+     "delivered": 405.25,
+     "mean_copies_heard": 2.029762
+    },
+    "oblig_slack_no_obligation": {
+     "service": 405.25,
+     "missing_collection": 0.0,
+     "missing_delivery": 266.75,
+     "aoi_mean_s": 3419.270221,
+     "uplinks": 692.55,
+     "downlink_attempts": 476.2,
+     "airtime_uplink_h": 0.058826,
+     "energy_consumed_wh": 0.379568,
+     "nodes_dead": 0.0,
+     "n_config_changes": 343.6,
+     "on_time_heard": 417.05,
+     "late_heard": 254.95,
+     "never_heard": 0.0,
+     "stuck_at_gateway_hop": 266.75,
+     "delivered": 405.25,
+     "mean_copies_heard": 2.029762
+    },
+    "aoi_const300": {
+     "service": 413.35,
+     "missing_collection": 0.0,
+     "missing_delivery": 258.65,
+     "aoi_mean_s": 3251.239347,
+     "uplinks": 944.1,
+     "downlink_attempts": 19.2,
+     "airtime_uplink_h": 0.082503,
+     "energy_consumed_wh": 0.385538,
+     "nodes_dead": 0.0,
+     "n_config_changes": 13.0,
+     "on_time_heard": 419.65,
+     "late_heard": 252.35,
+     "never_heard": 0.0,
+     "stuck_at_gateway_hop": 258.65,
+     "delivered": 413.35,
+     "mean_copies_heard": 2.029762
+    }
+   },
+   "stuck_vs_backlog": {
+    "fixed300": -3.0,
+    "pacing_backlog900_300": 0.0,
+    "oblig_copies1": 5.1,
+    "oblig_copies2": -1.1,
+    "oblig_copies3": -1.5,
+    "oblig_slack": 5.1,
+    "oblig_slack_no_slack": 5.1,
+    "oblig_slack_no_delay": 5.1,
+    "oblig_slack_no_obligation": 5.1
+   },
+   "stuck_vs_backlog_ci": {
+    "fixed300": {
+     "mean_delta": -3.0,
+     "ci95": [
+      -4.5,
+      -1.7
+     ],
+     "ci_excludes_0": true,
+     "n_pos": 0,
+     "n_neg": 16,
+     "n_seeds": 20
+    },
+    "oblig_copies1": {
+     "mean_delta": 5.1,
+     "ci95": [
+      3.15,
+      7.25
+     ],
+     "ci_excludes_0": true,
+     "n_pos": 17,
+     "n_neg": 2,
+     "n_seeds": 20
+    },
+    "oblig_copies2": {
+     "mean_delta": -1.1,
+     "ci95": [
+      -1.7,
+      -0.6
+     ],
+     "ci_excludes_0": true,
+     "n_pos": 0,
+     "n_neg": 12,
+     "n_seeds": 20
+    },
+    "oblig_copies3": {
+     "mean_delta": -1.5,
+     "ci95": [
+      -2.3,
+      -0.75
+     ],
+     "ci_excludes_0": true,
+     "n_pos": 2,
+     "n_neg": 14,
+     "n_seeds": 20
+    },
+    "oblig_slack": {
+     "mean_delta": 5.1,
+     "ci95": [
+      3.15,
+      7.15
+     ],
+     "ci_excludes_0": true,
+     "n_pos": 17,
+     "n_neg": 2,
+     "n_seeds": 20
+    },
+    "oblig_slack_no_slack": {
+     "mean_delta": 5.1,
+     "ci95": [
+      3.15,
+      7.15
+     ],
+     "ci_excludes_0": true,
+     "n_pos": 17,
+     "n_neg": 2,
+     "n_seeds": 20
+    },
+    "oblig_slack_no_delay": {
+     "mean_delta": 5.1,
+     "ci95": [
+      3.1,
+      7.1
+     ],
+     "ci_excludes_0": true,
+     "n_pos": 17,
+     "n_neg": 2,
+     "n_seeds": 20
+    },
+    "oblig_slack_no_obligation": {
+     "mean_delta": 5.1,
+     "ci95": [
+      3.2,
+      7.1
+     ],
+     "ci_excludes_0": true,
+     "n_pos": 17,
+     "n_neg": 2,
+     "n_seeds": 20
+    }
+   },
+   "reference_floor_note": "参照服务取冻结普通基线最高者 aoi_const300=413.35/672.0（缺采 0.00）；容差 1% 折合 6.72 条义务"
+  }
+ },
+ "verdict": {
+  "P0_no_outage": {
+   "verdict": "本轮臂集合内候选与普通规则都未胜出",
+   "r1_any": {
+    "0.00%": false,
+    "1.00%": false
+   },
+   "r2_any": false
+  },
+  "P1_backhaul_4h7h": {
+   "verdict": "本轮臂集合内候选与普通规则都未胜出",
+   "r1_any": {
+    "0.00%": false,
+    "1.00%": false
+   },
+   "r2_any": false
+  },
+  "P2_access_4h7h": {
+   "verdict": "本轮臂集合内候选与普通规则都未胜出",
+   "r1_any": {
+    "0.00%": false,
+    "1.00%": false
+   },
+   "r2_any": false
+  }
+ },
+ "r1_holds_all_conditions": false
+}

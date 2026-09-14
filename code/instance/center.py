@@ -85,6 +85,10 @@ class CenterView:
     #: **网关缓存里最老一条待转发记录的年龄（秒）**——同样是网关本地可观测。
     #: 它是「第二条普通规则族」的输入：**用另一个本地信号判断同一种"回传受阻"**。
     gateway_oldest_pending_age_s: int | None = None
+    #: **逐义务副本计数**（doc 60 §3）：`{节点: 该节点**当前义务窗口**内已被网关听到的合格样本数}`。
+    #: 网关本地可观测（它自己收到过哪些样本）。**不含**评分器的义务匹配结果、**不含**任何未来信息。
+    #: 义务的周期与相位是**公开服务配置**，对全部臂同等开放。
+    gateway_copies_in_window: dict | None = None
 
     def soc_of(self, node_id: str) -> float | None:
         """策略**看到**的电量。它可能比真实值旧、脏、偏，或者干脆没到。"""
@@ -747,6 +751,120 @@ GRID_REPORT = (300, 600, 900, 1800, 3600)
 GRID_SAMPLE_WH = 4.7e-4
 #: 每周期上报能耗（Wh）。与已登记式子 `load_h = (3600/i)·4.7e-4 + (3600/r)·4.53e-5` 同源。
 GRID_REPORT_WH = 4.53e-5
+
+
+class ObligationCopiesPolicy(CenterPolicy):
+    """**逐义务副本数阈值**——本轮最可能竞争的**普通规则**（doc 60 §2）。
+
+    该节点**当前义务窗口**内已被网关听到的合格样本数 `< k` ⇒ 快报；否则慢报。
+
+    **它是普通规则，不是候选**：只有一个阈值、没有余量判断、没有生效延迟考虑、
+    不区分「已满足」与「差一份」。它存在的唯一目的是回答：
+    **P1 定位出的那一跳（网关→中心副本覆盖率）是否已经被一条短规则覆盖。**
+    """
+
+    def __init__(self, k: int = 2, fast_s: int = 300, slow_s: int = 900,
+                 dwell_s: int = 600) -> None:
+        super().__init__()
+        self.k, self.fast_s, self.slow_s, self.dwell_s = k, fast_s, slow_s, dwell_s
+        self._last: dict[str, int] = {}
+        self.name = f"oblig_copies{k}"
+
+    def plan(self, view: CenterView) -> list[tuple[str, dict]]:
+        copies = view.gateway_copies_in_window
+        if copies is None:
+            return []                       # 没有该接口 ⇒ 不动作（不猜）
+        out = []
+        for nid in view.node_ids:
+            if nid in view.in_flight:
+                self._skip("in_flight", nid)
+                continue
+            last = self._last.get(nid)
+            if last is not None and view.t_s - last < self.dwell_s:
+                self._skip("dwell", nid)
+                continue
+            want = self.fast_s if copies.get(nid, 0) < self.k else self.slow_s
+            snap = view.reports.get(nid) or {}
+            if snap.get("report_period_s") == want:
+                self._skip("already_confirmed", nid)
+                continue
+            self._last[nid] = view.t_s
+            out.append((nid, self.stamp(nid, op=OP_SET_REPORT_PERIOD, period_s=want)))
+        return out
+
+
+class ObligationSlackPolicy(CenterPolicy):
+    """**候选（doc 58 §2）**：逐节点「当前窗口是否已满足 + 到该窗口截止的剩余余量 + 命令生效延迟」。
+
+    判据（三者都要用，且只用**网关本地可观测**的量与**公开的**义务周期）：
+
+    * 当前窗口**已满足**（已有 ≥1 份合格副本）**且**下一窗口仍有余量 ⇒ **允许慢报**；
+    * 当前窗口**未满足**、且剩余余量**还够一条命令生效** ⇒ **快报**；
+    * 当前窗口未满足、但余量**已不够**一条命令生效 ⇒ **不动作**——
+      此刻改配置只花一次下行而下一次机会已过，是白花。
+
+    三个消融开关（doc 60 §5 R3 要求它们必须解释收益）：
+    `use_obligation=False` 去掉义务区分（只看窗口内听到过任何样本）；
+    `use_slack=False` 去掉剩余余量（只看是否已满足）；
+    `use_delay=False` 去掉生效延迟考虑（来不及也照样下发）。
+    """
+
+    def __init__(self, fast_s: int = 300, slow_s: int = 900, dwell_s: int = 600,
+                 obligation_period_s: int = 900, command_delay_s: int = 600,
+                 use_obligation: bool = True, use_slack: bool = True,
+                 use_delay: bool = True) -> None:
+        super().__init__()
+        self.fast_s, self.slow_s, self.dwell_s = fast_s, slow_s, dwell_s
+        self.obligation_period_s = int(obligation_period_s)
+        self.command_delay_s = int(command_delay_s)
+        self.use_obligation, self.use_slack, self.use_delay = (
+            use_obligation, use_slack, use_delay)
+        self._last: dict[str, int] = {}
+        tags = []
+        if not use_obligation:
+            tags.append("no_obligation")
+        if not use_slack:
+            tags.append("no_slack")
+        if not use_delay:
+            tags.append("no_delay")
+        self.name = "oblig_slack" + ("_" + "_".join(tags) if tags else "")
+
+    def plan(self, view: CenterView) -> list[tuple[str, dict]]:
+        copies = view.gateway_copies_in_window
+        if copies is None:
+            return []
+        period = self.obligation_period_s
+        t_s = view.t_s
+        slack = (t_s // period + 2) * period - t_s      # 与 exogenous.Obligation.deadline 同定义
+        out = []
+        for nid in view.node_ids:
+            if nid in view.in_flight:
+                self._skip("in_flight", nid)
+                continue
+            last = self._last.get(nid)
+            if last is not None and t_s - last < self.dwell_s:
+                self._skip("dwell", nid)
+                continue
+            n = copies.get(nid, 0)
+            if not self.use_obligation:
+                want = self.slow_s if n > 0 else self.fast_s
+            else:
+                satisfied = n >= 1
+                next_room = (slack >= period) if self.use_slack else True
+                if satisfied and next_room:
+                    want = self.slow_s
+                elif self.use_delay and slack < self.command_delay_s:
+                    self._skip("too_late_to_matter", nid)
+                    continue
+                else:
+                    want = self.fast_s
+            snap = view.reports.get(nid) or {}
+            if snap.get("report_period_s") == want:
+                self._skip("already_confirmed", nid)
+                continue
+            self._last[nid] = t_s
+            out.append((nid, self.stamp(nid, op=OP_SET_REPORT_PERIOD, period_s=want)))
+        return out
 
 
 class GridConfigPolicy(DenseSamplingPolicy):

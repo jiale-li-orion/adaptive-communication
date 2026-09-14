@@ -520,6 +520,11 @@ class Instance:
         #: **网关本地可观测的转发反馈**（doc 48 §4）：上一次 `backhaul_forward` **真的把缓存交给了中心**
         #: 的时刻。网关自己知道这次尝试成不成功——这是本地观测，不含环境真值、不含未来恢复时刻。
         self.gateway_last_forward_ok_at: int | None = 0
+        #: **逐义务副本计数**（doc 60 §3）：`(节点, 义务窗口) -> 网关已听到的合格样本数`。
+        #: 这是网关**自己的接收历史**（它知道自己收到过哪些样本），不含环境真值或未来信息。
+        self.gateway_window_copies: dict = {}
+        self._obligation_period_s = max(
+            1, int(getattr(next(iter(nodes.values())).p, "obligation_period_s", 3600)))
         self.cache_over_payload_ticks = 0
         self.cache_over_payload_peak = 0
         self.cache_len_sum = 0
@@ -759,6 +764,10 @@ class Instance:
         """
         self.gateway_reports[node.node_id] = node.snapshot(t_s)
         self.gateway_report_at[node.node_id] = t_s
+        _per = self._obligation_period_s
+        for _s in batch:
+            _k = (node.node_id, _s.taken_at // _per)
+            self.gateway_window_copies[_k] = self.gateway_window_copies.get(_k, 0) + 1
         newest = self.gateway_newest_taken_at.get(node.node_id)
         for sample in batch:
             if newest is None or sample.taken_at > newest:
@@ -790,7 +799,11 @@ class Instance:
                           gateway_pending_depth=len(self.plane.gateway_pending),
                           gateway_oldest_pending_age_s=(
                               t_s - min(i.heard_at_s for i in self.plane.gateway_pending)
-                              if self.plane.gateway_pending else None))
+                              if self.plane.gateway_pending else None),
+                          gateway_copies_in_window={
+                              nid: self.gateway_window_copies.get(
+                                  (nid, t_s // self._obligation_period_s), 0)
+                              for nid in self.nodes})
 
     def _send_command(self, node_id: str, payload: dict, t_s: int,
                       origin: str = "center") -> None:
