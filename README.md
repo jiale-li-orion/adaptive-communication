@@ -39,21 +39,24 @@
 > **对抗性复制**（偏离曲线且偏在上方）；1% 容差档在三档的上行／空口／总能耗三列上仍全部由它取得。
 > 另交付：**27 臂 × 4 容差的可决策表**（缺采零违反；下行一列动态节奏全部更贵）、
 > **一个正例的完整时间线**（证据 → 目标 → 生效 → 义务从「晚 900 s」变「准时」）与**一个无效例**。
-> **下一活动入口**：**第一阶段（v1.1 因果闭环）已完成** ——
-> [`doc 64 first-heard sufficiency audit`](docs/s7-method/instance-v1/64-first-heard-sufficiency-audit-2026-09-14.md)
-> ｜[`doc 65 综合`](docs/s7-method/instance-v1/65-synthesis-observation-actuator-stage-residual-2026-09-14.md)。
-> **交付由且仅由「最早合法网关到达 `h*`」与「截止前最后一次可回传时刻 `B(d)`」决定**：
-> `delivered = 1[h* ≤ B(d)]`，**161,280 条义务级判定、不一致 0**；**副本数不进入交付判定**，
-> doc 59 的「多份副本撞回传窗口」已在 doc 59 就地**撤回**（数字保留、解释改写）。
-> 逐义务配对：候选**新增 0 条、只丢失 24–186 条**；`oblig_copies{1,2,3}` 整条路
-> **因目标变量不存在而永久关闭**（不是经验巧合）。
-> **⚠ 两条边界**：① `oblig_slack` 一类**不重开**（解析退化 ⇒ 无 intervention contrast），
-> 若补 baseline 只补**一条非调参**的 latest-safe-action 规则；
-> ② **v1.1 的网关→中心没有有限容量调度动作**（`backhaul_forward` 一次交出全部 pending），
-> 所以 doc 61 §7 的「缓存/打包纪律」入口**已撤回**——那需要 **Task v1.2 的能力变化**，
-> 不得包装成 v1.1 没试的一角。**第二阶段**（写实证论文 或 设计带真实下游 actuator 的 v1.2）待选。
-> **⚠ 不得**把「本轮 R1 不成立」读成「普通规则已覆盖那一跳」，
-> 也不得把「关闭具名子假说」读成「所有 agent 方法无用」。
+> **当前阶段：v1.1 已封版（tag `v1.1-causal-closure`，commit `928f3ec`），
+> 进入 v1.2 的 actuator source audit。**
+> [`doc 66 v1.1 封版`](docs/s7-method/instance-v1/66-v1.1-freeze-2026-09-14.md)
+> ｜[`v1.2/01 actuator source audit`](docs/s7-method/v1.2/01-actuator-source-audit-2026-09-14.md)。
+> **为什么在这里停**：`delivered = 1[h* ≤ B(d)]` 是当前系统语义的直接推论（161,280 条义务级判定零冲突），
+> 且 gateway→center 这一跳**没有可调度自由度**（可用即全量转发、失败不丢、无容量、无优先级、无转发延迟）
+> ⇒ **v1.1 method ceiling ≈ 只能优化 `h*`**，而 `pacing_backlog900_300` 已给出这一控制面上很强的**普通**工作点。
+> **停止 method search 是结论**：不再在 `report_period` 上设计新的 obligation／slack／copy 规则，
+> 也不补 heuristic。**新方法空间只能来自「控制 `B(d)`」或「控制受限 `B(d)` 服务谁」。**
+> **能力防火墙**：任何改变 `B(d)` 或分配 `B(d)` 的动作面**一律归 v1.2**，v1.1 的实例层不为此改动一个字节
+> （物理隔离，避免「为了救方法偷偷改 task」的审稿风险）。
+> **论文图已产出**：`results/figures/fig_first_heard_counterexample.png`（两臂 `n_heard` 都是 2、
+> `B(d)` 同为 5400 s，只有 `h*` 3900 vs 6300 ⇒ 一条交付一条失败；脚本内含不变式断言）。
+> **当前在做的唯一一件事**：`Task v1.2 actuator source audit`——现实世界到底给不给那只「手」。
+> 判据已先写定（G1–G6 + 总体 GO/NO-GO，来源分级 A/B/C/D），**不得发明数值约束**；
+> 若没有任何候选通过 ⇒ **NO-GO，收成 v1.1 的实证论文**，不得为保住方法而虚构动作面。
+> **⚠** deadline baseline **现在不打**（它瞄的边界是 `d`，而 decisive boundary 是随机的 `B(d)`）；
+> 唯一补做条件＝写论文时 reviewer-facing baseline table 缺 deadline-aware representative，只作 appendix completeness。
 >
 > **最新信息时序核验**：[`doc 55 审查`](docs/s7-method/instance-v1/55-review-fair-pacing-and-multipath-probe-2026-09-14.md)
 > ｜[`doc 56 结果`](docs/s7-method/instance-v1/56-information-timing-result-2026-09-14.md)
