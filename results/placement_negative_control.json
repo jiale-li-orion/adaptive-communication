@@ -1,0 +1,338 @@
+{
+ "note": "正确负对照＝把**回传跳的代价**消掉（`backhaul_p_good = 1.0`）。两个位置的证据与命令路径因此完全等价，同一策略必须给出**逐位相同**的运行。原「接入中断作负对照」是控制设计错误：残差来自回传跳，而接入中断不移除它（无中断档 Δ 已达 +0.30）。",
+ "arms": [
+  "ea_aoi",
+  "aoi"
+ ],
+ "controls": {
+  "D1_perfect_backhaul_no_outage": {
+   "overrides": {
+    "backhaul_p_good": 1.0
+   },
+   "per_arm": {
+    "ea_aoi": {
+     "all_seeds_identical": true,
+     "per_seed": [
+      {
+       "seed": 0,
+       "identical": true,
+       "n_diff_paths": 0,
+       "diff_sample": []
+      },
+      {
+       "seed": 1,
+       "identical": true,
+       "n_diff_paths": 0,
+       "diff_sample": []
+      },
+      {
+       "seed": 2,
+       "identical": true,
+       "n_diff_paths": 0,
+       "diff_sample": []
+      },
+      {
+       "seed": 3,
+       "identical": true,
+       "n_diff_paths": 0,
+       "diff_sample": []
+      },
+      {
+       "seed": 4,
+       "identical": true,
+       "n_diff_paths": 0,
+       "diff_sample": []
+      },
+      {
+       "seed": 5,
+       "identical": true,
+       "n_diff_paths": 0,
+       "diff_sample": []
+      },
+      {
+       "seed": 6,
+       "identical": true,
+       "n_diff_paths": 0,
+       "diff_sample": []
+      },
+      {
+       "seed": 7,
+       "identical": true,
+       "n_diff_paths": 0,
+       "diff_sample": []
+      },
+      {
+       "seed": 8,
+       "identical": true,
+       "n_diff_paths": 0,
+       "diff_sample": []
+      },
+      {
+       "seed": 9,
+       "identical": true,
+       "n_diff_paths": 0,
+       "diff_sample": []
+      }
+     ],
+     "service_center": [
+      167,
+      168,
+      168,
+      167,
+      166,
+      167,
+      168,
+      166,
+      168,
+      167
+     ]
+    },
+    "aoi": {
+     "all_seeds_identical": true,
+     "per_seed": [
+      {
+       "seed": 0,
+       "identical": true,
+       "n_diff_paths": 0,
+       "diff_sample": []
+      },
+      {
+       "seed": 1,
+       "identical": true,
+       "n_diff_paths": 0,
+       "diff_sample": []
+      },
+      {
+       "seed": 2,
+       "identical": true,
+       "n_diff_paths": 0,
+       "diff_sample": []
+      },
+      {
+       "seed": 3,
+       "identical": true,
+       "n_diff_paths": 0,
+       "diff_sample": []
+      },
+      {
+       "seed": 4,
+       "identical": true,
+       "n_diff_paths": 0,
+       "diff_sample": []
+      },
+      {
+       "seed": 5,
+       "identical": true,
+       "n_diff_paths": 0,
+       "diff_sample": []
+      },
+      {
+       "seed": 6,
+       "identical": true,
+       "n_diff_paths": 0,
+       "diff_sample": []
+      },
+      {
+       "seed": 7,
+       "identical": true,
+       "n_diff_paths": 0,
+       "diff_sample": []
+      },
+      {
+       "seed": 8,
+       "identical": true,
+       "n_diff_paths": 0,
+       "diff_sample": []
+      },
+      {
+       "seed": 9,
+       "identical": true,
+       "n_diff_paths": 0,
+       "diff_sample": []
+      }
+     ],
+     "service_center": [
+      167,
+      168,
+      168,
+      168,
+      166,
+      168,
+      168,
+      168,
+      168,
+      168
+     ]
+    }
+   }
+  },
+  "D2_perfect_backhaul_access_outage": {
+   "overrides": {
+    "backhaul_p_good": 1.0,
+    "access_outage_start_h": 4.0,
+    "access_outage_h": 3.0
+   },
+   "per_arm": {
+    "ea_aoi": {
+     "all_seeds_identical": true,
+     "per_seed": [
+      {
+       "seed": 0,
+       "identical": true,
+       "n_diff_paths": 0,
+       "diff_sample": []
+      },
+      {
+       "seed": 1,
+       "identical": true,
+       "n_diff_paths": 0,
+       "diff_sample": []
+      },
+      {
+       "seed": 2,
+       "identical": true,
+       "n_diff_paths": 0,
+       "diff_sample": []
+      },
+      {
+       "seed": 3,
+       "identical": true,
+       "n_diff_paths": 0,
+       "diff_sample": []
+      },
+      {
+       "seed": 4,
+       "identical": true,
+       "n_diff_paths": 0,
+       "diff_sample": []
+      },
+      {
+       "seed": 5,
+       "identical": true,
+       "n_diff_paths": 0,
+       "diff_sample": []
+      },
+      {
+       "seed": 6,
+       "identical": true,
+       "n_diff_paths": 0,
+       "diff_sample": []
+      },
+      {
+       "seed": 7,
+       "identical": true,
+       "n_diff_paths": 0,
+       "diff_sample": []
+      },
+      {
+       "seed": 8,
+       "identical": true,
+       "n_diff_paths": 0,
+       "diff_sample": []
+      },
+      {
+       "seed": 9,
+       "identical": true,
+       "n_diff_paths": 0,
+       "diff_sample": []
+      }
+     ],
+     "service_center": [
+      144,
+      148,
+      140,
+      148,
+      146,
+      147,
+      143,
+      144,
+      154,
+      143
+     ]
+    },
+    "aoi": {
+     "all_seeds_identical": true,
+     "per_seed": [
+      {
+       "seed": 0,
+       "identical": true,
+       "n_diff_paths": 0,
+       "diff_sample": []
+      },
+      {
+       "seed": 1,
+       "identical": true,
+       "n_diff_paths": 0,
+       "diff_sample": []
+      },
+      {
+       "seed": 2,
+       "identical": true,
+       "n_diff_paths": 0,
+       "diff_sample": []
+      },
+      {
+       "seed": 3,
+       "identical": true,
+       "n_diff_paths": 0,
+       "diff_sample": []
+      },
+      {
+       "seed": 4,
+       "identical": true,
+       "n_diff_paths": 0,
+       "diff_sample": []
+      },
+      {
+       "seed": 5,
+       "identical": true,
+       "n_diff_paths": 0,
+       "diff_sample": []
+      },
+      {
+       "seed": 6,
+       "identical": true,
+       "n_diff_paths": 0,
+       "diff_sample": []
+      },
+      {
+       "seed": 7,
+       "identical": true,
+       "n_diff_paths": 0,
+       "diff_sample": []
+      },
+      {
+       "seed": 8,
+       "identical": true,
+       "n_diff_paths": 0,
+       "diff_sample": []
+      },
+      {
+       "seed": 9,
+       "identical": true,
+       "n_diff_paths": 0,
+       "diff_sample": []
+      }
+     ],
+     "service_center": [
+      150,
+      151,
+      145,
+      148,
+      150,
+      153,
+      149,
+      152,
+      154,
+      150
+     ]
+    }
+   }
+  }
+ },
+ "by_design_ignored": [
+  "cache_backlog",
+  "commands_sent_by_gateway",
+  "placement"
+ ]
+}
