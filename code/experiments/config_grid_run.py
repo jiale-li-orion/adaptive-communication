@@ -73,6 +73,10 @@ def extract(run: dict) -> dict:
         "nodes_dead": sum(1 for v in en.values() if v.get("dead_at_s") is not None),
         "uplinks": cm.get("uplinks"), "uplinks_heard": cm.get("uplinks_heard"),
         "downlink_attempts": cm.get("downlink_attempts"),
+        #: **上行空口时长**：doc 43 §八.2 要求"分列缺采、AoI、**空口**、能源"，
+        #: 且 §八.3 要求区分**空口下降**与**总站点能耗下降**——两者不是同一件事
+        #: （§40 E1 空口 −30.7% 而总能耗只降约 0.3%）。第一版漏了这一列。
+        "airtime_uplink_h": cm.get("airtime_uplink_h"),
         "commands_sent": cc.get("commands_sent"), "commands_refused": cc.get("commands_refused"),
         "mixed_config_s": run.get("mixed_config_s"),
     }

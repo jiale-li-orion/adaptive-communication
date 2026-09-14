@@ -1,0 +1,932 @@
+{
+ "source": "config_grid.json",
+ "declared": {
+  "tolerances_frac_of_fixed_denominator": [
+   0.0,
+   0.01,
+   0.03,
+   0.05
+  ],
+  "cost_axes": [
+   "uplinks",
+   "downlink_attempts",
+   "airtime_uplink_h",
+   "energy_consumed_wh"
+  ],
+  "note": "容差与预算点是**公开声明的研究参数**，**未有现场依据前不得称 SLA**；主口径保留固定业务分母，空口与总能耗**分列**。"
+ },
+ "conditions": {
+  "N1_no_outage": {
+   "denom": 168.0,
+   "seeds": 20,
+   "best_arm": "aoi_const300",
+   "best_service": 155.45,
+   "tolerance_points": {
+    "0.00%": {
+     "service_floor": 155.45,
+     "n_feasible_arms": 3,
+     "feasible_sample": [
+      "aoi_const300",
+      "aoi_t900",
+      "fixed300"
+     ],
+     "cheapest_per_axis": {
+      "uplinks": {
+       "arm": "aoi_t900",
+       "value": 553.85,
+       "service": 155.45,
+       "service_gap_to_best": 0.0
+      },
+      "downlink_attempts": {
+       "arm": "aoi_const300",
+       "value": 18.75,
+       "service": 155.45,
+       "service_gap_to_best": 0.0
+      },
+      "airtime_uplink_h": {
+       "arm": "aoi_t900",
+       "value": 0.030422,
+       "service": 155.45,
+       "service_gap_to_best": 0.0
+      },
+      "energy_consumed_wh": {
+       "arm": "aoi_t900",
+       "value": 0.113263,
+       "service": 155.45,
+       "service_gap_to_best": 0.0
+      }
+     }
+    },
+    "1.00%": {
+     "service_floor": 153.77,
+     "n_feasible_arms": 31,
+     "feasible_sample": [
+      "aoi_const300",
+      "aoi_t900",
+      "fixed300",
+      "aoi",
+      "aoi_f600",
+      "aoi_t14400",
+      "aoi_t1800",
+      "aoi_t7200"
+     ],
+     "cheapest_per_axis": {
+      "uplinks": {
+       "arm": "grid3600x900",
+       "value": 324.95,
+       "service": 154.35,
+       "service_gap_to_best": 1.1
+      },
+      "downlink_attempts": {
+       "arm": "aoi_const300",
+       "value": 18.75,
+       "service": 155.45,
+       "service_gap_to_best": 0.0
+      },
+      "airtime_uplink_h": {
+       "arm": "grid3600x900",
+       "value": 0.017554,
+       "service": 154.35,
+       "service_gap_to_best": 1.1
+      },
+      "energy_consumed_wh": {
+       "arm": "grid3600x900",
+       "value": 0.10561,
+       "service": 154.35,
+       "service_gap_to_best": 1.1
+      }
+     }
+    },
+    "3.00%": {
+     "service_floor": 150.41,
+     "n_feasible_arms": 60,
+     "feasible_sample": [
+      "aoi_const300",
+      "aoi_t900",
+      "fixed300",
+      "aoi",
+      "aoi_f600",
+      "aoi_t14400",
+      "aoi_t1800",
+      "aoi_t7200"
+     ],
+     "cheapest_per_axis": {
+      "uplinks": {
+       "arm": "grid3600x1800",
+       "value": 232.65,
+       "service": 153.7,
+       "service_gap_to_best": 1.75
+      },
+      "downlink_attempts": {
+       "arm": "aoi_const300",
+       "value": 18.75,
+       "service": 155.45,
+       "service_gap_to_best": 0.0
+      },
+      "airtime_uplink_h": {
+       "arm": "grid3600x1800",
+       "value": 0.012555,
+       "service": 153.7,
+       "service_gap_to_best": 1.75
+      },
+      "energy_consumed_wh": {
+       "arm": "grid3600x1800",
+       "value": 0.102788,
+       "service": 153.7,
+       "service_gap_to_best": 1.75
+      }
+     }
+    },
+    "5.00%": {
+     "service_floor": 147.05,
+     "n_feasible_arms": 67,
+     "feasible_sample": [
+      "aoi_const300",
+      "aoi_t900",
+      "fixed300",
+      "aoi",
+      "aoi_f600",
+      "aoi_t14400",
+      "aoi_t1800",
+      "aoi_t7200"
+     ],
+     "cheapest_per_axis": {
+      "uplinks": {
+       "arm": "aoi_const3600",
+       "value": 169.0,
+       "service": 149.5,
+       "service_gap_to_best": 5.95
+      },
+      "downlink_attempts": {
+       "arm": "local",
+       "value": 0.0,
+       "service": 149.5,
+       "service_gap_to_best": 5.95
+      },
+      "airtime_uplink_h": {
+       "arm": "aoi_const3600",
+       "value": 0.009479,
+       "service": 149.5,
+       "service_gap_to_best": 5.95
+      },
+      "energy_consumed_wh": {
+       "arm": "local",
+       "value": 0.100629,
+       "service": 149.5,
+       "service_gap_to_best": 5.95
+      }
+     }
+    }
+   },
+   "paired_vs_best_service_arm": {
+    "uplinks": {
+     "axis_label": "上行次数",
+     "low_cost_arm": "grid3600x900",
+     "reference_arm": "aoi_const300",
+     "seeds": 20,
+     "mean_delta": {
+      "service": -1.1,
+      "missing_collection": 0.0,
+      "aoi_mean_s": 214.478857,
+      "uplinks": -439.65,
+      "downlink_attempts": 18.6,
+      "airtime_uplink_h": -0.024193,
+      "energy_consumed_wh": -0.01337
+     },
+     "ci95_bootstrap": {
+      "service": [
+       -1.7,
+       -0.55
+      ],
+      "missing_collection": [
+       0.0,
+       0.0
+      ],
+      "aoi_mean_s": [
+       180.4412,
+       253.5365
+      ],
+      "uplinks": [
+       -510.5,
+       -366.05
+      ],
+      "downlink_attempts": [
+       17.65,
+       19.55
+      ],
+      "airtime_uplink_h": [
+       -0.0297,
+       -0.019
+      ],
+      "energy_consumed_wh": [
+       -0.0158,
+       -0.0109
+      ]
+     }
+    },
+    "downlink_attempts": {
+     "arm": "aoi_const300",
+     "note": "与该轴最低成本臂相同，无配对差"
+    },
+    "airtime_uplink_h": {
+     "axis_label": "上行空口 h",
+     "low_cost_arm": "grid3600x900",
+     "reference_arm": "aoi_const300",
+     "seeds": 20,
+     "mean_delta": {
+      "service": -1.1,
+      "missing_collection": 0.0,
+      "aoi_mean_s": 214.478857,
+      "uplinks": -439.65,
+      "downlink_attempts": 18.6,
+      "airtime_uplink_h": -0.024193,
+      "energy_consumed_wh": -0.01337
+     },
+     "ci95_bootstrap": {
+      "service": [
+       -1.7,
+       -0.55
+      ],
+      "missing_collection": [
+       0.0,
+       0.0
+      ],
+      "aoi_mean_s": [
+       180.4412,
+       253.5365
+      ],
+      "uplinks": [
+       -510.5,
+       -366.05
+      ],
+      "downlink_attempts": [
+       17.65,
+       19.55
+      ],
+      "airtime_uplink_h": [
+       -0.0297,
+       -0.019
+      ],
+      "energy_consumed_wh": [
+       -0.0158,
+       -0.0109
+      ]
+     }
+    },
+    "energy_consumed_wh": {
+     "axis_label": "总站点能耗 Wh",
+     "low_cost_arm": "grid3600x900",
+     "reference_arm": "aoi_const300",
+     "seeds": 20,
+     "mean_delta": {
+      "service": -1.1,
+      "missing_collection": 0.0,
+      "aoi_mean_s": 214.478857,
+      "uplinks": -439.65,
+      "downlink_attempts": 18.6,
+      "airtime_uplink_h": -0.024193,
+      "energy_consumed_wh": -0.01337
+     },
+     "ci95_bootstrap": {
+      "service": [
+       -1.7,
+       -0.55
+      ],
+      "missing_collection": [
+       0.0,
+       0.0
+      ],
+      "aoi_mean_s": [
+       180.4412,
+       253.5365
+      ],
+      "uplinks": [
+       -510.5,
+       -366.05
+      ],
+      "downlink_attempts": [
+       17.65,
+       19.55
+      ],
+      "airtime_uplink_h": [
+       -0.0297,
+       -0.019
+      ],
+      "energy_consumed_wh": [
+       -0.0158,
+       -0.0109
+      ]
+     }
+    }
+   }
+  },
+  "N2_access_outage": {
+   "denom": 168.0,
+   "seeds": 10,
+   "best_arm": "aoi",
+   "best_service": 59.8,
+   "tolerance_points": {
+    "0.00%": {
+     "service_floor": 59.8,
+     "n_feasible_arms": 10,
+     "feasible_sample": [
+      "aoi",
+      "aoi_const300",
+      "aoi_f600",
+      "aoi_f900",
+      "aoi_t14400",
+      "aoi_t1800",
+      "aoi_t7200",
+      "aoi_t900"
+     ],
+     "cheapest_per_axis": {
+      "uplinks": {
+       "arm": "aoi_f900",
+       "value": 91.2,
+       "service": 59.8,
+       "service_gap_to_best": 0.0
+      },
+      "downlink_attempts": {
+       "arm": "aoi_const300",
+       "value": 17.5,
+       "service": 59.8,
+       "service_gap_to_best": 0.0
+      },
+      "airtime_uplink_h": {
+       "arm": "aoi_f900",
+       "value": 0.007925,
+       "service": 59.8,
+       "service_gap_to_best": 0.0
+      },
+      "energy_consumed_wh": {
+       "arm": "aoi_f900",
+       "value": 0.098799,
+       "service": 59.8,
+       "service_gap_to_best": 0.0
+      }
+     }
+    },
+    "1.00%": {
+     "service_floor": 58.12,
+     "n_feasible_arms": 13,
+     "feasible_sample": [
+      "aoi",
+      "aoi_const300",
+      "aoi_f600",
+      "aoi_f900",
+      "aoi_t14400",
+      "aoi_t1800",
+      "aoi_t7200",
+      "aoi_t900"
+     ],
+     "cheapest_per_axis": {
+      "uplinks": {
+       "arm": "aoi_link",
+       "value": 80.0,
+       "service": 58.5,
+       "service_gap_to_best": 1.3
+      },
+      "downlink_attempts": {
+       "arm": "aoi_link",
+       "value": 11.8,
+       "service": 58.5,
+       "service_gap_to_best": 1.3
+      },
+      "airtime_uplink_h": {
+       "arm": "aoi_link",
+       "value": 0.007371,
+       "service": 58.5,
+       "service_gap_to_best": 1.3
+      },
+      "energy_consumed_wh": {
+       "arm": "aoi_link",
+       "value": 0.098423,
+       "service": 58.5,
+       "service_gap_to_best": 1.3
+      }
+     }
+    },
+    "3.00%": {
+     "service_floor": 54.76,
+     "n_feasible_arms": 36,
+     "feasible_sample": [
+      "aoi",
+      "aoi_const300",
+      "aoi_f600",
+      "aoi_f900",
+      "aoi_t14400",
+      "aoi_t1800",
+      "aoi_t7200",
+      "aoi_t900"
+     ],
+     "cheapest_per_axis": {
+      "uplinks": {
+       "arm": "aoi_const3600",
+       "value": 52.0,
+       "service": 56.3,
+       "service_gap_to_best": 3.5
+      },
+      "downlink_attempts": {
+       "arm": "local",
+       "value": 0.0,
+       "service": 56.3,
+       "service_gap_to_best": 3.5
+      },
+      "airtime_uplink_h": {
+       "arm": "aoi_const3600",
+       "value": 0.004302,
+       "service": 56.3,
+       "service_gap_to_best": 3.5
+      },
+      "energy_consumed_wh": {
+       "arm": "local",
+       "value": 0.097235,
+       "service": 56.3,
+       "service_gap_to_best": 3.5
+      }
+     }
+    },
+    "5.00%": {
+     "service_floor": 51.4,
+     "n_feasible_arms": 44,
+     "feasible_sample": [
+      "aoi",
+      "aoi_const300",
+      "aoi_f600",
+      "aoi_f900",
+      "aoi_t14400",
+      "aoi_t1800",
+      "aoi_t7200",
+      "aoi_t900"
+     ],
+     "cheapest_per_axis": {
+      "uplinks": {
+       "arm": "ea_h15",
+       "value": 51.5,
+       "service": 54.7,
+       "service_gap_to_best": 5.1
+      },
+      "downlink_attempts": {
+       "arm": "local",
+       "value": 0.0,
+       "service": 56.3,
+       "service_gap_to_best": 3.5
+      },
+      "airtime_uplink_h": {
+       "arm": "aoi_const3600",
+       "value": 0.004302,
+       "service": 56.3,
+       "service_gap_to_best": 3.5
+      },
+      "energy_consumed_wh": {
+       "arm": "local",
+       "value": 0.097235,
+       "service": 56.3,
+       "service_gap_to_best": 3.5
+      }
+     }
+    }
+   },
+   "paired_vs_best_service_arm": {
+    "uplinks": {
+     "axis_label": "上行次数",
+     "low_cost_arm": "aoi_link",
+     "reference_arm": "aoi",
+     "seeds": 10,
+     "mean_delta": {
+      "service": -1.3,
+      "missing_collection": 0.0,
+      "aoi_mean_s": 332.394113,
+      "uplinks": -54.6,
+      "downlink_attempts": -22.8,
+      "airtime_uplink_h": -0.005374,
+      "energy_consumed_wh": -0.002218
+     },
+     "ci95_bootstrap": {
+      "service": [
+       -2.0,
+       -0.7
+      ],
+      "missing_collection": [
+       0.0,
+       0.0
+      ],
+      "aoi_mean_s": [
+       162.9806,
+       510.8612
+      ],
+      "uplinks": [
+       -84.1,
+       -26.9
+      ],
+      "downlink_attempts": [
+       -26.3,
+       -19.5
+      ],
+      "airtime_uplink_h": [
+       -0.0089,
+       -0.0022
+      ],
+      "energy_consumed_wh": [
+       -0.0033,
+       -0.0011
+      ]
+     }
+    },
+    "downlink_attempts": {
+     "axis_label": "下行尝试",
+     "low_cost_arm": "aoi_link",
+     "reference_arm": "aoi",
+     "seeds": 10,
+     "mean_delta": {
+      "service": -1.3,
+      "missing_collection": 0.0,
+      "aoi_mean_s": 332.394113,
+      "uplinks": -54.6,
+      "downlink_attempts": -22.8,
+      "airtime_uplink_h": -0.005374,
+      "energy_consumed_wh": -0.002218
+     },
+     "ci95_bootstrap": {
+      "service": [
+       -2.0,
+       -0.7
+      ],
+      "missing_collection": [
+       0.0,
+       0.0
+      ],
+      "aoi_mean_s": [
+       162.9806,
+       510.8612
+      ],
+      "uplinks": [
+       -84.1,
+       -26.9
+      ],
+      "downlink_attempts": [
+       -26.3,
+       -19.5
+      ],
+      "airtime_uplink_h": [
+       -0.0089,
+       -0.0022
+      ],
+      "energy_consumed_wh": [
+       -0.0033,
+       -0.0011
+      ]
+     }
+    },
+    "airtime_uplink_h": {
+     "axis_label": "上行空口 h",
+     "low_cost_arm": "aoi_link",
+     "reference_arm": "aoi",
+     "seeds": 10,
+     "mean_delta": {
+      "service": -1.3,
+      "missing_collection": 0.0,
+      "aoi_mean_s": 332.394113,
+      "uplinks": -54.6,
+      "downlink_attempts": -22.8,
+      "airtime_uplink_h": -0.005374,
+      "energy_consumed_wh": -0.002218
+     },
+     "ci95_bootstrap": {
+      "service": [
+       -2.0,
+       -0.7
+      ],
+      "missing_collection": [
+       0.0,
+       0.0
+      ],
+      "aoi_mean_s": [
+       162.9806,
+       510.8612
+      ],
+      "uplinks": [
+       -84.1,
+       -26.9
+      ],
+      "downlink_attempts": [
+       -26.3,
+       -19.5
+      ],
+      "airtime_uplink_h": [
+       -0.0089,
+       -0.0022
+      ],
+      "energy_consumed_wh": [
+       -0.0033,
+       -0.0011
+      ]
+     }
+    },
+    "energy_consumed_wh": {
+     "axis_label": "总站点能耗 Wh",
+     "low_cost_arm": "aoi_link",
+     "reference_arm": "aoi",
+     "seeds": 10,
+     "mean_delta": {
+      "service": -1.3,
+      "missing_collection": 0.0,
+      "aoi_mean_s": 332.394113,
+      "uplinks": -54.6,
+      "downlink_attempts": -22.8,
+      "airtime_uplink_h": -0.005374,
+      "energy_consumed_wh": -0.002218
+     },
+     "ci95_bootstrap": {
+      "service": [
+       -2.0,
+       -0.7
+      ],
+      "missing_collection": [
+       0.0,
+       0.0
+      ],
+      "aoi_mean_s": [
+       162.9806,
+       510.8612
+      ],
+      "uplinks": [
+       -84.1,
+       -26.9
+      ],
+      "downlink_attempts": [
+       -26.3,
+       -19.5
+      ],
+      "airtime_uplink_h": [
+       -0.0089,
+       -0.0022
+      ],
+      "energy_consumed_wh": [
+       -0.0033,
+       -0.0011
+      ]
+     }
+    }
+   }
+  },
+  "N3_second_source": {
+   "denom": 672.0,
+   "seeds": 20,
+   "best_arm": "aoi_const300",
+   "best_service": 511.05,
+   "tolerance_points": {
+    "0.00%": {
+     "service_floor": 511.05,
+     "n_feasible_arms": 2,
+     "feasible_sample": [
+      "aoi_const300",
+      "fixed300"
+     ],
+     "cheapest_per_axis": {
+      "uplinks": {
+       "arm": "aoi_const300",
+       "value": 1241.55,
+       "service": 511.05,
+       "service_gap_to_best": 0.0
+      },
+      "downlink_attempts": {
+       "arm": "aoi_const300",
+       "value": 18.85,
+       "service": 511.05,
+       "service_gap_to_best": 0.0
+      },
+      "airtime_uplink_h": {
+       "arm": "aoi_const300",
+       "value": 0.099047,
+       "service": 511.05,
+       "service_gap_to_best": 0.0
+      },
+      "energy_consumed_wh": {
+       "arm": "aoi_const300",
+       "value": 0.3947,
+       "service": 511.05,
+       "service_gap_to_best": 0.0
+      }
+     }
+    },
+    "1.00%": {
+     "service_floor": 504.33,
+     "n_feasible_arms": 4,
+     "feasible_sample": [
+      "aoi_const300",
+      "fixed300",
+      "grid900x300",
+      "grid600x300"
+     ],
+     "cheapest_per_axis": {
+      "uplinks": {
+       "arm": "grid900x300",
+       "value": 1231.0,
+       "service": 509.7,
+       "service_gap_to_best": 1.35
+      },
+      "downlink_attempts": {
+       "arm": "aoi_const300",
+       "value": 18.85,
+       "service": 511.05,
+       "service_gap_to_best": 0.0
+      },
+      "airtime_uplink_h": {
+       "arm": "aoi_const300",
+       "value": 0.099047,
+       "service": 511.05,
+       "service_gap_to_best": 0.0
+      },
+      "energy_consumed_wh": {
+       "arm": "grid900x300",
+       "value": 0.39461,
+       "service": 509.7,
+       "service_gap_to_best": 1.35
+      }
+     }
+    },
+    "3.00%": {
+     "service_floor": 490.89,
+     "n_feasible_arms": 18,
+     "feasible_sample": [
+      "aoi_const300",
+      "fixed300",
+      "grid900x300",
+      "grid600x300",
+      "aoi_t900",
+      "aoi_t1800",
+      "grid900x600",
+      "aoi"
+     ],
+     "cheapest_per_axis": {
+      "uplinks": {
+       "arm": "aoi_f900",
+       "value": 676.0,
+       "service": 496.2,
+       "service_gap_to_best": 14.85
+      },
+      "downlink_attempts": {
+       "arm": "local",
+       "value": 0.0,
+       "service": 496.2,
+       "service_gap_to_best": 14.85
+      },
+      "airtime_uplink_h": {
+       "arm": "aoi_f900",
+       "value": 0.04981,
+       "service": 496.2,
+       "service_gap_to_best": 14.85
+      },
+      "energy_consumed_wh": {
+       "arm": "local",
+       "value": 0.374322,
+       "service": 496.2,
+       "service_gap_to_best": 14.85
+      }
+     }
+    },
+    "5.00%": {
+     "service_floor": 477.45,
+     "n_feasible_arms": 20,
+     "feasible_sample": [
+      "aoi_const300",
+      "fixed300",
+      "grid900x300",
+      "grid600x300",
+      "aoi_t900",
+      "aoi_t1800",
+      "grid900x600",
+      "aoi"
+     ],
+     "cheapest_per_axis": {
+      "uplinks": {
+       "arm": "aoi_f900",
+       "value": 676.0,
+       "service": 496.2,
+       "service_gap_to_best": 14.85
+      },
+      "downlink_attempts": {
+       "arm": "local",
+       "value": 0.0,
+       "service": 496.2,
+       "service_gap_to_best": 14.85
+      },
+      "airtime_uplink_h": {
+       "arm": "aoi_f900",
+       "value": 0.04981,
+       "service": 496.2,
+       "service_gap_to_best": 14.85
+      },
+      "energy_consumed_wh": {
+       "arm": "grid1800x300",
+       "value": 0.2294,
+       "service": 478.5,
+       "service_gap_to_best": 32.55
+      }
+     }
+    }
+   },
+   "paired_vs_best_service_arm": {
+    "uplinks": {
+     "axis_label": "上行次数",
+     "low_cost_arm": "grid900x300",
+     "reference_arm": "aoi_const300",
+     "seeds": 20,
+     "mean_delta": {
+      "service": -1.35,
+      "missing_collection": 0.0,
+      "aoi_mean_s": 21.640456,
+      "uplinks": -10.55,
+      "downlink_attempts": 18.1,
+      "airtime_uplink_h": 6.8e-05,
+      "energy_consumed_wh": -9e-05
+     },
+     "ci95_bootstrap": {
+      "service": [
+       -2.1,
+       -0.7
+      ],
+      "missing_collection": [
+       0.0,
+       0.0
+      ],
+      "aoi_mean_s": [
+       10.2017,
+       37.0043
+      ],
+      "uplinks": [
+       -12.85,
+       -8.2
+      ],
+      "downlink_attempts": [
+       17.25,
+       18.9
+      ],
+      "airtime_uplink_h": [
+       -0.0003,
+       0.0006
+      ],
+      "energy_consumed_wh": [
+       -0.0002,
+       -0.0
+      ]
+     }
+    },
+    "downlink_attempts": {
+     "arm": "aoi_const300",
+     "note": "与该轴最低成本臂相同，无配对差"
+    },
+    "airtime_uplink_h": {
+     "arm": "aoi_const300",
+     "note": "与该轴最低成本臂相同，无配对差"
+    },
+    "energy_consumed_wh": {
+     "axis_label": "总站点能耗 Wh",
+     "low_cost_arm": "grid900x300",
+     "reference_arm": "aoi_const300",
+     "seeds": 20,
+     "mean_delta": {
+      "service": -1.35,
+      "missing_collection": 0.0,
+      "aoi_mean_s": 21.640456,
+      "uplinks": -10.55,
+      "downlink_attempts": 18.1,
+      "airtime_uplink_h": 6.8e-05,
+      "energy_consumed_wh": -9e-05
+     },
+     "ci95_bootstrap": {
+      "service": [
+       -2.1,
+       -0.7
+      ],
+      "missing_collection": [
+       0.0,
+       0.0
+      ],
+      "aoi_mean_s": [
+       10.2017,
+       37.0043
+      ],
+      "uplinks": [
+       -12.85,
+       -8.2
+      ],
+      "downlink_attempts": [
+       17.25,
+       18.9
+      ],
+      "airtime_uplink_h": [
+       -0.0003,
+       0.0006
+      ],
+      "energy_consumed_wh": [
+       -0.0002,
+       -0.0
+      ]
+     }
+    }
+   }
+  }
+ }
+}
