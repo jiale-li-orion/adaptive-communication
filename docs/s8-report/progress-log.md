@@ -4464,7 +4464,9 @@ v4 的 `"whether an effect is still unresolved (pending_effect)"` ⇒ v5 的
 新增 `GridConfigPolicy`（行为与 `DenseSamplingPolicy` 逐位相同，只把名字带上 report 维）
 与 `RollingConfigSearchPolicy`（**普通滚动搜索**：候选＝30 个合法点 ∪{保持现状}，
 只用已确认配置与电量 + 场景**声明**的采能与两个链路概率，目标＝剩余时域预期交付，
-先按可行性过滤再排序，**无调参权重**，**无证据不下发**）。`ARMS` **38 → 69**，**不改任何既有臂语义**。
+先按可行性过滤再排序，**无调参权重**，**无证据不下发**）。`ARMS` **38 → 68**（+30 个网格臂；
+滚动搜索**故意不进 `ARMS`**——它必须按场景参数构造，放默认值条目会让 `--arms rolling_search`
+**静默跑成另一组条件**；与 `clairvoyant_static` 同法，由实验脚本运行时注入），**不改任何既有臂语义**。
 
 **条件全部复用已登记实例**（`build_kwargs` 重放，同一个实例）：
 N1 无中断（`instance_arms`，3600 s 义务，20 种子）/ N2 介入后失联（`instance_adm_out3`，10 种子）/

@@ -6,7 +6,10 @@
 
 结果文件：`results/config_grid.json`（30 个合法点 + 4 条现有前沿臂 + 普通滚动搜索，三档条件）。
 代码：`code/experiments/config_grid_run.py`；臂见 `code/instance/center.py`
-（`GridConfigPolicy`、`RollingConfigSearchPolicy`，`ARMS` 38 → 69）。
+（`GridConfigPolicy`、`RollingConfigSearchPolicy`；`ARMS` 38 → **68**，即 +30 个网格臂。
+**滚动搜索故意不进 `ARMS`**——它必须按场景参数构造，放一个"默认值"条目会让 `--arms rolling_search`
+**静默跑成另一组条件**；与 `clairvoyant_static` 同法，由实验脚本在**运行时**注入，
+见 `config_grid_run.py` 与 `center.py` 末尾的说明）。
 
 ## 一、做了什么
 
@@ -109,7 +112,8 @@
   **架构收益 0**（本判别不涉及架构）；**普通算法收益**＝N3 服务 +2.45%（代价上行 +77.9%）；
   **本文额外机制收益＝空**。按第 110 行：**保留它为强基线，不立即命名方法、不定 venue。**
 - **R5（纪律）**：`run_checks.py` **18/18（`EXIT=0`）**；新增测试 [33]；**只补臂、不改任何既有臂语义**；
-  `ARMS` 38 → 69。新增臂的 `mixed_config_s` **全部为 0**（见下）。
+  `ARMS` 38 → **68**（+30 个网格臂；滚动搜索按场景参数在运行时注入，**不进 ARMS**）。
+  新增臂的 `mixed_config_s` **全部为 0**（见下）。
 
 ## 四、三条附带读数（都影响后面的判断）
 

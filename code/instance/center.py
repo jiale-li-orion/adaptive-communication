@@ -872,9 +872,13 @@ ARMS: dict[str, type[CenterPolicy]] = {
     "grid3600x900": lambda: GridConfigPolicy(3600, 900),
     "grid3600x1800": lambda: GridConfigPolicy(3600, 1800),
     "grid3600x3600": lambda: GridConfigPolicy(3600, 3600),
-    # **强对照**：同预测、同观测的普通滚动搜索（判定 B 的"竞争者"，第 77/79 行）。
-    # 默认参数只是占位；实验脚本会按**场景声明的**参数构造它（见 `config_grid_run.py`）。
-    "rolling_search": lambda: RollingConfigSearchPolicy(),
+    # **`rolling_search` 故意不放进 `ARMS`。** 它必须按**场景声明的**参数构造
+    # （义务周期、剩余时域、两个链路概率、采能率、电池容量），而 `ARMS` 的工厂**拿不到**这些。
+    # 在这里放一个"用默认值"的条目，只会让 `--arms rolling_search` **静默**跑成另一组条件——
+    # 那正是 `build_kwargs` 的文档里写死的病："静默重放会悄悄跑成另一个实例，数字对不上才发现"。
+    # 处理方式与仓库既有的 `clairvoyant_static` 一致（`instance_run.py` 直接构造、不进 ARMS），
+    # 也与 `llm_naive_baseline.py` 的做法一致：**实验脚本在运行时注入**
+    # `C.ARMS["rolling_search"] = <按场景参数构造的工厂>`（见 `code/experiments/config_grid_run.py`）。
 }
 
 
