@@ -23,12 +23,14 @@
 >
 > ### 当前状态（2026-09-14）：**关闭的是具名子假说，不是「agent 方法」这一类**
 >
+> **下一活动入口**：[`doc 58 后续计划与主张边界`](docs/s7-method/instance-v1/58-next-stage-plan-2026-09-14.md)。先用微型对照分开信息待遇、停发规则和执行方式，再在 Task v1.1 原动作内验证逐节点的义务驱动上报节奏。当前是计划，尚未实现/运行该候选。
+>
 > **最新信息时序核验**：[`doc 55 审查`](docs/s7-method/instance-v1/55-review-fair-pacing-and-multipath-probe-2026-09-14.md)
 > ｜[`doc 56 结果`](docs/s7-method/instance-v1/56-information-timing-result-2026-09-14.md)
 > ｜[`doc 57 场景—接口桥接`](docs/s7-method/instance-v1/57-scenario-interface-bridge-2026-09-14.md)。
 > 原多路径目录降为 **A 层条件扩展**；旧的“严格上界/传统天花板/残差由 agent 接管”均撤回。
-> 修正时序后，逐包 ACK 相对整拍提交只产生事件可靠性与常态交付/成本的普通前沿；
-> 同价主动探测在两档都被数据 ACK 支配。**该 probe 方向关闭，不新增机制，不接 LLM。**
+> 修正时序后，四个具体实现有事件/常态交付与成本取舍；同价探测启发式在两档的报告均值上劣于数据 ACK。
+> **doc 58 再收窄**：固定停发阈值和不同执行循环仍有混杂，不能称普通前沿已封住。当前探测启发式不晋级，保留义务驱动节奏的有限方法探索。
 >
 > [`28-global-research-direction-review-2026-09-14.md`](docs/s7-method/instance-v1/28-global-research-direction-review-2026-09-14.md)
 > ｜[`29-wirelessagent-adaptation-diff`](docs/s7-method/instance-v1/29-wirelessagent-adaptation-diff-2026-09-14.md)

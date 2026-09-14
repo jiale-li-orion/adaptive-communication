@@ -247,3 +247,5 @@ python3 code/analysis/steady_gap.py --seeds 20 --tag q3_dpu2 --downlink-per-upli
 **`pacing_fair.json` 行的后续更正（doc 55）**：`heard=672` 只表示运行结束前曾有匹配样本到网关，
 评分器没有检查第一次到网关时刻是否早于截止。因此“省下的上行全是截止前冗余”、“上行侧改善对象不存在”撤回；
 动态规则的服务—成本读数保留。`post_outage` 的 1530/2115 s 是候选臂绝对延迟，不是尚未与参照相减的“额外等待”。
+
+**`multipath_probe/results/information_timing.json` 的后续边界（doc 58）**：原数值未重跑或改写。`history_only` 与 `data_ack` 的停止/执行规则也不同，不能作为纯信息干预；固定 `q <= 0.05` 的停发阈值不看期限。当前同价探测启发式不晋级，但几个 ACK 聚合工作点不证明普通方法前沿已覆盖。相邻动作换路计数不证明反馈造成重规划；细粒度账本没有随聚合文件保留。下一阶段计划见 `docs/s7-method/instance-v1/58-next-stage-plan-2026-09-14.md`。

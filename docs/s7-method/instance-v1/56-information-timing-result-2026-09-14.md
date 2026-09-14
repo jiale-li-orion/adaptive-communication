@@ -1,5 +1,7 @@
 # 信息返回时序对照：普通 ACK 形成服务—成本取舍，付费探测被支配
 
+> **后续复核（2026-09-14，以 doc 58 为准）**：保留下面四个具体实现的数值，但撤回“归因已干净、普通规则前沿已覆盖”的扩大判断。固定 `q <= 0.05` 停发不看期限；batch 与 sequential 还使用不同停止规则。ACK 聚合实验仅提供几个经验工作点，未证明帕累托最优。相邻失败后换路不是 ACK 触发重规划的充分证据，运行文件未保留细粒度 action/evidence 台账。当前同价探测启发式不晋级，但不能据此关闭全部信息使用/探测策略。下一步见 [doc 58](58-next-stage-plan-2026-09-14.md)。
+
 日期：2026-09-14。依据 [`doc 55`](55-review-fair-pacing-and-multipath-probe-2026-09-14.md) 的三项交付实施。
 代码为 `multipath_probe/information_timing.py` 与 `run_information_timing.py`；结果为
 `multipath_probe/results/information_timing.json`（20 个配对种子，含逐种子分列指标）。
