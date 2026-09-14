@@ -1859,6 +1859,120 @@ def test_cache_packing_disciplines_are_hand_checkable() -> None:
     check("零积压时四条纯打包纪律占用的记录集合一致（R1 想检验的东西）", same, f"基准 {a}")
 
 
+def test_conditional_plan_admission_and_faithfulness() -> None:
+    """**条件计划的准入检查与执行保真**（§31 第 45 行）。
+
+      1. **依赖中心证据的分支必须被留下**——网关拿不到"中心实际收到的最新样本"与"任务更新"，
+         准入期就要把它们留在 `held`（wait / request_update），**不许下沉**；
+      2. **未登记的观察量、以及"按保守值猜"的 on_missing，都必须在构造时响亮地拒绝**——
+         这两件事都是"把未知伪装成已知"的入口；
+      3. **有效范围**：计划过期后**不再执行**（但不撤销已生效的配置）；
+      4. **目标值必须落在允许的配置集合内**，越界即准入出错；
+      5. **执行保真**：把既有 `AoiPolicy` 的规则编译成计划、**在网关执行**，
+         与"把同一个策略对象放在网关就地执行"**在全部行为字段上逐位相同**
+         （只允许 `arm` 名与**诊断用**的 `skip_reasons` 不同）。
+    """
+    print("\n[35] 条件计划的准入检查与执行保真")
+    import plan as P
+
+    # 1) center-only 证据的分支被留下
+    center_branch = P.PlanBranch(branch_id="needs_center", applies_to=("*",),
+                                 evidence=("center.newest_sample_taken_at",),
+                                 when="center_newest_sample_stale",
+                                 target={"period_s": 300})
+    ok_branch = P.PlanBranch(branch_id="local_ok", applies_to=("*",),
+                             evidence=("node.newest_sample_taken_at",),
+                             when="always", target={"period_s": 900})
+    pl_center = P.ConditionalPlan(plan_id="demo_center", version=1,
+                                  branches=(center_branch, ok_branch),
+                                  allowed_configs=frozenset({P.config_key({"period_s": 300}),
+                                                             P.config_key({"period_s": 900})}))
+    rep = P.admit(pl_center, "gateway")
+    check("依赖中心证据的分支被留下、不进 executable",
+          [b.branch_id for b in rep.executable] == ["local_ok"]
+          and [b.branch_id for b in rep.held] == ["needs_center"],
+          f"executable={[b.branch_id for b in rep.executable]} "
+          f"held={[b.branch_id for b in rep.held]}")
+    raised = False
+    try:
+        P.admit(pl_center, "gateway", raise_on_held=True)
+    except P.PlanAdmissionError:
+        raised = True
+    check("raise_on_held=True 时响亮地拒绝整份计划", raised)
+    check("同一份计划在中心侧可全部执行",
+          len(P.admit(pl_center, "center").executable) == 2, "两个分支都在 center 可得")
+
+    # 2) 未登记观察量 / 非法 on_missing 在构造期即拒
+    bad_ev = bad_om = False
+    try:
+        P.PlanBranch(branch_id="x", applies_to=("*",), evidence=("未登记的量",),
+                     when="always", target={"period_s": 300})
+    except P.PlanAdmissionError:
+        bad_ev = True
+    try:
+        P.PlanBranch(branch_id="y", applies_to=("*",), evidence=("node.soc_wh",),
+                     when="always", target={"period_s": 300}, on_missing="guess")
+    except P.PlanAdmissionError:
+        bad_om = True
+    check("未登记的观察量在构造期被拒", bad_ev)
+    check("非法 on_missing（按保守值猜）在构造期被拒", bad_om)
+
+    # 3) 有效范围
+    pl_exp = P.ConditionalPlan(plan_id="expired", version=1, branches=(ok_branch,),
+                               allowed_configs=frozenset({P.config_key({"period_s": 900})}),
+                               valid_to_s=60)
+    check("有效范围之外不执行", (not pl_exp.active_at(61)) and pl_exp.active_at(59))
+
+    # 4) 目标值越界 ⇒ 准入出错
+    pl_bad = P.ConditionalPlan(plan_id="out_of_set", version=1,
+                               branches=(P.PlanBranch(branch_id="oob", applies_to=("*",),
+                                                      evidence=("node.newest_sample_taken_at",),
+                                                      when="always",
+                                                      target={"period_s": 12345}),),
+                               allowed_configs=frozenset({P.config_key({"period_s": 900})}))
+    dp = DeviceProfile(report_period_s=3600)
+    nodes = {NODE: Node(NODE, "displacement", dp, initial_wh=None)}
+    truth = wang_fragment_truth(0, HOURS, (NODE,))
+    harvest, temp = constant_harvest((NODE,), HOURS, 2.0, 10.0)
+    truth.harvest_wh, truth.temp_c = harvest, temp
+    inst_oob = Instance(nodes, truth, seed=0, policy=P.PlanGatewayPolicy(pl_bad),
+                        placement="gateway")
+    raised = False
+    try:
+        inst_oob.run(1)
+    except P.PlanAdmissionError:
+        raised = True
+    check("计划产生越界目标值时准入出错（不是静默下发）", raised)
+
+    # 5) 执行保真：计划执行 vs 就地执行，逐位相同（允许 arm 名与诊断计数不同）
+    import center as _C
+    _C.ARMS["plan_aoi_probe"] = lambda: P.PlanGatewayPolicy(P.compile_aoi_plan())
+    kw = dict(uplink_p_arrive=0.74, backhaul_p_good=0.62)
+
+    def _run(arm):
+        nd = {NODE: Node(NODE, "displacement", dp, initial_wh=None)}
+        tr = wang_fragment_truth(0, HOURS, (NODE,))
+        h, t = constant_harvest((NODE,), HOURS, 2.0, 10.0)
+        tr.harvest_wh, tr.temp_c = h, t
+        ins = Instance(nd, tr, seed=0, policy=build_policy(arm), placement="gateway")
+        ins.plane.uplink_p_arrive = kw["uplink_p_arrive"]
+        ins.plane.backhaul_p_good = kw["backhaul_p_good"]
+        ins.run(HOURS)
+        return ins
+
+    a, b = _run("aoi"), _run("plan_aoi_probe")
+    diffs = []
+    for k in ("intent_log", "mixed_config_ticks", "command_seq"):
+        if getattr(a, k) != getattr(b, k):
+            diffs.append(k)
+    if {kk: v for kk, v in a.counters.items()} != {kk: v for kk, v in b.counters.items()}:
+        diffs.append("counters")
+    if sorted(a.log.samples) != sorted(b.log.samples):
+        diffs.append("samples")
+    check("计划在网关执行 ≡ 同一策略在网关就地执行（行为字段逐位相同）",
+          not diffs, f"不同的行为字段={diffs}（只允许 arm 名与诊断 skip_reasons 不同）")
+
+
 def main() -> int:
     print("实例层验收（Task Contract v1.1）")
     test_denominator_is_exogenous()
@@ -1894,6 +2008,7 @@ def main() -> int:
     test_placement_isolates_the_two_instruments()
     test_config_grid_and_rolling_search_are_legal()
     test_cache_packing_disciplines_are_hand_checkable()
+    test_conditional_plan_admission_and_faithfulness()
     print("\n" + "-" * 74)
     if FAIL:
         print(f"  {len(FAIL)} 项失败: {', '.join(FAIL)}")
