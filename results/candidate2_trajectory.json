@@ -1,0 +1,314 @@
+{
+ "condition": "instance_ccorral_iid_c0.05",
+ "seeds": 20,
+ "arms": [
+  "local",
+  "aoi",
+  "aoi_const300"
+ ],
+ "note": "候选 2 已按 R1 关闭；本轨迹记录的是**既有端点 `aoi_const300`** 相对 `aoi` 为何够用、增加哪条义务、代价多少。逐义务台账来自 `collect_rows=True`。",
+ "per_arm": {
+  "local": {
+   "denom": 672,
+   "service_mean": 496.2,
+   "service_per_seed": [
+    600,
+    549,
+    434,
+    407,
+    564,
+    372,
+    625,
+    442,
+    480,
+    403,
+    516,
+    514,
+    480,
+    540,
+    407,
+    570,
+    323,
+    604,
+    495,
+    599
+   ],
+   "missing_collection": 0.0,
+   "aoi_mean_s": 2185.655590243304,
+   "uplinks": 676.0,
+   "downlink_attempts": 0.0,
+   "airtime_uplink_h": 0.04981020444444445,
+   "energy_consumed_wh": 0.374321937,
+   "nodes_dead": 0.0,
+   "soc_final_min_wh": 0.021107343155200037,
+   "n_config_changes": 0.0,
+   "config_changes": [],
+   "config_choices": []
+  },
+  "aoi": {
+   "denom": 672,
+   "service_mean": 497.5,
+   "service_per_seed": [
+    600,
+    549,
+    435,
+    410,
+    568,
+    374,
+    625,
+    443,
+    480,
+    407,
+    516,
+    514,
+    481,
+    544,
+    409,
+    571,
+    326,
+    604,
+    495,
+    599
+   ],
+   "missing_collection": 0.0,
+   "aoi_mean_s": 2167.114850856865,
+   "uplinks": 691.7,
+   "downlink_attempts": 40.35,
+   "airtime_uplink_h": 0.051378830222222206,
+   "energy_consumed_wh": 0.3752085055,
+   "nodes_dead": 0.0,
+   "soc_final_min_wh": 0.020984078528000043,
+   "n_config_changes": 28.3,
+   "config_changes": [
+    {
+     "t_s": 3660,
+     "node": "n02",
+     "sampling_interval_s": 900,
+     "report_period_s": 300
+    },
+    {
+     "t_s": 3660,
+     "node": "n03",
+     "sampling_interval_s": 900,
+     "report_period_s": 300
+    },
+    {
+     "t_s": 3660,
+     "node": "n04",
+     "sampling_interval_s": 900,
+     "report_period_s": 300
+    },
+    {
+     "t_s": 3660,
+     "node": "n05",
+     "sampling_interval_s": 900,
+     "report_period_s": 300
+    },
+    {
+     "t_s": 3660,
+     "node": "n10",
+     "sampling_interval_s": 900,
+     "report_period_s": 300
+    },
+    {
+     "t_s": 3660,
+     "node": "n11",
+     "sampling_interval_s": 900,
+     "report_period_s": 300
+    },
+    {
+     "t_s": 4560,
+     "node": "n00",
+     "sampling_interval_s": 900,
+     "report_period_s": 300
+    },
+    {
+     "t_s": 4560,
+     "node": "n03",
+     "sampling_interval_s": 900,
+     "report_period_s": 900
+    },
+    {
+     "t_s": 4560,
+     "node": "n04",
+     "sampling_interval_s": 900,
+     "report_period_s": 900
+    },
+    {
+     "t_s": 4560,
+     "node": "n13",
+     "sampling_interval_s": 900,
+     "report_period_s": 300
+    },
+    {
+     "t_s": 4560,
+     "node": "n15",
+     "sampling_interval_s": 900,
+     "report_period_s": 300
+    },
+    {
+     "t_s": 4560,
+     "node": "n16",
+     "sampling_interval_s": 900,
+     "report_period_s": 300
+    }
+   ],
+   "config_choices": [
+    [
+     900,
+     300
+    ],
+    [
+     900,
+     900
+    ]
+   ]
+  },
+  "aoi_const300": {
+   "denom": 672,
+   "service_mean": 511.05,
+   "service_per_seed": [
+    613,
+    557,
+    446,
+    420,
+    587,
+    390,
+    643,
+    448,
+    504,
+    418,
+    531,
+    531,
+    504,
+    558,
+    416,
+    587,
+    333,
+    615,
+    504,
+    616
+   ],
+   "missing_collection": 0.0,
+   "aoi_mean_s": 1981.0238953604198,
+   "uplinks": 1241.55,
+   "downlink_attempts": 18.85,
+   "airtime_uplink_h": 0.0990471253333331,
+   "energy_consumed_wh": 0.3946999035,
+   "nodes_dead": 0.0,
+   "soc_final_min_wh": 0.020053765760000043,
+   "n_config_changes": 13.0,
+   "config_changes": [
+    {
+     "t_s": 3660,
+     "node": "n02",
+     "sampling_interval_s": 900,
+     "report_period_s": 300
+    },
+    {
+     "t_s": 3660,
+     "node": "n03",
+     "sampling_interval_s": 900,
+     "report_period_s": 300
+    },
+    {
+     "t_s": 3660,
+     "node": "n04",
+     "sampling_interval_s": 900,
+     "report_period_s": 300
+    },
+    {
+     "t_s": 3660,
+     "node": "n05",
+     "sampling_interval_s": 900,
+     "report_period_s": 300
+    },
+    {
+     "t_s": 3660,
+     "node": "n10",
+     "sampling_interval_s": 900,
+     "report_period_s": 300
+    },
+    {
+     "t_s": 3660,
+     "node": "n11",
+     "sampling_interval_s": 900,
+     "report_period_s": 300
+    },
+    {
+     "t_s": 4560,
+     "node": "n00",
+     "sampling_interval_s": 900,
+     "report_period_s": 300
+    },
+    {
+     "t_s": 4560,
+     "node": "n13",
+     "sampling_interval_s": 900,
+     "report_period_s": 300
+    },
+    {
+     "t_s": 4560,
+     "node": "n15",
+     "sampling_interval_s": 900,
+     "report_period_s": 300
+    },
+    {
+     "t_s": 4560,
+     "node": "n16",
+     "sampling_interval_s": 900,
+     "report_period_s": 300
+    },
+    {
+     "t_s": 5460,
+     "node": "n07",
+     "sampling_interval_s": 900,
+     "report_period_s": 300
+    },
+    {
+     "t_s": 6360,
+     "node": "n01",
+     "sampling_interval_s": 900,
+     "report_period_s": 300
+    }
+   ],
+   "config_choices": [
+    [
+     900,
+     300
+    ]
+   ]
+  }
+ },
+ "diff_aoi_const300_vs_aoi": {
+  "gained": 13,
+  "lost": 0,
+  "gained_oids_sample": [
+   "n00:routine:00012",
+   "n00:routine:00047",
+   "n04:routine:00030",
+   "n05:routine:00026",
+   "n05:routine:00027",
+   "n05:routine:00034",
+   "n05:routine:00035",
+   "n10:routine:00027",
+   "n11:routine:00022",
+   "n11:routine:00042",
+   "n11:routine:00046",
+   "n11:routine:00047"
+  ],
+  "lost_oids_sample": [],
+  "gained_latency_mean_s": 530.8,
+  "lost_latency_mean_s": null,
+  "gained_by_release_hour": {
+   "3": 1,
+   "4": 1,
+   "5": 1,
+   "6": 3,
+   "7": 1,
+   "8": 2,
+   "10": 1,
+   "11": 3
+  }
+ }
+}

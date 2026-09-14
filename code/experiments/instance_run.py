@@ -60,6 +60,7 @@ def one_seed(seed: int, task_hours: float, tail_hours: float,
              soc_bias: float = 1.0, soc_loss_p: float = 0.0, hold_op: str | None = None,
              atomic: bool = False, exec_label: str | None = None,
              placement: str = "center",
+             obligation_ledger: bool = False,
              capacity_wh: float = 0.05, low_frac: float = 0.4,
              low_wh_per_hour: float = 0.005,
              oracle_cache: dict | None = None,
@@ -260,7 +261,8 @@ def one_seed(seed: int, task_hours: float, tail_hours: float,
                                     require_sample=True)["total_oracle"]
     res = evaluate(obligations, log, int(hours), nodes.keys(),
                    battery={k: v.power.to_dict() for k, v in nodes.items()},
-                   plane=inst.plane, task_hours=int(task_hours), outage=outage)
+                   plane=inst.plane, task_hours=int(task_hours), outage=outage,
+                   collect_rows=obligation_ledger)
 
     return {
         "seed": seed,
@@ -313,6 +315,9 @@ def one_seed(seed: int, task_hours: float, tail_hours: float,
         "not_applicable": res["not_applicable"],
         #: **只在 `trace=True` 时非空**。逐事件时间线属于诊断产物，不进结果文件的常规列。
         **({"_trace": inst.trace_events} if trace else {}),
+        #: **逐义务台账**：只在 `obligation_ledger=True` 时出现（§31 第 109 行要"增加的是**哪条**
+        #: 固定义务的服务"，聚合量答不了）。默认关闭时结果**逐位不变**。
+        **({"_obligations": res["rows"]} if obligation_ledger else {}),
     }
 
 

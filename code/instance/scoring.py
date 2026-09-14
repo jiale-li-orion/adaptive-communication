@@ -64,7 +64,8 @@ def evaluate(obligations: ObligationSet, log, hours: int, node_ids,
              battery: dict[str, dict] | None = None,
              plane=None, task_hours: int | None = None,
              outage: tuple[int, int] | None = None,
-             recovery_s: int = 3600) -> dict:
+             recovery_s: int = 3600,
+             collect_rows: bool = False) -> dict:
     """对一次运行评分。返回**分列**的结果字典，不含任何合成分数。
 
     **尾部观察期（v1.1 §9）。** `hours` 是**运行**长度，`task_hours` 是**义务**覆盖的区间；
@@ -102,6 +103,14 @@ def evaluate(obligations: ObligationSet, log, hours: int, node_ids,
 
     res: dict = {"n_obligations": len(outcomes),
                  "by_kind": _split(outcomes)}
+    if collect_rows:
+        # **逐义务台账（默认关闭）**：§31 第 109 行要"它增加的是**哪条固定义务**的服务"，
+        # 聚合量答不了这个问题。`collect_rows=False` 时一个字节都不多记，读数逐位不变。
+        res["rows"] = [{"oid": o.oid, "kind": o.kind, "node_id": o.node_id,
+                        "release_at": o.release_at, "collected": o.collected,
+                        "delivered": o.delivered, "censored": o.censored,
+                        "delivered_at": o.delivered_at, "latency_s": o.latency_s}
+                       for o in outcomes]
 
     # -------------------------------------------------- 周期新鲜度与完整性
     res["routine"] = _routine_block(outcomes, log, node_ids, end_s, by_key)
