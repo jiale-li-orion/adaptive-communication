@@ -277,4 +277,5 @@ python3 code/analysis/steady_gap.py --seeds 20 --tag q3_dpu2 --downlink-per-upli
 | `v3joint_timeline.png` | `python3 code/v3joint/make_fig_timeline.py`（trace 重跑 seed0/n00） | 1（机制示意，非统计） | 论文图：单节点电量+采样档因果时间线，闭环中断期耗尽永久死亡、开环存活，doc12 §2 |
 | `v3joint_tight.json` | `python3 code/v3joint/tight_paired.py`（风险窗 P=300，6 种子） | 6 | 紧 regime 静态配置前沿各点与 ea/eh 的 routine/空口/电量；ea 比前沿点 grid600x600 低 31.2pp（CI[-33.7,-28.7] 6/6）、被 grid900x600 Pareto 支配，见 doc15 |
 | `v3joint_frontier.png` | 由 `v3joint_tight.json` 经 `python3 code/v3joint/make_fig_frontier.py` 生成 | 6 | 论文图：风险窗服务-空口静态前沿，端到端 AoI/EH-AoI 两闭环落在前沿下方，doc15 |
+| `v3joint_ea_sens.json` | `python3 code/v3joint/probe_ea_sens.py`（紧张工况 8 种子） | 8 | ea_aoi 旋钮稳健性：上报档/回滞/阈值.005-.020 均仍崩(.28-.31,活约1)，唯疏化密采档1200(.81)或极高阈值.030(追平但10.8倍下行命令)能避死，即安全只能靠把闭环削弱成开环，见 doc17 |
 | 
