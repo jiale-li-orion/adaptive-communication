@@ -275,4 +275,6 @@ python3 code/analysis/steady_gap.py --seeds 20 --tag q3_dpu2 --downlink-per-upli
 | `v3joint_phase.png` | 由 `v3joint_phase.json` 经 `python3 code/v3joint/make_fig_phase.py` 生成 | 4 | 论文图：采能×中断相图三面板（ea 损失/eh 损失/anchor 绝对值），对应 doc12、13 |
 | `v3joint_paired.json` | `python3 code/v3joint/paired_stats.py`（16 种子配对，双中断 8） | 16/8 | fixed900 基准的 routine 配对差/95%CI/符号/存活，三工况；ea 16/16 一致 −69~−73pp，eh 缓解到 −5~−9pp，anchor 微负 −0.2~−0.3pp 存活相同。结论见 doc14 |
 | `v3joint_timeline.png` | `python3 code/v3joint/make_fig_timeline.py`（trace 重跑 seed0/n00） | 1（机制示意，非统计） | 论文图：单节点电量+采样档因果时间线，闭环中断期耗尽永久死亡、开环存活，doc12 §2 |
+| `v3joint_tight.json` | `python3 code/v3joint/tight_paired.py`（风险窗 P=300，6 种子） | 6 | 紧 regime 静态配置前沿各点与 ea/eh 的 routine/空口/电量；ea 比前沿点 grid600x600 低 31.2pp（CI[-33.7,-28.7] 6/6）、被 grid900x600 Pareto 支配，见 doc15 |
+| `v3joint_frontier.png` | 由 `v3joint_tight.json` 经 `python3 code/v3joint/make_fig_frontier.py` 生成 | 6 | 论文图：风险窗服务-空口静态前沿，端到端 AoI/EH-AoI 两闭环落在前沿下方，doc15 |
 | 
