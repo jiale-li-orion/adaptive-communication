@@ -280,12 +280,35 @@ class TimingEnv:
         }
 
 
+#: **停止原因码**（doc 58 §P0 第 1 条）。短时域固定历史里「本 epoch 为什么停下来」
+#: 在旧读数中**四种原因同形**——都表现为「没有下一次尝试」，于是信息/算法/执行方式
+#: 三者无法分开。这里把原因**逐次落账**，并把当时**读到的量**一并记下（action/evidence 台账）。
+STOP_REASONS = (
+    "queue_empty",         # 队列已空，没有可投递的数据
+    "no_eligible_path",    # epoch 未开、或 data 无队列、或全部路径被容量/配额/能量否掉
+    "q_threshold",         # 路径存在，但每条可用路径的 q 都 <= 0.05，规则拒绝
+    "path_capacity",       # 该路径本 epoch 的容量已用尽
+    "sat_quota",           # 卫星日配额已用尽
+    "total_energy",        # 总预算不足以支付下一条路径
+    "epoch_allowance",     # 本 epoch 的分配额度已用尽
+    "attempt_refused",     # 环境拒绝了这次尝试（eligible 与 attempt 之间有变动）
+    "backlog_met",         # 批处理臂：期望积压已投递完
+)
+
+#: **同 epoch「收到 ACK 但延后使用」控制**（doc 58 §P0 第 2 条）。
+#: 它在**同一个逐次执行循环**里跑：ACK 照收、照记，但**不在本 epoch 内改变信念**。
+#: 于是它与 `history_only`（批处理 + 无同拍信息）之差 = **执行方式**，
+#: 与 `data_ack`（逐次 + 立即用 ACK）之差 = **信息待遇**。旧批处理臂降为历史参考。
+ARM_SEQ_DEFERRED = "seq_deferred_ack"
+
+
 class InformationPolicy:
-    """四臂共用的在线信念与逐包效率规则；仅信息返回时刻不同。"""
+    """五臂共用的在线信念与逐包效率规则；仅信息返回时刻与执行方式不同。"""
 
     def __init__(self, arm: str, event_energy_multiplier: float = 3.0,
                  feedback_batch_size: int = 1):
-        if arm not in ("history_only", "data_ack", "paid_probe", "current_truth"):
+        if arm not in ("history_only", "data_ack", "paid_probe", "current_truth",
+                       ARM_SEQ_DEFERRED):
             raise ValueError(f"unknown arm: {arm}")
         self.arm = arm
         self.event_energy_multiplier = event_energy_multiplier
@@ -293,6 +316,32 @@ class InformationPolicy:
             raise ValueError("feedback_batch_size must be positive")
         self.feedback_batch_size = feedback_batch_size
         self.belief: dict[str, float] = {}
+        #: **停止原因台账**（纯诊断，不参与任何判断；默认关闭时读数逐位不变）
+        self.stop_ledger: list[dict] = []
+        #: 本 epoch 内被**收到但延后使用**的证据（只对 `seq_deferred_ack` 非空）
+        self.deferred_evidence: list[Evidence] = []
+        #: 已被使用的延后证据条数（审计用；非零才说明「延后」不等于「丢弃」）
+        self.deferred_applied = 0
+
+    def _note_stop(self, env: "TimingEnv", reason: str, kind: str, allowance: float,
+                   notes: dict) -> None:
+        """记一条停止原因 + **当时读到的全部量**。**只读，不改任何状态。**"""
+        self.stop_ledger.append({
+            "t": env.t, "arm": self.arm, "kind": kind, "reason": reason,
+            "queue_len": len(env.queue),
+            "queue_event": sum(1 for s in env.queue if s.kind == EVENT),
+            "n_eligible": notes.get("n_eligible"),
+            "dropped_capacity": sorted(notes.get("dropped_capacity") or []),
+            "dropped_q": sorted(notes.get("dropped_q") or []),
+            "n_scored": notes.get("n_scored"),
+            "cap_left": dict(env._cap_left),
+            "sat_quota_left": env.sat_quota_left,
+            "energy_left": (None if env.energy_left is None
+                            else round(env.energy_left, 8)),
+            "epoch_energy_spent": round(env.epoch_energy_spent, 8),
+            "allowance": (None if allowance == math.inf else round(allowance, 8)),
+            "belief": {k: round(v, 8) for k, v in sorted(self.belief.items())},
+        })
 
     def start_epoch(self, env: TimingEnv) -> None:
         for path in env.tr.paths:
@@ -308,6 +357,23 @@ class InformationPolicy:
                     self.belief[path] = b * (1 - p_gb) + (1 - b) * p_bg
             elif path == "uav":
                 self.belief[path] = spec["good_frac"] if env.tr.uav_scheduled(env.t) else 0.0
+        # **延后使用的 ACK 在这里并入**（doc 58 §P0 第 2 条）：只有 `seq_deferred_ack`
+        # 会让 `deferred_evidence` 非空，其余臂恒为空 ⇒ 这一步对其他臂是空操作，
+        # 因此它们的行为逐位不变（`run_p0_decomposition.py` 的回归检查钉住这一点）。
+        if self.deferred_evidence:
+            self.apply_deferred()
+
+    def apply_deferred(self) -> int:
+        """把**上一 epoch 收到但延后使用**的证据一次性并入信念；返回条数。
+
+        `seq_deferred_ack` 与 `data_ack` 的差别**只有这一处**：ACK 在本 epoch 内是否被用。
+        """
+        n = len(self.deferred_evidence)
+        for evidence in self.deferred_evidence:
+            self.update(evidence)
+        self.deferred_evidence = []
+        self.deferred_applied += n
+        return n
 
     def update(self, evidence: Evidence) -> None:
         prior = min(1 - 1e-12, max(1e-12, self.belief[evidence.path]))
@@ -323,19 +389,56 @@ class InformationPolicy:
         belief = self.belief[path]
         return belief * GOOD_TX_SUCCESS + (1 - belief) * BAD_TX_SUCCESS
 
-    def select_path(self, env: TimingEnv, kind: str, cap_left: dict[str, int] | None = None) -> str | None:
+    def select_path(self, env: TimingEnv, kind: str, cap_left: dict[str, int] | None = None,
+                    notes: dict | None = None) -> str | None:
         eligible = env.eligible_paths(kind)
+        if notes is not None:
+            notes["n_eligible"] = len(eligible)
+            notes["dropped_capacity"] = [
+                path for path in eligible if cap_left is not None
+                and cap_left.get(path, 0) <= 0]
         if cap_left is not None:
             eligible = [path for path in eligible if cap_left.get(path, 0) > 0]
         scored = []
+        dropped_q = []
         for path in eligible:
             q = self._q(env, path)
             if q <= 0.05:
+                dropped_q.append(path)
                 continue
             energy = PATH_SPECS[path]["energy"] * (
                 env.probe_cost_multiplier if kind == "probe" else 1.0)
             scored.append((q / energy, -PATH_SPECS[path]["money"], -PATH_ORDER.index(path), path))
+        if notes is not None:
+            notes["dropped_q"] = dropped_q
+            notes["n_scored"] = len(scored)
         return max(scored)[-1] if scored else None
+
+    def _reason_for_none(self, env: "TimingEnv", notes: dict,
+                         cap_left: dict[str, int] | None) -> str:
+        """把「没选出路径」判成**一个**原因码。判据只用 `env` 当时的量与 `notes`。
+
+        **它是一个摘要**：原始量（`cap_left`/`sat_quota_left`/`energy_left`/`dropped_q`）
+        同时落账，因此读者可以核对这个码是否与原始量一致（测试 [P0-c] 就是这么做的）。
+        """
+        if not env.queue:
+            return "queue_empty"
+        if not env._open:
+            return "no_eligible_path"
+        cand = [p for p in env.tr.paths
+                if cap_left is None or cap_left.get(p, 0) > 0]
+        if not cand or all(env._cap_left.get(p, 0) <= 0 for p in cand):
+            return "path_capacity"
+        if all(p == "satellite" for p in cand) and env.sat_quota_left <= 0:
+            return "sat_quota"
+        if env.energy_left is not None and all(
+                env.energy_left < PATH_SPECS[p]["energy"] - 1e-9 for p in cand):
+            return "total_energy"
+        if notes.get("n_eligible", 0) == 0:
+            return "sat_quota" if env.sat_quota_left <= 0 else "no_eligible_path"
+        if notes.get("n_scored", 0) == 0:
+            return "q_threshold"
+        return "path_capacity"
 
     def energy_allowance(self, env: TimingEnv) -> float:
         if env.energy_left is None:
@@ -349,17 +452,26 @@ class InformationPolicy:
         energy_left = allowance
         expected_backlog = float(len(env.queue))
         plan: list[str] = []
+        stopped = False
         while expected_backlog > 0.5:
-            path = self.select_path(env, "data", cap_left)
+            notes: dict = {}
+            path = self.select_path(env, "data", cap_left, notes)
             if path is None:
+                self._note_stop(env, self._reason_for_none(env, notes, cap_left),
+                                "data", allowance, notes)
+                stopped = True
                 break
             cost = PATH_SPECS[path]["energy"]
             if energy_left < cost - 1e-9:
+                self._note_stop(env, "epoch_allowance", "data", allowance, notes)
+                stopped = True
                 break
             plan.append(path)
             cap_left[path] -= 1
             energy_left -= cost
             expected_backlog -= self._q(env, path)
+        if not stopped:
+            self._note_stop(env, "backlog_met", "data", allowance, {})
         observations = []
         for path in plan:
             outcome = env.attempt(path, "data")
@@ -370,23 +482,39 @@ class InformationPolicy:
 
     def _run_sequential(self, env: TimingEnv, allowance: float) -> None:
         pending: dict[str, list[Evidence]] = {path: [] for path in env.tr.paths}
+        stopped = False
         while env.queue and env.epoch_energy_spent < allowance - 1e-9:
-            path = self.select_path(env, "data")
+            notes: dict = {}
+            path = self.select_path(env, "data", None, notes)
             if path is None:
+                self._note_stop(env, self._reason_for_none(env, notes, None),
+                                "data", allowance, notes)
+                stopped = True
                 break
             cost = PATH_SPECS[path]["energy"]
             if env.epoch_energy_spent + cost > allowance + 1e-9:
+                self._note_stop(env, "epoch_allowance", "data", allowance, notes)
+                stopped = True
                 break
             outcome = env.attempt(path, "data")
             if outcome is None:
+                self._note_stop(env, "attempt_refused", "data", allowance, notes)
+                stopped = True
                 break
+            if self.arm == ARM_SEQ_DEFERRED:
+                # **收到 ACK 但延后使用**：照收、照记，**本 epoch 内不改信念**
+                self.deferred_evidence.append(outcome.evidence)
+                continue
             if self.arm != "current_truth":
                 pending[path].append(outcome.evidence)
                 if len(pending[path]) >= self.feedback_batch_size:
                     for evidence in pending[path]:
                         self.update(evidence)
                     pending[path] = []
-        if self.arm != "current_truth":
+        if not stopped:
+            self._note_stop(env, "queue_empty" if not env.queue else "epoch_allowance",
+                            "data", allowance, {})
+        if self.arm not in ("current_truth", ARM_SEQ_DEFERRED):
             for observations in pending.values():
                 for evidence in observations:
                     self.update(evidence)
@@ -424,4 +552,15 @@ def run_arm(trace: Trace, arm: str, energy_budget: float | None,
         policy.start_epoch(env)
         policy.run_epoch(env)
         env.end_epoch()
-    return env.finalize()
+    out = env.finalize()
+    # **P0 诊断字段**（doc 58 §P0）：停止原因台账与「延后使用」计数。
+    # 它们**不参与任何判断**，加与不加时 `env.finalize()` 的数值逐位相同
+    # （`run_p0_decomposition.py` 的回归检查就是这么验的）。
+    out["arm"] = arm
+    out["stop_ledger"] = list(policy.stop_ledger)
+    counts: dict[str, int] = {}
+    for row in policy.stop_ledger:
+        counts[row["reason"]] = counts.get(row["reason"], 0) + 1
+    out["stop_reason_counts"] = counts
+    out["deferred_applied"] = policy.deferred_applied
+    return out

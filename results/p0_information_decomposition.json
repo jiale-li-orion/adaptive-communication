@@ -1,0 +1,2492 @@
+{
+ "hours": 48,
+ "budget": 278.57142857142856,
+ "seeds": 20,
+ "arms": [
+  "history_only",
+  "seq_deferred_ack",
+  "data_ack",
+  "paid_probe",
+  "current_truth"
+ ],
+ "regression_identical": {
+  "history_only": true,
+  "data_ack": true,
+  "paid_probe": true,
+  "current_truth": true
+ },
+ "stop_reason_table": {
+  "history_only": {
+   "queue_empty": 0,
+   "no_eligible_path": 0,
+   "q_threshold": 0,
+   "path_capacity": 64,
+   "sat_quota": 5,
+   "total_energy": 0,
+   "epoch_allowance": 752,
+   "attempt_refused": 0,
+   "backlog_met": 139
+  },
+  "seq_deferred_ack": {
+   "queue_empty": 147,
+   "no_eligible_path": 0,
+   "q_threshold": 53,
+   "path_capacity": 56,
+   "sat_quota": 15,
+   "total_energy": 0,
+   "epoch_allowance": 689,
+   "attempt_refused": 0,
+   "backlog_met": 0
+  },
+  "data_ack": {
+   "queue_empty": 164,
+   "no_eligible_path": 0,
+   "q_threshold": 88,
+   "path_capacity": 41,
+   "sat_quota": 15,
+   "total_energy": 0,
+   "epoch_allowance": 652,
+   "attempt_refused": 0,
+   "backlog_met": 0
+  },
+  "paid_probe": {
+   "queue_empty": 157,
+   "no_eligible_path": 0,
+   "q_threshold": 85,
+   "path_capacity": 41,
+   "sat_quota": 15,
+   "total_energy": 0,
+   "epoch_allowance": 662,
+   "attempt_refused": 0,
+   "backlog_met": 0
+  },
+  "current_truth": {
+   "queue_empty": 191,
+   "no_eligible_path": 0,
+   "q_threshold": 137,
+   "path_capacity": 36,
+   "sat_quota": 23,
+   "total_energy": 0,
+   "epoch_allowance": 573,
+   "attempt_refused": 0,
+   "backlog_met": 0
+  }
+ },
+ "means": {
+  "history_only": {
+   "event_rate": 0.9708333333333334,
+   "routine_rate": 0.86015625,
+   "attempts": 240.9,
+   "probe_attempts": 0.0,
+   "energy": 262.175,
+   "money": 22.2,
+   "sat_quota_used": 22.2,
+   "wasted_bad_path": 43.95,
+   "same_epoch_reroutes": 1.1,
+   "deferred_applied": 0.0
+  },
+  "seq_deferred_ack": {
+   "event_rate": 0.9708333333333334,
+   "routine_rate": 0.8442708333333334,
+   "attempts": 229.1,
+   "probe_attempts": 0.0,
+   "energy": 255.775,
+   "money": 25.0,
+   "sat_quota_used": 25.0,
+   "wasted_bad_path": 35.4,
+   "same_epoch_reroutes": 1.15,
+   "deferred_applied": 223.0
+  },
+  "data_ack": {
+   "event_rate": 0.96875,
+   "routine_rate": 0.8708333333333333,
+   "attempts": 213.05,
+   "probe_attempts": 0.0,
+   "energy": 247.125,
+   "money": 26.75,
+   "sat_quota_used": 26.75,
+   "wasted_bad_path": 13.0,
+   "same_epoch_reroutes": 7.3,
+   "deferred_applied": 0.0
+  },
+  "paid_probe": {
+   "event_rate": 0.9666666666666666,
+   "routine_rate": 0.8700520833333334,
+   "attempts": 214.75,
+   "probe_attempts": 3.15,
+   "energy": 248.65,
+   "money": 26.9,
+   "sat_quota_used": 26.9,
+   "wasted_bad_path": 12.95,
+   "same_epoch_reroutes": 6.75,
+   "deferred_applied": 0.0
+  },
+  "current_truth": {
+   "event_rate": 0.9666666666666666,
+   "routine_rate": 0.91640625,
+   "attempts": 209.05,
+   "probe_attempts": 0.0,
+   "energy": 240.1,
+   "money": 25.4,
+   "sat_quota_used": 25.4,
+   "wasted_bad_path": 0.0,
+   "same_epoch_reroutes": 0.4,
+   "deferred_applied": 0.0
+  }
+ },
+ "comparisons": {
+  "execution_mode_seq_deferred_minus_history": {
+   "event_rate": {
+    "direction": "second_minus_first",
+    "mean": 0.0,
+    "lo": 0.0,
+    "hi": 0.0,
+    "win": 0,
+    "tie": 20,
+    "loss": 0
+   },
+   "routine_rate": {
+    "direction": "second_minus_first",
+    "mean": -1.5885416666666667,
+    "lo": -3.188854525702288,
+    "hi": 0.011771192368954742,
+    "win": 7,
+    "tie": 2,
+    "loss": 11
+   },
+   "attempts": {
+    "direction": "second_minus_first",
+    "mean": -11.8,
+    "lo": -15.867556956156724,
+    "hi": -7.732443043843277,
+    "win": 1,
+    "tie": 1,
+    "loss": 18
+   },
+   "probe_attempts": {
+    "direction": "second_minus_first",
+    "mean": 0.0,
+    "lo": 0.0,
+    "hi": 0.0,
+    "win": 0,
+    "tie": 20,
+    "loss": 0
+   },
+   "energy": {
+    "direction": "second_minus_first",
+    "mean": -6.4,
+    "lo": -10.42281489107997,
+    "hi": -2.377185108920032,
+    "win": 5,
+    "tie": 0,
+    "loss": 15
+   },
+   "money": {
+    "direction": "second_minus_first",
+    "mean": 2.8,
+    "lo": 1.8566212698915388,
+    "hi": 3.7433787301084607,
+    "win": 16,
+    "tie": 3,
+    "loss": 1
+   },
+   "sat_quota_used": {
+    "direction": "second_minus_first",
+    "mean": 2.8,
+    "lo": 1.8566212698915388,
+    "hi": 3.7433787301084607,
+    "win": 16,
+    "tie": 3,
+    "loss": 1
+   },
+   "wasted_bad_path": {
+    "direction": "second_minus_first",
+    "mean": -8.55,
+    "lo": -11.912798660792275,
+    "hi": -5.187201339207727,
+    "win": 0,
+    "tie": 2,
+    "loss": 18
+   },
+   "same_epoch_reroutes": {
+    "direction": "second_minus_first",
+    "mean": 0.05,
+    "lo": -0.13441168582392238,
+    "hi": 0.2344116858239224,
+    "win": 2,
+    "tie": 17,
+    "loss": 1
+   },
+   "deferred_applied": {
+    "direction": "second_minus_first",
+    "mean": 223.0,
+    "lo": 215.6532859801491,
+    "hi": 230.3467140198509,
+    "win": 20,
+    "tie": 0,
+    "loss": 0
+   }
+  },
+  "information_data_ack_minus_seq_deferred": {
+   "event_rate": {
+    "direction": "second_minus_first",
+    "mean": -0.20833333333333343,
+    "lo": -0.6443750000000003,
+    "hi": 0.2277083333333334,
+    "win": 0,
+    "tie": 19,
+    "loss": 1
+   },
+   "routine_rate": {
+    "direction": "second_minus_first",
+    "mean": 2.6562500000000013,
+    "lo": 0.6872214314912619,
+    "hi": 4.62527856850874,
+    "win": 13,
+    "tie": 4,
+    "loss": 3
+   },
+   "attempts": {
+    "direction": "second_minus_first",
+    "mean": -16.05,
+    "lo": -21.760709465683522,
+    "hi": -10.33929053431648,
+    "win": 0,
+    "tie": 0,
+    "loss": 20
+   },
+   "probe_attempts": {
+    "direction": "second_minus_first",
+    "mean": 0.0,
+    "lo": 0.0,
+    "hi": 0.0,
+    "win": 0,
+    "tie": 20,
+    "loss": 0
+   },
+   "energy": {
+    "direction": "second_minus_first",
+    "mean": -8.65,
+    "lo": -13.77908631712829,
+    "hi": -3.5209136828717114,
+    "win": 3,
+    "tie": 0,
+    "loss": 17
+   },
+   "money": {
+    "direction": "second_minus_first",
+    "mean": 1.75,
+    "lo": 0.8155227161247057,
+    "hi": 2.684477283875294,
+    "win": 14,
+    "tie": 4,
+    "loss": 2
+   },
+   "sat_quota_used": {
+    "direction": "second_minus_first",
+    "mean": 1.75,
+    "lo": 0.8155227161247057,
+    "hi": 2.684477283875294,
+    "win": 14,
+    "tie": 4,
+    "loss": 2
+   },
+   "wasted_bad_path": {
+    "direction": "second_minus_first",
+    "mean": -22.4,
+    "lo": -27.645482525895368,
+    "hi": -17.15451747410463,
+    "win": 0,
+    "tie": 0,
+    "loss": 20
+   },
+   "same_epoch_reroutes": {
+    "direction": "second_minus_first",
+    "mean": 6.15,
+    "lo": 4.850218529551582,
+    "hi": 7.449781470448419,
+    "win": 20,
+    "tie": 0,
+    "loss": 0
+   },
+   "deferred_applied": {
+    "direction": "second_minus_first",
+    "mean": -223.0,
+    "lo": -230.3467140198509,
+    "hi": -215.6532859801491,
+    "win": 0,
+    "tie": 0,
+    "loss": 20
+   }
+  },
+  "paid_probe_minus_data_ack": {
+   "event_rate": {
+    "direction": "second_minus_first",
+    "mean": -0.20833333333333343,
+    "lo": -0.6443750000000003,
+    "hi": 0.2277083333333334,
+    "win": 0,
+    "tie": 19,
+    "loss": 1
+   },
+   "routine_rate": {
+    "direction": "second_minus_first",
+    "mean": -0.07812500000000164,
+    "lo": -0.9161032201023218,
+    "hi": 0.7598532201023185,
+    "win": 2,
+    "tie": 12,
+    "loss": 6
+   },
+   "attempts": {
+    "direction": "second_minus_first",
+    "mean": 1.7,
+    "lo": 0.07805826099183122,
+    "hi": 3.3219417390081687,
+    "win": 9,
+    "tie": 10,
+    "loss": 1
+   },
+   "probe_attempts": {
+    "direction": "second_minus_first",
+    "mean": 3.15,
+    "lo": 2.97854604001442,
+    "hi": 3.32145395998558,
+    "win": 20,
+    "tie": 0,
+    "loss": 0
+   },
+   "energy": {
+    "direction": "second_minus_first",
+    "mean": 1.525,
+    "lo": 0.4105492600937304,
+    "hi": 2.6394507399062697,
+    "win": 10,
+    "tie": 9,
+    "loss": 1
+   },
+   "money": {
+    "direction": "second_minus_first",
+    "mean": 0.15,
+    "lo": -0.16395,
+    "hi": 0.46395,
+    "win": 2,
+    "tie": 17,
+    "loss": 1
+   },
+   "sat_quota_used": {
+    "direction": "second_minus_first",
+    "mean": 0.15,
+    "lo": -0.16395,
+    "hi": 0.46395,
+    "win": 2,
+    "tie": 17,
+    "loss": 1
+   },
+   "wasted_bad_path": {
+    "direction": "second_minus_first",
+    "mean": -0.05,
+    "lo": -0.4651432934288441,
+    "hi": 0.3651432934288441,
+    "win": 1,
+    "tie": 16,
+    "loss": 3
+   },
+   "same_epoch_reroutes": {
+    "direction": "second_minus_first",
+    "mean": -0.55,
+    "lo": -0.9363779324838912,
+    "hi": -0.16362206751610892,
+    "win": 1,
+    "tie": 9,
+    "loss": 10
+   },
+   "deferred_applied": {
+    "direction": "second_minus_first",
+    "mean": 0.0,
+    "lo": 0.0,
+    "hi": 0.0,
+    "win": 0,
+    "tie": 20,
+    "loss": 0
+   }
+  },
+  "current_truth_minus_data_ack": {
+   "event_rate": {
+    "direction": "second_minus_first",
+    "mean": -0.20833333333333343,
+    "lo": -0.6443750000000003,
+    "hi": 0.2277083333333334,
+    "win": 0,
+    "tie": 19,
+    "loss": 1
+   },
+   "routine_rate": {
+    "direction": "second_minus_first",
+    "mean": 4.557291666666664,
+    "lo": 2.350176062079174,
+    "hi": 6.7644072712541545,
+    "win": 14,
+    "tie": 6,
+    "loss": 0
+   },
+   "attempts": {
+    "direction": "second_minus_first",
+    "mean": -4.0,
+    "lo": -7.669432062752749,
+    "hi": -0.3305679372472512,
+    "win": 7,
+    "tie": 0,
+    "loss": 13
+   },
+   "probe_attempts": {
+    "direction": "second_minus_first",
+    "mean": 0.0,
+    "lo": 0.0,
+    "hi": 0.0,
+    "win": 0,
+    "tie": 20,
+    "loss": 0
+   },
+   "energy": {
+    "direction": "second_minus_first",
+    "mean": -7.025,
+    "lo": -11.069161161684537,
+    "hi": -2.9808388383154627,
+    "win": 3,
+    "tie": 1,
+    "loss": 16
+   },
+   "money": {
+    "direction": "second_minus_first",
+    "mean": -1.35,
+    "lo": -2.2126319776218533,
+    "hi": -0.4873680223781468,
+    "win": 2,
+    "tie": 7,
+    "loss": 11
+   },
+   "sat_quota_used": {
+    "direction": "second_minus_first",
+    "mean": -1.35,
+    "lo": -2.2126319776218533,
+    "hi": -0.4873680223781468,
+    "win": 2,
+    "tie": 7,
+    "loss": 11
+   },
+   "wasted_bad_path": {
+    "direction": "second_minus_first",
+    "mean": -13.0,
+    "lo": -15.656153326661855,
+    "hi": -10.343846673338145,
+    "win": 0,
+    "tie": 0,
+    "loss": 20
+   },
+   "same_epoch_reroutes": {
+    "direction": "second_minus_first",
+    "mean": -6.9,
+    "lo": -8.307307524653858,
+    "hi": -5.492692475346143,
+    "win": 0,
+    "tie": 0,
+    "loss": 20
+   },
+   "deferred_applied": {
+    "direction": "second_minus_first",
+    "mean": 0.0,
+    "lo": 0.0,
+    "hi": 0.0,
+    "win": 0,
+    "tie": 20,
+    "loss": 0
+   }
+  }
+ },
+ "per_seed": {
+  "history_only": [
+   {
+    "event_rate": 1.0,
+    "routine_rate": 0.7864583333333334,
+    "attempts": 243,
+    "probe_attempts": 0,
+    "energy": 268.5,
+    "money": 24.0,
+    "sat_quota_used": 24,
+    "wasted_bad_path": 60,
+    "same_epoch_reroutes": 1,
+    "deferred_applied": 0,
+    "stop_reason_counts": {
+     "epoch_allowance": 42,
+     "backlog_met": 3,
+     "path_capacity": 3
+    },
+    "n_stop_rows": 48,
+    "seed": 0
+   },
+   {
+    "event_rate": 1.0,
+    "routine_rate": 0.859375,
+    "attempts": 245,
+    "probe_attempts": 0,
+    "energy": 270.0,
+    "money": 24.0,
+    "sat_quota_used": 24,
+    "wasted_bad_path": 48,
+    "same_epoch_reroutes": 3,
+    "deferred_applied": 0,
+    "stop_reason_counts": {
+     "epoch_allowance": 43,
+     "backlog_met": 1,
+     "path_capacity": 4
+    },
+    "n_stop_rows": 48,
+    "seed": 1
+   },
+   {
+    "event_rate": 1.0,
+    "routine_rate": 1.0,
+    "attempts": 253,
+    "probe_attempts": 0,
+    "energy": 262.0,
+    "money": 17.0,
+    "sat_quota_used": 17,
+    "wasted_bad_path": 21,
+    "same_epoch_reroutes": 1,
+    "deferred_applied": 0,
+    "stop_reason_counts": {
+     "epoch_allowance": 44,
+     "backlog_met": 2,
+     "path_capacity": 2
+    },
+    "n_stop_rows": 48,
+    "seed": 2
+   },
+   {
+    "event_rate": 1.0,
+    "routine_rate": 0.8229166666666666,
+    "attempts": 239,
+    "probe_attempts": 0,
+    "energy": 269.0,
+    "money": 27.0,
+    "sat_quota_used": 27,
+    "wasted_bad_path": 47,
+    "same_epoch_reroutes": 1,
+    "deferred_applied": 0,
+    "stop_reason_counts": {
+     "epoch_allowance": 39,
+     "backlog_met": 4,
+     "path_capacity": 5
+    },
+    "n_stop_rows": 48,
+    "seed": 3
+   },
+   {
+    "event_rate": 1.0,
+    "routine_rate": 0.9947916666666666,
+    "attempts": 240,
+    "probe_attempts": 0,
+    "energy": 239.0,
+    "money": 12.0,
+    "sat_quota_used": 12,
+    "wasted_bad_path": 17,
+    "same_epoch_reroutes": 1,
+    "deferred_applied": 0,
+    "stop_reason_counts": {
+     "epoch_allowance": 37,
+     "path_capacity": 2,
+     "backlog_met": 9
+    },
+    "n_stop_rows": 48,
+    "seed": 4
+   },
+   {
+    "event_rate": 1.0,
+    "routine_rate": 0.9010416666666666,
+    "attempts": 241,
+    "probe_attempts": 0,
+    "energy": 266.5,
+    "money": 24.0,
+    "sat_quota_used": 24,
+    "wasted_bad_path": 34,
+    "same_epoch_reroutes": 0,
+    "deferred_applied": 0,
+    "stop_reason_counts": {
+     "epoch_allowance": 37,
+     "backlog_met": 8,
+     "path_capacity": 3
+    },
+    "n_stop_rows": 48,
+    "seed": 5
+   },
+   {
+    "event_rate": 1.0,
+    "routine_rate": 0.9947916666666666,
+    "attempts": 243,
+    "probe_attempts": 0,
+    "energy": 237.0,
+    "money": 9.0,
+    "sat_quota_used": 9,
+    "wasted_bad_path": 25,
+    "same_epoch_reroutes": 0,
+    "deferred_applied": 0,
+    "stop_reason_counts": {
+     "epoch_allowance": 31,
+     "backlog_met": 15,
+     "path_capacity": 2
+    },
+    "n_stop_rows": 48,
+    "seed": 6
+   },
+   {
+    "event_rate": 1.0,
+    "routine_rate": 0.9947916666666666,
+    "attempts": 238,
+    "probe_attempts": 0,
+    "energy": 236.0,
+    "money": 8.0,
+    "sat_quota_used": 8,
+    "wasted_bad_path": 9,
+    "same_epoch_reroutes": 0,
+    "deferred_applied": 0,
+    "stop_reason_counts": {
+     "epoch_allowance": 19,
+     "backlog_met": 27,
+     "path_capacity": 2
+    },
+    "n_stop_rows": 48,
+    "seed": 7
+   },
+   {
+    "event_rate": 0.4166666666666667,
+    "routine_rate": 0.8958333333333334,
+    "attempts": 249,
+    "probe_attempts": 0,
+    "energy": 271.0,
+    "money": 23.0,
+    "sat_quota_used": 23,
+    "wasted_bad_path": 62,
+    "same_epoch_reroutes": 2,
+    "deferred_applied": 0,
+    "stop_reason_counts": {
+     "epoch_allowance": 44,
+     "path_capacity": 4
+    },
+    "n_stop_rows": 48,
+    "seed": 8
+   },
+   {
+    "event_rate": 1.0,
+    "routine_rate": 0.4635416666666667,
+    "attempts": 213,
+    "probe_attempts": 0,
+    "energy": 250.0,
+    "money": 30.0,
+    "sat_quota_used": 30,
+    "wasted_bad_path": 98,
+    "same_epoch_reroutes": 1,
+    "deferred_applied": 0,
+    "stop_reason_counts": {
+     "epoch_allowance": 31,
+     "backlog_met": 10,
+     "path_capacity": 3,
+     "sat_quota": 4
+    },
+    "n_stop_rows": 48,
+    "seed": 9
+   },
+   {
+    "event_rate": 1.0,
+    "routine_rate": 0.8645833333333334,
+    "attempts": 243,
+    "probe_attempts": 0,
+    "energy": 272.5,
+    "money": 27.0,
+    "sat_quota_used": 27,
+    "wasted_bad_path": 42,
+    "same_epoch_reroutes": 0,
+    "deferred_applied": 0,
+    "stop_reason_counts": {
+     "epoch_allowance": 45,
+     "path_capacity": 3
+    },
+    "n_stop_rows": 48,
+    "seed": 10
+   },
+   {
+    "event_rate": 1.0,
+    "routine_rate": 0.84375,
+    "attempts": 237,
+    "probe_attempts": 0,
+    "energy": 268.0,
+    "money": 28.0,
+    "sat_quota_used": 28,
+    "wasted_bad_path": 42,
+    "same_epoch_reroutes": 0,
+    "deferred_applied": 0,
+    "stop_reason_counts": {
+     "epoch_allowance": 45,
+     "path_capacity": 3
+    },
+    "n_stop_rows": 48,
+    "seed": 11
+   },
+   {
+    "event_rate": 1.0,
+    "routine_rate": 0.953125,
+    "attempts": 256,
+    "probe_attempts": 0,
+    "energy": 269.5,
+    "money": 18.0,
+    "sat_quota_used": 18,
+    "wasted_bad_path": 41,
+    "same_epoch_reroutes": 1,
+    "deferred_applied": 0,
+    "stop_reason_counts": {
+     "epoch_allowance": 41,
+     "backlog_met": 3,
+     "path_capacity": 4
+    },
+    "n_stop_rows": 48,
+    "seed": 12
+   },
+   {
+    "event_rate": 1.0,
+    "routine_rate": 0.5989583333333334,
+    "attempts": 223,
+    "probe_attempts": 0,
+    "energy": 265.5,
+    "money": 34.0,
+    "sat_quota_used": 34,
+    "wasted_bad_path": 82,
+    "same_epoch_reroutes": 1,
+    "deferred_applied": 0,
+    "stop_reason_counts": {
+     "epoch_allowance": 45,
+     "path_capacity": 2,
+     "sat_quota": 1
+    },
+    "n_stop_rows": 48,
+    "seed": 13
+   },
+   {
+    "event_rate": 1.0,
+    "routine_rate": 0.8177083333333334,
+    "attempts": 235,
+    "probe_attempts": 0,
+    "energy": 268.0,
+    "money": 28.0,
+    "sat_quota_used": 28,
+    "wasted_bad_path": 45,
+    "same_epoch_reroutes": 1,
+    "deferred_applied": 0,
+    "stop_reason_counts": {
+     "epoch_allowance": 43,
+     "backlog_met": 2,
+     "path_capacity": 3
+    },
+    "n_stop_rows": 48,
+    "seed": 14
+   },
+   {
+    "event_rate": 1.0,
+    "routine_rate": 0.9739583333333334,
+    "attempts": 248,
+    "probe_attempts": 0,
+    "energy": 253.5,
+    "money": 13.0,
+    "sat_quota_used": 13,
+    "wasted_bad_path": 30,
+    "same_epoch_reroutes": 2,
+    "deferred_applied": 0,
+    "stop_reason_counts": {
+     "epoch_allowance": 23,
+     "backlog_met": 21,
+     "path_capacity": 4
+    },
+    "n_stop_rows": 48,
+    "seed": 15
+   },
+   {
+    "event_rate": 1.0,
+    "routine_rate": 0.8958333333333334,
+    "attempts": 242,
+    "probe_attempts": 0,
+    "energy": 269.5,
+    "money": 26.0,
+    "sat_quota_used": 26,
+    "wasted_bad_path": 34,
+    "same_epoch_reroutes": 3,
+    "deferred_applied": 0,
+    "stop_reason_counts": {
+     "epoch_allowance": 43,
+     "backlog_met": 1,
+     "path_capacity": 4
+    },
+    "n_stop_rows": 48,
+    "seed": 16
+   },
+   {
+    "event_rate": 1.0,
+    "routine_rate": 0.8645833333333334,
+    "attempts": 242,
+    "probe_attempts": 0,
+    "energy": 271.0,
+    "money": 27.0,
+    "sat_quota_used": 27,
+    "wasted_bad_path": 40,
+    "same_epoch_reroutes": 1,
+    "deferred_applied": 0,
+    "stop_reason_counts": {
+     "epoch_allowance": 44,
+     "backlog_met": 1,
+     "path_capacity": 3
+    },
+    "n_stop_rows": 48,
+    "seed": 17
+   },
+   {
+    "event_rate": 1.0,
+    "routine_rate": 0.9010416666666666,
+    "attempts": 248,
+    "probe_attempts": 0,
+    "energy": 270.5,
+    "money": 21.0,
+    "sat_quota_used": 21,
+    "wasted_bad_path": 38,
+    "same_epoch_reroutes": 3,
+    "deferred_applied": 0,
+    "stop_reason_counts": {
+     "epoch_allowance": 33,
+     "backlog_met": 11,
+     "path_capacity": 4
+    },
+    "n_stop_rows": 48,
+    "seed": 18
+   },
+   {
+    "event_rate": 1.0,
+    "routine_rate": 0.7760416666666666,
+    "attempts": 240,
+    "probe_attempts": 0,
+    "energy": 266.5,
+    "money": 24.0,
+    "sat_quota_used": 24,
+    "wasted_bad_path": 64,
+    "same_epoch_reroutes": 0,
+    "deferred_applied": 0,
+    "stop_reason_counts": {
+     "epoch_allowance": 23,
+     "backlog_met": 21,
+     "path_capacity": 4
+    },
+    "n_stop_rows": 48,
+    "seed": 19
+   }
+  ],
+  "seq_deferred_ack": [
+   {
+    "event_rate": 1.0,
+    "routine_rate": 0.796875,
+    "attempts": 232,
+    "probe_attempts": 0,
+    "energy": 267.0,
+    "money": 29.0,
+    "sat_quota_used": 29,
+    "wasted_bad_path": 49,
+    "same_epoch_reroutes": 1,
+    "deferred_applied": 225,
+    "stop_reason_counts": {
+     "queue_empty": 4,
+     "epoch_allowance": 36,
+     "q_threshold": 4,
+     "path_capacity": 3,
+     "sat_quota": 1
+    },
+    "n_stop_rows": 48,
+    "seed": 0
+   },
+   {
+    "event_rate": 1.0,
+    "routine_rate": 0.84375,
+    "attempts": 236,
+    "probe_attempts": 0,
+    "energy": 271.0,
+    "money": 29.0,
+    "sat_quota_used": 29,
+    "wasted_bad_path": 42,
+    "same_epoch_reroutes": 3,
+    "deferred_applied": 228,
+    "stop_reason_counts": {
+     "epoch_allowance": 41,
+     "queue_empty": 1,
+     "path_capacity": 4,
+     "q_threshold": 2
+    },
+    "n_stop_rows": 48,
+    "seed": 1
+   },
+   {
+    "event_rate": 1.0,
+    "routine_rate": 1.0,
+    "attempts": 251,
+    "probe_attempts": 0,
+    "energy": 258.0,
+    "money": 16.0,
+    "sat_quota_used": 16,
+    "wasted_bad_path": 21,
+    "same_epoch_reroutes": 1,
+    "deferred_applied": 247,
+    "stop_reason_counts": {
+     "queue_empty": 4,
+     "epoch_allowance": 42,
+     "path_capacity": 2
+    },
+    "n_stop_rows": 48,
+    "seed": 2
+   },
+   {
+    "event_rate": 1.0,
+    "routine_rate": 0.7447916666666666,
+    "attempts": 214,
+    "probe_attempts": 0,
+    "energy": 255.5,
+    "money": 33.0,
+    "sat_quota_used": 33,
+    "wasted_bad_path": 37,
+    "same_epoch_reroutes": 1,
+    "deferred_applied": 208,
+    "stop_reason_counts": {
+     "queue_empty": 4,
+     "epoch_allowance": 38,
+     "path_capacity": 2,
+     "q_threshold": 2,
+     "sat_quota": 2
+    },
+    "n_stop_rows": 48,
+    "seed": 3
+   },
+   {
+    "event_rate": 1.0,
+    "routine_rate": 1.0,
+    "attempts": 237,
+    "probe_attempts": 0,
+    "energy": 238.5,
+    "money": 13.0,
+    "sat_quota_used": 13,
+    "wasted_bad_path": 13,
+    "same_epoch_reroutes": 1,
+    "deferred_applied": 232,
+    "stop_reason_counts": {
+     "epoch_allowance": 36,
+     "path_capacity": 2,
+     "queue_empty": 10
+    },
+    "n_stop_rows": 48,
+    "seed": 4
+   },
+   {
+    "event_rate": 1.0,
+    "routine_rate": 0.9583333333333334,
+    "attempts": 245,
+    "probe_attempts": 0,
+    "energy": 270.0,
+    "money": 24.0,
+    "sat_quota_used": 24,
+    "wasted_bad_path": 27,
+    "same_epoch_reroutes": 0,
+    "deferred_applied": 237,
+    "stop_reason_counts": {
+     "queue_empty": 7,
+     "epoch_allowance": 34,
+     "path_capacity": 4,
+     "q_threshold": 3
+    },
+    "n_stop_rows": 48,
+    "seed": 5
+   },
+   {
+    "event_rate": 1.0,
+    "routine_rate": 1.0,
+    "attempts": 236,
+    "probe_attempts": 0,
+    "energy": 235.0,
+    "money": 11.0,
+    "sat_quota_used": 11,
+    "wasted_bad_path": 15,
+    "same_epoch_reroutes": 1,
+    "deferred_applied": 230,
+    "stop_reason_counts": {
+     "epoch_allowance": 31,
+     "queue_empty": 14,
+     "path_capacity": 2,
+     "q_threshold": 1
+    },
+    "n_stop_rows": 48,
+    "seed": 6
+   },
+   {
+    "event_rate": 1.0,
+    "routine_rate": 1.0,
+    "attempts": 238,
+    "probe_attempts": 0,
+    "energy": 241.0,
+    "money": 11.0,
+    "sat_quota_used": 11,
+    "wasted_bad_path": 9,
+    "same_epoch_reroutes": 0,
+    "deferred_applied": 233,
+    "stop_reason_counts": {
+     "queue_empty": 24,
+     "epoch_allowance": 21,
+     "path_capacity": 3
+    },
+    "n_stop_rows": 48,
+    "seed": 7
+   },
+   {
+    "event_rate": 0.4166666666666667,
+    "routine_rate": 0.90625,
+    "attempts": 239,
+    "probe_attempts": 0,
+    "energy": 268.5,
+    "money": 27.0,
+    "sat_quota_used": 27,
+    "wasted_bad_path": 52,
+    "same_epoch_reroutes": 2,
+    "deferred_applied": 231,
+    "stop_reason_counts": {
+     "epoch_allowance": 41,
+     "path_capacity": 3,
+     "q_threshold": 4
+    },
+    "n_stop_rows": 48,
+    "seed": 8
+   },
+   {
+    "event_rate": 1.0,
+    "routine_rate": 0.4635416666666667,
+    "attempts": 189,
+    "probe_attempts": 0,
+    "energy": 227.5,
+    "money": 31.0,
+    "sat_quota_used": 31,
+    "wasted_bad_path": 72,
+    "same_epoch_reroutes": 0,
+    "deferred_applied": 183,
+    "stop_reason_counts": {
+     "queue_empty": 11,
+     "epoch_allowance": 26,
+     "path_capacity": 2,
+     "q_threshold": 6,
+     "sat_quota": 3
+    },
+    "n_stop_rows": 48,
+    "seed": 9
+   },
+   {
+    "event_rate": 1.0,
+    "routine_rate": 0.8229166666666666,
+    "attempts": 229,
+    "probe_attempts": 0,
+    "energy": 266.5,
+    "money": 31.0,
+    "sat_quota_used": 31,
+    "wasted_bad_path": 37,
+    "same_epoch_reroutes": 0,
+    "deferred_applied": 221,
+    "stop_reason_counts": {
+     "epoch_allowance": 40,
+     "path_capacity": 4,
+     "q_threshold": 4
+    },
+    "n_stop_rows": 48,
+    "seed": 10
+   },
+   {
+    "event_rate": 1.0,
+    "routine_rate": 0.765625,
+    "attempts": 218,
+    "probe_attempts": 0,
+    "energy": 256.5,
+    "money": 32.0,
+    "sat_quota_used": 32,
+    "wasted_bad_path": 41,
+    "same_epoch_reroutes": 0,
+    "deferred_applied": 212,
+    "stop_reason_counts": {
+     "epoch_allowance": 40,
+     "path_capacity": 2,
+     "q_threshold": 3,
+     "sat_quota": 3
+    },
+    "n_stop_rows": 48,
+    "seed": 11
+   },
+   {
+    "event_rate": 1.0,
+    "routine_rate": 0.9583333333333334,
+    "attempts": 251,
+    "probe_attempts": 0,
+    "energy": 270.0,
+    "money": 21.0,
+    "sat_quota_used": 21,
+    "wasted_bad_path": 36,
+    "same_epoch_reroutes": 1,
+    "deferred_applied": 243,
+    "stop_reason_counts": {
+     "queue_empty": 4,
+     "epoch_allowance": 39,
+     "path_capacity": 5
+    },
+    "n_stop_rows": 48,
+    "seed": 12
+   },
+   {
+    "event_rate": 1.0,
+    "routine_rate": 0.5677083333333334,
+    "attempts": 199,
+    "probe_attempts": 0,
+    "energy": 247.0,
+    "money": 37.0,
+    "sat_quota_used": 37,
+    "wasted_bad_path": 63,
+    "same_epoch_reroutes": 1,
+    "deferred_applied": 193,
+    "stop_reason_counts": {
+     "epoch_allowance": 38,
+     "path_capacity": 2,
+     "q_threshold": 6,
+     "sat_quota": 2
+    },
+    "n_stop_rows": 48,
+    "seed": 13
+   },
+   {
+    "event_rate": 1.0,
+    "routine_rate": 0.8125,
+    "attempts": 225,
+    "probe_attempts": 0,
+    "energy": 265.5,
+    "money": 32.0,
+    "sat_quota_used": 32,
+    "wasted_bad_path": 35,
+    "same_epoch_reroutes": 2,
+    "deferred_applied": 218,
+    "stop_reason_counts": {
+     "queue_empty": 3,
+     "epoch_allowance": 40,
+     "path_capacity": 2,
+     "q_threshold": 2,
+     "sat_quota": 1
+    },
+    "n_stop_rows": 48,
+    "seed": 14
+   },
+   {
+    "event_rate": 1.0,
+    "routine_rate": 0.9583333333333334,
+    "attempts": 244,
+    "probe_attempts": 0,
+    "energy": 257.5,
+    "money": 17.0,
+    "sat_quota_used": 17,
+    "wasted_bad_path": 29,
+    "same_epoch_reroutes": 2,
+    "deferred_applied": 236,
+    "stop_reason_counts": {
+     "epoch_allowance": 23,
+     "queue_empty": 19,
+     "path_capacity": 4,
+     "q_threshold": 2
+    },
+    "n_stop_rows": 48,
+    "seed": 15
+   },
+   {
+    "event_rate": 1.0,
+    "routine_rate": 0.828125,
+    "attempts": 226,
+    "probe_attempts": 0,
+    "energy": 259.5,
+    "money": 29.0,
+    "sat_quota_used": 29,
+    "wasted_bad_path": 30,
+    "same_epoch_reroutes": 3,
+    "deferred_applied": 220,
+    "stop_reason_counts": {
+     "epoch_allowance": 41,
+     "queue_empty": 1,
+     "path_capacity": 2,
+     "q_threshold": 2,
+     "sat_quota": 2
+    },
+    "n_stop_rows": 48,
+    "seed": 16
+   },
+   {
+    "event_rate": 1.0,
+    "routine_rate": 0.8072916666666666,
+    "attempts": 224,
+    "probe_attempts": 0,
+    "energy": 262.5,
+    "money": 32.0,
+    "sat_quota_used": 32,
+    "wasted_bad_path": 34,
+    "same_epoch_reroutes": 1,
+    "deferred_applied": 216,
+    "stop_reason_counts": {
+     "epoch_allowance": 41,
+     "queue_empty": 1,
+     "path_capacity": 3,
+     "q_threshold": 3
+    },
+    "n_stop_rows": 48,
+    "seed": 17
+   },
+   {
+    "event_rate": 1.0,
+    "routine_rate": 0.890625,
+    "attempts": 232,
+    "probe_attempts": 0,
+    "energy": 254.5,
+    "money": 21.0,
+    "sat_quota_used": 21,
+    "wasted_bad_path": 24,
+    "same_epoch_reroutes": 3,
+    "deferred_applied": 230,
+    "stop_reason_counts": {
+     "queue_empty": 18,
+     "epoch_allowance": 23,
+     "path_capacity": 3,
+     "q_threshold": 4
+    },
+    "n_stop_rows": 48,
+    "seed": 18
+   },
+   {
+    "event_rate": 1.0,
+    "routine_rate": 0.7604166666666666,
+    "attempts": 217,
+    "probe_attempts": 0,
+    "energy": 244.0,
+    "money": 24.0,
+    "sat_quota_used": 24,
+    "wasted_bad_path": 42,
+    "same_epoch_reroutes": 0,
+    "deferred_applied": 217,
+    "stop_reason_counts": {
+     "queue_empty": 22,
+     "epoch_allowance": 18,
+     "path_capacity": 2,
+     "q_threshold": 5,
+     "sat_quota": 1
+    },
+    "n_stop_rows": 48,
+    "seed": 19
+   }
+  ],
+  "data_ack": [
+   {
+    "event_rate": 1.0,
+    "routine_rate": 0.8125,
+    "attempts": 208,
+    "probe_attempts": 0,
+    "energy": 260.0,
+    "money": 33.0,
+    "sat_quota_used": 33,
+    "wasted_bad_path": 18,
+    "same_epoch_reroutes": 11,
+    "deferred_applied": 0,
+    "stop_reason_counts": {
+     "queue_empty": 4,
+     "epoch_allowance": 34,
+     "path_capacity": 3,
+     "q_threshold": 4,
+     "sat_quota": 3
+    },
+    "n_stop_rows": 48,
+    "seed": 0
+   },
+   {
+    "event_rate": 1.0,
+    "routine_rate": 0.9114583333333334,
+    "attempts": 219,
+    "probe_attempts": 0,
+    "energy": 268.0,
+    "money": 32.0,
+    "sat_quota_used": 32,
+    "wasted_bad_path": 12,
+    "same_epoch_reroutes": 12,
+    "deferred_applied": 0,
+    "stop_reason_counts": {
+     "epoch_allowance": 40,
+     "path_capacity": 3,
+     "q_threshold": 5
+    },
+    "n_stop_rows": 48,
+    "seed": 1
+   },
+   {
+    "event_rate": 1.0,
+    "routine_rate": 1.0,
+    "attempts": 239,
+    "probe_attempts": 0,
+    "energy": 260.5,
+    "money": 20.0,
+    "sat_quota_used": 20,
+    "wasted_bad_path": 7,
+    "same_epoch_reroutes": 8,
+    "deferred_applied": 0,
+    "stop_reason_counts": {
+     "queue_empty": 4,
+     "epoch_allowance": 42,
+     "path_capacity": 2
+    },
+    "n_stop_rows": 48,
+    "seed": 2
+   },
+   {
+    "event_rate": 1.0,
+    "routine_rate": 0.8489583333333334,
+    "attempts": 210,
+    "probe_attempts": 0,
+    "energy": 252.5,
+    "money": 34.0,
+    "sat_quota_used": 34,
+    "wasted_bad_path": 13,
+    "same_epoch_reroutes": 8,
+    "deferred_applied": 0,
+    "stop_reason_counts": {
+     "queue_empty": 4,
+     "epoch_allowance": 38,
+     "q_threshold": 3,
+     "path_capacity": 1,
+     "sat_quota": 2
+    },
+    "n_stop_rows": 48,
+    "seed": 3
+   },
+   {
+    "event_rate": 1.0,
+    "routine_rate": 1.0,
+    "attempts": 229,
+    "probe_attempts": 0,
+    "energy": 238.0,
+    "money": 16.0,
+    "sat_quota_used": 16,
+    "wasted_bad_path": 5,
+    "same_epoch_reroutes": 5,
+    "deferred_applied": 0,
+    "stop_reason_counts": {
+     "epoch_allowance": 36,
+     "path_capacity": 2,
+     "queue_empty": 10
+    },
+    "n_stop_rows": 48,
+    "seed": 4
+   },
+   {
+    "event_rate": 1.0,
+    "routine_rate": 0.9114583333333334,
+    "attempts": 220,
+    "probe_attempts": 0,
+    "energy": 249.0,
+    "money": 24.0,
+    "sat_quota_used": 24,
+    "wasted_bad_path": 10,
+    "same_epoch_reroutes": 5,
+    "deferred_applied": 0,
+    "stop_reason_counts": {
+     "queue_empty": 12,
+     "epoch_allowance": 25,
+     "path_capacity": 2,
+     "q_threshold": 5,
+     "sat_quota": 4
+    },
+    "n_stop_rows": 48,
+    "seed": 5
+   },
+   {
+    "event_rate": 1.0,
+    "routine_rate": 1.0,
+    "attempts": 227,
+    "probe_attempts": 0,
+    "energy": 230.0,
+    "money": 12.0,
+    "sat_quota_used": 12,
+    "wasted_bad_path": 6,
+    "same_epoch_reroutes": 3,
+    "deferred_applied": 0,
+    "stop_reason_counts": {
+     "epoch_allowance": 29,
+     "queue_empty": 16,
+     "q_threshold": 2,
+     "path_capacity": 1
+    },
+    "n_stop_rows": 48,
+    "seed": 6
+   },
+   {
+    "event_rate": 1.0,
+    "routine_rate": 1.0,
+    "attempts": 233,
+    "probe_attempts": 0,
+    "energy": 233.0,
+    "money": 9.0,
+    "sat_quota_used": 9,
+    "wasted_bad_path": 3,
+    "same_epoch_reroutes": 1,
+    "deferred_applied": 0,
+    "stop_reason_counts": {
+     "queue_empty": 32,
+     "epoch_allowance": 14,
+     "path_capacity": 2
+    },
+    "n_stop_rows": 48,
+    "seed": 7
+   },
+   {
+    "event_rate": 0.375,
+    "routine_rate": 0.9635416666666666,
+    "attempts": 218,
+    "probe_attempts": 0,
+    "energy": 267.5,
+    "money": 31.0,
+    "sat_quota_used": 31,
+    "wasted_bad_path": 18,
+    "same_epoch_reroutes": 7,
+    "deferred_applied": 0,
+    "stop_reason_counts": {
+     "epoch_allowance": 40,
+     "q_threshold": 6,
+     "path_capacity": 2
+    },
+    "n_stop_rows": 48,
+    "seed": 8
+   },
+   {
+    "event_rate": 1.0,
+    "routine_rate": 0.484375,
+    "attempts": 145,
+    "probe_attempts": 0,
+    "energy": 192.5,
+    "money": 34.0,
+    "sat_quota_used": 34,
+    "wasted_bad_path": 24,
+    "same_epoch_reroutes": 8,
+    "deferred_applied": 0,
+    "stop_reason_counts": {
+     "queue_empty": 11,
+     "epoch_allowance": 22,
+     "q_threshold": 15
+    },
+    "n_stop_rows": 48,
+    "seed": 9
+   },
+   {
+    "event_rate": 1.0,
+    "routine_rate": 0.7916666666666666,
+    "attempts": 204,
+    "probe_attempts": 0,
+    "energy": 255.5,
+    "money": 33.0,
+    "sat_quota_used": 33,
+    "wasted_bad_path": 15,
+    "same_epoch_reroutes": 9,
+    "deferred_applied": 0,
+    "stop_reason_counts": {
+     "epoch_allowance": 36,
+     "path_capacity": 3,
+     "q_threshold": 9
+    },
+    "n_stop_rows": 48,
+    "seed": 10
+   },
+   {
+    "event_rate": 1.0,
+    "routine_rate": 0.8645833333333334,
+    "attempts": 210,
+    "probe_attempts": 0,
+    "energy": 249.0,
+    "money": 32.0,
+    "sat_quota_used": 32,
+    "wasted_bad_path": 12,
+    "same_epoch_reroutes": 8,
+    "deferred_applied": 0,
+    "stop_reason_counts": {
+     "epoch_allowance": 40,
+     "path_capacity": 2,
+     "q_threshold": 2,
+     "sat_quota": 4
+    },
+    "n_stop_rows": 48,
+    "seed": 11
+   },
+   {
+    "event_rate": 1.0,
+    "routine_rate": 1.0,
+    "attempts": 232,
+    "probe_attempts": 0,
+    "energy": 255.5,
+    "money": 19.0,
+    "sat_quota_used": 19,
+    "wasted_bad_path": 7,
+    "same_epoch_reroutes": 5,
+    "deferred_applied": 0,
+    "stop_reason_counts": {
+     "queue_empty": 6,
+     "epoch_allowance": 38,
+     "path_capacity": 3,
+     "q_threshold": 1
+    },
+    "n_stop_rows": 48,
+    "seed": 12
+   },
+   {
+    "event_rate": 1.0,
+    "routine_rate": 0.5364583333333334,
+    "attempts": 156,
+    "probe_attempts": 0,
+    "energy": 213.0,
+    "money": 40.0,
+    "sat_quota_used": 40,
+    "wasted_bad_path": 23,
+    "same_epoch_reroutes": 12,
+    "deferred_applied": 0,
+    "stop_reason_counts": {
+     "epoch_allowance": 36,
+     "q_threshold": 10,
+     "path_capacity": 2
+    },
+    "n_stop_rows": 48,
+    "seed": 13
+   },
+   {
+    "event_rate": 1.0,
+    "routine_rate": 0.8489583333333334,
+    "attempts": 212,
+    "probe_attempts": 0,
+    "energy": 266.5,
+    "money": 37.0,
+    "sat_quota_used": 37,
+    "wasted_bad_path": 15,
+    "same_epoch_reroutes": 10,
+    "deferred_applied": 0,
+    "stop_reason_counts": {
+     "queue_empty": 3,
+     "epoch_allowance": 39,
+     "path_capacity": 2,
+     "q_threshold": 3,
+     "sat_quota": 1
+    },
+    "n_stop_rows": 48,
+    "seed": 14
+   },
+   {
+    "event_rate": 1.0,
+    "routine_rate": 0.9895833333333334,
+    "attempts": 239,
+    "probe_attempts": 0,
+    "energy": 255.0,
+    "money": 18.0,
+    "sat_quota_used": 18,
+    "wasted_bad_path": 18,
+    "same_epoch_reroutes": 5,
+    "deferred_applied": 0,
+    "stop_reason_counts": {
+     "epoch_allowance": 17,
+     "queue_empty": 25,
+     "path_capacity": 2,
+     "q_threshold": 4
+    },
+    "n_stop_rows": 48,
+    "seed": 15
+   },
+   {
+    "event_rate": 1.0,
+    "routine_rate": 0.8958333333333334,
+    "attempts": 221,
+    "probe_attempts": 0,
+    "energy": 258.5,
+    "money": 31.0,
+    "sat_quota_used": 31,
+    "wasted_bad_path": 11,
+    "same_epoch_reroutes": 11,
+    "deferred_applied": 0,
+    "stop_reason_counts": {
+     "epoch_allowance": 42,
+     "queue_empty": 1,
+     "path_capacity": 2,
+     "q_threshold": 2,
+     "sat_quota": 1
+    },
+    "n_stop_rows": 48,
+    "seed": 16
+   },
+   {
+    "event_rate": 1.0,
+    "routine_rate": 0.8802083333333334,
+    "attempts": 220,
+    "probe_attempts": 0,
+    "energy": 258.5,
+    "money": 32.0,
+    "sat_quota_used": 32,
+    "wasted_bad_path": 15,
+    "same_epoch_reroutes": 6,
+    "deferred_applied": 0,
+    "stop_reason_counts": {
+     "epoch_allowance": 39,
+     "queue_empty": 1,
+     "path_capacity": 3,
+     "q_threshold": 5
+    },
+    "n_stop_rows": 48,
+    "seed": 17
+   },
+   {
+    "event_rate": 1.0,
+    "routine_rate": 0.9114583333333334,
+    "attempts": 227,
+    "probe_attempts": 0,
+    "energy": 255.5,
+    "money": 24.0,
+    "sat_quota_used": 24,
+    "wasted_bad_path": 13,
+    "same_epoch_reroutes": 6,
+    "deferred_applied": 0,
+    "stop_reason_counts": {
+     "queue_empty": 13,
+     "epoch_allowance": 27,
+     "path_capacity": 2,
+     "q_threshold": 6
+    },
+    "n_stop_rows": 48,
+    "seed": 18
+   },
+   {
+    "event_rate": 1.0,
+    "routine_rate": 0.765625,
+    "attempts": 192,
+    "probe_attempts": 0,
+    "energy": 224.5,
+    "money": 24.0,
+    "sat_quota_used": 24,
+    "wasted_bad_path": 15,
+    "same_epoch_reroutes": 6,
+    "deferred_applied": 0,
+    "stop_reason_counts": {
+     "queue_empty": 22,
+     "epoch_allowance": 18,
+     "path_capacity": 2,
+     "q_threshold": 6
+    },
+    "n_stop_rows": 48,
+    "seed": 19
+   }
+  ],
+  "paid_probe": [
+   {
+    "event_rate": 1.0,
+    "routine_rate": 0.796875,
+    "attempts": 208,
+    "probe_attempts": 3,
+    "energy": 260.0,
+    "money": 33.0,
+    "sat_quota_used": 33,
+    "wasted_bad_path": 18,
+    "same_epoch_reroutes": 11,
+    "deferred_applied": 0,
+    "stop_reason_counts": {
+     "queue_empty": 4,
+     "epoch_allowance": 34,
+     "path_capacity": 3,
+     "q_threshold": 4,
+     "sat_quota": 3
+    },
+    "n_stop_rows": 48,
+    "seed": 0
+   },
+   {
+    "event_rate": 1.0,
+    "routine_rate": 0.8854166666666666,
+    "attempts": 219,
+    "probe_attempts": 4,
+    "energy": 268.5,
+    "money": 32.0,
+    "sat_quota_used": 32,
+    "wasted_bad_path": 15,
+    "same_epoch_reroutes": 11,
+    "deferred_applied": 0,
+    "stop_reason_counts": {
+     "epoch_allowance": 40,
+     "path_capacity": 3,
+     "q_threshold": 5
+    },
+    "n_stop_rows": 48,
+    "seed": 1
+   },
+   {
+    "event_rate": 1.0,
+    "routine_rate": 1.0,
+    "attempts": 241,
+    "probe_attempts": 3,
+    "energy": 262.5,
+    "money": 20.0,
+    "sat_quota_used": 20,
+    "wasted_bad_path": 7,
+    "same_epoch_reroutes": 7,
+    "deferred_applied": 0,
+    "stop_reason_counts": {
+     "queue_empty": 3,
+     "epoch_allowance": 43,
+     "path_capacity": 2
+    },
+    "n_stop_rows": 48,
+    "seed": 2
+   },
+   {
+    "event_rate": 1.0,
+    "routine_rate": 0.8489583333333334,
+    "attempts": 210,
+    "probe_attempts": 3,
+    "energy": 252.5,
+    "money": 34.0,
+    "sat_quota_used": 34,
+    "wasted_bad_path": 13,
+    "same_epoch_reroutes": 7,
+    "deferred_applied": 0,
+    "stop_reason_counts": {
+     "queue_empty": 4,
+     "epoch_allowance": 38,
+     "q_threshold": 3,
+     "path_capacity": 1,
+     "sat_quota": 2
+    },
+    "n_stop_rows": 48,
+    "seed": 3
+   },
+   {
+    "event_rate": 1.0,
+    "routine_rate": 1.0,
+    "attempts": 231,
+    "probe_attempts": 3,
+    "energy": 239.0,
+    "money": 16.0,
+    "sat_quota_used": 16,
+    "wasted_bad_path": 5,
+    "same_epoch_reroutes": 4,
+    "deferred_applied": 0,
+    "stop_reason_counts": {
+     "epoch_allowance": 36,
+     "path_capacity": 2,
+     "queue_empty": 10
+    },
+    "n_stop_rows": 48,
+    "seed": 4
+   },
+   {
+    "event_rate": 1.0,
+    "routine_rate": 0.9166666666666666,
+    "attempts": 223,
+    "probe_attempts": 3,
+    "energy": 252.0,
+    "money": 24.0,
+    "sat_quota_used": 24,
+    "wasted_bad_path": 10,
+    "same_epoch_reroutes": 6,
+    "deferred_applied": 0,
+    "stop_reason_counts": {
+     "queue_empty": 12,
+     "epoch_allowance": 25,
+     "path_capacity": 2,
+     "q_threshold": 5,
+     "sat_quota": 4
+    },
+    "n_stop_rows": 48,
+    "seed": 5
+   },
+   {
+    "event_rate": 1.0,
+    "routine_rate": 1.0,
+    "attempts": 227,
+    "probe_attempts": 3,
+    "energy": 230.0,
+    "money": 12.0,
+    "sat_quota_used": 12,
+    "wasted_bad_path": 6,
+    "same_epoch_reroutes": 3,
+    "deferred_applied": 0,
+    "stop_reason_counts": {
+     "epoch_allowance": 29,
+     "queue_empty": 16,
+     "q_threshold": 2,
+     "path_capacity": 1
+    },
+    "n_stop_rows": 48,
+    "seed": 6
+   },
+   {
+    "event_rate": 1.0,
+    "routine_rate": 1.0,
+    "attempts": 236,
+    "probe_attempts": 3,
+    "energy": 236.0,
+    "money": 9.0,
+    "sat_quota_used": 9,
+    "wasted_bad_path": 3,
+    "same_epoch_reroutes": 1,
+    "deferred_applied": 0,
+    "stop_reason_counts": {
+     "queue_empty": 28,
+     "epoch_allowance": 18,
+     "path_capacity": 2
+    },
+    "n_stop_rows": 48,
+    "seed": 7
+   },
+   {
+    "event_rate": 0.3333333333333333,
+    "routine_rate": 0.9635416666666666,
+    "attempts": 216,
+    "probe_attempts": 4,
+    "energy": 265.5,
+    "money": 31.0,
+    "sat_quota_used": 31,
+    "wasted_bad_path": 16,
+    "same_epoch_reroutes": 7,
+    "deferred_applied": 0,
+    "stop_reason_counts": {
+     "epoch_allowance": 40,
+     "q_threshold": 6,
+     "path_capacity": 2
+    },
+    "n_stop_rows": 48,
+    "seed": 8
+   },
+   {
+    "event_rate": 1.0,
+    "routine_rate": 0.484375,
+    "attempts": 145,
+    "probe_attempts": 3,
+    "energy": 192.5,
+    "money": 34.0,
+    "sat_quota_used": 34,
+    "wasted_bad_path": 24,
+    "same_epoch_reroutes": 7,
+    "deferred_applied": 0,
+    "stop_reason_counts": {
+     "queue_empty": 11,
+     "epoch_allowance": 22,
+     "q_threshold": 15
+    },
+    "n_stop_rows": 48,
+    "seed": 9
+   },
+   {
+    "event_rate": 1.0,
+    "routine_rate": 0.859375,
+    "attempts": 219,
+    "probe_attempts": 3,
+    "energy": 259.5,
+    "money": 32.0,
+    "sat_quota_used": 32,
+    "wasted_bad_path": 14,
+    "same_epoch_reroutes": 6,
+    "deferred_applied": 0,
+    "stop_reason_counts": {
+     "epoch_allowance": 38,
+     "path_capacity": 3,
+     "q_threshold": 7
+    },
+    "n_stop_rows": 48,
+    "seed": 10
+   },
+   {
+    "event_rate": 1.0,
+    "routine_rate": 0.8489583333333334,
+    "attempts": 210,
+    "probe_attempts": 3,
+    "energy": 249.0,
+    "money": 32.0,
+    "sat_quota_used": 32,
+    "wasted_bad_path": 12,
+    "same_epoch_reroutes": 8,
+    "deferred_applied": 0,
+    "stop_reason_counts": {
+     "epoch_allowance": 40,
+     "path_capacity": 2,
+     "q_threshold": 2,
+     "sat_quota": 4
+    },
+    "n_stop_rows": 48,
+    "seed": 11
+   },
+   {
+    "event_rate": 1.0,
+    "routine_rate": 1.0,
+    "attempts": 235,
+    "probe_attempts": 4,
+    "energy": 262.5,
+    "money": 21.0,
+    "sat_quota_used": 21,
+    "wasted_bad_path": 7,
+    "same_epoch_reroutes": 4,
+    "deferred_applied": 0,
+    "stop_reason_counts": {
+     "queue_empty": 6,
+     "epoch_allowance": 38,
+     "path_capacity": 3,
+     "q_threshold": 1
+    },
+    "n_stop_rows": 48,
+    "seed": 12
+   },
+   {
+    "event_rate": 1.0,
+    "routine_rate": 0.5260416666666666,
+    "attempts": 156,
+    "probe_attempts": 3,
+    "energy": 213.0,
+    "money": 40.0,
+    "sat_quota_used": 40,
+    "wasted_bad_path": 23,
+    "same_epoch_reroutes": 12,
+    "deferred_applied": 0,
+    "stop_reason_counts": {
+     "epoch_allowance": 36,
+     "q_threshold": 10,
+     "path_capacity": 2
+    },
+    "n_stop_rows": 48,
+    "seed": 13
+   },
+   {
+    "event_rate": 1.0,
+    "routine_rate": 0.8385416666666666,
+    "attempts": 212,
+    "probe_attempts": 3,
+    "energy": 266.5,
+    "money": 37.0,
+    "sat_quota_used": 37,
+    "wasted_bad_path": 15,
+    "same_epoch_reroutes": 9,
+    "deferred_applied": 0,
+    "stop_reason_counts": {
+     "queue_empty": 3,
+     "epoch_allowance": 39,
+     "path_capacity": 2,
+     "q_threshold": 3,
+     "sat_quota": 1
+    },
+    "n_stop_rows": 48,
+    "seed": 14
+   },
+   {
+    "event_rate": 1.0,
+    "routine_rate": 0.9895833333333334,
+    "attempts": 242,
+    "probe_attempts": 3,
+    "energy": 262.0,
+    "money": 20.0,
+    "sat_quota_used": 20,
+    "wasted_bad_path": 17,
+    "same_epoch_reroutes": 5,
+    "deferred_applied": 0,
+    "stop_reason_counts": {
+     "epoch_allowance": 18,
+     "queue_empty": 25,
+     "path_capacity": 2,
+     "q_threshold": 3
+    },
+    "n_stop_rows": 48,
+    "seed": 15
+   },
+   {
+    "event_rate": 1.0,
+    "routine_rate": 0.8958333333333334,
+    "attempts": 221,
+    "probe_attempts": 3,
+    "energy": 258.5,
+    "money": 31.0,
+    "sat_quota_used": 31,
+    "wasted_bad_path": 11,
+    "same_epoch_reroutes": 10,
+    "deferred_applied": 0,
+    "stop_reason_counts": {
+     "epoch_allowance": 42,
+     "queue_empty": 1,
+     "path_capacity": 2,
+     "q_threshold": 2,
+     "sat_quota": 1
+    },
+    "n_stop_rows": 48,
+    "seed": 16
+   },
+   {
+    "event_rate": 1.0,
+    "routine_rate": 0.8697916666666666,
+    "attempts": 220,
+    "probe_attempts": 3,
+    "energy": 258.5,
+    "money": 32.0,
+    "sat_quota_used": 32,
+    "wasted_bad_path": 15,
+    "same_epoch_reroutes": 6,
+    "deferred_applied": 0,
+    "stop_reason_counts": {
+     "epoch_allowance": 39,
+     "queue_empty": 1,
+     "path_capacity": 3,
+     "q_threshold": 5
+    },
+    "n_stop_rows": 48,
+    "seed": 17
+   },
+   {
+    "event_rate": 1.0,
+    "routine_rate": 0.9114583333333334,
+    "attempts": 229,
+    "probe_attempts": 3,
+    "energy": 257.5,
+    "money": 24.0,
+    "sat_quota_used": 24,
+    "wasted_bad_path": 13,
+    "same_epoch_reroutes": 5,
+    "deferred_applied": 0,
+    "stop_reason_counts": {
+     "queue_empty": 11,
+     "epoch_allowance": 29,
+     "path_capacity": 2,
+     "q_threshold": 6
+    },
+    "n_stop_rows": 48,
+    "seed": 18
+   },
+   {
+    "event_rate": 1.0,
+    "routine_rate": 0.765625,
+    "attempts": 195,
+    "probe_attempts": 3,
+    "energy": 227.5,
+    "money": 24.0,
+    "sat_quota_used": 24,
+    "wasted_bad_path": 15,
+    "same_epoch_reroutes": 6,
+    "deferred_applied": 0,
+    "stop_reason_counts": {
+     "queue_empty": 22,
+     "epoch_allowance": 18,
+     "path_capacity": 2,
+     "q_threshold": 6
+    },
+    "n_stop_rows": 48,
+    "seed": 19
+   }
+  ],
+  "current_truth": [
+   {
+    "event_rate": 1.0,
+    "routine_rate": 0.8541666666666666,
+    "attempts": 197,
+    "probe_attempts": 0,
+    "energy": 251.0,
+    "money": 33.0,
+    "sat_quota_used": 33,
+    "wasted_bad_path": 0,
+    "same_epoch_reroutes": 0,
+    "deferred_applied": 0,
+    "stop_reason_counts": {
+     "queue_empty": 4,
+     "epoch_allowance": 28,
+     "path_capacity": 3,
+     "q_threshold": 8,
+     "sat_quota": 5
+    },
+    "n_stop_rows": 48,
+    "seed": 0
+   },
+   {
+    "event_rate": 1.0,
+    "routine_rate": 0.9791666666666666,
+    "attempts": 220,
+    "probe_attempts": 0,
+    "energy": 262.5,
+    "money": 28.0,
+    "sat_quota_used": 28,
+    "wasted_bad_path": 0,
+    "same_epoch_reroutes": 0,
+    "deferred_applied": 0,
+    "stop_reason_counts": {
+     "epoch_allowance": 37,
+     "queue_empty": 1,
+     "path_capacity": 3,
+     "q_threshold": 6,
+     "sat_quota": 1
+    },
+    "n_stop_rows": 48,
+    "seed": 1
+   },
+   {
+    "event_rate": 1.0,
+    "routine_rate": 1.0,
+    "attempts": 231,
+    "probe_attempts": 0,
+    "energy": 240.5,
+    "money": 17.0,
+    "sat_quota_used": 17,
+    "wasted_bad_path": 0,
+    "same_epoch_reroutes": 1,
+    "deferred_applied": 0,
+    "stop_reason_counts": {
+     "queue_empty": 11,
+     "epoch_allowance": 35,
+     "path_capacity": 2
+    },
+    "n_stop_rows": 48,
+    "seed": 2
+   },
+   {
+    "event_rate": 1.0,
+    "routine_rate": 0.8854166666666666,
+    "attempts": 205,
+    "probe_attempts": 0,
+    "energy": 248.0,
+    "money": 34.0,
+    "sat_quota_used": 34,
+    "wasted_bad_path": 0,
+    "same_epoch_reroutes": 0,
+    "deferred_applied": 0,
+    "stop_reason_counts": {
+     "queue_empty": 4,
+     "epoch_allowance": 30,
+     "q_threshold": 10,
+     "sat_quota": 4
+    },
+    "n_stop_rows": 48,
+    "seed": 3
+   },
+   {
+    "event_rate": 1.0,
+    "routine_rate": 1.0,
+    "attempts": 226,
+    "probe_attempts": 0,
+    "energy": 231.0,
+    "money": 13.0,
+    "sat_quota_used": 13,
+    "wasted_bad_path": 0,
+    "same_epoch_reroutes": 1,
+    "deferred_applied": 0,
+    "stop_reason_counts": {
+     "epoch_allowance": 31,
+     "path_capacity": 2,
+     "queue_empty": 15
+    },
+    "n_stop_rows": 48,
+    "seed": 4
+   },
+   {
+    "event_rate": 1.0,
+    "routine_rate": 0.9791666666666666,
+    "attempts": 222,
+    "probe_attempts": 0,
+    "energy": 251.5,
+    "money": 24.0,
+    "sat_quota_used": 24,
+    "wasted_bad_path": 0,
+    "same_epoch_reroutes": 0,
+    "deferred_applied": 0,
+    "stop_reason_counts": {
+     "queue_empty": 12,
+     "epoch_allowance": 22,
+     "path_capacity": 2,
+     "q_threshold": 8,
+     "sat_quota": 4
+    },
+    "n_stop_rows": 48,
+    "seed": 5
+   },
+   {
+    "event_rate": 1.0,
+    "routine_rate": 1.0,
+    "attempts": 221,
+    "probe_attempts": 0,
+    "energy": 225.0,
+    "money": 12.0,
+    "sat_quota_used": 12,
+    "wasted_bad_path": 0,
+    "same_epoch_reroutes": 1,
+    "deferred_applied": 0,
+    "stop_reason_counts": {
+     "epoch_allowance": 29,
+     "queue_empty": 16,
+     "q_threshold": 2,
+     "path_capacity": 1
+    },
+    "n_stop_rows": 48,
+    "seed": 6
+   },
+   {
+    "event_rate": 1.0,
+    "routine_rate": 1.0,
+    "attempts": 230,
+    "probe_attempts": 0,
+    "energy": 232.5,
+    "money": 10.0,
+    "sat_quota_used": 10,
+    "wasted_bad_path": 0,
+    "same_epoch_reroutes": 0,
+    "deferred_applied": 0,
+    "stop_reason_counts": {
+     "queue_empty": 32,
+     "epoch_allowance": 14,
+     "path_capacity": 2
+    },
+    "n_stop_rows": 48,
+    "seed": 7
+   },
+   {
+    "event_rate": 0.3333333333333333,
+    "routine_rate": 1.0,
+    "attempts": 209,
+    "probe_attempts": 0,
+    "energy": 243.0,
+    "money": 25.0,
+    "sat_quota_used": 25,
+    "wasted_bad_path": 0,
+    "same_epoch_reroutes": 0,
+    "deferred_applied": 0,
+    "stop_reason_counts": {
+     "epoch_allowance": 37,
+     "q_threshold": 8,
+     "queue_empty": 3
+    },
+    "n_stop_rows": 48,
+    "seed": 8
+   },
+   {
+    "event_rate": 1.0,
+    "routine_rate": 0.5,
+    "attempts": 124,
+    "probe_attempts": 0,
+    "energy": 173.5,
+    "money": 35.0,
+    "sat_quota_used": 35,
+    "wasted_bad_path": 0,
+    "same_epoch_reroutes": 0,
+    "deferred_applied": 0,
+    "stop_reason_counts": {
+     "queue_empty": 11,
+     "epoch_allowance": 15,
+     "q_threshold": 22
+    },
+    "n_stop_rows": 48,
+    "seed": 9
+   },
+   {
+    "event_rate": 1.0,
+    "routine_rate": 0.9010416666666666,
+    "attempts": 211,
+    "probe_attempts": 0,
+    "energy": 253.0,
+    "money": 33.0,
+    "sat_quota_used": 33,
+    "wasted_bad_path": 0,
+    "same_epoch_reroutes": 0,
+    "deferred_applied": 0,
+    "stop_reason_counts": {
+     "epoch_allowance": 35,
+     "path_capacity": 3,
+     "queue_empty": 1,
+     "q_threshold": 9
+    },
+    "n_stop_rows": 48,
+    "seed": 10
+   },
+   {
+    "event_rate": 1.0,
+    "routine_rate": 0.9375,
+    "attempts": 212,
+    "probe_attempts": 0,
+    "energy": 245.0,
+    "money": 29.0,
+    "sat_quota_used": 29,
+    "wasted_bad_path": 0,
+    "same_epoch_reroutes": 0,
+    "deferred_applied": 0,
+    "stop_reason_counts": {
+     "epoch_allowance": 31,
+     "queue_empty": 3,
+     "path_capacity": 2,
+     "q_threshold": 8,
+     "sat_quota": 4
+    },
+    "n_stop_rows": 48,
+    "seed": 11
+   },
+   {
+    "event_rate": 1.0,
+    "routine_rate": 1.0,
+    "attempts": 224,
+    "probe_attempts": 0,
+    "energy": 244.5,
+    "money": 17.0,
+    "sat_quota_used": 17,
+    "wasted_bad_path": 0,
+    "same_epoch_reroutes": 0,
+    "deferred_applied": 0,
+    "stop_reason_counts": {
+     "queue_empty": 8,
+     "epoch_allowance": 36,
+     "path_capacity": 3,
+     "q_threshold": 1
+    },
+    "n_stop_rows": 48,
+    "seed": 12
+   },
+   {
+    "event_rate": 1.0,
+    "routine_rate": 0.71875,
+    "attempts": 168,
+    "probe_attempts": 0,
+    "energy": 224.0,
+    "money": 39.0,
+    "sat_quota_used": 39,
+    "wasted_bad_path": 0,
+    "same_epoch_reroutes": 0,
+    "deferred_applied": 0,
+    "stop_reason_counts": {
+     "epoch_allowance": 34,
+     "q_threshold": 12,
+     "path_capacity": 2
+    },
+    "n_stop_rows": 48,
+    "seed": 13
+   },
+   {
+    "event_rate": 1.0,
+    "routine_rate": 0.9166666666666666,
+    "attempts": 211,
+    "probe_attempts": 0,
+    "energy": 261.0,
+    "money": 34.0,
+    "sat_quota_used": 34,
+    "wasted_bad_path": 0,
+    "same_epoch_reroutes": 1,
+    "deferred_applied": 0,
+    "stop_reason_counts": {
+     "queue_empty": 3,
+     "epoch_allowance": 34,
+     "path_capacity": 2,
+     "q_threshold": 7,
+     "sat_quota": 2
+    },
+    "n_stop_rows": 48,
+    "seed": 14
+   },
+   {
+    "event_rate": 1.0,
+    "routine_rate": 0.9895833333333334,
+    "attempts": 224,
+    "probe_attempts": 0,
+    "energy": 238.0,
+    "money": 17.0,
+    "sat_quota_used": 17,
+    "wasted_bad_path": 0,
+    "same_epoch_reroutes": 0,
+    "deferred_applied": 0,
+    "stop_reason_counts": {
+     "epoch_allowance": 17,
+     "queue_empty": 25,
+     "path_capacity": 2,
+     "q_threshold": 4
+    },
+    "n_stop_rows": 48,
+    "seed": 15
+   },
+   {
+    "event_rate": 1.0,
+    "routine_rate": 0.9791666666666666,
+    "attempts": 225,
+    "probe_attempts": 0,
+    "energy": 258.5,
+    "money": 29.0,
+    "sat_quota_used": 29,
+    "wasted_bad_path": 0,
+    "same_epoch_reroutes": 2,
+    "deferred_applied": 0,
+    "stop_reason_counts": {
+     "epoch_allowance": 37,
+     "queue_empty": 1,
+     "path_capacity": 1,
+     "q_threshold": 7,
+     "sat_quota": 2
+    },
+    "n_stop_rows": 48,
+    "seed": 16
+   },
+   {
+    "event_rate": 1.0,
+    "routine_rate": 0.921875,
+    "attempts": 213,
+    "probe_attempts": 0,
+    "energy": 251.5,
+    "money": 32.0,
+    "sat_quota_used": 32,
+    "wasted_bad_path": 0,
+    "same_epoch_reroutes": 1,
+    "deferred_applied": 0,
+    "stop_reason_counts": {
+     "epoch_allowance": 38,
+     "queue_empty": 1,
+     "path_capacity": 2,
+     "q_threshold": 6,
+     "sat_quota": 1
+    },
+    "n_stop_rows": 48,
+    "seed": 17
+   },
+   {
+    "event_rate": 1.0,
+    "routine_rate": 0.921875,
+    "attempts": 215,
+    "probe_attempts": 0,
+    "energy": 241.5,
+    "money": 23.0,
+    "sat_quota_used": 23,
+    "wasted_bad_path": 0,
+    "same_epoch_reroutes": 1,
+    "deferred_applied": 0,
+    "stop_reason_counts": {
+     "queue_empty": 18,
+     "epoch_allowance": 21,
+     "path_capacity": 2,
+     "q_threshold": 7
+    },
+    "n_stop_rows": 48,
+    "seed": 18
+   },
+   {
+    "event_rate": 1.0,
+    "routine_rate": 0.84375,
+    "attempts": 193,
+    "probe_attempts": 0,
+    "energy": 226.5,
+    "money": 24.0,
+    "sat_quota_used": 24,
+    "wasted_bad_path": 0,
+    "same_epoch_reroutes": 0,
+    "deferred_applied": 0,
+    "stop_reason_counts": {
+     "queue_empty": 22,
+     "epoch_allowance": 12,
+     "path_capacity": 2,
+     "q_threshold": 12
+    },
+    "n_stop_rows": 48,
+    "seed": 19
+   }
+  ]
+ }
+}
