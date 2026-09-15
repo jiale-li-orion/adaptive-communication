@@ -1,0 +1,166 @@
+# Coverage Breadth Meets Sample Timeliness: Obligation-Level Arbitration over a Sparse Backup Link for Pre-Disaster Monitoring
+
+> **Working draft v2, 2026-09-15.** This draft supersedes the v1 line ("When Freshness Feedback Lies", retained for traceability in `paper-draft-v1.md`) after the independent review (doc19) and experiments R05–R17 (docs 23–29). Reorganization, not deletion: v1's end-to-end-AoI narrative is **demoted to one boundary finding** (Finding I), and the new primary contribution is **obligation-level arbitration over the sparse short-message backup** (Finding II). Every number below is reproduced by `code/v3joint/` (6 development seeds 0–5; held-out seeds 6–9 where stated) and archived in `results/v3joint_*.json`; nothing is a field SLA. Backup cadence/payload are A-level research assumptions (different standard sections, not one operating point); the backup link is modeled as reliable (success=1, a stated simplification of the ≥95% standard figure). [cite:…] placeholders must be verified against the transfer ledger.
+
+## Abstract
+
+Pre-disaster geohazard monitoring must keep satisfying periodic monitoring *obligations* when the cellular backhaul is out for hours and a narrow short-message service (e.g., RDSS-style satellite packets) is the only way out, with small solar-powered nodes behind a LoRaWAN Class A access segment. We separate two decision levels that prior work tends to conflate. **(I) Upstream configuration**—how densely to sample and how often to report—has, in this setting, almost no *dynamic* headroom: across paired seeds the strongest feasible static operating point (sample/report matched to the obligation period) reaches 0.984 timely coverage and physically dominates every adaptive rule we could field, including an ordinary rolling MPC (0.647) and an obligation-driven joint policy (0.937, high variance, ≈80× the commands, whose sampling and report-only ablations are identical). **(II) Backup content arbitration**—which already-collected samples occupy each sparse backup packet—is where adaptation matters, and only under scarcity. When backup throughput matches or exceeds production, item-level rules and obligation-level rules all saturate at 0.984 (a phase transition at throughput ≈ production). When backup throughput falls below production (0.46–0.69 of production in the two capacity-scarce regimes), or opportunities are sparse even when total per-hour capacity nominally suffices, classical item-level rules (FIFO/EDF/newest-first) stall at 0.46–0.55, and no single classical rule wins across scarcity structures. We show why (aggressive per-obligation de-duplication stalls packet emission and builds gateway backlog up to 41,400 s; "drop-expired" and "no-redundancy" variants each fail for distinct, traced reasons) and give a two-layer online rule, **cover**: a cross-packet layer that maximizes *coverage breadth* (prefer samples of obligations not yet covered, still salvageable) followed by a layer that fills remaining bytes by *sample timeliness* (newest first), never suppressing or skipping a send opportunity. With **the same backup bytes** as the item-level rules, cover reaches 0.906/0.699/0.921 in the two capacity-scarce regimes and one sparse-large-packet regime, versus the strongest classical rule 0.838/0.656/0.917, the largest gain +6.8 pp with non-overlapping seed ranges; the ordering reproduces on held-out seeds 6–9; three ablations show both layers and the cross-packet memory are necessary; an infinite-capacity bound places the opportunity-structure ceiling at 0.966–0.984, leaving 0.05–0.08 in the main regimes. The result is a communication-execution-layer contribution achieved by rules, which any higher-layer planner (MPC or tool-using agent) inherits; no LLM is used.
+
+**Index terms**—emergency/disaster networks, intermittent backhaul, LoRaWAN Class A, satellite short message, scheduling under limited service opportunities, age/timeliness, obligation-level resource arbitration.
+
+---
+
+## 1. Introduction
+
+### 1.1 Setting
+
+We study a pre-event, always-on mountain geohazard monitoring deployment: field sensor nodes on a slope reach one cached, locally-autonomous gateway over LoRaWAN Class A; the gateway reaches the operations center over an intermittent cellular primary backhaul plus a constrained short-message backup. Nodes are solar-powered with small batteries and no mains. The service target is **continuity of monitoring obligations**, not an always-up link: a routine obligation for object *i* opens a window of length *P*, and is satisfied when one valid in-window sample is received at the center by the deadline window+grace; event obligations are short local-trigger bursts. The deployment class follows the Wang Guizhou loess-slope system [cite: Wang, Front. Earth Sci. 2022], the Kumar asymmetric multi-WAN deployment [cite: Springer MONET 2019], and alpine sites [cite: Hochvogel EGU25-11121]; the reference instance, obligations and evidence grades are fixed by the project task contract. Node count follows the v1.1 manifest (main table: 14 nodes = 1 gateway + 13 displacement stations, all SF7); 5/9-node runs are scale axes only.
+
+### 1.2 Two decision levels, and where adaptation does and does not pay
+
+A sample crosses two segments with very different availability: the **access** segment (node→gateway, intermittent LoRa, Class A, delayed downlink) and the **backhaul** segment (gateway→center, cellular primary + sparse short-message backup). This split makes two distinct control questions:
+- **Upstream configuration.** Choose sampling interval and reporting period over time, under energy and the Class-A command delay. An extensive literature on AoI/energy-harvesting sampling motivates adaptive, freshness-driven loops [cite: Bacinoglu arXiv:1905.06679; Zakeri arXiv:2311.06522].
+- **Backup content arbitration.** At each sparse backup opportunity, with a hard byte cap, choose *which already-collected samples* to put in the packet.
+
+Our central empirical claim is that in this deployment the answers are opposite in character. Upstream, the optimum is pinned to a unique physical operating point by energy (sensing costs ≈20× a transmission) and by access/backup throughput, so dynamic reconfiguration has no measurable headroom (Finding I). Downstream, under hard backup scarcity, *which obligations' samples are sent* is decisive and item-level rules leave large, recoverable service on the table (Finding II). The two are not contradictory: they delimit the boundary between where a fixed execution layer suffices and where obligation-level arbitration is required.
+
+### 1.3 Contributions
+
+All claims are inside the fixed scenario: no scenario substitution, no LLM in the loop, baselines instantiated at full strength and never weakened to win, criteria written before the confirming runs.
+
+- **C1 — Grounded harness and a zero-copy failover layer.** A byte-/energy-accurate two-segment Class-A model with real obligation semantics and a primary/backup failover plane that is bit-identical to the v1.1 baseline when backup is disabled (five regression anchors).
+- **C2 — Finding I: bounded headroom of upstream adaptation (a boundary result).** The strongest feasible static point reaches 0.984 and dominates adaptive rules; a rolling MPC that uses only nominal harvesting and declared link probabilities reaches 0.647; an obligation-driven joint policy reaches 0.937 with ≈80× commands and high seed variance, and its sampling and report-only ablations coincide, i.e., the sampling degree of freedom is empty. We state this as a scoped boundary, not "closed loops are bad," and we withdrew earlier over-strong claims (an "AoI-induced 6× densification" causal chain, a zero-loss no-outage claim, an access-congestion capacity ceiling, and an optimality claim) per independent review; the surviving statement is about *physical pinning* of the operating point, demonstrated with corrected arrival-time accounting.
+- **C3 — Finding II (primary): obligation-level two-layer backup arbitration.** We (i) map a phase transition at backup throughput ≈ production; (ii) show no single classical item-level rule dominates across scarcity structures and trace each rule's failure; (iii) give **cover**, an online two-layer rule combining coverage breadth and sample timeliness, which dominates the strongest classical rule in all three hard-scarcity regimes at identical byte cost, reproduces on held-out seeds, and survives three necessity ablations; and (iv) bound the remaining gap with an infinite-capacity ceiling.
+- **C4 — Scope of the agentic layer.** The communication execution layer needs no agent and is where this paper's contribution sits; a higher-layer agent/MPC inherits a correct substrate. We position, but do not assert, agent value above it, and we do not re-run the previously falsified "LLM scores record importance" test.
+
+### 1.4 Pre-registered kill criteria
+
+Finding II would be falsified by a legal-information (no future truth, identical backup budget) item-level rule that matches cover in every scarcity regime, by an ablation whose removal leaves actions unchanged (a dead component), or by cover's advantage disappearing on held-out seeds. We report a residual we did **not** engineer away: in the *saturated* regime cover trails newest-first by 0.7 pp (0.9776 vs 0.9842, overlapping ranges, near-ceiling), the price of the timeliness insurance that is essential under scarcity; a variant that removes that insurance returns to 0.984 when saturated but collapses under scarcity, which we report as an ablation rather than hide.
+
+## 2. Related work
+
+**AoI / energy-harvesting sampling.** Threshold/switching policies on age and battery assume a *sender-local* controller with immediate per-action feedback [cite: Bacinoglu arXiv:1905.06679; Arafa arXiv:2007.10200; TCOM/TII]. Joint sampling/transmission/energy under partial observability is cast as a POMDP with the controller at the transmitter, acting in the same slot [cite: Zakeri arXiv:2311.06522]. We field strong instances of these as baselines; Finding I delineates where their sender-local assumption is violated by the two-segment path, without claiming the policies are wrong in their native model.
+
+**Scheduling with bounded buffers / limited service opportunities.** Constrained-queue models with exogenous arrivals, finite buffers, a server that visits objects at limited opportunities, and receipt feedback supply the formal elements we inherit. The closest instance, ICLDC (arXiv:2504.14556 / IEEE IoT-J, DOI 10.1109/JIOT.2025.3615410), is—verified from the record—a **single-hop UAV data-collection scheduler whose policy is an LLM using in-context learning** (baselines DQN / max-channel-gain); it does not contain a primary/backup dual-scale link, multi-many-to-many sample-obligation matching with absolute deadlines and grace, a gateway that holds only link receipts with no application-layer confirmation, nor our two-layer online packing. We state this as a precise distinction, not a novelty gap claim.
+
+**DTN / emergency / space links and content selection.** Store-and-forward [cite: Fall SIGCOMM 2003], contact-aware triage at extreme low rate (SHETLAND-NET, *not fully verifiable in this environment*), and overbooking on space links [cite: CCSDS 734.3-B-1] already establish that *content-selective packing under a sparse contact is useful*. We therefore do not re-claim content selection; our specific object is the combination the literature separates: dual-scale primary/backup channels, per-obligation absolute deadlines with grace and many-to-many candidate samples, and—decisively—a gateway that cannot know the center's final satisfaction state during an outage. Priority packing for BeiDou capacity scarcity is the closest applied work and remains to be verified line-by-line before submission.
+
+**Agents/LLMs for emergency networks.** The TopoLLM lineage [cite: DC Networks 12(2026) 273–282] and its three branches (LLM direct resource scheduling; LLM-assisted RL; post-disaster infrastructure recovery agents) let an agent choose network resources or recovery sequences *after* a disaster. Our object is long-horizon *pre-disaster* continuity, and per C4 the present paper is deliberately agent-free at the execution layer. We make no "first/uncovered" claim; α³-Bench and other entries remain unread and are registered as blocking such claims.
+
+## 3. System model and problem
+
+### 3.1 Deployment and roles
+The reference instance has 14 nodes (1 gateway `gw0` + 13 displacement stations, all SF7); 5/9-node instances are scale axes. The gateway caches data and preloaded local-autonomy rules; nothing is mains-powered. Samples are displacement (6 B) or rainfall (4 B); aggregate production is very low (13 displacement stations × 6 obligations/h = 78 obligation-records/h at P=600 s), a fact that anchors the phase transition.
+
+### 3.2 Two-segment communication and Class-A delay
+A configuration command (`set_sampling_interval`, `set_report_period`) can only be emitted in a Class-A receive window opened by an uplink and takes effect after the next sampling cycle (dwell 300 s, command TTL 6 h); during a backhaul outage the center's downlink gate is closed, so foreknowledge of an outage cannot be acted on from the center—feed-forward must execute at the gateway over local LoRa. Access arrival probability is 0.74 and the primary backhaul is good with probability 0.62 in the reference instance.
+
+### 3.3 Energy
+Per-tick SoC = harvest − sleep/sense/TX/RX; sensing is 4.7e-4 Wh/sample (measured profile [cite: Ragnoli JLPEA 2022]) and an uplink 2.33e-5 Wh (**sensing ≈20× a report**); capacity 0.05 Wh. A node whose SoC falls below one sensing energy is declared dead for the mission (the restart/energy model is fixed by R01/R02 and loss is split into never-at-gateway / late-at-gateway / missed-to-center classes).
+
+### 3.4 Obligations and service metric
+Routine obligation *i* has window [iP,(i+1)P], grace P, deadline (i+2)P; a sample matches deterministically from its `taken_at` (the same `matches` function is used by the gateway policy and the center scorer—there is no label noise in matching). The shared exogenous denominator is identical across policies. Primary metric: **timely routine coverage** = obligations with an in-window sample received by the deadline; we also report collection rate, nodes alive, final SoC, uplink airtime, downlink commands, and backup packets/bytes/suppressions (real cost).
+
+### 3.5 Observable plane
+A legal controller knows link state/history, its own queues, sample heard/taken times, and public obligation cadence (period/grace) and the configured backup opportunity grid; it never knows future outage truth or the center's final per-obligation satisfaction during an outage. The backup leg returns only a link-level send receipt; in our model a sent backup is received (success=1, §note above), so "I sent it" and "the center has it" coincide at the link layer—but the gateway still cannot know *which obligation the center will treat a many-to-many candidate as finally satisfying relative to other samples*.
+
+### 3.6 Problem
+Per obligation, over time, choose (a) sampling/reporting configuration under energy and Class-A delay, and (b) which pending samples occupy each capacity-capped backup opportunity, using legal history only, to maximize timely coverage under energy and backup-byte budgets. We compare under identical exogenous trajectories and budgets.
+
+## 4. Execution layer and policy families
+
+### 4.1 Zero-copy primary/backup failover
+The plane subclasses the v1.1 control plane and overrides only `backhaul_forward`. When the primary is down, at each backup opportunity (t mod r_b = 0) it packetizes one subset of pending samples at sample granularity (net payload = backup bytes − 20 B header), splits a source item across packets, and removes sent samples from the primary queue to avoid duplication; a `last_primary_ok_at` updates only on genuine primary forwards. With backup disabled it is bit-identical to v1.1 (anchor). Backup rate/payload ({120,300,600,900,1200} s; {78,200} B) are scanned as A-level assumptions.
+
+### 4.2 Upstream policy family (Finding I)
+Open-loop fixed grids `grid(S,R)`; v1.1 adaptive report policies; an Energy-AoI loop `ea_aoi`; an ordinary **rolling MPC** that searches the legal sampling/reporting grid each cycle using only nominal harvesting and declared link probabilities (it does not read the future); and an obligation-driven policy **ODP** with sampling-gating and report-only ablations. Every fed signal passes an identifiability gate (a signal whose constant setting leaves actions unchanged is declared dead, not retained).
+
+### 4.3 Backup chooser family and the cover algorithm (Finding II)
+Item-level baselines: **fifo** (heard order), **edf** (earliest obligation deadline), **latest** (newest heard). Obligation-level: **obligation** (cross-packet de-duplication + EDF; once an obligation has been sent a qualifying sample, later copies are suppressed), **salvage** (also hard-drop samples past their local deadline). The proposed **cover** maintains a cross-packet set `seen` of covered obligations (used only to order, never to suppress or skip a send) and, per opportunity:
+```
+layer 0 (coverage breadth):
+  candidates = pending samples whose obligation set is DISJOINT from seen
+               and whose tightest deadline > now        # still salvageable, purely new
+  pack them in deadline order, add their obligations to seen
+layer 1 (sample timeliness):
+  fill remaining bytes with all other pending samples, newest-heard first
+never return an empty packet while pending exists (no stall)
+```
+Ablations used below: `cover` with `seen` reset each packet (no cross-packet memory); `cover_l0only` (layer 1 off); `cover2` (layer 1 admits only partially-new obligations, i.e., drops "purely redundant" copies).
+
+## 5. Finding I — upstream dynamic configuration is physically pinned
+
+*Regime: P=600 s, 16 h backhaul outage, solar peak 0.03 Wh/h, initial SoC 1, 14 nodes, backup 300 s/78 B; 6 paired seeds (R05, `v3joint_r05_headroom.json`); held-out seeds 6–9 (R07).*
+
+**The feasible static point dominates.** `grid600x600` reaches **0.9841** [0.981,0.987] (collection 1.000, final SoC 0.265, 26 commands, 691 s airtime). Slower sampling loses obligations outright (`grid1800x900` 0.597 with collection only 0.694); slower reporting `grid900x600` reaches 0.953; a fixed 900 s report 0.868; the Energy-AoI loop 0.873. The ordinary rolling MPC reaches only **0.647** (collection 0.841): it treats the link at a constant nominal probability, does not use the deterministic outage schedule, and under weak energy backs off into missed collection. The obligation-driven ODP reaches 0.937 [0.820,0.989] but with ≈2,093 commands (≈80×) and 951 s airtime, and one seed at 0.820 from over-reacting to unreliable replica feedback; crucially **ODP_joint (0.937) ≈ ODP_report_only (0.936)**—the sampling degree of freedom is empty and "joint acquisition×backhaul" reduces to report timing.
+
+**Mechanism.** Sensing is the dominant energy cost and cannot be denser than the obligation period without killing nodes under weak harvesting; reporting is matched to access/backup throughput; deviating inside the outage window (faster 300 s report self-congests against backup throughput; slower report starves the backup of records; relaxed 1800 s sampling cuts backup feed) is dominated at every deviation we scanned. A center-issued feed-forward segment plan is bit-identical to static because the center's downlink gate is closed during the outage; only gateway-local execution is actionable, and there the optimum is the single matched point (P,P). Held-out seeds 6–9 preserve the ordering: grid 0.9830, ODP 0.9010 [0.743,0.988], rolling MPC 0.6193, in-900 0.9430.
+
+**The backup leg is what keeps this regime at 0.98 rather than 0.42.** With backup on, coverage is 0.9841; turning backup off drops it to **0.4188** and *raises* uplink airtime from 691 s to 3,101 s (LoRa self-retransmission against a closed backhaul); the backup leg carries 2,467 records and closes 1,248 displacement obligations inside the 16 h window (R06). This motivates Finding II: once the upstream point is fixed, the remaining service is decided entirely by what the sparse backup carries.
+
+## 6. Finding II — obligation-level arbitration over the sparse backup
+
+### 6.1 Phase transition at throughput ≈ production (R08)
+Production is 78 obligation-records/h (13 displacement stations × 6/h at P=600 s). Net backup records/h = (3600/rate)·⌊(bytes−20)/6⌋; the ratio to production is in parentheses. 270/h (3.46×)→0.984, 108/h (1.38×)→0.984, **54/h (0.69×)→0.504, 36/h (0.46×)→0.462, 27/h (0.35×)→0.450**; a larger 200 B packet compensates a slower rate (180/h (2.31×)→0.984, 90/h (1.15×)→0.528). Service tracks the capacity/production ratio, not rate or payload separately, and the transition sits where backup throughput ≈ production. Two scarcity structures follow: **capacity scarcity** (net throughput below production: r600/78 at 0.69×, r900/78 at 0.46×) and **opportunity sparsity** (r1200/200 at 1.15× total capacity but only one 30-record packet every 1,200 s, where within-packet selection still matters). These are the RDSS short-message regimes under tight registration parameters.
+
+### 6.2 No single classical rule wins (R09/R10), and why each fails (R11)
+Under hard scarcity (6 seeds):
+
+| regime (cap/prod) | fifo/edf | latest | obligation | salvage |
+|---|---|---|---|---|
+| r600/78B (0.69) | 0.504 | 0.548 | **0.838** | 0.769 |
+| r900/78B (0.46) | 0.462 | 0.477 | 0.574 | **0.656** |
+| r1200/200B (1.15, sparse) | 0.528 | **0.917** | 0.804 | 0.711 |
+
+Item-level rules waste scarce packets on repeated copies of the same obligations. `obligation` de-duplicates efficiently (small-packet regime) but is capped at **0.838 even when backup is saturated** (r300): once it marks an obligation "sent" it suppresses later copies and, when the queue looks fully covered, **skips the send opportunity entirely**, emitting only 69–161 packets versus 87–333 for the non-stalling rules; per-obligation pairing against `latest` shows the *same samples eventually arrive* (0 obligations differ in identity) but arrive late—maximum gateway wait 41,400 s versus ≤300 s for the non-stalling rules. `salvage`'s hard expiry helps only at the tightest extreme and otherwise drops samples the center still counts; the "unreliable link needs retransmission" explanation is ruled out (backup success=1), as is any matching-error explanation (matching is deterministic and shared). The recurring failure is a **timeliness** failure under many-to-many candidate samples, compounded by stall-on-covered.
+
+### 6.3 cover: main paired result (J1, R14)
+Same six development seeds, identical backup budget:
+
+| regime | edf | obligation | latest | salvage | **cover** | vs best classical |
+|---|---|---|---|---|---|---|
+| saturated r300/78 | 0.984 | 0.838 | 0.984 | 0.771 | 0.9776 | −0.7 pp (reported, §1.4) |
+| r600/78 | 0.504 | 0.838 | 0.548 | 0.769 | **0.9063** [0.871,0.922] | **+6.8 pp**, ranges disjoint |
+| r900/78 | 0.462 | 0.574 | 0.477 | 0.656 | **0.6985** [0.641,0.731] | **+4.2 pp** |
+| r1200/200 | 0.528 | 0.804 | 0.917 | 0.711 | **0.9214** [0.908,0.929] | **+0.4 pp** |
+
+cover dominates the best classical rule in **all three scarce/sparse regimes** and is the only rule competitive everywhere. It wins by breadth where packets are small and frequent, and by timeliness where packets are large and opportunities sparse—exactly the two properties the two layers encode.
+
+### 6.4 Components are necessary (J2, R12/R15/R16)
+Removing any single mechanism causes a specific, direction-consistent loss:
+- **Cross-packet memory removed** (`seen` reset per packet): cover collapses to item-level edf in every scarce regime (0.46–0.55) — global obligation memory is what produces breadth.
+- **Layer 1 removed** (`cover_l0only`): scarce regimes collapse to 0.46–0.53 (−24 to −40 pp); only saturated returns to 0.984.
+- **Layer 1 forbids "purely redundant" copies** (`cover2`): saturated returns to 0.9841 but scarce regimes collapse to 0.46–0.53, at identical packet/byte counts. Because an obligation has several time-competing candidate samples, newest-first filling is what keeps at least one candidate of each obligation moving; removing it leaves obligations with no timely candidate even though matching is perfect.
+No component is a dead parameter.
+
+### 6.5 Same cost (J3) and held-out reproduction (J4)
+cover does not buy service with budget: at r600 it sends 13,554 B vs edf 13,564 B (174 packets both); at r1200 16,706 B vs latest 16,710 B (87 packets both). On **held-out seeds 6–9** (never used in development) the ordering is unchanged: cover 0.889/0.683/0.927 vs the strongest classical 0.801/0.639/0.923 (r600 +8.9 pp with disjoint ranges); saturated 0.976.
+
+### 6.6 Distance to the opportunity-structure ceiling (J5, R17)
+Relaxing only the byte cap (unlimited payload, real sparse opportunity grid) gives an upper bound of 0.966–0.984: even with infinite bandwidth, discrete opportunities plus stochastic LoRa arrival leave 2–3% unrecoverable. cover trails this bound by only 0.049 (r1200) and 0.078 (r600) in the main regimes—most of the recoverable scarcity gap is captured. At the extreme r900 (capacity 0.43 of production) the gap is 0.267, dominated by the hard per-packet capacity (every packet is full and cover already sends the same count as edf while covering more distinct obligations); a capacity-aware offline optimum to split this residual precisely is listed as remaining work, and we do not claim cover is optimal.
+
+## 7. Discussion
+
+**A boundary, not a panacea.** Finding I says dynamic *upstream* configuration has no headroom once energy and throughput pin the operating point; Finding II says *downstream content* arbitration has substantial headroom precisely under backup scarcity. The same identifiability question—does this control action change a deliverable outcome, using only legal information?—locates an operator on either side. We explicitly do not claim results for value-heterogeneous obligations (we use fixed, value-equal routine duties), monetary quota constraints, multiple backup channels, or operation beyond single-gateway access capacity; those are registered, not silently folded in.
+
+**Why a rule winning is the contribution.** A communication paper does not need an irreplaceable LLM. A failover substrate that cannot be polluted by a downstream outage and an online arbitration rule that, at identical byte cost, recovers 0.4–0.7 of the scarcity gap is a communication-systems result that any higher-layer planner—rule MPC or tool-using agent—inherits. Baselines are at full strength (a literature EH/AoI structure, a non-future MPC, four classical and two obligation-level choosers); negative results and the 0.7 pp saturated residual are reported, not smoothed.
+
+**Where the agent goes (C4).** The execution layer needs no agent. A defensible agent role is slower, context-bearing orchestration across heterogeneous means when task context cannot be structured for an MPC; we state that condition and leave the matched planner comparison to a second stage rather than re-run a falsified LLM-scoring experiment.
+
+**Threats to validity.** (i) Backup cadence/payload are A-level assumptions drawn from different standard sections (DZ/T 0450 §7.4.2.3/§7.4.3.2), scanned not asserted; RDSS cost/power lack a verbatim source, and text was obtained via a document-sharing mirror (official site TLS failed locally). (ii) Backup success=1 simplifies the ≥95% standard figure; a real loss model must be applied identically to every chooser. (iii) Harvesting is a model swept over peak/initial SoC, not a site trace; we do not claim field outage distributions. (iv) Quantitative claims rest on 6 development + 4 held-out paired seeds; phase scans are exploratory for trend. (v) We never label rain-driven acceleration a false precursor; geotechnical truth is left to node autonomy. (vi) The capacity-aware offline optimum (J5-b) and line-by-line verification of BeiDou priority-packing / SHETLAND / CCSDS are required before any novelty wording; no "first/gap" claim is made.
+
+## 8. Conclusion
+
+In a pre-disaster monitoring network with a Class-A access segment, intermittent cellular backhaul, and a narrow short-message backup, the two levels of network control behave oppositely. *Upstream* sampling/reporting adaptation is physically pinned to the obligation-period operating point and is dominated by a feasible static configuration plus failover (0.984); the apparent "joint" freedom collapses to report timing. *Downstream*, once the backup is the bottleneck, item-level scheduling leaves large service on the table, and a two-layer online rule that joins obligation coverage breadth with newest-first sample timeliness—never stalling, using only legal information—dominates every classical chooser in hard scarcity at the same byte cost, reproduces held-out, and sits within 0.05–0.08 of an opportunity-structure upper bound. The combined statement is a precise map of where a fixed communication execution layer suffices and where obligation-level arbitration is required—a stable substrate on which a monitoring agent runtime can orchestrate recovery, rather than an unstable one it must constantly repair.
+
+## References (verify each against the transfer ledger before submission)
+- Bacinoglu, Sun, Uysal, Mutlu, "Optimal Status Updating with a Finite-Battery EH Source," arXiv:1905.06679 (verified model; threshold structure; `eh`-family inspiration only—its per-slot threshold solver is not reproduced).
+- Zakeri et al., "Semantic-aware Sampling and Transmission in Real-time Tracking: A POMDP," arXiv:2311.06522 (verified: transmitter-side controller, same-slot action; model-comparison baseline for joint sampling/transmission/energy).
+- Emami, Zhou, Nabavirazani, Almeida, ICLDC, arXiv:2504.14556 / IEEE IoT-J 2025, DOI 10.1109/JIOT.2025.3615410 (verified: single-hop UAV collection, LLM in-context scheduler; formal neighbor, not the present dual-scale problem).
+- Arafa et al., arXiv:2007.10200; TCOM 2021/2025, TII 2025, INFOCOM 2026 (AoI/freshness-cost scheduling; verify venues).
+- Fall, "DTN Architecture," SIGCOMM 2003; CCSDS 734.3-B-1 overbooking; SHETLAND-NET contact triage *(environment access failed—verify)*; BeiDou short-message priority packing *(verify line-by-line)*.
+- TopoLLM, Digital Communications and Networks 12 (2026) 273–282; PS-UAV (IEEE WCM 2026), LODA (Computer Communications 2026), WirelessAgent (China Communications 2026), ESWA IIN-recovery, SCS Lifeline/MCP (abstract-level per transfer ledger).
+- Ragnoli et al., measured LoRa energy profile, JLPEA 12(3):47, 2022.
+- Wang et al., Guizhou loess-slope LoRa–gateway–4G, Front. Earth Sci. 2022, 10.3389/feart.2022.899509; Kumar et al., Springer MONET, 10.1007/s11276-019-02059-7.
+- DZ/T 0450-2023 §7.4.2.3/§7.4.3.2, DZ/T 0460-2023 §5.3.7 *(D-grade mirror channel)*; BDS-OS-PS-3.0 Table 7-1 (≥95% success, mean latency <2 s, cadence ~1/30 s, ≤14000 bit, registration-constrained).
+- USGS/Iverson, landslide motion / dilatancy / pore-pressure feedback.
