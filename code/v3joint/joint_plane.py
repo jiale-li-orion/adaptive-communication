@@ -58,6 +58,7 @@ class JointControlPlane(ControlPlane):
         obj._obl_index: dict = {}
         obj.suppress_duplicates = bool(suppress_duplicates)
         obj._backed_obl_keys: set = set()           # 已用备用送过至少一条合格样本的义务
+        obj._cover_seen: set = set()               # cover: 跨包已覆盖义务(仅降优先级,不 suppress/不停发)
         if obligations is not None:
             for _o in obligations.obligations:
                 obj._obl_index.setdefault((_o.node_id, _o.measurand), []).append(_o)
@@ -152,28 +153,60 @@ class JointControlPlane(ControlPlane):
                     sk = (item_dl, it.heard_at_s, it.node_id)
                 stream.append((sk, it, s, okeys))
         stream.sort(key=lambda x: x[0])
-        picked_of: dict[int, tuple[GatewayItem, list]] = {}
-        used = 0
-        for _, it, s, okeys in stream:
-            # 冗余抑制：该样本能满足的义务都已用备用送过合格样本，就不再占稀缺窗口
-            if (self.backup_chooser in ("obligation", "salvage") and self.suppress_duplicates
-                    and okeys and (self._backed_obl_keys & okeys)):
-                self.backup_suppressed += 1
-                continue
-            b = self.sample_bytes.get(getattr(s, "measurand", "displacement"), 6)
-            if used > 0 and used + b > cap:
-                continue                            # 这条装不下，试后面更小的（4B 雨量）
-            picked_of.setdefault(id(it), (it, []))[1].append(s)
-            used += b
-            if self.backup_chooser in ("obligation", "salvage") and okeys:
-                self._backed_obl_keys |= okeys
-        if used == 0:
-            empty = [it for it in candidates if not it.payload]
-            if not empty:
-                return primary                      # 积压全是已备过的冗余：不发空包、省资费
-            it = empty[0]
-            picked_of = {id(it): (it, [])}
-            used = self._item_payload_bytes(it)
+        if self.backup_chooser == "cover":
+            # R12 两遍贪心：层0 边际覆盖新义务(最急义务先、包内同义务不重复)；
+            # 层1 用剩余容量填更新副本、把机会用满(治 obligation 停发积压)。无全局永久去重、无硬剔除。
+            entries = [(it, s, okeys, self.sample_bytes.get(getattr(s, "measurand", "displacement"), 6))
+                       for _, it, s, okeys in stream]
+            picked_of: dict[int, tuple[GatewayItem, list]] = {}
+            used = 0
+            covered = self._cover_seen  # 跨包全局记忆:只用于层0降优先级,层1仍可发故不积压
+
+            def _take(it, s, b):
+                if used > 0 and used + b > cap:
+                    return False
+                picked_of.setdefault(id(it), (it, []))[1].append(s)
+                return True
+            # 层0 只选纯新增(其义务与已见集合不相交)且仍可挽救(dl>t)的干净样本;多对多匹配下
+            # '带一个已覆盖老义务'的老样本边际覆盖低,降入层1,避免占满名额致新义务饿死(EDF过载)。
+            def _fresh(e):
+                _s2 = e[1]; _ok = e[2]
+                return (self._sample_obl(_s2)[0] > t_s) and (not _ok or _ok.isdisjoint(covered))
+            for it, s, okeys, b in sorted((e for e in entries if _fresh(e)),
+                                          key=lambda e: (self._sample_obl(e[1])[0], e[0].heard_at_s)):
+                if _take(it, s, b):
+                    used += b
+                    covered |= okeys
+            # 层1(J2 消融: cover_l0only 关闭此层)：剩余容量按最新填更新副本,机会用满、不积压
+            if self.backup_chooser == "cover":
+                chosen = {s.sample_id for _, sp in picked_of.values() for s in sp}
+                for it, s, okeys, b in sorted((e for e in entries if e[1].sample_id not in chosen),
+                                              key=lambda e: (-e[0].heard_at_s, self._sample_obl(e[1])[0])):
+                    if _take(it, s, b):
+                        used += b                   # 剩余容量带更新副本,保持流动、不积压
+        else:
+            picked_of: dict[int, tuple[GatewayItem, list]] = {}
+            used = 0
+            for _, it, s, okeys in stream:
+                # 冗余抑制：该样本能满足的义务都已用备用送过合格样本，就不再占稀缺窗口
+                if (self.backup_chooser in ("obligation", "salvage") and self.suppress_duplicates
+                        and okeys and (self._backed_obl_keys & okeys)):
+                    self.backup_suppressed += 1
+                    continue
+                b = self.sample_bytes.get(getattr(s, "measurand", "displacement"), 6)
+                if used > 0 and used + b > cap:
+                    continue                            # 这条装不下，试后面更小的（4B 雨量）
+                picked_of.setdefault(id(it), (it, []))[1].append(s)
+                used += b
+                if self.backup_chooser in ("obligation", "salvage") and okeys:
+                    self._backed_obl_keys |= okeys
+            if used == 0:
+                empty = [it for it in candidates if not it.payload]
+                if not empty:
+                    return primary                      # 积压全是已备过的冗余：不发空包、省资费
+                it = empty[0]
+                picked_of = {id(it): (it, [])}
+                used = self._item_payload_bytes(it)
         out, remain = [], []
         for it in self.gateway_pending:
             entry = picked_of.get(id(it))
