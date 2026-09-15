@@ -1,0 +1,138 @@
+[
+ {
+  "arm": "fixed900",
+  "cond": {
+   "harvest_peak_wh_per_hour": 0.005,
+   "initial_soc": 0.5,
+   "blackout_frac": 0.3,
+   "outage_hours": 16
+  },
+  "routine_earliest_new": [
+   671,
+   672
+  ],
+  "routine_last_old": [
+   671,
+   672
+  ],
+  "routine_changed": 0,
+  "event_earliest_new": [
+   16,
+   21
+  ],
+  "event_last_old": [
+   16,
+   21
+  ],
+  "samples_with_overridden_arrival": 8,
+  "survival": {
+   "alive": 14,
+   "n": 14,
+   "mean_final_soc": 0.7197,
+   "dead": []
+  },
+  "downlink": 16,
+  "airtime_s": 138.2,
+  "note": "same run; earliest vs last differ only in scoring; survival/command/airtime identical by construction"
+ },
+ {
+  "arm": "ea_aoi",
+  "cond": {
+   "harvest_peak_wh_per_hour": 0.005,
+   "initial_soc": 0.5,
+   "blackout_frac": 0.3,
+   "outage_hours": 16
+  },
+  "routine_earliest_new": [
+   148,
+   672
+  ],
+  "routine_last_old": [
+   139,
+   672
+  ],
+  "routine_changed": 9,
+  "event_earliest_new": [
+   14,
+   21
+  ],
+  "event_last_old": [
+   13,
+   21
+  ],
+  "samples_with_overridden_arrival": 609,
+  "survival": {
+   "alive": 2,
+   "n": 14,
+   "mean_final_soc": 0.4311,
+   "dead": [
+    "n00",
+    "n01",
+    "n02",
+    "n03",
+    "n04",
+    "n05",
+    "n06",
+    "n07",
+    "n10",
+    "n11",
+    "n13",
+    "n15"
+   ]
+  },
+  "downlink": 56,
+  "airtime_s": 1493.8,
+  "note": "same run; earliest vs last differ only in scoring; survival/command/airtime identical by construction"
+ },
+ {
+  "arm": "fixed900",
+  "cond": {
+   "harvest_peak_wh_per_hour": 0.03,
+   "initial_soc": 1.0,
+   "blackout_frac": 0.0,
+   "outage_hours": 16
+  },
+  "routine_earliest_new": [
+   494,
+   8064
+  ],
+  "routine_last_old": [
+   481,
+   8064
+  ],
+  "routine_changed": 13,
+  "event_earliest_new": [
+   10,
+   21
+  ],
+  "event_last_old": [
+   8,
+   21
+  ],
+  "samples_with_overridden_arrival": 829,
+  "survival": {
+   "alive": 0,
+   "n": 14,
+   "mean_final_soc": 1.0,
+   "dead": [
+    "gw0",
+    "n00",
+    "n01",
+    "n02",
+    "n03",
+    "n04",
+    "n05",
+    "n06",
+    "n07",
+    "n10",
+    "n11",
+    "n13",
+    "n15",
+    "n16"
+   ]
+  },
+  "downlink": 22,
+  "airtime_s": 1435.4,
+  "note": "same run; earliest vs last differ only in scoring; survival/command/airtime identical by construction"
+ }
+]

@@ -167,6 +167,11 @@ class Transit:
 class Node:
     """一台现场监测节点：本地采样、本地触发、有限缓存、自动补发、动作驱动的电量。"""
 
+    #: R02 复机模型（默认 None=欠压即永久死亡的吸收态，保持既有行为与锚点）。
+    #: 设为数值 k 时：节点欠压停机后，若回充到 >= k*sample_wh 则冷启动复机（带回滞，避免抖动），
+    #: 模拟能量采集 PMIC 的 UVLO 下限断电/上限复电；这是模型敏感性的乐观极，不主张器件必然自动复机。
+    restart_threshold_mult: float | None = None
+
     def __init__(self, node_id: str, measurand: str, profile: DeviceProfile = DeviceProfile(),
                  *, initial_soc: float | None = None, initial_wh: float | None = None,
                  is_gateway: bool = False) -> None:
@@ -220,6 +225,8 @@ class Node:
         self.dropped = 0
         self.dead_at: int | None = None
         self.idle_ticks = 0
+        self.restarts = 0          # R02：欠压停机后回充复机次数
+        self.revived_at: list[int] = []
 
     # -------------------------------------------------- 电量
 
@@ -249,6 +256,12 @@ class Node:
                 self.alive = False
                 self.dead_at = t_s
                 self.power.dead_at_s = t_s
+        # R02：回充复机（带回滞）。死节点每 tick 仍先在上方积分采能；充到重启阈值之上才冷启动。
+        if (not self.alive and self.restart_threshold_mult is not None
+                and self.soc_wh >= self.restart_threshold_mult * self.p.sample_wh):
+            self.alive = True
+            self.restarts += 1
+            self.revived_at.append(t_s)
         self.power.soc_wh = self.soc_wh
 
     def spend(self, wh: float) -> None:
@@ -404,6 +417,10 @@ class Center:
     它不能读环境真值，也不能读节点缓存。所有回答都从 `self.received` 与 `self.reports` 里来。
     """
 
+    #: R01-B：是否只接受源时刻(read_at)更新的遥测快照。默认 False=到达即覆盖的旧行为，锚点逐位不变；
+    #: 置 True 时更旧的乱序快照不再覆盖较新中心视图（标准去乱序基线能力，非新贡献）。
+    monotonic_telemetry: bool = False
+
     def __init__(self) -> None:
         self.received: dict[str, Sample] = {}
         self.received_at: dict[str, int] = {}
@@ -417,8 +434,12 @@ class Center:
             self.received[sample.sample_id] = sample
             self.received_at[sample.sample_id] = t_s
         if item.snapshot:
-            self.reports[item.node_id] = dict(item.snapshot)
-            self.report_at[item.node_id] = t_s
+            _prev = self.reports.get(item.node_id)
+            _stale = (self.monotonic_telemetry and _prev is not None
+                      and item.snapshot.get("read_at", 0) < _prev.get("read_at", 0))
+            if not _stale:
+                self.reports[item.node_id] = dict(item.snapshot)
+                self.report_at[item.node_id] = t_s
         self.items_forwarded += 1
 
     def newest_taken_at(self, node_id: str) -> int | None:
@@ -664,7 +685,9 @@ class Instance:
                 # 网关自己的传感器：没有接入跳，直接进网关缓存。`heard_at` 就是采集时刻。
                 counters["heard"] += 1
                 for sample in batch:
-                    self.log.transit[sample.sample_id].heard_at = t_s
+                    _tr = self.log.transit[sample.sample_id]
+                    if _tr.heard_at is None or t_s < _tr.heard_at:
+                        _tr.heard_at = t_s
                 self._note_gateway_heard(node, t_s, batch)
                 self.plane.gateway_ingest(node.node_id, t_s,
                                           [s.sample_id for s in batch],
@@ -701,7 +724,9 @@ class Instance:
                 continue
             counters["heard"] += 1
             for sample in batch:
-                self.log.transit[sample.sample_id].heard_at = t_s
+                _tr = self.log.transit[sample.sample_id]
+                if _tr.heard_at is None or t_s < _tr.heard_at:
+                    _tr.heard_at = t_s
             self._note_gateway_heard(node, t_s, batch)
             self.plane.gateway_ingest(node.node_id, t_s,
                                       [s.sample_id for s in batch],
@@ -726,7 +751,9 @@ class Instance:
             self.center.receive(item, t_s)
             counters["forwarded"] += 1
             for sample in (item.payload or ()):
-                self.log.transit[sample.sample_id].received_at = t_s
+                _tr = self.log.transit[sample.sample_id]
+                if _tr.received_at is None or t_s < _tr.received_at:
+                    _tr.received_at = t_s
                 self.nodes[sample.node_id].ack([sample.sample_id])
         # 跨代混配：两个配置字段的世代号不一致，说明节点正在跑一个**没有任何 planner 请求过
         # 的组合**（如"新上报周期 + 旧采样间隔"）。协议里 sampling interval 与 report period
