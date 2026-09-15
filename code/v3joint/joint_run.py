@@ -25,6 +25,7 @@ from exogenous import (ObligationSet, constant_harvest,      # noqa: E402
                        displacement_series, hetero_harvest, solar_harvest,
                        irradiance_harvest,
                        rule_obligations_for_truth, routine_obligations_by_node,
+                       piecewise_routine_obligations,
                        wang_fragment_truth)
 from center import SocObservationModel, build_policy          # noqa: E402
 from network import DeviceProfile, Instance, nodes_from       # noqa: E402
@@ -32,6 +33,7 @@ from scoring import evaluate                                  # noqa: E402
 from joint_plane import JointControlPlane                     # noqa: E402
 from joint_policy import DeliveryOpportunisticPolicy, GatewayObserver  # noqa: E402
 from obligation_policy import ObligationDeliveryPolicy  # noqa: E402
+from mission_policy import MissionChangePolicy  # noqa: E402
 
 
 def run_joint(seed: int = 0, task_hours: int = 12, tail_hours: int = 1,
@@ -56,7 +58,10 @@ def run_joint(seed: int = 0, task_hours: int = 12, tail_hours: int = 1,
               cup_use_window: bool = True, cup_lead_s: int = 900, cup_gate_sampling: bool = True,
               odp_gate_sampling: bool = True, odp_use_backup_phase: bool = True,
               trace: bool = False,
-              collect_rows: bool = False, placement: str = "center"):
+              collect_rows: bool = False, placement: str = "center",
+              # ---- 顺序2: 外生授权任务变更(doc35) ----
+              mission_schedule=None, mission_mode: str | None = None,
+              mission_scope=None, mission_healthy_wh: float = 0.010):
     hours = task_hours + tail_hours
     dep = build_deployment(groups=groups, per_group=per_group)
     prof = DeviceProfile(sample_interval_s=sample_interval_s,
@@ -94,12 +99,19 @@ def run_joint(seed: int = 0, task_hours: int = 12, tail_hours: int = 1,
     truth.temp_c.update(temp)
 
     meas = {k: v.measurand for k, v in nodes.items()}
-    obs = routine_obligations_by_node(meas, int(task_hours), period_s=routine_period_s)
+    if mission_schedule is not None:
+        obs = piecewise_routine_obligations(meas, int(task_hours), mission_schedule)
+    else:
+        obs = routine_obligations_by_node(meas, int(task_hours), period_s=routine_period_s)
     obs = obs + rule_obligations_for_truth(truth, spacing_s=event_spacing_s)
     obligations = ObligationSet(obs)
 
     cup_observer = None
-    if arm == "cup":
+    if mission_mode is not None:
+        pol = MissionChangePolicy(mission_schedule, mode=mission_mode, scope=mission_scope,
+                                  healthy_wh=mission_healthy_wh)
+        placement = "center"
+    elif arm == "cup":
         cup_observer = GatewayObserver(backup_rate_s=backup_rate_s,
                                        enable_backup=enable_backup)
         pol = DeliveryOpportunisticPolicy(
@@ -159,6 +171,10 @@ def run_joint(seed: int = 0, task_hours: int = 12, tail_hours: int = 1,
     res["backup"] = inst.plane.backup_summary()
     res["deployment"] = dep.summary()
     res["command_counters"] = dict(inst.counters)
+    if mission_mode is not None:
+        res["mission_refusals"] = [
+            {"node": n, "req_period_s": rq, "at_s": t, "soc_wh": soc}
+            for (n, rq, t, soc) in pol.refusals]
     res["survival"] = {
         "alive": sum(1 for n in nodes.values() if getattr(n, "alive", True)),
         "n": len(nodes),
