@@ -307,3 +307,4 @@ python3 code/analysis/steady_gap.py --seeds 20 --tag q3_dpu2 --downlink-per-upli
 | `v3joint_r14_cover_fixed.json` | `r14_cover_fixed.py`（最终两层 cover：层0纯新增边际覆盖+层1用满，4 档 5 选包器，6 种子） | 6（J1 主结果） | 硬稀缺三档统一支配各档最强规则:r600 .906 vs obl.838(+6.8pp区间分离)、r900 .699 vs salv.656、r1200 .921 vs latest.917;备份字节与 edf/latest 相同(同成本);饱和 .978 比最优低0.7pp。见 doc27。 |
 | `v3joint_r15_ablation_l0only.json` | `r15_ablation_heldout.py`（J2：关层1 cover_l0only，6 种子） | 6（J2 消融） | 关层1后硬稀缺三档崩到 .46-.53(层1在稀缺+24~40pp)、仅饱和回到.984;与 r12 共同证明层0全局记忆/层1绑缚补足双必要、无死参数。见 doc27。 |
 | `v3joint_r15_heldout_seeds69.json` | `r15_ablation_heldout.py`（J4 held-out 种子6-9，未参与开发） | 4（held-out） | 排序无反转:cover 硬稀缺三档 .889/.683/.927 分别支配各档最强 .801/.639/.923,饱和.976。见 doc27。 |
+| `v3joint_r16_cover2.json` | `r16_cover2.py`（cover2=层1不补纯冗余，4 档 5 选包器，6 种子） | 6（J2 补充消融） | cover2 饱和回到.984(去冗余保新鲜)但三硬稀缺档全崩(.504/.462/.528)⇒层1补的'冗余'是对本地义务判断不完美(多对多/窗口边缘把新窗口样本误判已覆盖)的容错保险,在线无中心最终口径时不可无损去除;定稿 cover、不做魔数切换。见 doc28。 |

@@ -178,12 +178,22 @@ class JointControlPlane(ControlPlane):
                     used += b
                     covered |= okeys
             # 层1(J2 消融: cover_l0only 关闭此层)：剩余容量按最新填更新副本,机会用满、不积压
-            if self.backup_chooser == "cover":
+            # cover2: 只补仍带>=1未见义务的绑缚样本,纯冗余(义务全已见)不补(饱和保新鲜度)
+            if self.backup_chooser in ("cover", "cover2"):
                 chosen = {s.sample_id for _, sp in picked_of.values() for s in sp}
-                for it, s, okeys, b in sorted((e for e in entries if e[1].sample_id not in chosen),
+
+                def _l1ok(e):
+                    if e[1].sample_id in chosen:
+                        return False
+                    if self.backup_chooser == "cover2":
+                        _ok = e[2]
+                        if _ok and not (_ok - covered):
+                            return False            # 纯冗余:其义务全部已见,不占剩余容量
+                    return True
+                for it, s, okeys, b in sorted((e for e in entries if _l1ok(e)),
                                               key=lambda e: (-e[0].heard_at_s, self._sample_obl(e[1])[0])):
                     if _take(it, s, b):
-                        used += b                   # 剩余容量带更新副本,保持流动、不积压
+                        used += b                   # 剩余容量带绑缚/更新副本,保持流动、不积压
         else:
             picked_of: dict[int, tuple[GatewayItem, list]] = {}
             used = 0
