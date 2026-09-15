@@ -308,3 +308,4 @@ python3 code/analysis/steady_gap.py --seeds 20 --tag q3_dpu2 --downlink-per-upli
 | `v3joint_r15_ablation_l0only.json` | `r15_ablation_heldout.py`（J2：关层1 cover_l0only，6 种子） | 6（J2 消融） | 关层1后硬稀缺三档崩到 .46-.53(层1在稀缺+24~40pp)、仅饱和回到.984;与 r12 共同证明层0全局记忆/层1绑缚补足双必要、无死参数。见 doc27。 |
 | `v3joint_r15_heldout_seeds69.json` | `r15_ablation_heldout.py`（J4 held-out 种子6-9，未参与开发） | 4（held-out） | 排序无反转:cover 硬稀缺三档 .889/.683/.927 分别支配各档最强 .801/.639/.923,饱和.976。见 doc27。 |
 | `v3joint_r16_cover2.json` | `r16_cover2.py`（cover2=层1不补纯冗余，4 档 5 选包器，6 种子） | 6（J2 补充消融） | cover2 饱和回到.984 但三硬稀缺档全崩(.504/.462/.528),且包/字节/发送量与cover相同、R17逐义务配对=0(非matches误判)⇒层1按最新补位承担'样本时效'(一义务多份时序竞争候选,保最新一份赶上机会),与层0'覆盖广度'正交、不可去;定稿cover不做魔数切换。见 doc28。 |
+| `v3joint_r17_oracle_infcap.json` | `r17_oracle_infcap.py`（J5-a 宽松上界:净荷无限、保留真实机会稀疏度,6 种子） | 6（上界见证,非可实现主张） | 机会结构天花板.966-.984;cover 距上界 r600 .078/r1200 .049(中等稀缺主结果档已榨取大部分空间)、r900 .267(容量仅产出.43,主要为物理容量硬限:每包装满、发送量与edf同而覆盖更优)。完整容量感知离线oracle为成稿前补强。见 doc29。 |
