@@ -118,6 +118,86 @@ class JointControlPlane(ControlPlane):
         oids = frozenset(o.oid for o in matched)
         return dl, min(oids), oids
 
+    # ---- 统一的 cover 族装包引擎(R20 修复:所有变体真正可达、可单测)----
+    def _cover_family_pack(self, stream, t_s, cap):
+        """返回 (picked_of, used_bytes)。stream 元素=(sk,it,s,okeys)。
+        cover         : 跨包 seen + 层0覆盖广度(disjoint纯新增,dl升序) + 层1最新优先补满
+        cover_l0only  : 跨包 seen + 仅层0(关闭层1)
+        cover_local   : 层0但 seen 每包重置(消融跨包全局记忆) + 层1
+        cover2        : 跨包 seen + 层0 + 严格层1(不补纯冗余)
+        maxcov        : 教科书 maxcov-recency:阶段1按每字节边际新增有效义务覆盖贪心
+                        (包内每选一个重算,期限打破平局),阶段2最新优先补满,不停发
+        """
+        v = self.backup_chooser
+        E = []
+        for _sk, it, sx, ok in stream:
+            b = self.sample_bytes.get(getattr(sx, "measurand", "displacement"), 6)
+            dl, _, _ = self._sample_obl(sx)
+            E.append({"it": it, "s": sx, "ok": set(ok), "b": b, "dl": dl, "heard": it.heard_at_s})
+        picked = {}
+        used = 0
+
+        def chosen_ids():
+            return {sx.sample_id for _, sp in picked.values() for sx in sp}
+
+        def take(e):
+            nonlocal used
+            if used > 0 and used + e["b"] > cap:
+                return False
+            picked.setdefault(id(e["it"]), (e["it"], []))[1].append(e["s"])
+            used += e["b"]
+            return True
+
+        seen = set(self._cover_seen) if v != "cover_local" else set()
+
+        if v == "maxcov":
+            # 阶段1: 反复选 边际新增有效义务覆盖/字节 最大者; tie=期限早, 再 tie=更新
+            while True:
+                best, bk = None, None
+                for e in E:
+                    if e["s"].sample_id in chosen_ids():
+                        continue
+                    if used > 0 and used + e["b"] > cap:
+                        continue
+                    fresh = [o for o in e["ok"] if o not in seen] if e["dl"] > t_s else []
+                    if not fresh:
+                        continue
+                    key = (-len(fresh) / e["b"], e["dl"], -e["heard"])
+                    if bk is None or key < bk:
+                        bk, best = key, e
+                if best is None:
+                    break
+                if take(best):
+                    seen |= best["ok"]
+            # 阶段2: 剩余容量最新优先补满(不因无新覆盖停发)
+            for e in sorted((e for e in E if e["s"].sample_id not in chosen_ids()),
+                            key=lambda e: (-e["heard"], e["dl"])):
+                take(e)
+        else:
+            # 层0: 纯新增(义务与 seen 不相交)且仍可挽救(dl>t), dl 升序
+            def _fresh0(e):
+                return (e["dl"] > t_s) and (not e["ok"] or e["ok"].isdisjoint(seen))
+            for e in sorted(E, key=lambda e: (e["dl"], e["heard"])):
+                if not _fresh0(e):
+                    continue                      # 循环内用最新 seen 动态重判 disjoint
+                if take(e):
+                    seen |= e["ok"]
+            # 层1: 样本时效
+            if v in ("cover", "cover_local", "cover2"):
+                def _l1ok(e):
+                    if e["s"].sample_id in chosen_ids():
+                        return False
+                    if v == "cover2" and e["ok"] and not (e["ok"] - seen):
+                        return False          # 严格层1: 纯冗余不补
+                    return True
+                for e in sorted((e for e in E if _l1ok(e)),
+                                key=lambda e: (-e["heard"], e["dl"])):
+                    take(e)
+            # cover_l0only: 无层1
+        if v != "cover_local":
+            self._cover_seen |= seen
+        return picked, used
+
     # ---- 关键覆写：主回传之后，在同一拍叠加备用腿 ----
     def backhaul_forward(self, t_s: int, delay_s: int = 0) -> list[GatewayItem]:
         primary = super().backhaul_forward(t_s, delay_s)   # 主路 down 时为 []，且保留 pending
@@ -157,47 +237,9 @@ class JointControlPlane(ControlPlane):
                     sk = (item_dl, it.heard_at_s, it.node_id)
                 stream.append((sk, it, s, okeys))
         stream.sort(key=lambda x: x[0])
-        if self.backup_chooser == "cover":
-            # R12 两遍贪心：层0 边际覆盖新义务(最急义务先、包内同义务不重复)；
-            # 层1 用剩余容量填更新副本、把机会用满(治 obligation 停发积压)。无全局永久去重、无硬剔除。
-            entries = [(it, s, okeys, self.sample_bytes.get(getattr(s, "measurand", "displacement"), 6))
-                       for _, it, s, okeys in stream]
-            picked_of: dict[int, tuple[GatewayItem, list]] = {}
-            used = 0
-            covered = self._cover_seen  # 跨包全局记忆:只用于层0降优先级,层1仍可发故不积压
-
-            def _take(it, s, b):
-                if used > 0 and used + b > cap:
-                    return False
-                picked_of.setdefault(id(it), (it, []))[1].append(s)
-                return True
-            # 层0 只选纯新增(其义务与已见集合不相交)且仍可挽救(dl>t)的干净样本;多对多匹配下
-            # '带一个已覆盖老义务'的老样本边际覆盖低,降入层1,避免占满名额致新义务饿死(EDF过载)。
-            def _fresh(e):
-                _s2 = e[1]; _ok = e[2]
-                return (self._sample_obl(_s2)[0] > t_s) and (not _ok or _ok.isdisjoint(covered))
-            for it, s, okeys, b in sorted((e for e in entries if _fresh(e)),
-                                          key=lambda e: (self._sample_obl(e[1])[0], e[0].heard_at_s)):
-                if _take(it, s, b):
-                    used += b
-                    covered |= okeys
-            # 层1(J2 消融: cover_l0only 关闭此层)：剩余容量按最新填更新副本,机会用满、不积压
-            # cover2: 只补仍带>=1未见义务的绑缚样本,纯冗余(义务全已见)不补(饱和保新鲜度)
-            if self.backup_chooser in ("cover", "cover2"):
-                chosen = {s.sample_id for _, sp in picked_of.values() for s in sp}
-
-                def _l1ok(e):
-                    if e[1].sample_id in chosen:
-                        return False
-                    if self.backup_chooser == "cover2":
-                        _ok = e[2]
-                        if _ok and not (_ok - covered):
-                            return False            # 纯冗余:其义务全部已见,不占剩余容量
-                    return True
-                for it, s, okeys, b in sorted((e for e in entries if _l1ok(e)),
-                                              key=lambda e: (-e[0].heard_at_s, self._sample_obl(e[1])[0])):
-                    if _take(it, s, b):
-                        used += b                   # 剩余容量带绑缚/更新副本,保持流动、不积压
+        _COVER_FAMILY = ("cover", "cover_l0only", "cover_local", "cover2", "maxcov")
+        if self.backup_chooser in _COVER_FAMILY:
+            picked_of, used = self._cover_family_pack(stream, t_s, cap)
         else:
             picked_of: dict[int, tuple[GatewayItem, list]] = {}
             used = 0
