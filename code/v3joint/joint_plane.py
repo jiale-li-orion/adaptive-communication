@@ -138,7 +138,11 @@ class JointControlPlane(ControlPlane):
             item_dl = self._item_deadline(it)
             for s in (it.payload or []):
                 dl, _, okeys = self._sample_obl(s)
-                if self.backup_chooser == "obligation":
+                # salvage: 已过义务截止、再发也无法按期交付的样本不占稀缺包位
+                if self.backup_chooser == "salvage" and dl <= t_s:
+                    self.backup_suppressed += 1
+                    continue
+                if self.backup_chooser in ("obligation", "salvage"):
                     sk = (dl, it.heard_at_s, it.node_id)
                 elif self.backup_chooser == "fifo":
                     sk = (it.heard_at_s, dl, it.node_id)
@@ -152,7 +156,7 @@ class JointControlPlane(ControlPlane):
         used = 0
         for _, it, s, okeys in stream:
             # 冗余抑制：该样本能满足的义务都已用备用送过合格样本，就不再占稀缺窗口
-            if (self.backup_chooser == "obligation" and self.suppress_duplicates
+            if (self.backup_chooser in ("obligation", "salvage") and self.suppress_duplicates
                     and okeys and (self._backed_obl_keys & okeys)):
                 self.backup_suppressed += 1
                 continue
@@ -161,7 +165,7 @@ class JointControlPlane(ControlPlane):
                 continue                            # 这条装不下，试后面更小的（4B 雨量）
             picked_of.setdefault(id(it), (it, []))[1].append(s)
             used += b
-            if self.backup_chooser == "obligation" and okeys:
+            if self.backup_chooser in ("obligation", "salvage") and okeys:
                 self._backed_obl_keys |= okeys
         if used == 0:
             empty = [it for it in candidates if not it.payload]
