@@ -32,23 +32,40 @@ class ObligationDeliveryPolicy(CenterPolicy):
     name = "odp"
 
     def __init__(self, observer, period_s: int = 3600,
-                 dense_sample_s: int = 600, sparse_sample_s: int = 3600,
-                 fast_s: int = 300, mid_s: int = 900, relaxed_s: int = 1800,
-                 healthy_wh: float = 0.010, lead_s: int = 900,
+                 dense_sample_s: int | None = None, sparse_sample_s: int | None = None,
+                 fast_s: int | None = None, mid_s: int | None = None,
+                 relaxed_s: int | None = None,
+                 healthy_wh: float = 0.010, lead_s: int | None = None,
                  dwell_s: int = 600, decision_epoch_s: int = 300,
-                 primary_stale_s: int = 1800) -> None:
+                 primary_stale_s: int = 1800,
+                 gate_sampling: bool = True, use_backup_phase: bool = True) -> None:
         super().__init__()
         self.obs = observer
         self.period_s = int(period_s)
-        self.dense_sample_s, self.sparse_sample_s = dense_sample_s, sparse_sample_s
-        self.fast_s, self.mid_s, self.relaxed_s = fast_s, mid_s, relaxed_s
-        self.healthy_wh, self.lead_s = healthy_wh, lead_s
+        # 档位按义务周期 P 尺度归一（默认 None=auto，无自由调参），且遵守器件物理：
+        # 采样比上报贵约20倍、一义务窗一份即可，故采样最密只到 P（不做 P/2 密采，弱能下会耗死），
+        # 仅在能量保命时放松到 2P；上报便宜，可在 P/2(赶交付)/P(常态)/2P(保命) 间切。
+        # lead 是"下令→Class A 生效→采/报→赶上交付"的**绝对物理前置**，不随 P 缩放，默认 900s。
+        # 显式传值可覆盖（R04 见证用固定秒数复现同一组可达历史）。
+        self.sparse_sample_s = self.period_s if sparse_sample_s is None else sparse_sample_s
+        self.dense_sample_s = self.period_s if dense_sample_s is None else dense_sample_s
+        self.survive_sample_s = 2 * self.period_s
+        self.mid_s = self.period_s if mid_s is None else mid_s
+        self.fast_s = max(self.period_s // 2, 60) if fast_s is None else fast_s
+        self.relaxed_s = 2 * self.period_s if relaxed_s is None else relaxed_s
+        self.lead_s = 900 if lead_s is None else lead_s
+        self.healthy_wh = healthy_wh
         self.dwell_s, self.decision_epoch_s = dwell_s, decision_epoch_s
         # 超过这么久没成功转发过，就按主路受阻处理（纯本地反馈，对所有臂同接口）。
         self.primary_stale_s = primary_stale_s
+        # 消融开关：gate_sampling=False 只门控上报、采样恒稀疏（= 普通义务slack规则）；
+        # use_backup_phase=False 不把下一次备用机会相位计入可执行前置期。
+        self.gate_sampling = gate_sampling
+        self.use_backup_phase = use_backup_phase
         self._last: dict[str, int] = {}
         self._issued: dict[str, tuple[int, int]] = {}
         self.last_reason: dict[str, str] = {}     # 记录每个节点本次决策的三态归因，供可辨识见证
+        self._fast: dict[str, bool] = {}          # 快档迟滞状态（进入紧、退出松，抑制档位震荡/信令爆炸）
 
     # ------------------------------------------------------------ 合法状态推导
     def _primary_feeds(self, view, t: int) -> bool:
@@ -79,26 +96,33 @@ class ObligationDeliveryPolicy(CenterPolicy):
         energy_ok = (soc is None) or soc >= self.healthy_wh
         if not energy_ok:
             self.last_reason[nid] = "energy_guard"
-            return self.sparse_sample_s, self.relaxed_s
+            return self.survive_sample_s, self.relaxed_s
         opn = self.oldest_open(view, nid)
         if opn is None:
             # 态1：相关窗口网关都已有副本（或当前无欠账）→ 最省，不重复密采
+            self._fast[nid] = False
             self.last_reason[nid] = "covered_at_gateway"
             return self.sparse_sample_s, self.mid_s
         k, slack, node_has = opn
         feeds = self._primary_feeds(view, t)
         nxt_backup = self.obs.next_backup_in_s(t) if self.obs is not None else 0
         # 主路在喂：回传会自行恢复转发，不必动用备用前置期，按常规节奏即可。
-        horizon = self.lead_s if feeds else self.lead_s + nxt_backup
+        horizon = self.lead_s if feeds else (
+            self.lead_s + (nxt_backup if self.use_backup_phase else 0))
+        # 快档迟滞：进入要求 slack<=horizon，已在快档则放宽到 horizon+dwell 才退出，避免边界抖动。
+        enter = slack <= horizon
+        was_fast = self._fast.get(nid, False)
+        urgent = enter if not was_fast else (slack <= horizon + self.dwell_s)
+        self._fast[nid] = urgent
         if node_has:
-            # 态2：采到了、没到网关 → 促上报，采样保持稀疏（再密采只耗电与冗余）
-            if slack <= horizon:
+            # 态2：采到了、没到网关 → 促上报，采样保持义务密度（再密采只耗电与冗余）
+            if urgent:
                 self.last_reason[nid] = "push_report"
                 return self.sparse_sample_s, self.fast_s
             self.last_reason[nid] = "covered_soon"
             return self.sparse_sample_s, self.mid_s
-        # 态3：窗口样本都还没采到 → 必须在可执行前置期内密采+快报才来得及
-        if slack <= horizon:
+        # 态3：窗口样本都还没采到 → 前置期内恢复义务密度采样+快报才来得及
+        if urgent:
             self.last_reason[nid] = "must_sample"
             return self.dense_sample_s, self.fast_s
         self.last_reason[nid] = "ahead_of_deadline"
@@ -122,6 +146,8 @@ class ObligationDeliveryPolicy(CenterPolicy):
                 self._skip("no_soc", nid)
                 continue
             want_sample, want_report = self._want(view, nid)
+            if not self.gate_sampling:
+                want_sample = self.sparse_sample_s     # 消融：只门控上报，采样恒稀疏
             snap = view.reports.get(nid) or {}
             if (snap.get("sample_interval_s") == want_sample
                     and snap.get("report_period_s") == want_report):

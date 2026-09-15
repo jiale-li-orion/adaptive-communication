@@ -63,17 +63,19 @@
    "routine": {
     "n": 672,
     "collected": 672,
-    "delivered": 671,
+    "delivered": 669,
     "censored": 0,
     "missing_collection": 0,
-    "missing_delivery": 1
+    "missing_delivery": 3
    },
    "alive": 14,
    "reasons": [
+    "ahead_of_deadline",
     "covered_at_gateway",
-    "energy_guard"
+    "energy_guard",
+    "must_sample"
    ],
-   "odp_cmd": 38,
+   "odp_cmd": 117,
    "fixed_cmd": 16,
    "fixed_routine": {
     "n": 672,
@@ -96,25 +98,22 @@
   "tight": {
    "routine": {
     "n": 4032,
-    "collected": 1774,
-    "delivered": 1631,
+    "collected": 4032,
+    "delivered": 3971,
     "censored": 0,
-    "missing_collection": 2258,
-    "missing_delivery": 143
+    "missing_collection": 0,
+    "missing_delivery": 61
    },
    "alive": 14,
    "reasons": [
-    "ahead_of_deadline",
     "covered_at_gateway",
-    "must_sample",
-    "push_report"
+    "must_sample"
    ],
    "final_configs": [
-    "(600, 600)",
-    "(3600, 300)",
-    "(3600, 900)"
+    "(600, 300)",
+    "(600, 600)"
    ],
-   "cmd": 802
+   "cmd": 2121
   }
  }
 }

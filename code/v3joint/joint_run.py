@@ -53,6 +53,7 @@ def run_joint(seed: int = 0, task_hours: int = 12, tail_hours: int = 1,
               backup_chooser: str = "edf", backup_failover: bool = True,
               backup_suppress: bool = True,
               cup_use_window: bool = True, cup_lead_s: int = 900, cup_gate_sampling: bool = True,
+              odp_gate_sampling: bool = True, odp_use_backup_phase: bool = True,
               trace: bool = False,
               collect_rows: bool = False, placement: str = "center"):
     hours = task_hours + tail_hours
@@ -109,7 +110,9 @@ def run_joint(seed: int = 0, task_hours: int = 12, tail_hours: int = 1,
         cup_observer = GatewayObserver(backup_rate_s=backup_rate_s,
                                        enable_backup=enable_backup)
         pol = ObligationDeliveryPolicy(cup_observer, period_s=routine_period_s,
-                                       lead_s=cup_lead_s)
+                                       lead_s=cup_lead_s,
+                                       gate_sampling=odp_gate_sampling,
+                                       use_backup_phase=odp_use_backup_phase)
         placement = "gateway"
     elif arm == "ea_aoi_gw":
         # 机制归因：与 ea_aoi 同一条策略，仅放置到网关——其 AoI 自动改用"网关听到"而非"中心收到"
