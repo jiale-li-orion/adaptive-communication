@@ -101,7 +101,7 @@ Ablations used below: `cover` with `seen` reset each packet (no cross-packet mem
 ## 6. Finding II — obligation-level arbitration over the sparse backup
 
 ### 6.1 Phase transition at throughput ≈ production (R08)
-Production is 78 obligation-records/h (13 displacement stations × 6/h at P=600 s). Net backup records/h = (3600/rate)·⌊(bytes−20)/6⌋; the ratio to production is in parentheses. 270/h (3.46×)→0.984, 108/h (1.38×)→0.984, **54/h (0.69×)→0.504, 36/h (0.46×)→0.462, 27/h (0.35×)→0.450**; a larger 200 B packet compensates a slower rate (180/h (2.31×)→0.984, 90/h (1.15×)→0.528). Service tracks the capacity/production ratio, not rate or payload separately, and the transition sits where backup throughput ≈ production. Two scarcity structures follow: **capacity scarcity** (net throughput below production: r600/78 at 0.69×, r900/78 at 0.46×) and **opportunity sparsity** (r1200/200 at 1.15× total capacity but only one 30-record packet every 1,200 s, where within-packet selection still matters). These are the RDSS short-message regimes under tight registration parameters.
+Production is 78 obligation-records/h (13 displacement stations × 6/h at P=600 s). Net backup records/h = (3600/rate)·⌊(bytes−20)/6⌋; the ratio to production is in parentheses. 270/h (3.46×)→0.984, 108/h (1.38×)→0.984, **54/h (0.69×)→0.504, 36/h (0.46×)→0.462, 27/h (0.35×)→0.450**; a larger 200 B packet compensates a slower rate (180/h (2.31×)→0.984, 90/h (1.15×)→0.528). Service tracks the capacity/production ratio, not rate or payload separately, and the transition sits where backup throughput ≈ production. Two scarcity structures follow: **capacity scarcity** (net throughput below production: r600/78 at 0.69×, r900/78 at 0.46×) and **opportunity sparsity** (r1200/200 at 1.15× total capacity but only one 30-record packet every 1,200 s, where within-packet selection still matters). These are the RDSS short-message regimes under tight registration parameters. **Fig. 1(a)** plots the transition: coverage sits on a 0.45–0.53 plateau below capacity=production and jumps to 0.98 once backup throughput matches production.
 
 ### 6.2 No single classical rule wins (R09/R10), and why each fails (R11)
 Under hard scarcity (6 seeds):
@@ -114,7 +114,7 @@ Under hard scarcity (6 seeds):
 
 Item-level rules waste scarce packets on repeated copies of the same obligations. `obligation` de-duplicates efficiently (small-packet regime) but is capped at **0.838 even when backup is saturated** (r300): once it marks an obligation "sent" it suppresses later copies and, when the queue looks fully covered, **skips the send opportunity entirely**, emitting only 69–161 packets versus 87–333 for the non-stalling rules; per-obligation pairing against `latest` shows the *same samples eventually arrive* (0 obligations differ in identity) but arrive late—maximum gateway wait 41,400 s versus ≤300 s for the non-stalling rules. `salvage`'s hard expiry helps only at the tightest extreme and otherwise drops samples the center still counts; the "unreliable link needs retransmission" explanation is ruled out (backup success=1), as is any matching-error explanation (matching is deterministic and shared). The recurring failure is a **timeliness** failure under many-to-many candidate samples, compounded by stall-on-covered. A cross-segment check strengthens the attribution: aligning per-obligation first-heard times across choosers, **cover and `latest` share 99.7% of their access-side arrival trajectory**, so cover's advantage over the strongest item-level rule is obtained on essentially identical inputs and is purely a packing effect; `edf` shares only 80.5%—its oldest-first sends feed back through the primary queue/Class-A windows and delay ~20% of obligations' first hearing past their deadlines, a cross-segment self-congestion that compounds its in-packet ordering loss.
 
-### 6.3 cover: main paired result (J1, R14)
+### 6.3 cover: main paired result (J1, R14; Fig. 1(b))
 Same six development seeds, identical backup budget:
 
 | regime | edf | obligation | latest | salvage | **cover** | vs best classical |
@@ -124,7 +124,7 @@ Same six development seeds, identical backup budget:
 | r900/78 | 0.462 | 0.574 | 0.477 | 0.656 | **0.6985** [0.641,0.731] | **+4.2 pp** |
 | r1200/200 | 0.528 | 0.804 | 0.917 | 0.711 | **0.9214** [0.908,0.929] | **+0.4 pp** |
 
-cover dominates the best classical rule in **all three scarce/sparse regimes** and is the only rule competitive everywhere. It wins by breadth where packets are small and frequent, and by timeliness where packets are large and opportunities sparse—exactly the two properties the two layers encode.
+cover dominates the best classical rule in **all three scarce/sparse regimes** and is the only rule competitive everywhere. It wins by breadth where packets are small and frequent, and by timeliness where packets are large and opportunities sparse—exactly the two properties the two layers encode. **Fig. 1** (`results/fig_backup_arbitration.png`): (a) the capacity/production phase transition under item-level packing; (b) per-regime coverage of the five choosers at identical backup budget, with cover outlined in black.
 
 ### 6.4 Components are necessary (J2, R12/R15/R16)
 Removing any single mechanism causes a specific, direction-consistent loss:
