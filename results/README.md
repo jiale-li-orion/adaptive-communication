@@ -279,3 +279,13 @@ python3 code/analysis/steady_gap.py --seeds 20 --tag q3_dpu2 --downlink-per-upli
 | `v3joint_frontier.png` | 由 `v3joint_tight.json` 经 `python3 code/v3joint/make_fig_frontier.py` 生成 | 6 | 论文图：风险窗服务-空口静态前沿，端到端 AoI/EH-AoI 两闭环落在前沿下方，doc15 |
 | `v3joint_ea_sens.json` | `python3 code/v3joint/probe_ea_sens.py`（紧张工况 8 种子） | 8 | ea_aoi 旋钮稳健性：上报档/回滞/阈值.005-.020 均仍崩(.28-.31,活约1)，唯疏化密采档1200(.81)或极高阈值.030(追平但10.8倍下行命令)能避死，即安全只能靠把闭环削弱成开环，见 doc17 |
 | 
+
+
+## 2026-09-15 独立审查：v3joint 引用限制与诊断补件
+
+**本节覆盖上方 v3joint 的机制/最优性解释。** doc19 已发现首次到达覆盖、anchor 分支恒假、AoI/SoC/命令路径归因混合、吸收态死亡及错误拥塞解释。原文件暂留原路径供历史重放，**不再视为已通过科学审查的主结果**；完整修复与影响范围核定后按既有规则归档，不手工改旧数值。尤其撤回「无中断损失约零」「静态最优」「安全只能放弃闭环」「0.80 单网关容量上限」。
+
+| 文件 | 命令 | 种子 | 允许支持的结论 |
+|---|---|---|---|
+| `v3joint_review_20260915.json` | `python3 code/v3joint/review_diagnostic.py --output /tmp/v3joint_review_diagnostic.json`（源码哈希与已登记条件在文件内） | 固定 seed 0；两臂诊断，非主实验 | observer 开/关所有结果字段一致；首次到达独立重评使 ea routine 139→148、event 13→14，fixed 不变；分支枚举证明 anchor 常量目标。未修改生产仿真。 |
+| `v3joint_review_tight_20260915.json` | 同脚本加 `--include-tight` 可重放其中 tight 案例（完整输出另含两臂及保真检查；此文件为该案例单独补件） | 固定 seed 0，非统计 | 原 `probe_diag_tight` openloop 条件缺采4754、存活0/14且末电满；不是纯接入拥塞的反例。补件原运行未另做 observer 关闭对照，不能引用为所有字段保真检查已完成。 |

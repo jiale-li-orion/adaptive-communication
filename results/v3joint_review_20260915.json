@@ -1,0 +1,457 @@
+{
+  "source_commit": "87e9d4902fd6136b87f5ec24ea096880b3abd2a1",
+  "source_sha256": {
+    "code/instance/network.py": "b4a5df530849a1e849fa2b9f811bfba7e923f750d5cd508801c26622ba188920",
+    "code/instance/scoring.py": "27587449c2768d6778dab189f32b72a279a33dcddad61c1de225816695b82e3b",
+    "code/instance/center.py": "1e16f821e8f378434957ef7f88916077e6a3c3209cd5bf922d317cd693bcfb62",
+    "code/monitoring/opportunity.py": "d822d36bbaced02b1571584c0ad674df0ffbe5bde6cf4864a22c3574e8627b62",
+    "code/v3joint/joint_run.py": "c289e4f05cc9e8dcde6cff7686bee02f3f3397d6b91f275e3c445f89746f0b68",
+    "code/v3joint/joint_plane.py": "f8f87588c74a81a1881808ad5ccd651a747cdd7d497992af5f26dfecd16f223c",
+    "code/v3joint/joint_policy.py": "4acd8b5cf8061d24228c13b28b963b68290698411977c94277382c178c716777"
+  },
+  "scope": "Existing published conditions, seed 0; observer and branch diagnostics only, no new candidate or simulator fix",
+  "branch_audit": {
+    "scope": "Constructed healthy/primary-down/no-copy views, all ticks in 48h; branch audit, not business performance",
+    "rows": [
+      {
+        "period_s": 3600,
+        "use_backup_window": false,
+        "generated_targets": [
+          [
+            3600,
+            900
+          ]
+        ]
+      },
+      {
+        "period_s": 3600,
+        "use_backup_window": true,
+        "generated_targets": [
+          [
+            3600,
+            900
+          ]
+        ]
+      },
+      {
+        "period_s": 300,
+        "use_backup_window": false,
+        "generated_targets": [
+          [
+            3600,
+            900
+          ]
+        ]
+      },
+      {
+        "period_s": 300,
+        "use_backup_window": true,
+        "generated_targets": [
+          [
+            600,
+            300
+          ]
+        ]
+      }
+    ]
+  },
+  "records": [
+    {
+      "arm": "fixed900",
+      "seed": 0,
+      "condition": {
+        "task_hours": 48,
+        "tail_hours": 1,
+        "outage_start_h": 4.0,
+        "outage_hours": 16.0,
+        "enable_backup": true,
+        "backup_rate_s": 300,
+        "backup_bytes": 78,
+        "harvest_mode": "solar",
+        "initial_soc": 0.5,
+        "harvest_peak_wh_per_hour": 0.005,
+        "blackout_frac": 0.3,
+        "blackout_start_h": 4.0
+      },
+      "official_by_kind": {
+        "routine": {
+          "n": 672,
+          "collected": 672,
+          "delivered": 671,
+          "censored": 0,
+          "missing_collection": 0,
+          "missing_delivery": 1
+        },
+        "event": {
+          "n": 21,
+          "collected": 21,
+          "delivered": 16,
+          "censored": 0,
+          "missing_collection": 0,
+          "missing_delivery": 5
+        }
+      },
+      "first_arrival_by_kind": {
+        "routine": {
+          "n": 672,
+          "collected": 672,
+          "delivered": 671,
+          "censored": 0,
+          "missing_collection": 0,
+          "missing_delivery": 1
+        },
+        "event": {
+          "n": 21,
+          "collected": 21,
+          "delivered": 16,
+          "censored": 0,
+          "missing_collection": 0,
+          "missing_delivery": 5
+        }
+      },
+      "survival": {
+        "alive": 14,
+        "n": 14,
+        "mean_final_soc": 0.7197,
+        "dead": []
+      },
+      "backup": {
+        "backup_opportunities": 85,
+        "backup_gated": 0,
+        "backup_packets": 85,
+        "backup_records": 374,
+        "backup_bytes_sent": 3840,
+        "backup_suppressed": 0,
+        "backup_rate_s": 300,
+        "backup_bytes": 78,
+        "backup_chooser": "edf",
+        "backup_failover": true
+      },
+      "observer_all_result_fields_identical": true,
+      "dead_with_enough_final_energy_to_sample": [],
+      "final_report_periods_s": {
+        "gw0": 3600,
+        "n00": 900,
+        "n01": 900,
+        "n02": 900,
+        "n03": 900,
+        "n04": 900,
+        "n05": 900,
+        "n06": 900,
+        "n07": 900,
+        "n10": 900,
+        "n11": 900,
+        "n13": 900,
+        "n15": 900,
+        "n16": 900
+      },
+      "arrival_events": 720,
+      "distinct_arriving_samples": 707,
+      "samples_delivered_more_than_once": 8,
+      "samples_delivered_by_backup_more_than_once": 8,
+      "received_at_later_than_first": 0,
+      "heard_at_later_than_first": 8,
+      "snapshot_regressions_count": 0,
+      "snapshot_regressions_first_10": [],
+      "changed_rows_count": 0,
+      "changed_rows_first_20": [],
+      "note": "Observer only. Re-scoring uses first arrivals; policies and trajectories are unchanged. No simulator fix or causal intervention."
+    },
+    {
+      "arm": "ea_aoi",
+      "seed": 0,
+      "condition": {
+        "task_hours": 48,
+        "tail_hours": 1,
+        "outage_start_h": 4.0,
+        "outage_hours": 16.0,
+        "enable_backup": true,
+        "backup_rate_s": 300,
+        "backup_bytes": 78,
+        "harvest_mode": "solar",
+        "initial_soc": 0.5,
+        "harvest_peak_wh_per_hour": 0.005,
+        "blackout_frac": 0.3,
+        "blackout_start_h": 4.0
+      },
+      "official_by_kind": {
+        "routine": {
+          "n": 672,
+          "collected": 299,
+          "delivered": 139,
+          "censored": 0,
+          "missing_collection": 373,
+          "missing_delivery": 160
+        },
+        "event": {
+          "n": 21,
+          "collected": 21,
+          "delivered": 13,
+          "censored": 0,
+          "missing_collection": 0,
+          "missing_delivery": 8
+        }
+      },
+      "first_arrival_by_kind": {
+        "routine": {
+          "n": 672,
+          "collected": 299,
+          "delivered": 148,
+          "censored": 0,
+          "missing_collection": 373,
+          "missing_delivery": 151
+        },
+        "event": {
+          "n": 21,
+          "collected": 21,
+          "delivered": 14,
+          "censored": 0,
+          "missing_collection": 0,
+          "missing_delivery": 7
+        }
+      },
+      "survival": {
+        "alive": 2,
+        "n": 14,
+        "mean_final_soc": 0.4311,
+        "dead": [
+          "n00",
+          "n01",
+          "n02",
+          "n03",
+          "n04",
+          "n05",
+          "n06",
+          "n07",
+          "n10",
+          "n11",
+          "n13",
+          "n15"
+        ]
+      },
+      "backup": {
+        "backup_opportunities": 210,
+        "backup_gated": 0,
+        "backup_packets": 210,
+        "backup_records": 1808,
+        "backup_bytes_sent": 14944,
+        "backup_suppressed": 0,
+        "backup_rate_s": 300,
+        "backup_bytes": 78,
+        "backup_chooser": "edf",
+        "backup_failover": true
+      },
+      "observer_all_result_fields_identical": true,
+      "dead_with_enough_final_energy_to_sample": [
+        "n00",
+        "n01",
+        "n03",
+        "n05",
+        "n06",
+        "n07",
+        "n11",
+        "n13",
+        "n15"
+      ],
+      "final_report_periods_s": {
+        "gw0": 3600,
+        "n00": 300,
+        "n01": 900,
+        "n02": 900,
+        "n03": 900,
+        "n04": 900,
+        "n05": 900,
+        "n06": 300,
+        "n07": 300,
+        "n10": 900,
+        "n11": 3600,
+        "n13": 300,
+        "n15": 300,
+        "n16": 900
+      },
+      "arrival_events": 19010,
+      "distinct_arriving_samples": 914,
+      "samples_delivered_more_than_once": 609,
+      "samples_delivered_by_backup_more_than_once": 208,
+      "received_at_later_than_first": 218,
+      "heard_at_later_than_first": 609,
+      "snapshot_regressions_count": 21,
+      "snapshot_regressions_first_10": [
+        {
+          "at": 16500,
+          "node_id": "n15",
+          "old_read_at": 14700,
+          "new_read_at": 14400,
+          "old_soc_wh": 0.025098,
+          "new_soc_wh": 0.024898,
+          "path": "backup"
+        },
+        {
+          "at": 21000,
+          "node_id": "n15",
+          "old_read_at": 15900,
+          "new_read_at": 15300,
+          "old_soc_wh": 0.025222,
+          "new_soc_wh": 0.025296,
+          "path": "backup"
+        },
+        {
+          "at": 24000,
+          "node_id": "n06",
+          "old_read_at": 19500,
+          "new_read_at": 18000,
+          "old_soc_wh": 0.025067,
+          "new_soc_wh": 0.025054,
+          "path": "backup"
+        },
+        {
+          "at": 63000,
+          "node_id": "n10",
+          "old_read_at": 23400,
+          "new_read_at": 18000,
+          "old_soc_wh": 0.019621,
+          "new_soc_wh": 0.024167,
+          "path": "backup"
+        },
+        {
+          "at": 63000,
+          "node_id": "n15",
+          "old_read_at": 23100,
+          "new_read_at": 18600,
+          "old_soc_wh": 0.026003,
+          "new_soc_wh": 0.024901,
+          "path": "backup"
+        },
+        {
+          "at": 63000,
+          "node_id": "n02",
+          "old_read_at": 25200,
+          "new_read_at": 18900,
+          "old_soc_wh": 0.015984,
+          "new_soc_wh": 0.021511,
+          "path": "backup"
+        },
+        {
+          "at": 63000,
+          "node_id": "n06",
+          "old_read_at": 24000,
+          "new_read_at": 19200,
+          "old_soc_wh": 0.025618,
+          "new_soc_wh": 0.024963,
+          "path": "backup"
+        },
+        {
+          "at": 63600,
+          "node_id": "n03",
+          "old_read_at": 23400,
+          "new_read_at": 20700,
+          "old_soc_wh": 0.025943,
+          "new_soc_wh": 0.025513,
+          "path": "backup"
+        },
+        {
+          "at": 63600,
+          "node_id": "n04",
+          "old_read_at": 23400,
+          "new_read_at": 20700,
+          "old_soc_wh": 0.017445,
+          "new_soc_wh": 0.019947,
+          "path": "backup"
+        },
+        {
+          "at": 63600,
+          "node_id": "n00",
+          "old_read_at": 22800,
+          "new_read_at": 21600,
+          "old_soc_wh": 0.025678,
+          "new_soc_wh": 0.025647,
+          "path": "backup"
+        }
+      ],
+      "changed_rows_count": 10,
+      "changed_rows_first_20": [
+        {
+          "oid": "n00:routine:00005",
+          "before": false,
+          "after": true,
+          "deadline": 25200,
+          "old_first_received_at": 65100,
+          "true_first_received_at": 23400
+        },
+        {
+          "oid": "n01:routine:00005",
+          "before": false,
+          "after": true,
+          "deadline": 25200,
+          "old_first_received_at": 45300,
+          "true_first_received_at": 23700
+        },
+        {
+          "oid": "n03:routine:00005",
+          "before": false,
+          "after": true,
+          "deadline": 25200,
+          "old_first_received_at": 45900,
+          "true_first_received_at": 23700
+        },
+        {
+          "oid": "n04:routine:00005",
+          "before": false,
+          "after": true,
+          "deadline": 25200,
+          "old_first_received_at": 46200,
+          "true_first_received_at": 24000
+        },
+        {
+          "oid": "n06:routine:00005",
+          "before": false,
+          "after": true,
+          "deadline": 25200,
+          "old_first_received_at": 63300,
+          "true_first_received_at": 24000
+        },
+        {
+          "oid": "n07:routine:00005",
+          "before": false,
+          "after": true,
+          "deadline": 25200,
+          "old_first_received_at": 69900,
+          "true_first_received_at": 24300
+        },
+        {
+          "oid": "n15:routine:00005",
+          "before": false,
+          "after": true,
+          "deadline": 25200,
+          "old_first_received_at": 72000,
+          "true_first_received_at": 25200
+        },
+        {
+          "oid": "n16:routine:00004",
+          "before": false,
+          "after": true,
+          "deadline": 21600,
+          "old_first_received_at": 24600,
+          "true_first_received_at": 21000
+        },
+        {
+          "oid": "n16:routine:00005",
+          "before": false,
+          "after": true,
+          "deadline": 25200,
+          "old_first_received_at": 64200,
+          "true_first_received_at": 24600
+        },
+        {
+          "oid": "gw0:event:r5.1",
+          "before": false,
+          "after": true,
+          "deadline": 30360,
+          "old_first_received_at": 30600,
+          "true_first_received_at": 30000
+        }
+      ],
+      "note": "Observer only. Re-scoring uses first arrivals; policies and trajectories are unchanged. No simulator fix or causal intervention."
+    }
+  ]
+}

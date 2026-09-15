@@ -1,0 +1,325 @@
+{
+  "source_commit": "87e9d4902fd6136b87f5ec24ea096880b3abd2a1",
+  "source_sha256": {
+    "code/instance/network.py": "b4a5df530849a1e849fa2b9f811bfba7e923f750d5cd508801c26622ba188920",
+    "code/instance/scoring.py": "27587449c2768d6778dab189f32b72a279a33dcddad61c1de225816695b82e3b",
+    "code/instance/center.py": "1e16f821e8f378434957ef7f88916077e6a3c3209cd5bf922d317cd693bcfb62",
+    "code/monitoring/opportunity.py": "d822d36bbaced02b1571584c0ad674df0ffbe5bde6cf4864a22c3574e8627b62",
+    "code/v3joint/joint_run.py": "c289e4f05cc9e8dcde6cff7686bee02f3f3397d6b91f275e3c445f89746f0b68",
+    "code/v3joint/joint_plane.py": "f8f87588c74a81a1881808ad5ccd651a747cdd7d497992af5f26dfecd16f223c",
+    "code/v3joint/joint_policy.py": "4acd8b5cf8061d24228c13b28b963b68290698411977c94277382c178c716777"
+  },
+  "scope": "Seed 0, exact openloop condition from probe_diag_tight.py. Additional observer run; uninstrumented parity was NOT rerun for this slower condition. Reproduce this case via review_diagnostic.py --include-tight.",
+  "record": {
+    "arm": "fixed900",
+    "seed": 0,
+    "condition": {
+      "task_hours": 48,
+      "tail_hours": 1,
+      "outage_start_h": 4.0,
+      "outage_hours": 16.0,
+      "enable_backup": true,
+      "backup_rate_s": 300,
+      "backup_bytes": 78,
+      "harvest_mode": "solar",
+      "initial_soc": 1.0,
+      "harvest_peak_wh_per_hour": 0.03,
+      "blackout_frac": 0.0,
+      "sample_interval_s": 300,
+      "report_period_s": 300,
+      "routine_period_s": 300
+    },
+    "official_by_kind": {
+      "routine": {
+        "n": 8064,
+        "collected": 3310,
+        "delivered": 481,
+        "censored": 0,
+        "missing_collection": 4754,
+        "missing_delivery": 2829
+      },
+      "event": {
+        "n": 21,
+        "collected": 21,
+        "delivered": 8,
+        "censored": 0,
+        "missing_collection": 0,
+        "missing_delivery": 13
+      }
+    },
+    "first_arrival_by_kind": {
+      "routine": {
+        "n": 8064,
+        "collected": 3310,
+        "delivered": 494,
+        "censored": 0,
+        "missing_collection": 4754,
+        "missing_delivery": 2816
+      },
+      "event": {
+        "n": 21,
+        "collected": 21,
+        "delivered": 10,
+        "censored": 0,
+        "missing_collection": 0,
+        "missing_delivery": 11
+      }
+    },
+    "survival": {
+      "alive": 0,
+      "n": 14,
+      "mean_final_soc": 1.0,
+      "dead": [
+        "gw0",
+        "n00",
+        "n01",
+        "n02",
+        "n03",
+        "n04",
+        "n05",
+        "n06",
+        "n07",
+        "n10",
+        "n11",
+        "n13",
+        "n15",
+        "n16"
+      ]
+    },
+    "backup": {
+      "backup_opportunities": 204,
+      "backup_gated": 0,
+      "backup_packets": 204,
+      "backup_records": 2040,
+      "backup_bytes_sent": 15912,
+      "backup_suppressed": 0,
+      "backup_rate_s": 300,
+      "backup_bytes": 78,
+      "backup_chooser": "edf",
+      "backup_failover": true
+    },
+    "arrival_events": 22251,
+    "distinct_arriving_samples": 1552,
+    "samples_delivered_more_than_once": 829,
+    "samples_delivered_by_backup_more_than_once": 283,
+    "received_at_later_than_first": 301,
+    "heard_at_later_than_first": 829,
+    "snapshot_regressions_count": 34,
+    "snapshot_regressions_first_10": [
+      {
+        "at": 2400,
+        "node_id": "n16",
+        "old_read_at": 1200,
+        "new_read_at": 900,
+        "old_soc_wh": 0.047846,
+        "new_soc_wh": 0.048183,
+        "path": "backup"
+      },
+      {
+        "at": 3000,
+        "node_id": "gw0",
+        "old_read_at": 2100,
+        "new_read_at": 1800,
+        "old_soc_wh": 0.046851,
+        "new_soc_wh": 0.047018,
+        "path": "backup"
+      },
+      {
+        "at": 3600,
+        "node_id": "n01",
+        "old_read_at": 1800,
+        "new_read_at": 1500,
+        "old_soc_wh": 0.047194,
+        "new_soc_wh": 0.047486,
+        "path": "telemetry"
+      },
+      {
+        "at": 3600,
+        "node_id": "gw0",
+        "old_read_at": 2100,
+        "new_read_at": 1800,
+        "old_soc_wh": 0.046851,
+        "new_soc_wh": 0.047018,
+        "path": "telemetry"
+      },
+      {
+        "at": 19500,
+        "node_id": "n03",
+        "old_read_at": 17100,
+        "new_read_at": 16200,
+        "old_soc_wh": 0.049482,
+        "new_soc_wh": 0.049489,
+        "path": "backup"
+      },
+      {
+        "at": 19800,
+        "node_id": "n10",
+        "old_read_at": 17100,
+        "new_read_at": 16200,
+        "old_soc_wh": 0.049482,
+        "new_soc_wh": 0.049489,
+        "path": "backup"
+      },
+      {
+        "at": 26100,
+        "node_id": "n03",
+        "old_read_at": 18900,
+        "new_read_at": 17100,
+        "old_soc_wh": 0.049475,
+        "new_soc_wh": 0.049482,
+        "path": "backup"
+      },
+      {
+        "at": 26100,
+        "node_id": "n06",
+        "old_read_at": 19800,
+        "new_read_at": 17100,
+        "old_soc_wh": 0.049467,
+        "new_soc_wh": 0.049489,
+        "path": "backup"
+      },
+      {
+        "at": 33300,
+        "node_id": "gw0",
+        "old_read_at": 31200,
+        "new_read_at": 30600,
+        "old_soc_wh": 0.05,
+        "new_soc_wh": 0.049459,
+        "path": "backup"
+      },
+      {
+        "at": 36600,
+        "node_id": "n07",
+        "old_read_at": 20700,
+        "new_read_at": 18000,
+        "old_soc_wh": 0.049467,
+        "new_soc_wh": 0.049489,
+        "path": "backup"
+      }
+    ],
+    "changed_rows_count": 15,
+    "changed_rows_first_20": [
+      {
+        "oid": "n03:routine:00002",
+        "before": false,
+        "after": true,
+        "deadline": 1200,
+        "old_first_received_at": 1800,
+        "true_first_received_at": 1200
+      },
+      {
+        "oid": "n03:routine:00003",
+        "before": false,
+        "after": true,
+        "deadline": 1500,
+        "old_first_received_at": 1800,
+        "true_first_received_at": 1200
+      },
+      {
+        "oid": "n03:routine:00004",
+        "before": false,
+        "after": true,
+        "deadline": 1800,
+        "old_first_received_at": 3600,
+        "true_first_received_at": 1800
+      },
+      {
+        "oid": "n05:routine:00002",
+        "before": false,
+        "after": true,
+        "deadline": 1200,
+        "old_first_received_at": 1500,
+        "true_first_received_at": 900
+      },
+      {
+        "oid": "n05:routine:00003",
+        "before": false,
+        "after": true,
+        "deadline": 1500,
+        "old_first_received_at": 2400,
+        "true_first_received_at": 1500
+      },
+      {
+        "oid": "n07:routine:00002",
+        "before": false,
+        "after": true,
+        "deadline": 1200,
+        "old_first_received_at": 1500,
+        "true_first_received_at": 900
+      },
+      {
+        "oid": "n07:routine:00003",
+        "before": false,
+        "after": true,
+        "deadline": 1500,
+        "old_first_received_at": 3000,
+        "true_first_received_at": 1500
+      },
+      {
+        "oid": "n10:routine:00003",
+        "before": false,
+        "after": true,
+        "deadline": 1500,
+        "old_first_received_at": 2100,
+        "true_first_received_at": 1500
+      },
+      {
+        "oid": "n10:routine:00004",
+        "before": false,
+        "after": true,
+        "deadline": 1800,
+        "old_first_received_at": 2100,
+        "true_first_received_at": 1800
+      },
+      {
+        "oid": "n13:routine:00002",
+        "before": false,
+        "after": true,
+        "deadline": 1200,
+        "old_first_received_at": 1800,
+        "true_first_received_at": 1200
+      },
+      {
+        "oid": "n13:routine:00004",
+        "before": false,
+        "after": true,
+        "deadline": 1800,
+        "old_first_received_at": 3600,
+        "true_first_received_at": 1800
+      },
+      {
+        "oid": "n15:routine:00002",
+        "before": false,
+        "after": true,
+        "deadline": 1200,
+        "old_first_received_at": 2100,
+        "true_first_received_at": 1200
+      },
+      {
+        "oid": "n15:routine:00003",
+        "before": false,
+        "after": true,
+        "deadline": 1500,
+        "old_first_received_at": 3000,
+        "true_first_received_at": 1500
+      },
+      {
+        "oid": "gw0:event:r1.1",
+        "before": false,
+        "after": true,
+        "deadline": 1680,
+        "old_first_received_at": 1800,
+        "true_first_received_at": 1200
+      },
+      {
+        "oid": "gw0:event:r5.1",
+        "before": false,
+        "after": true,
+        "deadline": 30360,
+        "old_first_received_at": 30900,
+        "true_first_received_at": 30000
+      }
+    ],
+    "note": "Observer only. Re-scoring uses first arrivals; policies and trajectories are unchanged. No simulator fix or causal intervention."
+  }
+}

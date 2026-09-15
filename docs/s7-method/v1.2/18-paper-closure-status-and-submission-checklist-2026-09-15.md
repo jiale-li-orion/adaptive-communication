@@ -1,5 +1,7 @@
 # Task v1.2 — 18 · 论文闭环状态报告与投稿前清单（阶段定稿）
 
+> **后续独立审查覆盖本件状态判定**：见 [doc19](19-independent-paper-review-2026-09-15.md)。下文保留为历史判断；「科学内容已闭环」「仅剩成稿工程」暂停采用。新增首次到达反例与分支审计已落盘；需完成 [doc20 的有限核验](20-review-experiment-matrix-2026-09-15.md) 后再决定写作。
+
 日期：2026-09-15。承接 [17](17-ea-parameter-sensitivity-2026-09-15.md)。
 本件回答一个问题：**"When Freshness Feedback Lies" 这篇论文现在闭环到什么程度、还差什么能投。**
 

@@ -1,0 +1,268 @@
+{
+  "date": "2026-09-15",
+  "source_review": "19-independent-paper-review-2026-09-15.md",
+  "route": "measurement validity -> identifiability -> conditional single headroom probe",
+  "highlight_hypotheses": {
+    "H1": "同一结果年龄不足以确定应改变哪一段；现有失败尚未归因。",
+    "H2": "持续配置的生效延迟、负载和有限交付联动可能产生普通规则之外的差额；未证实。"
+  },
+  "rows": [
+    {
+      "exp_id": "R00",
+      "tier": "required",
+      "experiment_type": "existing_result_audit",
+      "status": "analyzed",
+      "feasibility_now": "complete",
+      "claim_ids": [
+        "C1",
+        "C2",
+        "C3"
+      ],
+      "highlight_ids": [],
+      "research_question": "已有主张能否由当前代码和结果支持？",
+      "hypothesis": "原始到达记录及候选分支足以揭示无效归因",
+      "comparators": [
+        "published aggregates",
+        "independent arrival observer",
+        "branch enumeration"
+      ],
+      "metrics": [
+        "first arrival",
+        "delivered obligations",
+        "reachable targets"
+      ],
+      "minimal_success_criterion": "给出可复现反例；不改变策略轨迹",
+      "paper_placement": "review/artifact",
+      "promotion_rule": "仅证明缺口，不晋级方法",
+      "next_action": "按 doc19 R1–R7 收窄主张"
+    },
+    {
+      "exp_id": "R01",
+      "tier": "required",
+      "experiment_type": "measurement_repair",
+      "status": "pending",
+      "feasibility_now": "available",
+      "claim_ids": [
+        "C1"
+      ],
+      "highlight_ids": [],
+      "research_question": "重复到达与旧遥测能否污染评分和状态？",
+      "hypothesis": "首次到达单调保存，遥测按源时间更新",
+      "comparators": [
+        "original",
+        "first-arrival repair",
+        "source-time telemetry repair"
+      ],
+      "metrics": [
+        "all changed obligations",
+        "source timestamp regressions",
+        "service",
+        "sensing deficit",
+        "cost"
+      ],
+      "minimal_success_criterion": "本轮反例消失；分别记录纯评分变化与行为变化；受影响旧产物不再直接引用",
+      "paper_placement": "artifact validation",
+      "promotion_rule": "修复不作为方法增量",
+      "next_action": "修复公共层后仅重放反例和少量原开发种子"
+    },
+    {
+      "exp_id": "R02",
+      "tier": "required",
+      "experiment_type": "model_validity",
+      "status": "pending",
+      "feasibility_now": "source work needed; sensitivity feasible",
+      "claim_ids": [
+        "C1",
+        "C2"
+      ],
+      "highlight_ids": [],
+      "research_question": "永久死亡及紧任务缺口是否来自已证实器件语义？",
+      "hypothesis": "吸收态和可复机模型可能改变恢复后损害",
+      "comparators": [
+        "declared absorbing failure",
+        "declared recoverable brownout"
+      ],
+      "metrics": [
+        "missed sensing windows",
+        "unpowered time",
+        "recovery delay",
+        "alive",
+        "SoC",
+        "service"
+      ],
+      "minimal_success_criterion": "来源/研究假设分清；采集、接入、回传损失分列；不把未采集记成无线拥塞",
+      "paper_placement": "model and limitations",
+      "promotion_rule": "不能只选让效果更大的模型",
+      "next_action": "先制作器件复机与 P300 窗口语义卡；再做单条件模型敏感性"
+    },
+    {
+      "exp_id": "R03",
+      "tier": "conditional",
+      "experiment_type": "causal_attribution",
+      "status": "pending_if_feedback_claim_retained",
+      "feasibility_now": "after R01/R02",
+      "claim_ids": [
+        "C2"
+      ],
+      "highlight_ids": [
+        "H1"
+      ],
+      "research_question": "差额来自 AoI、电量陈旧，还是无法纠正配置？",
+      "hypothesis": "至少一种单因素作用在固定命令通道下可辨识",
+      "comparators": [
+        "same controller with individually changed evidence source",
+        "unchanged evidence with changed command ingress"
+      ],
+      "metrics": [
+        "applied config timeline",
+        "evidence source time",
+        "accepted and refused commands",
+        "sensing deficit",
+        "service"
+      ],
+      "minimal_success_criterion": "每个对照只改一项；跨位置理想信息须标诊断而非可实现算法；不能用旧配置持续效果冒充新命令生效",
+      "paper_placement": "mechanism analysis",
+      "promotion_rule": "不支持 AoI 因果则删除该因果主张，不继续为标题找参数",
+      "next_action": "先写因果图及单因素干预表，不扩相图"
+    },
+    {
+      "exp_id": "R04",
+      "tier": "required_before_candidate",
+      "experiment_type": "mechanism_identifiability",
+      "status": "partly_analyzed_existing_candidate_fails",
+      "feasibility_now": "available",
+      "claim_ids": [
+        "candidate"
+      ],
+      "highlight_ids": [
+        "H1"
+      ],
+      "research_question": "真实未完成义务和机会信息能否改变合法动作？",
+      "hypothesis": "可构造同标量年龄但不同未完成义务/就绪状态的可达历史",
+      "comparators": [
+        "current C-up",
+        "absolute pending-obligation ledger",
+        "constant/ablated inputs"
+      ],
+      "metrics": [
+        "distinct proposed actions",
+        "applied actions",
+        "pending absolute deadlines"
+      ],
+      "minimal_success_criterion": "候选触发依赖所称变量且动作可生效；不得以提高阈值代替修正义务对象",
+      "paper_placement": "method validation if promoted",
+      "promotion_rule": "没有可达动作差异即不实现方法",
+      "next_action": "修正义务对象并给两条可达历史见证"
+    },
+    {
+      "exp_id": "R05",
+      "tier": "conditional",
+      "experiment_type": "bounded_headroom_probe",
+      "status": "not_started",
+      "feasibility_now": "after R01/R02/R04",
+      "claim_ids": [
+        "candidate"
+      ],
+      "highlight_ids": [
+        "H2"
+      ],
+      "research_question": "相同服务成本约束下是否存在比静态/普通规则更好的可执行动作序列？",
+      "hypothesis": "配置生效时机和有限备用交付联动可能存在差额",
+      "comparators": [
+        "frozen static candidates",
+        "ordinary gateway rules",
+        "short-horizon sequence search"
+      ],
+      "metrics": [
+        "routine and event delivery",
+        "missing sensing",
+        "uplink/downlink/backup cost",
+        "energy"
+      ],
+      "minimal_success_criterion": "现有一个合法工作点发现非同义/非评分修复的差额；未来信息搜索只作见证",
+      "paper_placement": "preliminary method evidence",
+      "promotion_rule": "有差额才进入 R06；没有则关闭具名候选",
+      "next_action": "先定义有限动作序列和真实执行延迟，不引入新风险任务或硬件"
+    },
+    {
+      "exp_id": "R06",
+      "tier": "conditional",
+      "experiment_type": "fair_method_comparison",
+      "status": "not_started",
+      "feasibility_now": "only if R05 passes",
+      "claim_ids": [
+        "candidate"
+      ],
+      "highlight_ids": [
+        "H2"
+      ],
+      "research_question": "合法观测下的联合执行规划是否优于普通延迟感知 MPC 与规则？",
+      "hypothesis": "联合处理记录就绪/持续负载具有剩余收益",
+      "comparators": [
+        "static frontier",
+        "ordinary gateway rules",
+        "delay-aware MPC",
+        "candidate with coupling ablation"
+      ],
+      "metrics": [
+        "paired service/cost deltas",
+        "sensing deficit",
+        "execution timing",
+        "planning overhead"
+      ],
+      "minimal_success_criterion": "相同信息/能力/预算，冻结后留出种子验证；耦合消融有差额",
+      "paper_placement": "main comparison only after pass",
+      "promotion_rule": "普通规则/MPC 覆盖则不认领新方法",
+      "next_action": "R05 通过前不启动实现或全量实验"
+    },
+    {
+      "exp_id": "R07",
+      "tier": "optional",
+      "experiment_type": "agent_transfer",
+      "status": "deferred",
+      "feasibility_now": "only after execution benefit exists",
+      "claim_ids": [
+        "C4"
+      ],
+      "highlight_ids": [],
+      "research_question": "已有执行机制是否改善真实 agent 工具工作流？",
+      "hypothesis": "执行可行性反馈可能减少无效/有害持续配置",
+      "comparators": [
+        "same planner with/without verified execution layer"
+      ],
+      "metrics": [
+        "business service",
+        "harmful effective actions",
+        "tool overhead"
+      ],
+      "minimal_success_criterion": "真实工具过程、同任务与能力；不能仅把 agent 写入讨论",
+      "paper_placement": "optional downstream evaluation",
+      "promotion_rule": "没有执行层增益则不接 LLM 救命题",
+      "next_action": "本轮不做"
+    },
+    {
+      "exp_id": "W01",
+      "tier": "required",
+      "experiment_type": "manuscript_revision",
+      "status": "status_banner_done_body_pending",
+      "feasibility_now": "available",
+      "claim_ids": [
+        "C1",
+        "C2",
+        "C3",
+        "C4"
+      ],
+      "highlight_ids": [],
+      "research_question": "稿件是否区分事实、假说与未测边界？",
+      "hypothesis": "撤回强主张可恢复一致性",
+      "comparators": [],
+      "metrics": [
+        "unsupported claim count"
+      ],
+      "minimal_success_criterion": "doc19 替换表落实；先决定可支持的科学主张再排 bib/venue",
+      "paper_placement": "entire draft",
+      "promotion_rule": "不以增加种子或图表替代科学缺口",
+      "next_action": "当前保留历史稿和审查横幅，科学闸门通过后改正文"
+    }
+  ]
+}

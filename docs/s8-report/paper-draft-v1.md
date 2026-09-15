@@ -1,5 +1,7 @@
 # When Freshness Feedback Lies: Stabilizing the Communication Execution Layer for Pre-Disaster Monitoring under Intermittent Backhaul and Energy Scarcity
 
+> **Independent review, 2026-09-15: scientific closure NOT established.** This historical draft retains claims now challenged by the [doc19 audit](../s7-method/v1.2/19-independent-paper-review-2026-09-15.md): inactive candidate branches, arrival-time overwrite, confounded feedback attribution, absorbing node failure, and unsupported congestion/optimality claims. Preserve the draft for traceability; do not use it as a submission-ready statement. Follow-up evidence requirements are in [doc20](../s7-method/v1.2/20-review-experiment-matrix-2026-09-15.md).
+
 *Working draft v1, 2026-09-15. All numbers are reproduced by `code/v3joint/` (16-seed paired unless noted) and archived under `results/`. Source-grade labels E/A/M follow the repo evidence ledger; nothing here is a field SLA. Placeholder citations marked [cite:…] must be verified against the transfer ledger before submission.*
 
 ## Abstract
@@ -181,4 +183,3 @@ In a pre-disaster mountain monitoring network with Class-A control delay, a spli
 - DZ/T 0450-2023 §7.4.2.3 / §7.4.3.2, DZ/T 0460-2023 §5.3.7 *(text obtained via document-sharing mirror; official site TLS failed locally — grade D channel)*.
 - USGS/Iverson, landslide motion, dilatancy and pore-pressure feedback (rain-driven motion may be genuine acceleration).
 - PS-UAV (IEEE WCM 2026), LODA (Computer Communications 2026), WirelessAgent (China Communications 2026), ESWA IIN-recovery, SCS Lifeline/MCP — lineage, abstract-level verification per transfer ledger.
-
