@@ -42,7 +42,8 @@ class JointControlPlane(ControlPlane):
               backup_header_bytes: int = 20, chooser: str = "edf",
               failover: bool = True, obligation_period_s: int = 3600,
               grace_s: int = 3600, sample_bytes: dict | None = None,
-              obligations=None, suppress_duplicates: bool = True) -> "JointControlPlane":
+              obligations=None, suppress_duplicates: bool = True,
+              backup_p_succ: float = 1.0, backup_loss_seed: int = 0) -> "JointControlPlane":
         obj = object.__new__(cls)
         obj.__dict__.update(src.__dict__)          # 同构接管：不丢任何 v1.1 状态
         obj.enable_backup = bool(enable_backup)
@@ -73,6 +74,9 @@ class JointControlPlane(ControlPlane):
         # Instance 的 gateway_last_forward_ok_at 会把备用返回项也算作"转发成功"，策略要区分
         # "主路是否健康"时必须用这个干净信号。
         obj.last_primary_ok_at = 0
+        obj.backup_p_succ = float(backup_p_succ)
+        import random as _random
+        obj._bk_rng = _random.Random(int(backup_loss_seed))
         return obj
 
     # ---- 单条 item 的**净荷**字节（不含包头；一个备用包只计一次固定头）----
@@ -239,8 +243,13 @@ class JointControlPlane(ControlPlane):
                 remain.append(it)
         self.gateway_pending = remain
         self.backup_packets += 1
-        self.backup_records += sum(len(sp) for _, sp in picked_of.values())
         self.backup_bytes_sent += used + self.backup_header_bytes
+        # 可选整包丢包(默认1.0不抽签、逐位锚点不变):整包以 p_succ 到达;失败则样本已移出 pending、
+        # 资费照计但不进 out(不重传;对各 chooser 同等施加)。
+        if self.backup_p_succ < 1.0 and self._bk_rng.random() > self.backup_p_succ:
+            out = []
+        else:
+            self.backup_records += sum(len(sp) for _, sp in picked_of.values())
         return primary + out
 
     def backup_summary(self) -> dict:

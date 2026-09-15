@@ -52,6 +52,7 @@ def run_joint(seed: int = 0, task_hours: int = 12, tail_hours: int = 1,
               backup_bytes: int = 200, backup_header_bytes: int = 20,
               backup_chooser: str = "edf", backup_failover: bool = True,
               backup_suppress: bool = True,
+              backup_p_succ: float = 1.0,
               cup_use_window: bool = True, cup_lead_s: int = 900, cup_gate_sampling: bool = True,
               odp_gate_sampling: bool = True, odp_use_backup_phase: bool = True,
               trace: bool = False,
@@ -145,7 +146,8 @@ def run_joint(seed: int = 0, task_hours: int = 12, tail_hours: int = 1,
         backup_bytes=backup_bytes, backup_header_bytes=backup_header_bytes,
         chooser=backup_chooser, failover=backup_failover,
         obligation_period_s=routine_period_s, grace_s=routine_period_s,
-        obligations=obligations, suppress_duplicates=backup_suppress)
+        obligations=obligations, suppress_duplicates=backup_suppress,
+        backup_p_succ=backup_p_succ, backup_loss_seed=seed)
     if cup_observer is not None:
         cup_observer.plane = inst.plane       # 绑定后策略才能读主路状态/备用相位
 
