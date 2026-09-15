@@ -1,0 +1,120 @@
+{
+ "pairA_record_location": {
+  "t": 13500,
+  "AoI": 6000,
+  "soc": 0.05,
+  "H1_covered": [
+   [
+    3600,
+    900
+   ],
+   "covered_at_gateway"
+  ],
+  "H2_no_copy": [
+   [
+    3600,
+    300
+   ],
+   "push_report"
+  ],
+  "different": true,
+  "const_control_equal_H2": true,
+  "old_anchor_constant": [
+   3600,
+   900
+  ],
+  "old_anchor_acts": false
+ },
+ "pairB_slack": {
+  "AoI": 6000,
+  "far": [
+   7300,
+   [
+    3600,
+    900
+   ],
+   "ahead_of_deadline"
+  ],
+  "near": [
+   13500,
+   [
+    3600,
+    300
+   ],
+   "push_report"
+  ],
+  "different": true
+ },
+ "state2_vs_3": {
+  "push_report": [
+   3600,
+   300
+  ],
+  "must_sample": [
+   600,
+   300
+  ],
+  "different": true,
+  "sampling_differs": true,
+  "report_both_fast": true
+ },
+ "end_to_end": {
+  "loose": {
+   "routine": {
+    "n": 672,
+    "collected": 672,
+    "delivered": 671,
+    "censored": 0,
+    "missing_collection": 0,
+    "missing_delivery": 1
+   },
+   "alive": 14,
+   "reasons": [
+    "covered_at_gateway",
+    "energy_guard"
+   ],
+   "odp_cmd": 38,
+   "fixed_cmd": 16,
+   "fixed_routine": {
+    "n": 672,
+    "collected": 672,
+    "delivered": 671,
+    "censored": 0,
+    "missing_collection": 0,
+    "missing_delivery": 1
+   },
+   "ea_routine": {
+    "n": 672,
+    "collected": 299,
+    "delivered": 148,
+    "censored": 0,
+    "missing_collection": 373,
+    "missing_delivery": 151
+   },
+   "ea_alive": 2
+  },
+  "tight": {
+   "routine": {
+    "n": 4032,
+    "collected": 1774,
+    "delivered": 1631,
+    "censored": 0,
+    "missing_collection": 2258,
+    "missing_delivery": 143
+   },
+   "alive": 14,
+   "reasons": [
+    "ahead_of_deadline",
+    "covered_at_gateway",
+    "must_sample",
+    "push_report"
+   ],
+   "final_configs": [
+    "(600, 600)",
+    "(3600, 300)",
+    "(3600, 900)"
+   ],
+   "cmd": 802
+  }
+ }
+}

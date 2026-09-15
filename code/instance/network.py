@@ -830,6 +830,10 @@ class Instance:
                           gateway_copies_in_window={
                               nid: self.gateway_window_copies.get(
                                   (nid, t_s // self._obligation_period_s), 0)
+                              for nid in self.nodes},
+                          gateway_copies_by_window={
+                              nid: {k: c for (nn, k), c in self.gateway_window_copies.items()
+                                    if nn == nid}
                               for nid in self.nodes})
 
     def _send_command(self, node_id: str, payload: dict, t_s: int,

@@ -89,6 +89,10 @@ class CenterView:
     #: 网关本地可观测（它自己收到过哪些样本）。**不含**评分器的义务匹配结果、**不含**任何未来信息。
     #: 义务的周期与相位是**公开服务配置**，对全部臂同等开放。
     gateway_copies_in_window: dict | None = None
+    #: R04：网关听到的、按义务窗口 index 分组的合格副本数 {nid: {window_k: count}}。
+    #: 网关本地合法可观测（它自己听过哪些样本），义务相位是公开服务配置；不含未来/环境真值。
+    #: 用于定位"最老的、网关尚无合格副本的未完成义务"，修复只看当前窗口导致紧急分支恒假。
+    gateway_copies_by_window: dict | None = None
 
     def soc_of(self, node_id: str) -> float | None:
         """策略**看到**的电量。它可能比真实值旧、脏、偏，或者干脆没到。"""

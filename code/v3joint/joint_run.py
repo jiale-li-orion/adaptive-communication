@@ -31,6 +31,7 @@ from network import DeviceProfile, Instance, nodes_from       # noqa: E402
 from scoring import evaluate                                  # noqa: E402
 from joint_plane import JointControlPlane                     # noqa: E402
 from joint_policy import DeliveryOpportunisticPolicy, GatewayObserver  # noqa: E402
+from obligation_policy import ObligationDeliveryPolicy  # noqa: E402
 
 
 def run_joint(seed: int = 0, task_hours: int = 12, tail_hours: int = 1,
@@ -103,6 +104,13 @@ def run_joint(seed: int = 0, task_hours: int = 12, tail_hours: int = 1,
             cup_observer, period_s=routine_period_s, lead_s=cup_lead_s,
             use_backup_window=cup_use_window, gate_sampling=cup_gate_sampling)
         placement = "gateway"          # C-up 必须在网关位置才能读到网关本地观测
+    elif arm == "odp":
+        # R04 正确实例化：义务-交付联合策略（最老未完成义务+绝对截止+三态），网关位置
+        cup_observer = GatewayObserver(backup_rate_s=backup_rate_s,
+                                       enable_backup=enable_backup)
+        pol = ObligationDeliveryPolicy(cup_observer, period_s=routine_period_s,
+                                       lead_s=cup_lead_s)
+        placement = "gateway"
     elif arm == "ea_aoi_gw":
         # 机制归因：与 ea_aoi 同一条策略，仅放置到网关——其 AoI 自动改用"网关听到"而非"中心收到"
         pol = build_policy("ea_aoi")
