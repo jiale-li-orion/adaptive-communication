@@ -2,7 +2,9 @@
 
 灾前山区滑坡与泥石流监测。
 
-> **最新研究审查（2026-09-15，覆盖联合控制 doc08–18）**：见 [v1.2/19：独立论文审查](docs/s7-method/v1.2/19-independent-paper-review-2026-09-15.md) 与 [20：后续矩阵](docs/s7-method/v1.2/20-review-experiment-matrix-2026-09-15.md)。**暂缓 doc18 的「科学闭环」判定**：anchor 紧急分支恒假；主策略密采直接由 SoC 而非 AoI 控制；首次到达被重传覆盖；永久死亡与「接入拥塞」归因待修；静态最优没有证明。两臂单种子旁路核验已落盘，未改变原仿真/方法。下一步先恢复测量与可辨识性，只有发现公平差额才实例化短时域联合规划。上一轮审查保留于 [doc07](docs/s7-method/v1.2/07-review-and-method-space-2026-09-15.md)。
+> **当前研究入口（2026-09-16）**：[doc33：全局复盘与单篇论文路线](docs/s7-method/v1.2/33-global-synthesis-and-single-paper-route-2026-09-16.md)。按 Human 决定继续以一篇 agentic communication 论文为目标，优先判别“监测义务到可达执行的编译与增量修复”；**候选尚未证实，未实现、未接新 LLM 实验**。doc21–32 已修旧测量并测得稀缺备份选包增益，但本轮发现 `cover_l0only`/`cover2` 实际落入 EDF 分支，R17 逐义务连接键也无效，故**暂停 v2/两层必要性定稿**；主 `cover` 对已测规则的读数保留为有限比较。下一轮交付、来源、最强反方和关闭条件均在 doc33，以下旧阶段横幅按历史阅读。
+
+> **上一轮研究审查（2026-09-15，覆盖联合控制 doc08–18）**：见 [v1.2/19：独立论文审查](docs/s7-method/v1.2/19-independent-paper-review-2026-09-15.md) 与 [20：后续矩阵](docs/s7-method/v1.2/20-review-experiment-matrix-2026-09-15.md)。当时指出的首次到达、失电模型、分支可辨识性已有 doc21–24 后续处理；请按 doc33 读取当前状态，不将历史待办重复启动。更早审查保留于 [doc07](docs/s7-method/v1.2/07-review-and-method-space-2026-09-15.md)。
 
 > ## ⚠ 当前状态：方法主张仍暂停，**但当前阶段已经不是"收盘"，而是"提炼判据"**
 >

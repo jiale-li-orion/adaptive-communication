@@ -310,3 +310,17 @@ python3 code/analysis/steady_gap.py --seeds 20 --tag q3_dpu2 --downlink-per-upli
 | `v3joint_r16_cover2.json` | `r16_cover2.py`（cover2=层1不补纯冗余，4 档 5 选包器，6 种子） | 6（J2 补充消融） | cover2 饱和回到.984 但三硬稀缺档全崩(.504/.462/.528),且包/字节/发送量与cover相同、R17逐义务配对=0(非matches误判)⇒层1按最新补位承担'样本时效'(一义务多份时序竞争候选,保最新一份赶上机会),与层0'覆盖广度'正交、不可去;定稿cover不做魔数切换。见 doc28。 |
 | `v3joint_r17_oracle_infcap.json` | `r17_oracle_infcap.py`（J5-a 宽松上界:净荷无限、保留真实机会稀疏度,6 种子） | 6（上界见证,非可实现主张） | 机会结构天花板.966-.984;cover 距上界 r600 .078/r1200 .049(中等稀缺主结果档已榨取大部分空间)、r900 .267(容量仅产出.43,主要为物理容量硬限:每包装满、发送量与edf同而覆盖更优)。完整容量感知离线oracle为成稿前补强。见 doc29。 |
 | `v3joint_r19_loss95.json` | `r19_loss95.py`（稳健性:备份整包成功率0.95,其余同r14,6种子;joint_plane 新增默认1.0的 backup_p_succ 参数,默认路径逐位锚点不变,test_joint 5/5） | 6 | 5%整包丢包下排序与可靠链路一致:三稀缺/稀疏档 cover 仍支配最强经典规则 r600 .856 vs .805(+5.1pp)、r900 .679 vs .640(+4.0)、r1200 .879 vs .833(+4.6);饱和档 latest .980 仍占优 cover .971(已定性trade-off)。EDF在丢包下从.984崩到.810(老样本丢失无后补),流动策略抗丢包更强。见 doc32。 |
+
+
+### 2026-09-16 interpretation supersession (doc33; no new simulation results)
+
+The following interpretation corrections supersede the affected rows above; raw files are retained unchanged. See [doc33](../docs/s7-method/v1.2/33-global-synthesis-and-single-paper-route-2026-09-16.md).
+
+| Existing artifact | Current interpretation |
+|---|---|
+| `v3joint_r15_ablation_l0only.json`, `v3joint_r16_cover2.json` | Invalid intended ablations: both chooser names dispatch to the EDF fallback. They cannot establish layer-1 necessity or the cost of suppressing fresh filler. Repair and branch witnesses are pending. |
+| R17 diagnostic in doc28 (`r17_diag_cover2.py`) | Invalid obligation join: `(node, taken_at)` are absent from scorer rows; keys collapse to `(None, None)`. The zero paired-success difference is not causal evidence. |
+| `v3joint_r17_oracle_infcap.json` | Relaxed-capacity policy reference, not a proven optimal upper bound. |
+| `v3joint_r15_heldout_seeds69.json` | Seeds held out relative to cover development; seeds 6–9 were previously used in R07. Do not call them never-seen test tasks. |
+| R14/R19 main comparisons | Retained as comparisons against the implemented policies. The new audit does not erase their main readings; stronger marginal-coverage/recency comparison and corrected component attribution are still required. |
+| `fig_backup_arbitration.png` | Existing figure from `python3 code/v3joint/plot_main_fig.py` (commit `db6cbe7`), now indexed to repair the missing registration. Retained historical figure; production denominator and phase-transition wording require the doc33 corrections before paper use. Not regenerated in this review. |
