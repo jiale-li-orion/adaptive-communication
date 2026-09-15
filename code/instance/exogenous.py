@@ -235,6 +235,53 @@ def routine_obligations_by_node(measurands: dict[str, str], hours: int,
     return out
 
 
+def piecewise_routine_obligations(measurands: dict[str, str], hours: int,
+                                  schedule: list[tuple[int, int, str]],
+                                  window_s: int | None = None,
+                                  grace_s: int | None = None) -> list[Obligation]:
+    """按**外部授权的预警等级调度表**分段生成周期义务(DZ/T 0460 §5.3.3/§8.4.2)。
+
+    ``schedule`` 为 ``[(start_s, period_s, level), ...]``,按 start 升序,首段 start=0;
+    每段表示自 start 起、到下一段 start(或任务结束)为止,外部会商认定的预警等级对应的
+    采样/上报**要求周期** period_s。等级与授权来自标准(§8.4.1 四级、§8.4.2 经会商升降/解除),
+    但**每级具体周期数值标准未给**,属研究选择(A),由调用方显式传入、不得在本函数编造。
+
+    语义:
+      - 每段以**段起点为新网格**生成义务(对应新配置在 Class A 生效延迟之后起效);
+      - 升级(period 变小)后新义务按密周期开窗;**变更前已 release、deadline 未到的旧疏义务
+        仍由其 release 所在段保留**,不随版本升级删除(H2:旧义务仍需兑现);
+      - 降级/解除(period 变大)后按疏周期生成,已开窗的旧密义务保留到各自 deadline;
+      - 义务与策略/Agent 无关:改控制不能增删义务分母(v1.1 §5.1);Agent 不判滑坡风险。
+
+    单段恒定调度直接委托 :func:`routine_obligations_by_node`,保证“无变更负对照”bit-identical。
+    多段时 oid 含绝对 release 秒(``:t{rel}``)以保证跨周期全局唯一;评分只依赖 node/measurand/
+    window,不解析 oid 格式。
+    """
+    schedule = sorted(schedule, key=lambda x: x[0])
+    if len(schedule) == 1:
+        return routine_obligations_by_node(measurands, hours, period_s=schedule[0][1],
+                                           window_s=window_s, grace_s=grace_s)
+    H = int(hours * 3600)
+    seg_ends = [seg[0] for seg in schedule[1:]] + [H]
+    out: list[Obligation] = []
+    for node_id, measurand in sorted(measurands.items()):
+        for (start, period, _level), end in zip(schedule, seg_ends):
+            w = period if window_s is None else window_s
+            g = period if grace_s is None else grace_s
+            k = 0
+            while True:
+                rel = start + k * period
+                if rel >= end:
+                    break
+                if rel < H:
+                    out.append(Obligation(
+                        oid=f"{node_id}:routine:t{rel:07d}", node_id=node_id,
+                        measurand=measurand, kind=KIND_ROUTINE,
+                        release_at=rel, window=(rel, rel + w), grace_s=g))
+                k += 1
+    return out
+
+
 # ---------------------------------------------------------------- 环境真值
 
 @dataclass
