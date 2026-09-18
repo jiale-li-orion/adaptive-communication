@@ -39,7 +39,9 @@ short-message backup), we first establish a \emph{symmetric feasibility frontier
 strong reactive baselines (energy-aware sampling, obligation-driven max-coverage backup
 packing, piecewise mission views, FIFO repair), per-obligation counterfactual relaxations and
 an omniscient offline packing show that a controller---including a joint optimizer or an
-LLM---cannot raise on-time delivery without changing resources or the granted authority;
+LLM---cannot raise on-time delivery by re-optimising collection, scheduling, or packing under the
+standard edge discipline, without changing resources or the granted authority (the one
+fixed-resource gain is an orthogonal execution-layer change to record disposition, shown later);
 the residual failures decompose cleanly into four chain segments. We then show that the
 genuine, achievable value is \emph{feasibility truth}, not throughput. At mission-compile
 time, the geometry of the backup schedule alone lets us certify, with 100\% recall and zero
@@ -47,13 +49,28 @@ false positives a median of 7.2~h ahead, the obligations whose delivery window c
 return path; when the mission table finally traverses the outage, the gateway attributes the
 correct failure segment for 100\% of already-missed obligations from its local log. We further
 find that 45.6\% of short-message records delivered during the outage arrive already expired.
+Critically, feasibility truth also has an \emph{execution-layer payoff}. Under the standard link
+semantics in which a record is cleared from a node's FIFO repair cache only once the centre
+acknowledges it, naively withholding expired backup records is not free: the unacknowledged dead
+records keep occupying each limited access batch and push fresh samples' reception past the
+outage---a cross-layer transfer of cost from the backhaul to the access segment. A
+\emph{deadline-aware selective purge}, the execution-layer counterpart of the certificate, stops
+holding and retransmitting only records whose obligation deadline has passed while retaining
+every still-rescuable record; it is implementable at the node with zero downlink signalling. At
+the main point it raises outage on-time delivery from 202 to 434 and full-horizon service from
+0.400 to 0.432 under unchanged resources, drives expired sends to zero (send-promise precision
+$0.54\!\to\!1.00$), and on three held-out seeds raises service by 3.7--5.6 points and outage
+delivery 2.2--3.4$\times$. It dominates the AoI latest-only queue, which matches outage freshness
+only by discarding still-useful records (service 0.363); EDF and obligation-greedy queues that
+reorder but never release gain nothing.
 In a within-subject study with a real LLM controller, the unaided agent mistakes LoRa access
 for backhaul connectivity, storms ineffective commands, and silently reports the elevated
 mission as in effect; given only the certificate, the same agent stops, locates the blocking
 segment, holds the last lawful configuration, and initiates a standards-authorised
 re-compilation. The contribution is an execution-grounded obligation model, segment-labelled
-feasibility certificates, and lawful re-compilation that align what the system promises with
-what it can actually deliver.
+feasibility certificates, an execution-layer selective purge that turns a certified loss into
+both metered-cost savings and higher on-time delivery without adding resources, and lawful
+re-compilation that align what the system promises with what it can actually deliver.
 \end{abstract}
 
 \section{Introduction}
@@ -76,7 +93,10 @@ would deliver more than fixed rules. A sequence of increasingly strong, symmetri
 refuted the \emph{throughput} version of that hypothesis, and---importantly---refuted it
 without rigging the baseline. Under fixed resources, strong reactive policies already sit on
 the feasible frontier; the failures that remain are physical walls (no return slot, backup
-capacity, night-time energy), and omniscient offline packing cannot route around them.
+capacity, night-time energy), and omniscient offline packing cannot route around them. This bound
+concerns collection, scheduling, and packing decisions under the standard hold-until-acknowledged
+edge discipline; we later find one fixed-resource gain orthogonal to it, an execution-layer change
+to how already-dead records are disposed (\S\ref{sec:purge}).
 
 Closing the throughput question did not close the research problem. Instrumenting a real LLM
 controller exposed a different, sharper failure: the runtime is \emph{blind to where the
@@ -109,9 +129,17 @@ attribution at 100\% once the delayed mission table reaches the field. We delimi
 which claims are deterministic and which require online state.
 \item \textbf{Lawful re-compilation and real cost (\S\ref{sec:cert},\S\ref{sec:eval}).}
 Re-compilation confined to standards-granted authority (remote frequency adjustment;
-conference upgrade/downgrade), and measurable cost avoidance: 45.6\% of outage short-message
-records arrive expired and are suppressible without harming on-time delivery; futile
-night-time dense sampling that permanently kills nodes is avoided.
+conference upgrade/downgrade), with measurable cost accounting: 45.6\% of outage short-message
+records arrive expired (a record-level waste upper bound), and certificate-aware holding avoids
+futile night-time dense sampling that permanently kills nodes.
+\item \textbf{Execution-layer certificate: deadline-aware selective purge (\S\ref{sec:purge},\S\ref{sec:eval}).}
+The same feasibility judgement, applied at the edge, releases from the FIFO repair cache only
+records proven past their deadline and retains every rescuable one. Under fixed resources it more
+than doubles outage on-time delivery (202$\to$434) and raises full-horizon service 3.2 points at
+the main point (3.7--5.6 on held-out seeds), with zero expired sends and send-promise precision
+$0.54\!\to\!1.00$. It is location-independent (a zero-signalling node queue slightly beats a
+gateway version), dominates AoI latest-only, and is not reproduced by EDF or obligation-greedy
+queues.
 \item \textbf{Real-agent within-subject evidence (\S\ref{sec:agent}.)}
 With identical legal information, adding only the certificate converts a real LLM
 controller's segment misdiagnosis, command storm, and silent mis-reporting into
@@ -180,8 +208,11 @@ is 0.05~Wh. Solar input follows a 12~h half-sine with peak 0.03~Wh/h, with per-n
 stochastic cloud occlusion (35\% chance of attenuation to 0.25; expected coefficient
 $k_c\!\approx\!0.7375$). A node that browns out \emph{permanently} dies in the main
 configuration (an absorbing state; a restart sensitivity is left open). A cache of 240 slots
-with FIFO replacement sits at the node. Access succeeds with probability 0.74; primary
-backhaul is good with probability 0.62.
+with FIFO replacement sits at the node. A record is removed from this cache only once it is
+acknowledged at the centre (the acknowledgement is modelled synchronously and without airtime,
+a pre-existing simplification that favours every queue discipline equally); until then it is
+retransmitted oldest-first, with at most 32 records per upload opportunity. Access succeeds
+with probability 0.74; primary backhaul is good with probability 0.62.
 
 \paragraph{Class~A execution reality.}
 A configuration command is not immediate: it is queued, transits the backhaul to the gateway,
@@ -300,7 +331,10 @@ input, not the nominal mission table.
 \paragraph{Frontier conclusion.} Across the full horizon and within the outage, the two
 subspaces' omniscient upper bounds collapse onto the reactive baseline, and the only large
 gains require adding backhaul capacity or energy. Under fixed resources and authority there is
-no realisable throughput headroom for a controller, a joint MPC, or an LLM. This is a strong,
+no realisable throughput headroom for a controller, a joint MPC, or an LLM within collection,
+scheduling, and packing under the fixed edge discipline. (The execution-layer record-disposition
+action of \S\ref{sec:purge} was held constant in these relaxations and is examined separately.)
+This is a strong,
 symmetrically backed \emph{negative result} for the control question---and it frees the
 contribution to live where value genuinely remains.
 
@@ -343,12 +377,58 @@ against its local heard/forwarding log and the public slot geometry, assigning
 
 \subsection{Lawful re-compilation}
 For certified obligations the runtime acts only within standards authority: hold the last
-lawful configuration and local autonomy; suppress futile commands and expired backup sends;
+lawful configuration and local autonomy; suppress futile commands and expired backup sends (the latter only paired with the selective
+purge of \S\ref{sec:purge}, never by withholding sends alone);
 log an obligation-level infeasibility certificate with the segment and the resource change
 that would move it; after recovery, compile only the guaranteeable subset; and where the
 mission truly requires more, request added backup quota or a conference downgrade/upgrade under
 \S5.3.3/\S8.4.2. The agent never silently marks an unfulfilled obligation complete, never
 deletes it, and never judges landslide risk.
+
+\subsection{Execution-layer certificate: deadline-aware selective purge}
+\label{sec:purge}
+The compile-time certificate says an obligation cannot be returned; the execution-layer question
+is what the edge should \emph{do} with records already caught in its caches. Two facts interact.
+A record leaves a node's repair cache only on central acknowledgement; otherwise FIFO repair
+keeps re-sending the oldest unacknowledged records, and during an outage the metered backup path
+is the only route to such an acknowledgement.
+
+\paragraph{Why naively suppressing expired sends is not free.}
+Withholding a backup record that is already past its deadline (the obvious reading of the 45.6\%
+waste) withholds its acknowledgement as well. The record then stays in the node cache and, as an
+oldest unacknowledged entry, fills the limited access batches, so genuinely fresh samples are not
+heard until the primary recovers. At the main point this naive suppression saves 29\% of backup
+bytes but costs 8 on-time obligations and 0.25 points of service: cost is moved from the backhaul
+segment to the access segment, not removed.
+
+\paragraph{Selective purge.}
+The execution-layer counterpart of the certificate releases an unacknowledged edge record
+\emph{if and only if} its obligation deadline has already passed ($d\le t$ under the locally
+known period)---a zero-false-positive test because the deadline is absolute---while retaining
+every record with $d>t$. This both stops the expired backup send and frees the access batch. It
+has two equivalent placements: a node-local queue discipline that needs no downlink at all
+(\texttt{deadline-purge}), and a gateway action that locally acknowledges records it will not send
+(\texttt{cert-purge}); both use only the public period $P$ legally available before the mission
+table arrives. The two placements implement one deadline judgement and give the same result.
+
+\paragraph{Why ordinary queues do not suffice.}
+EDF and obligation-greedy disciplines reorder which records occupy a batch but never release
+them, so the cache is not freed and we measure no gain. The AoI latest-only queue does release
+records, but indiscriminately (it keeps only the newest), matching outage freshness while
+permanently abandoning records still deliverable after recovery and lowering full-horizon
+service. The certificate supplies the \emph{selectivity} that turns a blunt freshness heuristic
+into a service-preserving action; this is an execution-layer mechanism a fixed rule realises, and
+whose per-obligation judgements an agent must maintain when requirements change.
+
+\paragraph{Relationship to the feasibility frontier.}
+The negative result of \S\ref{sec:frontier} is scoped to collection, access scheduling, and
+backhaul packing under the standard edge discipline that \emph{holds every unacknowledged record
+until the centre confirms it}. Selective purge is an orthogonal execution-layer action: it changes
+a record's \emph{lifetime disposition}, not resource use, and that disposition was held fixed in
+every counterfactual relaxation. Its gain is therefore not throughput extracted from a physical
+wall; it removes an internal leak in which records already proven unrecoverable keep consuming
+access batches. The symmetric frontier bounds what better \emph{decisions} achieve given the
+protocol's state handling; the execution-layer certificate corrects that state handling itself.
 
 \section{Evaluation}
 \label{sec:eval}
@@ -377,13 +457,50 @@ certification before the deadline is essentially impossible at the field (4 marg
 because the field physically does not know these obligations exist---the certificate value at
 this level is immediate, segment-labelled accounting versus silent, un-explained loss.
 
-\subsection{RQ3: Is real cost being wasted on the infeasible?}
+\subsection{RQ3: Is real cost wasted on the infeasible, and can a certificate recover it?}
 During the outage 75 backup packets carry 750 records (5848~B). Of 480 records actually
 received centrally via backup during the outage, 261 are on-time and \textbf{219 (45.6\%) are
-already expired} (1270 of 2782 payload bytes). Because \stime obligations have no slot in the
-first place, suppressing expired sends does not displace any on-time record: this is a net
-metered-cost saving with no service loss (the per-packet saving depends on billing granularity,
-which we report rather than assume). The energy analogue is larger: always-dense compliance
+already expired} (1270 of 2782 payload bytes). The tempting response---simply stop sending expired records---is not free, for the
+acknowledgement reason of \S\ref{sec:purge}. Table~\ref{tab:purge} holds the strong maxcov
+backup chooser fixed and varies only the edge queue/action. Naive suppression removes the 219
+expired sends but loses 8 on-time obligations (202$\to$194) and 0.25 service points: tracing at
+record level, nine fresh samples taken during the outage are, because the unacknowledged dead
+records fill each access batch, not heard until after the primary recovers. Completing the
+certificate at the edge reverses the sign. The node-local \texttt{deadline-purge}, which needs no
+downlink, raises outage on-time obligations 202$\to$434 and full-horizon service
+0.400$\to$0.432, clears expired sends, and raises send-promise precision 0.54$\to$1.00; the
+gateway \texttt{cert-purge} is within 0.2 points, confirming that the gain is the deadline
+judgement rather than its location. Reordering alone (EDF, obligation-greedy) frees no cache and
+gains nothing; the AoI latest-only queue reaches the outage figure but abandons records still
+deliverable after recovery, collapsing full-horizon service to 0.363.
+\begin{table}[h]
+\centering\small
+\begin{tabular}{lcccc}
+\toprule
+Edge queue / action & Full svc & Outage on-time & Expired sends & Send prec.\\
+\midrule
+maxcov + FIFO (baseline) & 0.400 & 202 & 219 & 0.54\\
+maxcov-ontime: suppress, no purge & 0.398 & 194 & 0 & 1.00\\
+maxcov + obligation-greedy & 0.392 & 205 & 216 & 0.55\\
+maxcov + EDF & 0.400 & 202 & 219 & 0.54\\
+maxcov + latest-only (AoI) & 0.363 & 431 & 0 & 1.00\\
+\textbf{maxcov + deadline-purge (node)} & \textbf{0.432} & \textbf{434} & \textbf{0} & \textbf{1.00}\\
+cert-purge (gateway) + FIFO & 0.430 & 420 & 0 & 1.00\\
+\bottomrule
+\end{tabular}
+\caption{Seed~0, strong maxcov backup chooser fixed; only the edge queue/action changes. Outage
+on-time counts upgraded obligations delivered by deadline; expired sends are backup records
+received centrally after their deadline; send precision is the share of backup sends that were
+on-time. Naive suppression clears expired sends but loses 8 on-time obligations (the cross-layer
+FIFO cost of \S\ref{sec:purge}); deadline-aware selective purge clears them \emph{and} adds 232
+on-time obligations under unchanged resources. Reordering queues do not help; AoI latest-only
+trades post-recovery coverage for outage freshness.}
+\label{tab:purge}
+\end{table}
+\textbf{Held-out robustness.} On seeds 6/7/8, never used during development, switching the edge
+queue FIFO$\to$deadline-purge raises full-horizon service by 5.6/4.4/3.7 points and outage
+on-time delivery by 2.2--3.4$\times$, with expired sends cleared; deadline-purge dominates
+latest-only on every held-out seed (+7.1/+4.3/+5.3 points). The effect is not seed-specific. The energy analogue is larger: always-dense compliance
 kills 13 nodes, whereas certificate-aware holding keeps deaths at zero.
 
 \subsection{RQ4: Does the certificate change a real agent?}
@@ -469,6 +586,17 @@ two independent copies. We did not execute authors' reference implementations an
 do not claim replication of any cited system; one field study endpoint was rate-limited from
 our network and is cited without its numbers.
 
+\textbf{Selective-purge assumptions.} (i) The central acknowledgement is modelled synchronously
+and without airtime, a pre-existing v1.1 simplification that favours every queue discipline
+equally; the node-local \texttt{deadline-purge} needs no downlink at all and is our primary
+mechanism, whereas the gateway \texttt{cert-purge}'s explicit acknowledgements would consume
+Class~A receive windows in a real deployment. (ii) A purged record forgoes any retrospective value
+after its deadline; where such value matters it can be retained at the gateway rather than sent.
+(iii) During the outage the node and gateway test deadlines against the public pre-change period
+$P{=}600$; the exact post-upgrade $P{=}300$ deadline enters only post-hoc accounting, never as an
+online input. (iv) Edge-queue results use the development seed plus three held-out seeds; a full
+seed 0--9 sweep with confidence intervals remains future work.
+
 \textbf{Generality.} The obligation chain and the three-way statement discipline transfer to
 any intermittent, energy-limited, authority-bounded monitoring workflow; the specific walls
 are parameterised by the deployment and should be re-derived per deployment.
@@ -480,8 +608,11 @@ remaining failures are physical and cleanly attributable. The defensible role fo
 runtime is therefore not to out-pack the network but to maintain \emph{execution-grounded
 honesty}: to compile authorised missions against the real collection/access/return/energy
 chain, certify structural infeasibility hours ahead with no false alarms, attribute every
-miss to its segment the moment evidence arrives, suppress futile spend, and re-compile or
-re-negotiate only within the law---so that the system promises exactly what it can execute,
+miss to its segment the moment evidence arrives, and---at the execution layer---release exactly
+the records a certificate proves unrecoverable while keeping every rescuable one, so that honesty
+about infeasibility also frees real on-time delivery rather than merely moving cost between the
+access and backhaul segments; it then re-compiles or
+re-negotiates only within the law---so that the system promises exactly what it can execute,
 and says, precisely and early, why it cannot do the rest.
 
 \bibliographystyle{unsrt}
