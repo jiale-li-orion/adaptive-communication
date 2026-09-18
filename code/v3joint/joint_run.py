@@ -64,7 +64,10 @@ def run_joint(seed: int = 0, task_hours: int = 12, tail_hours: int = 1,
               # ---- 顺序2: 外生授权任务变更(doc35) ----
               mission_schedule=None, mission_mode: str | None = None,
               mission_scope=None, mission_healthy_wh: float = 0.010,
-              mission_policy_obj=None):
+              mission_policy_obj=None,
+              local_floor: bool = False, floor_day_start: float = 6.0,
+              floor_dusk: float = 18.0, floor_sparse: int | None = None,
+              floor_dense: int | None = None, local_dayfeed: bool = False):
     hours = task_hours + tail_hours
     dep = build_deployment(groups=groups, per_group=per_group)
     prof = DeviceProfile(sample_interval_s=sample_interval_s,
@@ -160,6 +163,21 @@ def run_joint(seed: int = 0, task_hours: int = 12, tail_hours: int = 1,
     inst.plane.backhaul_p_good = backhaul_p_good
     for pth in inst.plane.paths:
         object.__setattr__(pth, "p_good", backhaul_p_good)
+    if local_floor:
+        # 节点本地能量自治底座（场景"预置自治规则"）：夜间本地强制 sparse、日落自动降级，不依赖
+        # 中心下行。默认关闭，关闭时节点无 local_floor 属性、行为逐位不变（见 test_joint 锚点）。
+        dense_p = floor_dense
+        if dense_p is None and mission_schedule:
+            dense_p = min(p for _, p, _ in mission_schedule)
+        dense_p = int(dense_p if dense_p is not None else 300)
+        sparse_p = int(floor_sparse if floor_sparse is not None else sample_interval_s)
+        for _n in nodes.values():
+            _lf = {"day_start": floor_day_start, "dusk": floor_dusk,
+                   "sparse": sparse_p, "dense": dense_p}
+            if local_dayfeed and mission_schedule:
+                _lf["dayfeed_schedule"] = [(int(a), int(p), str(lv))
+                                           for a, p, lv in mission_schedule]
+            _n.local_floor = _lf
     outage = None
     if outage_hours > 0:
         lo, hi = int(outage_start_h), int(outage_start_h + outage_hours)

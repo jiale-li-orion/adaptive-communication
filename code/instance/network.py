@@ -295,6 +295,7 @@ class Node:
             # deficit 恒为 0，而节点明明已经死了）。
             self.power.deficit_s += TICK_S
             return []
+        self._apply_local_floor(t_s)
         if self._trigger_fires(t_s, truth):
             self.event_left = self.p.event_slots
             self.next_event_sample_at = t_s
@@ -307,6 +308,36 @@ class Node:
             self.event_left -= 1
             self.next_event_sample_at = (t_s + self.p.event_interval_s) if self.event_left > 0 else None
         return new
+
+    def _apply_local_floor(self, t_s) -> None:
+        """节点本地能量自治底座（默认关闭；run_joint(local_floor=True) 时启用）。
+
+        建模场景中的网关/节点"预置自治规则"：安全关键的昼夜能量节律在**节点本地**执行，不依赖
+        中心下行——Class A 接收窗 + 回传中断会让中心的日落降级命令来不及生效（r39 在最紧能量种子
+        实测 12 节点因此耗尽，而纯本地昼夜规则 0 死亡）。夜间本地把采样/上报钳回 sparse，白天不
+        干预中心命令。只用本地时钟，无外部信息；默认无该属性时逐位保持原行为。
+        """
+        lf = getattr(self, "local_floor", None)
+        if not lf:
+            return
+        hod = (lf["day_start"] + t_s / 3600.0) % 24.0
+        night = hod < lf["day_start"] or hod >= lf["dusk"]
+        if night:
+            if self.sample_interval_s == lf["dense"]:
+                self.sample_interval_s = lf["sparse"]
+            if self.report_period_s == lf["dense"]:
+                self.report_period_s = lf["sparse"]
+        elif lf.get("dayfeed_schedule"):
+            # 最强本地自治反方：任务表预装到节点，白天本地按授权节律执行（零中心下行、无 Class A
+            # 延迟），夜间仍由上面的能量门兜底。用于检验"静态可预知任务下中心编译是否还有增量"。
+            sched = lf["dayfeed_schedule"]
+            past = [pp for aa, pp, _lv in sched if aa <= t_s]
+            req = past[-1] if past else lf["sparse"]
+            tgt = req if req < lf["sparse"] else lf["sparse"]
+            if self.sample_interval_s != tgt:
+                self.sample_interval_s = tgt
+            if self.report_period_s != tgt:
+                self.report_period_s = tgt
 
     def _trigger_fires(self, t_s: int, truth) -> bool:
         """本地共享规则：本次 tick 有一个属于本节点的外生触发，且本节点可供电。"""

@@ -17,9 +17,9 @@
 \newcommand{\senergy}{$S_{\mathrm{energy}}$\xspace}
 \newcommand{\saccess}{$S_{\mathrm{access}}$\xspace}
 
-\title{\textbf{Execution-Grounded Mission Feasibility:\\
-Obligation-Level Certificates and Lawful Re-Compilation\\
-for Intermittent Geohazard Monitoring}}
+\title{\textbf{Execution-Grounded Mission Feasibility for Intermittent\\
+Geohazard Monitoring: Obligation-Level Certificates, a Local\\
+Safety Floor, and Lawful Re-Compilation}}
 
 \author{Pre-disaster monitoring \& agentic emergency communication working draft\\
 \texttt{agentic-communication} repository, method v1.2 --- \today}
@@ -64,14 +64,32 @@ points (95\% CI $+3.64$ to $+4.79$, positive on all ten seeds) and outage on-tim
 increases 2.52-fold, while it dominates the AoI latest-only queue by 5.73 points (CI $+5.06$ to
 $+6.39$) on every seed---latest-only matches outage freshness only by discarding still-useful
 records. EDF and obligation-greedy queues that reorder but never release gain nothing.
-In a within-subject study with a real LLM controller, the unaided agent mistakes LoRa access
-for backhaul connectivity, storms ineffective commands, and silently reports the elevated
-mission as in effect; given only the certificate, the same agent stops, locates the blocking
-segment, holds the last lawful configuration, and initiates a standards-authorised
+A deterministic, LLM-free placement study then fixes \emph{where} feasibility must be enforced.
+A na\"ive centre that directly complies with the elevated schedule permanently kills 13 of 14
+nodes on every seed (39 deaths over three seeds) and halves service; a centre-side feasibility
+\emph{envelope} that constrains any planner to lawful actions cuts refused commands by an order
+of magnitude (2488$\to$222) yet still cannot save the tightest-energy seed (12 deaths), because
+the night-time relax command must cross the backhaul and then a Class~A receive window before it
+applies. Moving the safety-critical night-energy rule to a \emph{node-local autonomy floor}
+removes every death (39/12$\to$0) at unchanged service. A purely local upper bound---a
+pre-provisioned day/night rhythm with zero centre commands---attains the same service (0.360) as
+every centre-compiled configuration: under static, pre-provisioned, predictable missions a centre
+controller adds no throughput. The defensible role of the agent runtime is therefore confined to
+what local autonomy cannot obtain---non-pre-provisioned authorised changes, structural
+infeasibility disclosure, and renegotiation---mediated by a deterministic envelope that can never
+override the local safety floor. In a within-subject study with a real LLM controller, the unaided
+agent mistakes LoRa access for backhaul connectivity, storms ineffective commands, and silently
+reports the elevated mission as in effect, fatally densifying at night on every valid trace;
+textual certificates greatly reduce this but do not guarantee it across seeds, whereas the
+deterministic local floor and envelope do. Given the certificate, the same agent stops, locates
+the blocking segment, holds the last lawful configuration, and initiates a standards-authorised
 re-compilation. The contribution is an execution-grounded obligation model, segment-labelled
-feasibility certificates, an execution-layer selective purge that turns a certified loss into
-both metered-cost savings and higher on-time delivery without adding resources, and lawful
-re-compilation that align what the system promises with what it can actually deliver.
+feasibility certificates, two execution-layer mechanisms (deadline-aware selective purge and a
+locality-correct local safety floor with a centre feasibility envelope) that turn certified loss
+into metered-cost savings, higher on-time delivery, and guaranteed survival without adding
+resources, a symmetric negative result bounding what any centre controller may add under static
+missions, and lawful re-compilation that aligns what the system promises with what it can
+actually deliver.
 \end{abstract}
 
 \section{Introduction}
@@ -142,6 +160,18 @@ $+3.64$ to $+4.79$, positive on all ten seeds) and 2.52-fold outage on-time deli
 sends cleared and send-promise precision $0.54\!\to\!1.00$. It is location-independent (a
 zero-signalling node queue slightly beats a gateway version), dominates AoI latest-only on every
 seed, and is not reproduced by EDF or obligation-greedy queues.
+\item \textbf{Execution locality and a layered feasibility runtime (\S\ref{sec:locality}).}
+A deterministic, LLM-free placement study establishes that safety-critical feasibility must be
+enforced where it can act in time: a node-local night-energy floor and deadline purge (zero
+downlink), gateway-local autonomy (max-coverage packing, mission-view gating, arrival-time
+attribution), and a centre runtime confined to what local autonomy cannot obtain---non-pre-provisioned
+authorised changes, structural infeasibility disclosure, and renegotiation---with every centre
+action passed through a deterministic feasibility envelope that cannot override the local floor.
+The node-local floor removes all permanent deaths (39 and 12 $\to$ 0 over three seeds) at unchanged
+service; a zero-command purely local upper bound matches every centre-compiled service level
+(0.360), a symmetric negative result that closes centre throughput/energy control under static
+pre-provisioned missions; the centre envelope alone cuts refused commands 2488$\to$222 but cannot
+guarantee survival without the local floor (12 deaths remain on the tightest-energy seed).
 \item \textbf{Real-agent within-subject evidence (\S\ref{sec:agent}.)}
 With identical legal information, adding only the certificate converts a real LLM
 controller's segment misdiagnosis, command storm, and silent mis-reporting into
@@ -436,14 +466,109 @@ wall; it removes an internal leak in which records already proven unrecoverable 
 access batches. The symmetric frontier bounds what better \emph{decisions} achieve given the
 protocol's state handling; the execution-layer certificate corrects that state handling itself.
 
+\section{Execution locality and the layered runtime}
+\label{sec:locality}
+
+The selective-purge result already hints at a placement principle: the zero-downlink node-local
+queue slightly beats the gateway version, because it acts without waiting for any round trip. We
+now make that principle explicit and test it deterministically (no LLM, three seeds, the main
+operating point). The question is not how smart a centre planner is, but \emph{where a feasibility
+constraint can be enforced in time}.
+
+\paragraph{Two deterministic mechanisms.}
+The first is a centre-side feasibility \textbf{envelope}, a pure filter wrapping any planner
+(rule, MPC, or LLM) and using only signals the planner itself may legally see (each node's last
+\emph{confirmed} configuration, how many nodes were heard in the recent window, the authorised
+requirement, and the local clock). It enforces: (E1) a night-energy hard gate---during
+18:00--06:00 every target is clamped to sparse and nodes currently dense are explicitly
+downgraded, overriding both mission level and any apparent ``recovery'', with 16:00--18:00 closed
+to new dense sessions; (E2) a control-plane confirmation gate---inside the 06:00--16:00 compile
+window, a node not yet confirmed dense is not upgraded while fewer than all nodes are heard, since
+the command cannot currently apply; and (E3) sparse under the blue level. The second mechanism is a
+\textbf{node-local energy floor}: on every 60~s tick the node itself, on its local clock, clamps
+sampling/report to sparse at night and self-downgrades at dusk, with no centre command at all; an
+optional pre-provisioned schedule additionally lets the node execute the authorised day/night
+rhythm locally. This models the gateway/node ``pre-provisioned autonomous rules'' already in the
+deployment; it is off by default and all pre-existing tests remain bit-identical when off.
+
+\paragraph{Why a centre envelope cannot guarantee survival.}
+A dense 300~s night costs $\approx$0.071~Wh, above the 0.05~Wh battery, and a brownout is absorbing
+(permanent death). A centre-issued dusk downgrade must traverse the cellular backhaul, then wait
+for a Class~A receive window; under the outage and geometric loss it does not arrive before dusk on
+the tightest-energy seed. The same rule---``never stay dense overnight''---is a late, refusable
+\emph{suggestion} at the centre but an invariant enforced every tick \emph{at the node}. Table~\ref{tab:r39}
+shows the consequence: na\"ive centre compliance kills 13/14 nodes on every seed; the centre
+envelope removes the command storm but 12 nodes still die on the tightest seed; the node-local floor
+removes every death on every seed without lowering service.
+
+\begin{table}[h]
+\centering\small
+\begin{tabular}{lcccc}
+\toprule
+Configuration (centre placement unless noted) & Mean svc & Deaths (3 seeds) & Cmds sent & Refused\\
+\midrule
+comply (na\"ive, no protection)                     & 0.162 & 39 & 160  & 2488\\
+dayfeed-c (centre day/night rule)                   & 0.370 & 12 & 308  & 1256\\
+envelope(comply), centre only                       & 0.359 & 12 & 308  & 298\\
+comply + local floor                                & 0.366 & 0  & 1424 & 3364\\
+dayfeed-c + local floor                             & 0.368 & 0  & 258  & 1156\\
+\textbf{envelope(comply) + local floor}            & 0.359 & \textbf{0} & 282 & \textbf{222}\\
+\midrule
+local-dayfeed (existing conservative local policy) & 0.296 & 0  & 0    & 0\\
+\textbf{pure-local (pre-provisioned, 0 centre cmd)} & \textbf{0.360} & \textbf{0} & 0 & 0\\
+\bottomrule
+\end{tabular}
+\caption{Deterministic three-seed placement study (no LLM). Centre rows share one policy harness,
+centre placement, and the queued/in-transit/applied command path; only the decider and the local
+floor differ. The local floor removes all permanent deaths at unchanged service; the envelope
+removes the command storm (refused 2488$\to$222) but cannot save the tightest seed without the
+floor. \emph{pure-local}---a node-local pre-provisioned day/night rhythm with zero centre
+commands---matches every centre-compiled service level, closing centre throughput/energy control
+under static pre-provisioned missions. The slightly higher unprotected dayfeed-c mean is bought by
+12 deaths (dense sampling before nodes expire) and is not a survivable operating point.}
+\label{tab:r39}
+\end{table}
+
+\paragraph{A symmetric local upper bound closes the static control question.}
+\emph{pure-local} attains mean service 0.360 (range 0.317--0.387) with zero deaths and zero centre
+commands, statistically indistinguishable from every centre-compiled configuration (0.359--0.368);
+a run in which the centre still issues comply commands while the node executes the pre-provisioned
+rhythm gives bit-identical service but 1274 sent / 2354 refused commands---the centre's sampling
+commands are pure overhead under a static, predictable mission. Local autonomy collects more
+(fewer missing collections, 2016 vs.\ $\approx$2650) but returns no more (more missing deliveries),
+confirming the backhaul, not collection policy, as the binding wall. This is a symmetric,
+upper-bound-backed closure of the same subspace the omniscient packer closed in
+\S\ref{sec:frontier}, now from the placement direction.
+
+\paragraph{The layered runtime.}
+The results prescribe a three-layer feasibility runtime, each holding only the constraints it can
+act on in time:
+\textbf{L0, node-local (zero-signalling safety floor)}---the night-energy floor and obligation
+deadline-purge, guaranteeing no irreversible death and no dead-record cache exhaustion;
+\textbf{L1, gateway-local (field autonomy)}---max-coverage backup packing, the non-prescient
+mission-view gate, arrival-time segment attribution, and autonomous operation during outages; and
+\textbf{L2, centre agent runtime}---only what local autonomy cannot obtain: cross-layer
+compilation and lawful re-compilation/renegotiation of \emph{non-pre-provisioned} authorised
+changes, compile-time structural infeasibility certificates with the three-way statement
+discipline, and cross-segment-consistent disposition and honest external reporting. Every L2
+action passes through the deterministic envelope and can never override L0/L1 safety. Rules, MPC,
+and solvers benefit from the same layers: this is a general communication execution layer, not a
+claim that an LLM is irreplaceable. Under static, pre-provisioned, predictable missions L2 rightly
+stays silent; its value appears when requirements change and the system must promise only what it
+can execute and say, early and precisely, why it cannot do the rest.
+
 \section{Evaluation}
 \label{sec:eval}
 
 \textbf{Setup.} Seed~0 main point (with multi-seed checks where randomness enters): 48~h + 1~h
 tail, 14 nodes, two groups, cap 0.05~Wh, solar peak 0.03~Wh/h, outage 4--20~h, backup
 1200~s/78~B with maxcov, blue$\to$yellow (600$\to$300~s) at 6~h, mission table reaching the
-gateway at 20~h. All numbers are produced by the repository scripts (r29--r36), each run
-reproduces 18/18 repository checks and 5/5 joint invariants.
+gateway at 20~h. All numbers are produced by the repository scripts (r29--r39), each run
+reproduces 18/18 repository checks and 5/5 joint invariants; the local safety floor is off by
+default and the disabled-backup and no-floor configurations remain bit-identical to the v1.1
+anchors. The placement study of RQ4 is deterministic (no LLM) over seeds 0--2; node death is a
+deterministic/highly robust quantity, while mean-service differences below one point are not
+claimed significant.
 
 \subsection{RQ1: Do structural certificates provide early, precise warning?}
 \textbf{Yes, and deterministically.} At compile time (6~h) the geometry test emits 602
@@ -514,7 +639,24 @@ $+5.06$ to $+6.39$): latest-only matches outage freshness but abandons post-reco
 energy analogue is larger: always-dense compliance kills 13 nodes, whereas certificate-aware
 holding keeps deaths at zero.
 
-\subsection{RQ4: Does the certificate change a real agent?}
+\subsection{RQ4: Does enforcement placement determine safety and command hygiene?}
+\textbf{Yes, deterministically.} Table~\ref{tab:r39} (mechanisms in \S\ref{sec:locality}) yields
+three findings. (i)~Letting the centre directly drive sampling is harmful, not merely suboptimal:
+na\"ive compliance permanently kills 13/14 nodes on all three seeds (39 total) and halves service
+to 0.162. (ii)~A centre-side envelope alone is insufficient for safety: it removes the command
+storm (refused 2488$\to$298) and protects two seeds, but on the tightest-energy seed 12 nodes still
+die, because the dusk downgrade cannot cross the backhaul and a Class~A window in time. The
+node-local floor removes all 39/12 deaths at unchanged service---the safety-critical constraint
+must sit where it can act before the energy is spent. (iii)~The envelope's own payoff is command
+hygiene: with the floor present, adding the envelope cuts refused centre commands from 3364 (na\"ive)
+or 1156 (centre dayfeed) to 222 at the same zero-death service level---a real saving when backhaul
+and Class~A downlink opportunities and short-message billing are scarce. A purely local,
+zero-command pre-provisioned rhythm reaches 0.360 service, matching every centre-compiled arm;
+under static, pre-provisioned missions the centre's sampling commands add neither service nor
+safety, only cost. The centre's genuine remit is therefore the non-pre-provisioned and the
+declarational, examined next.
+
+\subsection{RQ5: Does the certificate change a real agent?}
 \label{sec:agent}
 We replay three genuine decision points from an unaided deepseek-flash controller trace (99
 decisions, service 0.399, 606 commands refused, 14 confirmed) with identical system prompt,
@@ -540,6 +682,23 @@ effect-size estimate.}
 The certificate does not optimise for the agent; it integrates signals the agent already
 received but could not combine (confirmed-applied configs, queued commands, slot geometry,
 night energy), turning a scalar ``age / battery'' view into a chain-segment view.
+
+\paragraph{Three-arm live runs and the limit of textual advice.}
+Beyond the three-point replay, symmetric three-arm live runs (identical harness, legal
+information, tools, and action space; A0 unaided, A0-structured with only a pending-command
+engineering checklist, A1 with the certificate appended) show that death counts are highly robust
+while per-run service is noisy: across valid traces obtained before the API balance was exhausted,
+A0 and A0-structured permanently densify at night and kill 13 nodes on all seven valid traces,
+whereas A1 with the certificate reaches zero deaths on all three seed-0 certificate revisions and
+replaces silent mis-reporting with 17--29 explicit infeasibility log entries. The engineering
+checklist alone does not save nodes (the gain is the certificate, not bookkeeping), and
+\emph{textual} certificates reduce but do not guarantee safety across seeds---a revision without
+an unconditional night gate still compiles dense after a deep-night recovery and kills 13 nodes on
+the tightest seed, and temperature-0 runs show trajectory variance. The deterministic local floor
+and envelope of \S\ref{sec:locality} are what guarantee the result across seeds. We therefore
+report these LLM runs strictly as existence evidence with one model and few valid traces (later
+seeds and the reliable-link control returned a quota error and were discarded); effect-size claims
+rest on the deterministic RQ4 results, not on the LLM.
 
 \section{Related work}
 \label{sec:related}
@@ -605,10 +764,22 @@ compile-time certificate.
 point with symmetric relaxations and strong (including omniscient and MPC) baselines; the
 structural \stime certificate is geometric and seed-invariant, but capacity and night-energy
 \emph{forecasts} are deliberately not claimed as deterministic---they depend on online state
-and unknown weather. The agent study is a three-point within-subject existence proof; an
-effect-size claim requires 3--5 full trajectories and an A0-structured arm (plain engineering
-checklists, pending-command lists, bookkeeping) to ensure the gain is not merely good
-engineering hygiene. The brownout model is absorbing; a restart sensitivity could move the
+and unknown weather. The real-LLM evidence is existence-only: one model, few valid full trajectories (the API balance
+was exhausted mid-sweep, so later seeds and the reliable-link negative control are missing), with
+large per-run service variance; the three-arm runs nonetheless show robust death counts (unaided
+A0/A0-structured 13 deaths on all seven valid traces, certificate A1 zero deaths on the seed-0
+revisions) and motivate the deterministic layer. Effect-size and the safety guarantee rest on the
+deterministic three-seed placement study (RQ4), which itself spans one main operating point; wider
+deployment ranges (backup rate/payload, node count, capacity, cloud cover, brownout restart
+threshold) are not swept, and sub-point mean-service differences are not treated as significant.
+The static-mission closure assumes a pre-provisioned or predictable schedule. A full
+three-placement comparison for \emph{runtime, non-pre-provisioned} warning-level changes---centre
+long loop versus gateway-local LoRa re-compilation versus node pre-provisioning---including
+in-flight cross-generation commands and the residual physical effects of superseded
+configurations, is left as future work; the unreachable half is already quantified (RQ2), the
+reachable half converges to the local operating point once the table arrives (\S\ref{sec:locality}),
+and consistent-update/versioning mechanisms are established in the literature, so we claim no
+novelty there. The brownout model is absorbing; a restart sensitivity could move the
 energy wall but not the slot/capacity walls. The centre's knowledge of outage duration assumes
 network-side operations visibility; we also give a conservative variant that assumes only the
 current outage and counts deterministic backup slots. Standards text for one channel was
@@ -639,15 +810,24 @@ are parameterised by the deployment and should be re-derived per deployment.
 For pre-disaster geohazard monitoring under intermittent connectivity, strong ordinary
 controllers already extract essentially all on-time delivery that fixed resources allow; the
 remaining failures are physical and cleanly attributable. The defensible role for an agent
-runtime is therefore not to out-pack the network but to maintain \emph{execution-grounded
-honesty}: to compile authorised missions against the real collection/access/return/energy
-chain, certify structural infeasibility hours ahead with no false alarms, attribute every
-miss to its segment the moment evidence arrives, and---at the execution layer---release exactly
-the records a certificate proves unrecoverable while keeping every rescuable one, so that honesty
-about infeasibility also frees real on-time delivery rather than merely moving cost between the
-access and backhaul segments; it then re-compiles or
-re-negotiates only within the law---so that the system promises exactly what it can execute,
-and says, precisely and early, why it cannot do the rest.
+runtime is therefore neither to out-pack the network nor to directly drive safety-critical
+sampling, but to sit \emph{above} a layered, execution-grounded substrate. Node-local and
+gateway-local autonomy enforce, in time and with zero or local signalling, the night-energy floor
+and record disposition that no centre round trip can guarantee: a deterministic placement study
+shows that unprotected centre compliance permanently kills nodes, that a centre-side feasibility
+filter alone cannot save the tightest-energy seed, that a node-local floor guarantees survival at
+unchanged service, and that a purely local pre-provisioned rhythm already matches every
+centre-compiled service level under static missions. Above that floor the centre maintains
+\emph{execution-grounded honesty}: it compiles authorised missions against the real
+collection/access/return/energy chain, certifies structural infeasibility hours ahead with no
+false alarms, attributes every miss to its segment the moment evidence arrives, and---at the
+execution layer---releases exactly the records a certificate proves unrecoverable while keeping
+every rescuable one, so that honesty about infeasibility also frees real on-time delivery rather
+than merely moving cost between the access and backhaul segments; it then re-compiles or
+re-negotiates only within the law. The agent's value is thereby reserved for what local autonomy
+cannot have---changing, non-pre-provisioned requirements and honest, early, segment-precise
+disclosure---so that the system promises exactly what it can execute, and says, precisely and
+early, why it cannot do the rest.
 
 \bibliographystyle{unsrt}
 \bibliography{refs}
