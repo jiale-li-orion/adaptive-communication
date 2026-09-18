@@ -58,11 +58,12 @@ outage---a cross-layer transfer of cost from the backhaul to the access segment.
 holding and retransmitting only records whose obligation deadline has passed while retaining
 every still-rescuable record; it is implementable at the node with zero downlink signalling. At
 the main point it raises outage on-time delivery from 202 to 434 and full-horizon service from
-0.400 to 0.432 under unchanged resources, drives expired sends to zero (send-promise precision
-$0.54\!\to\!1.00$), and on three held-out seeds raises service by 3.7--5.6 points and outage
-delivery 2.2--3.4$\times$. It dominates the AoI latest-only queue, which matches outage freshness
-only by discarding still-useful records (service 0.363); EDF and obligation-greedy queues that
-reorder but never release gain nothing.
+0.400 to 0.432 under unchanged resources, and drives expired sends to zero (send-promise precision
+$0.54\!\to\!1.00$). A paired ten-seed sweep confirms the effect: service rises by a mean 4.21
+points (95\% CI $+3.64$ to $+4.79$, positive on all ten seeds) and outage on-time delivery
+increases 2.52-fold, while it dominates the AoI latest-only queue by 5.73 points (CI $+5.06$ to
+$+6.39$) on every seed---latest-only matches outage freshness only by discarding still-useful
+records. EDF and obligation-greedy queues that reorder but never release gain nothing.
 In a within-subject study with a real LLM controller, the unaided agent mistakes LoRa access
 for backhaul connectivity, storms ineffective commands, and silently reports the elevated
 mission as in effect; given only the certificate, the same agent stops, locates the blocking
@@ -135,11 +136,12 @@ futile night-time dense sampling that permanently kills nodes.
 \item \textbf{Execution-layer certificate: deadline-aware selective purge (\S\ref{sec:purge},\S\ref{sec:eval}).}
 The same feasibility judgement, applied at the edge, releases from the FIFO repair cache only
 records proven past their deadline and retains every rescuable one. Under fixed resources it more
-than doubles outage on-time delivery (202$\to$434) and raises full-horizon service 3.2 points at
-the main point (3.7--5.6 on held-out seeds), with zero expired sends and send-promise precision
-$0.54\!\to\!1.00$. It is location-independent (a zero-signalling node queue slightly beats a
-gateway version), dominates AoI latest-only, and is not reproduced by EDF or obligation-greedy
-queues.
+than doubles outage on-time delivery at the main point (202$\to$434) and raises full-horizon
+service 3.2 points there; a paired ten-seed sweep gives a mean $+4.21$ points (95\% CI
+$+3.64$ to $+4.79$, positive on all ten seeds) and 2.52-fold outage on-time delivery, with expired
+sends cleared and send-promise precision $0.54\!\to\!1.00$. It is location-independent (a
+zero-signalling node queue slightly beats a gateway version), dominates AoI latest-only on every
+seed, and is not reproduced by EDF or obligation-greedy queues.
 \item \textbf{Real-agent within-subject evidence (\S\ref{sec:agent}.)}
 With identical legal information, adding only the certificate converts a real LLM
 controller's segment misdiagnosis, command storm, and silent mis-reporting into
@@ -410,6 +412,10 @@ has two equivalent placements: a node-local queue discipline that needs no downl
 (\texttt{deadline-purge}), and a gateway action that locally acknowledges records it will not send
 (\texttt{cert-purge}); both use only the public period $P$ legally available before the mission
 table arrives. The two placements implement one deadline judgement and give the same result.
+Dropping stale or expired packets is itself well known in AoI packet management and DTN bundle
+expiry~\cite{costa2014pm,dtnarch}; the novelty is not the discard but its obligation-feasibility
+trigger and the requirement that it be consistent across both segments (see
+\S\ref{sec:related}).
 
 \paragraph{Why ordinary queues do not suffice.}
 EDF and obligation-greedy disciplines reorder which records occupy a batch but never release
@@ -497,11 +503,16 @@ on-time obligations under unchanged resources. Reordering queues do not help; Ao
 trades post-recovery coverage for outage freshness.}
 \label{tab:purge}
 \end{table}
-\textbf{Held-out robustness.} On seeds 6/7/8, never used during development, switching the edge
-queue FIFO$\to$deadline-purge raises full-horizon service by 5.6/4.4/3.7 points and outage
-on-time delivery by 2.2--3.4$\times$, with expired sends cleared; deadline-purge dominates
-latest-only on every held-out seed (+7.1/+4.3/+5.3 points). The effect is not seed-specific. The energy analogue is larger: always-dense compliance
-kills 13 nodes, whereas certificate-aware holding keeps deaths at zero.
+\textbf{Paired ten-seed sweep.} Across seeds 0--9 (the maxcov chooser fixed, only the edge queue
+changes), FIFO$\to$deadline-purge raises mean full-horizon service from 0.373 to 0.415---a paired
+mean gain of 4.21 points (sd 0.81, 95\% CI $+3.64$ to $+4.79$ using $t_{0.975,9}{=}2.262$), positive
+on all ten seeds (range $+3.2$ to $+5.6$)---and raises total outage on-time delivery
+1691$\to$4265 (2.52$\times$), while expired backup records fall from 2538 to 1. The three seeds
+never touched during development (6/7/8) fall in the same range ($+5.6/+4.4/+3.7$). Deadline-purge
+also dominates the AoI latest-only queue on \emph{every} seed, by a mean 5.73 points (95\% CI
+$+5.06$ to $+6.39$): latest-only matches outage freshness but abandons post-recovery coverage. The
+energy analogue is larger: always-dense compliance kills 13 nodes, whereas certificate-aware
+holding keeps deaths at zero.
 
 \subsection{RQ4: Does the certificate change a real agent?}
 \label{sec:agent}
@@ -567,6 +578,27 @@ task-transition effects after it. Network calculus and delay/disruption-tolerant
 extreme contacts are complementary deterministic characterisations of the walls we
 measure~\cite{leboudec01}.
 
+\textbf{Packet discard, freshness, and DTN expiry.} Discarding stale or expired packets is itself
+well established: AoI packet management pre-empts or drops old updates to lower the receiver's
+age~\cite{costa2014pm,kam2016deadline,krishnan2019multihop}; deadline-aware buffer discard has
+been coupled with adaptive ARQ for video~\cite{razavivideo}; a sensor transport protocol suppresses
+packet generation when the estimated delay exceeds the time limit~\cite{wada2009timeout}; DTN
+bundle protocols attach a lifetime and expire bundles hop by hop, alongside a family of
+TTL/encounter-based drop policies~\cite{dtnarch,iranmaneshdtnqueue}; and LoRa--satellite rural
+systems use priority queues and de-duplication~\cite{sateriot}. These mechanisms decide from
+packet age, a local buffer deadline, a single packet's estimated delay, or a bundle TTL, and the
+discard takes effect locally at one hop. Our selective purge differs in three coupled respects:
+(i) the release test is the \emph{obligation's} end-to-end feasibility---its absolute delivery
+deadline against legally known return geometry---not packet age or a local TTL; (ii) suppression
+must be \emph{consistent across the access and backhaul segments}, because withholding an expired
+backhaul send while leaving the record in the node's acknowledgement-driven FIFO repair cache
+back-pressures fresh access traffic and costs on-time obligations (\S\ref{sec:purge}), a
+cross-segment interaction absent from single-hop AoI discard and from hop-local bundle expiry;
+and (iii) release is paired with retaining every still-rescuable record, which AoI latest-only
+(whose objective ignores coverage) does not do. We claim not the act of dropping expired packets
+but the obligation-feasibility test, its cross-segment consistency, and its identity with the
+compile-time certificate.
+
 \section{Discussion, limitations, and threats to validity}
 \label{sec:disc}
 \textbf{Scope of claims.} The throughput negative result is established at one main operating
@@ -594,8 +626,10 @@ Class~A receive windows in a real deployment. (ii) A purged record forgoes any r
 after its deadline; where such value matters it can be retained at the gateway rather than sent.
 (iii) During the outage the node and gateway test deadlines against the public pre-change period
 $P{=}600$; the exact post-upgrade $P{=}300$ deadline enters only post-hoc accounting, never as an
-online input. (iv) Edge-queue results use the development seed plus three held-out seeds; a full
-seed 0--9 sweep with confidence intervals remains future work.
+online input. (iv) Edge-queue results rest on a paired seed 0--9 sweep with 95\% confidence
+intervals (all service gains positive); the purge test is deterministic given the public period,
+so residual seed dependence enters through access/solar randomness, and wider deployment parameter
+ranges are not swept.
 
 \textbf{Generality.} The obligation chain and the three-way statement discipline transfer to
 any intermittent, energy-limited, authority-bounded monitoring workflow; the specific walls
