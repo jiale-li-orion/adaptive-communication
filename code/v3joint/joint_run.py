@@ -56,6 +56,7 @@ def run_joint(seed: int = 0, task_hours: int = 12, tail_hours: int = 1,
               backup_chooser: str = "edf", backup_failover: bool = True,
               backup_suppress: bool = True,
               backup_p_succ: float = 1.0,
+              cache_service: str = "fifo",
               cup_use_window: bool = True, cup_lead_s: int = 900, cup_gate_sampling: bool = True,
               odp_gate_sampling: bool = True, odp_use_backup_phase: bool = True,
               trace: bool = False,
@@ -70,7 +71,7 @@ def run_joint(seed: int = 0, task_hours: int = 12, tail_hours: int = 1,
                          report_period_s=report_period_s,
                          event_interval_s=event_spacing_s,
                          capacity_wh=capacity_wh, initial_soc=initial_soc,
-                         charge_min_c=5.0, cache_service="fifo",
+                         charge_min_c=5.0, cache_service=cache_service,
                          obligation_period_s=routine_period_s,
                          idle_wh_per_tick=0.0,
                          sample_wh=DeviceProfile().sample_wh)
@@ -175,7 +176,7 @@ def run_joint(seed: int = 0, task_hours: int = 12, tail_hours: int = 1,
         obligation_period_s=routine_period_s, grace_s=routine_period_s,
         obligations=obligations, suppress_duplicates=backup_suppress,
         backup_p_succ=backup_p_succ, backup_loss_seed=seed,
-        mission_gate=mission_gate)
+        mission_gate=mission_gate, nodes_ref=nodes)
     if cup_observer is not None:
         cup_observer.plane = inst.plane       # 绑定后策略才能读主路状态/备用相位
 

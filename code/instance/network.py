@@ -373,6 +373,23 @@ class Node:
                 self.dropped += 1
             self.cache = [newest]
             return [newest]
+        if self.p.cache_service == "deadline_purge":
+            # **义务可行性证书的节点本地实现(零下行/零备份资费)**: 每拍发送前, 先按设备自己
+            # 知道的公开义务节奏 P 核销"截止期 dl=(taken//P+2)P 已过、再无可能按期交付"的未确认
+            # 记录, 停止对它们的持有与 FIFO 重传, 把每拍批次名额让给仍可挽救的新鲜样本; **未到期
+            # 记录一律保留**(不像 latest_only 那样无差别丢弃), 故不牺牲全时段覆盖。它与网关
+            # cert_purge 是**同一个 deadline 可行性判定的两个部署位置**; 丢弃一律记账。
+            period = max(1, int(self.p.obligation_period_s))
+            keep, drop = [], []
+            for s in self.cache:
+                dl = (s.taken_at // period + 2) * period
+                (drop if dl <= t_s else keep).append(s)
+            if drop:
+                for old in drop:
+                    self.transit[old.sample_id].dropped_at = t_s
+                    self.dropped += 1
+                self.cache = keep
+            return self.cache[:max_slots]
         if self.p.cache_service in ("edf", "obligation_greedy"):
             # **两种"按义务"的纪律**（§31 §五 第一项判别要求加入的两条）。
             # 它们只用**设备自己知道的东西**：缓存的未确认记录 + 自己的监测契约节奏。

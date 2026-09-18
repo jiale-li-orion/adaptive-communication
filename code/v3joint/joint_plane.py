@@ -44,7 +44,7 @@ class JointControlPlane(ControlPlane):
               grace_s: int = 3600, sample_bytes: dict | None = None,
               obligations=None, suppress_duplicates: bool = True,
               backup_p_succ: float = 1.0, backup_loss_seed: int = 0,
-              mission_gate=None) -> "JointControlPlane":
+              mission_gate=None, nodes_ref=None) -> "JointControlPlane":
         obj = object.__new__(cls)
         obj.__dict__.update(src.__dict__)          # 同构接管：不丢任何 v1.1 状态
         obj.enable_backup = bool(enable_backup)
@@ -76,6 +76,7 @@ class JointControlPlane(ControlPlane):
         obj.backup_records = 0           # 经备用送达中心的样本数
         obj.backup_bytes_sent = 0        # 经备用发出的估算字节
         obj.backup_suppressed = 0        # 因同义务已送而抑制、未占稀缺窗的冗余样本
+        obj.backup_local_purge = 0       # cert_purge: 网关本地核销的确定失约样本(不发、不占资费, 但ack释放节点重传)
         # **主路专属**成功时刻：只在主回传真的交出数据时更新，备用成功不算主路恢复。
         # Instance 的 gateway_last_forward_ok_at 会把备用返回项也算作"转发成功"，策略要区分
         # "主路是否健康"时必须用这个干净信号。
@@ -83,6 +84,7 @@ class JointControlPlane(ControlPlane):
         obj.backup_p_succ = float(backup_p_succ)
         import random as _random
         obj._bk_rng = _random.Random(int(backup_loss_seed))
+        obj._nodes_ref = nodes_ref          # cert_purge 本地核销时用于 ack 节点(默认 None=零行为)
         return obj
 
     # ---- 在线任务变更：随主回传可达性增量发布现场义务视图（doc38 §3）----
@@ -173,8 +175,11 @@ class JointControlPlane(ControlPlane):
 
         seen = set(self._cover_seen) if v != "cover_local" else set()
 
-        if v == "maxcov":
-            # 阶段1: 反复选 边际新增有效义务覆盖/字节 最大者; tie=期限早, 再 tie=更新
+        _ONTIME_ONLY = ("maxcov_ontime", "cert_purge")
+        if v in ("maxcov",) + _ONTIME_ONLY:
+            # 阶段1: 反复选 边际新增有效义务覆盖/字节 最大者; tie=期限早, 再 tie=更新。
+            # maxcov 与 maxcov_ontime 的阶段1逐位相同(都只取 dl>t 的可挽救样本),
+            # 故两者的 on-time 义务覆盖集合一致; 差异仅在阶段2是否用已过期样本补满。
             while True:
                 best, bk = None, None
                 for e in E:
@@ -192,8 +197,15 @@ class JointControlPlane(ControlPlane):
                     break
                 if take(best):
                     seen |= best["ok"]
-            # 阶段2: 剩余容量最新优先补满(不因无新覆盖停发)
-            for e in sorted((e for e in E if e["s"].sample_id not in chosen_ids()),
+            # 阶段2: 剩余容量最新优先补满。
+            #  maxcov        : 不因无新覆盖停发, 用最新样本(含已过期 dl<=t)补满 -> 资费花在过期样本;
+            #  maxcov_ontime : 证书感知, 只补仍可按期交付(dl>t)的样本, 已过期不补、槽宁可空。
+            def _stage2_ok(e):
+                if v in _ONTIME_ONLY and e["dl"] <= t_s:
+                    return False
+                return True
+            for e in sorted((e for e in E
+                             if e["s"].sample_id not in chosen_ids() and _stage2_ok(e)),
                             key=lambda e: (-e["heard"], e["dl"])):
                 take(e)
         else:
@@ -261,9 +273,14 @@ class JointControlPlane(ControlPlane):
                     sk = (item_dl, it.heard_at_s, it.node_id)
                 stream.append((sk, it, s, okeys))
         stream.sort(key=lambda x: x[0])
-        _COVER_FAMILY = ("cover", "cover_l0only", "cover_local", "cover2", "maxcov")
+        _ONTIME_ONLY = ("maxcov_ontime", "cert_purge")
+        _COVER_FAMILY = ("cover", "cover_l0only", "cover_local", "cover2",
+                         "maxcov", "maxcov_ontime", "cert_purge")
         if self.backup_chooser in _COVER_FAMILY:
             picked_of, used = self._cover_family_pack(stream, t_s, cap)
+            if self.backup_chooser in _ONTIME_ONLY and used == 0:
+                # 证书感知: 该槽没有任何仍可按期交付的样本(全过期/冗余), 不发空包、省整包头资费。
+                return primary
         else:
             picked_of: dict[int, tuple[GatewayItem, list]] = {}
             used = 0
@@ -308,6 +325,34 @@ class JointControlPlane(ControlPlane):
                     it.payload = [s for s in it.payload if s.sample_id not in pset]
                 remain.append(it)
         self.gateway_pending = remain
+        if self.backup_chooser == "cert_purge" and self._nodes_ref is not None:
+            # 完整证书动作: 对"已听到、压在网关、按网关口径确定失约(dl<=t)"的剩余样本,
+            # 不花备份资费发送, 但**本地核销**——等价一次确认, 清掉节点未确认缓存, 使节点
+            # FIFO 自动补发不再反复重传无可挽回记录、占满每拍批次名额(r37b: 只抑制发送而
+            # 不核销, 会经节点重传把成本推回接入段, 拖慢新鲜样本 heard)。
+            kept: list = []
+            purge_n = 0
+            for it in remain:
+                pl = getattr(it, "payload", None)
+                if not pl:
+                    kept.append(it)
+                    continue
+                keep_s, drop_s = [], []
+                for s in pl:
+                    dl, _, _ = self._sample_obl(s)
+                    (drop_s if dl <= t_s else keep_s).append(s)
+                if drop_s:
+                    purge_n += len(drop_s)
+                    _node = self._nodes_ref.get(it.node_id)
+                    if _node is not None:
+                        _node.ack([s.sample_id for s in drop_s])
+                if keep_s:
+                    it.sample_ids = tuple(s.sample_id for s in keep_s)
+                    it.payload = keep_s
+                    kept.append(it)
+                # keep_s 为空: 整 item 均确定失约, 核销后不再保留(不发中心、不占缓存)。
+            self.gateway_pending = kept
+            self.backup_local_purge += purge_n
         self.backup_packets += 1
         self.backup_bytes_sent += used + self.backup_header_bytes
         # 可选整包丢包(默认1.0不抽签、逐位锚点不变):整包以 p_succ 到达;失败则样本已移出 pending、
@@ -323,5 +368,6 @@ class JointControlPlane(ControlPlane):
                 "backup_gated": self.backup_gated, "backup_packets": self.backup_packets,
                 "backup_records": self.backup_records, "backup_bytes_sent": self.backup_bytes_sent,
                 "backup_suppressed": self.backup_suppressed,
+                "backup_local_purge": self.backup_local_purge,
                 "backup_rate_s": self.backup_rate_s, "backup_bytes": self.backup_bytes,
                 "backup_chooser": self.backup_chooser, "backup_failover": self.backup_failover}
