@@ -335,4 +335,4 @@ The following interpretation corrections supersede the affected rows above; raw 
 
 | Artifact | Producer | Notes |
 |---|---|---|
-| `agent_traces/A0_seed0_1789738644.jsonl` (+ `.summary.json`) | `code/v3joint/r25_agent_harness.py llm 0`（deepseek-flash A0，99 决策、约 518k token） | 第一条有效真实 agent 轨迹：svc=**.3993**（dayfeed .4001）、0 死亡、命令 112 sent/606 refused/14 confirmed、任务表 gw=72000。逐决策记录完整合法观察、四个同信息工具建议、模型原始返回与 token 用量；离线重放 `r25_agent_harness.py replay <trace> 0` 逐位复现 .3993。解释与边界见 doc40。更早一次 `A0_seed0_1789737746` 系 max_tokens 被推理耗尽的接口故障废跑，已删除、不得引用。 |
+| `agent_traces/A0_seed0_1789738644.jsonl` （另有同名 summary 汇总文件，后缀为 .summary.json，同在 agent_traces 子目录） | `code/v3joint/r25_agent_harness.py llm 0`（deepseek-flash A0，99 决策、约 518k token） | 第一条有效真实 agent 轨迹：svc=**.3993**（dayfeed .4001）、0 死亡、命令 112 sent/606 refused/14 confirmed、任务表 gw=72000。逐决策记录完整合法观察、四个同信息工具建议、模型原始返回与 token 用量；离线重放 `r25_agent_harness.py replay <trace> 0` 逐位复现 .3993。解释与边界见 doc40。更早一次 `A0_seed0_1789737746` 系 max_tokens 被推理耗尽的接口故障废跑，已删除、不得引用。 |
