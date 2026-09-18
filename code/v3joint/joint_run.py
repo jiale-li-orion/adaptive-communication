@@ -34,6 +34,7 @@ from joint_plane import JointControlPlane                     # noqa: E402
 from joint_policy import DeliveryOpportunisticPolicy, GatewayObserver  # noqa: E402
 from obligation_policy import ObligationDeliveryPolicy  # noqa: E402
 from mission_policy import MissionChangePolicy  # noqa: E402
+from mission_view import MissionViewGate  # noqa: E402
 
 
 def run_joint(seed: int = 0, task_hours: int = 12, tail_hours: int = 1,
@@ -100,11 +101,20 @@ def run_joint(seed: int = 0, task_hours: int = 12, tail_hours: int = 1,
 
     meas = {k: v.measurand for k, v in nodes.items()}
     if mission_schedule is not None:
-        obs = piecewise_routine_obligations(meas, int(task_hours), mission_schedule)
+        # 在线变更新任务采用半开窗口独立观测语义(doc38 §4); 单段无变更回退闭区间, 与旧版一致。
+        obs = piecewise_routine_obligations(
+            meas, int(task_hours), mission_schedule,
+            half_open_after_first=len(mission_schedule) >= 2)
     else:
         obs = routine_obligations_by_node(meas, int(task_hours), period_s=routine_period_s)
     obs = obs + rule_obligations_for_truth(truth, spacing_s=event_spacing_s)
     obligations = ObligationSet(obs)
+
+    # 在线新增授权(doc38 §3): 多段 schedule 时现场网关义务视图随任务表更新穿过主回传到达而增量
+    # 发布; 单段/固定任务 gate=None, 与旧版逐位一致。独立 scorer 始终持 obligations 全集真值。
+    mission_gate = None
+    if mission_schedule is not None and len(mission_schedule) >= 2:
+        mission_gate = MissionViewGate(meas, int(task_hours), mission_schedule)
 
     cup_observer = None
     if mission_mode is not None:
@@ -159,7 +169,8 @@ def run_joint(seed: int = 0, task_hours: int = 12, tail_hours: int = 1,
         chooser=backup_chooser, failover=backup_failover,
         obligation_period_s=routine_period_s, grace_s=routine_period_s,
         obligations=obligations, suppress_duplicates=backup_suppress,
-        backup_p_succ=backup_p_succ, backup_loss_seed=seed)
+        backup_p_succ=backup_p_succ, backup_loss_seed=seed,
+        mission_gate=mission_gate)
     if cup_observer is not None:
         cup_observer.plane = inst.plane       # 绑定后策略才能读主路状态/备用相位
 
@@ -175,6 +186,8 @@ def run_joint(seed: int = 0, task_hours: int = 12, tail_hours: int = 1,
         res["mission_refusals"] = [
             {"node": n, "req_period_s": rq, "at_s": t, "soc_wh": soc}
             for (n, rq, t, soc) in pol.refusals]
+    if mission_gate is not None:
+        res["mission_timing"] = mission_gate.timing()
     res["survival"] = {
         "alive": sum(1 for n in nodes.values() if getattr(n, "alive", True)),
         "n": len(nodes),

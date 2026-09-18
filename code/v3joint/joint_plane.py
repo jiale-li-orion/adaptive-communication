@@ -43,7 +43,8 @@ class JointControlPlane(ControlPlane):
               failover: bool = True, obligation_period_s: int = 3600,
               grace_s: int = 3600, sample_bytes: dict | None = None,
               obligations=None, suppress_duplicates: bool = True,
-              backup_p_succ: float = 1.0, backup_loss_seed: int = 0) -> "JointControlPlane":
+              backup_p_succ: float = 1.0, backup_loss_seed: int = 0,
+              mission_gate=None) -> "JointControlPlane":
         obj = object.__new__(cls)
         obj.__dict__.update(src.__dict__)          # 同构接管：不丢任何 v1.1 状态
         obj.enable_backup = bool(enable_backup)
@@ -60,9 +61,14 @@ class JointControlPlane(ControlPlane):
         obj.suppress_duplicates = bool(suppress_duplicates)
         obj._backed_obl_keys: set = set()           # 已用备用送过至少一条合格样本的义务
         obj._cover_seen: set = set()               # cover: 跨包已覆盖义务(仅降优先级,不 suppress/不停发)
+        obj._mission_gate = mission_gate
         if obligations is not None:
-            for _o in obligations.obligations:
+            _view = (mission_gate.initial_view(obligations.obligations)
+                     if mission_gate is not None else obligations.obligations)
+            for _o in _view:
                 obj._obl_index.setdefault((_o.node_id, _o.measurand), []).append(_o)
+        if mission_gate is not None:
+            mission_gate._plane = obj
         # 备用腿账本（尝试/发出，全部可审计）
         obj.backup_opportunities = 0     # 到达备用发送节拍且有积压的次数
         obj.backup_gated = 0             # failover 下因主路 up 而未启用的次数
@@ -78,6 +84,23 @@ class JointControlPlane(ControlPlane):
         import random as _random
         obj._bk_rng = _random.Random(int(backup_loss_seed))
         return obj
+
+    # ---- 在线任务变更：随主回传可达性增量发布现场义务视图（doc38 §3）----
+    def _install_mission_segment(self, seg) -> None:
+        remove, add = self._mission_gate.segment_ops(seg)
+        for o in remove:
+            lst = self._obl_index.get((o.node_id, o.measurand))
+            if lst and o in lst:
+                lst.remove(o)
+        for o in add:
+            self._obl_index.setdefault((o.node_id, o.measurand), []).append(o)
+
+    def _pump_mission(self, t_s: int) -> None:
+        """已生效且此刻主回传可达的任务表更新发布到网关；gate=None 时零行为（锚点不变）。"""
+        if self._mission_gate is None:
+            return
+        for seg in self._mission_gate.poll(t_s, lambda h: self.path_available(h, 0)):
+            self._install_mission_segment(seg)
 
     # ---- 单条 item 的**净荷**字节（不含包头；一个备用包只计一次固定头）----
     def _item_payload_bytes(self, item: GatewayItem) -> int:
@@ -200,6 +223,7 @@ class JointControlPlane(ControlPlane):
 
     # ---- 关键覆写：主回传之后，在同一拍叠加备用腿 ----
     def backhaul_forward(self, t_s: int, delay_s: int = 0) -> list[GatewayItem]:
+        self._pump_mission(t_s)   # 在线任务表更新随主回传可达性到达（默认 gate=None，零行为）
         primary = super().backhaul_forward(t_s, delay_s)   # 主路 down 时为 []，且保留 pending
         if primary:
             self.last_primary_ok_at = t_s                  # 主路专属成功（备用不计入）

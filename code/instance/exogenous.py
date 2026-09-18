@@ -67,6 +67,10 @@ class Obligation:
     #: 整数 tick 网格上；仿真在网格上走，因此必须显式声明一个匹配容差，而不是偷偷把时刻改掉。
     #: v1.1 §11 要求 manifest 含"采集匹配容差"，就是这一项。默认 0 表示窗口本身就是判据。
     tolerance_s: int = 0
+    #: 新任务版本(在线变更后)采用半开窗口 [lo,hi) 的**独立观测**语义(doc38 §4): 一份边界样本
+    #: 只归属一个窗、不双配, "每 P 秒一份独立新观测"不能被更疏采样在边界点凑出。
+    #: 默认 False = v1.1 闭区间窗口覆盖; 旧实验/R20 一律不改。
+    match_half_open: bool = False
 
     @property
     def deadline(self) -> int:
@@ -83,6 +87,8 @@ class Obligation:
             return False
         lo = self.window[0] - self.tolerance_s
         hi = self.window[1] + self.tolerance_s
+        if self.match_half_open:
+            return lo <= sample.taken_at < hi
         return lo <= sample.taken_at <= hi
 
 
@@ -238,7 +244,8 @@ def routine_obligations_by_node(measurands: dict[str, str], hours: int,
 def piecewise_routine_obligations(measurands: dict[str, str], hours: int,
                                   schedule: list[tuple[int, int, str]],
                                   window_s: int | None = None,
-                                  grace_s: int | None = None) -> list[Obligation]:
+                                  grace_s: int | None = None,
+                                  half_open_after_first: bool = False) -> list[Obligation]:
     """按**外部授权的预警等级调度表**分段生成周期义务(DZ/T 0460 §5.3.3/§8.4.2)。
 
     ``schedule`` 为 ``[(start_s, period_s, level), ...]``,按 start 升序,首段 start=0;
@@ -247,7 +254,9 @@ def piecewise_routine_obligations(measurands: dict[str, str], hours: int,
     但**每级具体周期数值标准未给**,属研究选择(A),由调用方显式传入、不得在本函数编造。
 
     语义:
-      - 每段以**段起点为新网格**生成义务(对应新配置在 Class A 生效延迟之后起效);
+      - 每段以**段起点为新网格**生成义务; 义务窗(评分分母)从**任务授权/生效时刻**段起点起算,
+        **不随某方法命令实际送达快慢后移**(doc38 §4): 未及时收到/采用新配置记执行
+        失败或共同通信损失, 不改变分母; 执行器可见视图何时更新由 MissionViewGate 门控;
       - 升级(period 变小)后新义务按密周期开窗;**变更前已 release、deadline 未到的旧疏义务
         仍由其 release 所在段保留**,不随版本升级删除(H2:旧义务仍需兑现);
       - 降级/解除(period 变大)后按疏周期生成,已开窗的旧密义务保留到各自 deadline;
@@ -277,7 +286,8 @@ def piecewise_routine_obligations(measurands: dict[str, str], hours: int,
                     out.append(Obligation(
                         oid=f"{node_id}:routine:t{rel:07d}", node_id=node_id,
                         measurand=measurand, kind=KIND_ROUTINE,
-                        release_at=rel, window=(rel, rel + w), grace_s=g))
+                        release_at=rel, window=(rel, rel + w), grace_s=g,
+                            match_half_open=bool(half_open_after_first and start != 0)))
                 k += 1
     return out
 
