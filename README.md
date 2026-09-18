@@ -2,7 +2,7 @@
 
 灾前山区滑坡与泥石流监测。
 
-> **当前研究入口（2026-09-16）**：[doc33：全局复盘与单篇论文路线](docs/s7-method/v1.2/33-global-synthesis-and-single-paper-route-2026-09-16.md)。按 Human 决定继续以一篇 agentic communication 论文为目标，优先判别“监测义务到可达执行的编译与增量修复”；**候选尚未证实，未实现、未接新 LLM 实验**。doc21–32 已修旧测量并测得稀缺备份选包增益，但本轮发现 `cover_l0only`/`cover2` 实际落入 EDF 分支，R17 逐义务连接键也无效，故**暂停 v2/两层必要性定稿**；主 `cover` 对已测规则的读数保留为有限比较。下一轮交付、来源、最强反方和关闭条件均在 doc33，以下旧阶段横幅按历史阅读。
+> **当前研究入口（2026-09-16）**：[doc38：R20／任务变更／Agent 交接审查](docs/s7-method/v1.2/38-review-r20-mission-and-agent-handoff-2026-09-16.md)，主线沿用 [doc33：单篇论文路线](docs/s7-method/v1.2/33-global-synthesis-and-single-paper-route-2026-09-16.md)。R20 已修复具名消融并采用普通 `maxcov` 工具；**doc37 的结构性 NO-GO 和“普通 MPC 已最优”不成立**，目前是资源诊断完成、可改变损失未定。真实 Agent 小样本探索前，先明确任务更新怎样到网关、采样频率与窗口覆盖的评分区别、A0 的完整合法历史；不能用 `dayfeed` 的失败当作物理不可兑现的金标准。单篇 agentic communication 目标继续，候选尚未证实，以下旧阶段横幅按历史阅读。
 
 > **上一轮研究审查（2026-09-15，覆盖联合控制 doc08–18）**：见 [v1.2/19：独立论文审查](docs/s7-method/v1.2/19-independent-paper-review-2026-09-15.md) 与 [20：后续矩阵](docs/s7-method/v1.2/20-review-experiment-matrix-2026-09-15.md)。当时指出的首次到达、失电模型、分支可辨识性已有 doc21–24 后续处理；请按 doc33 读取当前状态，不将历史待办重复启动。更早审查保留于 [doc07](docs/s7-method/v1.2/07-review-and-method-space-2026-09-15.md)。
 
