@@ -62,7 +62,8 @@ def run_joint(seed: int = 0, task_hours: int = 12, tail_hours: int = 1,
               collect_rows: bool = False, placement: str = "center",
               # ---- 顺序2: 外生授权任务变更(doc35) ----
               mission_schedule=None, mission_mode: str | None = None,
-              mission_scope=None, mission_healthy_wh: float = 0.010):
+              mission_scope=None, mission_healthy_wh: float = 0.010,
+              mission_policy_obj=None):
     hours = task_hours + tail_hours
     dep = build_deployment(groups=groups, per_group=per_group)
     prof = DeviceProfile(sample_interval_s=sample_interval_s,
@@ -117,7 +118,11 @@ def run_joint(seed: int = 0, task_hours: int = 12, tail_hours: int = 1,
         mission_gate = MissionViewGate(meas, int(task_hours), mission_schedule)
 
     cup_observer = None
-    if mission_mode is not None:
+    if mission_policy_obj is not None:
+        # 顺序3: 外部构造的任务策略(真实 Agent / 脚本对照), 与 MissionChangePolicy 同放置、同链路。
+        pol = mission_policy_obj
+        placement = "center"
+    elif mission_mode is not None:
         pol = MissionChangePolicy(mission_schedule, mode=mission_mode, scope=mission_scope,
                                   healthy_wh=mission_healthy_wh)
         placement = "center"
@@ -182,10 +187,11 @@ def run_joint(seed: int = 0, task_hours: int = 12, tail_hours: int = 1,
     res["backup"] = inst.plane.backup_summary()
     res["deployment"] = dep.summary()
     res["command_counters"] = dict(inst.counters)
-    if mission_mode is not None:
+    _refusals = getattr(pol, "refusals", None)
+    if _refusals is not None:
         res["mission_refusals"] = [
             {"node": n, "req_period_s": rq, "at_s": t, "soc_wh": soc}
-            for (n, rq, t, soc) in pol.refusals]
+            for (n, rq, t, soc) in _refusals]
     if mission_gate is not None:
         res["mission_timing"] = mission_gate.timing()
     res["survival"] = {
