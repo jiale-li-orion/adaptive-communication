@@ -46,8 +46,11 @@ FINAL = {
     ("nolinkout", "A1", 0): "r38_nolinkout_A1_seed0_1789801839.jsonl",
 }
 
-RE_LUP = re.compile(r"link\s*(?:is\s*)?up|backhaul\s*(?:is\s*)?up|link\s+healthy|link\s+is\s+healthy|"
-                    r"commands?\s+can\s+apply|can\s+apply|control\s+plane\s*(?:is\s*)?(?:up|delivering)", re.I)
+# up(?!link)(?![a-z]): "link is uplink-only" must NOT count as an optimistic "link is up".
+RE_LUP = re.compile(r"link\s+(?:is\s+)?up(?!link)(?![a-z])|backhaul\s+(?:is\s+)?up(?!link)(?![a-z])|"
+                    r"link\s+healthy|link\s+is\s+healthy|"
+                    r"commands?\s+can\s+apply|can\s+apply|"
+                    r"control\s+plane\s+(?:is\s+)?(?:up|delivering)(?![a-z])", re.I)
 RE_LDOWN = re.compile(r"not delivering|unreachable|unconfirmable|cannot\s+(?:be\s*)?(?:deliver|confirm|apply)|"
                       r"can'?t\s+(?:be\s*)?(?:deliver|confirm|apply)|no-?return-?slot|control\s+plane\s+not|"
                       r"not\s+deliver|infeasib", re.I)

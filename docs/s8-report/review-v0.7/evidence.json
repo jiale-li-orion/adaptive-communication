@@ -1,0 +1,692 @@
+{
+  "energy": {
+    "energy_flags": 189,
+    "energy_flags_with_pre_night_evidence": 120
+  },
+  "energy_stale_examples": [
+    {
+      "trace": "r38_outage_A0_seed0_1789797185.jsonl",
+      "line": 74,
+      "t_s": 129600,
+      "hod": 18.0,
+      "node": {
+        "id": "n00",
+        "alive": true,
+        "soc_wh": 0.000474,
+        "soc_evidence_age_s": 44100,
+        "aoi_s": 43800,
+        "cur_sample_s": 300,
+        "cur_report_s": 300,
+        "cache_level": 8,
+        "in_flight": true,
+        "heard_last_window": false
+      }
+    },
+    {
+      "trace": "r38_outage_A0_seed0_1789797185.jsonl",
+      "line": 75,
+      "t_s": 131400,
+      "hod": 18.5,
+      "node": {
+        "id": "n00",
+        "alive": true,
+        "soc_wh": 0.000474,
+        "soc_evidence_age_s": 45900,
+        "aoi_s": 45600,
+        "cur_sample_s": 300,
+        "cur_report_s": 300,
+        "cache_level": 8,
+        "in_flight": true,
+        "heard_last_window": false
+      }
+    },
+    {
+      "trace": "r38_outage_A0_seed0_1789797185.jsonl",
+      "line": 76,
+      "t_s": 133200,
+      "hod": 19.0,
+      "node": {
+        "id": "n00",
+        "alive": true,
+        "soc_wh": 0.000474,
+        "soc_evidence_age_s": 47700,
+        "aoi_s": 47400,
+        "cur_sample_s": 300,
+        "cur_report_s": 300,
+        "cache_level": 8,
+        "in_flight": true,
+        "heard_last_window": false
+      }
+    },
+    {
+      "trace": "r38_outage_A0_seed0_1789797185.jsonl",
+      "line": 77,
+      "t_s": 135000,
+      "hod": 19.5,
+      "node": {
+        "id": "n00",
+        "alive": true,
+        "soc_wh": 0.000474,
+        "soc_evidence_age_s": 49500,
+        "aoi_s": 49200,
+        "cur_sample_s": 300,
+        "cur_report_s": 300,
+        "cache_level": 8,
+        "in_flight": true,
+        "heard_last_window": false
+      }
+    }
+  ],
+  "up_keyword_notes": [
+    {
+      "arm": "A0",
+      "seed": 0,
+      "line": 15,
+      "t_s": 23400,
+      "note": "Required 300s already commanded at 21600 and all heard nodes report cur_sample_s=600 (not yet applied); link is up, no new commands needed, wait for confirmation before re-issuing."
+    },
+    {
+      "arm": "A0",
+      "seed": 0,
+      "line": 17,
+      "t_s": 27000,
+      "note": "Yellow 300s requirement active and link up at midday with solar harvest; comply on all nodes, reverting to 600 only if nightfall approaches with link still up to avoid draining batteries."
+    },
+    {
+      "arm": "A0",
+      "seed": 0,
+      "line": 21,
+      "t_s": 34200,
+      "note": "Yellow requirement active, link up, SoC near full; hold all nodes at 300s dense sampling."
+    },
+    {
+      "arm": "A0",
+      "seed": 0,
+      "line": 22,
+      "t_s": 36000,
+      "note": "Hold all nodes at required 300s/300s; SoC ~0.049Wh is ample for dense sampling, link up so commands can apply."
+    },
+    {
+      "arm": "A0",
+      "seed": 0,
+      "line": 23,
+      "t_s": 37800,
+      "note": "Yellow requirement 300s holds, backhaul up and all nodes near full SOC; keep dense sampling on all nodes."
+    },
+    {
+      "arm": "A0",
+      "seed": 0,
+      "line": 24,
+      "t_s": 39600,
+      "note": "Yellow level requires 300s; all nodes ~0.0494 Wh and link up, so hold dense config on all nodes."
+    },
+    {
+      "arm": "A0",
+      "seed": 0,
+      "line": 25,
+      "t_s": 41400,
+      "note": "Yellow level requires 300s; all nodes ~0.0494Wh and link up, so hold dense config on all nodes."
+    },
+    {
+      "arm": "A0",
+      "seed": 0,
+      "line": 26,
+      "t_s": 43200,
+      "note": "Yellow level requires 300s; all nodes have healthy SoC (~0.049 Wh) and link is up, so sustain dense sampling across all nodes."
+    },
+    {
+      "arm": "A0",
+      "seed": 0,
+      "line": 28,
+      "t_s": 46800,
+      "note": "Hold dense 300s config for all nodes; link up and SOC healthy, re-issue to confirm applied."
+    },
+    {
+      "arm": "A0",
+      "seed": 0,
+      "line": 29,
+      "t_s": 48600,
+      "note": "Required period 300s already targeted on all nodes since 37800s; link up (10 heard), no new commands needed, avoid redundant downlinks."
+    },
+    {
+      "arm": "A0",
+      "seed": 0,
+      "line": 31,
+      "t_s": 52200,
+      "note": "Elevated requirement active; restore 300s sampling on all nodes, link up so commands can apply."
+    },
+    {
+      "arm": "A0",
+      "seed": 0,
+      "line": 41,
+      "t_s": 70200,
+      "note": "link up, all nodes ~0.023-0.025Wh, comply with 300s dense sampling"
+    },
+    {
+      "arm": "A0",
+      "seed": 1,
+      "line": 11,
+      "t_s": 16260,
+      "note": "Required period still 600 (blue); current targets already 600, link healthy, no action until yellow at 21600s."
+    },
+    {
+      "arm": "A0",
+      "seed": 1,
+      "line": 16,
+      "t_s": 25200,
+      "note": "Daytime with near-full batteries and backhaul up: restore 300s sampling for all nodes to meet the yellow requirement, overriding the prior 600s grid setting; re-check at dusk to avoid overnight drain."
+    },
+    {
+      "arm": "A0",
+      "seed": 1,
+      "line": 17,
+      "t_s": 27000,
+      "note": "Yellow requirement active; link up, SoC high, set all nodes to 300s dense sampling."
+    },
+    {
+      "arm": "A0",
+      "seed": 1,
+      "line": 18,
+      "t_s": 28800,
+      "note": "Set all nodes to 300s sampling to comply with yellow requirement; SOC high and link up."
+    },
+    {
+      "arm": "A0",
+      "seed": 1,
+      "line": 19,
+      "t_s": 30600,
+      "note": "Required period is 300s and all nodes already target 300/300 with healthy SoC (~0.049 Wh) and link up; no change needed, keep dense monitoring."
+    },
+    {
+      "arm": "A0",
+      "seed": 1,
+      "line": 22,
+      "t_s": 36000,
+      "note": "Set all nodes to 300s sampling per required schedule; link is up, reassess energy before night."
+    },
+    {
+      "arm": "A0",
+      "seed": 1,
+      "line": 23,
+      "t_s": 37800,
+      "note": "Yellow requires 300s; SoC ~0.049Wh healthy, link up, re-assert dense config on all nodes."
+    },
+    {
+      "arm": "A0",
+      "seed": 1,
+      "line": 24,
+      "t_s": 39600,
+      "note": "Hold all nodes at required 300s dense sampling; SOC ~0.049Wh is ample for the elevated window, link up so commands can apply."
+    },
+    {
+      "arm": "A0",
+      "seed": 1,
+      "line": 25,
+      "t_s": 41400,
+      "note": "Hold 300s dense config for all nodes; SoC ~0.049Wh healthy, link up, no change needed."
+    },
+    {
+      "arm": "A0",
+      "seed": 1,
+      "line": 26,
+      "t_s": 43200,
+      "note": "Hold 300s dense config for all nodes; SoC ~0.049Wh healthy, link up, no new commands needed."
+    },
+    {
+      "arm": "A0",
+      "seed": 1,
+      "line": 27,
+      "t_s": 45000,
+      "note": "hold dense 300s config for all nodes; link up, soc healthy, no new commands needed"
+    },
+    {
+      "arm": "A0",
+      "seed": 1,
+      "line": 29,
+      "t_s": 48600,
+      "note": "Yellow level requires 300s; all nodes have healthy SoC (~0.044 Wh) and link is up, so restore dense sampling on all nodes."
+    },
+    {
+      "arm": "A0",
+      "seed": 1,
+      "line": 33,
+      "t_s": 55800,
+      "note": "Link up, all nodes heard; comply with 300s requirement, SOC sufficient for dense sampling."
+    },
+    {
+      "arm": "A0",
+      "seed": 2,
+      "line": 18,
+      "t_s": 28800,
+      "note": "Comply with yellow: set all nodes to 300s; SoC high, backhaul up"
+    },
+    {
+      "arm": "A0",
+      "seed": 2,
+      "line": 19,
+      "t_s": 30600,
+      "note": "Yellow level requires 300s; link up and all nodes near full SOC, so comply with dense sampling on all nodes."
+    },
+    {
+      "arm": "A0",
+      "seed": 2,
+      "line": 20,
+      "t_s": 32400,
+      "note": "hold dense 300s config for all nodes under yellow requirement; link up, SOC healthy"
+    },
+    {
+      "arm": "A0",
+      "seed": 2,
+      "line": 22,
+      "t_s": 36000,
+      "note": "Hold all nodes at required 300s dense sampling; SoC ~0.049Wh is healthy and link is up, so no energy-driven fallback needed."
+    },
+    {
+      "arm": "A0",
+      "seed": 2,
+      "line": 23,
+      "t_s": 37800,
+      "note": "Yellow requirement active, link up, SoC healthy: hold all nodes at 300/300."
+    },
+    {
+      "arm": "A0",
+      "seed": 2,
+      "line": 24,
+      "t_s": 39600,
+      "note": "Yellow level requires 300s; all nodes near full SOC and link up, so keep dense config."
+    },
+    {
+      "arm": "A0",
+      "seed": 2,
+      "line": 25,
+      "t_s": 41400,
+      "note": "Hold all nodes at required 300s/300s; SoC ~0.049Wh is healthy and link is up, so no energy-driven fallback needed."
+    },
+    {
+      "arm": "A0",
+      "seed": 2,
+      "line": 29,
+      "t_s": 48600,
+      "note": "Hold dense 300s config for all nodes; link up, SOCs healthy, no change needed."
+    },
+    {
+      "arm": "A0",
+      "seed": 2,
+      "line": 30,
+      "t_s": 50400,
+      "note": "Required period 300s (yellow) and link is up; all nodes already targeted 300/300 from prior commands, so no new commands needed. Night (20:00) with tight SoC ~0.042-0.046 Wh: dense sampling risks drain, but requirement is elevated and nodes are near-full; hold current 300/300 targets rather than re-issuing, avoiding redundant downlinks."
+    },
+    {
+      "arm": "A0",
+      "seed": 2,
+      "line": 38,
+      "t_s": 64800,
+      "note": "Yellow level requires 300s; all nodes have healthy SOC (~0.029-0.031 Wh) and link is up, so comply with dense sampling on all nodes."
+    },
+    {
+      "arm": "A0",
+      "seed": 2,
+      "line": 41,
+      "t_s": 70200,
+      "note": "Link up, all nodes alive with adequate SOC; comply with 300s requirement across all nodes."
+    },
+    {
+      "arm": "A0s",
+      "seed": 0,
+      "line": 10,
+      "t_s": 14460,
+      "note": "Blue segment requires 600s; all nodes already at 600/600 with healthy SoC and link up—hold, re-plan before yellow at t=21600."
+    },
+    {
+      "arm": "A0s",
+      "seed": 0,
+      "line": 12,
+      "t_s": 18060,
+      "note": "Required period is 600s (blue) until 21600s; all nodes already at 600/600 and link is healthy, so hold and pre-stage the 300s switch at the next grid step before the yellow segment starts."
+    },
+    {
+      "arm": "A0s",
+      "seed": 0,
+      "line": 13,
+      "t_s": 19860,
+      "note": "Backhaul up and last decision point before the 21600 yellow segment: issue 300s configs now so they clear queue/transit and apply by segment start; batteries ~full at midday so brief denser sampling is safe."
+    },
+    {
+      "arm": "A0s",
+      "seed": 0,
+      "line": 16,
+      "t_s": 25200,
+      "note": "Required period is 300s and all nodes already show cur_sample_s=600 with 300s commands pending/not yet confirmed; link is up (10 heard) so re-issuing is unnecessary and would only add traffic. Hold targets at 300/300 and wait for node reports to confirm application before any further action."
+    },
+    {
+      "arm": "A0s",
+      "seed": 0,
+      "line": 19,
+      "t_s": 30600,
+      "note": "Yellow requirement 300s active; link up and all nodes ~full SoC with daylight solar, so comply at 300s/300s and re-issue stale unapplied 300 targets; monitor SoC before night."
+    },
+    {
+      "arm": "A0s",
+      "seed": 0,
+      "line": 21,
+      "t_s": 34200,
+      "note": "Required period is 300s and all nodes report healthy SoC (~0.0495 Wh) with link up; re-issue 300/300 to all nodes since prior commands are unconfirmed and not in-flight."
+    },
+    {
+      "arm": "A0s",
+      "seed": 0,
+      "line": 22,
+      "t_s": 36000,
+      "note": "Yellow (req 300s) holds; all SOC ~99% so nodes can survive dense sampling, backhaul up (10 heard). Prior 300 targets not confirmed on any report and not in-flight, so re-issue 300/300 to all nodes and hold steady instead of flip-flopping."
+    },
+    {
+      "arm": "A0s",
+      "seed": 0,
+      "line": 23,
+      "t_s": 37800,
+      "note": "Required period is 300s (yellow) and all nodes already report cur_sample_s=600 with 300s targets pending/not yet confirmed; link is up (13 heard) but commands from 36000s are still unapplied, so re-issuing would be redundant churn. Hold current targets, keep 300/300 intent, and wait for node reports confirming the applied config before any further change."
+    },
+    {
+      "arm": "A0s",
+      "seed": 0,
+      "line": 25,
+      "t_s": 41400,
+      "note": "Required period is 300s and all nodes already report cur_sample_s=600 with pending 300s commands sent at 39600 not yet confirmed; link is up (10 heard) so re-issue 300/300 to all nodes to ensure the elevated config applies, no change to targets needed beyond confirming."
+    },
+    {
+      "arm": "A0s",
+      "seed": 0,
+      "line": 26,
+      "t_s": 43200,
+      "note": "Yellow level requires 300s; link up and SOC ~0.049Wh supports dense sampling, re-issue unconfirmed 300s targets."
+    },
+    {
+      "arm": "A0s",
+      "seed": 0,
+      "line": 31,
+      "t_s": 52200,
+      "note": "Re-issue 300s targets to all nodes; prior 300s commands never confirmed applied (nodes still report 600s), link is up so re-send."
+    },
+    {
+      "arm": "A0s",
+      "seed": 0,
+      "line": 35,
+      "t_s": 59400,
+      "note": "re-issue 300s targets to all nodes; pending cmds stale/unapplied, link up, soc sufficient"
+    },
+    {
+      "arm": "A0s",
+      "seed": 1,
+      "line": 13,
+      "t_s": 19860,
+      "note": "Backhaul up now; pre-queue 300s on all nodes so yellow at t=21600 is met, monitor SoC and revert to 600 if night drain threatens."
+    },
+    {
+      "arm": "A0s",
+      "seed": 1,
+      "line": 16,
+      "t_s": 25200,
+      "note": "Re-issue 300/300 to all nodes for yellow requirement; link up, SOC high, pending old commands unresolved."
+    },
+    {
+      "arm": "A0s",
+      "seed": 1,
+      "line": 20,
+      "t_s": 32400,
+      "note": "Backhaul up and all SOC~full at 15:00; comply with yellow 300s and re-issue the stale/unapplied 300 targets (prior 600 hold was wrong); re-evaluate before night to avoid overnight drain."
+    },
+    {
+      "arm": "A0s",
+      "seed": 1,
+      "line": 22,
+      "t_s": 36000,
+      "note": "Yellow req=300; backhaul up and SoC~0.049/0.050 (daylight, harvestable) so dense sampling is survivable. Prior 300/300 commands unconfirmed and not in-flight, so re-issue 300/300 to all nodes to converge on required schedule; hold 600 only would fail the requirement."
+    },
+    {
+      "arm": "A0s",
+      "seed": 1,
+      "line": 24,
+      "t_s": 39600,
+      "note": "Required 300s; link up and SOC ~0.049Wh supports dense sampling, re-issue 300s targets to all nodes."
+    },
+    {
+      "arm": "A0s",
+      "seed": 1,
+      "line": 25,
+      "t_s": 41400,
+      "note": "Required period is 300s and all nodes already report cur_sample_s=600 with pending 300s commands sent at 39600 not yet confirmed; link is up (12 heard) so re-issuing is unnecessary and would only add churn. Hold targets at 300s and wait for node reports to confirm application before any further change."
+    },
+    {
+      "arm": "A0s",
+      "seed": 1,
+      "line": 26,
+      "t_s": 43200,
+      "note": "Link up; required 300s, SoC ~0.049Wh healthy, re-issue unconfirmed 300s targets to all nodes."
+    },
+    {
+      "arm": "A0s",
+      "seed": 1,
+      "line": 27,
+      "t_s": 45000,
+      "note": "Required period is 300s (yellow) and all nodes already have pending 300/300 commands from t=43200 not yet confirmed; link is up (9 heard) so re-issuing is unnecessary and would only add churn. Hold current targets, keep dense sampling for the elevated requirement, and wait for node reports to confirm the 300s config applied before any further change."
+    },
+    {
+      "arm": "A0s",
+      "seed": 1,
+      "line": 31,
+      "t_s": 52200,
+      "note": "required period is 300s and link is up; re-issue 300s to all nodes since prior 300s commands never confirmed applied"
+    },
+    {
+      "arm": "A0s",
+      "seed": 1,
+      "line": 34,
+      "t_s": 57600,
+      "note": "Re-issue 300s to all nodes: required period is 300, link up, SOC ~0.036Wh supports dense sampling; prior 300s commands unconfirmed so re-send."
+    },
+    {
+      "arm": "A0s",
+      "seed": 2,
+      "line": 14,
+      "t_s": 21600,
+      "note": "Yellow req (300s) starts at noon with link up; command all nodes to 300/300, daytime solar covers draw, confirm via next reports."
+    },
+    {
+      "arm": "A0s",
+      "seed": 2,
+      "line": 18,
+      "t_s": 28800,
+      "note": "Re-issue 300s config to all nodes; energy healthy, link up."
+    },
+    {
+      "arm": "A0s",
+      "seed": 2,
+      "line": 22,
+      "t_s": 36000,
+      "note": "Required period is 300s and all nodes already report cur_sample_s=600 with pending 300s commands sent 1800s ago not yet confirmed; link is up (5 heard) so re-issuing is unnecessary and would only add churn—hold and wait for nodes to confirm the 300s config before any further change."
+    },
+    {
+      "arm": "A0s",
+      "seed": 2,
+      "line": 23,
+      "t_s": 37800,
+      "note": "Yellow level requires 300s; link up and SOC ~0.049Wh healthy, so re-issue 300s to all nodes to override the erroneous 600s hold."
+    },
+    {
+      "arm": "A0s",
+      "seed": 2,
+      "line": 24,
+      "t_s": 39600,
+      "note": "Required period is 300s (yellow); all nodes already report cur_sample_s=600 with 300s commands pending/not yet confirmed, link is up and SOC is healthy, so hold and let the outstanding 300s configs apply rather than re-issuing duplicates."
+    },
+    {
+      "arm": "A0s",
+      "seed": 2,
+      "line": 25,
+      "t_s": 41400,
+      "note": "Yellow level requires 300s; all nodes healthy and link up, re-issue 300s to all to confirm application."
+    },
+    {
+      "arm": "A0s",
+      "seed": 2,
+      "line": 26,
+      "t_s": 43200,
+      "note": "Yellow requires 300s; all nodes ~0.049Wh and link up, so re-issue 300/300 to all to confirm application."
+    },
+    {
+      "arm": "A0s",
+      "seed": 2,
+      "line": 27,
+      "t_s": 45000,
+      "note": "Required period is 300s (yellow) and link is up; all nodes already carry a 300s target from the 43200s command (cur_sample_s still shows 600 pending confirmation, no in-flight), so no re-issue needed; hold and verify on next reports."
+    },
+    {
+      "arm": "A0s",
+      "seed": 2,
+      "line": 31,
+      "t_s": 52200,
+      "note": "Required 300s; all nodes ~0.040-0.043Wh, reissue unconfirmed 300s targets to comply while link is up."
+    },
+    {
+      "arm": "A0s",
+      "seed": 2,
+      "line": 41,
+      "t_s": 70200,
+      "note": "Re-issue 300s config to all nodes; prior commands unconfirmed and not in-flight, link up, SOC sufficient."
+    },
+    {
+      "arm": "A1",
+      "seed": 1,
+      "line": 19,
+      "t_s": 30600,
+      "note": "Hold last APPLIED 600s on all nodes (0/14 confirm 300; link is uplink-only backup, no return slot for elevated window); re-spamming unconfirmable 300 commands helps nothing, so log elevated-300 as control-plane/delivery infeasible and recompile only after all nodes heard in daylight and commands confirm."
+    },
+    {
+      "arm": "A1",
+      "seed": 2,
+      "line": 13,
+      "t_s": 19860,
+      "note": "Required period is still 600 (blue, until 21600s); all nodes already confirmed at 600/600 and link is up but a command would only add backhaul load, so hold — no downlink now. Elevate to 300 only at the yellow transition once fresh telemetry confirms nodes can apply it, keeping night survival by not pre-draining."
+    }
+  ],
+  "mock_accounting_and_omission": {
+    "requests": 2,
+    "decisions": 1,
+    "reported_total_tokens": 20,
+    "mock_actual_total_tokens": 30,
+    "attempts": [
+      {
+        "attempt": 0,
+        "ok": false,
+        "finish": "length",
+        "error": "empty content finish=length"
+      },
+      {
+        "attempt": 1,
+        "ok": true,
+        "finish": "stop",
+        "total_tokens": 20,
+        "completion_tokens": 19
+      }
+    ],
+    "omitted_target_action": {
+      "n00": [
+        600,
+        600
+      ]
+    }
+  },
+  "reviewed_commit": "94079df",
+  "scope": "Zero API; one independent seed-0 FIFO simulation; r41 arithmetic checked, not all seeds independently rerun.",
+  "attribution": {
+    "full_horizon": {
+      "delivered": 3025,
+      "S_return": 1115,
+      "S_time": 588,
+      "S_collection": 2002,
+      "S_access": 830
+    },
+    "missed_upgrade_subset": {
+      "S_time": 588,
+      "S_return": 327,
+      "S_collection": 571,
+      "S_access": 650
+    },
+    "gateway_visible_subset": {
+      "S_time": 588,
+      "S_return": 327,
+      "unknown": 998,
+      "S_access": 223
+    },
+    "return_cases_with_no_slot_after_actual_hearing": 54,
+    "examples_no_slot_after_hearing": [
+      [
+        "gw0:routine:t0030000",
+        30600,
+        30600
+      ],
+      [
+        "gw0:routine:t0031200",
+        31800,
+        31800
+      ],
+      [
+        "gw0:routine:t0046800",
+        47400,
+        47400
+      ],
+      [
+        "n00:routine:t0027600",
+        28200,
+        28200
+      ],
+      [
+        "n00:routine:t0031200",
+        31800,
+        31800
+      ]
+    ]
+  },
+  "expiry": {
+    "bit_identical_recorded": true,
+    "queues": {
+      "fifo": {
+        "svc_mean": 0.3728835978835979,
+        "svc_sd": 0.029276895943562607,
+        "outage_d_total": 1691,
+        "backup_on": 2264,
+        "backup_late": 2538,
+        "dead_total": 12
+      },
+      "deadline_purge": {
+        "svc_mean": 0.415026455026455,
+        "svc_sd": 0.02897360219501715,
+        "outage_d_total": 4265,
+        "backup_on": 4800,
+        "backup_late": 1,
+        "dead_total": 0
+      },
+      "generic_expiry": {
+        "svc_mean": 0.415026455026455,
+        "svc_sd": 0.02897360219501715,
+        "outage_d_total": 4265,
+        "backup_on": 4800,
+        "backup_late": 1,
+        "dead_total": 0
+      },
+      "latest_only": {
+        "svc_mean": 0.35775132275132276,
+        "svc_sd": 0.020464843495847342,
+        "outage_d_total": 4250,
+        "backup_on": 4799,
+        "backup_late": 0,
+        "dead_total": 0
+      }
+    },
+    "paired_mean_pp": 4.214285714285714,
+    "paired_ci95_pp": [
+      3.6380909652477684,
+      4.79048046332366
+    ]
+  }
+}

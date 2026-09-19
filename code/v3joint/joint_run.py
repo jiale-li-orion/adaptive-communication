@@ -67,7 +67,8 @@ def run_joint(seed: int = 0, task_hours: int = 12, tail_hours: int = 1,
               mission_policy_obj=None,
               local_floor: bool = False, floor_day_start: float = 6.0,
               floor_dusk: float = 18.0, floor_sparse: int | None = None,
-              floor_dense: int | None = None, local_dayfeed: bool = False):
+              floor_dense: int | None = None, local_dayfeed: bool = False,
+              floor_lease_end_s: float | None = None):
     hours = task_hours + tail_hours
     dep = build_deployment(groups=groups, per_group=per_group)
     prof = DeviceProfile(sample_interval_s=sample_interval_s,
@@ -174,6 +175,8 @@ def run_joint(seed: int = 0, task_hours: int = 12, tail_hours: int = 1,
         for _n in nodes.values():
             _lf = {"day_start": floor_day_start, "dusk": floor_dusk,
                    "sparse": sparse_p, "dense": dense_p}
+            if floor_lease_end_s is not None:
+                _lf["lease_end_s"] = int(floor_lease_end_s)
             if local_dayfeed and mission_schedule:
                 _lf["dayfeed_schedule"] = [(int(a), int(p), str(lv))
                                            for a, p, lv in mission_schedule]

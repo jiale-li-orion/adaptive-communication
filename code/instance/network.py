@@ -322,6 +322,16 @@ class Node:
             return
         hod = (lf["day_start"] + t_s / 3600.0) % 24.0
         night = hod < lf["day_start"] or hod >= lf["dusk"]
+        # Optional dense-config lease bound (absolute time). Once the data the current dense
+        # profile can produce is no longer deliverable by its deadline, the node locally
+        # returns sample/report to sparse without any downlink (idempotent with the night
+        # clock gate). Default-off: without the key the behaviour is bit-identical. The bound
+        # source is a policy variable (fixed TTL vs delivery-opportunity lease).
+        if lf.get("lease_end_s") is not None and t_s >= lf["lease_end_s"]:
+            if self.sample_interval_s == lf["dense"]:
+                self.sample_interval_s = lf["sparse"]
+            if self.report_period_s == lf["dense"]:
+                self.report_period_s = lf["sparse"]
         if night:
             if self.sample_interval_s == lf["dense"]:
                 self.sample_interval_s = lf["sparse"]
