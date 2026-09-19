@@ -77,11 +77,16 @@ every centre-compiled configuration: under static, pre-provisioned, predictable 
 controller adds no throughput. The defensible role of the agent runtime is therefore confined to
 what local autonomy cannot obtain---non-pre-provisioned authorised changes, structural
 infeasibility disclosure, and renegotiation---mediated by a deterministic envelope that can never
-override the local safety floor. In a within-subject study with a real LLM controller, the unaided
-agent mistakes LoRa access for backhaul connectivity, storms ineffective commands, and silently
-reports the elevated mission as in effect, fatally densifying at night on every valid trace;
-textual certificates greatly reduce this but do not guarantee it across seeds, whereas the
-deterministic local floor and envelope do. Given the certificate, the same agent stops, locates
+override the local safety floor. In a full three-arm live study with a real LLM controller (three
+outage seeds each for an unaided agent, an agent given an ordinary engineering checklist, and a
+certificate agent, plus healthy-link controls), the unaided and checklist agents mistake LoRa
+access for backhaul connectivity, storm ineffective commands, and falsely report the elevated
+mission as in effect (24 and 19 times), fatally densifying at night (35 and 39 node-deaths); the
+certificate agent eliminates the false reports and ineffective dense commands, logs structural
+infeasibility instead, and cuts deaths to 4 (zero on two seeds)---the four tightest-seed residuals
+that the deterministic local floor then removes---and on a healthy link it does not suppress the
+feasible upgrade but is strictly better, whereas an unaided agent still kills 13 nodes by
+over-sampling. Given the certificate, the same agent stops, locates
 the blocking segment, holds the last lawful configuration, and initiates a standards-authorised
 re-compilation. The contribution is an execution-grounded obligation model, segment-labelled
 feasibility certificates, two execution-layer mechanisms (deadline-aware selective purge and a
@@ -120,8 +125,8 @@ to how already-dead records are disposed (\S\ref{sec:purge}).
 Closing the throughput question did not close the research problem. Instrumenting a real LLM
 controller exposed a different, sharper failure: the runtime is \emph{blind to where the
 mission breaks}. During a 16~h backhaul outage it read ``nodes are heard over LoRa'' as
-``backhaul is up'', kept emitting the elevated 300~s configuration (606 commands refused, 14
-confirmed), oscillated between configurations every 30~minutes, and reported the elevated
+``backhaul is up'', kept emitting the elevated 300~s configuration that the outage made
+unapplyable (the vast majority of these commands were refused, almost none confirmed), oscillated between configurations every 30~minutes, and reported the elevated
 mission as running while the field still executed the previous, lower alert level. The same
 aggregate telemetry (age-of-information, state-of-charge) cannot tell the controller whether
 data were never sampled, sit at a node, sit at the gateway, or lack a return opportunity, and
@@ -172,10 +177,14 @@ service; a zero-command purely local upper bound matches every centre-compiled s
 (0.360), a symmetric negative result that closes centre throughput/energy control under static
 pre-provisioned missions; the centre envelope alone cuts refused commands 2488$\to$222 but cannot
 guarantee survival without the local floor (12 deaths remain on the tightest-energy seed).
-\item \textbf{Real-agent within-subject evidence (\S\ref{sec:agent}.)}
+\item \textbf{Real-agent three-arm evidence (\S\ref{sec:agent}.)}
 With identical legal information, adding only the certificate converts a real LLM
 controller's segment misdiagnosis, command storm, and silent mis-reporting into
-segment-correct, lawful, honest behaviour across three decision points.
+segment-correct, lawful, honest behaviour: across three outage seeds the unaided and
+checklist agents cause 35/39 permanent deaths with 24/19 false upgrade reports while the
+certificate agent causes 4 (zero on two seeds) with zero false reports, does not suppress a
+feasible upgrade on a healthy link, and leaves the residual energy-safety guarantee to the
+deterministic local floor.
 \end{enumerate}
 We do \emph{not} claim an LLM out-optimises a solver with the full task model; the deterministic
 projector, packer, and energy ledger are in-layer tools available to rules and agents alike.
@@ -658,10 +667,10 @@ declarational, examined next.
 
 \subsection{RQ5: Does the certificate change a real agent?}
 \label{sec:agent}
-We replay three genuine decision points from an unaided deepseek-flash controller trace (99
-decisions, service 0.399, 606 commands refused, 14 confirmed) with identical system prompt,
-legal observation, and history; the A1 condition appends only a certificate derived from the
-agent's own command ledger and public parameters (no future truth). Table~\ref{tab:agent}.
+We first replay three genuine outage-window decision points from an unaided
+deepseek-flash controller trace with identical system prompt, legal observation, and
+history; the A1 condition appends only a certificate derived from the agent's own command
+ledger and public parameters (no future truth). Table~\ref{tab:agent}.
 \begin{table}[h]
 \centering\small
 \begin{tabular}{p{0.09\linewidth}p{0.40\linewidth}p{0.42\linewidth}}
@@ -683,22 +692,65 @@ The certificate does not optimise for the agent; it integrates signals the agent
 received but could not combine (confirmed-applied configs, queued commands, slot geometry,
 night energy), turning a scalar ``age / battery'' view into a chain-segment view.
 
-\paragraph{Three-arm live runs and the limit of textual advice.}
-Beyond the three-point replay, symmetric three-arm live runs (identical harness, legal
-information, tools, and action space; A0 unaided, A0-structured with only a pending-command
-engineering checklist, A1 with the certificate appended) show that death counts are highly robust
-while per-run service is noisy: across valid traces obtained before the API balance was exhausted,
-A0 and A0-structured permanently densify at night and kill 13 nodes on all seven valid traces,
-whereas A1 with the certificate reaches zero deaths on all three seed-0 certificate revisions and
-replaces silent mis-reporting with 17--29 explicit infeasibility log entries. The engineering
-checklist alone does not save nodes (the gain is the certificate, not bookkeeping), and
-\emph{textual} certificates reduce but do not guarantee safety across seeds---a revision without
-an unconditional night gate still compiles dense after a deep-night recovery and kills 13 nodes on
-the tightest seed, and temperature-0 runs show trajectory variance. The deterministic local floor
-and envelope of \S\ref{sec:locality} are what guarantee the result across seeds. We therefore
-report these LLM runs strictly as existence evidence with one model and few valid traces (later
-seeds and the reliable-link control returned a quota error and were discarded); effect-size claims
-rest on the deterministic RQ4 results, not on the LLM.
+\paragraph{Full three-arm live sweep.}
+Beyond the within-subject replay, we ran the complete doc38 protocol against live
+deepseek-flash: three seeds $\times$ three arms over the 16-hour outage, plus two
+healthy-link negative controls (A0 and A1), each a full 48~h$+$tail run with a real model
+call at every 30-minute decision (99/99 calls, no heuristic fallback;
+Table~\ref{tab:r38three}). All arms share the identical harness, legal observation, tools,
+history, and action space; only the decider's information block differs. The preregistered
+hypotheses concern survival, honest reporting, command hygiene, and non-suppression on a
+healthy link; death and reporting counts are robust, whereas per-run service is noisy at
+$n=3$.
+\begin{table}[h]
+\centering\small
+\resizebox{\linewidth}{!}{%
+\begin{tabular}{lccccccc}
+\toprule
+Arm & svc (s0/s1/s2) & svc mean & dead (s0/s1/s2) & false & ineff.\ dense & infeas.\ log & sent/ref\\
+\midrule
+A0 & .160/.319/.408 & .296 & 13/13/9\,(35) & 24 & 53 & 35 & 500/2008\\
+A0-structured & .181/.221/.265 & .222 & 13/13/13\,(39) & 19 & 42 & 32 & 496/1420\\
+A1 $+$ certificate & .381/.316/.377 & .358 & 0/4/0\,(4) & 0 & 0 & 89 & 342/182\\
+\bottomrule
+\end{tabular}}
+\caption{Live three-arm runs over the 16-hour outage, three seeds, 99 real model decisions per
+trace with no heuristic fallback. Service per seed and mean; permanent deaths per seed (total in
+parentheses); outage-window counts totaled over seeds: false ``upgrade in effect'' reports,
+ineffective dense commands, structural-infeasibility log entries, and commands sent/refused.}
+\label{tab:r38three}
+\end{table}
+
+\emph{Survival (H4):} A0 and A0-structured cause 35 and 39 permanent node-deaths across the
+three seeds (the checklist kills 13 on every seed); A1 cuts this to 4---zero on seeds~0 and~2,
+four residual on the tightest seed~1. \emph{Honest reporting (H2):} over outage windows
+A0/A0-structured emit 24/19 false ``upgrade in effect'' confirmations and 53/42 dense
+commands that never take effect, whereas A1 emits zero of either, holds sparse sampling at
+every outage decision (hold fraction 1.0), and writes 89 structural-infeasibility entries,
+reporting what cannot be guaranteed instead of over-promising. \emph{Command hygiene (H1):}
+A1 issues 342 commands with 182 refusals (0.53 refusals per sent), against 500/2008 (4.0) for
+A0 and 496/1420 (2.9) for A0-structured. \emph{Service:} A1 attains the highest mean service
+(.358), equal to the deterministic safe floor (.360, Table~\ref{tab:r39}); the seed-1 service
+values overlap (.316 vs .319), so we draw no significance from $n=3$ service means---the
+death, reporting, and command counts carry the result. The ordinary checklist does not close
+the gap (A0-structured is no better than A0, and worse on mean service and total deaths),
+attributing the gain to the feasibility certificate rather than to prompt engineering or
+bookkeeping.
+
+\emph{Healthy-link negative control (H3).} With no outage the certificate must not suppress a
+feasible upgrade. A1 attains service .511 with zero deaths and zero false/infeasible reports,
+whereas unaided A0 reaches only .275 and still kills 13 nodes: it over-samples through the
+elevated segment even with a healthy backhaul, so its energy failure is self-inflicted rather
+than outage-induced. The certificate is thus not trading service for caution where the network
+is healthy.
+
+The four residual seed-1 deaths show that the L2 certificate---a per-decision advisory to a
+live model---does not itself guarantee energy safety in the tightest realization; the
+deterministic L0 node-local energy gate (\S\ref{sec:locality}, off by default and
+bit-identical when disabled) removes exactly those deaths at unchanged service. We report the
+live runs as real-agent existence and directional evidence with one model and three seeds;
+the mechanistic and safety guarantees rest on the bit-identical, seed-swept deterministic
+RQ3/RQ4 results, not on the LLM.
 
 \section{Related work}
 \label{sec:related}
@@ -754,9 +806,14 @@ backhaul send while leaving the record in the node's acknowledgement-driven FIFO
 back-pressures fresh access traffic and costs on-time obligations (\S\ref{sec:purge}), a
 cross-segment interaction absent from single-hop AoI discard and from hop-local bundle expiry;
 and (iii) release is paired with retaining every still-rescuable record, which AoI latest-only
-(whose objective ignores coverage) does not do. We claim not the act of dropping expired packets
-but the obligation-feasibility test, its cross-segment consistency, and its identity with the
-compile-time certificate.
+(whose objective ignores coverage) does not do. DTN custody transfer~\cite{rfc5050} likewise moves
+retention and retransmission responsibility, but as a \emph{forward} hand-off: a downstream
+custodian accepts a bundle and releases the upstream custodian, explicitly to decouple reliability
+from any end-to-end acknowledgement; it is keyed to bundle custody rather than to a specific
+obligation's deadline, has no notion of two segments coupled by a link-layer repair cache, and has
+been migrated out of the core Bundle Protocol in BPv7~\cite{rfc9171}. We claim not the act of
+dropping expired packets but the obligation-feasibility test, its cross-segment consistency, and
+its identity with the compile-time certificate.
 
 \section{Discussion, limitations, and threats to validity}
 \label{sec:disc}
@@ -764,11 +821,14 @@ compile-time certificate.
 point with symmetric relaxations and strong (including omniscient and MPC) baselines; the
 structural \stime certificate is geometric and seed-invariant, but capacity and night-energy
 \emph{forecasts} are deliberately not claimed as deterministic---they depend on online state
-and unknown weather. The real-LLM evidence is existence-only: one model, few valid full trajectories (the API balance
-was exhausted mid-sweep, so later seeds and the reliable-link negative control are missing), with
-large per-run service variance; the three-arm runs nonetheless show robust death counts (unaided
-A0/A0-structured 13 deaths on all seven valid traces, certificate A1 zero deaths on the seed-0
-revisions) and motivate the deterministic layer. Effect-size and the safety guarantee rest on the
+and unknown weather. The real-LLM evidence uses one model with three outage seeds per arm (plus
+two healthy-link controls), each a single temperature-0 trajectory, and per-run service variance
+is large at $n=3$; the live sweep shows robust death and reporting counts (unaided
+A0/A0-structured cause 35/39 deaths with 24/19 false upgrade reports, the certificate agent 4
+deaths with zero false reports) but is not a powered service-significance test, and it motivates
+the deterministic layer---the L2 certificate leaves four residual deaths on the tightest seed,
+and the L0 node-local gate, not the L2 advisory, provides the energy-safety guarantee.
+Effect-size and the safety guarantee rest on the
 deterministic three-seed placement study (RQ4), which itself spans one main operating point; wider
 deployment ranges (backup rate/payload, node count, capacity, cloud cover, brownout restart
 threshold) are not swept, and sub-point mean-service differences are not treated as significant.

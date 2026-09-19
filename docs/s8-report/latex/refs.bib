@@ -2,6 +2,8 @@
 % Entries use only bibliographic facts verified in the repository source ledger;
 % items whose authors were not verified from the primary record in this environment
 % use a misc-type entry (title, venue, year, URL) rather than guessed authors.
+% Last bibliographic verification pass: 2026-09-19 (Razavi/Wada/Krishnan delta-2
+% audit; RFC 5050/9171 custody transfer; Costa/Kam/Iranmanesh metadata).
 
 @misc{topollm,
   title        = {{TopoLLM}: Large Language Model based topology and resource planning for post-disaster rescue networks},
@@ -81,46 +83,84 @@
   year        = {2023}
 }
 
-@misc{costa2014pm,
-  title        = {On the Age of Information in Status Update Systems with Packet Management},
-  howpublished = {IEEE International Symposium on Information Theory (ISIT); see also arXiv:1506.08637},
-  year         = {2014}
+@article{costa2014pm,
+  author  = {Maice Costa and Marian Codreanu and Anthony Ephremides},
+  title   = {On the Age of Information in Status Update Systems with Packet Management},
+  journal = {IEEE Transactions on Information Theory},
+  volume  = {62},
+  number  = {4},
+  pages   = {1897--1910},
+  year    = {2016},
+  doi     = {10.1109/TIT.2016.2533395},
+  note    = {Conference version: Age of information with packet management, IEEE ISIT 2014, pp.~1583--1587}
 }
 
-@misc{kam2016deadline,
-  title        = {Controlling the Age of Information: Buffer Size, Deadline, and Packet Replacement},
-  howpublished = {IEEE MILCOM, Networking Protocols and Performance Track},
-  year         = {2016}
+@inproceedings{kam2016deadline,
+  author    = {Chih-ping Kam and Sennur Kaya and Anthony Ephremides},
+  title     = {Controlling the Age of Information: Buffer Size, Deadline, and Packet Replacement},
+  booktitle = {Proc. IEEE Military Communications Conference ({MILCOM})},
+  year      = {2016},
+  doi       = {10.1109/MILCOM.2016.7795343}
 }
 
 @misc{krishnan2019multihop,
-  title        = {Minimizing Age of Information in a Multihop Wireless Network (local dropping of older packets)},
+  author       = {Ashok Krishnan K.~S. and Vinod Sharma},
+  title        = {Minimizing Age of Information in a Multihop Wireless Network},
   howpublished = {arXiv:1909.06571},
-  year         = {2019}
+  year         = {2019},
+  note         = {Distributed scheduling plus a local drop rule that keeps only the newest packet of each flow at each queue (no inter-node signalling); the keep-latest multihop baseline}
 }
 
-@misc{razavivideo,
-  title        = {Deadline-aware video delivery in a disrupted bluetooth network (deadline-aware buffer discard with adaptive {ARQ})},
-  howpublished = {IEEE},
-  year         = {2008}
+@inproceedings{razavivideo,
+  author    = {Rouzbeh Razavi and Martin Fleury and Mohammed Ghanbari},
+  title     = {Deadline-aware video delivery in a disrupted {Bluetooth} network},
+  booktitle = {Proc. IEEE Sarnoff Symposium},
+  year      = {2007},
+  note      = {IEEE Xplore document 4567352; deadline-aware active discard from the send buffer co-located with picture-type adaptive {ARQ} on a single {Bluetooth} piconet (verified from publisher/abstract-level record; IEEE full text not opened in this environment)}
 }
 
-@misc{wada2009timeout,
-  title        = {A transport protocol reducing redundant transmissions by suppressing packets whose estimated delay exceeds the time limit in wireless sensor and actor networks},
-  howpublished = {IEEE PACRIM},
-  year         = {2009}
+@inproceedings{wada2009timeout,
+  author    = {Takahiro Wada and Hayato Kitamoto and Takerou Fukuhara and Iwao Sasase},
+  title     = {A Transport Protocol with Energy Consumption Reduction by Reducing Redundant Transmissions in Wireless Sensor and Actor Networks},
+  booktitle = {Proc. IEEE Pacific Rim Conference on Communications, Computers and Signal Processing ({PACRIM})},
+  year      = {2009},
+  note      = {IEEE Xplore document 5291354; a source node does not generate a packet when its estimated one-hop-times-hops delay already exceeds the remaining time limit}
 }
 
 @misc{dtnarch,
   title        = {Delay-Tolerant Networking Architecture (bundle layer, bundle lifetime/expiration)},
+  author       = {Kevin Fall and Scott Burleigh and Adrian Hooke and others},
   howpublished = {IRTF RFC 4838},
   year         = {2007}
 }
 
-@misc{iranmaneshdtnqueue,
-  title        = {A novel queue management policy for delay-tolerant networks ({TTL}/encounter-based scheduling and drop)},
-  howpublished = {EURASIP Journal on Wireless Communications and Networking},
-  year         = {2016}
+@techreport{rfc5050,
+  author      = {Kevin Scott and Scott Burleigh},
+  title       = {Bundle Protocol Specification},
+  institution = {IRTF / RFC Editor},
+  number      = {RFC 5050},
+  year        = {2007},
+  note        = {Custody transfer: on accepting custody a downstream node commits to retain/re-forward a bundle and releases the upstream custodian; the mechanism is a forward hand-off that decouples retransmission responsibility from end-to-end acknowledgement}
+}
+
+@techreport{rfc9171,
+  title       = {Bundle Protocol Version 7},
+  institution = {IETF / RFC Editor},
+  number      = {RFC 9171},
+  year        = {2022},
+  note        = {Appendix A: custody transfer is migrated out of the core bundle protocol to bundle-in-bundle encapsulation (BIBE)}
+}
+
+@article{iranmaneshdtnqueue,
+  author  = {Saeid Iranmanesh},
+  title   = {A novel queue management policy for delay-tolerant networks},
+  journal = {EURASIP Journal on Wireless Communications and Networking},
+  volume  = {2016},
+  number  = {88},
+  pages   = {1--23},
+  year    = {2016},
+  doi     = {10.1186/s13638-016-0576-6},
+  note    = {{QM-EBRP}: local forward/drop utility from time-to-live, encounter rate and replica count under quota-based routing}
 }
 
 @misc{sateriot,
