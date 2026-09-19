@@ -107,12 +107,16 @@ make tables   # 由结果文件重新生成论文表格
 | `paper/` | 论文中文稿与英文稿的 LaTeX 源码、PDF、共享书目与构建脚本；`paper/generated/` 存放生成的表格体 |
 | `spec/` | 规范性文件：部署条件与数据集来源 |
 | `artifact/` | 评审人入口：`AE.md`、`reproduce_all.sh`、`compare_result.py` |
-| `scripts/` | 仓库外依赖的获取脚本与表格生成器 |
+| `scripts/` | 仓库外依赖的获取脚本、表格生成器，以及 `new_paper_repo.sh` |
+| `template/` | 新论文仓库的骨架，由 `scripts/new_paper_repo.sh` 实例化 |
+| `PAPER-REPO-STANDARD.md` | 本仓库所遵循的维护规范（本仓库是它的参考实现），另附中文版 |
 | `code/instance/` | 节点、网关、能量、外生义务与评分；`network.py` 包含缓存纪律、本地时钟夜门与租约执行器，默认关闭 |
 | `code/v3joint/` | 当前联合通信实验、任务视图门、agent harness，以及 r37 至 r48 各轮实验 |
 | `code/physics/`、`code/analysis/`、`code/monitoring/`、`code/runtime/`、`code/experiments/` | 地形与传播模型、轨迹分析、监测仿真、早期执行语义与历史对照 |
 | `results/` | 结果文件与 agent 轨迹；`README.md` 为登记册，`CLAIMS.md` 为主张表，`reference/` 为冻结判定基准，`_withdrawn/` 为作废清单 |
 | `data/`、`libs/` | 原始数据与依赖，按获取说明在本地准备，不纳入版本控制 |
+
+本仓库同时是 [`PAPER-REPO-STANDARD.md`](PAPER-REPO-STANDARD.md)（中文版 [`PAPER-REPO-STANDARD.zh.md`](PAPER-REPO-STANDARD.zh.md)）的参考实现：那份规范面向以论文为主要产物的仓库，四条不可违例是克隆可验证、数字单一来源、主张单一状态、历史不可变，每条都配一个机械检查。要从同一套骨架开始新论文仓库，运行 `./scripts/new_paper_repo.sh <目录>`：它复制 `template/`，从本仓库取走审计与比较的机制文件以保证实现只有一处，跑通一条端到端示例，并在报告结果前用 `make check` 验证接线。
 
 ## 9. 适用范围与后续工作
 

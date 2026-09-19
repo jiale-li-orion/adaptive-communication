@@ -107,12 +107,16 @@ The script, convention and denominator behind every number are registered in [`r
 | `paper/` | LaTeX sources, PDFs, shared bibliography and build script; `paper/generated/` holds the generated table bodies |
 | `spec/` | Normative specifications: deployment conditions and dataset provenance |
 | `artifact/` | Reviewer entry point: `AE.md`, `reproduce_all.sh`, `compare_result.py` |
-| `scripts/` | Acquisition scripts for dependencies that are not in the repository, and the table generator |
+| `scripts/` | Acquisition scripts for dependencies that are not in the repository, the table generator, and `new_paper_repo.sh` |
+| `template/` | Skeleton for a new paper repository, instantiated by `scripts/new_paper_repo.sh` |
+| `PAPER-REPO-STANDARD.md` | The maintenance standard this repository is the reference implementation of, plus the Chinese version |
 | `code/instance/` | Nodes, gateway, energy, exogenous obligations and scoring; `network.py` holds the cache discipline, the local clock night-guard and the lease executor, all off by default |
 | `code/v3joint/` | Current joint communication experiments, the mission-view gate, the agent harness, and the r37 to r48 rounds |
 | `code/physics/`, `code/analysis/`, `code/monitoring/`, `code/runtime/`, `code/experiments/` | Terrain and propagation models, trajectory analysis, monitoring simulation, earlier execution semantics and historical comparisons |
 | `results/` | Result files and agent traces; `README.md` is the registry, `CLAIMS.md` the claim table, `reference/` the frozen verdict baselines and `_withdrawn/` the withdrawal list |
 | `data/`, `libs/` | Raw data and dependencies, prepared locally according to the acquisition notes and not version-controlled |
+
+This repository doubles as the reference implementation of [`PAPER-REPO-STANDARD.md`](PAPER-REPO-STANDARD.md) (Chinese: [`PAPER-REPO-STANDARD.zh.md`](PAPER-REPO-STANDARD.zh.md)), a reusable convention for repositories whose primary product is a paper. Four invariants drive it: the clone is verifiable, numbers have one source, claims have one current status, and history is immutable; each is paired with a mechanical check. To start a new paper repository from the same skeleton, run `./scripts/new_paper_repo.sh <directory>`: it copies `template/`, takes the audit and comparison mechanisms from this repository so there is a single implementation, runs one example experiment end to end, and verifies the wiring with `make check` before reporting.
 
 ## 9. Scope and future work
 

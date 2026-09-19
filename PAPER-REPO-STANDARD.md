@@ -108,6 +108,8 @@ The manuscript holds prose, `\input` of generated tables, and references to stab
 
 ## 10. Bootstrap checklist for a new repository
 
+The repository this standard was distilled from ships the skeleton as `template/` plus `scripts/new_paper_repo.sh <directory>`, which copies it, takes the audit and comparison mechanisms from the source repository so there is one implementation, runs one example experiment end to end, initialises git, and proves the wiring with `make check` before reporting. The checklist below is what that script automates and what a manual bootstrap must still cover.
+
 1. Create the skeleton of section 3, with `spec/`, `results/reference/` and `artifact/` present from the first commit.
 2. Write `results/CLAIMS.md` with the claims the paper currently makes, even while the list is short and volatile.
 3. Add a check entry point with three checks: registry and disk agree, claim rows are complete, generated tables match results.

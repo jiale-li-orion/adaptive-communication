@@ -100,7 +100,8 @@ def main() -> int:
         if len(row) <= max(ci_id, ci_stat, ci_scr, ci_res):
             check(f"主张行格式完整", False, str(row)[:80])
             continue
-        cid, status = row[ci_id], row[ci_stat]
+        # 单元格可能写成 `supported` 或 supported；检查不该对 markdown 装饰敏感。
+        cid, status = row[ci_id].strip().strip("`"), row[ci_stat].strip().strip("`")
         ids.append(cid)
         check(f"{cid} 编号格式", bool(re.fullmatch(r"C\d+", cid)), cid)
         check(f"{cid} 状态取自集合", status in STATUS, status)
