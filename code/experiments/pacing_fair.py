@@ -1,4 +1,5 @@
 """公平版节奏对照（交付：把上一轮被先验排除的那一格补上）。
+本模块引用的 `docs/…` 路径为作者本地过程文档，不随仓库发布。
 
 规则与臂集合先写定在
 `docs/s7-method/instance-v1/53-pre-registration-fair-pacing-2026-09-14.md`。

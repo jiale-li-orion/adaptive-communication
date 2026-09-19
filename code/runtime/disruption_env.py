@@ -1,5 +1,6 @@
 #!/usr/bin/env python3
 """
+本模块引用的 `docs/…` 路径为作者本地过程文档，不随仓库发布。
 disruption_env.py — a trace-grounded disruption-tolerant tool-execution environment.
 
 Node reachability comes from REAL terrain (the Longley-Rice coverage grid in

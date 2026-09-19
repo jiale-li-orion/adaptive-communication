@@ -522,7 +522,7 @@ def audit_instance_figures() -> None:
 
 
 def audit_manifest_matches_code() -> None:
-    """`02-instance-manifest.md` 的**部署条件**那一节必须与代码一致。
+    """`spec/instance-v1-manifest.md` 的**部署条件**那一节必须与代码一致。
 
     部署条件是系统模型那节唯一的数字来源。它一旦与代码不一致，**不会自己报错**——只会让引用它的人
     算错。本项目已经栽过一次：manifest §五 的采样能耗长期停在已作废的 `2e-5 Wh`，而实现早已是
@@ -541,8 +541,12 @@ def audit_manifest_matches_code() -> None:
     dep = _dep.build_deployment(groups=2)
     nodes = nodes_from(dep, profile=prof)
 
-    md = open(os.path.join(ROOT, "docs", "s7-method", "instance-v1",
-                           "02-instance-manifest.md"), encoding="utf-8").read()
+    spec = os.path.join(ROOT, "spec", "instance-v1-manifest.md")
+    if not os.path.exists(spec):
+        check("规范性文件 spec/instance-v1-manifest.md 存在", False,
+              "缺失：部署条件是系统模型唯一的数字来源，本仓库必须随附该文件")
+        return
+    md = open(spec, encoding="utf-8").read()
     # **数值项按数值比，不按字符串比。** 同一件事有 `4.7e-4` 与 `0.00047` 两种合理写法，
     # 用字符串比会把它们判成不一致——那种噪声化的核对很快就会被无视，比没有核对更糟。
     import re as _re

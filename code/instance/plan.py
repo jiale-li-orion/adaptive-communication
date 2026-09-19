@@ -1,4 +1,5 @@
 """**条件计划**：把"未来证据 → 目标值"的映射编译成可下发给网关的产物。
+本模块引用的 `docs/…` 路径为作者本地过程文档，不随仓库发布。
 
 对应 [Task Contract v1.1](../../../docs/s7-method/task-contract-v1.1.md) §10 允许的分布式控制比较，
 与 [`31-communication-method-candidates-2026-09-14.md`](../../../docs/s7-method/instance-v1/31-communication-method-candidates-2026-09-14.md)

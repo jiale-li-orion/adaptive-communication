@@ -1,4 +1,5 @@
 """中心侧：可见历史、下发动作与回执。
+本模块引用的 `docs/…` 路径为作者本地过程文档，不随仓库发布。
 
 对应 [Task Contract v1.1](../docs/s7-method/task-contract-v1.1.md) §4 的 `O_center(t)` 与 §6 的动作表。
 

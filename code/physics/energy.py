@@ -1,5 +1,6 @@
 #!/usr/bin/env python3
 """
+本模块引用的 `docs/…` 路径为作者本地过程文档，不随仓库发布。
 energy.py — per-node energy state driven by real altitude and temperature physics.
 
 Replaces the placeholder recharge in disruption_env.py (`bat += 0.05`) with the mechanism

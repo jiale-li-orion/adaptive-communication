@@ -1,4 +1,5 @@
 """§31 候选 1 第一项判别：**同一确定性策略置于中心 vs 网关**。
+本模块引用的 `docs/…` 路径为作者本地过程文档，不随仓库发布。
 
 判定规则**先写定**在
 `docs/s7-method/instance-v1/33-pre-registration-placement-2026-09-14.md`；

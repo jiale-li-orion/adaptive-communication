@@ -1,5 +1,6 @@
 #!/usr/bin/env python3
 """闭环分解：把 `T_loop` 拆成 `T_evidence + T_return`，并算条件概率 `A(a)`。
+本模块引用的 `docs/…` 路径为作者本地过程文档，不随仓库发布。
 
 要回答什么
 ----------

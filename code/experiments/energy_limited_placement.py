@@ -1,4 +1,5 @@
 """交付 3：**能源受限上下文中的中心/网关位置对照**。
+本模块引用的 `docs/…` 路径为作者本地过程文档，不随仓库发布。
 
 预注册先写定在
 `docs/s7-method/instance-v1/46-pre-registration-energy-placement-2026-09-14.md`。

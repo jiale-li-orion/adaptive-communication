@@ -1,4 +1,5 @@
 """副本覆盖率导向的上报节奏：冻结 9 臂对照（P2）。
+本模块引用的 `docs/…` 路径为作者本地过程文档，不随仓库发布。
 
 臂集合与判读规则**先写定**在
 `docs/s7-method/instance-v1/60-pre-registration-copy-coverage-pacing-2026-09-14.md`，

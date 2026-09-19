@@ -1,4 +1,5 @@
 """按 doc 60 §5 的预注册规则判读 `results/pacing_copies.json`。
+本模块引用的 `docs/…` 路径为作者本地过程文档，不随仓库发布。
 
 **本脚本只做判读，不重跑实验**：读数来自 `pacing_copies.py`，臂集合与规则先写定在
 `docs/s7-method/instance-v1/60-pre-registration-copy-coverage-pacing-2026-09-14.md`。

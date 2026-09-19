@@ -1,4 +1,5 @@
 """备选 3 补充判别：**一窗多条记录**（采样周期细于义务周期）。
+本模块引用的 `docs/…` 路径为作者本地过程文档，不随仓库发布。
 
 预注册先写定在
 `docs/s7-method/instance-v1/40-pre-registration-multirecord-2026-09-14.md`。

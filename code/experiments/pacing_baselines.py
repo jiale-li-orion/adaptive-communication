@@ -1,4 +1,5 @@
 """交付 2：**普通规则的节奏对照**（不实现候选）。
+本模块引用的 `docs/…` 路径为作者本地过程文档，不随仓库发布。
 
 依据 `docs/s7-method/instance-v1/48-review-energy-placement-and-pacing-decision-2026-09-14.md`
 §4、§5。规则先写定在

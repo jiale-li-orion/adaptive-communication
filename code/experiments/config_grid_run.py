@@ -1,4 +1,5 @@
 """§31 候选 2 第一项判别：**合法配置网格 + 普通滚动搜索**。
+本模块引用的 `docs/…` 路径为作者本地过程文档，不随仓库发布。
 
 判定规则**先写定**在
 `docs/s7-method/instance-v1/34-pre-registration-config-grid-2026-09-14.md`；
