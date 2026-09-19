@@ -136,7 +136,7 @@ The manuscript holds prose, `\input` of generated tables, and references to stab
 
 ## 12. Anti-patterns and case studies
 
-Four incidents from the repository this standard was distilled from. Each rule above traces to one of them.
+Five incidents from the repository this standard was distilled from. Each rule above traces to at least one of them.
 
 **A specification excluded from the repository.** The check entry point read a deployment manifest that lived under a directory excluded from version control. On the author's machine the check passed; in a fresh clone it could not open the file. Cause: the manifest was treated as process documentation, while it was a normative dependency. Rule: I1, and the publishable-versus-acquired distinction in section 2.
 
@@ -145,6 +145,8 @@ Four incidents from the repository this standard was distilled from. Each rule a
 **A metric that measured its own prompt.** An agent honesty count ran only on decisions that issued a dense command, never on the control group, and matched keywords the prompt itself taught; the arm with the highest score was the arm whose instructions contained the vocabulary being counted. Rule: I3, and the requirement that a retracted claim leaves a pointer.
 
 **A number that stopped tracking the code.** A sample-energy figure in the manifest stayed at a superseded value while the implementation had moved, and the mismatch surfaced only when someone recomputed from it. Cause: two sources for one quantity, neither checked against the other. Rule: I2, plus the numeric-comparison rule in this repository's own check, which compares values rather than strings so that `4.7e-4` and `0.00047` are not reported as a disagreement.
+
+**A hash that froze the wrong artifact.** An irradiance acquisition step pinned the SHA-256 of the raw NASA POWER HTTP response. A later fetch returned identical hourly values and a byte-identical derived table, with a different response hash, because the response header carries the API version and the service had moved from v2.10.0 to v2.10.2. The check reported a source change where the data had not changed. Cause: the frozen artifact was the transport rather than the content. Rule: freeze the derived, semantically meaningful artifact, and report transport metadata as information; a false alarm of this kind drowns the real ones.
 
 Two anti-patterns recur independently of incidents. A README that accumulates round-by-round progress notes stops being an entry page and becomes a log nobody reads to the end. A second entry point for checks, tests or builds creates two answers to one question, and the answer that is wrong is the one that gets run.
 

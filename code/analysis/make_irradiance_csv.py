@@ -21,11 +21,15 @@ RAW = _os.path.join(_DIR, "power_hourly_2023_30.33N_94.78E.json")
 CSV = _os.path.join(_DIR, "power_hourly_2023_30.33N_94.78E.csv")
 
 #: SOURCE.md 里记下的核对值。改来源就会对不上——那时要同时改 SOURCE.md，不是改这里。
+#:
+#: 冻结的是**派生 CSV 的内容哈希**，不是原始响应的字节哈希。原始响应里带 API 版本号，
+#: NASA 每次升级都会改变它（实测 v2.10.0 → v2.10.2），而 8760 个逐小时数值与派生表逐字节相同。
+#: 按响应字节冻结会在数据毫无变化时误报，把真实的不一致淹掉。
 EXPECT_ROWS = 8760
 EXPECT_IRR_MAX = 1118.82
 EXPECT_T_MIN, EXPECT_T_MAX = -20.49, 16.19
 EXPECT_GE5 = 1665
-EXPECT_RAW_SHA16 = "05394ddac4c2576f"
+EXPECT_CSV_SHA16 = "548afa25f9b0eaa6"
 
 
 def main() -> int:
@@ -47,6 +51,10 @@ def main() -> int:
         for k in keys:
             w.writerow([k, f"{irr[k]:.2f}", f"{tmp[k]:.2f}"])
 
+    csv_sha16 = hashlib.sha256(open(CSV, "rb").read()).hexdigest()[:16]
+    raw_sha16 = sha16
+    api_ver = str(data.get("header", {}).get("api", {}).get("version", "?"))
+
     vals_i = [irr[k] for k in keys]
     vals_t = [tmp[k] for k in keys]
     ge5 = sum(1 for x in vals_t if x >= 5.0)
@@ -56,7 +64,7 @@ def main() -> int:
         ("气温下限", round(min(vals_t), 2), EXPECT_T_MIN),
         ("气温上限", round(max(vals_t), 2), EXPECT_T_MAX),
         ("≥5 °C 小时数", ge5, EXPECT_GE5),
-        ("原始 SHA-256 前 16 位", sha16, EXPECT_RAW_SHA16),
+        ("派生 CSV SHA-256 前 16 位", csv_sha16, EXPECT_CSV_SHA16),
     ]
     bad = []
     for name, got, want in checks:
@@ -65,6 +73,8 @@ def main() -> int:
         if not ok:
             bad.append(name)
     print(f"写出 {CSV}")
+    print(f"  参考：原始响应 SHA-256 前 16 位 {raw_sha16}，POWER API 版本 {api_ver}"
+          f"（两者都不作为判定条件）")
     if bad:
         print(f"\n{len(bad)} 项不符：{bad}。来源或派生步骤变了——同步更新 SOURCE.md，"
               f"不要只改本脚本的期望值。")
