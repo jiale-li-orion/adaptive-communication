@@ -1,0 +1,11 @@
+# LaTeX 构建中间产物（两份文档共用）
+*.aux
+*.log
+*.out
+*.bbl
+*.blg
+*.toc
+*.fls
+*.fdb_latexmk
+# 自建 xelatex 格式缓存（本机无 xelatex/ctex，见 build.sh）
+.build/
