@@ -1,0 +1,15 @@
+% 由 scripts/make_tables.py 生成，勿手改；数字来自结果文件。
+\begin{tabular}{lcccc}
+\toprule
+Configuration & Mean svc & Deaths & Cmds sent & Refused\\
+\midrule
+comply (naive, unprotected) & 0.162 & 39 & 160 & 2488\\
+dayfeed-c (centre day/night rule) & 0.370 & 12 & 308 & 1256\\
+envelope(comply), centre only & 0.359 & 12 & 308 & 298\\
+comply + local guard & 0.366 & 0 & 1424 & 3364\\
+dayfeed-c + local guard & 0.368 & 0 & 258 & 1156\\
+\textbf{envelope(comply) + local guard} & \textbf{0.359} & \textbf{0} & \textbf{282} & \textbf{222}\\
+\midrule
+\textbf{pure-local (pre-provisioned, 0 cmds)} & \textbf{0.360} & \textbf{0} & \textbf{0} & \textbf{0}\\
+\bottomrule
+\end{tabular}

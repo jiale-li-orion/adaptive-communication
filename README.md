@@ -79,7 +79,7 @@ Two controlled episodes are used. **Episode I** is the v1.1 manifest operating p
 ```bash
 R="$PWD"
 export PYTHONPATH="$R/libs/pylibs:$R/code/v3joint:$R/code/instance:$R/code/physics:$R/code/runtime:$R/code/experiments:$R/code/analysis:$R/code/monitoring"
-python3 code/run_checks.py            # 18/18, including the registry/disk subset consistency check
+python3 code/run_checks.py            # 20/20, including the registry/disk subset consistency check
 python3 code/v3joint/test_joint.py    # 5/5 joint-layer anchors, bit-identical to v1.1 with backup, guard and lease off
 ```
 

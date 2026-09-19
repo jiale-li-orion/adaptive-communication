@@ -3,7 +3,8 @@
 import sys, numpy as np, matplotlib
 matplotlib.use("Agg")
 import matplotlib.pyplot as plt
-ROOT="/home/orion/Communications/应急通信/project1/agentic communication"
+_ROOT = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
+ROOT=_ROOT
 for p in [ROOT+"/code/v3joint",ROOT+"/libs/pylibs"]+[ROOT+"/code/"+d for d in
           ("physics","runtime","experiments","analysis","monitoring","instance")]:
     if p not in sys.path: sys.path.insert(0,p)

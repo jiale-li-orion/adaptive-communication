@@ -215,8 +215,14 @@ def audit_result_index() -> None:
     # 审计会一直报"未登记"，而照着 README 改也改不掉。此前没人用过带 `-` 的文件名所以没露出来。
     # 记住这条：**检查工具的限制会伪装成数据的缺陷**。
     named = set(_re.findall(r"`([A-Za-z_0-9.-]+\.(?:json|txt|csv|png|obj|xml|log))`", text))
+    # **登记册索引的是结果产物，不是文档。** 本目录下的 markdown（README.md、CLAIMS.md）
+    # 描述结果而不是结果本身，把它们算成"未登记的结果文件"会让检查报出无法通过照做来消除的红，
+    # 而那正是这条检查最该避免的失败模式：检查工具的限制伪装成数据的缺陷。
+    _RESULT_EXT = (".json", ".txt", ".csv", ".png", ".obj", ".xml", ".log")
     on_disk = {f for f in _os.listdir(results_dir)
-               if _os.path.isfile(_os.path.join(results_dir, f)) and f != "README.md"}
+               if _os.path.isfile(_os.path.join(results_dir, f))
+               and not f.endswith(".md")
+               and f.endswith(_RESULT_EXT)}
     unlisted = sorted(on_disk - named)
     check("results/ 下没有被索引漏登的文件", not unlisted, f"未登记: {unlisted}")
     # A file the index names but that is not on disk is allowed only when it is named as withdrawn.

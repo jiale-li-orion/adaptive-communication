@@ -1,0 +1,16 @@
+% 由 scripts/make_tables.py 生成，勿手改；数字来自结果文件。
+\begin{tabular}{lcc}
+\toprule
+段 & 离线真值 & 在线（$t_a$）\\
+\midrule
+\stime（无回传槽，几何） & 588 & 588\\
+\scap（按期听到但未回传） & 327 & 327\\
+\saccess（晚于期限听到） & 650 & 223\\
+\senergy（无合格样本） & 571 & --- (unknown)\\
+\unk（在线不可分离） & --- & 998\\
+\midrule
+合计 & 2136 & 2136\\
+标注覆盖率 & 100\% & 53.3\%\\
+已标注子集精度 & 1.000 & 1.000\\
+\bottomrule
+\end{tabular}

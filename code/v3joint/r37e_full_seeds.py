@@ -40,6 +40,11 @@ def ci(diffs):
     return m, s, m - h, m + h
 
 
+def _ndead(v):
+    """r37.audit 的 dead 是节点列表，取长度；兼容历史上返回计数的情况。"""
+    return len(v) if isinstance(v, (list, tuple)) else int(v)
+
+
 def main():
     rows = {}
     print("== r37e seed 0-9 全扫 (maxcov x 队列) ==")
@@ -81,6 +86,52 @@ def main():
     print(f"svc 差(点): 逐seed " + ",".join(f"{x*100:+.1f}" for x in pv))
     print(f"purge-latest svc 差均值 {m*100:+.2f} 点, 95%CI [{lo*100:+.2f},{hi*100:+.2f}], "
           f"purge 全部支配: {all(x > 0 for x in pv)}")
+
+    # --- 机器可读结果：论文表格与主张表的参考值都读这一份 ---
+    import json as _json
+    # 只落盘标量：r37.audit 的返回里带每条义务的完整行与义务对象，直接 dump 会写出
+    # 数 MB 的中间结构，把主张所需的读数淹没。
+    _SCALARS = ("svc", "dead", "n", "d", "on", "late", "onb", "lateb",
+                "packets", "records", "bytes", "suppressed", "local_purge")
+    per_seed = {}
+    for s_ in SEEDS:
+        for cs in QS:
+            z = rows[(s_, cs)]
+            per_seed[f"s{s_}/{cs}"] = {
+                k: (len(z[k]) if k == "dead" and isinstance(z[k], (list, tuple)) else z[k])
+                for k in _SCALARS}
+    dsvc = [rows[(s, "deadline_purge")]["svc"] - rows[(s, "fifo")]["svc"] for s in SEEDS]
+    dl = [rows[(s, "deadline_purge")]["late"] - rows[(s, "fifo")]["late"] for s in SEEDS]
+    m_svc, s_svc, lo_d, hi_d = ci(dsvc)
+    out = {
+        "run": "r37e_full_seeds",
+        "seeds": SEEDS,
+        "queues": list(QS),
+        "chooser": "maxcov",
+        "per_seed": per_seed,
+        "summary": {
+            cs: {
+                "svc_mean": round(mean([rows[(s, cs)]["svc"] for s in SEEDS]), 4),
+                "svc_sd": round(sd([rows[(s, cs)]["svc"] for s in SEEDS]), 4),
+                "outage_on_time_total": sum(rows[(s, cs)]["d"] for s in SEEDS),
+                "backup_on_total": sum(rows[(s, cs)]["on"] for s in SEEDS),
+                "expired_total": sum(rows[(s, cs)]["late"] for s in SEEDS),
+                "deaths_total": sum(_ndead(rows[(s, cs)]["dead"]) for s in SEEDS),
+            } for cs in QS
+        },
+        "paired_purge_minus_fifo": {
+            "per_seed_points": [round(x * 100, 3) for x in dsvc],
+            "mean_points": round(m_svc * 100, 3),
+            "ci95_points": [round(lo_d * 100, 3), round(hi_d * 100, 3)],
+            "all_positive": all(x > 0 for x in dsvc),
+            "expired_records_delta_total": sum(dl),
+            "outage_on_time_delta_total": (sum(rows[(x, "deadline_purge")]["d"] for x in SEEDS)
+                                          - sum(rows[(x, "fifo")]["d"] for x in SEEDS)),
+        },
+    }
+    _p = os.path.join(_CODE, "..", "results", "r37e_full_seeds.json")
+    _json.dump(out, open(_p, "w", encoding="utf-8"), ensure_ascii=False, indent=2)
+    print(f"\n写出 {_p}")
 
 
 if __name__ == "__main__":

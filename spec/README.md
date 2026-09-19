@@ -11,6 +11,7 @@
 | 部署条件（站点几何、拓扑、时间、能量、采能、链路、存储） | [`instance-v1-manifest.md`](instance-v1-manifest.md) | `code/run_checks.py` 的检查 [11]：manifest 数值与 `deployment.py`、`network.py` 的实算值逐项比对 |
 | 结果文件的脚本、命令、口径与分母 | `results/README.md` | 检查 [6]：登记册与磁盘文件互为子集；检查 [10]：实例层文档数字与结果文件对齐 |
 | 被测主张及其状态 | `results/CLAIMS.md` | 检查 [19]：每行的脚本与参考结果必须存在，状态必须取自固定集合 |
+| 论文表格的数字 | `paper/generated/`（由 `scripts/make_tables.py` 生成） | 检查 [20]：生成物与结果文件一致，且两份稿件只经 `\input` 引入生成物 |
 | 评审入口与环境声明 | `artifact/AE.md` | `artifact/reproduce_all.sh` 的判定与文档写明的期望值比对 |
 | 三条声明的语义（confirmed / unconfirmed / unreachable） | 论文正文 §3.6 与两份稿件 | 人工审阅，无机械检查 |
 

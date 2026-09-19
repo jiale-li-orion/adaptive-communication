@@ -3,7 +3,8 @@
 import json, numpy as np, matplotlib
 matplotlib.use("Agg")
 import matplotlib.pyplot as plt
-ROOT="/home/orion/Communications/应急通信/project1/agentic communication"
+_ROOT = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
+ROOT=_ROOT
 g=json.load(open(ROOT+"/results/v3joint_phase.json",encoding="utf-8"))
 PEAKS=[0.003,0.005,0.008,0.012,0.020]; OUT=[0,4,8,16,32]
 def mat(arm, metric="rout"):

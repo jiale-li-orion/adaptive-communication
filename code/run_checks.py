@@ -9,14 +9,17 @@ Each check is a standalone script that prints PASS/FAIL lines and exits non-zero
 runner does not parse their output; it reports exit codes, because a check that fails silently
 while printing confident lines is exactly the failure mode these files exist to prevent.
 
-Two groups, because they answer different questions:
+Three groups, because they answer different questions:
 
-  mechanism   the execution-semantics layer and the frozen mechanism-isolation experiment. These
-              back the numbers in README section six and must stay reproducible.
-  monitoring  the business-loop simulator built for the paper contract. These back the readings in
-              README section seven.
+  mechanism   the execution-semantics layer and the frozen mechanism-isolation experiment.
+  monitoring  the business-loop simulator built for the paper contract.
+  claims      the claim table: every claim must name an existing script and an existing reference
+              result, with one status drawn from a fixed set. This is what keeps a claim and the
+              evidence for it from drifting apart across revisions.
+  paper       the manuscripts' tables must be generated from the result files rather than typed
+              into the text, so a re-run cannot leave a stale number in the paper.
 
-Run: python3 code/run_checks.py [--group mechanism|monitoring|all] [--quiet]
+Run: python3 code/run_checks.py [--group mechanism|monitoring|claims|paper|all] [--quiet]
 """
 from __future__ import annotations
 
@@ -51,13 +54,19 @@ CHECKS = {
         ("experiments/test_instance.py", "实例层验收：Task v1.1 最小闭环的手工可核算性质"),
         ("experiments/audit_fairness.py", "业务层公平性审计"),
     ],
+    "claims": [
+        ("experiments/audit_claims.py", "主张表：脚本与参考结果存在、状态取自固定集合"),
+    ],
+    "paper": [
+        ("experiments/audit_tables.py", "论文表格由结果文件生成，稿件不手写表体"),
+    ],
 }
 
 
 def main() -> int:
     ap = argparse.ArgumentParser()
     ap.add_argument("--group", default="all",
-                    choices=["mechanism", "monitoring", "all"])
+                    choices=["mechanism", "monitoring", "claims", "paper", "all"])
     ap.add_argument("--quiet", action="store_true", help="print only failures")
     args = ap.parse_args()
 

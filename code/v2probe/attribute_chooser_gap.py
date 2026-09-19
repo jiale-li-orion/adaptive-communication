@@ -1,5 +1,6 @@
 import json, os, sys
-REPO = '/home/orion/Communications/应急通信/project1/agentic communication'
+import os as _os
+REPO = _os.path.dirname(_os.path.dirname(_os.path.dirname(_os.path.abspath(__file__))))
 CODE = os.path.join(REPO, 'code')
 for p in ('code/v2probe' if False else os.path.join(CODE,'v2probe'),
           os.path.join(CODE,'analysis'), os.path.join(CODE,'experiments'),

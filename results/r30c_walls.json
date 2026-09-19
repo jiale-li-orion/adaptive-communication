@@ -1,0 +1,42 @@
+{
+  "run": "r30c_walls",
+  "seed": 0,
+  "task_hours": 48,
+  "outage_h": [
+    4,
+    20
+  ],
+  "runs": {
+    "base": {
+      "config": "dayfeed,0.05Wh,1200s/78B",
+      "delivered": 3025,
+      "n": 7560,
+      "svc": 0.4001
+    },
+    "O_bh": {
+      "config": "dayfeed,0.05Wh,unlimited",
+      "delivered": 4740,
+      "n": 7560,
+      "svc": 0.627
+    },
+    "O_en": {
+      "config": "always-300,0.50Wh,1200s/78B",
+      "delivered": 4089,
+      "n": 7560,
+      "svc": 0.5409
+    },
+    "O_bo": {
+      "config": "always-300,0.50Wh,unlimited",
+      "delivered": 6023,
+      "n": 7560,
+      "svc": 0.7967
+    }
+  },
+  "decomposition": {
+    "backhaul_only": 1715,
+    "energy_only": 1128,
+    "coupled": 155,
+    "structurally_infeasible": 1537,
+    "base_failures": 4535
+  }
+}

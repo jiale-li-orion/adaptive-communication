@@ -79,7 +79,7 @@ cd paper && ./build.sh            # 构建两份；./build.sh zh|en 只构建一
 ```bash
 R="$PWD"
 export PYTHONPATH="$R/libs/pylibs:$R/code/v3joint:$R/code/instance:$R/code/physics:$R/code/runtime:$R/code/experiments:$R/code/analysis:$R/code/monitoring"
-python3 code/run_checks.py            # 18/18，含 results/README 登记与磁盘 json 互为子集的一致性校验
+python3 code/run_checks.py            # 20/20，含 results/README 登记与磁盘 json 互为子集的一致性校验
 python3 code/v3joint/test_joint.py    # 5/5 联合层锚点，关闭备份、guard 与 lease 时与 v1.1 逐位一致
 ```
 

@@ -1,0 +1,15 @@
+% 由 scripts/make_tables.py 生成，勿手改；数字来自结果文件。
+\begin{tabular}{lcccc}
+\toprule
+配置（除注明外均在中心） & 平均服务 & 死亡 & 发送 & 被拒\\
+\midrule
+comply（朴素，无保护） & 0.162 & 39 & 160 & 2488\\
+dayfeed-c（中心昼夜规则） & 0.370 & 12 & 308 & 1256\\
+envelope(comply)，仅中心 & 0.359 & 12 & 308 & 298\\
+comply + 本地门 & 0.366 & 0 & 1424 & 3364\\
+dayfeed-c + 本地门 & 0.368 & 0 & 258 & 1156\\
+\textbf{envelope(comply) + 本地门} & \textbf{0.359} & \textbf{0} & \textbf{282} & \textbf{222}\\
+\midrule
+\textbf{pure-local（预置，0 命令）} & \textbf{0.360} & \textbf{0} & \textbf{0} & \textbf{0}\\
+\bottomrule
+\end{tabular}

@@ -1,0 +1,11 @@
+% 由 scripts/make_tables.py 生成，勿手改；数字来自结果文件。
+\begin{tabular}{lcccc}
+\toprule
+Edge disposition & Full svc & Outage OT & Expired & Deaths\\
+\midrule
+FIFO (baseline) & 0.373 & 1691 & 2538 & 12\\
+latest-only (AoI) & 0.358 & 4250 & 0 & 0\\
+\texttt{generic-expiry}$^{\dagger}$ & 0.415 & 4265 & 1 & 0\\
+\texttt{deadline-purge}$^{\ddagger}$ & 0.415 & 4265 & 1 & 0\\
+\bottomrule
+\end{tabular}

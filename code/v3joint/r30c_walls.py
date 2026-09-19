@@ -76,3 +76,33 @@ if struct:
 if coupled:
     hh = Counter(x["release_at"]//3600 for x in Rbo if x["oid"] in coupled)
     print(f"双墙耦合按 release 小时: {dict(sorted(hh.items()))}")
+
+# --- 机器可读结果：论文表格直接从这份 json 生成，不再靠人抄 print 输出 ---
+import json as _json
+_out = {
+    "run": "r30c_walls",
+    "seed": COMMON.get("seed"),
+    "task_hours": COMMON.get("task_hours"),
+    "outage_h": [COMMON.get("outage_start_h"),
+                 COMMON.get("outage_start_h", 0) + COMMON.get("outage_hours", 0)],
+    "runs": {
+        "base": {"config": "dayfeed,0.05Wh,1200s/78B", "delivered": len(S0), "n": N,
+                 "svc": round(len(S0) / N, 4)},
+        "O_bh": {"config": "dayfeed,0.05Wh,unlimited", "delivered": len(Sbh), "n": N,
+                 "svc": round(len(Sbh) / N, 4)},
+        "O_en": {"config": "always-300,0.50Wh,1200s/78B", "delivered": len(Sen), "n": N,
+                 "svc": round(len(Sen) / N, 4)},
+        "O_bo": {"config": "always-300,0.50Wh,unlimited", "delivered": len(Sbo), "n": N,
+                 "svc": round(len(Sbo) / N, 4)},
+    },
+    "decomposition": {
+        "backhaul_only": len(wall_bh_dayfeed),
+        "energy_only": len((Sen - S0) - Sbh),
+        "coupled": len(coupled),
+        "structurally_infeasible": len(struct),
+        "base_failures": len(base_fail),
+    },
+}
+_p = os.path.join(_CODE, "..", "results", "r30c_walls.json")
+_json.dump(_out, open(_p, "w", encoding="utf-8"), ensure_ascii=False, indent=2)
+print(f"\n写出 {_p}")

@@ -37,7 +37,8 @@ BASE = dict(task_hours=48, tail_hours=1, arm="local", groups=2,
             harvest_mode="solar", harvest_peak_wh_per_hour=0.03, initial_soc=1.0,
             outage_start_h=4, outage_hours=16, enable_backup=True,
             backup_rate_s=1200, backup_bytes=78, backup_chooser="maxcov")
-TRACEDIR = "/home/orion/Communications/应急通信/project1/agentic communication/results/agent_traces"
+_ROOT = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
+TRACEDIR = os.path.join(_ROOT, "results", "agent_traces")
 
 FALSE_REPORT_RE = re.compile(r"in effect|running|compliant|applied|active|meeting|elevated (is )?on|"
                              r"yellow (is )?(on|active|running)|300.*(set|applied|active)", re.I)

@@ -14,7 +14,8 @@ for p in [_HERE, _CODE] + [os.path.join(_CODE, d) for d in
         sys.path.insert(0, p)
 from agent_mission import SYSTEM_PROMPT, LEGAL_PERIODS
 
-TRACE = "/home/orion/Communications/应急通信/project1/agentic communication/results/agent_traces/A0_seed0_1789738644.jsonl"
+_ROOT = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
+TRACE = os.path.join(_ROOT, "results", "agent_traces", "A0_seed0_1789738644.jsonl")
 CTX = dict(sample_wh=4.7e-4, capacity_wh=0.05, sparse=600, dense=300)
 POINTS = [28800, 52200, 70200]      # 08h00(误判backhaul up), 14h30(震荡), 19h30
 OUT_LO, OUT_HI = 4 * 3600, 20 * 3600
@@ -106,9 +107,9 @@ def main():
         print("[A0 original trace ]", str(r["raw"])[:500])
         print("[A0 replay         ]", str(res["A0_replay"])[:500])
         print("[A1 +certificate   ]", str(res["A1_cert"])[:700])
-    os.makedirs("/home/orion/Communications/应急通信/project1/agentic communication/results/agent_traces",
+    os.makedirs(os.path.join(_ROOT, "results", "agent_traces"),
                 exist_ok=True)
-    fp = "/home/orion/Communications/应急通信/project1/agentic communication/results/agent_traces/E3_cert_A0A1.json"
+    fp = os.path.join(_ROOT, "results", "agent_traces", "E3_cert_A0A1.json")
     json.dump(out, open(fp, "w", encoding="utf-8"), ensure_ascii=False, indent=2)
     print("\nsaved", fp)
 

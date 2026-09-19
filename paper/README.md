@@ -23,6 +23,24 @@
 
 在具备 `texlive-lang-chinese` 与 `xelatex` 的机器上，`zh/main.tex` 也可改用 `ctexart` 编译；当前写法不依赖该宏包，代价是拉丁文与数字沿用 CJK 字体的拉丁字形，等宽实体用 Latin Modern Mono。
 
+## 表格由结果文件生成
+
+两份稿件的五个表体不写在 `main.tex` 里，而是 `\input{../generated/table_<表>.<语言>.tex}`。
+生成物由 `python3 scripts/make_tables.py` 从结果文件产出，两份稿共用同一批数字，中英各行标签分开：
+同一张表只有一处数字，语言差异只落在行名上。
+
+| 表 | 生成物 | 数据来源 |
+|---|---|---|
+| 资源墙 | `table_walls.{en,zh}.tex` | `results/r30c_walls.json` |
+| 记录到期 | `table_expiry.{en,zh}.tex` | `results/r41_expiry_equiv.json` |
+| 交付租约 | `table_lease.{en,zh}.tex` | `results/r48_ttl_vs_lease.json` |
+| 任务表归因 | `table_attribution.{en,zh}.tex` | `results/r40_local_attribution.json` |
+| 执行位置 | `table_placement.{en,zh}.tex` | `results/agent_traces/r39_table.json` |
+
+规则：**生成物不手改。** 结果文件变动时在**同一次提交**里重新生成；`code/experiments/audit_tables.py`
+检查生成物与结果文件一致、且稿件里没有手写的表格行。数值按十进制四舍五入（`ROUND_HALF_UP`），
+按二进制格式化会让 `0.3695` 输出 `0.369` 而人写 `0.370`，同一份数据出现两种写法。
+
 ## 与 `main.tex` 的编号差异
 
 `main.tex` 只给配置释放界编了号（`\eqref{eq:trelcfg}`），四条约束在 `align` 内未单独编号。本初稿把配置释放界编为式 (1)，目标函数为式 (2)，四条约束为式 (3)--(6)，并在中文稿中直接以 (C1)--(C4) 引用；交付链在中文稿中单独编为式 (1)。引用时按各自文件内的编号。
