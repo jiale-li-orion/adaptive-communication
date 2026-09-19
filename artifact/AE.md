@@ -30,8 +30,8 @@ Measured on the machine that produced the frozen reference results:
 ## 3. Obtaining the artifact
 
 ```bash
-git clone https://github.com/jiale-li-orion/agentic-communication.git
-cd agentic-communication
+git clone https://github.com/jiale-li-orion/adaptive-communication.git
+cd adaptive-communication
 make deps     # itmlogic into libs/pylibs (idempotent)
 make data     # SRTM terrain tiles and NASA POWER irradiance (idempotent, ~100 MB)
 ```

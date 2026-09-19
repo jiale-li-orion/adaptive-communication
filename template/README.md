@@ -1,11 +1,11 @@
 # 论文仓库启动模板
 
-这是从 `agentic-communication` 沉淀出的骨架，用于新建论文仓库。规范全文见仓库根的
+这是从 `adaptive-communication` 沉淀出的骨架，用于新建论文仓库。规范全文见仓库根的
 `PAPER-REPO-STANDARD.md`（中文版 `PAPER-REPO-STANDARD.zh.md`）。
 
 ## 用法
 
-在 `agentic-communication` 里运行：
+在 `adaptive-communication` 里运行：
 
 ```bash
 ./scripts/new_paper_repo.sh ../my-next-paper
@@ -15,7 +15,7 @@
 `code/experiments/audit_claims.py`、`code/experiments/audit_tables.py`）→ 跑一次示例实验 →
 初始化 git → 执行 `make check` 验证接线。检查通过即表示骨架可用。
 
-手工方式：把本目录内容拷到新仓库，再从 `agentic-communication` 取上述三个机制文件。
+手工方式：把本目录内容拷到新仓库，再从 `adaptive-communication` 取上述三个机制文件。
 
 ## 起手就跑通的窄路径
 

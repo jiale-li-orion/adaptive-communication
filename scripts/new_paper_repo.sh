@@ -65,7 +65,7 @@ if [ "$DO_GIT" -eq 1 ]; then
       -c user.email="$(git -C "$HERE" config user.email || echo template@localhost)" \
       commit -q -m "初始化：论文仓库骨架
 
-由 agentic-communication 的 template/ 生成。四条不可违例（克隆可验证、数字单一来源、
+由 adaptive-communication 的 template/ 生成。四条不可违例（克隆可验证、数字单一来源、
 主张单一状态、历史不可变）已接好线：主张表、结果登记册、冻结基准、表格生成器与两个审计。
 下一步见 template/README.md 的「需要你改的地方」。"
   echo "   已提交初始状态"

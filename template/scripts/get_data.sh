@@ -5,7 +5,7 @@
 # 同样的命令，而不是抛出 traceback。核对方式优先选派生表的内容哈希，避免把传输字节当判据：
 # 在线服务常把版本号或时间戳写进响应头，按响应字节冻结会在数据毫无变化时误报。
 #
-# 参考实现见 agentic-communication 的 scripts/get_data.sh（地形高程瓦片与 NASA POWER 辐照）。
+# 参考实现见 adaptive-communication 的 scripts/get_data.sh（地形高程瓦片与 NASA POWER 辐照）。
 set -euo pipefail
 
 ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"

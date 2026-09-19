@@ -105,7 +105,7 @@
 ## 7. 复现
 
 ```bash
-cd "agentic communication"
+cd "adaptive-communication"
 python3 multipath_probe/run_probe.py                 # 跑 K×b 扫描，写 results/probe_results.json
 python3 multipath_probe/test_probe.py                # 不变量自检
 ```
