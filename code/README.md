@@ -2,6 +2,8 @@
 
 更新：2026-09-19。当前论文实验入口在 `v3joint/`，基础节点与评分实现在 `instance/`。其余目录包含物理支撑、历史实验与回归；下方早期脚本说明保留用于复现，不代表当前论文的证据状态。结论与待办见[根 README](../README.md)。
 
+> **本地材料说明。** 本文件引用的 `docs/…` 路径属于作者本地的过程文档与逐轮审计记录，不随本仓库发布；远端仓库只包含 `paper/`、`code/`、`results/` 与根 README。
+
 ```
 code/
 ├── v3joint/        当前联合层、任务视图、Agent 接入、r37–r39 与联合检查
@@ -13,9 +15,9 @@ code/
 └── analysis/       数据处理：从真实轨迹拟合参数
 ```
 
-各脚本头部注明依赖与输出。常用检查和数据准备见[根 README 的复现入口](../README.md#代码与复现)；旧 README 章节已[归档](../docs/早期状态/2026-09-19-README-history.md)。
+各脚本头部注明依赖与输出。常用检查和数据准备见[根 README 的复现入口](../README.md#代码与复现)；旧 README 章节已`docs/早期状态/2026-09-19-README-history.md`。
 
-当前联合层检查为 `python3 code/v3joint/test_joint.py`；仓库回归为 `python3 code/run_checks.py --quiet`。现有 Agent 轨迹的只读审计见 [audit_traces.py](../docs/s8-report/review-v0.6/audit_traces.py)，不调用模型。论文证据边界见 [doc51](../docs/s7-method/v1.2/51-independent-review-paper-v06-2026-09-19.md)。
+当前联合层检查为 `python3 code/v3joint/test_joint.py`；仓库回归为 `python3 code/run_checks.py --quiet`。现有 Agent 轨迹的只读审计见 `docs/s8-report/review-v0.6/audit_traces.py`，不调用模型。论文证据边界见 `docs/s7-method/v1.2/51-independent-review-paper-v06-2026-09-19.md`。
 
 ## physics/ — 物理层
 

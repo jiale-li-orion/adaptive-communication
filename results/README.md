@@ -7,6 +7,8 @@
 `--seeds` 的结果不得当作主结果；`scripted` 后端产生的任何数字不得当作模型结果。
 种子取自**开发区间**（0–999）；测试区间（seed ≥ 10000）除一致性审计外未被触碰。
 
+> **本地材料说明。** 本文件引用的 `docs/…` 路径属于作者本地的过程文档与逐轮审计记录，不随本仓库发布；远端仓库只包含 `paper/`、`code/`、`results/` 与根 README。
+
 ## 索引
 
 `results/` 只放**当前可引用**的文件。被取代或被缺陷污染的一律移入 `_withdrawn/`，逐条理由见
@@ -317,7 +319,7 @@ python3 code/analysis/steady_gap.py --seeds 20 --tag q3_dpu2 --downlink-per-upli
 
 ### 2026-09-16 interpretation supersession (doc33; no new simulation results)
 
-The following interpretation corrections supersede the affected rows above; raw files are retained unchanged. See [doc33](../docs/s7-method/v1.2/33-global-synthesis-and-single-paper-route-2026-09-16.md).
+The following interpretation corrections supersede the affected rows above; raw files are retained unchanged. See `docs/s7-method/v1.2/33-global-synthesis-and-single-paper-route-2026-09-16.md`.
 
 | Existing artifact | Current interpretation |
 |---|---|

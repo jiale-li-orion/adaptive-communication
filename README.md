@@ -1,119 +1,119 @@
-中文 | [English](README.en.md)
+English | [中文](README.zh.md)
 
-# 控制路径失效后终止已安装的通信状态
+# Terminating Installed Communication State When the Control Path Dies
 
-**间歇灾前监测下的期限到期与交付界配置租约**
+**Deadline Expiry and Delivery-Bounded Configuration Leases for Intermittent Pre-Disaster Monitoring**
 
-本仓库是一个灾前山区地质灾害监测通信系统的仿真实现与结果登记库，并收录论文的英文稿与中文稿。研究对象为电池加小光伏供电的 LoRaWAN Class A 部署：现场节点经 LoRaWAN Class A 接入网关，网关经蜂窝主回传与北斗短报文备用链路抵达中心；备用链路间歇可用、按量计费、只承载上行。
+This repository contains the simulation implementation and the result registry for a pre-disaster mountain geohazard monitoring system, together with the English and Chinese manuscripts. The studied deployment is battery-plus-solar LoRaWAN Class A: field nodes reach a gateway over LoRaWAN Class A, and the gateway reaches the centre over a cellular primary backhaul with a BeiDou short-message backup. The backup link is intermittent, metered, and uplink-only.
 
-## 1. 论文稿
+## 1. Manuscripts
 
-| 文稿 | 源码 | 成品 | 页数 |
+| Manuscript | Source | Built | Pages |
 |---|---|---|---|
-| 中文稿 | [`paper/zh/main.tex`](paper/zh/main.tex) | [`paper/zh/main.pdf`](paper/zh/main.pdf) | 14 |
-| 英文稿 | [`paper/en/main.tex`](paper/en/main.tex) | [`paper/en/main.pdf`](paper/en/main.pdf) | 9 |
+| English | [`paper/en/main.tex`](paper/en/main.tex) | [`paper/en/main.pdf`](paper/en/main.pdf) | 9 |
+| Chinese | [`paper/zh/main.tex`](paper/zh/main.tex) | [`paper/zh/main.pdf`](paper/zh/main.pdf) | 14 |
 
-两份文稿互为独立成稿，章节结构一一对应，共享同一份 [`paper/refs.bib`](paper/refs.bib)。构建方式：
+The two manuscripts are independent documents with section-by-section correspondence, and they share [`paper/refs.bib`](paper/refs.bib). Build with:
 
 ```bash
-cd paper && ./build.sh            # 构建两份；./build.sh zh|en 只构建一份
+cd paper && ./build.sh            # build both; ./build.sh en|zh builds one
 ```
 
-英文稿使用 `pdflatex` 与 IEEEtran；中文稿使用 XeTeX（`xetex -fmt=xelatex`，字体 Noto Serif CJK SC），因为目标环境没有 `xelatex` 命令，也没有 `ctex`、`xeCJK`、`luatexja` 或 `CJK` 任一中文宏包。构建脚本首次运行时会用 `xetex -ini -etex` 生成格式文件并缓存到 `paper/.build/`。
+The English manuscript is built with `pdflatex` and IEEEtran. The Chinese manuscript is built with XeTeX (`xetex -fmt=xelatex`, Noto Serif CJK SC), because the target environment provides no `xelatex` command and none of the `ctex`, `xeCJK`, `luatexja` or `CJK` packages. On first run the build script generates a format file with `xetex -ini -etex` and caches it under `paper/.build/`.
 
-## 2. 摘要
+## 2. Abstract
 
-山地站点回传失效之后，网络继续执行的是失效之前安装进去的通信状态。未确认的记录继续占满仅有的几次恢复接入批次；一条再也撤不回的密集采样配置继续耗电过夜。本文研究这两类**持久安装状态（persistent installed state）**可以依据什么证据、在哪个位置终止。两者归入**一个决策问题：部分证据下的本地终止**。节点只握有时钟、自身电量、缓存、最近接入收据与安装时刻携带的界，据此决定保留还是释放记录、维持还是退回配置，受无假释放、能量存续、证据局部性、无假完成四条约束。记录的终止时刻是业务期限，节点本地确定；该规则与标准 Bundle Protocol 的逐记录到期逐位相同，决定增益的是**跨段安置位置**：源端到期使中断按期交付由 202 升至 434、十种子平均 2.52 倍，而仅在网关抑制过期发送会将代价反压到接入段。配置的终止时刻本地不可观测，它取决于经故障路径传递的任务修订，以及网关掌握的回传槽几何。中断与日落同相、能量宽松时，时钟夜门足以应对；阴雨天气下它留下 20 至 31 个节点放电致死，而短到足以救活这些节点的固定配置 TTL 会在另一中断相位误释放 183 条仍可交付的义务。**交付界租约（delivery-bounded lease）**是一条普通租约，其界取当前档数据最后仍能满足义务的时刻，在各相位消除死亡且不误释放。全部结论来自确定性、仓库可复现的运行；端到端与跨模型验证列为后续工作。
+When a mountain-site backhaul fails, the network keeps executing communication state that was installed before the failure. Unacknowledged records keep filling the few recovery access batches, and a dense sampling configuration that can no longer be countermanded keeps draining a battery overnight. We study where, and on what evidence, these two forms of **persistent installed state** can be terminated. One decision problem, local termination under partial evidence, covers both: a node holding only its clock, battery, cache, recent access receipts and install-time bounds decides to retain or release a record and to hold or relax a configuration, under no-false-release, energy-survival, locality and no-false-completion constraints. A record's termination time is its business deadline, which the node knows unconditionally; the resulting source-local rule is bit-identical to standard Bundle-Protocol per-record expiry, and its cross-segment placement decides the gain. Source-local expiry raises outage on-time delivery from 202 to 434 and 2.52-fold over ten seeds, whereas suppressing expired sends at the gateway alone back-pressures the access segment. A configuration's termination time is not locally observable, because it depends on mission revisions travelling the failed path and on return-slot geometry held at the gateway. A clock night-guard suffices when the outage aligns with sunset and energy is ample; under overcast skies it leaves 20 to 31 nodes to discharge fatally, and a fixed configuration TTL short enough to save them falsely releases 183 still-deliverable obligations in a different outage phase. A **delivery-bounded lease**, an ordinary lease whose bound is the last time the current profile's data can still meet an obligation, removes those deaths in every phase without false release. All claims come from deterministic, repository-reproducible runs; end-to-end and cross-model agent validation is specified as future work.
 
-## 3. 研究的失效
+## 3. The failure studied
 
-回传中断后，网络继续运行：中断前安装的通信状态仍在执行，而终止它所需的控制与确认路径同时失效。有两个可复现现象。其一，未确认的缓存记录在确认前保留的边缘纪律下按最老优先重传，已过业务期限的记录继续占用稀缺的恢复接入批；网关只停止发送而不释放源缓存，代价因此被压到接入段，中断按期交付由 202 降至 194。其二，一条已生效的密集采样配置在回传中断后收不到中心的降级命令，继续按密集档耗电过夜；阴雨紧能量条件下节点放电致死，而中心信封发出的降级命令因下行不可达无法落地。
+After a backhaul failure the network keeps running: communication state installed before the failure is still executing, and the control and acknowledgement path required to terminate it has failed at the same time. Two phenomena are reproducible. First, unacknowledged cached records are retransmitted oldest-first under the standard hold-until-acknowledged edge discipline, so records past their business deadline keep occupying the scarce recovery access batches; a gateway that stops sending without releasing the source cache pushes the cost onto the access segment, moving outage on-time delivery from 202 down to 194. Second, a dense sampling configuration already in effect cannot be countermanded once the backhaul fails, and keeps draining the battery overnight; under overcast skies with tight energy the nodes discharge fatally, while a downgrade command issued by the centre envelope cannot be installed because the downlink is unavailable.
 
-本文把这两类对象统一为**持久安装状态**：**记录状态**（未确认样本）与**配置状态**（已生效的采样与上报档）。这是独立于 agent 的通信问题。
+The paper unifies these two objects as **persistent installed state**: **record state** (unacknowledged samples) and **configuration state** (the applied sampling and reporting profile). This is a communication problem independent of any agent.
 
-## 4. 系统模型
+## 4. System model
 
-**义务与交付链。** 监测义务 $o=(n,m,[l_o,h_o),d_o)$ 定义在节点 $n$ 与测量量 $m$ 上；周期为 $P$ 的例行义务满足 $h_o-l_o=P$、$d_o=h_o+P$。样本满足义务的条件是测量量匹配、在窗口内采集、并在 $d_o$ 前被中心收到，依次经过四个环节：节点采出合格样本、在网关被听到（LoRa 接入）、在 $d_o$ 前回传（蜂窝或短报文）、到达中心成为证据。分段任务的首段采用闭区间，后续段采用半开窗口。
+**Obligations and the delivery chain.** A monitoring obligation $o=(n,m,[l_o,h_o),d_o)$ is defined over node $n$ and measurand $m$; a routine obligation at period $P$ satisfies $h_o-l_o=P$ and $d_o=h_o+P$. A sample fulfils $o$ only if it matches the measurand, is taken in-window, and is received centrally by $d_o$, traversing four stages: a qualified sample at the node, being heard at the gateway (LoRa access), being returned before $d_o$ (cellular or short message), and arriving at the centre as evidence. For piecewise missions the first segment uses a closed interval and later segments half-open windows.
 
-**部署与工作点。** 十四个节点分两组监测坡体位移与降雨。备用链路每 1200 s 传输一个 78 字节包，其中位移样本 6 B、降雨样本 4 B，每包约承载 9 至 10 个样本。黄级任务周期为 300 s，交付窗约 600 s，短于 1200 s 的备份槽间距。LoRa 接入每次机会以 $p_a{=}0.74$ 成功，主回传在非中断期以 $p_b{=}0.62$ 良好。节点数、角色与扰动参数按冻结的 Task v1.1 实例清单确定。
+**Deployment and operating point.** Fourteen nodes in two groups monitor slope displacement and rainfall. The backup carries one 78-byte packet every 1200 s; a displacement sample is 6 B and rainfall 4 B, so roughly 9 to 10 samples fit per packet. The elevated (yellow) task uses a 300 s period with a delivery window of about 600 s, shorter than the 1200 s backup slot spacing. LoRa access succeeds per opportunity with $p_a{=}0.74$, and the primary backhaul is good with $p_b{=}0.62$ outside a declared outage. Node count, role mapping and disturbance parameters follow the frozen Task v1.1 instance manifest.
 
-**控制中断。** 中断是区间 $\mathcal O=[a,b)$，其间主回传对中心到现场的流量不可用：中心命令与任务表段在准入处被拒绝、从未发出，短报文备用无法承载下行配置。其间能够改变现场通信行为的只有节点与网关：节点依据自身时钟、电量、缓存、最近接入收据以及已生效命令携带的界，网关依据实际听到的样本、转发日志与已用备份槽。中心保留授权变更的权力，但没有安装变更的通道。
+**Control outage.** An outage is an interval $\mathcal O=[a,b)$ during which the primary is unavailable to centre-to-field traffic: centre commands and mission-table segments are refused at admission and never transmitted, and the short-message backup cannot carry downlink configuration. During $\mathcal O$ only the node and the gateway can change field communication behaviour: the node acts on its own clock, battery, cache, recent access receipts and the bounds carried by already-applied commands; the gateway acts on samples it has actually heard, its forwarding log and backup slots used. The centre retains authority to authorise changes but has no channel through which to install them.
 
-**能量。** 单次采样消耗 $e_s{=}4.7{\times}10^{-4}$ Wh，单次上行消耗 $e_u{=}2.33{\times}10^{-5}$ Wh，电池容量 $C{=}0.05$ Wh。日照输入为 12 h 半正弦，标称峰值 0.03 Wh/h，叠加随机云遮挡。整夜维持密集采样约消耗 0.071 Wh，超过电池容量；电量归零的节点永久死亡。
+**Energy.** A sample costs $e_s{=}4.7{\times}10^{-4}$ Wh and an uplink $e_u{=}2.33{\times}10^{-5}$ Wh; battery capacity is $C{=}0.05$ Wh. Solar input is a 12 h half-sine with a nominal peak of 0.03 Wh/h plus stochastic cloud occlusion. Holding dense sampling through a 12 h night draws about 0.071 Wh, exceeding battery capacity; a node whose state of charge reaches zero dies permanently.
 
-**释放时刻与四条约束。** 对每个状态 $x$ 定义释放时刻 $t_{\mathrm{rel}}(x)$：在此之后继续保留该状态已不可能为任何被满足的义务作出贡献。记录的释放时刻为其业务期限，$t_{\mathrm{rel}}(s)=d(s)$；配置的释放时刻是该档数据仍能经某条可行路径满足的最后一条义务期限，取各义务期限与最后回传槽时刻中较小者，再取最大。中断期间，实体对记录取 `retain` 或 `release`，对配置取 `hold` 或 `revert`，目标是最小化未满足义务、节点死亡与超期存活状态的资源代价，受以下四条约束：
+**Release time and four constraints.** For each state $x$, the release time $t_{\mathrm{rel}}(x)$ is the earliest time after which keeping $x$ alive can no longer contribute to a fulfilled obligation. For a record this is its business deadline, $t_{\mathrm{rel}}(s)=d(s)$. For a configuration it is the last obligation deadline the profile's data can still meet through some feasible path, taken as the maximum over obligations of the smaller of the obligation deadline and the last return-slot time. During an outage an entity chooses `retain` or `release` for a record and `hold` or `revert` for a configuration, minimising unfulfilled obligations, node deaths and the resource cost of state that outlives its release time, subject to:
 
-- **C1 无假释放**：释放或降级不得早于 $t_{\mathrm{rel}}(x)$；
-- **C2 能量存续**：SoC 全程不归零，在主配置下归零是吸收态死亡；
-- **C3 证据局部性**：决策只使用该实体在该时刻合法持有的证据，未来任务表段、全局样本与回传真值均在其外；
-- **C4 无假完成**：未知可行性下只报告 unconfirmed 或 unfulfillable，宣告完成与宣告不可达同样在其外。
+- **C1 no false release**: release or downgrade must not precede $t_{\mathrm{rel}}(x)$;
+- **C2 energy survival**: the state of charge never reaches zero, which is absorbing in the main configuration;
+- **C3 locality**: an action is a function only of the evidence the entity lawfully holds at that time; future mission-table segments, simulator-wide samples and backhaul truth are excluded;
+- **C4 no false completion**: under unknown feasibility the system reports unconfirmed or unfulfillable, and never reports fulfilment or unreachability.
 
-**三态声明。** 每条可行性声明属于以下三态之一：confirmed（独立上报显示目标档，或有匹配样本被中心收到）、unconfirmed（命令在途中或收据不全，既不蕴含已生效，也不蕴含链路已断）、unreachable（由明确的网络侧状态得知当前路径已断）。LoRa 接入收据只构成接入链路的证据，凭其本身无法确立回传可达。
+**Three statement classes.** Every feasibility claim is confirmed (an independent report shows the target profile, or a matching sample is received centrally), unconfirmed (a command is in flight or receipts are incomplete, which implies neither that it took effect nor that the channel is down), or unreachable (the current path is known down from explicit network-side state). A LoRa access receipt is evidence about the access link only and can never by itself establish backhaul reachability.
 
-**关键不对称。** 记录的释放时刻，节点凭公开节奏即可确定；配置的释放时刻取决于经故障回传才能到达的**任务修订**与只有网关掌握的**回传槽几何**，节点在中断中不可观测。这一不对称是全文的技术中心。
+**The key asymmetry.** A record's release time is locally certain from the public cadence. A configuration's release time depends on **mission revisions**, which reach the field only over the failed backhaul, and on **return-slot geometry**, which only the gateway holds; neither is observable at the node during an outage. This asymmetry is the technical centre of the paper.
 
-## 5. 主张与机制
+## 5. Claims and mechanisms
 
-**记录侧：标准到期，增益来自跨段位置。** 每次上传机会删除 $d(s)\le t$ 的缓存记录，其余按最老优先发送，实现为 `deadline-purge` 与 `generic-expiry` 两种写法；后者是普通 BPv7 式逐记录生命期，$\text{expires}=t_s+((P-t_s\bmod P)+P)=d(s)$，不引用义务 id、槽几何或证书。两者在每种子上逐位相同，因此记录侧机制即标准的逐记录到期，本文不主张新的丢弃算法。系统层的内容是端到端业务期限基准（以业务期限而非包龄或逐跳 TTL 为准）、零下行的源端安置，以及跨段一致性：确认耦合使得仅在网关释放并不能释放源端缓存。EDF 与义务贪心队列只重排、从不释放；AoI 的 `latest-only` 无差别释放，以放弃恢复后覆盖换取中断期新鲜度。
+**Records: standard expiry, with the gain in cross-segment placement.** At each upload opportunity the node deletes cached records with $d(s)\le t$ and sends survivors oldest-first, implemented as `deadline-purge` and `generic-expiry`. The latter is an ordinary BPv7-style per-record lifetime, $\text{expires}=t_s+((P-t_s\bmod P)+P)=d(s)$, referencing no obligation id, slot geometry or certificate. The two are bit-identical on every seed, so the record mechanism is standard per-record expiration and no new discard algorithm is claimed. The system-level content is an end-to-end business-deadline basis, rather than packet age or a hop TTL; zero-downlink source placement; and cross-segment consistency, since the acknowledgement coupling means a gateway-only release does not free the source cache. EDF and obligation-greedy queues only reorder and never release; AoI `latest-only` releases indiscriminately, buying outage freshness by abandoning post-recovery coverage.
 
-**配置侧：交付界租约。** 该机制复用普通配置租约与 TTL 原语，改动落在界的定义上：固定时长 $\Delta$ 更换为当前档数据的最后可交付时刻，由网关在连接期间计算并随安装命令下发，节点在 $t\ge\tau_L$ 且无下行时本地退回稀疏档。该界只使用安装时刻有效的信息，不预测未来的授权。与之并列的成熟做法是节点本地时钟与能量门：夜间将采样与上报钳回稀疏，白天不干预中心命令，默认关闭且关闭时逐位不变。
+**Configurations: the delivery-bounded lease.** The mechanism reuses the ordinary configuration lease and TTL primitive, changing only the bound: a fixed duration $\Delta$ is replaced by the last deliverable time of the current profile's data, computed at the gateway while connected and attached to the install command, and enforced at the node by reverting to sparse at $t\ge\tau_L$ with no downlink. The bound uses only information valid at install time and never forecasts a future authorisation. The mature complement is the node-local clock and energy guard, which clamps sampling and reporting to sparse at night and leaves daytime commands untouched; it is off by default and bit-identical when off.
 
-**可行性投影与声明纪律。** 编译期中心持有义务表、当前（从不预测）的网络侧中断状态与公开参数；任务表到达时，网关只持有其听到过的内容。结构性无回传证书仅由槽几何产生，并显式以主回传不可用为条件，几何本身从不断言中断。到达时刻投影器仅在本地证据足以区分各段时给出标注，否则返回 unknown。
+**Feasibility projection and statement discipline.** At compile time the centre holds the obligation table, the current and never-forecast network-side outage state, and public parameters; at mission-table arrival the gateway holds only what it has heard. A structural no-return certificate is emitted from slot geometry alone and is explicitly conditional on the primary being unavailable; geometry never infers an outage. An arrival-time projector labels a missed obligation only when local evidence separates the stages, and otherwise returns unknown.
 
-**本文不主张的内容。** 不主张 LLM 优于求解器，不主张新的丢弃算法，不主张全局调度上界。确定性机制是同一层内对规则、求解器与 agent 同等可用的工具。
+**What is not claimed.** No advantage of an LLM over a solver, no new discard algorithm and no global scheduling upper bound. The deterministic mechanisms are in-layer tools available equally to rules, solvers and agents.
 
-## 6. 关键结果
+## 6. Key results
 
-- **资源墙（限定于所测策略的负结果）**：Episode I 中强基线交付 3025/7560（0.400）；单独放宽回传得 4740，单独放宽能量得 4089，两者同时放宽得 6023。仅被回传容量阻塞 1715 条，仅被电池阻塞 1128 条，两者共同阻塞 155 条（2.0%）。大吞吐增益来自物理放宽，因此本文的落点是状态终止，而非更复杂的调度器。
-- **全时域归因修正**：4535 条失约按「heard 不晚于 deadline」计为 energy 2002（44.1%）、capacity 1115（24.6%）、access 830（18.3%）、time 588（13.0%）。旧口径将这 830 条接入迟到记为回传容量失约（1945/0）；交付数 3025 在两种口径下一致，改变的是损失记在哪一段。
-- **记录到期**：源端到期使全时段服务由 0.373 升至 0.415（配对 +4.21 点，95% 区间 +3.64 至 +4.79，10/10 为正），中断按期交付由 1691 升至 4265（2.52 倍），备份过期记录由 2538 降至 1，死亡由 12 降至 0；相对 `latest-only` 领先 5.73 点。网关单侧抑制使中断按期交付由 202 降至 194。
-- **配置租约**：阴雨峰值 $\eta{=}0.012$ 时，时钟夜门在相位 A 与相位 B 分别造成 20 与 31 个节点死亡，交付界租约在两相位均为 0 死亡、0 误释放，且最终 SoC 最高（0.066 升至 0.122）；固定 TTL 4 h 在相位 B 误释放 183 条仍可交付的黄级义务，6 h 仍少 26 条，8 h 在相位 A 仅剩最小能量裕度。因此不存在两相位都安全的固定 TTL。标称光伏下租约只节省资源而不改变服务；$\eta{=}0.01$ 时连稀疏运行都无法供电，各机制约 40 死亡，此时的正确输出是声明不可兑现。
-- **执行位置**：同一条「勿整夜密集」规则在中心是迟到且可被拒绝的建议（信封单独无法挽救最紧种子，朴素中心合规在三个种子上造成 39 个节点死亡、服务 0.162），在节点则成为每拍强制的不变量（死亡清零，被拒准入尝试降至 222）。预置零命令本地节奏在静态任务上达到 0.360，与各中心编译臂相当，构成对预置任务中心采样控制的限定负结果。
-- **任务表到达时的可判定范围**：2136 条已错过的黄级义务中，离线时间感知归因全部标注正确；仅使用网关在 $t_a{=}20$ h 前合法持有的证据，可标注 1138/2136（53.3%），已标注子集精度为 100%，其余 998 条保持 unknown（其离线真值为 571 条从未采样、427 条在 $t_a$ 之后才被听到）。「从未采样」与「采到但尚未听到」在缺少证据时无法分离，这正是原始的 G5 约束。
-- **真实 agent（形成性研究）**：deepseek-flash 共 11 条轨迹、1089 次决策。观测的 `link` 字段只包含 LoRa 接入收据、不含回传状态，由此产生双向误判：A0 与 A0s 在强制中断窗内给出 36/32 次「link 在线」乐观断言，A1 在去除分词假阳性后为 1 次；v4 证书在 5 个健康链路时刻反向悲观。52 次解析失败退回 hold，成因为 `max_tokens` 截断，逐臂格式失败率为 A0 7.1%、A0s 6.4%、A1 1.3%。agent 是候选控制器，问题的定义先于它成立。
+- **Resource walls (a negative result scoped to the tested policies).** In Episode I the strong baseline delivers 3025 of 7560 obligations (0.400); relaxing backhaul alone gives 4740, relaxing energy alone 4089, and both 6023. Backhaul capacity alone blocks 1715 obligations, battery alone 1128, and both 155 (2.0%). The large throughput gains are physical, which is why the paper targets state termination rather than a more elaborate scheduler.
+- **Full-horizon attribution correction.** Charging the 4535 failures with "heard" required by the deadline rather than at any later time gives energy 2002 (44.1%), capacity 1115 (24.6%), access 830 (18.3%) and time 588 (13.0%). An earlier accounting had charged those 830 late-access failures to backhaul capacity (1945/0). The delivered count of 3025 is identical under both accountings; the correction changes where the loss is charged.
+- **Record expiry.** Source-local expiry raises full-horizon service from 0.373 to 0.415 (paired +4.21 points, 95% CI +3.64 to +4.79, positive on all ten seeds), outage on-time delivery from 1691 to 4265 (2.52-fold), reduces expired backup records from 2538 to 1 and deaths from 12 to 0, and leads `latest-only` by 5.73 points. Gateway-only suppression moves outage on-time delivery from 202 down to 194.
+- **Configuration leases.** At the overcast peak $\eta{=}0.012$, the clock night-guard causes 20 and 31 node deaths in phases A and B respectively, while the delivery-bounded lease reaches zero deaths and zero false release in both phases with the highest final state of charge (0.066 to 0.122). A fixed TTL of 4 h falsely releases 183 still-deliverable yellow obligations in phase B, 6 h still loses 26, and 8 h leaves phase A at minimal energy margin. No fixed TTL is therefore safe across both phases. At nominal harvest the lease saves resources without changing service; at $\eta{=}0.01$ even sparse operation cannot be powered, all mechanisms incurring about 40 deaths, and the correct output is an unfulfillable declaration.
+- **Enforcement placement.** The same "never stay dense overnight" rule is a late and refusable suggestion at the centre, where the envelope alone cannot save the tightest seed and naive centre compliance causes 39 node deaths at service 0.162, but an invariant enforced every tick at the node, which clears the deaths and reduces refused admission attempts to 222. A zero-command pre-provisioned rhythm reaches 0.360 service, matching every centre-compiled arm for these static missions, a scoped negative result on centre sampling control for pre-provisioned tasks.
+- **What is attributable when the mission table arrives.** Of the 2136 upgraded obligations already missed, offline time-aware attribution labels all of them correctly; using only evidence the gateway lawfully holds before $t_a{=}20$ h labels 1138 of 2136 (53.3%) at 100% precision on the labelled subset, leaving 998 unknown, whose offline truth is 571 never sampled and 427 heard only after $t_a$. "Never sampled" and "sampled but not yet heard" are inseparable without evidence the gateway does not have, which is the original G5 constraint.
+- **Real-agent study (formative).** Eleven deepseek-flash trajectories covering 1089 decisions. The observation's `link` field carries LoRa access receipts only and no backhaul state, producing bidirectional errors: A0 and A0s assert "link up" on 36 and 32 decisions in the forced outage window, against 1 for A1 after token-boundary de-noising, and the v4 certificate is pessimistically wrong at five healthy-link times. Fifty-two decisions end in a parse-failure hold caused by `max_tokens` truncation, with per-arm format-failure rates of 7.1% for A0, 6.4% for A0s and 1.3% for A1. The agent is a controller candidate; the problem definition precedes it.
 
-## 7. 复现
+## 7. Reproducibility
 
-两个受控场景。**Episode I** 采用 v1.1 清单工作点：升级发生于 $t{=}6$ h，中断区间 4 至 20 h，任务表于 20 h 到达网关；它支撑资源墙、归因、记录到期、执行位置与 agent 结果。**Episode II** 为隔离配置终止而构造：相位 A 在 $t{=}2$ h 升级、$t{=}6$ h 降级、中断 4 至 20 h，相位 B 在 $t{=}1$ h 升级、$t{=}8$ h 降级、中断 6 至 22 h；$t{=}0$ 为本地 06:00，$t{=}12$ h 为日落。两场景除时刻表、中断相位与光伏峰值外参数相同。Episode II 是受控构造，不构成新的现场事实。
+Two controlled episodes are used. **Episode I** is the v1.1 manifest operating point: an upgrade at $t{=}6$ h, an outage from 4 to 20 h, and the mission table reaching the gateway at 20 h; it supports the resource walls, attribution, record expiry, enforcement placement and agent results. **Episode II** was constructed to isolate configuration termination: phase A upgrades at $t{=}2$ h with a downgrade at $t{=}6$ h and an outage from 4 to 20 h, and phase B upgrades at $t{=}1$ h with a downgrade at $t{=}8$ h and an outage from 6 to 22 h; $t{=}0$ is 06:00 local and $t{=}12$ h is sunset. The two episodes share all parameters except the schedule, the outage phasing and the swept harvest. Episode II is a controlled construction and not a new field claim.
 
 ```bash
 R="$PWD"
 export PYTHONPATH="$R/libs/pylibs:$R/code/v3joint:$R/code/instance:$R/code/physics:$R/code/runtime:$R/code/experiments:$R/code/analysis:$R/code/monitoring"
-python3 code/run_checks.py            # 18/18，含 results/README 登记与磁盘 json 互为子集的一致性校验
-python3 code/v3joint/test_joint.py    # 5/5 联合层锚点，关闭备份、guard 与 lease 时与 v1.1 逐位一致
+python3 code/run_checks.py            # 18/18, including the registry/disk subset consistency check
+python3 code/v3joint/test_joint.py    # 5/5 joint-layer anchors, bit-identical to v1.1 with backup, guard and lease off
 ```
 
-| 论文对象 | 脚本 | 结果 |
+| Paper object | Script | Result |
 |---|---|---|
-| 全时域时间感知归因 | `code/v3joint/r44_fullhorizon_attribution.py` | `results/r44_fullhorizon_attribution.json` |
-| 时钟对齐与残余现象见证 | `code/v3joint/r45_residual_witness.py` | `results/r45_residual_witness.json` |
-| 租约 $\tau$ 扫描与交付几何界 | `code/v3joint/r46_lease_sweep.py` | `results/r46_lease_sweep.json` |
-| 光伏能量与 $\tau$ 的联合扫描 | `code/v3joint/r47_lease_energy.py` | `results/r47_lease_energy.json` |
-| 固定 TTL 与交付租约的两相位对照 | `code/v3joint/r48_ttl_vs_lease.py` | `results/r48_ttl_vs_lease.json` |
-| 记录到期等价性与跨段代价 | `code/v3joint/r41_expiry_equiv.py` | `results/r41_expiry_equiv.json` |
-| 网关本地到达归因 | `code/v3joint/r40_local_attribution.py` | `results/r40_local_attribution.json` |
-| agent 声明对称重标与 v5 投影器重放 | `code/v3joint/r42_claim_relabel.py`、`code/v3joint/r43_cert_v5_replay.py` | `results/r42_claim_relabel.json`、`results/r43_cert_v5_replay.json` |
-| 资源墙、十种子扫描与执行位置对照 | r30 系列、`r37e`、`r39` | 同名 json，口径见 `results/README.md` |
+| Full-horizon time-aware attribution | `code/v3joint/r44_fullhorizon_attribution.py` | `results/r44_fullhorizon_attribution.json` |
+| Clock alignment and residual witness | `code/v3joint/r45_residual_witness.py` | `results/r45_residual_witness.json` |
+| Lease $\tau$ sweep and delivery-geometry bound | `code/v3joint/r46_lease_sweep.py` | `results/r46_lease_sweep.json` |
+| Harvest energy against $\tau$ | `code/v3joint/r47_lease_energy.py` | `results/r47_lease_energy.json` |
+| Fixed TTL against the delivery lease, two phases | `code/v3joint/r48_ttl_vs_lease.py` | `results/r48_ttl_vs_lease.json` |
+| Expiry equivalence and cross-segment cost | `code/v3joint/r41_expiry_equiv.py` | `results/r41_expiry_equiv.json` |
+| Gateway-local arrival attribution | `code/v3joint/r40_local_attribution.py` | `results/r40_local_attribution.json` |
+| Symmetric claim relabelling and v5 projector replay | `code/v3joint/r42_claim_relabel.py`, `code/v3joint/r43_cert_v5_replay.py` | `results/r42_claim_relabel.json`, `results/r43_cert_v5_replay.json` |
+| Resource walls, ten-seed sweep and placement study | the r30 series, `r37e`, `r39` | same-named json, conventions in `results/README.md` |
 
-每个数字对应的脚本、口径与分母登记于 [`results/README.md`](results/README.md)；新增结果文件必须在该登记册中登记。真实模型实验需配置 `DEEPSEEK_API_KEY`，并将请求、重试与解析计入账本，决策数不等于成功请求数。
+The script, convention and denominator behind every number are registered in [`results/README.md`](results/README.md), and any new result file must be registered there. Real-model experiments require `DEEPSEEK_API_KEY` and must account for requests, retries and parsing, since the number of decisions is not the number of successful requests.
 
-## 8. 仓库结构
+## 8. Repository layout
 
-| 路径 | 内容 |
+| Path | Contents |
 |---|---|
-| `paper/` | 论文中文稿与英文稿的 LaTeX 源码、PDF、共享书目与构建脚本 |
-| `code/instance/` | 节点、网关、能量、外生义务与评分；`network.py` 包含缓存纪律、本地时钟夜门与租约执行器，默认关闭 |
-| `code/v3joint/` | 当前联合通信实验、任务视图门、agent harness，以及 r37 至 r48 各轮实验 |
-| `code/physics/`、`code/analysis/`、`code/monitoring/`、`code/runtime/`、`code/experiments/` | 地形与传播模型、轨迹分析、监测仿真、早期执行语义与历史对照 |
-| `results/` | 结果文件与 agent 轨迹；以 `results/README.md` 为登记册，`results/_withdrawn/` 为作废清单 |
-| `data/`、`libs/` | 原始数据与依赖，按获取说明在本地准备，不纳入版本控制 |
+| `paper/` | LaTeX sources, PDFs, shared bibliography and build script for the English and Chinese manuscripts |
+| `code/instance/` | Nodes, gateway, energy, exogenous obligations and scoring; `network.py` holds the cache discipline, the local clock night-guard and the lease executor, all off by default |
+| `code/v3joint/` | Current joint communication experiments, the mission-view gate, the agent harness, and the r37 to r48 rounds |
+| `code/physics/`, `code/analysis/`, `code/monitoring/`, `code/runtime/`, `code/experiments/` | Terrain and propagation models, trajectory analysis, monitoring simulation, earlier execution semantics and historical comparisons |
+| `results/` | Result files and agent traces; `results/README.md` is the registry and `results/_withdrawn/` the withdrawal list |
+| `data/`, `libs/` | Raw data and dependencies, prepared locally according to the acquisition notes and not version-controlled |
 
-## 9. 适用范围与后续工作
+## 9. Scope and future work
 
-资源墙与吞吐负结果限定于所测策略族与单一工作点，不构成最优性定理；租约结果是两个相位、五个采能水平上的确定性证据，证明该机制存在以及固定 TTL 跨相位失效，不主张普适参数。备份速率与载荷、节点数、容量、云模型与复机阈值的更广扫描仍在进行。Episode II 是配置子问题的受控场景，独立于现场测量；中心确认按同步且不占空口建模，该简化同等有利于各队列规则。
+The resource walls and the throughput negative result are scoped to the policy families and the single operating point tested; they are not an optimality theorem. The lease result is deterministic evidence over two phases and five harvest levels, establishing that the mechanism exists and that fixed TTL bounds fail across phases, not a universal parameter choice. Wider sweeps of backup rate and payload, node count, capacity, cloud model and restart thresholds remain open. Episode II is a controlled scenario for the configuration sub-problem, independent of field measurement; central acknowledgement is modelled as synchronous and airtime-free, a simplification that equally favours every queue rule.
 
-**端到端与跨模型重跑由作者后续补充。** unknown 感知的 v5 证书（建议为观测增加网络侧 `primary_backhaul_state` 字段）、硬化记账与对称评分器三者就位后，重跑 A0、A0s 与 A1 的多种子实验，并新增 **matched-capability 臂**（向普通对照提供相同的昼夜策略、几何常量、确认规则与 note 模板，但不提供段投影器），端到端串接本地安全门后重新评估残余死亡，并完成跨模型复现。相关 harness 已就绪，本仓库不主张上述结论。
+**End-to-end and cross-model reruns remain to be completed by the authors.** Once the unknown-aware v5 certificate (which proposes adding a network-side `primary_backhaul_state` field to the observation), hardened accounting and the symmetric scorer are in place, the multi-seed A0, A0s and A1 runs will be repeated together with a new **matched-capability arm** that receives the same day/night policy, geometry constants, confirmation rules and note template but no segment projector. The residual deaths will then be reassessed with the local safety floor wired end to end, followed by cross-model replication. The harness is in place; this repository does not claim those results.
 
-**场景与证据纪律。** 场景固定为灾前山区监测，风险等级与授权由外部给定（DZ/T 0460-2023 §5.3.3 允许按预警等级远程调整采样与上传频率，§8.4.1 定义四级，§8.4.2 规定会商升降级；具体周期是研究选择。备用速率与载荷依据 BDS-OS-PS-3.0 与 DZ/T 0450-2023，其中 1200 s、78 B 为已声明的研究选择）；系统判定滑坡风险超出范围，删除失约义务或修改分母同样超出范围。强基线公平要求禁止 strawman、禁止为取胜调参、禁止为挽救方法而改变判据或收紧任务；普通规则、MPC 与标准机制带来的增益同样计入通信系统贡献，已被普通组合覆盖的部分如实关闭。来源分级为 A/B/C/D，未核验的内容不进入事实表。
+**Scenario and evidence discipline.** The scenario is fixed to pre-disaster mountain monitoring, and risk levels and authorisation are externally given (DZ/T 0460-2023 §5.3.3 permits remote adjustment of sampling and upload frequency by warning level, §8.4.1 defines four levels and §8.4.2 governs conferral of upgrades and downgrades; the specific periods are research choices. Backup rate and payload follow BDS-OS-PS-3.0 and DZ/T 0450-2023, where 1200 s and 78 B are declared research choices). Judging landslide risk is out of scope, as is deleting an obligation or changing the denominator. Baseline fairness forbids strawman comparisons, tuning to win, and relaxing the criterion or tightening the task to save a method; gains from ordinary rules, MPC and standard mechanisms count as communication-system contributions, and any part already covered by an ordinary combination is closed as such. Sources are graded A/B/C/D and unverified material does not enter the fact table.
 
-历史文档、逐轮审计记录与提交溯源在本地维护，不随本仓库发布；索引见本地 `docs/_archive/README.md`。
+Historical documents, round-by-round audit records and commit provenance are maintained locally and are not distributed with this repository; the index is the local `docs/_archive/README.md`.
