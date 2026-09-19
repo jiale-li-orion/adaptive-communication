@@ -45,12 +45,12 @@ sends at the gateway alone back-pressures access ($-8$). A configuration's termi
 not locally observable, because it depends on mission revisions travelling the failed path and
 on return-slot geometry held at the gateway. A clock night-guard suffices when the outage aligns
 with sunset and energy is ample; under overcast skies it leaves 20--31 nodes to discharge
-fatally, and a fixed config TTL short enough to save them falsely releases 183 still-deliverable
-obligations in another outage phase. A \emph{delivery-bounded lease}---an ordinary lease whose
-bound is the last time the current profile's data can still meet an obligation---removes those
-deaths in every phase without false release. The mechanisms are ordinary primitives with a
-re-derived bound. A formative LLM study locates the interface fault they target: LoRa access
-receipts read as backhaul state. All claims come from deterministic, repository-reproducible
+fatally. Preloaded local revert bounds remove these deaths without reducing aggregate yellow
+obligation delivery; a fixed 8~h TTL also does so in both tested phases. A proposed
+\emph{delivery-bounded lease} seeks to derive the bound from legally available mission and
+return-slot information. Current experiments supply the future downgrade time offline and do not
+validate that online derivation or command-carried installation. A formative LLM study locates an
+interface fault: LoRa access receipts read as backhaul state. All claims come from deterministic, repository-reproducible
 runs; end-to-end and cross-model agent validation is future work.
 \end{abstract}
 
@@ -111,19 +111,16 @@ dense sampling at dusk removes overnight deaths whenever the outage aligns with 
 battery is adequate. We credit both as mature primitives.
 
 \subsection{The residual}
-Two controlled experiments isolate what ordinary mechanisms do \emph{not} cover. Releasing
-expired records at the \emph{gateway}---stop sending, leave the source cache untouched---withholds
-the acknowledgement, so the expired record keeps filling the node's access batch and on-time
-delivery moves \emph{down} $202\to194$; the disposition must be consistent across the access and
-backhaul segments, which single-hop AoI discard and hop-local bundle expiry do not address. And
-the clock guard acts only at dusk: when an authorised daytime downgrade falls inside an outage,
-the node runs dense for hours after its data ceased to be deliverable, which under overcast skies
-is fatal (20--31 nodes), while a naive short config TTL that relaxes early enough to save those
-nodes falsely releases obligations still deliverable over the backup in a differently phased
-outage (183 lost). No fixed TTL is safe and sufficient across phases. The residual is therefore
-not ``terminate state''---ordinary expiry and guards do that---but \textbf{computing the
-configuration's termination bound from delivery geometry the node does not have, and installing
-it while connected so it can be enforced locally while disconnected}.
+The experiments expose two placement effects. Suppressing expired records at the
+\emph{gateway} while leaving the source cache untouched withholds the acknowledgement: the
+record continues to fill the node's access batch and on-time delivery moves $202\to194$.
+Source-local expiry removes this retained state. For configurations, the clock guard acts only
+at dusk, leaving 20--31 deaths in two overcast scenarios. Earlier preloaded revert times avoid
+these deaths. A short 4~h TTL sacrifices yellow delivery in the longer dense phase, but a fixed
+8~h TTL avoids deaths and preserves aggregate yellow delivery in both phases. These observations
+motivate studying how to select and install a bound before disconnection; they do not establish
+an increment over ordinary leases. In particular, a downgrade authored after the control path
+fails cannot be used to compute a prior install-time bound.
 
 \subsection{Contributions}
 \begin{enumerate}
@@ -140,13 +137,12 @@ business-deadline basis with source/gateway consistency, which doubles outage on
 and drives expired backup records to one, while gateway-only suppression moves cost to the
 access segment. Full-horizon time-aware attribution corrects an earlier accounting that had
 labelled 830 late-access failures as backhaul-capacity failures.
-\item \textbf{A delivery-bounded configuration lease for the residual}
-(\S\ref{sec:mech-lease}, \S\ref{sec:eval-lease}). The ordinary config-TTL/lease primitive keeps
-its form; its fixed-duration bound is replaced by the last deliverable time of the current
-profile's data, computed at the gateway while connected and enforced at the node with no
-downlink. Across outage phases and harvest levels it removes the 20--31 overcast deaths the
-clock guard leaves and avoids the 183-obligation false release of the best fixed TTL, while in
-ample-energy regimes it only removes wasted dense work.
+\item \textbf{A controlled study of configuration termination}
+(\S\ref{sec:mech-lease}, \S\ref{sec:eval-lease}). Preloaded revert bounds eliminate the
+20--31 deaths left by the clock guard. A fixed 8~h TTL also eliminates those deaths in both
+phases, while shorter TTLs lose yellow delivery in the longer phase. We identify the information
+and installation conditions that a delivery-derived lease must satisfy; its online increment
+remains open.
 \item \textbf{A formative real-agent study that locates the interface fault}
 (\S\ref{sec:eval-agent}). Symmetric accounting of 1089 live decisions shows LoRa access receipts
 read as backhaul state in both directions; an unknown-aware projector removes the healthy-link
@@ -260,6 +256,9 @@ where $\tau_{\text{last slot}}(o)$ is the latest primary or backup return opport
 qualified sample for $o$ can be heard and forwarded by $d(o)$. Unlike $d(s)$, this bound combines
 mission timing---which obligations the current profile serves---with return-slot geometry, when
 they can be carried; neither is fully observable at the node during $\mathcal O$.
+This is a candidate configuration bound, not a validated online release-time computation.
+Stopping new dense acquisition need not stop forwarding already acquired samples; establishing
+the earliest safe revert therefore also requires distinguishing these two activities.
 
 \subsection{Service loss and statement discipline}
 The objective counts deadline-valid obligation delivery (service), permanent node deaths, and the
@@ -314,29 +313,21 @@ design choice with measurable consequence is \emph{where the release is executed
 \eqref{eq:c3} and the cross-segment acknowledgement coupling.
 
 \subsection{Configuration sub-problem: $\trel$ is not locally observable}
-During $\mathcal O$ the node cannot compute $\trel(q)$ from \eqref{eq:trelcfg}: mission revisions
-that change which obligations $q$ serves travel the failed backhaul, and return-slot geometry sits
-at the gateway. Three local approximations are available, each flawed. A \emph{clock guard}
-reverts at sunset, correct when $\mathcal O$ aligns with dusk and dense data are undeliverable by
-then, and blind to a daytime downgrade and to overcast days with little harvest. A \emph{fixed
-config TTL} reverts $\Delta$ after install, and a single $\Delta$ cannot track \eqref{eq:trelcfg}:
-short $\Delta$ violates \eqref{eq:c1} when the dense window is long, long $\Delta$ violates
-\eqref{eq:c2} under tight energy when the window is short. A \emph{local energy guard} reverts on
-a SoC threshold computed at the node; it is necessary and deployed as a safety net, but reactive,
-acting only once energy is already low and unable to tell whether the data being sacrificed were
-still deliverable.
+During $\mathcal O$, future mission revisions cannot be inferred from missing messages.
+A clock guard, a fixed-duration lease and a node-local SoC guard use different locally available
+signals. Their feasibility must be compared under the same prior mission knowledge and energy
+conditions. The present experiments evaluate the clock guard and preloaded revert times; they
+do not evaluate a node-local SoC guard in the same configuration-termination comparison.
 
-\textbf{Delivery-bounded lease.} While connected, the gateway computes \eqref{eq:trelcfg} for the
-profile it is about to install, using obligations it knows and the primary/backup slot schedule,
-and attaches the resulting absolute bound $\tau_L$ to the configuration command. The node stores
-$\tau_L$ at apply time and reverts locally at $t\geq\tau_L$ with no downlink. The bound uses only
-information valid at install time and never forecasts a future authorisation; a later connected
-revision arrives with a fresh lease. This is the ordinary config-lease/TTL primitive with its
-bound re-derived from delivery geometry, exactly as semantic HARQ reuses HARQ but changes its
-criterion~\cite{razavivideo}: the minimal local object that makes \eqref{eq:c1}--\eqref{eq:c2}
-jointly satisfiable without assuming a surviving control path. When even the lease cannot keep the
-node alive, the honest outcome under \eqref{eq:c4} is to revert to the safe sparse default and mark
-the interval's obligations unfulfillable, not to report them complete.
+\textbf{Proposed delivery-bounded lease.} If a mission's validity end and relevant return
+opportunities are already authorised and known while connected, a gateway could derive an
+absolute bound and transmit it with the configuration. A later revision would require a new
+version and lease. If the downgrade is first authorised during the outage, its time is unavailable
+for this calculation. The current prototype instead preloads a bound computed from the full
+experimental schedule. It demonstrates the effect of local termination but does not implement
+command-carried, version-bound lease installation or prove an online solution to
+\eqref{eq:c1}--\eqref{eq:c3}. An ordinary mission-validity expiry with the same information is
+also required as a comparator.
 
 \subsection{Why this is a communication problem}
 Problem~1 is defined over network state, evidence locality and return geometry; it has an optimal
@@ -366,22 +357,19 @@ acknowledgement coupling means a gateway-only release does not free the source c
 
 \subsection{Configuration termination: guard and delivery-bounded lease}
 \label{sec:mech-lease}
-The \emph{local clock/energy guard} is mature: on every tick the node, on its local clock, clamps
-sampling and reporting to sparse at night (hod $<06{:}00$ or $\geq18{:}00$) and leaves daytime
-commands untouched, and an optional computed energy ledger---remaining dark hours times the
-dense-versus-sparse extra draw, against the node's own SoC---additionally reverts when dense
-operation would not survive the night. This is a standard time/energy local rule modelling the
-gateway's pre-provisioned autonomous rules; it is off by default and bit-identical when off.
+The implemented \emph{local clock guard} clamps sampling and reporting to sparse at night
+(hod $<06{:}00$ or $\geq18{:}00$) and leaves daytime commands untouched. It is off by default
+and bit-identical when off. A node-local SoC guard is a distinct ordinary comparator, not part
+of this clock-only implementation.
 
-The \emph{delivery-bounded lease} is the residual mechanism. The gateway computes $\tau_L$
-(Eq.~\ref{eq:trelcfg}) while connected: for the current dense profile it takes the last obligation
-the profile produces before the next known revision, sets that obligation's qualified-sample and
-return-slot deadline, aligns to the latest feasible primary or backup slot, and attaches $\tau_L$
-to the install command. The node enforces revert at $\tau_L$ alongside the clock guard, which
-remains the always-on safety net for conditions the install-time bound cannot see, such as an
-unforeseen weather collapse. A pre-provisioned full schedule is the degenerate case in which
-$\tau_L$ for every segment is known at $t{=}0$ and a local schedule executor suffices with zero
-centre traffic.
+The configuration experiment adds an absolute revert time to each node's local guard at
+initialisation. At or after that time the node clamps a dense profile back to sparse without a
+downlink. This is a preloaded bound experiment: the bound is not received through the configuration
+command, renewed by its version, or computed from an online gateway evidence view.
+The candidate delivery-derived setting uses the full schedule's downgrade time. It rounds the
+last yellow deadline \emph{up} to the next backup slot; this can lie after the deadline, and thus
+is not the latest feasible slot defined in Eq.~\ref{eq:trelcfg}. The numerical runs are retained
+as timing interventions, without claiming that this construction implements that equation.
 
 \subsection{Partial-observability projector}
 \label{sec:mech-projector}
@@ -478,48 +466,42 @@ against 202 for FIFO and 434 for source expiry---the cross-segment cost. $^{\dag
 
 \subsection{Configuration leases: deaths under overcast skies, false release under short TTL}
 \label{sec:eval-lease}
-Holding record expiry fixed (\texttt{generic-expiry} with maxcov) and varying only configuration
-termination in Episode~II, the node profile trace confirms the clock guard holds dense until sunset
-at $t{=}12$~h: 12 samples/h in $[2,12)$~h and 6/h thereafter. In phase~A the last yellow obligation
-is released just before the noon downgrade, and its deadline aligned to a 1200~s backup slot gives
-$\tau_L{=}6.33$~h. Sweeping the local revert time (Table~\ref{tab:lease}), reverting at
-$\tau_L{=}6$~h removes 468 of 978 (48\%) post-deadline daytime dense samples with \emph{zero} loss
-of yellow delivery (356/672) and no deaths, while reverting as early as 5~h falsely releases 9
-yellow obligations, marking the no-false-release boundary. At nominal harvest ($\eta{=}0.03$)
-service, deaths and final SoC are unchanged: here the lease buys resource and airtime efficiency,
-not service.
+Holding record expiry fixed (\texttt{generic-expiry} with maxcov), Episode~II varies the
+preloaded local revert time. In phase~A the clock guard holds dense until sunset at $t{=}12$~h.
+For seed 0 at nominal harvest, reverting at 6~h reduces samples in the post-downgrade daytime
+window from 978 to 510, with yellow delivery unchanged at 356/672; reverting at 5~h reduces
+yellow delivery by 9. This identifies sensitivity to the revert time, not a proof of the earliest
+safe bound or of record-level no-false-release.
 
 \begin{table*}[t]
 \centering\small
-\caption{Configuration termination across two outage phases (seeds 0--2, \texttt{generic-expiry}
-with maxcov fixed). The clock guard leaves 20--31 overcast-sky deaths. No fixed TTL is safe in both
-phases: 4~h falsely releases 183 still-deliverable obligations in phase~B, and 8~h is the phase~B
-value while leaving phase~A at minimal energy margin. The delivery bound tracks each phase's last
-deliverable slot, reaching 0 deaths with no false release and the highest final SoC. At
-$\eta{=}0.03$ all arms have 0 deaths and the lease changes only wasted dense work; at
-$\eta{=}0.01$ even sparse operation is infeasible (all arms $\approx$40 deaths), which the system
-must report as unfulfillable rather than survive.}
+\caption{Preloaded configuration revert bounds across two outage phases (seeds 0--2,
+\texttt{generic-expiry} and maxcov fixed). At $\eta{=}0.012$, both fixed TTL 8~h and the
+candidate delivery-derived setting achieve zero deaths and preserve aggregate yellow delivery
+in both phases. The latter has higher mean final SoC in phase~A (0.122 versus 0.117) and ties
+phase~B. This is not a minimum-SoC or universal safety guarantee. The delivery-derived setting
+is supplied offline from the full mission schedule; online derivation and installation are not
+validated by this table.}
 \label{tab:lease}
 \input{../generated/table_lease.en.tex}
 \end{table*}
 
-Sweeping harvest over three seeds, $\eta{=}0.03$, $0.02$ and $0.015$ give 0 deaths and service
-$\approx0.597$ under every bound. At the overcast $\eta{=}0.012$ the clock guard's sunset lag kills
-20 nodes (service 0.5961, final SoC 0.066) while the lease at 6--8~h removes all 20 deaths (0.5970,
-SoC 0.122, near-doubled); reverting as late as 10~h also avoids deaths but at a smaller margin
-(SoC 0.117). At $\eta{=}0.01$ even sparse operation cannot be powered ($\approx$40 deaths under
-every bound); the lease modestly raises pre-death service ($0.530\to0.577$) but cannot save nodes,
-and the correct output is an unfulfillable declaration rather than a false completion.
+Across five harvest levels in phase~A, all tested bounds yield zero deaths at
+$\eta\in\{0.03,0.02,0.015\}$. At $\eta{=}0.012$, sunset-only reversion leaves 20 deaths,
+whereas reverting at 6, 8 or 10~h leaves zero. The candidate setting likewise leaves zero deaths
+in phases A and B. Fixed TTL 4~h loses 183 aggregate yellow deliveries in phase~B and TTL 6~h
+loses 26; fixed TTL 8~h preserves the yellow counts in both phases and has zero deaths.
+Consequently these results do not rule out a single fixed TTL across the tested phases.
+At $\eta{=}0.01$, every tested arm incurs 40 deaths; this does not establish that every legal
+sparse policy is physically infeasible.
 
-Phase~B needs the bound near 8.3~h, the long dense window, where a 4~h TTL relaxes at 5~h and
-falsely releases 183 yellow obligations (service $-1.1$ points) and a 6~h TTL still loses 26;
-phase~A needs it near 6.3~h, where an 8~h TTL only just survives at the tightest energy (SoC
-0.117). The same pattern holds at nominal harvest. The delivery bound attains each phase's optimum
-because it is computed from obligations and slots rather than guessed as a duration. That is the
-mechanism's measured increment over a plain config TTL: phase- and rate-adaptive termination under
-\eqref{eq:c1}--\eqref{eq:c2}, with a bound that is auditable---``stop because the data cease to be
-deliverable here''---rather than empirical. We report it as a point-specific, deterministic result
-over the tested phases; wider sweeps of backup rate and node count are future work.
+The proposed slot-derived interpretation needs separate validation. The current implementation
+computes 6.33 and 8.33~h by rounding the last yellow deadline upward, and writes the bound to
+nodes at initialisation. It therefore tests a supplied absolute revert time, not online
+computation from install-time evidence. Further comparisons must give ordinary mission-validity
+expiry and a local SoC guard the same authorised information. They must distinguish stopping
+new dense acquisition from retaining samples that can still be forwarded, and report the lost
+obligation identities as well as aggregate delivery counts.
 
 \subsection{What the field can attribute when the table arrives}
 \label{sec:eval-attr}
@@ -647,25 +629,24 @@ and use TTL or encounter drop~\cite{dtnarch,iranmaneshdtnqueue,rfc9171}, and cus
 transfer~\cite{rfc5050} moves retention responsibility as a forward hand-off, since migrated out of
 the BPv7 core. Rural LoRa--LEO systems schedule around estimated satellite contacts and exploit
 spatial gateway diversity~\cite{sateriot}. Our record disposition \emph{is} BPv7-style expiry and we
-prove the equivalence; our configuration lease is a TTL/lease primitive with a delivery-derived
-bound. The claimed deltas are narrow and explicit: an end-to-end business-deadline basis with
+demonstrate equivalence on the tested seeds; the proposed configuration lease reuses the
+TTL/lease primitive with a delivery-derived bound. The claimed deltas are narrow and explicit: an end-to-end business-deadline basis with
 cross-segment source/gateway consistency, since expired backhaul suppression alone back-pressures
-access, and a configuration bound computed from the last deliverable slot, so that termination is
-safe across outage phases without a live control path.
+access, and the measured effect of preloaded configuration termination. Deriving and installing such a
+bound online, with an increment over equally informed ordinary leases, remains open.
 
 \section{Discussion, Limitations, and Threats to Validity}
 \label{sec:disc}
 
 \textbf{Scope.} The throughput negative result and the resource walls are scoped to the policy
 families and one operating point; they are not an optimum, and a better scheduler could exist. The
-lease result is deterministic over two constructed phases and five harvest levels, establishing the
-mechanism's existence and the failure of fixed clock and TTL bounds across those phases, not a
-universal parameter choice. Wider sweeps of backup rate and payload, node count, capacity, cloud
-model, restart thresholds and non-absorbing brownout are future work and could move the energy wall,
-not the slot or capacity walls. The lease bound uses information valid at install time; an
-authorisation changed entirely during a long outage is physically unreachable, and the correct
-behaviour is safe-default revert plus an unfulfillable declaration, which we report rather than
-hide.
+configuration results cover two constructed phases, with five harvest levels in phase~A and
+two in phase~B. They show that earlier local reversion can avoid deaths left by a clock guard;
+a fixed 8~h TTL also succeeds in both phases by the reported death and yellow-delivery counts.
+The candidate bound uses the future downgrade time and is preloaded. Its derivation under
+install-time knowledge, command delivery, renewal and version semantics remain unvalidated.
+Future-authorised revisions must not enter the calculation. Wider physical sweeps can test
+robustness after this information boundary is enforced.
 
 \textbf{Model simplifications.} Central acknowledgement is synchronous and airtime-free, equally
 favouring every queue rule; gateway acknowledgements would consume Class~A windows in deployment.
@@ -694,15 +675,12 @@ termination cannot wait for the control path that failed. We formulated this as 
 termination problem over two kinds of persistent installed state. Records carry a locally certain
 release time, the business deadline, and standard per-record expiry placed consistently at the
 source doubles outage on-time delivery while gateway-only suppression merely moves cost to the
-access segment. Configurations carry a release time the node cannot observe during an outage; a
-fixed clock guard or fixed TTL either kills nodes under overcast skies or falsely releases
-deliverable obligations across phases, whereas a delivery-bounded lease---an ordinary lease whose
-bound is the last deliverable slot, installed while connected and enforced locally---removes those
-deaths without false release. Throughout, mechanisms act only on evidence the acting entity
-lawfully holds, say unknown when they cannot tell, and declare work unfulfillable rather than
-complete. The network problem and its deterministic solutions stand on their own; an LLM is one
-candidate controller, and our live study shows most clearly the interface fault---access receipts
-mistaken for backhaul state---that the evidence discipline is designed to prevent.
+access segment. Configuration experiments show that preloaded local reversion can prevent deaths left by
+sunset-only control, with fixed TTL 8~h also succeeding in both tested phases. A delivery-derived
+lease remains a candidate whose online knowledge and installation semantics require validation.
+The evidence discipline applies throughout: an observer must distinguish confirmed outcomes from
+unknown state. An LLM is one candidate controller; the formative live study exposes access
+receipts being mistaken for backhaul state.
 
 \balance
 \bibliographystyle{IEEEtran}

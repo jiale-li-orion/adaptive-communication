@@ -23,7 +23,7 @@
 | C2 | §5.1、§7.2 表 2 | `deadline-purge` 与 `generic-expiry` 在十个种子上逐位相同（服务、中断计数、死亡、交付集合） | `code/v3joint/r41_expiry_equiv.py` | `results/r41_expiry_equiv.json` | supported |
 | C3 | §7.2 | 源端按期限到期相对 FIFO 的十种子配对增益，以及仅在网关抑制造成的反压 | `code/v3joint/r37e_full_seeds.py` | `results/r37e_full_seeds.json` | supported |
 | C4 | §7.1 | 全时域时间感知归因：4535 条失约中 830 条由回传容量改记为接入迟到 | `code/v3joint/r44_fullhorizon_attribution.py` | `results/r44_fullhorizon_attribution.json` | supported |
-| C5 | §7.3 表 3 | 交付界租约与固定 TTL 在两相位、五采能水平上的对照；固定 TTL 跨相位失效 | `code/v3joint/r46_lease_sweep.py`、`code/v3joint/r47_lease_energy.py`、`code/v3joint/r48_ttl_vs_lease.py` | `results/r46_lease_sweep.json`、`results/r47_lease_energy.json`、`results/r48_ttl_vs_lease.json` | supported |
+| C5 | §7.3 表 3 | 预置回退界相对日落回退的效果可复现；8 h TTL 在两相位也为零死亡且黄级交付总数不减。在线交付界推导、随命令安装及相对同信息普通租约的增量待验证 | `code/v3joint/r46_lease_sweep.py`、`code/v3joint/r47_lease_energy.py`、`code/v3joint/r48_ttl_vs_lease.py` | `results/r46_lease_sweep.json`、`results/r47_lease_energy.json`、`results/r48_ttl_vs_lease.json` | open |
 | C6 | §7.5 表 5 | 同一规则在中心与节点的执行位置对照；节点本地门消除所测种子死亡并压低被拒准入 | `code/v3joint/r39_envelope.py` | `results/agent_traces/r39_table.json` | supported |
 | C7 | §7.4 表 4 | 任务表到达时仅凭网关本地证据的可判定覆盖与已判定精度 | `code/v3joint/r40_local_attribution.py` | `results/r40_local_attribution.json` | supported |
 | C8 | §7.6 | 真实 agent 十一轨迹、1089 次决策的对称计量；接口故障与解析失败账目 | `code/v3joint/r38_agent_three_arm.py`、`code/v3joint/r42_claim_relabel.py`、`code/v3joint/r43_cert_v5_replay.py` | `results/agent_traces/r38_three_arm_summary.json`、`results/r42_claim_relabel.json`、`results/r43_cert_v5_replay.json` | formative |
@@ -36,6 +36,7 @@
 | 固定资源下任何中心控制器都无空间（全局调度上界、零残差） | C1 | 干预与贪心装包不构成全体合法策略的上界；收窄为所测策略族上的限定负结果 | `e8ff1c4` |
 | 本地夜间规则构成普遍安全保证 | C6 | 规则仅依据时钟，未证明任意采能与初始电量下的存活不变量；收窄为所测种子的经验结果 | `e8ff1c4` |
 | 强制中断窗的 24/19 次「配置生效谎报」与 r38 零解析回退 | C8 | 原评分只在命令密集的决策上运行、在对照组从不运行、并统计提示词自身教会的词；决策数不等于成功请求数 | `e8ff1c4` |
+| 固定 TTL 在两个相位都无法满足存活与无黄级交付总数损失；当前结果证明合法在线交付界租约的独立增量 | C5 | 8 h TTL 在两相位满足上述计数判据；候选界读取未来降级时间并预置，未通过命令安装；详见 [不可变归档](_withdrawn/2026-09-20-c5-lease-claims.md) | `59e5ef1` |
 
 ## 维护规则
 
