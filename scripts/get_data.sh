@@ -32,3 +32,26 @@ for tile in "${TILES[@]}"; do
 done
 
 echo "地形高程就绪：$DEST"
+
+# ---------------------------------------------------------------------------
+# 部署点逐小时辐照与气温（NASA POWER，E 层来源事实）。
+# 原始 JSON 有哈希可核对，派生脚本 code/analysis/make_irradiance_csv.py 会校验行数、
+# 辐照峰值、气温区间与 SHA-256 前 16 位，对不上即报错。2023 全年被实例层检查直接使用；
+# 2022 与 2024 供多年份实验使用。
+POWER="$ROOT/data/downloads/nasa_power_irradiance"
+API="https://power.larc.nasa.gov/api/temporal/hourly/point?parameters=ALLSKY_SFC_SW_DWN,T2M&community=RE&longitude=94.78&latitude=30.33&format=JSON"
+mkdir -p "$POWER"
+
+for year in 2022 2023 2024; do
+  raw="$POWER/power_hourly_${year}_30.33N_94.78E.json"
+  if [ -s "$raw" ]; then
+    echo "skip   power ${year} 原始响应（已存在）"
+    continue
+  fi
+  echo "fetch  power ${year} 原始响应"
+  curl -fsSL --retry 3 --retry-delay 2 "${API}&start=${year}0101&end=${year}1231" -o "$raw"
+done
+
+echo "derive 辐照 CSV（2023 由派生脚本核对哈希）"
+python3 "$ROOT/code/analysis/make_irradiance_csv.py"
+echo "辐照数据就绪：$POWER"
