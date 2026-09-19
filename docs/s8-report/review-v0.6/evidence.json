@@ -1,0 +1,508 @@
+{
+  "reviewed_commit": "3df2845",
+  "review_date": "2026-09-19",
+  "scope": "Read-only trace audit; seed0 FIFO and purge reruns; no-outage A1 action replay. No API calls, no full ten-seed rerun.",
+  "trace_audit": {
+    "reviewed_commit": "3df2845",
+    "trace_audit": [
+      {
+        "tag": "nolinkout",
+        "arm": "A0",
+        "seed": 0,
+        "trace": "results/agent_traces/r38_nolinkout_A0_seed0_1789801801.jsonl",
+        "decisions": 99,
+        "prior_attempt_error_field": 55,
+        "parse_hold": 12,
+        "llm_failed_hold": 0,
+        "valid_json": 87,
+        "invalid_json": 12
+      },
+      {
+        "tag": "nolinkout",
+        "arm": "A1",
+        "seed": 0,
+        "trace": "results/agent_traces/r38_nolinkout_A1_seed0_1789801839.jsonl",
+        "decisions": 99,
+        "prior_attempt_error_field": 8,
+        "parse_hold": 2,
+        "llm_failed_hold": 0,
+        "valid_json": 97,
+        "invalid_json": 2
+      },
+      {
+        "tag": "outage",
+        "arm": "A0",
+        "seed": 0,
+        "trace": "results/agent_traces/r38_outage_A0_seed0_1789797185.jsonl",
+        "decisions": 99,
+        "prior_attempt_error_field": 56,
+        "parse_hold": 4,
+        "llm_failed_hold": 0,
+        "valid_json": 95,
+        "invalid_json": 4
+      },
+      {
+        "tag": "outage",
+        "arm": "A0s",
+        "seed": 0,
+        "trace": "results/agent_traces/r38_outage_A0s_seed0_1789797185.jsonl",
+        "decisions": 99,
+        "prior_attempt_error_field": 51,
+        "parse_hold": 7,
+        "llm_failed_hold": 0,
+        "valid_json": 92,
+        "invalid_json": 7
+      },
+      {
+        "tag": "outage",
+        "arm": "A1",
+        "seed": 0,
+        "trace": "results/agent_traces/r38_outage_A1_seed0_1789797185.jsonl",
+        "decisions": 99,
+        "prior_attempt_error_field": 9,
+        "parse_hold": 1,
+        "llm_failed_hold": 0,
+        "valid_json": 98,
+        "invalid_json": 1
+      },
+      {
+        "tag": "outage",
+        "arm": "A0",
+        "seed": 1,
+        "trace": "results/agent_traces/r38_outage_A0_seed1_1789798090.jsonl",
+        "decisions": 99,
+        "prior_attempt_error_field": 51,
+        "parse_hold": 5,
+        "llm_failed_hold": 0,
+        "valid_json": 94,
+        "invalid_json": 5
+      },
+      {
+        "tag": "outage",
+        "arm": "A0s",
+        "seed": 1,
+        "trace": "results/agent_traces/r38_outage_A0s_seed1_1789799028.jsonl",
+        "decisions": 99,
+        "prior_attempt_error_field": 56,
+        "parse_hold": 7,
+        "llm_failed_hold": 0,
+        "valid_json": 92,
+        "invalid_json": 7
+      },
+      {
+        "tag": "outage",
+        "arm": "A1",
+        "seed": 1,
+        "trace": "results/agent_traces/r38_outage_A1_seed1_1789799070.jsonl",
+        "decisions": 99,
+        "prior_attempt_error_field": 10,
+        "parse_hold": 1,
+        "llm_failed_hold": 0,
+        "valid_json": 98,
+        "invalid_json": 1
+      },
+      {
+        "tag": "outage",
+        "arm": "A0",
+        "seed": 2,
+        "trace": "results/agent_traces/r38_outage_A0_seed2_1789799959.jsonl",
+        "decisions": 99,
+        "prior_attempt_error_field": 49,
+        "parse_hold": 7,
+        "llm_failed_hold": 0,
+        "valid_json": 92,
+        "invalid_json": 7
+      },
+      {
+        "tag": "outage",
+        "arm": "A0s",
+        "seed": 2,
+        "trace": "results/agent_traces/r38_outage_A0s_seed2_1789799995.jsonl",
+        "decisions": 99,
+        "prior_attempt_error_field": 58,
+        "parse_hold": 5,
+        "llm_failed_hold": 0,
+        "invalid_json": 5,
+        "valid_json": 94
+      },
+      {
+        "tag": "outage",
+        "arm": "A1",
+        "seed": 2,
+        "trace": "results/agent_traces/r38_outage_A1_seed2_1789800913.jsonl",
+        "decisions": 99,
+        "prior_attempt_error_field": 9,
+        "parse_hold": 1,
+        "llm_failed_hold": 0,
+        "valid_json": 98,
+        "invalid_json": 1
+      }
+    ],
+    "totals": {
+      "decisions": 1089,
+      "parse_hold": 52,
+      "llm_failed_hold": 0,
+      "invalid_json": 52,
+      "valid_json": 1037,
+      "prior_attempt_error_field": 412
+    },
+    "old_scorer_flagged_notes": [
+      {
+        "trace": "results/agent_traces/r38_outage_A0_seed0_1789797185.jsonl",
+        "line": 13,
+        "t_s": 19860,
+        "note": "Yellow segment active at 19860s; all nodes near full SOC, switch all to 300s dense sampling to comply."
+      },
+      {
+        "trace": "results/agent_traces/r38_outage_A0_seed0_1789797185.jsonl",
+        "line": 17,
+        "t_s": 27000,
+        "note": "Yellow 300s requirement active and link up at midday with solar harvest; comply on all nodes, reverting to 600 only if nightfall approaches with link still up to avoid draining batteries."
+      },
+      {
+        "trace": "results/agent_traces/r38_outage_A0_seed0_1789797185.jsonl",
+        "line": 21,
+        "t_s": 34200,
+        "note": "Yellow requirement active, link up, SoC near full; hold all nodes at 300s dense sampling."
+      },
+      {
+        "trace": "results/agent_traces/r38_outage_A0_seed0_1789797185.jsonl",
+        "line": 22,
+        "t_s": 36000,
+        "note": "Hold all nodes at required 300s/300s; SoC ~0.049Wh is ample for dense sampling, link up so commands can apply."
+      },
+      {
+        "trace": "results/agent_traces/r38_outage_A0_seed0_1789797185.jsonl",
+        "line": 26,
+        "t_s": 43200,
+        "note": "Yellow level requires 300s; all nodes have healthy SoC (~0.049 Wh) and link is up, so sustain dense sampling across all nodes."
+      },
+      {
+        "trace": "results/agent_traces/r38_outage_A0_seed0_1789797185.jsonl",
+        "line": 28,
+        "t_s": 46800,
+        "note": "Hold dense 300s config for all nodes; link up and SOC healthy, re-issue to confirm applied."
+      },
+      {
+        "trace": "results/agent_traces/r38_outage_A0_seed0_1789797185.jsonl",
+        "line": 31,
+        "t_s": 52200,
+        "note": "Elevated requirement active; restore 300s sampling on all nodes, link up so commands can apply."
+      },
+      {
+        "trace": "results/agent_traces/r38_outage_A0_seed0_1789797185.jsonl",
+        "line": 40,
+        "t_s": 68400,
+        "note": "Elevated 300s requirement active; all nodes have sufficient SOC, command dense sampling to comply."
+      },
+      {
+        "trace": "results/agent_traces/r38_outage_A0_seed0_1789797185.jsonl",
+        "line": 41,
+        "t_s": 70200,
+        "note": "link up, all nodes ~0.023-0.025Wh, comply with 300s dense sampling"
+      },
+      {
+        "trace": "results/agent_traces/r38_outage_A0s_seed0_1789797185.jsonl",
+        "line": 13,
+        "t_s": 19860,
+        "note": "Backhaul up and last decision point before the 21600 yellow segment: issue 300s configs now so they clear queue/transit and apply by segment start; batteries ~full at midday so brief denser sampling is safe."
+      },
+      {
+        "trace": "results/agent_traces/r38_outage_A0s_seed0_1789797185.jsonl",
+        "line": 19,
+        "t_s": 30600,
+        "note": "Yellow requirement 300s active; link up and all nodes ~full SoC with daylight solar, so comply at 300s/300s and re-issue stale unapplied 300 targets; monitor SoC before night."
+      },
+      {
+        "trace": "results/agent_traces/r38_outage_A0s_seed0_1789797185.jsonl",
+        "line": 21,
+        "t_s": 34200,
+        "note": "Required period is 300s and all nodes report healthy SoC (~0.0495 Wh) with link up; re-issue 300/300 to all nodes since prior commands are unconfirmed and not in-flight."
+      },
+      {
+        "trace": "results/agent_traces/r38_outage_A0s_seed0_1789797185.jsonl",
+        "line": 22,
+        "t_s": 36000,
+        "note": "Yellow (req 300s) holds; all SOC ~99% so nodes can survive dense sampling, backhaul up (10 heard). Prior 300 targets not confirmed on any report and not in-flight, so re-issue 300/300 to all nodes and hold steady instead of flip-flopping."
+      },
+      {
+        "trace": "results/agent_traces/r38_outage_A0s_seed0_1789797185.jsonl",
+        "line": 26,
+        "t_s": 43200,
+        "note": "Yellow level requires 300s; link up and SOC ~0.049Wh supports dense sampling, re-issue unconfirmed 300s targets."
+      },
+      {
+        "trace": "results/agent_traces/r38_outage_A0s_seed0_1789797185.jsonl",
+        "line": 35,
+        "t_s": 59400,
+        "note": "re-issue 300s targets to all nodes; pending cmds stale/unapplied, link up, soc sufficient"
+      },
+      {
+        "trace": "results/agent_traces/r38_outage_A0_seed1_1789798090.jsonl",
+        "line": 16,
+        "t_s": 25200,
+        "note": "Daytime with near-full batteries and backhaul up: restore 300s sampling for all nodes to meet the yellow requirement, overriding the prior 600s grid setting; re-check at dusk to avoid overnight drain."
+      },
+      {
+        "trace": "results/agent_traces/r38_outage_A0_seed1_1789798090.jsonl",
+        "line": 17,
+        "t_s": 27000,
+        "note": "Yellow requirement active; link up, SoC high, set all nodes to 300s dense sampling."
+      },
+      {
+        "trace": "results/agent_traces/r38_outage_A0_seed1_1789798090.jsonl",
+        "line": 18,
+        "t_s": 28800,
+        "note": "Set all nodes to 300s sampling to comply with yellow requirement; SOC high and link up."
+      },
+      {
+        "trace": "results/agent_traces/r38_outage_A0_seed1_1789798090.jsonl",
+        "line": 22,
+        "t_s": 36000,
+        "note": "Set all nodes to 300s sampling per required schedule; link is up, reassess energy before night."
+      },
+      {
+        "trace": "results/agent_traces/r38_outage_A0_seed1_1789798090.jsonl",
+        "line": 23,
+        "t_s": 37800,
+        "note": "Yellow requires 300s; SoC ~0.049Wh healthy, link up, re-assert dense config on all nodes."
+      },
+      {
+        "trace": "results/agent_traces/r38_outage_A0_seed1_1789798090.jsonl",
+        "line": 24,
+        "t_s": 39600,
+        "note": "Hold all nodes at required 300s dense sampling; SOC ~0.049Wh is ample for the elevated window, link up so commands can apply."
+      },
+      {
+        "trace": "results/agent_traces/r38_outage_A0_seed1_1789798090.jsonl",
+        "line": 29,
+        "t_s": 48600,
+        "note": "Yellow level requires 300s; all nodes have healthy SoC (~0.044 Wh) and link is up, so restore dense sampling on all nodes."
+      },
+      {
+        "trace": "results/agent_traces/r38_outage_A0_seed1_1789798090.jsonl",
+        "line": 33,
+        "t_s": 55800,
+        "note": "Link up, all nodes heard; comply with 300s requirement, SOC sufficient for dense sampling."
+      },
+      {
+        "trace": "results/agent_traces/r38_outage_A0s_seed1_1789799028.jsonl",
+        "line": 13,
+        "t_s": 19860,
+        "note": "Backhaul up now; pre-queue 300s on all nodes so yellow at t=21600 is met, monitor SoC and revert to 600 if night drain threatens."
+      },
+      {
+        "trace": "results/agent_traces/r38_outage_A0s_seed1_1789799028.jsonl",
+        "line": 16,
+        "t_s": 25200,
+        "note": "Re-issue 300/300 to all nodes for yellow requirement; link up, SOC high, pending old commands unresolved."
+      },
+      {
+        "trace": "results/agent_traces/r38_outage_A0s_seed1_1789799028.jsonl",
+        "line": 20,
+        "t_s": 32400,
+        "note": "Backhaul up and all SOC~full at 15:00; comply with yellow 300s and re-issue the stale/unapplied 300 targets (prior 600 hold was wrong); re-evaluate before night to avoid overnight drain."
+      },
+      {
+        "trace": "results/agent_traces/r38_outage_A0s_seed1_1789799028.jsonl",
+        "line": 22,
+        "t_s": 36000,
+        "note": "Yellow req=300; backhaul up and SoC~0.049/0.050 (daylight, harvestable) so dense sampling is survivable. Prior 300/300 commands unconfirmed and not in-flight, so re-issue 300/300 to all nodes to converge on required schedule; hold 600 only would fail the requirement."
+      },
+      {
+        "trace": "results/agent_traces/r38_outage_A0s_seed1_1789799028.jsonl",
+        "line": 24,
+        "t_s": 39600,
+        "note": "Required 300s; link up and SOC ~0.049Wh supports dense sampling, re-issue 300s targets to all nodes."
+      },
+      {
+        "trace": "results/agent_traces/r38_outage_A0s_seed1_1789799028.jsonl",
+        "line": 26,
+        "t_s": 43200,
+        "note": "Link up; required 300s, SoC ~0.049Wh healthy, re-issue unconfirmed 300s targets to all nodes."
+      },
+      {
+        "trace": "results/agent_traces/r38_outage_A0s_seed1_1789799028.jsonl",
+        "line": 31,
+        "t_s": 52200,
+        "note": "required period is 300s and link is up; re-issue 300s to all nodes since prior 300s commands never confirmed applied"
+      },
+      {
+        "trace": "results/agent_traces/r38_outage_A0s_seed1_1789799028.jsonl",
+        "line": 34,
+        "t_s": 57600,
+        "note": "Re-issue 300s to all nodes: required period is 300, link up, SOC ~0.036Wh supports dense sampling; prior 300s commands unconfirmed so re-send."
+      },
+      {
+        "trace": "results/agent_traces/r38_outage_A0_seed2_1789799959.jsonl",
+        "line": 18,
+        "t_s": 28800,
+        "note": "Comply with yellow: set all nodes to 300s; SoC high, backhaul up"
+      },
+      {
+        "trace": "results/agent_traces/r38_outage_A0_seed2_1789799959.jsonl",
+        "line": 19,
+        "t_s": 30600,
+        "note": "Yellow level requires 300s; link up and all nodes near full SOC, so comply with dense sampling on all nodes."
+      },
+      {
+        "trace": "results/agent_traces/r38_outage_A0_seed2_1789799959.jsonl",
+        "line": 20,
+        "t_s": 32400,
+        "note": "hold dense 300s config for all nodes under yellow requirement; link up, SOC healthy"
+      },
+      {
+        "trace": "results/agent_traces/r38_outage_A0_seed2_1789799959.jsonl",
+        "line": 23,
+        "t_s": 37800,
+        "note": "Yellow requirement active, link up, SoC healthy: hold all nodes at 300/300."
+      },
+      {
+        "trace": "results/agent_traces/r38_outage_A0_seed2_1789799959.jsonl",
+        "line": 24,
+        "t_s": 39600,
+        "note": "Yellow level requires 300s; all nodes near full SOC and link up, so keep dense config."
+      },
+      {
+        "trace": "results/agent_traces/r38_outage_A0_seed2_1789799959.jsonl",
+        "line": 38,
+        "t_s": 64800,
+        "note": "Yellow level requires 300s; all nodes have healthy SOC (~0.029-0.031 Wh) and link is up, so comply with dense sampling on all nodes."
+      },
+      {
+        "trace": "results/agent_traces/r38_outage_A0_seed2_1789799959.jsonl",
+        "line": 41,
+        "t_s": 70200,
+        "note": "Link up, all nodes alive with adequate SOC; comply with 300s requirement across all nodes."
+      },
+      {
+        "trace": "results/agent_traces/r38_outage_A0s_seed2_1789799995.jsonl",
+        "line": 14,
+        "t_s": 21600,
+        "note": "Yellow req (300s) starts at noon with link up; command all nodes to 300/300, daytime solar covers draw, confirm via next reports."
+      },
+      {
+        "trace": "results/agent_traces/r38_outage_A0s_seed2_1789799995.jsonl",
+        "line": 18,
+        "t_s": 28800,
+        "note": "Re-issue 300s config to all nodes; energy healthy, link up."
+      },
+      {
+        "trace": "results/agent_traces/r38_outage_A0s_seed2_1789799995.jsonl",
+        "line": 23,
+        "t_s": 37800,
+        "note": "Yellow level requires 300s; link up and SOC ~0.049Wh healthy, so re-issue 300s to all nodes to override the erroneous 600s hold."
+      },
+      {
+        "trace": "results/agent_traces/r38_outage_A0s_seed2_1789799995.jsonl",
+        "line": 25,
+        "t_s": 41400,
+        "note": "Yellow level requires 300s; all nodes healthy and link up, re-issue 300s to all to confirm application."
+      },
+      {
+        "trace": "results/agent_traces/r38_outage_A0s_seed2_1789799995.jsonl",
+        "line": 26,
+        "t_s": 43200,
+        "note": "Yellow requires 300s; all nodes ~0.049Wh and link up, so re-issue 300/300 to all to confirm application."
+      }
+    ]
+  },
+  "gateway_visibility": {
+    "run": "r37_conformance.COMMON + backup_chooser=maxcov",
+    "gateway_received_at": 72000,
+    "baseline": {
+      "n": 7560,
+      "delivered": 3025,
+      "missing_collection": 2588,
+      "missing_delivery": 1947,
+      "censored": 0,
+      "aoi_mean_s": 3129.2088607594937,
+      "no_observation_s": 4800,
+      "latency_mean_s": 121.90413223140496,
+      "latency_p90_s": 600
+    },
+    "samples_heard_after_gateway_received_at": 427,
+    "obligations_with_future_heard": 427,
+    "future_heard_examples": [
+      [
+        "gw0:routine:t0059400",
+        "gw0:rainfall:59400",
+        59400,
+        72600
+      ],
+      [
+        "gw0:routine:t0060000",
+        "gw0:rainfall:60000",
+        60000,
+        72600
+      ],
+      [
+        "gw0:routine:t0060600",
+        "gw0:rainfall:60600",
+        60600,
+        72600
+      ],
+      [
+        "gw0:routine:t0061200",
+        "gw0:rainfall:61200",
+        61200,
+        72600
+      ],
+      [
+        "gw0:routine:t0061800",
+        "gw0:rainfall:61800",
+        61800,
+        72600
+      ]
+    ],
+    "obligations_with_sample_heard_after_deadline": 650,
+    "method": "Match routine upgrade obligations, release>=21600 and deadline<=72000, against simulator samples taken<=72000; compare heard_at with task arrival and deadline. Global truth used for audit only."
+  },
+  "purge_seed0": {
+    "svc": 0.43214285714285716,
+    "dead": [],
+    "n": 2338,
+    "d": 434,
+    "on": 480,
+    "late": 0,
+    "onb": 2762,
+    "lateb": 0,
+    "packets": 75,
+    "records": 750,
+    "bytes": 5826,
+    "suppressed": 0,
+    "local_purge": 0
+  },
+  "no_forced_outage_A1_action_replay": {
+    "trace": "results/agent_traces/r38_nolinkout_A1_seed0_1789801839.jsonl",
+    "svc": 0.5108465608465609,
+    "dead": 0,
+    "false_primary_unavailable_certificates": [
+      {
+        "t_s": 28800,
+        "heard": 10,
+        "applied300": 13
+      },
+      {
+        "t_s": 41400,
+        "heard": 13,
+        "applied300": 0
+      },
+      {
+        "t_s": 90000,
+        "heard": 10,
+        "applied300": 0
+      },
+      {
+        "t_s": 104400,
+        "heard": 10,
+        "applied300": 13
+      },
+      {
+        "t_s": 174600,
+        "heard": 13,
+        "applied300": 11
+      }
+    ]
+  }
+}
