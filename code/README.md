@@ -1,16 +1,21 @@
 # 代码结构
 
-四组，按职责划分。每组内部的脚本可以互相导入，跨组导入由每个脚本头部的模块引导块保证。
+更新：2026-09-19。当前论文实验入口在 `v3joint/`，基础节点与评分实现在 `instance/`。其余目录包含物理支撑、历史实验与回归；下方早期脚本说明保留用于复现，不代表当前论文的证据状态。结论与待办见[根 README](../README.md)。
 
 ```
 code/
+├── v3joint/        当前联合层、任务视图、Agent 接入、r37–r39 与联合检查
+├── instance/       节点、网关、能量、义务与评分基础实现
 ├── physics/        物理层：地形、传播、信道时间结构与能量
-├── runtime/        执行层：操作语义与环境
-├── experiments/    实验驱动：主表、任务仿真、重启、故障验证
+├── runtime/        早期执行层：操作语义与环境
+├── monitoring/     早期业务闭环与接口
+├── experiments/    历史实验驱动、实例实验与回归检查
 └── analysis/       数据处理：从真实轨迹拟合参数
 ```
 
-各脚本头部注明依赖与输出，运行方式见仓库根目录 `README.md` 第七节。
+各脚本头部注明依赖与输出。常用检查和数据准备见[根 README 的复现入口](../README.md#代码与复现)；旧 README 章节已[归档](../docs/早期状态/2026-09-19-README-history.md)。
+
+当前联合层检查为 `python3 code/v3joint/test_joint.py`；仓库回归为 `python3 code/run_checks.py --quiet`。现有 Agent 轨迹的只读审计见 [audit_traces.py](../docs/s8-report/review-v0.6/audit_traces.py)，不调用模型。论文证据边界见 [doc51](../docs/s7-method/v1.2/51-independent-review-paper-v06-2026-09-19.md)。
 
 ## physics/ — 物理层
 
@@ -30,7 +35,7 @@ code/
 
 ## runtime/ — 执行层
 
-论文方法的主体。这一组与物理层无关，可以单独理解。
+早期执行语义实现。这一组与物理层无关，可以单独理解；不等同于 doc52 拟议的完整 obligation runtime。
 
 | 脚本 | 职责 | 依赖 | 输出 |
 |---|---|---|---|
