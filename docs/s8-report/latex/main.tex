@@ -9,6 +9,8 @@
 \usepackage{graphicx}
 \usepackage[colorlinks=true,linkcolor=NavyBlue,citecolor=PineGreen,urlcolor=NavyBlue]{hyperref}
 \usepackage{caption}
+\usepackage{tikz}
+\usetikzlibrary{positioning,arrows.meta,calc}
 
 \newcommand{\sys}{\textsc{CertCompile}\xspace}
 \usepackage{xspace}
@@ -241,7 +243,35 @@ $d_o=h_o+P$ (one period of grace). We track a sample through a fixed chain:
 \]
 An obligation is \emph{fulfilled} only when a sample matching $(n,m)$ is taken in-window and
 received centrally by $d_o$; matching uses half-open windows so a boundary sample cannot
-double-cover adjacent windows.
+double-cover adjacent windows. Figure~\ref{fig:chain} marks the chain stage at which each
+failure segment is charged.
+
+\begin{figure}[t]
+\centering
+\begin{tikzpicture}[
+  font=\footnotesize,
+  box/.style={draw,rounded corners,align=center,inner sep=4pt,text width=23mm,
+              minimum height=12mm,fill=blue!5},
+  fail/.style={align=center,font=\scriptsize,text width=27mm,text=black!62},
+  arr/.style={-{Stealth[length=2mm]},thick},
+]
+  \node[box] (s) {qualified sample taken (node)};
+  \node[box,right=5mm of s] (h) {heard at gateway (LoRa access)};
+  \node[box,right=5mm of h] (r) {returned by $d_o$ (cellular / BeiDou)};
+  \node[box,right=5mm of r] (e) {central evidence (fulfilled)};
+  \draw[arr] (s) -- (h);
+  \draw[arr] (h) -- (r);
+  \draw[arr] (r) -- (e);
+  \node[fail,below=3mm of s] {$S_{\mathrm{energy}}$: no qualified sample};
+  \node[fail,below=3mm of h] {$S_{\mathrm{access}}$: collected, not heard};
+  \node[fail,below=3mm of r] {$S_{\mathrm{time}}$: no return slot;\newline $S_{\mathrm{cap}}$: slot, but capacity};
+  \node[fail,below=3mm of e] {obligation met};
+\end{tikzpicture}
+\caption{The per-obligation chain and the four failure segments. An unfulfilled obligation is
+charged to its \emph{first} failing stage under an optimistic model that grants every later
+assumption, so the labels are mutually exclusive and leave no unexplained remainder.}
+\label{fig:chain}
+\end{figure}
 
 \paragraph{Energy and devices.}
 A sample costs $4.7{\times}10^{-4}$~Wh; an uplink $2.33{\times}10^{-5}$~Wh. Battery capacity
@@ -309,9 +339,10 @@ the strong baseline delivers 3025 (0.400) with zero node deaths; the 4535 failur
 
 \subsection{Relaxation walls}
 Table~\ref{tab:walls} relaxes energy (battery 0.05$\to$0.50~Wh with always-dense sampling) and
-backhaul (1200~s/78~B $\to$ 60~s/unlimited) independently and jointly.
+backhaul (the 1200~s, 78~B point relaxed to 60~s with unlimited bytes) independently and jointly.
 \begin{table}[h]
 \centering\small
+\resizebox{\linewidth}{!}{%
 \begin{tabular}{llcc}
 \toprule
 Run & Sampling/Energy & Backhaul & Delivered \\
@@ -321,7 +352,7 @@ $O_{bh}$ & dayfeed, 0.05~Wh & unlimited & 4740 (0.627)\\
 $O_{en}$ & always-300, 0.50~Wh & 1200~s/78~B & 4089 (0.541)\\
 $O_{bo}$ & always-300, 0.50~Wh & unlimited & 6023 (0.797)\\
 \bottomrule
-\end{tabular}
+\end{tabular}}
 \caption{Symmetric counterfactuals over 7560 obligations. Set decomposition: 1715 obligations
 are blocked by backhaul capacity alone, 1128 by battery alone, and only 155 (2.0\%) require
 \emph{both}---and even those need physical augmentation, not coordination.}
@@ -564,7 +595,41 @@ action passes through the deterministic envelope and can never override L0/L1 sa
 and solvers benefit from the same layers: this is a general communication execution layer, not a
 claim that an LLM is irreplaceable. Under static, pre-provisioned, predictable missions L2 rightly
 stays silent; its value appears when requirements change and the system must promise only what it
-can execute and say, early and precisely, why it cannot do the rest.
+can execute and say, early and precisely, why it cannot do the rest. Figure~\ref{fig:layers}
+summarises the three layers and the command path.
+
+\begin{figure}[t]
+\centering
+\begin{tikzpicture}[
+  font=\footnotesize,
+  layer/.style={draw,rounded corners,align=left,inner sep=6pt,text width=146mm},
+  arr/.style={-{Stealth[length=2.2mm]},thick},
+  note/.style={font=\scriptsize,align=left,text=black!62},
+]
+  \node[layer,fill=red!6] (L2){\textbf{L2, centre agent runtime.} Compile \emph{non-pre-provisioned}
+    authorised changes; emit structural infeasibility certificates under the three-way statement
+    discipline; lawfully re-compile and renegotiate. Every action passes through a deterministic
+    feasibility envelope that can never override L0/L1.};
+  \node[layer,fill=orange!8,below=13mm of L2] (L1){\textbf{L1, gateway-local autonomy.}
+    Max-coverage backup packing; the non-prescient mission-view gate; arrival-time segment
+    attribution; autonomous operation while the backhaul is down.};
+  \node[layer,fill=green!7,below=13mm of L1] (L0){\textbf{L0, node-local safety floor (zero downlink).}
+    Night-energy gate and deadline-aware selective purge, enforced every tick on the node clock.};
+  \draw[arr] ($(L2.south west)+(10mm,0)$) -- ($(L1.north west)+(10mm,0)$);
+  \node[note,anchor=west,text width=126mm] at ($(L2.south west)+(17mm,-6.8mm)$)
+    {centre command via backhaul, then a Class~A receive window (refused/delayed in outage)};
+  \draw[arr] ($(L1.south west)+(10mm,0)$) -- ($(L0.north west)+(10mm,0)$);
+  \draw[arr] ($(L0.south east)+(-6mm,0)$) .. controls ($(L0.south)+(0,-9mm)$) ..
+    ($(L0.south east)+(-20mm,0)$)
+    node[midway,below=1mm,note]{acts locally every tick; no round trip};
+\end{tikzpicture}
+\caption{The layered feasibility runtime. Safety-critical constraints sit at L0, where they act
+before energy is spent without waiting for any round trip; L1 holds field-local packing and
+attribution; the L2 agent is confined to changes local autonomy cannot obtain. Centre commands
+that must cross the backhaul and a Class~A window are refused or delayed during the outage, which
+is why L2 alone cannot guarantee survival (RQ4) and L0 must.}
+\label{fig:layers}
+\end{figure}
 
 \section{Evaluation}
 \label{sec:eval}
