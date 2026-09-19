@@ -77,35 +77,41 @@ The paper unifies these two objects as **persistent installed state**: **record 
 Two controlled episodes are used. **Episode I** is the v1.1 manifest operating point: an upgrade at $t{=}6$ h, an outage from 4 to 20 h, and the mission table reaching the gateway at 20 h; it supports the resource walls, attribution, record expiry, enforcement placement and agent results. **Episode II** was constructed to isolate configuration termination: phase A upgrades at $t{=}2$ h with a downgrade at $t{=}6$ h and an outage from 4 to 20 h, and phase B upgrades at $t{=}1$ h with a downgrade at $t{=}8$ h and an outage from 6 to 22 h; $t{=}0$ is 06:00 local and $t{=}12$ h is sunset. The two episodes share all parameters except the schedule, the outage phasing and the swept harvest. Episode II is a controlled construction and not a new field claim.
 
 ```bash
-R="$PWD"
-export PYTHONPATH="$R/libs/pylibs:$R/code/v3joint:$R/code/instance:$R/code/physics:$R/code/runtime:$R/code/experiments:$R/code/analysis:$R/code/monitoring"
-python3 code/run_checks.py            # 20/20, including the registry/disk subset consistency check
-python3 code/v3joint/test_joint.py    # 5/5 joint-layer anchors, bit-identical to v1.1 with backup, guard and lease off
+make deps     # third-party packages not in the repository (idempotent)
+make data     # terrain tiles and irradiance data (idempotent, about 100 MB)
+make check    # 20 checks in four groups, plus 5 joint-layer anchors
+make paper    # build both manuscripts
+make tables   # regenerate the paper tables from the result files
 ```
 
-| Paper object | Script | Result |
-|---|---|---|
-| Full-horizon time-aware attribution | `code/v3joint/r44_fullhorizon_attribution.py` | `results/r44_fullhorizon_attribution.json` |
-| Clock alignment and residual witness | `code/v3joint/r45_residual_witness.py` | `results/r45_residual_witness.json` |
-| Lease $\tau$ sweep and delivery-geometry bound | `code/v3joint/r46_lease_sweep.py` | `results/r46_lease_sweep.json` |
-| Harvest energy against $\tau$ | `code/v3joint/r47_lease_energy.py` | `results/r47_lease_energy.json` |
-| Fixed TTL against the delivery lease, two phases | `code/v3joint/r48_ttl_vs_lease.py` | `results/r48_ttl_vs_lease.json` |
-| Expiry equivalence and cross-segment cost | `code/v3joint/r41_expiry_equiv.py` | `results/r41_expiry_equiv.json` |
-| Gateway-local arrival attribution | `code/v3joint/r40_local_attribution.py` | `results/r40_local_attribution.json` |
-| Symmetric claim relabelling and v5 projector replay | `code/v3joint/r42_claim_relabel.py`, `code/v3joint/r43_cert_v5_replay.py` | `results/r42_claim_relabel.json`, `results/r43_cert_v5_replay.json` |
-| Resource walls, ten-seed sweep and placement study | the r30 series, `r37e`, `r39` | same-named json, conventions in `results/README.md` |
+`make check` covers four groups: **mechanism** (execution semantics and the frozen mechanism-isolation experiment), **monitoring** (the business-loop simulator), **claims** (the claim table: every claim names an existing script and reference result), and **paper** (the manuscripts' tables are generated from result files rather than typed in). After the two acquisition steps, nothing needs network access or credentials.
 
-The script, convention and denominator behind every number are registered in [`results/README.md`](results/README.md), and any new result file must be registered there. Real-model experiments require `DEEPSEEK_API_KEY` and must account for requests, retries and parsing, since the number of decisions is not the number of successful requests.
+| Claim | Paper object | Script | Result |
+|---|---|---|---|
+| C1 | Resource walls and the fixed-resource negative result | `code/v3joint/r30c_walls.py` | `results/r30c_walls.json` |
+| C2 | Expiry equivalence with standard per-record lifetime | `code/v3joint/r41_expiry_equiv.py` | `results/r41_expiry_equiv.json` |
+| C3 | Cross-segment placement: ten-seed paired gain | `code/v3joint/r37e_full_seeds.py` | `results/r37e_full_seeds.json` |
+| C4 | Full-horizon time-aware attribution | `code/v3joint/r44_fullhorizon_attribution.py` | `results/r44_fullhorizon_attribution.json` |
+| C5 | Delivery-bounded lease against fixed TTL, two phases | `code/v3joint/r46_lease_sweep.py`, `r47_lease_energy.py`, `r48_ttl_vs_lease.py` | `results/r46_lease_sweep.json`, `results/r47_lease_energy.json`, `results/r48_ttl_vs_lease.json` |
+| C6 | Enforcement placement: centre against node | `code/v3joint/r39_envelope.py` | `results/agent_traces/r39_table.json` |
+| C7 | Attributable fraction at mission-table arrival | `code/v3joint/r40_local_attribution.py` | `results/r40_local_attribution.json` |
+| C8 | Formative agent study and the interface fault | `code/v3joint/r38_agent_three_arm.py`, `r42_claim_relabel.py`, `r43_cert_v5_replay.py` | `results/agent_traces/r38_three_arm_summary.json`, `results/r42_claim_relabel.json`, `results/r43_cert_v5_replay.json` |
+
+The script, convention and denominator behind every number are registered in [`results/README.md`](results/README.md), and any new result file must be registered there. [`results/CLAIMS.md`](results/CLAIMS.md) carries every claim with its script, reference result and one current status; [`artifact/AE.md`](artifact/AE.md) is the reviewer's entry point, with a per-claim command and expected verdict; [`results/reference/`](results/reference/README.md) holds the frozen values those verdicts compare against. Manuscript tables are generated by `scripts/make_tables.py` into `paper/generated/` and included with `\input`; the generated files are committed and never hand-edited. Real-model experiments require `DEEPSEEK_API_KEY` and must account for requests, retries and parsing, since the number of decisions is not the number of successful requests.
 
 ## 8. Repository layout
 
 | Path | Contents |
 |---|---|
-| `paper/` | LaTeX sources, PDFs, shared bibliography and build script for the English and Chinese manuscripts |
+| `Makefile` | Four entry points: `check`, `paper`, `tables`, `data` |
+| `paper/` | LaTeX sources, PDFs, shared bibliography and build script; `paper/generated/` holds the generated table bodies |
+| `spec/` | Normative specifications: deployment conditions and dataset provenance |
+| `artifact/` | Reviewer entry point: `AE.md`, `reproduce_all.sh`, `compare_result.py` |
+| `scripts/` | Acquisition scripts for dependencies that are not in the repository, and the table generator |
 | `code/instance/` | Nodes, gateway, energy, exogenous obligations and scoring; `network.py` holds the cache discipline, the local clock night-guard and the lease executor, all off by default |
 | `code/v3joint/` | Current joint communication experiments, the mission-view gate, the agent harness, and the r37 to r48 rounds |
 | `code/physics/`, `code/analysis/`, `code/monitoring/`, `code/runtime/`, `code/experiments/` | Terrain and propagation models, trajectory analysis, monitoring simulation, earlier execution semantics and historical comparisons |
-| `results/` | Result files and agent traces; `results/README.md` is the registry and `results/_withdrawn/` the withdrawal list |
+| `results/` | Result files and agent traces; `README.md` is the registry, `CLAIMS.md` the claim table, `reference/` the frozen verdict baselines and `_withdrawn/` the withdrawal list |
 | `data/`, `libs/` | Raw data and dependencies, prepared locally according to the acquisition notes and not version-controlled |
 
 ## 9. Scope and future work

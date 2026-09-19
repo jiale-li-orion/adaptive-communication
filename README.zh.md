@@ -77,35 +77,41 @@ cd paper && ./build.sh            # 构建两份；./build.sh zh|en 只构建一
 两个受控场景。**Episode I** 采用 v1.1 清单工作点：升级发生于 $t{=}6$ h，中断区间 4 至 20 h，任务表于 20 h 到达网关；它支撑资源墙、归因、记录到期、执行位置与 agent 结果。**Episode II** 为隔离配置终止而构造：相位 A 在 $t{=}2$ h 升级、$t{=}6$ h 降级、中断 4 至 20 h，相位 B 在 $t{=}1$ h 升级、$t{=}8$ h 降级、中断 6 至 22 h；$t{=}0$ 为本地 06:00，$t{=}12$ h 为日落。两场景除时刻表、中断相位与光伏峰值外参数相同。Episode II 是受控构造，不构成新的现场事实。
 
 ```bash
-R="$PWD"
-export PYTHONPATH="$R/libs/pylibs:$R/code/v3joint:$R/code/instance:$R/code/physics:$R/code/runtime:$R/code/experiments:$R/code/analysis:$R/code/monitoring"
-python3 code/run_checks.py            # 20/20，含 results/README 登记与磁盘 json 互为子集的一致性校验
-python3 code/v3joint/test_joint.py    # 5/5 联合层锚点，关闭备份、guard 与 lease 时与 v1.1 逐位一致
+make deps     # 仓库外的第三方包（幂等）
+make data     # 地形高程与辐照数据（幂等，约 100 MB）
+make check    # 四组共 20 项检查，另加 5 项联合层锚点
+make paper    # 构建两份稿件
+make tables   # 由结果文件重新生成论文表格
 ```
 
-| 论文对象 | 脚本 | 结果 |
-|---|---|---|
-| 全时域时间感知归因 | `code/v3joint/r44_fullhorizon_attribution.py` | `results/r44_fullhorizon_attribution.json` |
-| 时钟对齐与残余现象见证 | `code/v3joint/r45_residual_witness.py` | `results/r45_residual_witness.json` |
-| 租约 $\tau$ 扫描与交付几何界 | `code/v3joint/r46_lease_sweep.py` | `results/r46_lease_sweep.json` |
-| 光伏能量与 $\tau$ 的联合扫描 | `code/v3joint/r47_lease_energy.py` | `results/r47_lease_energy.json` |
-| 固定 TTL 与交付租约的两相位对照 | `code/v3joint/r48_ttl_vs_lease.py` | `results/r48_ttl_vs_lease.json` |
-| 记录到期等价性与跨段代价 | `code/v3joint/r41_expiry_equiv.py` | `results/r41_expiry_equiv.json` |
-| 网关本地到达归因 | `code/v3joint/r40_local_attribution.py` | `results/r40_local_attribution.json` |
-| agent 声明对称重标与 v5 投影器重放 | `code/v3joint/r42_claim_relabel.py`、`code/v3joint/r43_cert_v5_replay.py` | `results/r42_claim_relabel.json`、`results/r43_cert_v5_replay.json` |
-| 资源墙、十种子扫描与执行位置对照 | r30 系列、`r37e`、`r39` | 同名 json，口径见 `results/README.md` |
+`make check` 覆盖四组：**mechanism**（执行语义与冻结的机制隔离实验）、**monitoring**（业务闭环仿真）、**claims**（主张表：每条主张必须给出存在的脚本与参考结果）、**paper**（论文表格由结果文件生成而非手写）。两条获取命令执行完毕后，全部检查不再需要联网，也不需要凭据。
 
-每个数字对应的脚本、口径与分母登记于 [`results/README.md`](results/README.md)；新增结果文件必须在该登记册中登记。真实模型实验需配置 `DEEPSEEK_API_KEY`，并将请求、重试与解析计入账本，决策数不等于成功请求数。
+| 主张 | 论文对象 | 脚本 | 结果 |
+|---|---|---|---|
+| C1 | 资源墙与固定资源下的负结果 | `code/v3joint/r30c_walls.py` | `results/r30c_walls.json` |
+| C2 | 与标准逐记录到期逐位等价 | `code/v3joint/r41_expiry_equiv.py` | `results/r41_expiry_equiv.json` |
+| C3 | 跨段位置：十种子配对增益 | `code/v3joint/r37e_full_seeds.py` | `results/r37e_full_seeds.json` |
+| C4 | 全时域时间感知归因 | `code/v3joint/r44_fullhorizon_attribution.py` | `results/r44_fullhorizon_attribution.json` |
+| C5 | 交付界租约与固定 TTL 的两相位对照 | `code/v3joint/r46_lease_sweep.py`、`r47_lease_energy.py`、`r48_ttl_vs_lease.py` | `results/r46_lease_sweep.json`、`results/r47_lease_energy.json`、`results/r48_ttl_vs_lease.json` |
+| C6 | 执行位置：中心与节点的对照 | `code/v3joint/r39_envelope.py` | `results/agent_traces/r39_table.json` |
+| C7 | 任务表到达时的可判定比例 | `code/v3joint/r40_local_attribution.py` | `results/r40_local_attribution.json` |
+| C8 | 形成性 agent 研究与接口故障 | `code/v3joint/r38_agent_three_arm.py`、`r42_claim_relabel.py`、`r43_cert_v5_replay.py` | `results/agent_traces/r38_three_arm_summary.json`、`results/r42_claim_relabel.json`、`results/r43_cert_v5_replay.json` |
+
+每个数字对应的脚本、口径与分母登记于 [`results/README.md`](results/README.md)；新增结果文件必须在该登记册中登记。[`results/CLAIMS.md`](results/CLAIMS.md) 给出每条主张的脚本、参考结果与唯一的当前状态；[`artifact/AE.md`](artifact/AE.md) 是评审人入口，逐主张给出命令与期望判定；[`results/reference/`](results/reference/README.md) 存放判定所比较的冻结值。论文表格由 `scripts/make_tables.py` 生成到 `paper/generated/`，稿件以 `\input` 引入；生成物入库，不手改。真实模型实验需配置 `DEEPSEEK_API_KEY`，并将请求、重试与解析计入账本，决策数不等于成功请求数。
 
 ## 8. 仓库结构
 
 | 路径 | 内容 |
 |---|---|
-| `paper/` | 论文中文稿与英文稿的 LaTeX 源码、PDF、共享书目与构建脚本 |
+| `Makefile` | 四条入口：`check`、`paper`、`tables`、`data` |
+| `paper/` | 论文中文稿与英文稿的 LaTeX 源码、PDF、共享书目与构建脚本；`paper/generated/` 存放生成的表格体 |
+| `spec/` | 规范性文件：部署条件与数据集来源 |
+| `artifact/` | 评审人入口：`AE.md`、`reproduce_all.sh`、`compare_result.py` |
+| `scripts/` | 仓库外依赖的获取脚本与表格生成器 |
 | `code/instance/` | 节点、网关、能量、外生义务与评分；`network.py` 包含缓存纪律、本地时钟夜门与租约执行器，默认关闭 |
 | `code/v3joint/` | 当前联合通信实验、任务视图门、agent harness，以及 r37 至 r48 各轮实验 |
 | `code/physics/`、`code/analysis/`、`code/monitoring/`、`code/runtime/`、`code/experiments/` | 地形与传播模型、轨迹分析、监测仿真、早期执行语义与历史对照 |
-| `results/` | 结果文件与 agent 轨迹；以 `results/README.md` 为登记册，`results/_withdrawn/` 为作废清单 |
+| `results/` | 结果文件与 agent 轨迹；`README.md` 为登记册，`CLAIMS.md` 为主张表，`reference/` 为冻结判定基准，`_withdrawn/` 为作废清单 |
 | `data/`、`libs/` | 原始数据与依赖，按获取说明在本地准备，不纳入版本控制 |
 
 ## 9. 适用范围与后续工作

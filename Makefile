@@ -14,7 +14,7 @@ export PYTHONPATH := $(ROOT)/libs/pylibs:$(ROOT)/code/v3joint:$(ROOT)/code/insta
 all: check paper
 
 help:
-	@echo "make check   检查层：18 项回归 + 5 项联合层锚点"
+	@echo "make check   检查层：20 项检查（四组）+ 5 项联合层锚点"
 	@echo "make paper   构建两份论文稿 PDF"
 	@echo "make tables  由结果文件生成论文表格（写入 paper/generated/）"
 	@echo "make deps    获取需获取依赖（第三方 Python 包，幂等）"
