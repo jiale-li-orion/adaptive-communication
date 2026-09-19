@@ -1,8 +1,6 @@
 English | [中文](README.zh.md)
 
-# Terminating Installed Communication State When the Control Path Dies
-
-**Deadline Expiry and Delivery-Bounded Configuration Leases for Intermittent Pre-Disaster Monitoring**
+# Local Communication Control for Pre-Disaster Monitoring with Intermittent Backhaul
 
 This repository contains the simulation implementation and the result registry for a pre-disaster mountain geohazard monitoring system, together with the English and Chinese manuscripts. The studied deployment is battery-plus-solar LoRaWAN Class A: field nodes reach a gateway over LoRaWAN Class A, and the gateway reaches the centre over a cellular primary backhaul with a BeiDou short-message backup. The backup link is intermittent, metered, and uplink-only.
 

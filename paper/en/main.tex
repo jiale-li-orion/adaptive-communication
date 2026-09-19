@@ -3,10 +3,11 @@
 \usepackage{booktabs}
 \usepackage{array}
 \usepackage{graphicx}
-\usepackage{balance}
+%\usepackage{balance}   % 暂时停用：末页双栏平衡在内容变短后产生 1.7pt 竖直溢出
 \usepackage[dvipsnames]{xcolor}
 \usepackage[colorlinks=true,linkcolor=NavyBlue,citecolor=PineGreen,urlcolor=NavyBlue]{hyperref}
 \usepackage{xspace}
+\raggedbottom   % 末页不满时按自然高度结束，避免 1pt 级的竖直溢出
 \newcommand{\stime}{$S_{\mathrm{time}}$\xspace}
 \newcommand{\scap}{$S_{\mathrm{cap}}$\xspace}
 \newcommand{\senergy}{$S_{\mathrm{energy}}$\xspace}
@@ -14,10 +15,8 @@
 \newcommand{\unk}{$U$\xspace}
 \newcommand{\trel}{t_{\mathrm{rel}}}
 
-\title{\textbf{Terminating Installed Communication State\\
-When the Control Path Dies: Deadline Expiry and\\
-Delivery-Bounded Configuration Leases for\\
-Intermittent Pre-Disaster Monitoring}}
+\title{\textbf{Local Communication Control for Pre-Disaster Monitoring\\
+with Intermittent Backhaul}}
 
 \author{Pre-disaster monitoring \& emergency-communication working draft\\
 \texttt{agentic-communication} repository --- working draft}
@@ -682,7 +681,6 @@ The evidence discipline applies throughout: an observer must distinguish confirm
 unknown state. An LLM is one candidate controller; the formative live study exposes access
 receipts being mistaken for backhaul state.
 
-\balance
 \bibliographystyle{IEEEtran}
 \bibliography{../refs}
 
