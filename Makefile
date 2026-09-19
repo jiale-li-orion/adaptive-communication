@@ -9,7 +9,7 @@ PY   := python3
 # 与 code/run_checks.py 内部设置的 PYTHONPATH 一致，保证从根目录与从子目录运行等价。
 export PYTHONPATH := $(ROOT)/libs/pylibs:$(ROOT)/code/v3joint:$(ROOT)/code/instance:$(ROOT)/code/physics:$(ROOT)/code/runtime:$(ROOT)/code/experiments:$(ROOT)/code/analysis:$(ROOT)/code/monitoring
 
-.PHONY: all check paper tables data clean help
+.PHONY: all check paper tables deps data clean help
 
 all: check paper
 
@@ -17,6 +17,7 @@ help:
 	@echo "make check   检查层：18 项回归 + 5 项联合层锚点"
 	@echo "make paper   构建两份论文稿 PDF"
 	@echo "make tables  由结果文件生成论文表格（写入 paper/generated/）"
+	@echo "make deps    获取需获取依赖（第三方 Python 包，幂等）"
 	@echo "make data    获取需获取依赖（地形高程瓦片，幂等）"
 	@echo "make all     check 加 paper"
 
@@ -29,7 +30,10 @@ check:
 paper:
 	cd paper && ./build.sh
 
-# 需获取依赖。检查依赖它，克隆后先跑这一条；缺失时检查会打印同样的命令。
+# 需获取依赖。检查依赖它们，克隆后先跑这两条；缺失时检查会打印同样的命令。
+deps:
+	./scripts/get_deps.sh
+
 data:
 	./scripts/get_data.sh
 
