@@ -4,6 +4,8 @@
 
 两份文档互为独立成稿，结构一一对应，不合并编排：中文稿是独立可读的中文论文，英文稿是独立可读的英文论文。二者共享同一份 [`refs.bib`](refs.bib)。
 
+> **本地材料说明。** 本文件引用的 `docs/…` 路径属于作者本地的过程文档与逐轮审计记录，不随本仓库发布；远端仓库只包含 `paper/`、`code/`、`results/`、`multipath_probe/` 与根 README。
+
 | 文件 | 语言 | 版式 | 页数 |
 |---|---|---|---|
 | [`en/main.tex`](en/main.tex) → [`en/main.pdf`](en/main.pdf) | 英文 | IEEEtran journal，双栏 | 9 |
@@ -31,4 +33,4 @@
 
 ## 状态
 
-论文正文的证据边界修订仍按 [`doc51`](../docs/s7-method/v1.2/51-independent-review-paper-v06-2026-09-19.md) 与 [`最小执行计划`](../docs/s8-report/review-v0.6/experiment_todo.md) 推进；本初稿只做语言压缩与两分编排，未落实 doc51 的全部修订。
+论文正文的证据边界修订仍按 `docs/s7-method/v1.2/51-independent-review-paper-v06-2026-09-19.md` 与 `docs/s8-report/review-v0.6/experiment_todo.md` 推进；本初稿只做语言压缩与两分编排，未落实 doc51 的全部修订。

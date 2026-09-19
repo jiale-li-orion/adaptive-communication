@@ -1,10 +1,12 @@
 # multipath_probe — 多路径 × 隐状态回传的 go/no-go 探针（预注册）
 
+> **本地材料说明。** 本文件引用的 `docs/…` 路径属于作者本地的过程文档与逐轮审计记录，不随本仓库发布；远端仓库只包含 `paper/`、`code/`、`results/`、`multipath_probe/` 与根 README。
+
 > **当前处置（2026-09-14）**：本文保留为原始预注册，不再代表当前主张。
 > `oracle` 是当前状态全知的贪心参照，不是严格上界；`belief_mpc` 是有限前视的近似实现，
 > 不是“传统方法天花板”。旧 probe 实现因零尝试刷新冷却、同拍记录覆盖与下一拍才使用结果，
 > 没有测到可购买的当前信息。完整审查见
-> [`doc 55`](../docs/s7-method/instance-v1/55-review-fair-pacing-and-multipath-probe-2026-09-14.md)；
+> `docs/s7-method/instance-v1/55-review-fair-pacing-and-multipath-probe-2026-09-14.md`；
 > 修正后的信息时序对照见 `run_information_timing.py` 与 `doc 56`。本目录是 A 层多路径扩展，
 > 不直接改写 Task v1.1 的单回传核心实例，也不由任何差距推导 agent 可恢复收益。
 
