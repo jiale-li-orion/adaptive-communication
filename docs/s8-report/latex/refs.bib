@@ -1,58 +1,87 @@
 % References for the agentic-communication feasibility-certificate draft.
-% Entries use only bibliographic facts verified in the repository source ledger;
-% items whose authors were not verified from the primary record in this environment
-% use a misc-type entry (title, venue, year, URL) rather than guessed authors.
-% Last bibliographic verification pass: 2026-09-19 (Razavi/Wada/Krishnan delta-2
-% audit; RFC 5050/9171 custody transfer; Costa/Kam/Iranmanesh metadata).
+% Entries use only bibliographic facts verified from primary records (publisher,
+% arXiv, standards body, or the repository source ledger). Where a full author
+% list could not be opened in this environment, verified authors are given with
+% "and others" rather than guessed names.
+% Bibliographic verification passes:
+%  2026-09-19 (a) Razavi/Wada/Krishnan delta-2 audit; RFC 5050/9171 custody;
+%               Costa/Kam/Iranmanesh metadata.
+%  2026-09-19 (b) TopoLLM/ICLDC/ICG-Restore/OSS-GPT/SDN-consistency/Zakeri/
+%               Bacinoglu/CCSDS SABR/SateRIoT metadata from arXiv, MDPI, Eurecom,
+%               IFIP/IEEE, CCSDS, and the NTU repository.
 
-@misc{topollm,
-  title        = {{TopoLLM}: Large Language Model based topology and resource planning for post-disaster rescue networks},
-  howpublished = {Digital Communications and Networks, 12 (2026) 273--282, online 2025-10-17}
+@article{topollm,
+  author  = {Yizhuo Ma and Rongzheng Wang and Ke Qin and others},
+  title   = {{TopoLLM}: {LLM}-Driven Adaptive Tool Learning for Real-Time Emergency Network Topology Planning},
+  journal = {Digital Communications and Networks},
+  volume  = {12},
+  pages   = {273--282},
+  year    = {2026},
+  doi     = {10.1016/j.dcan.2025.10.002},
+  note    = {Online 1 October 2025; the published version lists five authors, of whom three were verified in this environment}
 }
 
-@misc{icldc,
-  title        = {Constrained-queue scheduling with exogenous arrivals and finite service opportunities for IoT data collection ({ICLDC})},
-  howpublished = {arXiv:2504.14556; also IEEE Internet of Things Journal, DOI 10.1109/JIOT.2025.3615410},
-  year         = {2025}
+@article{icldc,
+  author  = {Yousef Emami and Hao Zhou and SeyedSina Nabavirazani and Luis Almeida},
+  title   = {{LLM}-Enabled In-Context Learning for Data Collection Scheduling in {UAV}-Assisted Sensor Networks},
+  journal = {IEEE Internet of Things Journal},
+  year    = {2025},
+  doi     = {10.1109/JIOT.2025.3615410},
+  note    = {arXiv:2504.14556; the state model pairs per-sensor bounded queues (queue length), exogenous sensing data, one-UAV finite per-step collection opportunities, battery/channel state, and a verifier feedback loop}
 }
 
-@misc{icgrestore,
-  title        = {{ICG-Restore}: intent- and graph-guided candidate-plan checking and local repair for infrastructure restoration},
-  howpublished = {AI, 7(8):294, MDPI},
-  year         = {2026},
-  url          = {https://www.mdpi.com/2673-2688/7/8/294}
+@article{icgrestore,
+  author  = {Jinyin Bai and Wei Zhu and Xiangchen Wang and Shiluo Guo and Zongzhe Nie and Tianjin Ni and Jinji Zhou and Kaiyang Kou and Lingxin Xu and Yihao Zhong},
+  title   = {{ICG-Restore}: Intent-Constrained, Graph-Enhanced {LLM} Planning with Minimal-Edit Repair for Post-Disaster Emergency Communication Recovery},
+  journal = {AI},
+  volume  = {7},
+  number  = {8},
+  pages   = {294},
+  year    = {2026},
+  doi     = {10.3390/ai7080294}
 }
 
-@misc{ossgpt,
-  title        = {{OSS-GPT}: orchestrating real network-management operations from interface documentation},
-  howpublished = {EureCom technical publication, ComSys publi-8206},
-  url          = {https://www.eurecom.fr/publication/8206/download/comsys-publi-8206.pdf}
+@inproceedings{ossgpt,
+  author    = {Abdelkader Mekrache and Adlen Ksentini and Christos Verikoukis},
+  title     = {{OSS-GPT}: An {LLM}-Powered Intent-Driven Operations Support System for {6G} Networks},
+  booktitle = {Proc. IEEE Conference on Network Softwarization (NetSoft)},
+  year      = {2025},
+  note      = {Budapest, June 2025; a SIGCOMM 2025 version appears as ``Next-generation 6G network management with OSS-GPT'' (Eurecom publi-8206)}
 }
 
-@misc{sdnconsistency,
-  title        = {On dependencies, loop freedom, and blackholes in consistent network updates},
-  howpublished = {Microsoft Research technical report},
-  url          = {https://www.microsoft.com/en-us/research/wp-content/uploads/2017/01/On-Dependencies-Loop-Freedom-and-Blackholes.pdf}
+@inproceedings{sdnconsistency,
+  author    = {Klaus-Tycho F{\"o}rster and Ratul Mahajan and Roger Wattenhofer},
+  title     = {Consistent Updates in Software Defined Networks: On Dependencies, Loop Freedom, and Blackholes},
+  booktitle = {Proc. IFIP Networking Conference and Workshops},
+  address   = {Vienna, Austria},
+  pages     = {1--9},
+  year      = {2016},
+  doi       = {10.1109/IFIPNetworking.2016.7497232}
 }
 
-@misc{zakeri2311,
-  title        = {Energy harvesting wireless control under partial observability ({EH-POMDP})},
-  howpublished = {arXiv:2311.06522},
-  year         = {2023},
-  url          = {https://arxiv.org/abs/2311.06522}
+@article{zakeri2311,
+  author  = {Abolfazl Zakeri and Mohammad Moltafet and Marian Codreanu},
+  title   = {Semantic-Aware Sampling and Transmission in Energy Harvesting Systems: A {POMDP} Approach},
+  journal = {arXiv preprint arXiv:2311.06522},
+  year    = {2023},
+  note    = {Preliminary results at Asilomar 2023 and IEEE GLOBECOM 2023; joint sampling/transmission cost under partial observability}
 }
 
-@misc{bacinoglu1905,
-  title        = {Age-optimal policies with energy harvesting and instantaneous battery state},
-  howpublished = {arXiv:1905.06679},
-  year         = {2019},
-  url          = {https://arxiv.org/abs/1905.06679}
+@article{bacinoglu1905,
+  author  = {Baran Tan Bacinoglu and Yin Sun and Elif Uysal and Volkan Mutlu},
+  title   = {Optimal Status Updating with a Finite-Battery Energy Harvesting Source},
+  journal = {arXiv preprint arXiv:1905.06679},
+  year    = {2019},
+  note    = {An optimal policy is monotone threshold, with the threshold a non-increasing function of instantaneous battery level}
 }
 
-@misc{ccsdssabr,
-  title        = {{CCSDS} 734.3-B-1, Scheduled-Aware Bundle Routing and overbooking for delay-tolerant space links},
-  howpublished = {Consultative Committee for Space Data Systems, blue book},
-  url          = {https://ccsds.org/Pubs/734x3b1.pdf}
+@techreport{ccsdssabr,
+  author      = {{Consultative Committee for Space Data Systems}},
+  title       = {Schedule-Aware Bundle Routing},
+  institution = {CCSDS},
+  number      = {CCSDS 734.3-B-1, Blue Book, Issue 1},
+  year        = {2019},
+  note        = {SABR: dynamic route computation under scheduled (not opportunistic) contacts, including contact overbooking}
 }
 
 @book{leboudec01,
@@ -103,12 +132,12 @@
   doi       = {10.1109/MILCOM.2016.7795343}
 }
 
-@misc{krishnan2019multihop,
-  author       = {Ashok Krishnan K.~S. and Vinod Sharma},
-  title        = {Minimizing Age of Information in a Multihop Wireless Network},
-  howpublished = {arXiv:1909.06571},
-  year         = {2019},
-  note         = {Distributed scheduling plus a local drop rule that keeps only the newest packet of each flow at each queue (no inter-node signalling); the keep-latest multihop baseline}
+@article{krishnan2019multihop,
+  author  = {Ashok Krishnan K.~S. and Vinod Sharma},
+  title   = {Minimizing Age of Information in a Multihop Wireless Network},
+  journal = {arXiv preprint arXiv:1909.06571},
+  year    = {2019},
+  note    = {Distributed scheduling plus a local drop rule that keeps only the newest packet of each flow at each queue (no inter-node signalling); the keep-latest multihop baseline}
 }
 
 @inproceedings{razavivideo,
@@ -116,7 +145,7 @@
   title     = {Deadline-aware video delivery in a disrupted {Bluetooth} network},
   booktitle = {Proc. IEEE Sarnoff Symposium},
   year      = {2007},
-  note      = {IEEE Xplore document 4567352; deadline-aware active discard from the send buffer co-located with picture-type adaptive {ARQ} on a single {Bluetooth} piconet (verified from publisher/abstract-level record; IEEE full text not opened in this environment)}
+  note      = {IEEE Xplore document 4567352; deadline-aware active discard from the send buffer co-located with picture-type adaptive {ARQ} on a single {Bluetooth} piconet (publisher/abstract-level verification; IEEE full text not opened in this environment)}
 }
 
 @inproceedings{wada2009timeout,
@@ -127,11 +156,12 @@
   note      = {IEEE Xplore document 5291354; a source node does not generate a packet when its estimated one-hop-times-hops delay already exceeds the remaining time limit}
 }
 
-@misc{dtnarch,
-  title        = {Delay-Tolerant Networking Architecture (bundle layer, bundle lifetime/expiration)},
-  author       = {Kevin Fall and Scott Burleigh and Adrian Hooke and others},
-  howpublished = {IRTF RFC 4838},
-  year         = {2007}
+@techreport{dtnarch,
+  author      = {Kevin Fall and Scott Burleigh and Adrian Hooke and others},
+  title       = {Delay-Tolerant Networking Architecture},
+  institution = {IRTF / RFC Editor},
+  number      = {RFC 4838},
+  year        = {2007}
 }
 
 @techreport{rfc5050,
@@ -144,6 +174,7 @@
 }
 
 @techreport{rfc9171,
+  author      = {{IETF Delay-Tolerant Networking Working Group}},
   title       = {Bundle Protocol Version 7},
   institution = {IETF / RFC Editor},
   number      = {RFC 9171},
@@ -163,8 +194,9 @@
   note    = {{QM-EBRP}: local forward/drop utility from time-to-live, encounter rate and replica count under quota-based routing}
 }
 
-@misc{sateriot,
-  title        = {{SateRloT}: high-performance ground-space networking for rural {IoT} ({LoRa} and {LEO} satellite, priority queue and de-duplication)},
-  howpublished = {ACM MobiCom},
-  year         = {2024}
+@inproceedings{sateriot,
+  author    = {Yidong Ren and Amalinda Gamage and Li Liu and Mo Li and Shigang Chen and Younsuk Dong and Zhichao Cao},
+  title     = {{SateRIoT}: High-Performance Ground-Space Networking for Rural {IoT}},
+  booktitle = {Proc. 30th Annual International Conference on Mobile Computing and Networking (ACM MobiCom '24)},
+  year      = {2024}
 }

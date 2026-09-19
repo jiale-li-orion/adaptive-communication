@@ -754,8 +754,8 @@ RQ3/RQ4 results, not on the LLM.
 
 \section{Related work}
 \label{sec:related}
-\textbf{LLMs in emergency / network control.} TopoLLM~\cite{topollm} uses an LLM for post-disaster rescue
-topology and resource planning; subsequent lines let LLMs (i) directly schedule UAV
+\textbf{LLMs in emergency / network control.} TopoLLM~\cite{topollm} uses an LLM with adaptive tool learning for real-time
+post-disaster emergency network topology planning; subsequent lines let LLMs (i) directly schedule UAV
 path/data collection and bandwidth, (ii) shape rewards for deep RL, or (iii) orchestrate
 infrastructure-recovery tools (e.g.\ graph-guided candidate-plan repair for network
 restoration and LLM-driven operation of real network-management
@@ -771,8 +771,10 @@ novel. Our delta is the per-obligation chain projection, the segment-labelled in
 certificate with zero-false-positive structural tests, and the compile-time/arrival-time
 split under mission unreachability.
 
-\textbf{Scheduling, freshness, energy.} Constrained-queue scheduling with exogenous arrivals
-and finite service opportunities provides our formal anchors~\cite{icldc}; age-of-information
+\textbf{Scheduling, freshness, energy.} A recent LLM in-context data-collection scheduler for
+UAV-assisted sensor networks supplies the closest state-model precedent we build on---per-sensor
+bounded queues, exogenous sensing arrivals, selectable objects under one-UAV finite per-step
+service opportunities, battery/channel state, and a verifier feedback loop~\cite{icldc}; age-of-information
 and energy-harvesting link optimisation---including instantaneous-battery threshold policies
 and partially-observed energy-harvesting control~\cite{bacinoglu1905,zakeri2311}---and
 overbooking/scheduled-aware forwarding for space links~\cite{ccsdssabr} address pieces of the
@@ -795,8 +797,9 @@ age~\cite{costa2014pm,kam2016deadline,krishnan2019multihop}; deadline-aware buff
 been coupled with adaptive ARQ for video~\cite{razavivideo}; a sensor transport protocol suppresses
 packet generation when the estimated delay exceeds the time limit~\cite{wada2009timeout}; DTN
 bundle protocols attach a lifetime and expire bundles hop by hop, alongside a family of
-TTL/encounter-based drop policies~\cite{dtnarch,iranmaneshdtnqueue}; and LoRa--satellite rural
-systems use priority queues and de-duplication~\cite{sateriot}. These mechanisms decide from
+TTL/encounter-based drop policies~\cite{dtnarch,iranmaneshdtnqueue}. LoRa--LEO ground-space
+rural IoT systems instead schedule around estimated temporal satellite contacts rather than
+deadline discard~\cite{sateriot}. The discard mechanisms above decide from
 packet age, a local buffer deadline, a single packet's estimated delay, or a bundle TTL, and the
 discard takes effect locally at one hop. Our selective purge differs in three coupled respects:
 (i) the release test is the \emph{obligation's} end-to-end feasibility---its absolute delivery
