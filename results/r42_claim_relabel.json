@@ -1,0 +1,726 @@
+{
+  "per_trace": {
+    "nolinkout|A0|s0": {
+      "decisions": 99,
+      "parse_hold": 12,
+      "dense_orders": 38,
+      "l_up": 20,
+      "l_up_in_forced_outage": 0,
+      "l_down": 1,
+      "claim_applied": 11,
+      "claim_applied_false": 1,
+      "plan_dense": 35,
+      "infeas_word": 0,
+      "window_decisions": 0
+    },
+    "nolinkout|A1|s0": {
+      "decisions": 99,
+      "parse_hold": 2,
+      "dense_orders": 28,
+      "l_up": 4,
+      "l_up_in_forced_outage": 0,
+      "l_down": 66,
+      "claim_applied": 2,
+      "claim_applied_false": 0,
+      "plan_dense": 46,
+      "infeas_word": 75,
+      "window_decisions": 0
+    },
+    "outage|A0|s0": {
+      "decisions": 99,
+      "parse_hold": 4,
+      "dense_orders": 43,
+      "l_up": 20,
+      "l_up_in_forced_outage": 12,
+      "l_down": 4,
+      "claim_applied": 16,
+      "claim_applied_false": 7,
+      "plan_dense": 46,
+      "infeas_word": 0,
+      "window_decisions": 32
+    },
+    "outage|A0|s1": {
+      "decisions": 99,
+      "parse_hold": 5,
+      "dense_orders": 49,
+      "l_up": 26,
+      "l_up_in_forced_outage": 13,
+      "l_down": 1,
+      "claim_applied": 21,
+      "claim_applied_false": 11,
+      "plan_dense": 38,
+      "infeas_word": 0,
+      "window_decisions": 32
+    },
+    "outage|A0|s2": {
+      "decisions": 99,
+      "parse_hold": 7,
+      "dense_orders": 52,
+      "l_up": 20,
+      "l_up_in_forced_outage": 11,
+      "l_down": 0,
+      "claim_applied": 19,
+      "claim_applied_false": 8,
+      "plan_dense": 30,
+      "infeas_word": 0,
+      "window_decisions": 32
+    },
+    "outage|A0s|s0": {
+      "decisions": 99,
+      "parse_hold": 7,
+      "dense_orders": 69,
+      "l_up": 15,
+      "l_up_in_forced_outage": 12,
+      "l_down": 5,
+      "claim_applied": 11,
+      "claim_applied_false": 0,
+      "plan_dense": 76,
+      "infeas_word": 0,
+      "window_decisions": 32
+    },
+    "outage|A0s|s1": {
+      "decisions": 99,
+      "parse_hold": 7,
+      "dense_orders": 61,
+      "l_up": 12,
+      "l_up_in_forced_outage": 10,
+      "l_down": 1,
+      "claim_applied": 19,
+      "claim_applied_false": 3,
+      "plan_dense": 74,
+      "infeas_word": 0,
+      "window_decisions": 32
+    },
+    "outage|A0s|s2": {
+      "decisions": 99,
+      "parse_hold": 5,
+      "dense_orders": 62,
+      "l_up": 17,
+      "l_up_in_forced_outage": 10,
+      "l_down": 0,
+      "claim_applied": 22,
+      "claim_applied_false": 3,
+      "plan_dense": 73,
+      "infeas_word": 0,
+      "window_decisions": 32
+    },
+    "outage|A1|s0": {
+      "decisions": 99,
+      "parse_hold": 1,
+      "dense_orders": 19,
+      "l_up": 0,
+      "l_up_in_forced_outage": 0,
+      "l_down": 67,
+      "claim_applied": 2,
+      "claim_applied_false": 0,
+      "plan_dense": 41,
+      "infeas_word": 81,
+      "window_decisions": 32
+    },
+    "outage|A1|s1": {
+      "decisions": 99,
+      "parse_hold": 1,
+      "dense_orders": 25,
+      "l_up": 2,
+      "l_up_in_forced_outage": 1,
+      "l_down": 79,
+      "claim_applied": 2,
+      "claim_applied_false": 0,
+      "plan_dense": 45,
+      "infeas_word": 83,
+      "window_decisions": 32
+    },
+    "outage|A1|s2": {
+      "decisions": 99,
+      "parse_hold": 1,
+      "dense_orders": 23,
+      "l_up": 2,
+      "l_up_in_forced_outage": 1,
+      "l_down": 65,
+      "claim_applied": 2,
+      "claim_applied_false": 0,
+      "plan_dense": 37,
+      "infeas_word": 78,
+      "window_decisions": 32
+    }
+  },
+  "arm_aggregates": {
+    "A0": {
+      "decisions": 396,
+      "parse_hold": 28,
+      "dense_orders": 182,
+      "l_up": 86,
+      "l_up_in_forced_outage": 36,
+      "l_down": 6,
+      "claim_applied": 67,
+      "claim_applied_false": 27,
+      "plan_dense": 149,
+      "infeas_word": 0,
+      "window_decisions": 96
+    },
+    "A1": {
+      "decisions": 396,
+      "parse_hold": 5,
+      "dense_orders": 95,
+      "l_up": 8,
+      "l_up_in_forced_outage": 2,
+      "l_down": 277,
+      "claim_applied": 8,
+      "claim_applied_false": 0,
+      "plan_dense": 169,
+      "infeas_word": 317,
+      "window_decisions": 96
+    },
+    "A0s": {
+      "decisions": 297,
+      "parse_hold": 19,
+      "dense_orders": 192,
+      "l_up": 44,
+      "l_up_in_forced_outage": 32,
+      "l_down": 6,
+      "claim_applied": 52,
+      "claim_applied_false": 6,
+      "plan_dense": 223,
+      "infeas_word": 0,
+      "window_decisions": 96
+    }
+  },
+  "nolinkout_ldown_claims": [
+    {
+      "arm": "A0",
+      "seed": 0,
+      "t": 75600,
+      "n_heard": 1,
+      "applied300": 10,
+      "note": "Backhaul outage: only gw0 heard, all nodes in_flight with stale SoC; commands would be refused/queued and cannot be confirmed. Hold previous targets (nodes already at 300"
+    },
+    {
+      "arm": "A1",
+      "seed": 0,
+      "t": 1860,
+      "n_heard": 10,
+      "applied300": 0,
+      "note": "Required period is 600s (blue segment); all heard nodes already report cur_sample/report 600s and no config change is needed, so issue no commands and avoid unconfirmable"
+    },
+    {
+      "arm": "A1",
+      "seed": 0,
+      "t": 12660,
+      "n_heard": 13,
+      "applied300": 0,
+      "note": "Maintain 600s sampling; upcoming 300s requirement infeasible due to energy drain and downlink slot constraints."
+    },
+    {
+      "arm": "A1",
+      "seed": 0,
+      "t": 27000,
+      "n_heard": 11,
+      "applied300": 13,
+      "note": "Required 300s already confirmed on 13/14 nodes; gw0 command in flight and n03 unconfirmed, so no re-spam. Hold last applied configs, log no-return-slot/command-unreachabl"
+    },
+    {
+      "arm": "A1",
+      "seed": 0,
+      "t": 28800,
+      "n_heard": 10,
+      "applied300": 13,
+      "note": "Control plane not delivering: only 13/14 nodes confirm period=300 (partials are uplink-only backup packets, not downlink configs); gw0 cmd still in-flight and n03 unconfi"
+    },
+    {
+      "arm": "A1",
+      "seed": 0,
+      "t": 41400,
+      "n_heard": 13,
+      "applied300": 0,
+      "note": "Required 300s cannot be confirmed or delivered via current backup/control path; hold last applied 600s config, do not re-spam in-flight dense commands, and log infeasibil"
+    },
+    {
+      "arm": "A1",
+      "seed": 0,
+      "t": 43200,
+      "n_heard": 14,
+      "applied300": 0,
+      "note": "Dark hours: hold/issue sparse 600 on all nodes (downgrade gw0 pending dense), log elevated-300 as energy-infeasible overnight and defer dense compile to 06:00."
+    },
+    {
+      "arm": "A1",
+      "seed": 0,
+      "t": 45000,
+      "n_heard": 13,
+      "applied300": 0,
+      "note": "Dark at 18.5h: hold/force sparse 600s everywhere incl. gw0 downgrade; log elevated 300 as energy-infeasible overnight, defer dense to 06:00."
+    },
+    {
+      "arm": "A1",
+      "seed": 0,
+      "t": 46800,
+      "n_heard": 10,
+      "applied300": 0,
+      "note": "Night energy hard gate: hold/confirm sparse 600 on all nodes, overwrite gw0 stale queued 300; log elevated 300 as energy-infeasible overnight, defer dense to 06:00."
+    },
+    {
+      "arm": "A1",
+      "seed": 0,
+      "t": 48600,
+      "n_heard": 14,
+      "applied300": 0,
+      "note": "Night energy gate: hold sparse 600 all nodes, override pending gw0 dense; log elevated 300 as energy-infeasible and defer compilation to 06:00."
+    },
+    {
+      "arm": "A1",
+      "seed": 0,
+      "t": 50400,
+      "n_heard": 14,
+      "applied300": 0,
+      "note": "Night: hold sparse 600/600 all nodes, cancel stale gw0 300 command, log elevated-300 as energy-infeasible and defer dense compile to 06:00 or conferred downgrade."
+    },
+    {
+      "arm": "A1",
+      "seed": 0,
+      "t": 52200,
+      "n_heard": 12,
+      "applied300": 0,
+      "note": "Dark hours: hold/confirm sparse 600 on all nodes, explicitly downgrade gw0's pending 300; log elevated-300 as energy-infeasible overnight and request conferred downgrade,"
+    },
+    {
+      "arm": "A1",
+      "seed": 0,
+      "t": 54000,
+      "n_heard": 10,
+      "applied300": 0,
+      "note": "Dark-hour energy gate: keep/confirm sparse 600 everywhere, supersede gw0's queued 300; log elevated-300 as energy-infeasible overnight, defer dense to 06:00."
+    },
+    {
+      "arm": "A1",
+      "seed": 0,
+      "t": 55800,
+      "n_heard": 14,
+      "applied300": 0,
+      "note": "Hold sparse 600 on all nodes overnight (dense 300 energy-infeasible, would kill nodes); log elevated-300 as infeasible, defer dense compilation to 06:00, and downgrade gw"
+    },
+    {
+      "arm": "A1",
+      "seed": 0,
+      "t": 57600,
+      "n_heard": 14,
+      "applied300": 0,
+      "note": "Dark-hour energy gate: hold all nodes at sparse 600 (gw0 downgraded from pending 300, no node confirming 300); log elevated 300 as energy-infeasible overnight and defer d"
+    },
+    {
+      "arm": "A1",
+      "seed": 0,
+      "t": 59400,
+      "n_heard": 14,
+      "applied300": 0,
+      "note": "Hold all nodes sparse 600 overnight (energy hard gate); downgrade gw0's stale 300 target, log elevated-300 as energy-infeasible, defer dense compilation to 06:00."
+    },
+    {
+      "arm": "A1",
+      "seed": 0,
+      "t": 61200,
+      "n_heard": 14,
+      "applied300": 0,
+      "note": "Dark hours: hold all nodes sparse 600/600 (incl. gw0 pending-dense overwrite); log elevated-300 as energy-infeasible overnight and defer dense compilation to 06:00."
+    },
+    {
+      "arm": "A1",
+      "seed": 0,
+      "t": 63000,
+      "n_heard": 10,
+      "applied300": 0,
+      "note": "Night energy-infeasible: hold all sparse 600, downgrade gw0 pending 300; defer dense 300 to 06:00/conferred downgrade."
+    },
+    {
+      "arm": "A1",
+      "seed": 0,
+      "t": 64800,
+      "n_heard": 8,
+      "applied300": 0,
+      "note": "Hold all nodes sparse 600 through dark; re-issue gw0 sparse to override pending 300; log 300 energy-infeasible overnight, defer dense to 06:00."
+    },
+    {
+      "arm": "A1",
+      "seed": 0,
+      "t": 66600,
+      "n_heard": 11,
+      "applied300": 0,
+      "note": "Hold sparse 600/600 fleet-wide through dark; elevated 300 logged energy-infeasible overnight (link n_heard=11<14, no confirmation path), defer dense compile to 06:00."
+    },
+    {
+      "arm": "A1",
+      "seed": 0,
+      "t": 68400,
+      "n_heard": 9,
+      "applied300": 0,
+      "note": "Hold sparse 600 on all nodes through dark hours (300 infeasible overnight); explicitly downgrade gw0's pending 300, log elevated-300 as energy-infeasible, defer dense to "
+    },
+    {
+      "arm": "A1",
+      "seed": 0,
+      "t": 70200,
+      "n_heard": 13,
+      "applied300": 0,
+      "note": "Hold sparse 600 everywhere overnight; log elevated 300 as energy-infeasible until 06:00."
+    },
+    {
+      "arm": "A1",
+      "seed": 0,
+      "t": 72000,
+      "n_heard": 10,
+      "applied300": 0,
+      "note": "Dark hour 2: dense 300 would permanently kill nodes, so hold all nodes at sparse 600 (override gw0's stale pending 300); log elevated-300 as energy-infeasible overnight a"
+    },
+    {
+      "arm": "A1",
+      "seed": 0,
+      "t": 73800,
+      "n_heard": 14,
+      "applied300": 0,
+      "note": "Night energy hard gate: keep all nodes at 600s sparse; defer dense 300 until 06:00; log elevated as infeasible overnight; override gw0 pending 300."
+    },
+    {
+      "arm": "A1",
+      "seed": 0,
+      "t": 75600,
+      "n_heard": 14,
+      "applied300": 0,
+      "note": "Hour 3 dark: hold/issue sparse 600 everywhere (incl. downgrading gw0's stale 300 target); elevated 300 logged energy-infeasible, compile at 06:00, no false completion."
+    },
+    {
+      "arm": "A1",
+      "seed": 0,
+      "t": 77400,
+      "n_heard": 14,
+      "applied300": 0,
+      "note": "Hold all nodes sparse 600 through dark; explicit downgrade of gw0's stale dense target; log elevated-300 as energy-infeasible overnight and defer dense compilation to 06:"
+    },
+    {
+      "arm": "A1",
+      "seed": 0,
+      "t": 79200,
+      "n_heard": 13,
+      "applied300": 0,
+      "note": "Hold sparse 600 everywhere through dark (dense 300 would kill nodes); log elevated monitoring as energy-infeasible overnight and defer 300 compilation to 06:00 or a confe"
+    },
+    {
+      "arm": "A1",
+      "seed": 0,
+      "t": 81000,
+      "n_heard": 13,
+      "applied300": 0,
+      "note": "Hold sparse 600 overnight for all nodes, cancel gw0 300 target, log elevated 300 as energy-infeasible, defer dense compilation to 06:00."
+    },
+    {
+      "arm": "A1",
+      "seed": 0,
+      "t": 82800,
+      "n_heard": 13,
+      "applied300": 0,
+      "note": "Hour-5 dark: hold sparse 600 all, cancel gw0 pending 300; log elevated 300 energy-infeasible until 06:00."
+    },
+    {
+      "arm": "A1",
+      "seed": 0,
+      "t": 84600,
+      "n_heard": 13,
+      "applied300": 0,
+      "note": "Hour 5.5 dark: dense 300 would kill nodes and control plane is not delivering (13<14 heard); hold sparse 600 on all nodes, cancel gw0 pending dense, log elevated-300 as e"
+    },
+    {
+      "arm": "A1",
+      "seed": 0,
+      "t": 86400,
+      "n_heard": 10,
+      "applied300": 0,
+      "note": "Hold last applied 600s config; 300s obligation infeasible and unconfirmable via backup-only partial receipts, log command-unreachable/no-return-slot, no re-spam."
+    },
+    {
+      "arm": "A1",
+      "seed": 0,
+      "t": 88200,
+      "n_heard": 12,
+      "applied300": 0,
+      "note": "Hold last APPLIED 600s config; required 300s not confirmable via current control plane, so do not re-spam; log infeasibility and await full-center daylight/control recove"
+    },
+    {
+      "arm": "A1",
+      "seed": 0,
+      "t": 90000,
+      "n_heard": 10,
+      "applied300": 0,
+      "note": "Control plane not delivering; hold last applied 600s config, log command-unreachable for required 300, recompile only after all nodes heard and commands confirm in daylig"
+    },
+    {
+      "arm": "A1",
+      "seed": 0,
+      "t": 93600,
+      "n_heard": 13,
+      "applied300": 11,
+      "note": "Required 300s; only 11/14 confirmed and control plane not delivering, so hold applied configs and do not re-spam unconfirmable commands."
+    },
+    {
+      "arm": "A1",
+      "seed": 0,
+      "t": 95400,
+      "n_heard": 12,
+      "applied300": 13,
+      "note": "Hold: 13/14 nodes already report sample=300 and gw0/others have dense cmds in flight; link is partial (12/14 heard, uplink-only backup, no confirm path) so re-emitting de"
+    },
+    {
+      "arm": "A1",
+      "seed": 0,
+      "t": 97200,
+      "n_heard": 10,
+      "applied300": 13,
+      "note": "All heard nodes already confirm sample=300 (required); control plane not delivering (only uplink backup packets), so new downlinks cannot be confirmed — hold last APPLIED"
+    },
+    {
+      "arm": "A1",
+      "seed": 0,
+      "t": 99000,
+      "n_heard": 12,
+      "applied300": 13,
+      "note": "Control plane not delivering; required 300 not confirmable (partial receipts are backup uplink only); hold last APPLIED configs, log infeasibility (no-return-slot/command"
+    },
+    {
+      "arm": "A1",
+      "seed": 0,
+      "t": 100800,
+      "n_heard": 10,
+      "applied300": 13,
+      "note": "Holding applied config; control plane not delivering (13/14 confirm 300, gw0 in-flight); re-issuing cannot be confirmed—log command-unreachable/no-return-slot infeasibili"
+    },
+    {
+      "arm": "A1",
+      "seed": 0,
+      "t": 102600,
+      "n_heard": 13,
+      "applied300": 13,
+      "note": "All heard nodes already confirm 300/300 (required level); gw0's 300 command is still in flight, so holding last applied configs and NOT re-spamming unconfirmable downlink"
+    },
+    {
+      "arm": "A1",
+      "seed": 0,
+      "t": 104400,
+      "n_heard": 10,
+      "applied300": 13,
+      "note": "Hold: required=300 and every node already confirms 300/300 except gw0 whose 300 command is still in flight (backhaul unconfirmed); n02/n03 stale 600 targets are unapplied"
+    },
+    {
+      "arm": "A1",
+      "seed": 0,
+      "t": 106200,
+      "n_heard": 14,
+      "applied300": 13,
+      "note": "Yellow requires 300s; all 13 confirmed nodes already report cur_sample=300/cur_report=300 (in effect, no change needed). gw0 target 300 is in-flight per ledger — do NOT r"
+    },
+    {
+      "arm": "A1",
+      "seed": 0,
+      "t": 109800,
+      "n_heard": 14,
+      "applied300": 13,
+      "note": "Daylight, link recovered 14/14; all nodes confirmed 300/300 except gw0 whose 300/300 target is already in flight - hold, re-issue nothing, await APPLIED confirmation; set"
+    },
+    {
+      "arm": "A1",
+      "seed": 0,
+      "t": 115200,
+      "n_heard": 14,
+      "applied300": 13,
+      "note": "Yellow req=300; 13 nodes already report 300 so no re-issue; clear gw0's unconfirmed 600 and the two stale 600 pending targets with one 300/300 compile each; watch for con"
+    },
+    {
+      "arm": "A1",
+      "seed": 0,
+      "t": 127800,
+      "n_heard": 13,
+      "applied300": 0,
+      "note": "Elevated 300 infeasible: control unconfirmed and night energy risk; hold last applied 600s, log infeasibility, no re-spam."
+    },
+    {
+      "arm": "A1",
+      "seed": 0,
+      "t": 129600,
+      "n_heard": 10,
+      "applied300": 0,
+      "note": "Dark-hour energy hard gate + partial control plane: hold/issue sparse 600 everywhere, downgrade dense report to 600, log elevated-300 as energy-infeasible overnight, defe"
+    },
+    {
+      "arm": "A1",
+      "seed": 0,
+      "t": 131400,
+      "n_heard": 13,
+      "applied300": 0,
+      "note": "Night energy hard gate: sparse 600 for all nodes; elevated 300 infeasible overnight; defer dense compilation to 06:00."
+    },
+    {
+      "arm": "A1",
+      "seed": 0,
+      "t": 133200,
+      "n_heard": 10,
+      "applied300": 0,
+      "note": "Hold sparse 600 on all nodes through dark hours (energy hard gate overrides elevated 300); log elevated-300 as energy-infeasible, downgrade gw0/n06/n15, defer dense compi"
+    },
+    {
+      "arm": "A1",
+      "seed": 0,
+      "t": 135000,
+      "n_heard": 14,
+      "applied300": 0,
+      "note": "Night energy hard gate: all nodes sparse 600/600; elevated 300 logged infeasible overnight, defer to 06:00 and request conferred downgrade."
+    },
+    {
+      "arm": "A1",
+      "seed": 0,
+      "t": 136800,
+      "n_heard": 13,
+      "applied300": 0,
+      "note": "Night energy hard gate: hold/issue 600s everywhere, countermand gw0 in-flight 300, log elevated 300 as energy-infeasible until 06:00."
+    },
+    {
+      "arm": "A1",
+      "seed": 0,
+      "t": 138600,
+      "n_heard": 14,
+      "applied300": 0,
+      "note": "20:30 dark: hold all nodes sparse 600 (dense 300 would kill batteries overnight); cancel stale gw0 300 target, log elevated-300 as energy-infeasible, recompile at 06:00."
+    },
+    {
+      "arm": "A1",
+      "seed": 0,
+      "t": 140400,
+      "n_heard": 14,
+      "applied300": 0,
+      "note": "Night energy hard gate: all nodes sparse 600, override gw0 pending 300; log elevated 300 infeasible overnight and defer dense until 06:00."
+    },
+    {
+      "arm": "A1",
+      "seed": 0,
+      "t": 142200,
+      "n_heard": 14,
+      "applied300": 0,
+      "note": "Night energy gate: hold all nodes sparse 600 (explicit downgrade for gw0 whose pending 300 never applied); log elevated-300 as energy-infeasible overnight and defer dense"
+    },
+    {
+      "arm": "A1",
+      "seed": 0,
+      "t": 144000,
+      "n_heard": 13,
+      "applied300": 0,
+      "note": "Dark-hours energy gate: hold sparse 600 on all nodes, override gw0 pending 300, log elevated-300 as energy-infeasible overnight and defer dense to 06:00."
+    },
+    {
+      "arm": "A1",
+      "seed": 0,
+      "t": 145800,
+      "n_heard": 14,
+      "applied300": 0,
+      "note": "Night energy hard gate: hold ALL nodes sparse 600 (re-issue unapplied gw0 dense target as 600), log elevated-300 as energy-infeasible overnight, defer dense compile to 06"
+    },
+    {
+      "arm": "A1",
+      "seed": 0,
+      "t": 147600,
+      "n_heard": 14,
+      "applied300": 0,
+      "note": "Hour 23 dark: hold all nodes sparse 600 (gw0 explicitly downgraded, others keep 600); elevated 300 is energy-infeasible overnight, logged not fulfilled, recompile after 0"
+    },
+    {
+      "arm": "A1",
+      "seed": 0,
+      "t": 149400,
+      "n_heard": 14,
+      "applied300": 0,
+      "note": "Night energy gate: keep all sparse 600s, cancel pending dense for gw0, log elevated 300 as energy-infeasible overnight, defer to 06:00."
+    },
+    {
+      "arm": "A1",
+      "seed": 0,
+      "t": 151200,
+      "n_heard": 12,
+      "applied300": 0,
+      "note": "Hour 0 dark: dense 300 would kill nodes; keep sparse 600 everywhere, downgrade gw0's stale dense command, log elevated-300 as energy-infeasible overnight and defer dense "
+    },
+    {
+      "arm": "A1",
+      "seed": 0,
+      "t": 154800,
+      "n_heard": 14,
+      "applied300": 0,
+      "note": "Hold sparse 600 across all 14 nodes through dark (dense 300 would permanently kill nodes), explicitly downgrade gw0's stale pending 300, log elevated 300 as energy-infeas"
+    },
+    {
+      "arm": "A1",
+      "seed": 0,
+      "t": 156600,
+      "n_heard": 14,
+      "applied300": 0,
+      "note": "Keep all nodes sparse 600 overnight; dense 300 infeasible (energy) until 06:00; only re-issue gw0 to cancel pending dense command."
+    },
+    {
+      "arm": "A1",
+      "seed": 0,
+      "t": 158400,
+      "n_heard": 13,
+      "applied300": 0,
+      "note": "Dark hour 2: hold sparse 600 on all nodes to avoid permanent battery death, downgrade gw0's queued 300, log elevated 300 as energy-infeasible overnight and defer dense co"
+    },
+    {
+      "arm": "A1",
+      "seed": 0,
+      "t": 162000,
+      "n_heard": 14,
+      "applied300": 0,
+      "note": "Hold all nodes sparse 600 through dark hours (elevated 300 logged energy-infeasible; not reported running); re-issue 600 to gw0 to overwrite stale 300 target; defer dense"
+    },
+    {
+      "arm": "A1",
+      "seed": 0,
+      "t": 163800,
+      "n_heard": 12,
+      "applied300": 0,
+      "note": "Hold sparse 600 everywhere through dark hours (dense 300 would drain/kill nodes); cancel queued dense command to gw0, log elevated-300 as energy-infeasible overnight and "
+    },
+    {
+      "arm": "A1",
+      "seed": 0,
+      "t": 165600,
+      "n_heard": 10,
+      "applied300": 0,
+      "note": "Hold sparse 600 everywhere overnight (dense 300 would kill nodes); explicitly downgrade gw0, log elevated-300 as energy-infeasible, defer dense compile to 06:00."
+    },
+    {
+      "arm": "A1",
+      "seed": 0,
+      "t": 167400,
+      "n_heard": 14,
+      "applied300": 0,
+      "note": "Dark hour: hold everyone sparse 600; explicitly cancel gw0 stale dense target; log elevated-300 as energy-infeasible overnight, recompile at 06:00."
+    },
+    {
+      "arm": "A1",
+      "seed": 0,
+      "t": 169200,
+      "n_heard": 14,
+      "applied300": 0,
+      "note": "Night energy hard gate: all nodes sparse 600; log elevated 300 as energy-infeasible overnight; defer dense compile to 06:00."
+    },
+    {
+      "arm": "A1",
+      "seed": 0,
+      "t": 171000,
+      "n_heard": 14,
+      "applied300": 0,
+      "note": "Hold sparse 600 all nodes through dark until 06:00; elevated 300 logged as energy-infeasible overnight, dense compilation deferred."
+    },
+    {
+      "arm": "A1",
+      "seed": 0,
+      "t": 174600,
+      "n_heard": 13,
+      "applied300": 11,
+      "note": "Control plane not delivering: 11/14 confirm 300, 7 in flight, 3 (gw0,n01,n13) still on last applied 600; no new command is confirmable (uplink-only ~1200s backup slot < 6"
+    }
+  ]
+}

@@ -1,0 +1,109 @@
+{
+  "ka_s": 72000,
+  "n_past_deadline": 2136,
+  "truth_segments": {
+    "S_time": 588,
+    "S_cap": 327,
+    "S_energy": 571,
+    "S_access": 650
+  },
+  "offline": {
+    "labelled": 2136,
+    "correct": 2136,
+    "accuracy": 1.0,
+    "segments": {
+      "S_time": 588,
+      "S_cap": 327,
+      "S_energy": 571,
+      "S_access": 650
+    }
+  },
+  "online": {
+    "segments": {
+      "S_time": 588,
+      "S_cap": 327,
+      "unknown": 998,
+      "S_access": 223
+    },
+    "coverage": 0.5327715355805244,
+    "unknown": 998,
+    "unknown_frac": 0.46722846441947563,
+    "labelled_correct": 1138,
+    "labelled_accuracy": 1.0,
+    "confusion": {
+      "S_time->S_time": 588,
+      "S_cap->S_cap": 327,
+      "S_access->S_access": 223
+    },
+    "unknown_truth_composition": {
+      "S_energy": 571,
+      "S_access": 427
+    }
+  },
+  "obligations_with_sample_heard_after_ka": 427,
+  "obligations_with_sample_heard_after_deadline": 650,
+  "examples_heard_after_ka": [
+    [
+      "gw0:routine:t0059400",
+      "gw0:rainfall:59400",
+      59400,
+      72600
+    ],
+    [
+      "gw0:routine:t0060000",
+      "gw0:rainfall:60000",
+      60000,
+      72600
+    ],
+    [
+      "gw0:routine:t0060600",
+      "gw0:rainfall:60600",
+      60600,
+      72600
+    ],
+    [
+      "gw0:routine:t0061200",
+      "gw0:rainfall:61200",
+      61200,
+      72600
+    ],
+    [
+      "gw0:routine:t0061800",
+      "gw0:rainfall:61800",
+      61800,
+      72600
+    ]
+  ],
+  "examples_heard_after_deadline": [
+    [
+      "gw0:routine:t0047400",
+      "gw0:rainfall:47400",
+      47400,
+      48600
+    ],
+    [
+      "gw0:routine:t0048000",
+      "gw0:rainfall:48000",
+      48000,
+      49800
+    ],
+    [
+      "gw0:routine:t0048600",
+      "gw0:rainfall:48600",
+      48600,
+      51000
+    ],
+    [
+      "gw0:routine:t0049200",
+      "gw0:rainfall:49200",
+      49200,
+      52200
+    ],
+    [
+      "gw0:routine:t0049800",
+      "gw0:rainfall:49800",
+      49800,
+      53400
+    ]
+  ]
+}

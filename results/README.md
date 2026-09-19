@@ -336,3 +336,17 @@ The following interpretation corrections supersede the affected rows above; raw 
 | Artifact | Producer | Notes |
 |---|---|---|
 | `agent_traces/A0_seed0_1789738644.jsonl` （另有同名 summary 汇总文件，后缀为 .summary.json，同在 agent_traces 子目录） | `code/v3joint/r25_agent_harness.py llm 0`（deepseek-flash A0，99 决策、约 518k token） | 第一条有效真实 agent 轨迹：svc=**.3993**（dayfeed .4001）、0 死亡、命令 112 sent/606 refused/14 confirmed、任务表 gw=72000。逐决策记录完整合法观察、四个同信息工具建议、模型原始返回与 token 用量；离线重放 `r25_agent_harness.py replay <trace> 0` 逐位复现 .3993。解释与边界见 doc40。更早一次 `A0_seed0_1789737746` 系 max_tokens 被推理耗尽的接口故障废跑，已删除、不得引用。 |
+
+
+---
+
+### v0.7 review re-grounding (doc51/doc52, 2026-09-19; zero LLM)
+
+Re-analysis that narrows/corrects v0.6 claims per the independent review (docs/s7-method/v1.2/51, 52) and the v0.7 revision record (doc53). Raw r38 traces and the r37/r39 results are retained unchanged; these files add the corrected denominators, a standard-expiry control, local-visibility attribution, and an offline v5 certificate witness.
+
+| 文件 | 命令 | 种子 | 允许支持的结论 |
+|---|---|---|---|
+| `r40_local_attribution.json` | `python3 code/v3joint/r40_local_attribution.py` | 固定 seed0，诊断非统计 | 任务表 ka=20h 到达时，网关仅用 ka 前合法可见证据（heard/received≤ka）只能对 53.3%（1138/2136）已失约升级义务给出段判定且已判定部分 100% 准确（S_time 588 / S_cap 327 / S_access 223）；46.7%（998 = 没采 571 + ka 后才传到 427）必须保留 unknown（G5：没采与采了没传到不可辨）。离线 time-aware 全局归因才 100%（588/327/571/650），并纠正旧 r32 把 650 条接入迟到误标为容量（旧 S_cap 977 = 327 真容量 + 650 接入迟到）。 |
+| `r41_expiry_equiv.json` | `python3 code/v3joint/r41_expiry_equiv.py` | 10 种子配对（maxcov） | 节点 `deadline_purge` 与标准每记录到期 `generic_expiry`（creation-relative lifetime 对齐业务交付期限，不引用义务 id/槽几何/证书）在全部 10 种子**逐位等价**（svc/中断按期/死亡/备份 on/late/delivered 集合全同）⇒ 节点机制是标准 deadline expiry 的业务期限参数化实例，不是新丢弃算法。正结果保留：对 FIFO 全时段 +4.21 点（95%CI[+3.64,+4.79]，10/10 为正）、中断按期 1691→4265（2.52×）、备份过期记录 2538→1、节点死亡 12→0；对 latest-only +5.73 点（CI[+5.06,+6.39]，10/10 为正）。网关单侧抑制（不释放源端）的跨段代价 202→194（−8）。 |
+| `r42_claim_relabel.json` | `python3 code/v3joint/r42_claim_relabel.py` | 最终 11 条 r38 轨迹（99 决策/条） | 对称重标（每臂、两组、每决策都评，报分母）：旧“谎报 24/19/0”口径不成立——A1 中断窗以 hold 为主致旧评分空集零、正常组评分分支根本未运行、且把“准备/重发 dense”误当“声称已生效”。根因是观测 `link` 仅含 LoRa 接入收据 n_heard、无回传/控制面状态：A0/A0s 在强制中断窗内分别有 36/32 次确定性“link up/commands can apply”乐观误判（A1 仅 2），A1 v4 则在无强制中断轨迹反向悲观（见 r43）。旧“89 条不可行登记”实为证书措辞命中（A1 317 个决策含该类词、A0/A0s 为 0），非逐义务结构登记。解析失败→hold 共 52/1089（max_tokens 截断，非模型选择 hold），逐臂格式失败率 A0 7.1%/A0s 6.4%/A1 1.3%，三臂差距混入格式可靠性。 |
+| `r43_cert_v5_replay.json` | `python3 code/v3joint/r43_cert_v5_replay.py` | 最终 11 条轨迹，纯函数离线 replay（零 LLM） | unknown-aware v5 证书在相同观测快照上：观测无网络侧回传字段时确定性 UNREACHABLE 断言 = 0（v4 在 evidence 确认的 5/5 个健康链路时刻断言 not-delivering，v5 全部改为 UNCONFIRMED）；夜间 v4 的 528 次“PERMANENTLY kills”统一硬门被真实能量账（剩余黑夜时长×dense 增量采样能耗 vs 节点上报 SoC）拆为 189 次确会耗尽的 ENERGY-INFEASIBLE 与 339 次 NIGHT ENERGY ADVISORY（临近日出 hod 4.5–6 全部正确降级为建议）。此为反事实机制见证、非端到端 v5 agent 运行；v5 三臂与跨模型端到端对照列为 future work（用户后续补）。 |

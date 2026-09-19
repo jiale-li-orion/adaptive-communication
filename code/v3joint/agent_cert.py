@@ -170,18 +170,162 @@ def _lawful_night(sparse, day_from):
             "fulfilled.")
 
 
-class CertLLMDecider(LLMDecider):
-    """A1：与 A0-structured 相同，仅在 user prompt 决策前追加一块可行性证书。"""
 
-    def __init__(self, model="deepseek-flash", cert_kwargs=None, **kw):
+
+def _geometry_conditional(backup_rate_s, elevated_window_s):
+    return ("- RETURN GEOMETRY (conditional): the short-message backup offers one small shared packet "
+            f"per {backup_rate_s}s; an elevated window (~{elevated_window_s}s) shorter than slot "
+            "spacing may contain NO backup slot. IF AND ONLY IF the primary is unavailable across such "
+            "a window is its elevated delivery structurally unreturnable; geometry alone does not "
+            "establish an outage, and tightening sampling cannot create a slot.")
+
+
+def online_cert_block_v5(obs, ctx, backup_rate_s=1200, elevated_window_s=600,
+                         dense_day_from=6.0, dense_day_to=16.0, dusk_to=18.0, energy_safety=1.3):
+    """v5 (doc51 R3 / doc52 sec 2.1,2.3): unknown-aware feasibility projector.
+
+    Keeps three statement classes separate:
+      CONFIRMED    - a node report shows cur_sample==target (the only proof of effect);
+      UNCONFIRMED  - command in flight / receipts incomplete; implies neither effect nor unreachability;
+      UNREACHABLE  - allowed ONLY from an explicit network-side CURRENT state
+                     (obs.link.primary_backhaul_state == "down"); LoRa access receipts (n_heard) can
+                     never by themselves establish backhaul/control-plane state, so when that field is
+                     absent the projector emits UNCONFIRMED.
+    Night energy is a computed ledger, not a blanket "dense kills" claim. Geometry is conditional on
+    actual backhaul state. Pure function of the observation snapshot and public constants; no future.
+    """
+    hod = obs.get("clock_hod", 12)
+    nodes = obs.get("nodes", [])
+    n = len(nodes) or 1
+    link = obs.get("link", {})
+    heard = int(link.get("n_heard", 0))
+    cp = link.get("primary_backhaul_state")          # "up" / "down" / None(unknown)
+    dense = ctx.get("dense", 300)
+    sparse = ctx.get("sparse", 600)
+    sample_wh = ctx.get("sample_wh", 4.7e-4)
+    req = obs.get("mission", {}).get("required_period_s", sparse)
+    applied_dense = sum(1 for x in nodes if (x.get("cur_sample_s") or sparse) == dense)
+    inflight = sum(1 for x in nodes if x.get("in_flight"))
+    elevated = req <= dense
+    dark = (hod < dense_day_from or hod >= dusk_to)
+    dusk = (dense_day_to <= hod < dusk_to)
+
+    def rem_dark(h):
+        if h >= dusk_to:
+            return max(0.0, (24 - h) + dense_day_from)
+        if h < dense_day_from:
+            return max(0.0, dense_day_from - h)
+        return 0.0
+
+    def extra_wh(h):
+        return rem_dark(h) * (3600.0 / dense - 3600.0 / sparse) * sample_wh
+
+    known_soc = [(x.get("id"), x.get("soc_wh")) for x in nodes if x.get("soc_wh") is not None]
+    L = ["",
+         "FEASIBILITY CERTIFICATE v5 (unknown-aware; from YOUR command ledger, node-confirmed configs, "
+         "center receipts you actually see, clock, public constants; no future truth; advisory). Keep "
+         "three statement classes distinct: CONFIRMED (a node reports cur_sample=target; the only proof "
+         "of effect), UNCONFIRMED (in flight / incomplete receipts; neither effective nor unreachable), "
+         "UNREACHABLE (only if a network-side field says the backhaul is CURRENTLY down). LoRa hearing "
+         "n_heard is the ACCESS link and can NEVER by itself establish backhaul/control-plane state."]
+
+    if not elevated:
+        L.append(f"- Mission currently requires only the sparse {sparse}s baseline; nodes confirming it "
+                 "need no change; keep any elevated target unissued until its segment is active.")
+        return "\n".join(L)
+
+    e_add = extra_wh(hod)
+
+    if dark:
+                        # ---- night energy ledger, highest precedence ----
+        poor = [(i, s) for i, s in known_soc if s < energy_safety * e_add] if (e_add > 0 and known_soc) else []
+        if poor:
+            ids = ", ".join(i for i, _ in poor[:6])
+            extra_draws = (3600.0 / dense - 3600.0 / sparse) * rem_dark(hod)
+            L.append(
+                f"- ENERGY-INFEASIBLE TO OPEN/HOLD dense {dense}s until {dense_day_from:02.0f}:00 (computed "
+                f"ledger): ~{rem_dark(hod):.1f} dark hours remain; dense-vs-sparse adds {e_add:.4f} Wh/node "
+                f"(~{extra_draws:.0f} extra draws at {sample_wh:.1e} Wh), exceeding the safety-adjusted "
+                f"reported SoC of {len(poor)} node(s) ({ids}); with no overnight harvest they reach "
+                f"permanent cutoff. Issue sparse {sparse}s to ALL, explicitly DOWNGRADE any node confirming "
+                f"{dense}s, defer dense to {dense_day_from:02.0f}:00; log elevated-{dense} energy-infeasible, "
+                "never report it running.")
+        else:
+            basis = "is unavailable" if not known_soc else "covers the computed extra"
+            L.append(
+                f"- NIGHT ENERGY ADVISORY (not an infeasibility certificate): ~{rem_dark(hod):.1f} dark "
+                f"hours remain; dense-vs-sparse extra is {e_add:.4f} Wh/node and reported SoC {basis}; "
+                f"opening/holding dense is NOT proven to kill nodes. A conservative controller may keep "
+                f"sparse {sparse}s overnight for margin, but do not claim dense is physically impossible.")
+        if cp == "down":
+            L.append("- CONTROL PLANE: command UNREACHABLE now (network-side reports primary backhaul "
+                     "CURRENTLY down; duration not predicted). Sparse is the last applied safe config.")
+        elif cp == "up":
+            L.append("- CONTROL PLANE: network-side reports primary CURRENTLY up; the night energy ledger "
+                     "still governs whether dense may run.")
+        else:
+            L.append(f"- CONTROL PLANE: command delivery UNCONFIRMED (n_heard={heard}/{n} is LoRa ACCESS "
+                     "only; it does NOT prove the backhaul is down). Do not assert unreachable; act on the "
+                     "energy ledger via whatever is locally applied and re-evaluate in daylight.")
+        L.append(_geometry_conditional(backup_rate_s, elevated_window_s))
+        return "\n".join(L)
+
+                        # ---- daylight / dusk ----
+    if applied_dense < n:
+        if cp == "down":
+            L.append("- CONTROL PLANE: command UNREACHABLE now (network-side reports primary CURRENTLY "
+                     "down; duration not predicted). Hold the last APPLIED config; a sent-but-unconfirmed "
+                     "command is not applied; log command-unreachable for the unconfirmed subset and do "
+                     "not re-spam.")
+        elif cp == "up":
+            L.append(f"- CONTROL PLANE: network-side reports primary CURRENTLY up; {applied_dense}/{n} "
+                     f"confirm {dense}s. You MAY compile {dense}s ONCE for the {n-applied_dense} unconfirmed "
+                     f"node(s) in daylight; it is CONFIRMED only after a node reports cur_sample={dense}s; "
+                     f"do not re-issue to the {inflight} in-flight node(s).")
+        else:
+            L.append(f"- CONTROL PLANE: command delivery UNCONFIRMED ({applied_dense}/{n} confirm {dense}s, "
+                     f"n_heard={heard}/{n}). Partial LoRa receipts neither confirm effect nor prove backhaul "
+                     "failure; with no network-side backhaul state you MUST NOT assert 'not delivering'. In "
+                     "daylight you may issue the target ONCE for unconfirmed nodes, then keep it UNCONFIRMED "
+                     f"until a node reports cur_sample={dense}s; never claim it is running and do not re-spam "
+                     "in-flight nodes.")
+        if applied_dense == 0:
+            L.append(f"- MISSION NOT CONFIRMED IN EFFECT: no node confirms elevated-{dense}s; the field "
+                     f"lawfully keeps its last APPLIED ({sparse}s) config. Do not report elevated monitoring "
+                     "as running.")
+        else:
+            L.append(f"- PARTIAL: {applied_dense}/{n} confirm {dense}s; the unconfirmed part is not in "
+                     "effect (UNCONFIRMED, not unreachable).")
+    else:
+        L.append(f"- All {n}/{n} nodes CONFIRM {dense}s (node reports); the elevated config is in effect.")
+    if dusk:
+        L.append(f"- DUSK POLICY ADVICE (Class A apply/withdraw lead time): opening new dense near hour "
+                 f"{hod:.0f} may leave it applied into dark; prefer sparse {sparse}s and downgrade any "
+                 f"{dense}s node before {dusk_to:02.0f}:00. This is scheduling advice, not an infeasibility "
+                 "proof.")
+    L.append(_geometry_conditional(backup_rate_s, elevated_window_s))
+    L.append("- LAWFUL ACTIONS (DZ/T 0460 §5.3.3/§8.4.2): emit only what node reports confirm; mark unmet "
+             "obligations UNCONFIRMED with the segment (no-return-slot / command-unconfirmed / "
+             "energy-infeasible) rather than asserting success or unreachability without evidence; request "
+             "added backup quota or a conferred downgrade for what cannot be guaranteed. Never mark an unmet "
+             "obligation fulfilled.")
+    return "\n".join(L)
+
+
+class CertLLMDecider(LLMDecider):
+    """A1：A0-structured + 决策前一块可行性证书。version="v4" 逐位复现 r38；"v5" 为 unknown-aware。"""
+
+    def __init__(self, model="deepseek-flash", cert_kwargs=None, version="v4", **kw):
         kw.setdefault("structured_state", True)
         super().__init__(model=model, **kw)
         self.cert_kwargs = dict(cert_kwargs or {})
-        self.kind = kw.get("tag", "A1") + "-cert"
+        self.version = version
+        self._cert_fn = online_cert_block_v5 if version == "v5" else online_cert_block
+        self.kind = kw.get("tag", "A1") + "-cert" + ("-v5" if version == "v5" else "")
 
     def _prompt(self, obs, ctx):
         sysp, usr = super()._prompt(obs, ctx)
-        cert = online_cert_block(obs, ctx, **self.cert_kwargs)
+        cert = self._cert_fn(obs, ctx, **self.cert_kwargs)
         marker = "\nDecide now. Emit the strict JSON object."
         if marker in usr:
             usr = usr[: usr.rfind(marker)] + cert + "\n" + marker.lstrip("\n")

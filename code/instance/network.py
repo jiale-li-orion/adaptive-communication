@@ -421,6 +421,23 @@ class Node:
                     self.dropped += 1
                 self.cache = keep
             return self.cache[:max_slots]
+        if self.p.cache_service == "generic_expiry":
+            # 标准每记录到期（普通 BPv7 lifetime / expiry 基线，doc51 R5）：源端在记录**创建时**
+            # 按其对监测契约的有用终点赋予一个 creation-relative lifetime（到期时刻对齐业务交付
+            # 期限 (floor(taken/P)+2)P）；到期删除并释放保留、未到期一律保留，幸存者按 FIFO 取批。
+            # 它不引用义务 id、回传槽几何或逐义务证书，仅用设备可知的公开节奏 P；用于检验
+            # deadline_purge 相对"同期限普通 expiry"是否存在任何增量。
+            period = max(1, int(self.p.obligation_period_s))
+            keep, drop = [], []
+            for s in self.cache:
+                expires_at = s.taken_at + ((period - s.taken_at % period) + period)
+                (drop if expires_at <= t_s else keep).append(s)
+            if drop:
+                for old in drop:
+                    self.transit[old.sample_id].dropped_at = t_s
+                    self.dropped += 1
+                self.cache = keep
+            return self.cache[:max_slots]
         if self.p.cache_service in ("edf", "obligation_greedy"):
             # **两种"按义务"的纪律**（§31 §五 第一项判别要求加入的两条）。
             # 它们只用**设备自己知道的东西**：缓存的未确认记录 + 自己的监测契约节奏。

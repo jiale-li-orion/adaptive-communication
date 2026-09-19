@@ -11,17 +11,17 @@
 \usepackage{caption}
 \usepackage{tikz}
 \usetikzlibrary{positioning,arrows.meta,calc}
-
-\newcommand{\sys}{\textsc{CertCompile}\xspace}
 \usepackage{xspace}
+\newcommand{\sys}{\textsc{ObliRun}\xspace}
 \newcommand{\stime}{$S_{\mathrm{time}}$\xspace}
 \newcommand{\scap}{$S_{\mathrm{cap}}$\xspace}
 \newcommand{\senergy}{$S_{\mathrm{energy}}$\xspace}
 \newcommand{\saccess}{$S_{\mathrm{access}}$\xspace}
+\newcommand{\unk}{$U$\xspace}
 
-\title{\textbf{Execution-Grounded Mission Feasibility for Intermittent\\
-Geohazard Monitoring: Obligation-Level Certificates, a Local\\
-Safety Floor, and Lawful Re-Compilation}}
+\title{\textbf{Execution-Grounded Obligation Runtime for Intermittent\\
+Pre-Disaster Geohazard Monitoring: Local Evidence,\\
+Deadline-Aligned Expiry, and Honest Infeasibility}}
 
 \author{Pre-disaster monitoring \& agentic emergency communication working draft\\
 \texttt{agentic-communication} repository, method v1.2 --- \today}
@@ -32,71 +32,37 @@ Safety Floor, and Lawful Re-Compilation}}
 \maketitle
 
 \begin{abstract}
-We study whether an agent runtime placed \emph{above} the communication entities of a
-pre-disaster landslide monitoring deployment can keep a monitoring mission executing when
-field nodes, the LoRaWAN access, and the cellular/short-message backhaul dynamically appear,
-degrade, disconnect, and recover. Under a source-grounded mountain deployment (battery+solar
-Class~A nodes, a gateway with local autonomy, a 16~h cellular outage, and a sparse BeiDou
-short-message backup), we first establish a \emph{symmetric feasibility frontier}: with
-strong reactive baselines (energy-aware sampling, obligation-driven max-coverage backup
-packing, piecewise mission views, FIFO repair), per-obligation counterfactual relaxations and
-an omniscient offline packing show that a controller---including a joint optimizer or an
-LLM---cannot raise on-time delivery by re-optimising collection, scheduling, or packing under the
-standard edge discipline, without changing resources or the granted authority (the one
-fixed-resource gain is an orthogonal execution-layer change to record disposition, shown later);
-the residual failures decompose cleanly into four chain segments. We then show that the
-genuine, achievable value is \emph{feasibility truth}, not throughput. At mission-compile
-time, the geometry of the backup schedule alone lets us certify, with 100\% recall and zero
-false positives a median of 7.2~h ahead, the obligations whose delivery window contains no
-return path; when the mission table finally traverses the outage, the gateway attributes the
-correct failure segment for 100\% of already-missed obligations from its local log. We further
-find that 45.6\% of short-message records delivered during the outage arrive already expired.
-Critically, feasibility truth also has an \emph{execution-layer payoff}. Under the standard link
-semantics in which a record is cleared from a node's FIFO repair cache only once the centre
-acknowledges it, naively withholding expired backup records is not free: the unacknowledged dead
-records keep occupying each limited access batch and push fresh samples' reception past the
-outage---a cross-layer transfer of cost from the backhaul to the access segment. A
-\emph{deadline-aware selective purge}, the execution-layer counterpart of the certificate, stops
-holding and retransmitting only records whose obligation deadline has passed while retaining
-every still-rescuable record; it is implementable at the node with zero downlink signalling. At
-the main point it raises outage on-time delivery from 202 to 434 and full-horizon service from
-0.400 to 0.432 under unchanged resources, and drives expired sends to zero (send-promise precision
-$0.54\!\to\!1.00$). A paired ten-seed sweep confirms the effect: service rises by a mean 4.21
-points (95\% CI $+3.64$ to $+4.79$, positive on all ten seeds) and outage on-time delivery
-increases 2.52-fold, while it dominates the AoI latest-only queue by 5.73 points (CI $+5.06$ to
-$+6.39$) on every seed---latest-only matches outage freshness only by discarding still-useful
-records. EDF and obligation-greedy queues that reorder but never release gain nothing.
-A deterministic, LLM-free placement study then fixes \emph{where} feasibility must be enforced.
-A na\"ive centre that directly complies with the elevated schedule permanently kills 13 of 14
-nodes on every seed (39 deaths over three seeds) and halves service; a centre-side feasibility
-\emph{envelope} that constrains any planner to lawful actions cuts refused commands by an order
-of magnitude (2488$\to$222) yet still cannot save the tightest-energy seed (12 deaths), because
-the night-time relax command must cross the backhaul and then a Class~A receive window before it
-applies. Moving the safety-critical night-energy rule to a \emph{node-local autonomy floor}
-removes every death (39/12$\to$0) at unchanged service. A purely local upper bound---a
-pre-provisioned day/night rhythm with zero centre commands---attains the same service (0.360) as
-every centre-compiled configuration: under static, pre-provisioned, predictable missions a centre
-controller adds no throughput. The defensible role of the agent runtime is therefore confined to
-what local autonomy cannot obtain---non-pre-provisioned authorised changes, structural
-infeasibility disclosure, and renegotiation---mediated by a deterministic envelope that can never
-override the local safety floor. In a full three-arm live study with a real LLM controller (three
-outage seeds each for an unaided agent, an agent given an ordinary engineering checklist, and a
-certificate agent, plus healthy-link controls), the unaided and checklist agents mistake LoRa
-access for backhaul connectivity, storm ineffective commands, and falsely report the elevated
-mission as in effect (24 and 19 times), fatally densifying at night (35 and 39 node-deaths); the
-certificate agent eliminates the false reports and ineffective dense commands, logs structural
-infeasibility instead, and cuts deaths to 4 (zero on two seeds)---the four tightest-seed residuals
-that the deterministic local floor then removes---and on a healthy link it does not suppress the
-feasible upgrade but is strictly better, whereas an unaided agent still kills 13 nodes by
-over-sampling. Given the certificate, the same agent stops, locates
-the blocking segment, holds the last lawful configuration, and initiates a standards-authorised
-re-compilation. The contribution is an execution-grounded obligation model, segment-labelled
-feasibility certificates, two execution-layer mechanisms (deadline-aware selective purge and a
-locality-correct local safety floor with a centre feasibility envelope) that turn certified loss
-into metered-cost savings, higher on-time delivery, and guaranteed survival without adding
-resources, a symmetric negative result bounding what any centre controller may add under static
-missions, and lawful re-compilation that aligns what the system promises with what it can
-actually deliver.
+After a communication loss, issued configurations and cached records keep producing
+consequences: a sampling regime still drains a battery it can no longer be told to relax, and
+records already past their usefulness keep competing for the few recovery opportunities. We ask
+\emph{on what evidence, and at which layer, an execution runtime may stop those consequences} for
+a pre-disaster landslide deployment---battery-plus-solar LoRaWAN Class~A nodes, an autonomous
+gateway, a 16~h cellular outage, and a sparse BeiDou short-message backup---with an agent runtime
+placed \emph{above} the communication entities. We make three points. First, under partial
+observability the runtime must separate \emph{fulfilment state} from \emph{failure cause}. When
+the delayed mission table reaches the gateway, evidence legally held by then identifies the
+failure segment for only 53.3\% of already-missed upgraded obligations, with zero errors on the
+labelled subset; the remaining 46.7\% are intrinsically \emph{unknown} (never sampled vs.\
+sampled but not yet heard), and complete 100\% segment attribution is available only as offline
+diagnosis. Second, complete diagnosis is not a precondition for correct local action. A node
+knows when its own records pass their business deadline and can stop worthless retransmission
+without resolving why the remote side is silent. This disposition is ordinary per-record
+expiration (a Bundle-Protocol lifetime aligned to the obligation's delivery deadline): we show
+it is bit-identical to a prior ``certificate-driven purge'', and that its basis and placement,
+not a new discard algorithm, carry the gain---outage on-time delivery 202$\to$434 at the main
+point, a paired ten-seed $+4.21$ service points (95\% CI $+3.64$ to $+4.79$, positive on all
+seeds), 2.52-fold outage delivery, expired backup records 2538$\to$1, and node deaths 12$\to$0;
+withholding expired \emph{sends} at the gateway without releasing the source cache instead moves
+cost to the access segment ($-8$). Third, enforcement follows a locality principle---a
+constraint acts where evidence, authority, and the observe-decide-act delay jointly permit; a
+node-local night-energy floor removes deaths in the tested seeds while a centre envelope alone
+cannot, and a pre-provisioned local rhythm matches every centre-compiled service level for the
+tested static missions (a scoped negative result, not a global optimality claim). A real-LLM
+three-arm study is formative: it reveals that access receipts were mistaken for backhaul state
+in both directions, and an unknown-aware projector removes the healthy-link false alarms in
+offline replay; end-to-end and cross-model validation is specified as future work. The
+contribution is an execution-grounded obligation runtime that acts on locally certain evidence
+while never upgrading ``unconfirmed'' to ``unreachable''.
 \end{abstract}
 
 \section{Introduction}
@@ -105,133 +71,132 @@ actually deliver.
 \paragraph{Where the agent sits.}
 Prior emergency-communication research combines and recovers \emph{given} network roles and
 infrastructure: it places UAVs, allocates bandwidth, re-plans topology, or sequences
-infrastructure recovery tools. We instead place an agent runtime \emph{above} these entities
-and study its ability to sustain task execution as the entities themselves change state. The
-setting is pre-disaster monitoring in a mountainous geohazard area, under tight energy and
-intermittent access/backhaul. The reference deployment keeps field nodes, a gateway with a
-cache and pre-provisioned autonomous rules, and intermittent backhaul; LoRaWAN Class~A is the
-studied access. Relay and backup backhaul enter only where hardware and standards support
-them.
+infrastructure-recovery tools. We instead place an agent runtime \emph{above} these entities and
+study its ability to sustain task execution as the entities themselves appear, degrade,
+disconnect, and recover. The setting is \emph{pre-disaster} monitoring in a mountainous geohazard
+area, under tight energy and intermittent access/backhaul. The reference deployment keeps field
+nodes, a gateway with a cache and pre-provisioned autonomous rules, and intermittent backhaul;
+LoRaWAN Class~A is the studied access (a field study used a custom LoRa link). Relay and backup
+backhaul enter only where hardware and standards support them. The agent never judges landslide
+risk.
 
 \paragraph{What we expected, and what we found.}
-An early hypothesis was that an agent that jointly configures collection and backup sending
-would deliver more than fixed rules. A sequence of increasingly strong, symmetric tests
-refuted the \emph{throughput} version of that hypothesis, and---importantly---refuted it
-without rigging the baseline. Under fixed resources, strong reactive policies already sit on
-the feasible frontier; the failures that remain are physical walls (no return slot, backup
-capacity, night-time energy), and omniscient offline packing cannot route around them. This bound
-concerns collection, scheduling, and packing decisions under the standard hold-until-acknowledged
-edge discipline; we later find one fixed-resource gain orthogonal to it, an execution-layer change
-to how already-dead records are disposed (\S\ref{sec:purge}).
+An early hypothesis was that an agent jointly configuring collection and backup sending would
+deliver more than fixed rules. Symmetric tests against deliberately strong ordinary baselines
+(energy-aware sampling, obligation-driven max-coverage backup packing, piecewise mission views,
+FIFO repair, rolling MPC, and an omniscient offline packer) found no realisable on-time delivery
+gain from re-optimising collection, scheduling, or packing under fixed resources and the standard
+hold-until-acknowledged edge discipline, over the policy families we tested. We report this as a
+scoped negative result about the tested strategies, not as a proof that no better scheduler
+exists. Closing that throughput question did not close the research problem.
 
-Closing the throughput question did not close the research problem. Instrumenting a real LLM
-controller exposed a different, sharper failure: the runtime is \emph{blind to where the
-mission breaks}. During a 16~h backhaul outage it read ``nodes are heard over LoRa'' as
-``backhaul is up'', kept emitting the elevated 300~s configuration that the outage made
-unapplyable (the vast majority of these commands were refused, almost none confirmed), oscillated between configurations every 30~minutes, and reported the elevated
-mission as running while the field still executed the previous, lower alert level. The same
-aggregate telemetry (age-of-information, state-of-charge) cannot tell the controller whether
-data were never sampled, sit at a node, sit at the gateway, or lack a return opportunity, and
-cannot distinguish a command queued, in transit, or applied.
+\paragraph{The problem that remains: consequences continue after contact is lost.}
+Instrumenting a real LLM controller exposed a sharper failure than low throughput: the runtime
+could not tell \emph{where} the mission broke, and it acted on that confusion in both directions.
+During a 16~h backhaul outage it read ``nodes are heard over LoRa'' as ``backhaul is up'' and kept
+emitting an elevated 300~s configuration the outage made unapplyable; on a healthy link a
+certificate variant read ``not every node was heard this window'' as ``the control plane is not
+delivering''. The same aggregate telemetry (age-of-information, state-of-charge, a count of heard
+nodes) cannot distinguish data never sampled, data sitting at a node, data at the gateway, or a
+missing return opportunity, and cannot distinguish a command queued, in transit, or applied. Two
+effects then persist with no one to stop them: a configuration already issued keeps driving
+energy use through the night, and records already past their deadline keep filling the limited
+access batches.
 
-\paragraph{The reframed problem.}
-The controller should compile a changing, authorised monitoring requirement into an
-\emph{executable plan} over sampling, access, energy, and return opportunities, and---crucially---when a part of the mission cannot be honoured, it must say \emph{which obligation,
-in which time interval, at which chain segment, is infeasible, and what lawful change would
-move it}, rather than silently under-delivering or killing nodes to try.
+\paragraph{Reframed question and core insight.}
+The controller should compile a changing, authorised monitoring requirement into a plan that can
+actually be executed over sampling, access, energy, and return opportunities; when part cannot be
+honoured it should report the obligation, interval, and segment as one of three rigorously
+separate statements---\textbf{confirmed}, \textbf{unconfirmed}, and
+\textbf{unreachable}---rather than silently under-delivering or killing nodes to try. Our central
+finding is that \emph{complete diagnosis is not required for correct local action}. The centre
+may be unable to distinguish a browned-out node from a lost link, yet the node itself knows
+exactly when its own records pass their business deadline and can stop retransmitting them; the
+evidence needed to stop a worthless local action can be strictly smaller than the evidence needed
+to diagnose the whole chain. This turns the runtime's goal from ``be certain everywhere'' to
+``match the statement and the action to the evidence actually available at the acting layer''.
 
 \paragraph{Contributions.}
 \begin{enumerate}[leftmargin=*,itemsep=2pt]
-\item \textbf{Obligation-chain model and symmetric feasibility frontier (\S\ref{sec:frontier}).}
-A per-obligation chain (qualified sample $\to$ gateway $\to$ return before deadline $\to$
-central evidence) and a methodology of symmetric per-obligation counterfactual relaxations.
-Strong baselines attain the frontier; under fixed resources no controller (rule, joint MPC,
-or omniscient packing) has a realisable on-time delivery gain. Failures decompose into four
-segments with zero unexplained remainder.
-\item \textbf{Execution-grounded feasibility certificates (\S\ref{sec:cert}).}
-Compile-time structural certificates (no return slot; mission/command unreachable) that are
-100\% sensitive with zero false positives and a 7.2~h median lead, plus arrival-time segment
-attribution at 100\% once the delayed mission table reaches the field. We delimit exactly
-which claims are deterministic and which require online state.
-\item \textbf{Lawful re-compilation and real cost (\S\ref{sec:cert},\S\ref{sec:eval}).}
-Re-compilation confined to standards-granted authority (remote frequency adjustment;
-conference upgrade/downgrade), with measurable cost accounting: 45.6\% of outage short-message
-records arrive expired (a record-level waste upper bound), and certificate-aware holding avoids
-futile night-time dense sampling that permanently kills nodes.
-\item \textbf{Execution-layer certificate: deadline-aware selective purge (\S\ref{sec:purge},\S\ref{sec:eval}).}
-The same feasibility judgement, applied at the edge, releases from the FIFO repair cache only
-records proven past their deadline and retains every rescuable one. Under fixed resources it more
-than doubles outage on-time delivery at the main point (202$\to$434) and raises full-horizon
-service 3.2 points there; a paired ten-seed sweep gives a mean $+4.21$ points (95\% CI
-$+3.64$ to $+4.79$, positive on all ten seeds) and 2.52-fold outage on-time delivery, with expired
-sends cleared and send-promise precision $0.54\!\to\!1.00$. It is location-independent (a
-zero-signalling node queue slightly beats a gateway version), dominates AoI latest-only on every
-seed, and is not reproduced by EDF or obligation-greedy queues.
-\item \textbf{Execution locality and a layered feasibility runtime (\S\ref{sec:locality}).}
-A deterministic, LLM-free placement study establishes that safety-critical feasibility must be
-enforced where it can act in time: a node-local night-energy floor and deadline purge (zero
-downlink), gateway-local autonomy (max-coverage packing, mission-view gating, arrival-time
-attribution), and a centre runtime confined to what local autonomy cannot obtain---non-pre-provisioned
-authorised changes, structural infeasibility disclosure, and renegotiation---with every centre
-action passed through a deterministic feasibility envelope that cannot override the local floor.
-The node-local floor removes all permanent deaths (39 and 12 $\to$ 0 over three seeds) at unchanged
-service; a zero-command purely local upper bound matches every centre-compiled service level
-(0.360), a symmetric negative result that closes centre throughput/energy control under static
-pre-provisioned missions; the centre envelope alone cuts refused commands 2488$\to$222 but cannot
-guarantee survival without the local floor (12 deaths remain on the tightest-energy seed).
-\item \textbf{Real-agent three-arm evidence (\S\ref{sec:agent}.)}
-With identical legal information, adding only the certificate converts a real LLM
-controller's segment misdiagnosis, command storm, and silent mis-reporting into
-segment-correct, lawful, honest behaviour: across three outage seeds the unaided and
-checklist agents cause 35/39 permanent deaths with 24/19 false upgrade reports while the
-certificate agent causes 4 (zero on two seeds) with zero false reports, does not suppress a
-feasible upgrade on a healthy link, and leaves the residual energy-safety guarantee to the
-deterministic local floor.
+\item \textbf{Obligation chains under partial observability (\S\ref{sec:model},\S\ref{sec:cert}).}
+A per-obligation execution chain and a three-class statement semantics that separates fulfilment
+state from failure cause and permits an explicit \emph{unknown}. At gateway arrival, locally
+legal evidence labels 53.3\% of missed upgraded obligations with 100\% precision on the labelled
+subset and leaves 46.7\% unknown; time-aware offline attribution reaches 100\%, correcting a prior
+mis-attribution of late access to backhaul capacity. Compile-time no-return geometry is retained
+as a \emph{conditional} structural certificate.
+\item \textbf{Deadline-aligned expiry as a local release primitive (\S\ref{sec:purge}).}
+Releasing a record when its business delivery deadline passes is standard per-record expiration
+(BPv7 lifetime), and we prove a prior certificate-driven purge is bit-identical to it on ten
+seeds. The defensible novelty is the obligation-deadline basis (not packet age or hop TTL), the
+zero-downlink source placement, and cross-segment consistency: suppressing expired sends at the
+gateway alone back-pressures access ($-8$ on-time), whereas source-local expiry raises outage
+on-time delivery 2.52-fold with expired sends driven to zero.
+\item \textbf{Execution locality and a layered runtime (\S\ref{sec:locality}).}
+A locality criterion---act where evidence is available, the action is authorised, and the
+observe-decide-act delay is shorter than the remaining intervention window---assigns a
+node-local night-energy floor, gateway-local packing and attribution, and a centre runtime
+restricted to what local autonomy cannot obtain. Deterministic tests show the floor removes
+deaths in the tested seeds while a centre envelope alone cannot; a pre-provisioned local rhythm
+matches centre-compiled service for the tested static missions. We state these as empirical,
+point-specific results.
+\item \textbf{A formative real-agent study and an unknown-aware mechanism (\S\ref{sec:agent}).}
+A three-arm live LLM study with symmetric accounting shows that access receipts were used as
+backhaul state in both an optimistic and a pessimistic direction, that apparent honesty
+differences mixed in output-format reliability and an expert prompt packet, and that the prior
+``infeasibility log'' count was prompt-taught wording. An unknown-aware v5 projector removes the
+healthy-link false assertions in offline replay and replaces a blanket night gate with a computed
+energy ledger; end-to-end v5 and cross-model runs are specified as future work.
 \end{enumerate}
 We do \emph{not} claim an LLM out-optimises a solver with the full task model; the deterministic
-projector, packer, and energy ledger are in-layer tools available to rules and agents alike.
+projector, expiry rule, packer, and energy ledger are in-layer tools available to rules and
+agents alike, and rules benefiting from them is a system success rather than a failure.
 
 \section{Background, scenario, and standards grounding}
 \label{sec:bg}
 
 \paragraph{Deployment.}
-Fourteen sensor nodes in two groups monitor displacement (and rainfall) on a slope. Nodes
-sample and upload to a local gateway over LoRaWAN Class~A; the gateway forwards to a central
-server over cellular backhaul, with a BeiDou short-message service as a sparse backup. Nodes
-are battery plus small solar. The mission is \emph{pre-disaster} and routine, with authorised
-warning-level changes; the agent never judges landslide risk.
+Fourteen sensor nodes in two groups monitor displacement (and rainfall) on a slope. Nodes sample
+and upload to a local gateway over LoRaWAN Class~A; the gateway forwards to a central server over
+cellular backhaul, with a BeiDou short-message service as a sparse backup. Nodes are battery plus
+small solar. The mission is \emph{pre-disaster} and routine, with authorised warning-level
+changes; the agent never judges landslide risk. Node count, role mapping, and disturbance
+parameters follow the frozen Task v1.1 instance manifest; an earlier 16-node sketch is not used as
+a field fact.
 
 \paragraph{Standards-grounded authority.}
 We use two Chinese geological-hazard monitoring industry standards, DZ/T~0460--2023 and
-DZ/T~0450--2023, retrieved and clause-audited in the repository~\cite{dzt0460,dzt0450}. Relevant clauses:
-\S5.3.3 permits \emph{remote dynamic adjustment of sampling and upload frequency by warning
-level} (no numeric levels are given, so the periods we use are declared research choices);
-\S8.4.1 defines four levels (red/orange/yellow/blue) and \S8.4.2 permits upgrade, downgrade,
-or termination after a conference; \S5.3.7 calls for dual-mode communication under weak
-coverage in high-risk extreme weather (a conditional requirement, appearing once); \S5.3.6
-gives endurance targets. The BeiDou open-service specification (BDS-OS-PS-3.0)~\cite{bdsps3} reports
-$\geq$95\% success, average latency under 2~s, an average service frequency of one message per
-30~s, and a single-message ceiling of 14{,}000 bits, while noting that realised frequency and
-maximum length are constrained by registration parameters---i.e.\ the rate is a
-\emph{provisioned} quantity. These clauses bound what the agent may lawfully do: it may
-re-compile frequency within granted levels and request a conference change, but it may not
-silently drop an obligation or declare risk itself.
+DZ/T~0450--2023, retrieved and clause-audited in the repository~\cite{dzt0460,dzt0450}. Relevant
+clauses: \S5.3.3 permits \emph{remote dynamic adjustment of sampling and upload frequency by
+warning level} (no numeric levels are given, so the periods we use are declared research choices);
+\S8.4.1 defines four levels (red/orange/yellow/blue) and \S8.4.2 permits upgrade, downgrade, or
+termination after a conference; \S5.3.7 calls for dual-mode communication under weak coverage in
+high-risk extreme weather---a conditional clause that appears once, not a blanket dual-channel
+mandate, and the communication-layer standard does not impose it; \S5.3.6 gives endurance targets.
+The BeiDou open-service specification (BDS-OS-PS-3.0)~\cite{bdsps3} reports $\geq$95\% success,
+average latency under 2~s, an average service frequency of one message per 30~s, and a
+single-message ceiling of 14{,}000 bits, while noting that realised frequency and maximum length
+are constrained by registration parameters---i.e.\ the rate is a \emph{provisioned} quantity.
+These clauses bound what the runtime may lawfully do: re-compile frequency within granted levels
+and request a conference change, but never silently drop an obligation or declare risk.
 
 \paragraph{Why the numbers are what they are.}
-The short-message service is metered and sparse; the studied operating point uses one
-78-byte packet every 1200~s (20~B header, 58~B payload; a displacement sample is 6~B, so
+The short-message service is metered and sparse; the studied operating point uses one 78-byte
+packet every 1200~s (20~B header, 58~B payload; a displacement sample is 6~B and rainfall 4~B, so
 roughly 9--10 samples fit per packet). The elevated (yellow) task uses a 300~s sampling period
-with half-open windows and a delivery deadline two periods after window open, i.e.\ a
-$\approx$600~s delivery window---\emph{shorter} than the 1200~s backup slot spacing. This
-geometric mismatch is load-bearing for our structural certificate.
+with a delivery deadline two periods after window open, i.e.\ a $\approx$600~s delivery
+window---\emph{shorter} than the 1200~s backup slot spacing. The 200~B single-packet ceiling and
+the $\geq$1~min period in DZ/T~0450 (\S7.4.3.2, \S7.4.2.3, with a $\geq$5~s inter-message gap at
+\S7.4.3.5) belong to different service-formulation sections and are not combined into a single
+``BeiDou operating point''; the 1200~s/78~B point is a declared research choice.
 
 \section{System model and the obligation chain}
 \label{sec:model}
 
-Time is slotted at 60~s. A \textbf{monitoring obligation} $o$ is a tuple
+Time is slotted at 60~s; $t{=}0$ is 06:00 local. A \textbf{monitoring obligation} $o$ is a tuple
 $(n,m,[l_o,h_o),d_o)$ over node $n$, measurand $m$, sampling window $[l_o,h_o)$ and absolute
-delivery deadline $d_o$. A routine obligation at period $P$ has $h_o-l_o=P$ and
-$d_o=h_o+P$ (one period of grace). We track a sample through a fixed chain:
+delivery deadline $d_o$. A routine obligation at period $P$ has $h_o-l_o=P$ and $d_o=h_o+P$ (one
+period of grace). We track a sample through a fixed chain:
 \[
 \underbrace{\text{qualified sample taken}}_{\text{node}}
 \;\to\;
@@ -242,9 +207,10 @@ $d_o=h_o+P$ (one period of grace). We track a sample through a fixed chain:
 \underbrace{\text{central evidence}}_{\text{mission fulfilled}} .
 \]
 An obligation is \emph{fulfilled} only when a sample matching $(n,m)$ is taken in-window and
-received centrally by $d_o$; matching uses half-open windows so a boundary sample cannot
-double-cover adjacent windows. Figure~\ref{fig:chain} marks the chain stage at which each
-failure segment is charged.
+received centrally by $d_o$. For piecewise missions the first segment uses a closed interval and
+later segments use half-open windows, so a boundary sample cannot double-cover adjacent windows
+after a level change. Figure~\ref{fig:chain} marks the chain stage at which each failure segment
+is charged.
 
 \begin{figure}[t]
 \centering
@@ -263,83 +229,89 @@ failure segment is charged.
   \draw[arr] (h) -- (r);
   \draw[arr] (r) -- (e);
   \node[fail,below=3mm of s] {$S_{\mathrm{energy}}$: no qualified sample};
-  \node[fail,below=3mm of h] {$S_{\mathrm{access}}$: collected, not heard};
+  \node[fail,below=3mm of h] {$S_{\mathrm{access}}$: collected, not heard in time};
   \node[fail,below=3mm of r] {$S_{\mathrm{time}}$: no return slot;\newline $S_{\mathrm{cap}}$: slot, but capacity};
   \node[fail,below=3mm of e] {obligation met};
 \end{tikzpicture}
 \caption{The per-obligation chain and the four failure segments. An unfulfilled obligation is
 charged to its \emph{first} failing stage under an optimistic model that grants every later
-assumption, so the labels are mutually exclusive and leave no unexplained remainder.}
+assumption, so the offline labels are mutually exclusive. An online observer that cannot see a
+stage must return \emph{unknown} rather than guess it.}
 \label{fig:chain}
 \end{figure}
 
 \paragraph{Energy and devices.}
-A sample costs $4.7{\times}10^{-4}$~Wh; an uplink $2.33{\times}10^{-5}$~Wh. Battery capacity
-is 0.05~Wh. Solar input follows a 12~h half-sine with peak 0.03~Wh/h, with per-node/hour
-stochastic cloud occlusion (35\% chance of attenuation to 0.25; expected coefficient
-$k_c\!\approx\!0.7375$). A node that browns out \emph{permanently} dies in the main
-configuration (an absorbing state; a restart sensitivity is left open). A cache of 240 slots
-with FIFO replacement sits at the node. A record is removed from this cache only once it is
-acknowledged at the centre (the acknowledgement is modelled synchronously and without airtime,
-a pre-existing simplification that favours every queue discipline equally); until then it is
-retransmitted oldest-first, with at most 32 records per upload opportunity. Access succeeds
-with probability 0.74; primary backhaul is good with probability 0.62.
+A sample costs $4.7{\times}10^{-4}$~Wh;
+an uplink costs $2.33{\times}10^{-5}$~Wh. Battery capacity is 0.05~Wh. Solar input follows a 12~h
+half-sine with peak 0.03~Wh/h, with per-node/hour stochastic cloud occlusion. A node that browns
+out \emph{permanently} dies in the main configuration (an absorbing state; a restart sensitivity
+is left open). A cache of 240 slots with FIFO replacement sits at the node. Under the modelled
+standard edge discipline a record leaves this cache only once it is acknowledged at the centre
+(the acknowledgement is modelled synchronously and without airtime, a pre-existing simplification
+that favours every queue discipline equally); until then it is retransmitted oldest-first, with at
+most 32 records per upload opportunity. Access succeeds with probability 0.74; the primary
+backhaul is good with probability 0.62.
 
 \paragraph{Class~A execution reality.}
-A configuration command is not immediate: it is queued, transits the backhaul to the gateway,
-and reaches a node only in its next Class~A receive window; it counts as \textsc{applied}
-only when the node later reports the new config. During a backhaul outage, commands are
-refused and fresh telemetry stops. A command issued now, applied later, and still consuming
-energy in between is a first-class effect; dense sampling across a 12~h night needs
-$\approx$0.071~Wh, exceeding the 0.05~Wh battery.
+A configuration command is not immediate: it is queued, transits the backhaul to the gateway, and
+reaches a node only in its next Class~A receive window; it counts as \textsc{applied} only when
+the node later reports the new config. During a backhaul outage, commands are refused at admission
+(they are never transmitted and occupy no airtime, so their count is a command-hygiene metric, not
+a wireless or short-message billing saving). A command issued now, applied later, and still
+consuming energy in between is a first-class effect; holding a dense 300~s regime across a 12~h
+night needs $\approx$0.071~Wh, exceeding the 0.05~Wh battery.
 
-\paragraph{Mission reachability.}
-The authorised schedule is piecewise (blue 600~s, then yellow 300~s from $t{=}6$~h). Crucially,
-the \emph{mission table itself} must traverse the backhaul to the gateway; in the main
-scenario the primary is down from $t{=}4$~h to $t{=}20$~h, and the table (which does not use
-the short-message path) reaches the gateway only at $t{=}20$~h. Before that instant the field
-lawfully continues the last \textsc{applied} blue configuration under local autonomy. This is
-not a modelling convenience: it is the phenomenon we study.
+\paragraph{Mission reachability and who knows what, when.}
+The authorised schedule is piecewise (blue 600~s, then yellow 300~s from $t{=}6$~h). The centre is
+pre-provisioned with the full authorised schedule; the \emph{field gateway's} obligation view,
+however, is gated by a piecewise mission view and is published incrementally only as the mission
+table traverses the backhaul. In the main scenario the primary is down from $t{=}4$~h to
+$t{=}20$~h, and the table (which does not use the short-message path) reaches the gateway only at
+$t{=}20$~h; before then the field lawfully continues the last \textsc{applied} blue configuration
+under local autonomy. We therefore do not model the field learning of an unseen future task at
+runtime; we model a pre-authorised schedule whose field view is delayed by the outage.
+
+\paragraph{Three statement classes.}
+Throughout, the runtime keeps distinct: \textbf{confirmed} (an independent node report shows the
+target config, or a matching sample is received centrally); \textbf{unconfirmed} (a command is in
+flight or receipts are incomplete---this implies neither that it took effect nor that the channel
+is down); and \textbf{unreachable} (the current path is known down from an explicit network-side
+state). A LoRa access receipt (``a node was heard'') is evidence about the access link only and can
+never by itself establish backhaul reachability.
 
 \paragraph{Strong baselines (the bar to beat).}
-We assemble deliberately strong ordinary mechanisms, each given the same legal information:
-\textbf{dayfeed}, an energy-aware sampling policy that densifies by day and relaxes through
-the night (the implicit worst-case-robust reaction); \textbf{maxcov}, a textbook
-max-coverage/recency greedy that packs each backup packet by marginal new obligation coverage
-per byte; \textbf{piecewise mission views} with a gateway gate that withholds future
-requirements until they actually arrive, while preserving already-open windows across a
-level change; and \textbf{FIFO} access repair. A scripted dayfeed decider driven through the
-full agent harness reproduces the reference service level bit-for-bit, demonstrating no
-hidden privilege or penalty for the agent path.
+We assemble deliberately strong ordinary mechanisms with the same legal information:
+\textbf{dayfeed}, an energy-aware policy that densifies by day and relaxes overnight;
+\textbf{maxcov}, a max-coverage/recency greedy that packs each backup packet by marginal new
+obligation coverage per byte; \textbf{piecewise mission views} with a gateway gate that withholds
+future requirements until they arrive while preserving already-open windows; and \textbf{FIFO}
+access repair. A scripted dayfeed decider driven through the full agent harness reproduces the
+reference service level bit-for-bit, demonstrating no hidden privilege or penalty for the agent
+path.
 
-\section{The symmetric feasibility frontier}
+\section{The feasibility frontier, scoped to the policies tested}
 \label{sec:frontier}
 
-Before proposing any mechanism we ask whether controllable, changeable loss exists. We do so
-with \emph{symmetric} per-obligation counterfactuals: each relaxation widens one physical
-resource (never the policy), and we report set differences over the same obligation ids, so a
-single strategy's good luck cannot masquerade as an upper bound.
+Before proposing any mechanism we ask whether controllable, changeable loss exists, using
+\emph{symmetric} per-obligation counterfactuals: each relaxation widens one physical resource
+(never the policy), and we report set differences over the same obligation ids, so a single
+strategy's good luck cannot masquerade as an upper bound.
 
-\subsection{Failure-segment attribution}
-For every unfulfilled obligation we attribute the first blocking segment using an
-\emph{optimistic} model that grants every assumption favourable to feasibility:
-\begin{itemize}[leftmargin=*,itemsep=1pt,nosep]
-\item \stime: even optimistically, no return opportunity (primary slot or backup slot) exists
-between the qualified sample and $d_o$;
-\item \senergy: a return opportunity exists but no qualified sample is collected;
-\item \saccess: collected but never heard at the gateway;
-\item \scap: collected and heard, but backup capacity / recovery congestion cannot return it
-by $d_o$.
-\end{itemize}
-Only the first failing segment is charged. The optimistic model for return opportunities
-counts deterministic backup slots and an open primary; an obligation is labelled \stime only
-when even this favourable model finds no slot. Over the full 48~h, 7560 routine obligations,
-the strong baseline delivers 3025 (0.400) with zero node deaths; the 4535 failures attribute as
-\senergy\ 2002 (26.5\%), \scap\ 1945 (25.7\%), \stime\ 588 (7.8\%), \saccess\ 0.
+\paragraph{Failure-segment attribution (offline, time-aware).}
+For every unfulfilled obligation we attribute the first blocking segment under an optimistic
+model that favours feasibility: \stime when even the optimistic model finds no primary or backup
+return opportunity between the qualified sample and $d_o$; \senergy when an opportunity exists but
+no qualified sample is collected; \saccess when a sample is collected but is not heard at the
+gateway \emph{by the deadline}; and \scap when it is heard in time but capacity/congestion cannot
+return it. Only the first failing segment is charged. Over the full 48~h, of 7560 routine
+obligations the strong maxcov/FIFO baseline delivers 3025 (0.400); the 4535 failures attribute
+offline as \senergy\ 2002 (26.5\%), \scap\ 1945 (25.7\%), \stime\ 588 (7.8\%), \saccess\ 0. This
+full-horizon accounting is an offline diagnostic; the online-visible subset is quantified in
+\S\ref{sec:cert} and is substantially smaller.
 
-\subsection{Relaxation walls}
+\paragraph{Relaxation walls over the tested policy family.}
 Table~\ref{tab:walls} relaxes energy (battery 0.05$\to$0.50~Wh with always-dense sampling) and
-backhaul (the 1200~s, 78~B point relaxed to 60~s with unlimited bytes) independently and jointly.
+backhaul (the 1200~s/78~B point to 60~s with unlimited bytes) independently and jointly.
 \begin{table}[h]
 \centering\small
 \resizebox{\linewidth}{!}{%
@@ -353,196 +325,230 @@ $O_{en}$ & always-300, 0.50~Wh & 1200~s/78~B & 4089 (0.541)\\
 $O_{bo}$ & always-300, 0.50~Wh & unlimited & 6023 (0.797)\\
 \bottomrule
 \end{tabular}}
-\caption{Symmetric counterfactuals over 7560 obligations. Set decomposition: 1715 obligations
-are blocked by backhaul capacity alone, 1128 by battery alone, and only 155 (2.0\%) require
-\emph{both}---and even those need physical augmentation, not coordination.}
+\caption{Counterfactual interventions over 7560 obligations. Set decomposition over the tested
+configurations: 1715 obligations are blocked by backhaul capacity alone, 1128 by battery alone,
+and 155 (2.0\%) require both. These are intervention results on the implemented strategies, not an
+exhaustive optimum over all legal policies; we make no zero-remainder or global-optimality claim.}
 \label{tab:walls}
 \end{table}
+These relaxations change resources \emph{and} couple in a specific policy, and the four-segment
+labelling is an exhaustive partition of the implemented model rather than a proof that every
+residual is physically immutable; we therefore read Table~\ref{tab:walls} as evidence that, for
+the policy families we tested, the large fixed-resource gains require adding backhaul capacity or
+energy, not smarter collection/scheduling/packing. A later section identifies one fixed-resource
+gain that is orthogonal to all of these---a change to record \emph{lifetime disposition}
+(\S\ref{sec:purge}), which was held constant here.
 
-\subsection{The sampling/energy subspace is already closed}
-A feed-forward night-energy policy that ignores two costs kills 13 nodes (service 0.213): it
-omits the Class~A command latency $L$ (the node keeps sampling densely while the relax command
-propagates) and the dawn charging ramp $R$ (solar input is near zero at sunrise). Counting
-both ($L{=}3600$, $R{=}7200$~s) collapses the policy \emph{bit-for-bit} to dayfeed. A
-rolling-horizon MPC that integrates the true half-sine harvest gains 1.47 points on seed~0 but
-averages $-1.3$ points over six seeds and introduces 21 new permanent deaths on seeds dayfeed
-survives; a robust sweep over the cloud coefficient has no operating point that adds no deaths
-and is not worse on average. The reason is structural: legal information does not reveal
-tomorrow's clouds, while dense sampling under random cloud plus an absorbing brownout state
-has asymmetric cost. Dayfeed's ``relax every night'' is an implicit minimax-robust response.
+\paragraph{The sampling/energy policy family offers no robust operating point.}
+A feed-forward night-energy policy that ignores two costs kills 13 nodes (service 0.213): it omits
+the Class~A command latency $L$ (the node keeps sampling densely while the relax command
+propagates) and the dawn charging ramp $R$ (solar input is near zero at sunrise). Counting both
+($L{=}3600$, $R{=}7200$~s) collapses the policy bit-for-bit to dayfeed. A rolling-horizon MPC that
+integrates the true half-sine harvest gains 1.47 points on seed~0 but averages $-1.3$ points over
+six seeds and introduces 21 new permanent deaths on seeds dayfeed survives; a robust sweep over
+the cloud coefficient has no operating point that adds no deaths and is not worse on average.
+Legal information does not reveal tomorrow's clouds, while dense sampling under random cloud plus
+an absorbing brownout state has asymmetric cost. This bounds the specific MPC/threshold policies
+tested; it is not a claim that no energy controller can help under any formulation.
 
-\subsection{The outage window: mission unreachability dominates}
+\paragraph{The outage window: mission unreachability dominates.}
 \label{sec:outage}
-Focusing on the 2338 yellow obligations whose deadlines fall inside the outage
-(release$\geq$6~h, deadline$\leq$20~h), Table~\ref{tab:outage} is decisive.
-\begin{table}[h]
-\centering\small
-\begin{tabular}{lccc}
-\toprule
-Run & collected/heard & delivered & $\Delta$ delivered \\
-\midrule
-base (dayfeed, 0.05~Wh, r1200/78) & 1181 & 202 & ---\\
-$O_{en}$ (always-300, 0.50~Wh, r1200/78) & 1181 & 202 & \textbf{0}\\
-$O_{bo}$ (always-300, 0.50~Wh, unlimited) & 1181 & 1120 & \textbf{+918}\\
-\bottomrule
-\end{tabular}
-\caption{Outage-window obligations (n=2338). Removing the energy wall gives \emph{zero}
-gain: the yellow command cannot traverse the outage, so the field keeps sampling at blue 600~s
-regardless of battery. Widening the backhaul adds 918. 1218 obligations remain unfulfilled
-even under both relaxations (no-slot geometry plus access loss).}
-\label{tab:outage}
-\end{table}
-The first failure of an elevated task during an outage is therefore \textbf{mission/command
-unreachability}, not energy and not packet selection. The field cannot execute a requirement
-it never receives. An omniscient compile-time EDF packing that assumes every obligation's
-sample is present at window start claims 420 obligations fit the backup slots, yet only 9 are
-realised---the offline packing was optimistic about \emph{supply}, which the unreachable task
-table prevents. Feasibility projection must take the field's legally knowable supply rhythm as
-input, not the nominal mission table.
+Of the 2338 yellow obligations whose deadlines fall inside the outage (release$\geq$6~h,
+deadline$\leq$20~h), removing the energy wall gives zero gain (the yellow command cannot traverse
+the outage, so the field keeps sampling at blue 600~s regardless of battery), while widening the
+backhaul adds 918; 1218 remain unfulfilled even under both interventions (no-slot geometry plus
+access loss). An omniscient compile-time EDF packing that assumes every obligation's sample is
+present at window start claims 420 obligations fit the backup slots, yet only 9 are realised---the
+offline packing was optimistic about \emph{supply}, which the unreachable mission table prevents.
+Feasibility projection must take the field's legally knowable supply rhythm as input, not the
+nominal mission table.
 
-\paragraph{Frontier conclusion.} Across the full horizon and within the outage, the two
-subspaces' omniscient upper bounds collapse onto the reactive baseline, and the only large
-gains require adding backhaul capacity or energy. Under fixed resources and authority there is
-no realisable throughput headroom for a controller, a joint MPC, or an LLM within collection,
-scheduling, and packing under the fixed edge discipline. (The execution-layer record-disposition
-action of \S\ref{sec:purge} was held constant in these relaxations and is examined separately.)
-This is a strong,
-symmetrically backed \emph{negative result} for the control question---and it frees the
-contribution to live where value genuinely remains.
-
-\section{Feasibility certificates and lawful re-compilation}
+\section{Feasibility statements under partial observability}
 \label{sec:cert}
 
-We give the runtime an obligation-level feasibility projector that emits three kinds of
-statement, kept rigorously distinct: \textbf{fulfilled} (verified by an independent scorer),
-\textbf{not currently guaranteed} (a knowledge boundary), and
-\textbf{infeasible-under-stated-conditions} (which requires an optimistic model to also fail;
-a heuristic that merely did not finish may never claim impossibility).
+The runtime emits obligation-level statements, kept rigorously distinct: \textbf{fulfilled}
+(verified by an independent scorer), \textbf{unconfirmed / not currently guaranteed} (a knowledge
+boundary), and \textbf{infeasible-under-stated-conditions} (an optimistic model must also fail; a
+heuristic that merely did not finish may never claim impossibility). Crucially, ``not currently
+guaranteed'' is never upgraded to ``unreachable'' without network-side evidence.
 
-\subsection{Two placement levels}
-\textbf{Compile-time (central),} when an authorised change is authored, the centre holds the
-full obligation table, network-side outage status, and public device/link parameters. It runs
-an optimistic allocation and emits only \emph{zero-false-positive structural} certificates.
-\textbf{Arrival-time (gateway),} when a (possibly delayed) mission table arrives, the gateway
-has the richest local state---heard samples, its own forwarding log, backup slots used---and
-performs precise per-obligation attribution and near-horizon packing, while remaining
-autonomous during outages. Capacity-contention outcomes that depend on online randomness are
-\emph{not} asserted per-obligation at compile time.
+\paragraph{Two placement levels.}
+At \textbf{compile time (centre),} when an authorised change is authored, the centre holds the
+full obligation table, the network-side outage status (current state, not a forecast of its
+duration), and public device/link parameters. At \textbf{arrival time (gateway),} when a possibly
+delayed mission table arrives, the gateway has the richest \emph{local} state---samples it has
+actually heard, its own forwarding log, and backup slots used---but, by construction, nothing that
+has not yet reached it.
 
-\subsection{Structural no-return certificate ($S_{\mathrm{time}}$)}
-Backup slots occur at $t\bmod 1200{=}0$; an upgraded obligation's delivery window is 600~s.
-An obligation whose window contains no backup slot (and whose primary is in outage) cannot be
-returned even under optimistic supply and unlimited node energy. This test uses only public
-geometry and contains no random quantity, so it is seed-invariant.
+\paragraph{Conditional structural no-return certificate (\stime).}
+Backup slots occur at $t\bmod 1200{=}0$; an upgraded obligation's delivery window is 600~s. An
+obligation whose window contains no backup slot cannot be returned via backup even under optimistic
+supply and unlimited node energy; this is a geometric fact, seed-invariant. The certificate is
+\emph{conditional}: it establishes \stime only \textbf{if the primary is in fact unavailable
+across that window}. Given the network-confirmed outage interval $[4\mathrm{h},20\mathrm{h}]$, the
+test emits 602 no-slot certificates; 588 obligations truly end as \stime (100\% recall of the 588,
+zero false positives), with 14 obligations at the recovery edge (20~h) that an optimistic primary
+slot could still serve and that are therefore excluded as boundary cases rather than certified.
+Lead time ranges 0.2--14~h with median 7.2~h, \emph{conditional on the network-side unavailable
+interval being known}; geometry alone never asserts an outage. A capacity certificate is
+deliberately not issued at compile time because it is impure under our tests (552 correct \scap,
+571 actually \senergy, 193 false positives); capacity attribution is pushed to the gateway.
 
-\subsection{Mission-unreachable certificate}
-If the mission table (and hence Class~A configuration commands) cannot reach the field before
-an obligation's deadline, the field will execute the last applied configuration under local
-autonomy; the elevated obligation is unreachable as a command, independent of node energy. The
-centre may derive this from its own command ledger (queued/refused, no \textsc{applied}
-confirmation) and network-side outage; no future truth is used.
+\paragraph{Arrival-time attribution: online partial, offline complete.}
+When the delayed table arrives at $t_{a}{=}20$~h, 2136 yellow obligations are already past
+deadline. We contrast two attributions (Table~\ref{tab:attribution}). The \emph{offline,
+time-aware} diagnostic uses simulator-wide evidence---whether a sample was ever taken, when it was
+heard, and when it was returned---and labels all 2136 correctly. The \emph{online gateway-local}
+attribution uses only evidence the gateway legally holds at $t_a$ (samples heard or received by
+$t_a$) and returns an explicit unknown whenever the failure stage is not separable.
+\begin{table}[h]
+\centering\small
+\begin{tabular}{lcc}
+\toprule
+Segment & Offline time-aware truth & Online gateway-local at $t_a$\\
+\midrule
+\stime (no return slot; geometry) & 588 & 588\\
+\scap (heard by deadline, not returned) & 327 & 327\\
+\saccess (heard after deadline / late) & 650 & 223\\
+\senergy (no qualified sample) & 571 & --- (merged into unknown)\\
+\unk (not separable online) & --- & 998\\
+\midrule
+Total & 2136 & 2136\\
+Labelled coverage & 100\% & 53.3\% (1138/2136)\\
+Precision on labelled subset & 1.000 & 1.000\\
+\bottomrule
+\end{tabular}
+\caption{Arrival-time attribution of the 2136 upgraded obligations already missed when their
+table reaches the gateway. Geometry needs no sample and is visible online; a sample heard by the
+deadline but not returned is provably \scap to the gateway; a sample heard in
+$(\text{deadline},t_a]$ is provably late access. The remaining 998 (46.7\%) have no sample heard
+by $t_a$: the gateway cannot separate ``never sampled'' (\senergy, 571 in truth) from ``sampled
+but heard only after $t_a$'' (\saccess, 427 in truth), and must report unknown under the original
+G5 constraint. The earlier ``100\% arrival attribution'' was the offline column; it also merged
+650 late-access cases into a 977-strong \scap class (977${=}327{+}650$).}
+\label{tab:attribution}
+\end{table}
+The online-labelled subset is exact (1138/1138) but partial: 427 matching samples are first heard
+after $t_a$, and 650 after their deadline. The result sharpens the runtime's requirement: the
+projector must expose \emph{unknown} as a first-class state, and local mechanisms must be able to
+act without resolving it.
 
-\subsection{Arrival-time segment attribution}
-When the delayed table arrives at $t{=}20$~h, the gateway replays each already-dead obligation
-against its local heard/forwarding log and the public slot geometry, assigning
-\stime/\scap/\senergy/\saccess.
-
-\subsection{Lawful re-compilation}
-For certified obligations the runtime acts only within standards authority: hold the last
-lawful configuration and local autonomy; suppress futile commands and expired backup sends (the latter only paired with the selective
-purge of \S\ref{sec:purge}, never by withholding sends alone);
-log an obligation-level infeasibility certificate with the segment and the resource change
-that would move it; after recovery, compile only the guaranteeable subset; and where the
-mission truly requires more, request added backup quota or a conference downgrade/upgrade under
-\S5.3.3/\S8.4.2. The agent never silently marks an unfulfilled obligation complete, never
-deletes it, and never judges landslide risk.
-
-\subsection{Execution-layer certificate: deadline-aware selective purge}
+\section{The obligation runtime: local release and execution placement}
 \label{sec:purge}
-The compile-time certificate says an obligation cannot be returned; the execution-layer question
-is what the edge should \emph{do} with records already caught in its caches. Two facts interact.
-A record leaves a node's repair cache only on central acknowledgement; otherwise FIFO repair
-keeps re-sending the oldest unacknowledged records, and during an outage the metered backup path
-is the only route to such an acknowledgement.
 
-\paragraph{Why naively suppressing expired sends is not free.}
-Withholding a backup record that is already past its deadline (the obvious reading of the 45.6\%
-waste) withholds its acknowledgement as well. The record then stays in the node cache and, as an
-oldest unacknowledged entry, fills the limited access batches, so genuinely fresh samples are not
-heard until the primary recovers. At the main point this naive suppression saves 29\% of backup
-bytes but costs 8 on-time obligations and 0.25 points of service: cost is moved from the backhaul
-segment to the access segment, not removed.
+\paragraph{Why withholding expired sends alone is not free.}
+During the outage, expired backup records are the obvious reading of wasted metered capacity. But
+under the hold-until-acknowledged discipline, withholding a backup record also withholds its
+acknowledgement; the record stays in the node cache and, as an oldest unacknowledged entry, fills
+the limited access batches, so genuinely fresh samples are not heard until the primary recovers.
+At the main point, gateway-only suppression (stop sending expired records, leave the node cache
+untouched) saves backup bytes but costs 8 on-time obligations (202$\to$194) and 0.25 service
+points: cost is moved from the backhaul to the access segment, not removed.
 
-\paragraph{Selective purge.}
-The execution-layer counterpart of the certificate releases an unacknowledged edge record
-\emph{if and only if} its obligation deadline has already passed ($d\le t$ under the locally
-known period)---a zero-false-positive test because the deadline is absolute---while retaining
-every record with $d>t$. This both stops the expired backup send and frees the access batch. It
-has two equivalent placements: a node-local queue discipline that needs no downlink at all
-(\texttt{deadline-purge}), and a gateway action that locally acknowledges records it will not send
-(\texttt{cert-purge}); both use only the public period $P$ legally available before the mission
-table arrives. The two placements implement one deadline judgement and give the same result.
-Dropping stale or expired packets is itself well known in AoI packet management and DTN bundle
-expiry~\cite{costa2014pm,dtnarch}; the novelty is not the discard but its obligation-feasibility
-trigger and the requirement that it be consistent across both segments (see
-\S\ref{sec:related}).
+\paragraph{Deadline-aligned expiry.}
+The execution-layer counterpart releases an unacknowledged edge record when its business delivery
+deadline has passed under the locally known period ($d\le t$)---a zero-false-positive test because
+the deadline is absolute---while retaining every record with $d>t$. This both stops the expired
+backup send and frees the access batch. We implement and compare two formulations. The node-local
+\texttt{deadline-purge} needs no downlink at all; a gateway \texttt{cert-purge} locally
+acknowledges records it will not send. We further implement \texttt{generic-expiry}, an ordinary
+per-record expiration primitive: at record creation the source assigns a creation-relative
+lifetime ending at the business deadline,
+$\text{expires}=(\lfloor t_{\text{taken}}/P\rfloor+2)P$, expired records are deleted and their
+retention released, unexpired records are kept, and survivors are sent FIFO. It references no
+obligation id, return-slot geometry, or certificate.
 
-\paragraph{Why ordinary queues do not suffice.}
+\paragraph{The ``certificate'' mechanism is standard expiry.}
+Across all ten seeds, \texttt{deadline-purge} and \texttt{generic-expiry} produce bit-identical
+trajectories---identical service, outage on-time count, deaths, backup on-time/expired counts, and
+the same delivered-obligation set (Table~\ref{tab:purgeexpiry}). We therefore make no
+novel-discard-algorithm claim. Dropping stale or expired packets is well established in AoI packet
+management and in DTN bundle expiry~\cite{costa2014pm,dtnarch,rfc9171}; BPv7 attaches a per-bundle
+creation-time lifetime and deletes on expiry~\cite{rfc9171}. The system contribution is the
+\emph{combination}: (i)~the lifetime is set from the obligation's end-to-end business delivery
+deadline rather than packet age, a hop-local TTL, or an estimated single-packet delay; (ii)~release
+is executed at the source with zero downlink, on evidence the source holds unconditionally; and
+(iii)~disposition is consistent across the access and backhaul segments, which the
+gateway-suppression experiment shows is necessary. Under a single fixed-period mission the
+obligation-keyed and deadline-keyed formulations coincide; when one record supports several
+overlapping obligations or mission versions, release must instead key to the \emph{latest} deadline
+for which the record is still valid---a generalisation we leave to future work rather than claim.
+
+\begin{table}[h]
+\centering\small
+\resizebox{\linewidth}{!}{%
+\begin{tabular}{lcccc}
+\toprule
+Edge queue / action & Full svc (mean) & Outage on-time (10-seed total) & Expired backup records & Deaths\\
+\midrule
+maxcov + FIFO (baseline) & 0.373 & 1691 & 2538 & 12\\
+maxcov + latest-only (AoI) & 0.358 & 4250 & 0 & 0\\
+maxcov + \texttt{generic-expiry} (standard) & 0.415 & 4265 & 1 & 0\\
+maxcov + \texttt{deadline-purge} (node) & 0.415 & 4265 & 1 & 0\\
+\bottomrule
+\end{tabular}}
+\caption{Ten-seed sweep with the strong maxcov backup chooser fixed; only the edge disposition
+changes. The standard per-record expiration and the prior ``certificate purge'' are bit-identical
+on every seed. Expiry doubles outage on-time delivery while latest-only reaches outage freshness
+by abandoning post-recovery coverage (lower full service). FIFO retains expired records and incurs
+12 deaths. The gateway-only suppression point (not shown; same FIFO edge cache) gives 194 outage
+on-time at seed~0 vs.\ 202 for FIFO and 434 for source expiry---the cross-segment cost.}
+\label{tab:purgeexpiry}
+\end{table}
+
+\paragraph{Why ordinary reordering queues do not suffice.}
 EDF and obligation-greedy disciplines reorder which records occupy a batch but never release
 them, so the cache is not freed and we measure no gain. The AoI latest-only queue does release
 records, but indiscriminately (it keeps only the newest), matching outage freshness while
 permanently abandoning records still deliverable after recovery and lowering full-horizon
-service. The certificate supplies the \emph{selectivity} that turns a blunt freshness heuristic
-into a service-preserving action; this is an execution-layer mechanism a fixed rule realises, and
-whose per-obligation judgements an agent must maintain when requirements change.
+service. Deadline-aligned expiry supplies the \emph{selectivity} that turns a blunt freshness
+heuristic into a service-preserving action; a fixed rule realises it, and an agent must maintain
+the same deadline judgement when requirements change.
 
-\paragraph{Relationship to the feasibility frontier.}
-The negative result of \S\ref{sec:frontier} is scoped to collection, access scheduling, and
-backhaul packing under the standard edge discipline that \emph{holds every unacknowledged record
-until the centre confirms it}. Selective purge is an orthogonal execution-layer action: it changes
-a record's \emph{lifetime disposition}, not resource use, and that disposition was held fixed in
-every counterfactual relaxation. Its gain is therefore not throughput extracted from a physical
-wall; it removes an internal leak in which records already proven unrecoverable keep consuming
-access batches. The symmetric frontier bounds what better \emph{decisions} achieve given the
-protocol's state handling; the execution-layer certificate corrects that state handling itself.
+\paragraph{The local-certainty principle.}
+The expiry result evidences the paper's central mechanism: at the moment $d\le t$ the node holds a
+certain fact (its own record's business deadline has passed) whose required action (stop
+retransmitting, free the batch) is entirely local, even though the node cannot know whether the
+remote silence is a brownout, an access loss, or a backhaul outage. Complete chain diagnosis is
+unnecessary for this disposition; demanding it would leave the worthless retransmission running.
 
 \section{Execution locality and the layered runtime}
 \label{sec:locality}
 
-The selective-purge result already hints at a placement principle: the zero-downlink node-local
-queue slightly beats the gateway version, because it acts without waiting for any round trip. We
-now make that principle explicit and test it deterministically (no LLM, three seeds, the main
-operating point). The question is not how smart a centre planner is, but \emph{where a feasibility
-constraint can be enforced in time}.
+The source-expiry result hints at a placement principle; we make it explicit and test it
+deterministically (no LLM, three seeds, the main operating point). A feasibility constraint can be
+enforced in time at a layer only when three conditions jointly hold:
+\[
+\text{evidence available}\ \wedge\ \text{action authorised}\ \wedge\
+D_{\text{observe}+\text{decide}+\text{act}} < M_c(t),
+\]
+where $M_c(t)$ is the remaining intervention window for constraint $c$. The question is not how
+smart a centre planner is, but where these three hold.
 
 \paragraph{Two deterministic mechanisms.}
 The first is a centre-side feasibility \textbf{envelope}, a pure filter wrapping any planner
-(rule, MPC, or LLM) and using only signals the planner itself may legally see (each node's last
-\emph{confirmed} configuration, how many nodes were heard in the recent window, the authorised
-requirement, and the local clock). It enforces: (E1) a night-energy hard gate---during
-18:00--06:00 every target is clamped to sparse and nodes currently dense are explicitly
-downgraded, overriding both mission level and any apparent ``recovery'', with 16:00--18:00 closed
-to new dense sessions; (E2) a control-plane confirmation gate---inside the 06:00--16:00 compile
-window, a node not yet confirmed dense is not upgraded while fewer than all nodes are heard, since
-the command cannot currently apply; and (E3) sparse under the blue level. The second mechanism is a
-\textbf{node-local energy floor}: on every 60~s tick the node itself, on its local clock, clamps
-sampling/report to sparse at night and self-downgrades at dusk, with no centre command at all; an
-optional pre-provisioned schedule additionally lets the node execute the authorised day/night
-rhythm locally. This models the gateway/node ``pre-provisioned autonomous rules'' already in the
-deployment; it is off by default and all pre-existing tests remain bit-identical when off.
+(rule, MPC, or LLM) and using only signals it may legally see (each node's last \emph{confirmed}
+configuration, recent node-hearing counts, the authorised requirement, and the local clock). It
+enforces a night-energy gate (18:00--06:00 sparse, dusk downgrade, 16:00--18:00 closed to new dense
+sessions), a control-plane confirmation gate, and sparse-under-blue. The second is a
+\textbf{node-local energy floor}: on every 60~s tick the node itself, on its local clock and
+reported SoC, clamps sampling/report to sparse at night and self-downgrades at dusk with no centre
+command; an optional pre-provisioned schedule additionally lets it execute the authorised
+day/night rhythm locally. This models the ``pre-provisioned autonomous rules'' already in the
+deployment; it is off by default and all pre-existing tests remain bit-identical when off. Unlike
+the v4 advisory, the floor's night decision is a computed ledger (remaining dark hours $\times$
+the dense-vs-sparse extra draw vs.\ reported SoC), not a blanket ``dense kills'' claim.
 
-\paragraph{Why a centre envelope cannot guarantee survival.}
+\paragraph{Why a centre envelope cannot ensure survival.}
 A dense 300~s night costs $\approx$0.071~Wh, above the 0.05~Wh battery, and a brownout is absorbing
-(permanent death). A centre-issued dusk downgrade must traverse the cellular backhaul, then wait
-for a Class~A receive window; under the outage and geometric loss it does not arrive before dusk on
-the tightest-energy seed. The same rule---``never stay dense overnight''---is a late, refusable
-\emph{suggestion} at the centre but an invariant enforced every tick \emph{at the node}. Table~\ref{tab:r39}
-shows the consequence: na\"ive centre compliance kills 13/14 nodes on every seed; the centre
-envelope removes the command storm but 12 nodes still die on the tightest seed; the node-local floor
-removes every death on every seed without lowering service.
-
+(permanent within the model). A centre-issued dusk downgrade must traverse the cellular backhaul
+and then a Class~A receive window; under the outage and geometric loss it does not arrive before
+dusk on the tightest-energy seed. The same rule---``never stay dense overnight''---is a late,
+refusable \emph{suggestion} at the centre but an invariant enforced every tick \emph{at the node}.
+Table~\ref{tab:r39} shows the consequence over the tested seeds.
 \begin{table}[h]
 \centering\small
+\resizebox{\linewidth}{!}{%
 \begin{tabular}{lcccc}
 \toprule
 Configuration (centre placement unless noted) & Mean svc & Deaths (3 seeds) & Cmds sent & Refused\\
@@ -557,46 +563,43 @@ dayfeed-c + local floor                             & 0.368 & 0  & 258  & 1156\\
 local-dayfeed (existing conservative local policy) & 0.296 & 0  & 0    & 0\\
 \textbf{pure-local (pre-provisioned, 0 centre cmd)} & \textbf{0.360} & \textbf{0} & 0 & 0\\
 \bottomrule
-\end{tabular}
-\caption{Deterministic three-seed placement study (no LLM). Centre rows share one policy harness,
-centre placement, and the queued/in-transit/applied command path; only the decider and the local
-floor differ. The local floor removes all permanent deaths at unchanged service; the envelope
-removes the command storm (refused 2488$\to$222) but cannot save the tightest seed without the
-floor. \emph{pure-local}---a node-local pre-provisioned day/night rhythm with zero centre
-commands---matches every centre-compiled service level, closing centre throughput/energy control
-under static pre-provisioned missions. The slightly higher unprotected dayfeed-c mean is bought by
-12 deaths (dense sampling before nodes expire) and is not a survivable operating point.}
+\end{tabular}}
+\caption{Deterministic three-seed placement study (no LLM). The local floor removes all permanent
+deaths \emph{in the three tested seeds} at unchanged service; the envelope removes the command
+storm (refused 2488$\to$222) but cannot save the tightest seed without the floor. Refused commands
+are rejected at admission and never transmitted, so this is command hygiene, not a radio/short-
+message billing saving. \emph{pure-local}---a node-local pre-provisioned rhythm with zero centre
+commands---matches every centre-compiled service level for the tested static missions. The slightly
+higher unprotected dayfeed-c mean is bought by 12 deaths and is not a survivable point. These are
+point-specific empirical results, not a general survival guarantee or an optimal-controller bound.}
 \label{tab:r39}
 \end{table}
 
-\paragraph{A symmetric local upper bound closes the static control question.}
+\paragraph{A local upper bound for static missions.}
 \emph{pure-local} attains mean service 0.360 (range 0.317--0.387) with zero deaths and zero centre
-commands, statistically indistinguishable from every centre-compiled configuration (0.359--0.368);
+commands, statistically indistinguishable from the centre-compiled configurations (0.359--0.368);
 a run in which the centre still issues comply commands while the node executes the pre-provisioned
-rhythm gives bit-identical service but 1274 sent / 2354 refused commands---the centre's sampling
-commands are pure overhead under a static, predictable mission. Local autonomy collects more
-(fewer missing collections, 2016 vs.\ $\approx$2650) but returns no more (more missing deliveries),
-confirming the backhaul, not collection policy, as the binding wall. This is a symmetric,
-upper-bound-backed closure of the same subspace the omniscient packer closed in
-\S\ref{sec:frontier}, now from the placement direction.
+rhythm gives bit-identical service with 1274 sent / 2354 refused commands---centre sampling
+commands are pure overhead under a static, predictable mission. This closes the centre
+throughput/energy control question \emph{for the tested static, pre-provisioned missions}; it does
+not bound non-pre-provisioned runtime task changes, which are the centre runtime's actual remit.
 
 \paragraph{The layered runtime.}
-The results prescribe a three-layer feasibility runtime, each holding only the constraints it can
-act on in time:
-\textbf{L0, node-local (zero-signalling safety floor)}---the night-energy floor and obligation
-deadline-purge, guaranteeing no irreversible death and no dead-record cache exhaustion;
+The results prescribe three layers, each holding only constraints it can act on in time
+(Figure~\ref{fig:layers}):
+\textbf{L0, node-local (zero-signalling safety floor)}---the computed night-energy ledger and
+deadline-aligned expiry, acting every tick on the node clock to prevent irreversible discharge and
+dead-record cache exhaustion;
 \textbf{L1, gateway-local (field autonomy)}---max-coverage backup packing, the non-prescient
-mission-view gate, arrival-time segment attribution, and autonomous operation during outages; and
+mission-view gate, local (partial, unknown-aware) arrival attribution, and autonomous operation
+during outages; and
 \textbf{L2, centre agent runtime}---only what local autonomy cannot obtain: cross-layer
 compilation and lawful re-compilation/renegotiation of \emph{non-pre-provisioned} authorised
-changes, compile-time structural infeasibility certificates with the three-way statement
-discipline, and cross-segment-consistent disposition and honest external reporting. Every L2
-action passes through the deterministic envelope and can never override L0/L1 safety. Rules, MPC,
-and solvers benefit from the same layers: this is a general communication execution layer, not a
-claim that an LLM is irreplaceable. Under static, pre-provisioned, predictable missions L2 rightly
-stays silent; its value appears when requirements change and the system must promise only what it
-can execute and say, early and precisely, why it cannot do the rest. Figure~\ref{fig:layers}
-summarises the three layers and the command path.
+changes, compile-time conditional structural certificates under the three-way statement
+discipline, and honest external reporting. Every L2 action passes through the deterministic
+envelope and can never override L0/L1. Rules, MPC, and solvers benefit from the same layers: this
+is a general communication execution substrate, not a claim that an LLM is irreplaceable. Under
+static pre-provisioned missions L2 rightly stays silent.
 
 \begin{figure}[t]
 \centering
@@ -607,355 +610,316 @@ summarises the three layers and the command path.
   note/.style={font=\scriptsize,align=left,text=black!62},
 ]
   \node[layer,fill=red!6] (L2){\textbf{L2, centre agent runtime.} Compile \emph{non-pre-provisioned}
-    authorised changes; emit structural infeasibility certificates under the three-way statement
-    discipline; lawfully re-compile and renegotiate. Every action passes through a deterministic
-    feasibility envelope that can never override L0/L1.};
+    authorised changes; emit conditional structural certificates under confirmed/unconfirmed/
+    unreachable discipline (unknown is a first-class state); lawfully re-compile and renegotiate.
+    Every action passes through a deterministic envelope that can never override L0/L1.};
   \node[layer,fill=orange!8,below=13mm of L2] (L1){\textbf{L1, gateway-local autonomy.}
-    Max-coverage backup packing; the non-prescient mission-view gate; arrival-time segment
-    attribution; autonomous operation while the backhaul is down.};
+    Max-coverage backup packing; the non-prescient mission-view gate; partial, unknown-aware
+    arrival attribution; autonomous operation while the backhaul is down.};
   \node[layer,fill=green!7,below=13mm of L1] (L0){\textbf{L0, node-local safety floor (zero downlink).}
-    Night-energy gate and deadline-aware selective purge, enforced every tick on the node clock.};
+    Computed night-energy ledger and deadline-aligned expiry, enforced every tick on the node clock.};
   \draw[arr] ($(L2.south west)+(10mm,0)$) -- ($(L1.north west)+(10mm,0)$);
   \node[note,anchor=west,text width=126mm] at ($(L2.south west)+(17mm,-6.8mm)$)
     {centre command via backhaul, then a Class~A receive window (refused/delayed in outage)};
   \draw[arr] ($(L1.south west)+(10mm,0)$) -- ($(L0.north west)+(10mm,0)$);
   \draw[arr] ($(L0.south east)+(-6mm,0)$) .. controls ($(L0.south)+(0,-9mm)$) ..
     ($(L0.south east)+(-20mm,0)$)
-    node[midway,below=1mm,note]{acts locally every tick; no round trip};
+    node[midway,below=1mm,note]{acts locally every tick on certain evidence; no round trip};
 \end{tikzpicture}
-\caption{The layered feasibility runtime. Safety-critical constraints sit at L0, where they act
-before energy is spent without waiting for any round trip; L1 holds field-local packing and
-attribution; the L2 agent is confined to changes local autonomy cannot obtain. Centre commands
-that must cross the backhaul and a Class~A window are refused or delayed during the outage, which
-is why L2 alone cannot guarantee survival (RQ4) and L0 must.}
+\caption{The layered obligation runtime. Safety-critical and deadline-certain constraints sit at
+L0, where they act before energy or access opportunity is spent without any round trip; L1 holds
+field-local packing and partial attribution; the L2 agent is confined to changes local autonomy
+cannot obtain, and must report unconfirmed rather than unreachable without network-side evidence.}
 \label{fig:layers}
 \end{figure}
 
 \section{Evaluation}
 \label{sec:eval}
 
-\textbf{Setup.} Seed~0 main point (with multi-seed checks where randomness enters): 48~h + 1~h
-tail, 14 nodes, two groups, cap 0.05~Wh, solar peak 0.03~Wh/h, outage 4--20~h, backup
-1200~s/78~B with maxcov, blue$\to$yellow (600$\to$300~s) at 6~h, mission table reaching the
-gateway at 20~h. All numbers are produced by the repository scripts (r29--r39), each run
-reproduces 18/18 repository checks and 5/5 joint invariants; the local safety floor is off by
-default and the disabled-backup and no-floor configurations remain bit-identical to the v1.1
-anchors. The placement study of RQ4 is deterministic (no LLM) over seeds 0--2; node death is a
-deterministic/highly robust quantity, while mean-service differences below one point are not
-claimed significant.
+\textbf{Setup.} Seed~0 main point (with paired multi-seed checks where randomness enters): 48~h
+plus a 1~h tail, 14 nodes in two groups, cap 0.05~Wh, solar peak 0.03~Wh/h, outage 4--20~h, backup
+1200~s/78~B with maxcov, blue$\to$yellow (600$\to$300~s) at 6~h authorised at the centre with the
+field mission table reaching the gateway at 20~h. Access $p{=}0.74$, primary backhaul
+$p_{\mathrm{good}}{=}0.62$. All numbers are produced by repository scripts; each run reproduces the
+repository checks and the five joint invariants; the local floor is off by default and the
+disabled-backup/no-floor configurations remain bit-identical to the v1.1 anchors. The placement
+study is deterministic over seeds 0--2; node death is a deterministic/highly robust quantity,
+while mean-service differences below one point are not claimed significant. Seeds 6--9 are a
+repeatedly reused held-out confirmation set, not an untouched test set.
 
 \subsection{RQ1: Do structural certificates provide early, precise warning?}
-\textbf{Yes, and deterministically.} At compile time (6~h) the geometry test emits 602
-no-slot certificates over the outage window; 588 obligations truly end as \stime (100\%
-recall of the 588), with 14 boundary cases at the recovery edge attributed to \scap, and
-\textbf{zero false positives} (no certified obligation is delivered). Lead time
-$d_o-6\,$h ranges 0.2--14~h, median 7.2~h. By contrast, an optimistic-energy capacity
-certificate is impure (552 correct \scap, 571 actually \senergy, 193 false positives), which
-is precisely why we restrict compile-time claims to structural/unreachable segments and push
-capacity attribution to the gateway.
+\textbf{Conditionally, and deterministically.} Given the network-confirmed outage interval, the
+geometry test emits 602 no-slot certificates; 588 obligations truly end as \stime (100\% recall,
+zero false positives), the 14 recovery-edge cases are excluded rather than certified, and lead
+time is 0.2--14~h (median 7.2~h). Without a confirmed unavailable interval the same geometry is
+only a conditional statement (``unreturnable \emph{if} the primary stays down''), which is how we
+now state it; geometry never infers an outage. An optimistic-energy capacity certificate is
+impure (552 correct \scap, 571 actually \senergy, 193 false positives), so compile-time claims are
+restricted to structural/unreachable segments and capacity attribution is pushed to the gateway.
 
-\subsection{RQ2: Can the field attribute failures when the table finally arrives?}
-\textbf{Yes, at 100\%.} 2136 yellow obligations are already past deadline when their table
-arrives at 20~h. From its local complete log the gateway attributes the correct segment for
-2136/2136 (true segments: \stime 588, \scap 977, \senergy 571). Deterministic \emph{advance}
-certification before the deadline is essentially impossible at the field (4 marginal cases),
-because the field physically does not know these obligations exist---the certificate value at
-this level is immediate, segment-labelled accounting versus silent, un-explained loss.
+\subsection{RQ2: What can the field attribute when the table finally arrives?}
+\textbf{Partially online, completely offline (Table~\ref{tab:attribution}).} Using only evidence
+held by $t_a{=}20$~h, the gateway labels 1138/2136 (53.3\%) missed upgraded obligations---all
+geometric \stime (588), all in-time-but-not-returned \scap (327), and 223 provably late
+\saccess---with 100\% precision on that labelled subset; 998 (46.7\%) are unknown, whose offline
+truth is 571 never-sampled and 427 heard only after $t_a$. The offline time-aware diagnostic
+labels all 2136 correctly (588/327/650/571); it also corrects the earlier online figure, which had
+folded the 650 late-access cases into \scap. The runtime value at this level is therefore not
+omniscient diagnosis but calibrated partial diagnosis plus an explicit unknown, which is exactly
+the state the local mechanisms of \S\ref{sec:purge} operate despite.
 
-\subsection{RQ3: Is real cost wasted on the infeasible, and can a certificate recover it?}
-During the outage 75 backup packets carry 750 records (5848~B). Of 480 records actually
-received centrally via backup during the outage, 261 are on-time and \textbf{219 (45.6\%) are
-already expired} (1270 of 2782 payload bytes). The tempting response---simply stop sending expired records---is not free, for the
-acknowledgement reason of \S\ref{sec:purge}. Table~\ref{tab:purge} holds the strong maxcov
-backup chooser fixed and varies only the edge queue/action. Naive suppression removes the 219
-expired sends but loses 8 on-time obligations (202$\to$194) and 0.25 service points: tracing at
-record level, nine fresh samples taken during the outage are, because the unacknowledged dead
-records fill each access batch, not heard until after the primary recovers. Completing the
-certificate at the edge reverses the sign. The node-local \texttt{deadline-purge}, which needs no
-downlink, raises outage on-time obligations 202$\to$434 and full-horizon service
-0.400$\to$0.432, clears expired sends, and raises send-promise precision 0.54$\to$1.00; the
-gateway \texttt{cert-purge} is within 0.2 points, confirming that the gain is the deadline
-judgement rather than its location. Reordering alone (EDF, obligation-greedy) frees no cache and
-gains nothing; the AoI latest-only queue reaches the outage figure but abandons records still
-deliverable after recovery, collapsing full-horizon service to 0.363.
-\begin{table}[h]
-\centering\small
-\begin{tabular}{lcccc}
-\toprule
-Edge queue / action & Full svc & Outage on-time & Expired sends & Send prec.\\
-\midrule
-maxcov + FIFO (baseline) & 0.400 & 202 & 219 & 0.54\\
-maxcov-ontime: suppress, no purge & 0.398 & 194 & 0 & 1.00\\
-maxcov + obligation-greedy & 0.392 & 205 & 216 & 0.55\\
-maxcov + EDF & 0.400 & 202 & 219 & 0.54\\
-maxcov + latest-only (AoI) & 0.363 & 431 & 0 & 1.00\\
-\textbf{maxcov + deadline-purge (node)} & \textbf{0.432} & \textbf{434} & \textbf{0} & \textbf{1.00}\\
-cert-purge (gateway) + FIFO & 0.430 & 420 & 0 & 1.00\\
-\bottomrule
-\end{tabular}
-\caption{Seed~0, strong maxcov backup chooser fixed; only the edge queue/action changes. Outage
-on-time counts upgraded obligations delivered by deadline; expired sends are backup records
-received centrally after their deadline; send precision is the share of backup sends that were
-on-time. Naive suppression clears expired sends but loses 8 on-time obligations (the cross-layer
-FIFO cost of \S\ref{sec:purge}); deadline-aware selective purge clears them \emph{and} adds 232
-on-time obligations under unchanged resources. Reordering queues do not help; AoI latest-only
-trades post-recovery coverage for outage freshness.}
-\label{tab:purge}
-\end{table}
-\textbf{Paired ten-seed sweep.} Across seeds 0--9 (the maxcov chooser fixed, only the edge queue
-changes), FIFO$\to$deadline-purge raises mean full-horizon service from 0.373 to 0.415---a paired
-mean gain of 4.21 points (sd 0.81, 95\% CI $+3.64$ to $+4.79$ using $t_{0.975,9}{=}2.262$), positive
-on all ten seeds (range $+3.2$ to $+5.6$)---and raises total outage on-time delivery
-1691$\to$4265 (2.52$\times$), while expired backup records fall from 2538 to 1. The three seeds
-never touched during development (6/7/8) fall in the same range ($+5.6/+4.4/+3.7$). Deadline-purge
-also dominates the AoI latest-only queue on \emph{every} seed, by a mean 5.73 points (95\% CI
-$+5.06$ to $+6.39$): latest-only matches outage freshness but abandons post-recovery coverage. The
-energy analogue is larger: always-dense compliance kills 13 nodes, whereas certificate-aware
-holding keeps deaths at zero.
+\subsection{RQ3: Does deadline-aligned expiry recover wasted cost?}
+During the outage 75 backup packets carry 750 records. With FIFO, of the records received
+centrally via backup during the outage a large fraction arrive already expired (219 expired vs.\
+261 on-time at seed~0, 45.6\%; 1270 of 2782 payload bytes). Gateway-only suppression removes those
+sends but loses 8 on-time obligations (202$\to$194) through access back-pressure. Source-local
+deadline expiry reverses the sign: at seed~0 it raises outage on-time obligations 202$\to$434 and
+full-horizon service 0.400$\to$0.432, drives expired backup records to zero, and raises the
+deadline-valid delivery fraction from 0.54 to 1.00; the gateway version is within 0.2 points
+(0.430/420), confirming the gain is the deadline judgement rather than its location. Across ten
+seeds (Table~\ref{tab:purgeexpiry}) expiry raises mean service 0.373$\to$0.415---a paired
+$+4.21$ points (sd 0.81, 95\% CI $+3.64$ to $+4.79$, positive on all ten seeds)---and total
+outage on-time delivery 1691$\to$4265 (2.52$\times$), with expired backup records 2538$\to$1 and
+deaths 12$\to$0; it dominates AoI latest-only on every seed by $+5.73$ points (95\% CI $+5.06$ to
+$+6.39$), because latest-only matches outage freshness only by abandoning post-recovery coverage.
+EDF and obligation-greedy queues, which reorder but never release, gain nothing.
 
 \subsection{RQ4: Does enforcement placement determine safety and command hygiene?}
-\textbf{Yes, deterministically.} Table~\ref{tab:r39} (mechanisms in \S\ref{sec:locality}) yields
-three findings. (i)~Letting the centre directly drive sampling is harmful, not merely suboptimal:
-na\"ive compliance permanently kills 13/14 nodes on all three seeds (39 total) and halves service
-to 0.162. (ii)~A centre-side envelope alone is insufficient for safety: it removes the command
-storm (refused 2488$\to$298) and protects two seeds, but on the tightest-energy seed 12 nodes still
-die, because the dusk downgrade cannot cross the backhaul and a Class~A window in time. The
-node-local floor removes all 39/12 deaths at unchanged service---the safety-critical constraint
-must sit where it can act before the energy is spent. (iii)~The envelope's own payoff is command
-hygiene: with the floor present, adding the envelope cuts refused centre commands from 3364 (na\"ive)
-or 1156 (centre dayfeed) to 222 at the same zero-death service level---a real saving when backhaul
-and Class~A downlink opportunities and short-message billing are scarce. A purely local,
-zero-command pre-provisioned rhythm reaches 0.360 service, matching every centre-compiled arm;
-under static, pre-provisioned missions the centre's sampling commands add neither service nor
-safety, only cost. The centre's genuine remit is therefore the non-pre-provisioned and the
-declarational, examined next.
+\textbf{Yes, deterministically, within the tested seeds (Table~\ref{tab:r39}).}
+(i)~Na\"ive centre compliance permanently kills 13/14 nodes on all three tested seeds (39 total)
+and halves service to 0.162. (ii)~A centre envelope removes the command storm (refused
+2488$\to$298) and protects two seeds but 12 nodes still die on the tightest seed because the dusk
+downgrade cannot cross the backhaul and a Class~A window in time; the node-local floor removes all
+39/12 deaths at unchanged service. (iii)~With the floor present, adding the envelope cuts refused
+centre commands from 3364 (na\"ive) or 1156 (centre dayfeed) to 222 at the same zero-death service
+level---a reduction in futile downlink \emph{attempts} (rejected at admission, not transmitted).
+(iv)~A zero-command pre-provisioned rhythm reaches 0.360 service, matching every centre-compiled
+arm for these static missions. We report zero deaths as an empirical result over the three tested
+seeds and operating point, not a universal survival invariant, and we do not transcribe these
+deterministic zeros onto the live agent runs of RQ5, which did not wire the L0 floor into the agent
+loop.
 
-\subsection{RQ5: Does the certificate change a real agent?}
+\subsection{RQ5: What does a real agent show, and what does it not?}
 \label{sec:agent}
-We first replay three genuine outage-window decision points from an unaided
-deepseek-flash controller trace with identical system prompt, legal observation, and
-history; the A1 condition appends only a certificate derived from the agent's own command
-ledger and public parameters (no future truth). Table~\ref{tab:agent}.
-\begin{table}[h]
-\centering\small
-\begin{tabular}{p{0.09\linewidth}p{0.40\linewidth}p{0.42\linewidth}}
-\toprule
-\textbf{Time} & \textbf{Unaided A0 (original live trace)} & \textbf{A1 + certificate}\\
-\midrule
-08h00 & Sets all 14 nodes to 300/300, notes ``backhaul up, link healthy'' (LoRa heard mistaken for backhaul) & \texttt{actions:[]} --- outage since 4h, yellow cannot compile, hold blue 600, log infeasibility\\
-14h30 & Sets all to 300 (``soc ok''), 30~min after having set 600 for the night; oscillating & \texttt{actions:[]} --- outage persists, yellow unreachable and lethal overnight; hold blue, cite \S5.3.3/\S8.4.2\\
-19h30 & Sets all to 300 at deepest night (cannot apply; would drain nodes) & \texttt{actions:[]} --- outage blocks Class~A; hold last applied blue; log unreachable/no-slot/energy; recompile guaranteeable subset after recovery\\
-\bottomrule
-\end{tabular}
-\caption{Within-subject real-LLM witness. A0 misreads the chain segment, emits ineffective
-commands that oscillate, and implicitly reports yellow as in effect; A1 is segment-correct,
-lawful, and honest at all three points. This is an existence proof (n=3, one model), not an
-effect-size estimate.}
-\label{tab:agent}
-\end{table}
-The certificate does not optimise for the agent; it integrates signals the agent already
-received but could not combine (confirmed-applied configs, queued commands, slot geometry,
-night energy), turning a scalar ``age / battery'' view into a chain-segment view.
+We ran a live three-arm study with deepseek-flash over the 16~h outage (three seeds for an
+unaided agent A0, the same agent with an ordinary pending-command checklist A0s, and a certificate
+agent A1) plus two healthy-link controls, each a full 48~h$+$tail run with a real model call at
+every 30~minute decision (99 decisions per trace). All arms share the harness, legal observation,
+tools, history, and action space; only the decider's information block differs. We report the
+service and death figures, then restate the honesty/accounting claims under symmetric scoring.
 
-\paragraph{Full three-arm live sweep.}
-Beyond the within-subject replay, we ran the complete doc38 protocol against live
-deepseek-flash: three seeds $\times$ three arms over the 16-hour outage, plus two
-healthy-link negative controls (A0 and A1), each a full 48~h$+$tail run with a real model
-call at every 30-minute decision (99/99 calls, no heuristic fallback;
-Table~\ref{tab:r38three}). All arms share the identical harness, legal observation, tools,
-history, and action space; only the decider's information block differs. The preregistered
-hypotheses concern survival, honest reporting, command hygiene, and non-suppression on a
-healthy link; death and reporting counts are robust, whereas per-run service is noisy at
-$n=3$.
+\paragraph{Service and survival (robust counts; noisy service at $n=3$).}
+Table~\ref{tab:r38three} reports per-seed service and permanent deaths. A1 attains the highest
+mean service (.358), statistically level with the deterministic safe floor (.360); seed-1 service
+overlaps across arms, so we draw no service significance from $n=3$. Death counts are the more
+robust quantity.
 \begin{table}[h]
 \centering\small
 \resizebox{\linewidth}{!}{%
-\begin{tabular}{lccccccc}
+\begin{tabular}{lcccc}
 \toprule
-Arm & svc (s0/s1/s2) & svc mean & dead (s0/s1/s2) & false & ineff.\ dense & infeas.\ log & sent/ref\\
+Arm & svc (s0/s1/s2) & svc mean & deaths (s0/s1/s2; total) & dense orders (3 outage seeds)\\
 \midrule
-A0 & .160/.319/.408 & .296 & 13/13/9\,(35) & 24 & 53 & 35 & 500/2008\\
-A0-structured & .181/.221/.265 & .222 & 13/13/13\,(39) & 19 & 42 & 32 & 496/1420\\
-A1 $+$ certificate & .381/.316/.377 & .358 & 0/4/0\,(4) & 0 & 0 & 89 & 342/182\\
+A0 unaided & .160/.319/.408 & .296 & 13/13/9 (35) & 144\\
+A0s + checklist & .181/.221/.265 & .222 & 13/13/13 (39) & 192\\
+A1 + v4 certificate & .381/.316/.377 & .358 & 0/4/0 (4) & 67\\
+\midrule
+A0 healthy-link control & \multicolumn{2}{c}{.275} & 13 & 38\\
+A1 healthy-link control & \multicolumn{2}{c}{.511} & 0 & 28\\
 \bottomrule
 \end{tabular}}
-\caption{Live three-arm runs over the 16-hour outage, three seeds, 99 real model decisions per
-trace with no heuristic fallback. Service per seed and mean; permanent deaths per seed (total in
-parentheses); outage-window counts totaled over seeds: false ``upgrade in effect'' reports,
-ineffective dense commands, structural-infeasibility log entries, and commands sent/refused.}
+\caption{Live three-arm runs, 99 decisions per trace. The v0.6 ``false reports / infeasibility
+log'' columns are removed: under symmetric relabelling they did not measure what they claimed
+(see text). Dense orders count decisions that emitted a 300~s target. The four A1 seed-1 deaths
+are \emph{not} cleared by L0 in this run, because the live agent loop was not wired to the L0
+floor; the deterministic floor result of RQ4 is a separate experiment.}
 \label{tab:r38three}
 \end{table}
 
-\emph{Survival (H4):} A0 and A0-structured cause 35 and 39 permanent node-deaths across the
-three seeds (the checklist kills 13 on every seed); A1 cuts this to 4---zero on seeds~0 and~2,
-four residual on the tightest seed~1. \emph{Honest reporting (H2):} over outage windows
-A0/A0-structured emit 24/19 false ``upgrade in effect'' confirmations and 53/42 dense
-commands that never take effect, whereas A1 emits zero of either, holds sparse sampling at
-every outage decision (hold fraction 1.0), and writes 89 structural-infeasibility entries,
-reporting what cannot be guaranteed instead of over-promising. \emph{Command hygiene (H1):}
-A1 issues 342 commands with 182 refusals (0.53 refusals per sent), against 500/2008 (4.0) for
-A0 and 496/1420 (2.9) for A0-structured. \emph{Service:} A1 attains the highest mean service
-(.358), equal to the deterministic safe floor (.360, Table~\ref{tab:r39}); the seed-1 service
-values overlap (.316 vs .319), so we draw no significance from $n=3$ service means---the
-death, reporting, and command counts carry the result. The ordinary checklist does not close
-the gap (A0-structured is no better than A0, and worse on mean service and total deaths),
-attributing the gain to the feasibility certificate rather than to prompt engineering or
-bookkeeping.
+\paragraph{Accurate call accounting.}
+The 11 traces contain 1089 decisions, not 1089 successful API calls. 52 decisions ended in a
+parse-failure hold, caused by \texttt{max\_tokens} cutting the JSON mid-string (a second
+thinking-disabled attempt then also failed); 412 decision records carry a first-attempt error even
+when the retry succeeded (a logging artefact where the first error was not cleared). Per-arm
+parse-failure rates are A0 7.1\% (28/396), A0s 6.4\% (19/297), A1 1.3\% (5/396): the arm
+difference therefore mixes output-format reliability with any semantic effect of the certificate.
+The hardened harness now logs per-request attempts, finish reasons, token use, and a truncation
+marker for future runs.
 
-\emph{Healthy-link negative control (H3).} With no outage the certificate must not suppress a
-feasible upgrade. A1 attains service .511 with zero deaths and zero false/infeasible reports,
-whereas unaided A0 reaches only .275 and still kills 13 nodes: it over-samples through the
-elevated segment even with a healthy backhaul, so its energy failure is self-inflicted rather
-than outage-induced. The certificate is thus not trading service for caution where the network
-is healthy.
+\paragraph{The honesty claims must be restated.}
+The v0.6 scorer (i)~scored a false ``upgrade in effect'' claim only inside decisions that ordered
+dense, so an arm that mostly holds (A1) was scored on the empty set; (ii)~never ran on the
+healthy-link group (its outage window was set to none), yielding initialisation zeros; and
+(iii)~counted a broad keyword set (hold/guarantee/certificate/downgrade) that the certificate text
+itself taught the model. Symmetric relabelling of every decision with denominators, plus the
+interface fact that the observation's \texttt{link} field carries only LoRa access receipts
+(\texttt{n\_heard}) and \emph{no backhaul state}, gives a different picture. In the forced outage
+window, A0/A0s assert ``link up / commands can apply'' on 36/32 decisions (A1 on 2)---a
+deterministic over-optimistic error, since the primary is down throughout; these are access
+receipts misread as a live backhaul, and they accompany the ineffective dense orders and deaths.
+Conversely, the v4 certificate asserts ``control plane not delivering'' whenever
+$\text{heard}<n$; offline replay on the healthy-link control confirms five decision times
+(local clock 14:00, 17:30 on day~1 and 07:00, 11:00, 06:30 on day~2) at which the primary was
+usable yet the assertion fired---twice while 13/14 nodes had already confirmed the 300~s
+regime---an over-pessimistic upgrade of \emph{unconfirmed} to \emph{unreachable}. The prior ``89 structural
+infeasibility entries'' are prompt-taught wording (the corresponding terms appear in 317 A1
+decisions and in zero A0/A0s decisions), not per-obligation structural registrations. The
+honest finding is therefore not ``the certificate makes the model truthful'' but ``a missing
+backhaul-state signal causes bidirectional errors, and the prompt packet changes both behaviour and
+wording''; isolating the certificate's independent increment requires the matched-capability
+control below.
 
-The four residual seed-1 deaths show that the L2 certificate---a per-decision advisory to a
-live model---does not itself guarantee energy safety in the tightest realization; the
-deterministic L0 node-local energy gate (\S\ref{sec:locality}, off by default and
-bit-identical when disabled) removes exactly those deaths at unchanged service. We report the
-live runs as real-agent existence and directional evidence with one model and three seeds;
-the mechanistic and safety guarantees rest on the bit-identical, seed-swept deterministic
-RQ3/RQ4 results, not on the LLM.
+\paragraph{Unknown-aware v5 projector (offline mechanism witness).}
+We repaired the projector without re-running the LLM: unreachable is emitted only from an explicit
+network-side current state (an observation field the current harness does not yet provide, in
+which case the projector emits unconfirmed), and the night gate becomes a computed ledger
+(remaining dark hours $\times$ the dense-vs-sparse extra draw vs.\ reported SoC) that distinguishes
+ENERGY-INFEASIBLE from mere conservative advice. Replaying v4 and v5 over the same logged
+observations: v5 issues zero unreachable assertions without a network-side field (v4 fired at all
+five healthy-link false-alarm times; v5 labels them unconfirmed), and of the 528 dark decisions on
+which v4 printed a blanket ``permanently kills'' gate, the ledger classifies 189 as genuinely
+energy-infeasible and 339 as advisory---including every near-dawn decision (04:30--06:00), where
+the remaining dense extra draw is small and reported SoC suffices. This is a counterfactual
+mechanism witness, not an end-to-end v5 result.
+
+\paragraph{Scope of the agent evidence.}
+The live study is formative and single-model: it demonstrates the failure mode (access receipts as
+backhaul state), the direction of the v4 packet's effect (fewer ineffective dense orders, fewer
+deaths, but confounded with format reliability and expert heuristics), and the need for the v5
+statement discipline. It does not establish an independent certificate increment (the A1 packet
+also bundled day/night heuristics, geometric constants, confirmation rules, and note templates),
+does not wire L0 into the agent, and is not a powered service-significance test. The deterministic
+service, expiry, and safety results of RQ3/RQ4 do not depend on the LLM. The specified next
+validation---a matched-capability arm that receives the same constants and heuristics without the
+segment projector, v5 end-to-end runs with an explicit backhaul-state observation, and cross-model
+replication---is left as future work.
 
 \section{Related work}
 \label{sec:related}
-\textbf{LLMs in emergency / network control.} TopoLLM~\cite{topollm} uses an LLM with adaptive tool learning for real-time
-post-disaster emergency network topology planning; subsequent lines let LLMs (i) directly schedule UAV
-path/data collection and bandwidth, (ii) shape rewards for deep RL, or (iii) orchestrate
-infrastructure-recovery tools (e.g.\ graph-guided candidate-plan repair for network
-restoration and LLM-driven operation of real network-management
-APIs)~\cite{icgrestore,ossgpt}. These decide \emph{network resources}
-or compose recovery tools; they do not maintain a long-horizon routine monitoring workflow
-across collection, configuration, return, and recovery under intermittent links and tight
-energy, and they do not produce per-obligation feasibility certificates grounded in the
-execution chain. Intent/graph-based restoration systems already include intent objects,
-budget/time constraints, candidate-plan checks and local repair, and LLM systems already
-orchestrate documented APIs~\cite{icgrestore,ossgpt}; we therefore do not claim ``natural
-language to constraints'' as
-novel. Our delta is the per-obligation chain projection, the segment-labelled infeasibility
-certificate with zero-false-positive structural tests, and the compile-time/arrival-time
-split under mission unreachability.
+\textbf{LLMs in emergency / network control.} TopoLLM~\cite{topollm} uses an LLM with adaptive
+tool learning for post-disaster emergency network topology planning; subsequent lines let LLMs
+directly schedule UAV path/data collection and bandwidth, shape rewards for deep RL, or orchestrate
+infrastructure-recovery tools, including graph-guided candidate-plan repair and LLM-driven operation
+of real network-management APIs~\cite{icgrestore,ossgpt}. These decide \emph{network resources} or
+compose recovery tools; intent objects, budget/time constraints, candidate-plan checks, and local
+repair already appear in restoration systems, and LLM systems already orchestrate documented
+APIs~\cite{icgrestore,ossgpt}, so we do not claim ``natural language to constraints'' as novel.
+They do not maintain a long-horizon routine monitoring workflow across collection, configuration,
+return, and recovery under intermittent links and tight energy, and do not maintain an
+unknown-aware, three-class obligation state. Our delta is the per-obligation chain projection with
+an explicit unknown, the conditional structural statement, and the local-certainty release
+principle.
 
-\textbf{Scheduling, freshness, energy.} A recent LLM in-context data-collection scheduler for
-UAV-assisted sensor networks supplies the closest state-model precedent we build on---per-sensor
-bounded queues, exogenous sensing arrivals, selectable objects under one-UAV finite per-step
-service opportunities, battery/channel state, and a verifier feedback loop~\cite{icldc}; age-of-information
-and energy-harvesting link optimisation---including instantaneous-battery threshold policies
-and partially-observed energy-harvesting control~\cite{bacinoglu1905,zakeri2311}---and
-overbooking/scheduled-aware forwarding for space links~\cite{ccsdssabr} address pieces of the
-resource problem. We
-use these as strong baselines and upper-bound tools, not as strawmen, and we do not claim
-joint sampling/transmission/energy optimisation as novel. Our setting differs in remote
-\emph{persistent} configuration with Class~A apply latency and in the separated access vs.\
-primary/backup return process, and---decisively---in asking what the controller should
-\emph{say and lawfully do} when the mission is structurally unfulfillable, rather than only
-how to pack more bits. Consistent network update work has long studied
-per-update validity, dependencies, and loop-freedom during transitions~\cite{sdnconsistency};
-we rely on that lesson (versioning, dependencies, local repair are not new) and place
-task-transition effects after it. Network calculus and delay/disruption-tolerant triage under
-extreme contacts are complementary deterministic characterisations of the walls we
-measure~\cite{leboudec01}.
+\textbf{Scheduling, freshness, energy.} An LLM in-context data-collection scheduler for
+UAV-assisted sensor networks supplies the closest state-model precedent---per-sensor bounded
+queues, exogenous arrivals, selectable objects under finite per-step service, battery/channel
+state, and a verifier feedback loop~\cite{icldc}; AoI and energy-harvesting link optimisation,
+including instantaneous-battery threshold policies and partially-observed energy-harvesting
+control~\cite{bacinoglu1905,zakeri2311}, and overbooking/scheduled-aware forwarding for space
+links~\cite{ccsdssabr} address pieces of the resource problem. Joint sampling/transmission/energy
+optimisation is well established and we do not claim it; our distinction is remote
+\emph{persistent} configuration with Class~A apply latency, the separated access vs.\
+primary/backup return process, and---decisively---what the controller should \emph{say and lawfully
+do} under partial observability when the mission is unfulfillable. Consistent network update work
+has long studied per-update validity, dependencies, and loop-freedom during
+transitions~\cite{sdnconsistency}; we rely on that lesson (versioning, dependencies, local repair
+are not new). Network calculus and DTN triage under extreme contacts are complementary
+deterministic characterisations of the walls we measure~\cite{leboudec01}.
 
-\textbf{Packet discard, freshness, and DTN expiry.} Discarding stale or expired packets is itself
-well established: AoI packet management pre-empts or drops old updates to lower the receiver's
-age~\cite{costa2014pm,kam2016deadline,krishnan2019multihop}; deadline-aware buffer discard has
-been coupled with adaptive ARQ for video~\cite{razavivideo}; a sensor transport protocol suppresses
-packet generation when the estimated delay exceeds the time limit~\cite{wada2009timeout}; DTN
-bundle protocols attach a lifetime and expire bundles hop by hop, alongside a family of
-TTL/encounter-based drop policies~\cite{dtnarch,iranmaneshdtnqueue}. LoRa--LEO ground-space
-rural IoT systems instead schedule around estimated temporal satellite contacts rather than
-deadline discard~\cite{sateriot}. The discard mechanisms above decide from
-packet age, a local buffer deadline, a single packet's estimated delay, or a bundle TTL, and the
-discard takes effect locally at one hop. Our selective purge differs in three coupled respects:
-(i) the release test is the \emph{obligation's} end-to-end feasibility---its absolute delivery
-deadline against legally known return geometry---not packet age or a local TTL; (ii) suppression
-must be \emph{consistent across the access and backhaul segments}, because withholding an expired
-backhaul send while leaving the record in the node's acknowledgement-driven FIFO repair cache
-back-pressures fresh access traffic and costs on-time obligations (\S\ref{sec:purge}), a
-cross-segment interaction absent from single-hop AoI discard and from hop-local bundle expiry;
-and (iii) release is paired with retaining every still-rescuable record, which AoI latest-only
-(whose objective ignores coverage) does not do. DTN custody transfer~\cite{rfc5050} likewise moves
-retention and retransmission responsibility, but as a \emph{forward} hand-off: a downstream
-custodian accepts a bundle and releases the upstream custodian, explicitly to decouple reliability
-from any end-to-end acknowledgement; it is keyed to bundle custody rather than to a specific
-obligation's deadline, has no notion of two segments coupled by a link-layer repair cache, and has
-been migrated out of the core Bundle Protocol in BPv7~\cite{rfc9171}. We claim not the act of
-dropping expired packets but the obligation-feasibility test, its cross-segment consistency, and
-its identity with the compile-time certificate.
+\textbf{Packet discard, freshness, and DTN expiry.} Discarding stale or expired packets is well
+established: AoI packet management pre-empts or drops old updates~\cite{costa2014pm,kam2016deadline,krishnan2019multihop};
+deadline-aware buffer discard has been coupled with adaptive ARQ for video~\cite{razavivideo}; a
+sensor transport suppresses generation when estimated delay exceeds a limit~\cite{wada2009timeout};
+DTN bundle protocols attach a creation-time lifetime and expire bundles, alongside TTL/
+encounter-based drop policies~\cite{dtnarch,iranmaneshdtnqueue,rfc9171}; LoRa--LEO rural IoT
+systems instead schedule around estimated satellite contacts~\cite{sateriot}. Our source-local
+disposition \emph{is} standard per-record expiration and we prove the equivalence; we claim not
+the act of dropping but (i)~setting the lifetime from the obligation's end-to-end business
+deadline rather than packet age, a local buffer deadline, an estimated single-packet delay, or a
+bundle TTL; (ii)~requiring disposition to be consistent across the access and backhaul segments,
+because withholding an expired backhaul send while the acknowledgement-driven FIFO repair cache
+keeps the record back-pressures fresh access---a cross-segment interaction absent from single-hop
+AoI discard and hop-local bundle expiry; and (iii)~retaining every still-rescuable record, which
+AoI latest-only (whose objective ignores coverage) does not. DTN custody transfer~\cite{rfc5050}
+moves retention responsibility as a \emph{forward} hand-off to decouple reliability from any
+end-to-end acknowledgement, keyed to custody rather than an obligation deadline, and has been
+migrated out of the BPv7 core~\cite{rfc9171}; it is an alternative architecture for the
+responsibility transfer we measure at the source, and a deployment study of custody hand-off
+versus source expiry is complementary future work.
 
 \section{Discussion, limitations, and threats to validity}
 \label{sec:disc}
 \textbf{Scope of claims.} The throughput negative result is established at one main operating
-point with symmetric relaxations and strong (including omniscient and MPC) baselines; the
-structural \stime certificate is geometric and seed-invariant, but capacity and night-energy
-\emph{forecasts} are deliberately not claimed as deterministic---they depend on online state
-and unknown weather. The real-LLM evidence uses one model with three outage seeds per arm (plus
-two healthy-link controls), each a single temperature-0 trajectory, and per-run service variance
-is large at $n=3$; the live sweep shows robust death and reporting counts (unaided
-A0/A0-structured cause 35/39 deaths with 24/19 false upgrade reports, the certificate agent 4
-deaths with zero false reports) but is not a powered service-significance test, and it motivates
-the deterministic layer---the L2 certificate leaves four residual deaths on the tightest seed,
-and the L0 node-local gate, not the L2 advisory, provides the energy-safety guarantee.
-Effect-size and the safety guarantee rest on the
-deterministic three-seed placement study (RQ4), which itself spans one main operating point; wider
-deployment ranges (backup rate/payload, node count, capacity, cloud cover, brownout restart
-threshold) are not swept, and sub-point mean-service differences are not treated as significant.
-The static-mission closure assumes a pre-provisioned or predictable schedule. A full
-three-placement comparison for \emph{runtime, non-pre-provisioned} warning-level changes---centre
-long loop versus gateway-local LoRa re-compilation versus node pre-provisioning---including
-in-flight cross-generation commands and the residual physical effects of superseded
-configurations, is left as future work; the unreachable half is already quantified (RQ2), the
-reachable half converges to the local operating point once the table arrives (\S\ref{sec:locality}),
-and consistent-update/versioning mechanisms are established in the literature, so we claim no
-novelty there. The brownout model is absorbing; a restart sensitivity could move the
-energy wall but not the slot/capacity walls. The centre's knowledge of outage duration assumes
-network-side operations visibility; we also give a conservative variant that assumes only the
-current outage and counts deterministic backup slots. Standards text for one channel was
-obtained from a document-sharing host (top-grade document, lower-grade copy chain) with the
-official host unreachable by TLS from our environment; clause numbers were cross-checked from
-two independent copies. We did not execute authors' reference implementations and therefore
-do not claim replication of any cited system; one field study endpoint was rate-limited from
-our network and is cited without its numbers.
+point against symmetric relaxations and strong (omniscient, MPC, greedy) baselines, and is scoped
+to the policy families tested; we make no global optimality or zero-remainder claim, and a better
+formulated controller could exist. The conditional \stime certificate is geometric and
+seed-invariant but presupposes a network-side unavailable interval; without it the statement is
+only conditional. Online arrival attribution is deliberately partial (53.3\%, exact on the
+labelled subset); treating its unknowns as a known segment would recreate the exact error we
+correct, and a deployment that can supply current (not forecast) backhaul state to the centre can
+shrink the unknown class---the v5 projector already consumes such a field.
 
-\textbf{Selective-purge assumptions.} (i) The central acknowledgement is modelled synchronously
-and without airtime, a pre-existing v1.1 simplification that favours every queue discipline
-equally; the node-local \texttt{deadline-purge} needs no downlink at all and is our primary
-mechanism, whereas the gateway \texttt{cert-purge}'s explicit acknowledgements would consume
-Class~A receive windows in a real deployment. (ii) A purged record forgoes any retrospective value
-after its deadline; where such value matters it can be retained at the gateway rather than sent.
-(iii) During the outage the node and gateway test deadlines against the public pre-change period
-$P{=}600$; the exact post-upgrade $P{=}300$ deadline enters only post-hoc accounting, never as an
-online input. (iv) Edge-queue results rest on a paired seed 0--9 sweep with 95\% confidence
-intervals (all service gains positive); the purge test is deterministic given the public period,
-so residual seed dependence enters through access/solar randomness, and wider deployment parameter
-ranges are not swept.
+\textbf{Agent evidence.} The live study uses one model with three outage seeds per arm (plus two
+healthy controls), each a single temperature-0 trajectory; per-run service variance is large at
+$n=3$, and the arm contrast confounds the segment projector with expert heuristics, geometric
+constants, note templates, and output-format reliability (parse-failure rates differ 5-fold). The
+hardened harness (per-request accounting, symmetric scoring over every decision and both groups,
+the v5 unknown-aware projector and energy ledger) is in the repository so that the specified
+matched-capability, v5 end-to-end, and cross-model studies can be run without re-litigating the
+instrumentation; those runs are explicitly not claimed here. The live agent loop was not wired to
+the L0 floor, so deterministic RQ4 zeros are not transcribed to agent deaths.
 
-\textbf{Generality.} The obligation chain and the three-way statement discipline transfer to
-any intermittent, energy-limited, authority-bounded monitoring workflow; the specific walls
-are parameterised by the deployment and should be re-derived per deployment.
+\textbf{Expiry assumptions.} The central acknowledgement is modelled synchronously and without
+airtime, a pre-existing simplification that favours every queue discipline; the source-local
+expiry needs no downlink and is our primary mechanism, while gateway acknowledgements would consume
+Class~A receive windows in deployment. During the outage the node tests deadlines against the
+public pre-change period $P{=}600$; the post-upgrade $P{=}300$ deadline enters only post-hoc
+accounting, never as an online input. The equivalence of obligation-keyed and deadline-keyed
+release holds for a single fixed-period mission; multi-obligation or mission-version overlap,
+where one record remains valid for a later obligation, requires release keyed to the record's
+latest still-valid deadline and is left future work, as is a custody-transfer deployment
+comparison. Expired records forgo retrospective value after their deadline; where that matters
+they can be retained at the gateway rather than sent.
+
+\textbf{Model and provenance.} The brownout model is absorbing; a restart sensitivity could move
+the energy wall but not the slot/capacity walls. Wider deployment ranges (backup rate/payload,
+node count, capacity, cloud cover, restart threshold) are not swept, and sub-point mean-service
+differences are not treated as significant. Centre knowledge of the outage interval assumes
+network-side operations visibility of the \emph{current} state, not its duration; a conservative
+variant counts only deterministic backup slots. Standards text for one channel was obtained from
+a document-sharing host (top-grade document, lower-grade copy chain) because the official host was
+unreachable by TLS from our environment; clause numbers were cross-checked from two independent
+copies, and the international LoRa-plus-satellite and some vendor lines were not verified and are
+not used as fact. We did not execute cited systems' reference implementations and claim no
+replication of them; one field-study endpoint was rate-limited from our network and is cited
+without its numbers.
+
+\textbf{Generality.} The obligation chain, the three-class statement discipline with an explicit
+unknown, and the local-certainty release principle transfer to any intermittent, energy-limited,
+authority-bounded monitoring workflow; the specific walls and periods are parameterised by the
+deployment and must be re-derived per deployment.
 
 \section{Conclusion}
 For pre-disaster geohazard monitoring under intermittent connectivity, strong ordinary
-controllers already extract essentially all on-time delivery that fixed resources allow; the
-remaining failures are physical and cleanly attributable. The defensible role for an agent
-runtime is therefore neither to out-pack the network nor to directly drive safety-critical
-sampling, but to sit \emph{above} a layered, execution-grounded substrate. Node-local and
-gateway-local autonomy enforce, in time and with zero or local signalling, the night-energy floor
-and record disposition that no centre round trip can guarantee: a deterministic placement study
-shows that unprotected centre compliance permanently kills nodes, that a centre-side feasibility
-filter alone cannot save the tightest-energy seed, that a node-local floor guarantees survival at
-unchanged service, and that a purely local pre-provisioned rhythm already matches every
-centre-compiled service level under static missions. Above that floor the centre maintains
-\emph{execution-grounded honesty}: it compiles authorised missions against the real
-collection/access/return/energy chain, certifies structural infeasibility hours ahead with no
-false alarms, attributes every miss to its segment the moment evidence arrives, and---at the
-execution layer---releases exactly the records a certificate proves unrecoverable while keeping
-every rescuable one, so that honesty about infeasibility also frees real on-time delivery rather
-than merely moving cost between the access and backhaul segments; it then re-compiles or
-re-negotiates only within the law. The agent's value is thereby reserved for what local autonomy
-cannot have---changing, non-pre-provisioned requirements and honest, early, segment-precise
-disclosure---so that the system promises exactly what it can execute, and says, precisely and
-early, why it cannot do the rest.
+controllers already extract essentially all the on-time delivery that fixed resources allow over
+the policies we tested; the failures that remain are physical and, offline, cleanly attributable.
+The defensible role of an agent runtime is therefore neither to out-pack the network nor to drive
+safety-critical sampling, but to sit above a layered, execution-grounded obligation runtime. We
+separate what the field can know from what it cannot: at gateway arrival less than half of missed
+upgraded obligations admit an exact segment label from local evidence and the rest must remain
+unknown, while complete attribution is an offline capability. That partial observability does not
+paralyse the edge---a node holds certain knowledge of its own records' business deadlines and can
+stop worthless retransmission and night-time discharge without diagnosing the remote cause. This
+deadline-aligned expiry is a standard primitive whose value lies in its business-deadline basis,
+its zero-downlink source placement, and its cross-segment consistency, doubling outage on-time
+delivery while removing expired sends and deaths where gateway-only suppression merely moves cost
+to the access segment. Safety-critical constraints sit at the node because only there the
+observe-decide-act delay beats the intervention window; the centre is confined to
+non-pre-provisioned authorised changes and to statements that never upgrade unconfirmed to
+unreachable. A formative real-agent study confirms the interface failure this design targets and
+motivates the unknown-aware projector, while the deterministic guarantees rest on rules any
+planner can use. The result is a runtime that promises only what it can execute, says unknown when
+it cannot tell, and still acts---locally and correctly---on the things it knows for certain.
 
 \bibliographystyle{unsrt}
 \bibliography{refs}

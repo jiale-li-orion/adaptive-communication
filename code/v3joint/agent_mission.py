@@ -164,7 +164,8 @@ class LLMDecider:
         self.tag = tag
         self.verbose = verbose
         self.kind = tag + ("-structured" if structured_state else "")
-        self.calls = 0
+        self.calls = 0              # decisions (one per decide() call)
+        self.requests = 0           # actual HTTP requests (>= decisions when retries occur)
         self.total_tokens = 0
 
     def _prompt(self, obs, ctx):
@@ -193,7 +194,9 @@ class LLMDecider:
             {"thinking": {"type": "disabled"}, "max_tokens": min(self.max_tokens, 2000)},
         ]
         raw, err, usage, finish, data = None, None, {}, None, None
+        attempts_log = []
         for attempt, cfg in enumerate(configs):
+            self.requests += 1
             payload = {"model": self.model,
                        "messages": [{"role": "system", "content": sysp},
                                     {"role": "user", "content": usr}],
@@ -212,18 +215,28 @@ class LLMDecider:
                 usage = data.get("usage", {})
                 if msg.get("content"):
                     raw = msg["content"]
+                    err = None            # success on this attempt clears the first attempt's error
+                    attempts_log.append({"attempt": attempt, "ok": True, "finish": finish,
+                                         "total_tokens": usage.get("total_tokens"),
+                                         "completion_tokens": usage.get("completion_tokens")})
                     break
                 err = f"empty content finish={finish}"
+                attempts_log.append({"attempt": attempt, "ok": False, "finish": finish, "error": err})
             except Exception as e:  # noqa: BLE001
                 err = f"{type(e).__name__}: {e}"
+                attempts_log.append({"attempt": attempt, "ok": False, "error": err})
                 time.sleep(2 + 3 * attempt)
         self.calls += 1
         self.total_tokens += int(usage.get("total_tokens", 0))
         actions, parse_note = self._parse(raw, obs, ctx)
+        if raw is not None and parse_note == "unparseable->hold" and finish == "length":
+            parse_note = "truncated->hold"   # max_tokens cut the JSON mid-string, not a chosen hold
         self._last_raw = raw
         self._last_err = err
         self._last_usage = usage
         self._parse_note = parse_note
+        self._last_requests = len(attempts_log)
+        self._last_attempts = attempts_log
         if self.verbose:
             print(f"[{self.kind}] t={obs['now_s']} call={self.calls} tok={usage.get('total_tokens')} "
                   f"err={err} actions={len(actions)} {parse_note}")
@@ -393,9 +406,13 @@ class AgentMissionPolicy(CenterPolicy):
                    "actions": {k: list(v) for k, v in actions.items()},
                    "targets_after": {k: list(v) for k, v in self.targets.items()}}
             if isinstance(self.decider, LLMDecider):
+                _pn = getattr(self.decider, "_parse_note", "")
                 rec.update(decider=self.decider.kind, raw=self.decider._last_raw,
                            api_error=self.decider._last_err, usage=self.decider._last_usage,
-                           parse_note=getattr(self.decider, "_parse_note", ""))
+                           parse_note=_pn,
+                           api_requests=getattr(self.decider, "_last_requests", 1),
+                           attempts=getattr(self.decider, "_last_attempts", []),
+                           parse_hold=(_pn or "").endswith("->hold"))
             self.decision_log.append(rec)
             if self.trace_path:
                 with open(self.trace_path, "a", encoding="utf-8") as f:
