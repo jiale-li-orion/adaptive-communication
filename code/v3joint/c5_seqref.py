@@ -631,6 +631,26 @@ def hidden_endpoint_counterexample(peak: float, up_h: int, down_h: int, sigma: f
             "v1_offset_convention_matches_review": bool(abs(mn_v1 - 0.0003295257) < 1e-9)}
 
 
+def policy_window_invariance(peak: float, up_h: int, down_h: int, sigma: float,
+                             alt_down_h: int) -> dict:
+    """**同一策略**在两个不同计分窗口终点下的规则表必须逐位相同。
+
+    审阅要求"不能逐终点重新解一个策略再称非预知"。这里直接核对：用两个终点各解一次 DP，
+    比较整张规则表（不是只看根状态）。相同即说明该策略不依赖终点；若不同，必须如实报告
+    （那意味着策略用到了计分窗口这一公开任务参数，需要在口径里声明）。
+    """
+    a = solve_nonprescient(peak, up_h, down_h, sigma)
+    b = solve_nonprescient(peak, up_h, alt_down_h, sigma)
+    shared = [h for h in a["_pol"] if h in b["_pol"]]
+    same = all(np.array_equal(a["_pol"][h], b["_pol"][h]) for h in shared)
+    return {"window_end_h": down_h, "alternative_window_end_h": alt_down_h,
+            "hours_compared": len(shared), "rule_table_bit_identical": bool(same),
+            "root_actions": {"at_%d" % down_h: {str(h): bool(a["_pol"][h][a["root_idx"]])
+                                                for h in shared if a["_pol"][h][a["root_idx"]]},
+                             "at_%d" % alt_down_h: {str(h): bool(b["_pol"][h][b["root_idx"]])
+                                                    for h in shared if b["_pol"][h][b["root_idx"]]}}}
+
+
 def never_stop_is_not_free(peak: float, up_h: int, down_h: int, sigma: float) -> dict:
     """v1 缺陷的最小见证：规则从不主动终止时，安全判定必须反映**它真的不终止**。"""
     ev = evaluate_rule(peak, up_h, down_h, lambda h, g: np.ones(g.n, dtype=bool), sigma)
@@ -860,6 +880,9 @@ def main() -> int:
     out["counterexamples"]["sparse_dominance"] = sparse_dominance_witness(0.012, up_a, CLOUD_SIGMA)
     out["endpoint_invariance"]["ttl8_alt_window_end"] = endpoint_invariance_probe(
         0.012, up_a, dn_a, CLOUD_SIGMA, rule_ttl_level(8, up_a, 0.008), 10)
+    # 可行峰值上：同一 DP 策略在两个计分窗口终点下的规则表必须逐位相同
+    out["endpoint_invariance"]["dp_policy_alt_window_end_peak016"] = policy_window_invariance(
+        0.016, up_a, dn_a, CLOUD_SIGMA, 10)
     print("独立反例与不变性：")
     ns = out["counterexamples"]["never_stop_is_not_free"]
     print(f"  never-stop 规则：求值器判定安全={ns['evaluator_safe']}  "
@@ -872,6 +895,9 @@ def main() -> int:
           f"成立={sd['monotone_as_claimed']}")
     ei = out["endpoint_invariance"]["ttl8_alt_window_end"]
     print(f"  跨隐藏终点执行一致（真值 6h vs 10h）：{ei['executed_dense_hours_identical']}")
+    dp_ei = out["endpoint_invariance"]["dp_policy_alt_window_end_peak016"]
+    print(f"  可行峰值上 DP 规则表对终点不变（比较 {dp_ei['hours_compared']} 个小时）："
+          f"{dp_ei['rule_table_bit_identical']}")
     print()
 
     for phase in PHASES:

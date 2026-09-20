@@ -148,6 +148,11 @@ def main() -> int:
     check("跨隐藏终点同一策略的配置轨迹逐位相同",
           bool(ei.get("executed_dense_hours_identical")),
           f"终点 {ei.get('true_window_end_h')}h 对 {ei.get('alternative_window_end_h')}h")
+    dpe = res.get("endpoint_invariance", {}).get("dp_policy_alt_window_end_peak016", {})
+    check("可行峰值上 DP 规则表对计分窗口终点不变（不是逐终点重解）",
+          bool(dpe.get("rule_table_bit_identical")),
+          f"比较 {dpe.get('hours_compared')} 个小时，终点 {dpe.get('window_end_h')}h 对 "
+          f"{dpe.get('alternative_window_end_h')}h")
     check("DP 的动作区间覆盖到地平线（不按窗口终点截断）",
           res["cells"][f"A|0.016|{S.CLOUD_SIGMA}"]["nonprescient"]["action_horizon_hours"][1]
           == S.END_HOUR)
