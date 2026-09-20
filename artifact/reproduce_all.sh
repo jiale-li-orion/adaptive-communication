@@ -42,6 +42,7 @@ CLAIMS=(
 "C8|creds|python3 code/v3joint/r42_claim_relabel.py && python3 code/v3joint/r43_cert_v5_replay.py|results/r42_claim_relabel.json,results/r43_cert_v5_replay.json,results/agent_traces/r38_three_arm_summary.json"
 "C9|no|python3 code/v3joint/c5_seqref.py && python3 code/experiments/measure_seqref_calibration.py|results/c5_seqref.json,results/c5_seqref_calibration.json"
 "C10|no|python3 code/analysis/retention_deadline_audit.py|results/retention_deadline_audit.json"
+"C11|no|python3 code/analysis/reverse_feedback_budget.py|results/reverse_feedback_budget.json"
 )
 
 if [ "$ONLY" = "__LIST__" ]; then
