@@ -1,0 +1,161 @@
+{
+ "script": "code/analysis/control_deadline_witness.py",
+ "seed": 0,
+ "delay_s": 900,
+ "t0_first_issue_s": 300,
+ "arms": {
+  "early": {
+   "svc": 2697,
+   "n": 7560,
+   "comm": {
+    "airtime_uplink_h": 0.24152689777776526,
+    "airtime_downlink_h": 0.09864362666666746,
+    "downlink_attempts": 2154
+   },
+   "backup": {
+    "backup_packets": 75,
+    "backup_bytes_sent": 5848,
+    "backup_on": null,
+    "backup_late": null
+   }
+  },
+  "late": {
+   "svc": 2698,
+   "n": 7560,
+   "comm": {
+    "airtime_uplink_h": 0.24071367111109862,
+    "airtime_downlink_h": 0.09585009777777855,
+    "downlink_attempts": 2093
+   },
+   "backup": {
+    "backup_packets": 75,
+    "backup_bytes_sent": 5848,
+    "backup_on": null,
+    "backup_late": null
+   }
+  },
+  "quiet": {
+   "svc": 2675,
+   "n": 7560,
+   "comm": {
+    "airtime_uplink_h": 0.21635470222221498,
+    "airtime_downlink_h": 0.0,
+    "downlink_attempts": 0
+   },
+   "backup": {
+    "backup_packets": 75,
+    "backup_bytes_sent": 5848,
+    "backup_on": null,
+    "backup_late": null
+   }
+  }
+ },
+ "witness_a": {
+  "rescued": 4,
+  "displaced": 5,
+  "rescued_oids": [
+   "n03:routine:t0082200",
+   "n06:routine:t0132600",
+   "n06:routine:t0159000",
+   "n15:routine:t0002400"
+  ],
+  "examples": [
+   {
+    "oid": "n03:routine:t0082200",
+    "early": {
+     "release_at": 82200,
+     "deadline": 82800,
+     "first_heard_at": 82500,
+     "first_received_at": 82500,
+     "latency_s": 300,
+     "delivered": true,
+     "heard_on_time": true,
+     "received_on_time": true
+    },
+    "late": {
+     "release_at": 82200,
+     "deadline": 82800,
+     "first_heard_at": 82800,
+     "first_received_at": 90000,
+     "latency_s": null,
+     "delivered": false,
+     "heard_on_time": true,
+     "received_on_time": false
+    }
+   },
+   {
+    "oid": "n06:routine:t0132600",
+    "early": {
+     "release_at": 132600,
+     "deadline": 133200,
+     "first_heard_at": 132900,
+     "first_received_at": 133200,
+     "latency_s": 600,
+     "delivered": true,
+     "heard_on_time": true,
+     "received_on_time": true
+    },
+    "late": {
+     "release_at": 132600,
+     "deadline": 133200,
+     "first_heard_at": 133800,
+     "first_received_at": 133800,
+     "latency_s": null,
+     "delivered": false,
+     "heard_on_time": false,
+     "received_on_time": false
+    }
+   },
+   {
+    "oid": "n06:routine:t0159000",
+    "early": {
+     "release_at": 159000,
+     "deadline": 159600,
+     "first_heard_at": 159300,
+     "first_received_at": 159300,
+     "latency_s": 300,
+     "delivered": true,
+     "heard_on_time": true,
+     "received_on_time": true
+    },
+    "late": {
+     "release_at": 159000,
+     "deadline": 159600,
+     "first_heard_at": 160200,
+     "first_received_at": 160200,
+     "latency_s": null,
+     "delivered": false,
+     "heard_on_time": false,
+     "received_on_time": false
+    }
+   },
+   {
+    "oid": "n15:routine:t0002400",
+    "early": {
+     "release_at": 2400,
+     "deadline": 3600,
+     "first_heard_at": 2700,
+     "first_received_at": 3600,
+     "latency_s": 1200,
+     "delivered": true,
+     "heard_on_time": true,
+     "received_on_time": true
+    },
+    "late": {
+     "release_at": 2400,
+     "deadline": 3600,
+     "first_heard_at": 4200,
+     "first_received_at": 4200,
+     "latency_s": null,
+     "delivered": false,
+     "heard_on_time": false,
+     "received_on_time": false
+    }
+   }
+  ],
+  "apply_changes_early": {}
+ },
+ "witness_b": {
+  "svc_delta": -22
+ }
+}
