@@ -28,134 +28,98 @@ with Intermittent Backhaul}}
 \maketitle
 
 \begin{abstract}
-When a mountain-site backhaul fails, the network keeps executing communication state that was
-installed before the failure. Unacknowledged records keep filling the few recovery access
-batches, and a dense sampling configuration that can no longer be countermanded keeps draining
-a battery overnight. We study where, and on what evidence, these two forms of \emph{persistent
-installed state} can be terminated, for a battery-plus-solar LoRaWAN Class~A deployment with an
-autonomous gateway, a cellular primary and a rate-limited BeiDou short-message backup. One
-decision problem---local termination under partial evidence---covers both: a node holding only
-its clock, battery, cache, recent access receipts and install-time bounds decides to retain or
-release a record and to hold or relax a configuration, under no-false-release, energy-survival,
-locality and no-false-completion constraints. A record's termination time is its business
-deadline, locally certain; the rule is bit-identical to standard Bundle-Protocol per-record
-expiry, and its \emph{cross-segment placement} decides the gain: source-local expiry raises
-outage on-time delivery $\cThreeSeedZeroFifo\to\cThreeSeedZeroPurge$ and \cThreeRatio-fold over ten seeds, whereas suppressing expired
-sends at the gateway alone back-pressures access ($-8$). A configuration's termination time is
-not locally observable, because it depends on mission revisions travelling the failed path and
-on return-slot geometry held at the gateway. A clock night-guard suffices when the outage aligns
-with sunset and energy is ample; under overcast skies it leaves 20--31 nodes to discharge
-fatally. Preloaded local revert bounds remove these deaths without reducing aggregate yellow
-obligation delivery; a fixed 8~h TTL also does so in both tested phases. A proposed
-\emph{delivery-bounded lease} seeks to derive the bound from legally available mission and
-return-slot information. Current experiments supply the future downgrade time offline and do not
-validate that online derivation or command-carried installation. A formative LLM study locates an
-interface fault: LoRa access receipts read as backhaul state. All claims come from deterministic, repository-reproducible
-runs; end-to-end and cross-model agent validation is future work.
+Intermittent backhaul disconnects a monitoring controller without stopping the communication
+state it has installed. Unacknowledged records continue consuming access opportunities, and
+applied sampling profiles continue drawing energy after corrective commands become unreachable.
+We study this failure in pre-disaster mountain monitoring with battery/solar LoRaWAN Class~A
+nodes, a cellular primary and an uplink-only short-message backup. We formulate an execution
+contract that separates record lifetime, authorised configuration fallback and evidence of
+end-to-end completion, and examine where each decision can be enforced. The central observation
+is that a valid local action can require less information than complete failure diagnosis.
+In the tested cache model, placing standard deadline expiry at the source improves on-time
+service by \cThreePairedPoints\ percentage points over ten paired seeds and increases outage
+on-time delivery by \cThreeRatio$\times$; gateway-only suppression can instead back-pressure
+access. Node-local protection also prevents losses that a central downgrade cannot avert in
+the tested episodes. Ordinary TTL and battery rules cover the evaluated configuration-stopping
+problem, including a same-information exact reference, so a new lease algorithm is not required
+for these results. Partial gateway attribution and live Agent traces expose a separate interface
+failure: access receipts being interpreted as backhaul or completion evidence. These findings
+support local enforcement and explicit evidence boundaries as communication-system design
+principles. The Agent study is formative; an independent benefit of the complete execution
+interface remains to be evaluated against a same-component ordinary stack.
 \end{abstract}
 
 \begin{IEEEkeywords}
-Persistent installed state, intermittent backhaul, LoRaWAN Class~A, satellite short message,
-deadline expiry, configuration lease, partial observability, pre-disaster monitoring.
+Pre-disaster monitoring, intermittent backhaul, LoRaWAN Class~A, communication state,
+local enforcement, deadline expiry, partial observability, agent execution.
 \end{IEEEkeywords}
 
 \section{Introduction}
+A mountain monitoring node receives an authorised dense sampling profile while its backhaul is
+available. The cellular path then fails, but the node continues sampling and transmitting. A
+later downgrade cannot reach its Class~A receive window. Meanwhile, records lacking central
+acknowledgement remain in the source cache and occupy later access batches even after their
+business deadlines. The gateway may suppress useless return traffic without releasing the
+source copies. Correct decisions at one layer can therefore fail to stop resource consumption
+at another.
 
-Consider a field node running an authorised dense sampling profile. While the cellular backhaul
-is up, the centre sends the configuration and the node applies it at its next LoRaWAN Class~A
-receive window. The backhaul then fails for sixteen hours, and three things keep happening with
-no control path to stop them. The node keeps sampling and transmitting at the dense rate,
-drawing energy the battery may not have through the night, while a downgrade authored after the
-failure cannot reach it. Records already cached at the node are, under the standard
-hold-until-acknowledged edge discipline, retransmitted oldest-first on every narrow access
-opportunity, including records whose business deadline has passed. The centre and gateway
-cannot tell whether missing data were never sampled, sit at a node, reached the gateway, or
-merely lack a return slot, nor whether a command is queued, in transit or applied. The network
-is not stuck: \emph{installed state is still executing}, spending energy, access slots and
-metered short-message bytes on work that can no longer meet any obligation.
+This paper studies \emph{persistent communication state under disconnected control}. Record
+retention and applied configuration have different termination conditions, but share an execution
+dependency: waiting for a later central decision assumes a control path that may be unavailable.
+The monitoring obligation remains end-to-end---an in-window sample must arrive at the centre
+before its deadline---while evidence and authority are distributed across the node, gateway and
+centre. An access receipt confirms one stage of that chain, not the entire obligation.
 
-This is a communication-systems failure with a specific shape: \textbf{the termination of a
-persistent installed state depends on a control/acknowledgement path that has itself failed}.
-SateRIoT observes that lossy satellite windows waste COTS-radio retransmissions and redesigns
-link estimation and multi-hop sharing around that measured behaviour~\cite{sateriot}; semantic
-HARQ reuses the mature HARQ primitive but changes its error criterion to match a new
-communication object~\cite{razavivideo}. In the same spirit we ask which ordinary mechanism
-already terminates each kind of installed state, and where a genuine gap remains once the
-ordinary mechanisms are applied fairly.
+\subsection{Design insight}
+\textbf{Local action and complete diagnosis have different information requirements.} A gateway
+may be unable to distinguish a sample that was never collected from one not yet heard. The
+source nevertheless knows whether a stored record has passed its locally assigned deadline and
+can stop retransmitting it. Similarly, an authorised local fallback can act on a clock or
+battery condition even when the centre cannot determine the current profile. These actions
+need explicit authority and enforceable local predicates; they do not need an invented account
+of the remote failure.
 
-\subsection{Two kinds of persistent installed state}
-A \textbf{record state} is an unacknowledged sample in the node cache, occupying a slot in every
-future access batch until acknowledged or discarded. A \textbf{configuration state} is the
-node's current sampling/reporting profile, installed by an applied command, which drives energy
-and airtime until a newer command or a local condition ends it. Both are created while connected
-and both outlive the connection. They differ in what evidence terminates them: a record's useful
-lifetime ends at an absolute business deadline the source computes from the public mission
-cadence, whereas a configuration's useful lifetime ends when the data it produces can no longer
-be delivered---a fact depending on mission \emph{revisions}, which reach the field over the
-failed backhaul, and on the geometry of future return opportunities, which the gateway and not
-the node holds. This asymmetry, made precise in \S\ref{sec:problem}, is the paper's technical
-centre.
+We organise this distinction as an execution contract: identify the state an operation changes,
+the evidence supporting its outcome, and the location capable of acting before further harm.
+Standard expiry and local protection instantiate the contract. The contribution is evaluated
+through their placement and communication consequences, rather than through a new name for
+these established mechanisms.
 
-\subsection{What strong ordinary mechanisms already settle}
-We first assemble deliberately strong baselines with the same legal information: energy-aware
-feed-forward sampling, an omniscient offline packer, rolling-horizon MPC, max-coverage/recency
-backup packing, earliest-deadline-first and obligation-greedy queues, piecewise non-prescient
-mission views, and symmetric resource relaxations. Over the policy families tested,
-re-optimising collection, scheduling or packing under fixed resources yields no robust
-on-time-delivery gain; the large fixed-resource gains require added backhaul capacity or energy.
-We report this as a scoped negative result. Two ordinary termination mechanisms also work well:
-per-record expiry, where releasing a cached record at its business deadline is standard
-Bundle-Protocol lifetime management~\cite{rfc9171}, to which a prior ``certificate-driven
-purge'' proves bit-identical; and a local clock/energy guard, where a node-local rule relaxing
-dense sampling at dusk removes overnight deaths whenever the outage aligns with sunset and the
-battery is adequate. We credit both as mature primitives.
+\subsection{Ordinary mechanisms and the remaining question}
+The comparisons include standard per-record expiry, local clock and battery protection,
+fixed-duration fallback, strong backup packing and a same-information exact stopping reference.
+Expiry reproduces obligation-keyed deletion on the tested seeds, and ordinary configuration
+rules cover the evaluated stopping family. These results delimit the need for a new algorithm.
+They do not establish a global optimum for communication scheduling.
 
-\subsection{The residual}
-The experiments expose two placement effects. Suppressing expired records at the
-\emph{gateway} while leaving the source cache untouched withholds the acknowledgement: the
-record continues to fill the node's access batch and on-time delivery moves $202\to194$.
-Source-local expiry removes this retained state. For configurations, the clock guard acts only
-at dusk, leaving \cFiveNightfloorDeadA--\cFiveNightfloorDeadB deaths in two overcast scenarios.
-Earlier preloaded revert times avoid these deaths. A short 4~h TTL gives up
-\cFiveTtlFourLostB yellow deliveries in the longer dense phase, whereas a fixed 8~h TTL avoids
-deaths and preserves the aggregate yellow delivery in both phases. A bound derived from energy
-feasibility also avoids deaths but gives up \cFiveEnergyLostA and \cFiveEnergyLostB deliveries. These observations
-motivate studying how to select and install a bound before disconnection; they do not establish
-an increment over ordinary leases. In particular, a downgrade authored after the control path
-fails cannot be used to compute a prior install-time bound.
+A remaining systems question is whether an explicit execution interface improves action selection
+and repair beyond a stack already containing those ordinary components. The distinction matters
+for Agents: a planner may order more sampling when the missing stage is return delivery, or infer
+that a command applied from unrelated access receipts. Our live study observes the latter
+interface failure, but its end-to-end comparison does not yet isolate the interface's independent
+contribution. We keep that question separate from the deterministic placement results.
 
 \subsection{Contributions}
 \begin{enumerate}
-\item \textbf{One termination problem for persistent installed state} (\S\ref{sec:model},
-\S\ref{sec:problem}). Records and configurations are modelled as state installed while connected
-and executed while disconnected, each state's release time is derived from the obligation chain,
-and a single local decision problem is stated under four constraints---no-false-release, energy
-survival, evidence locality, no-false-completion---with a three-class
-confirmed/unconfirmed/unreachable discipline that makes \emph{unknown} a first-class outcome.
-\item \textbf{Record termination is standard expiry; cross-segment placement is the gain}
-(\S\ref{sec:mech-record}, \S\ref{sec:eval-record}). Deadline-aligned source expiry is
-bit-identical to BPv7 per-record lifetime on ten seeds. The system contribution is an end-to-end
-business-deadline basis with source/gateway consistency, which doubles outage on-time delivery
-and drives expired backup records to one, while gateway-only suppression moves cost to the
-access segment. Full-horizon time-aware attribution corrects an earlier accounting that had
-labelled 830 late-access failures as backhaul-capacity failures.
-\item \textbf{A controlled study of configuration termination}
-(\S\ref{sec:mech-lease}, \S\ref{sec:eval-lease}). Preloaded revert bounds eliminate the
-\cFiveNightfloorDeadA--\cFiveNightfloorDeadB deaths left by the clock guard. A fixed 8~h TTL
-also eliminates those deaths in both phases, while shorter TTLs lose yellow delivery in the
-longer phase. An energy-feasibility bound likewise avoids deaths but sacrifices
-\cFiveEnergyLostA and \cFiveEnergyLostB yellow deliveries. We identify the information
-and installation conditions that a delivery-derived lease must satisfy; its online increment
-remains open.
-\item \textbf{A formative real-agent study that locates the interface fault}
-(\S\ref{sec:eval-agent}). Symmetric accounting of 1089 live decisions shows LoRa access receipts
-read as backhaul state in both directions; an unknown-aware projector removes the healthy-link
-false assertions in offline replay. The agent is a \emph{controller candidate}, not part of the
-problem definition.
+\item \textbf{An execution contract for disconnected monitoring}
+(\S\ref{sec:model}--\S\ref{sec:mech}). The formulation separates locally decidable record
+expiry, authorised configuration fallback and partial end-to-end evidence. An enforcement
+condition combines evidence availability, authority and actuation delay.
+\item \textbf{Measured cross-segment placement effects}
+(\S\ref{sec:eval-record}, \S\ref{sec:eval-place}). Source-local standard expiry improves
+service by \cThreePairedPoints\ percentage points (95\% CI
+[\cThreePairedLo,\cThreePairedHi]) and outage on-time delivery by \cThreeRatio$\times$.
+A complementary configuration experiment shows why a central protection rule can fail when
+the same rule can still act locally.
+\item \textbf{An empirical boundary for control and evidence}
+(\S\ref{sec:eval-lease}--\S\ref{sec:eval-agent}). Same-information ordinary stopping rules
+match the declared exact reference; gateway attribution remains necessarily partial; and
+formative Agent traces identify access/backhaul evidence confusion. Together these comparisons
+separate established local remedies from unproven planner or runtime increments.
 \end{enumerate}
-We claim no LLM advantage over a solver, no new discard algorithm, and no global scheduling upper
-bound. The deterministic mechanisms are in-layer tools available equally to rules, solvers and
-agents.
+The setting is pre-disaster monitoring with externally authorised requirements. The system does
+not infer hazard levels, remove missed obligations or obtain additional communication resources
+by changing the scoring task.
 
 \section{Scenario and Operating Point}
 \label{sec:bg}
@@ -234,8 +198,9 @@ without airtime, equally favouring every queue rule); until then it is re-sent o
 
 \emph{Configuration state.} The node runs one profile $q(t)\in\{P_0,P_1\}$ (sparse
 $P_0{=}600$~s, dense $P_1{=}300$~s) for both sampling and reporting, installed by an applied
-command carrying a version. A command is \emph{applied} only when a later node report confirms
-the new profile (Class~A latency); queued or in-transit commands change nothing. While applied,
+command carrying a version. A command is \emph{applied} when the node receives and executes it;
+a later report can confirm that effect to the observer. Queued or in-transit commands change
+nothing. While applied,
 $q{=}P_1$ draws additional sampling and uplink energy every tick until something terminates it.
 
 \subsection{Energy}
@@ -245,24 +210,18 @@ $0.03$~Wh/h) plus per-node/hour stochastic cloud occlusion. A node whose state o
 zero \emph{permanently} dies in the main configuration. Holding dense over a 12~h night draws
 $\approx0.071$~Wh $>C$.
 
-\subsection{Release time}
-For each state $x$, $\trel(x)$ is the earliest time after which keeping $x$ alive can no longer
-contribute to a fulfilled obligation. For a record, $\trel(s)=d(s)$: past the business deadline
-the record cannot fulfil any obligation, so further retention or retransmission has zero delivery
-value. For a configuration profile, $\trel(q)$ is the last deadline of an obligation the
-profile's data can still meet through \emph{some} feasible path,
-\begin{equation}
-\trel(q)=\max_{o:\,\text{profile }q\text{ produces }o}\;
-   \min\{\,d(o),\ \tau_{\text{last slot}}(o)\,\},
-\label{eq:trelcfg}
-\end{equation}
-where $\tau_{\text{last slot}}(o)$ is the latest primary or backup return opportunity at which a
-qualified sample for $o$ can be heard and forwarded by $d(o)$. Unlike $d(s)$, this bound combines
-mission timing---which obligations the current profile serves---with return-slot geometry, when
-they can be carried; neither is fully observable at the node during $\mathcal O$.
-This is a candidate configuration bound, not a validated online release-time computation.
-Stopping new dense acquisition need not stop forwarding already acquired samples; establishing
-the earliest safe revert therefore also requires distinguishing these two activities.
+\subsection{Local predicates and authorised fallback}
+A record carries an expiry time $d_n(s)$ assigned from the cadence known at its source. Once
+$t>d_n(s)$, retaining it has no value for obligations represented by that local contract.
+Records remain eligible on the deadline tick. During an unreceived mission revision, the source
+cannot substitute a future central deadline for $d_n(s)$; the independent scorer retains the
+actual authorised obligations.
+
+A configuration instead has a permitted fallback set and a local trigger, such as an installed
+TTL, a clock rule or a battery condition. Stopping dense acquisition and deleting previously
+collected records are separate actions: a sample can remain useful after the profile changes.
+Consequently we do not assign configurations a universal release time derived from the last
+return slot. Unknown future mission revisions cannot become node-local stopping evidence.
 
 \subsection{Service loss and statement discipline}
 The objective counts deadline-valid obligation delivery (service), permanent node deaths, and the
@@ -282,70 +241,70 @@ evidence about the access link only and never by itself establishes backhaul rea
 \section{Problem Formulation}
 \label{sec:problem}
 
-During an outage $\mathcal O$, at each tick $t$ each acting entity chooses, for the state it can
-touch, an action: for a record $a_t(s)\in\{\textsc{retain},\textsc{release}\}$; for the
-configuration $a_t(q)\in\{\textsc{hold},\textsc{revert}\}$, reverting dense to the last confirmed
-sparse profile. Let $\mathcal E_e(t)$ be the evidence entity $e$ lawfully holds at $t$---for a
-node, clock, own SoC, cache contents, recent Class~A receipts and any bound carried by commands
-applied before $a$, and explicitly \emph{not} future mission-table segments, simulator-wide
-samples or backhaul truth. The local termination problem is
-{\small
-\begin{align}
-\textbf{Problem 1.}\quad \min_{\{a_t\}}\quad
- & \textstyle\sum_o \mathbf 1[o\ \text{unfulfilled}]\notag\\
- & \textstyle{}+\lambda_d\sum_n \mathbf 1[n\ \text{dies}]\notag\\
- & \textstyle{}+\lambda_w\!\!\sum_{x:\,t\geq\trel(x)}\!\! \operatorname{cost}(x\ \text{kept}) \label{eq:obj}\\
-\text{s.t.}\quad
- & \text{(C1)}\ \textsc{release/revert}\Rightarrow t\geq\trel(x), \label{eq:c1}\\
- & \text{(C2)}\ \operatorname{SoC}_n(t)>0\ \ \forall n,t, \label{eq:c2}\\
- & \text{(C3)}\ a_t=f(\mathcal E_e(t)), \label{eq:c3}\\
- & \text{(C4)}\ \text{unknown}\Rightarrow\text{unconfirmed/unfulfillable},\label{eq:c4}
-\end{align}}
-where (C1) is no false release, (C2) energy survival, (C3) evidence locality and (C4) no false
-completion, which forbids reporting either fulfilment or unreachability under unknown feasibility.
-The tension is between \eqref{eq:c1} and \eqref{eq:c2} under locality \eqref{eq:c3}. Releasing too
-early violates \eqref{eq:c1}, abandoning work that could still be delivered; releasing too late
-violates \eqref{eq:c2}, paying for dense data after they became undeliverable and discharging
-fatally. The difficulty is that the two state types observe $\trel$ very differently.
+Let $\mathcal H_e(t)$ contain only the evidence actually available to entity $e$ by time $t$.
+Node history includes clock, battery, cache and received commands; gateway history additionally
+includes heard samples and its own forwarding log. A policy chooses record retention/release
+and configuration hold/fallback through $a_e(t)=\pi_e(\mathcal H_e(t))$.
+We compare the outcome vector
+\begin{equation}
+\mathcal J(\pi)=
+\bigl(N_{\rm miss},N_{\rm brownout},E_{\rm node},A_{\rm up},A_{\rm down},B_{\rm backup}\bigr),
+\label{eq:obj}
+\end{equation}
+where missed obligations, brownouts, node energy, uplink/downlink airtime and backup bytes are
+reported separately. A scalar death penalty is a declared experimental preference in the
+single-node reference, not an inferred requirement of disaster monitoring. Strict survival is
+one possible risk regime, not a universal assumption imposed on every experiment.
 
-\subsection{Record sub-problem: $\trel$ is locally certain}
-Because $d(s)$ uses only the public cadence, the node evaluates $\trel(s)=d(s)$ with certainty and
-no downlink. Constraint~\eqref{eq:c1} is the exact test $d(s)\le t$, and \textsc{release} frees
-both the backup send and the access batch. The optimal local rule is ordinary per-record expiry;
-\S\ref{sec:mech-record} shows a certificate-keyed variant is the same rule, and that the only
-design choice with measurable consequence is \emph{where the release is executed}, through
-\eqref{eq:c3} and the cross-segment acknowledgement coupling.
+\subsection{Execution contract}
+The comparison obeys four conditions. \emph{Locality}: identical local histories cannot produce
+different actions solely because of an unseen future. \emph{Authority}: configuration fallbacks
+must lie within permissions granted before they are used. \emph{Retention accountability}: the
+source may expire a record under its known lifetime; releasing transmission state does not erase
+an obligation from the score. \emph{Outcome evidence}: a queued request, an applied configuration,
+a gateway receipt and central delivery establish different facts.
 
-\subsection{Configuration sub-problem: $\trel$ is not locally observable}
-During $\mathcal O$, future mission revisions cannot be inferred from missing messages.
-A clock guard, a fixed-duration lease and a node-local SoC guard use different locally available
-signals. Their feasibility must be compared under the same prior mission knowledge and energy
-conditions. The present experiments evaluate the clock guard and preloaded revert times; they
-do not evaluate a node-local SoC guard in the same configuration-termination comparison.
+These conditions leave a real tradeoff. A fallback may protect energy while reducing acquisition
+for an outstanding obligation, and that loss remains in $N_{\rm miss}$. The system cannot promise
+both full service and survival under every resource history merely by changing the controller.
 
-\textbf{Proposed delivery-bounded lease.} If a mission's validity end and relevant return
-opportunities are already authorised and known while connected, a gateway could derive an
-absolute bound and transmit it with the configuration. A later revision would require a new
-version and lease. If the downgrade is first authorised during the outage, its time is unavailable
-for this calculation. The current prototype instead preloads a bound computed from the full
-experimental schedule. It demonstrates the effect of local termination but does not implement
-command-carried, version-bound lease installation or prove an online solution to
-\eqref{eq:c1}--\eqref{eq:c3}. An ordinary mission-validity expiry with the same information is
-also required as a comparator.
+\subsection{Where enforcement can act}
+For a predicate $c$ and candidate layer $e$, the design condition is
+\begin{equation}
+\begin{split}
+&\operatorname{evidence}(e,c)\ \land\ \operatorname{authority}(e,c)\\
+&\qquad\land\ D_{\rm observe+decide+act}(e,c)<M_c(t),
+\end{split}
+\label{eq:placement}
+\end{equation}
+where $M_c(t)$ is the remaining intervention margin. Evidence and authority alone do not make a
+central protection rule enforceable: its delay includes backhaul delivery and a Class~A window.
+During a control outage that delay may exceed the energy margin. A source-local expiry needs
+neither a new command nor a remote failure diagnosis. The condition identifies implementation
+requirements; an empirical delay estimate is not a universal safety bound.
 
-\subsection{Why this is a communication problem}
-Problem~1 is defined over network state, evidence locality and return geometry; it has an optimal
-oracle solution and ordinary rule-based solutions independent of any LLM. An agent is one possible
-\emph{solver} of the same decision and a convenient probe of where the interface misleads a
-planner; nothing in the objective or constraints references a model. We therefore evaluate the
-mechanisms deterministically and treat the LLM study as formative.
+\subsection{Knowledge boundary}
+Consider two histories with identical observations at the node, one with an unseen central
+downgrade and one with the elevated requirement still active. Any causal node policy takes the
+same action in both until new evidence arrives. It therefore cannot claim to track the unseen
+mission revision exactly. A pre-authorised fallback resolves what the node is allowed to do;
+it does not reveal which remote history occurred. This elementary indistinguishability argument
+explains why an unknown outcome must remain distinct from confirmed completion or infeasibility.
+
+An Agent, a deterministic rule and a solver can all consume this contract. Their common action
+space and evidence boundaries define the communication problem independently of the planner.
 
 \section{Mechanisms}
 \label{sec:mech}
+The prototype instantiates the execution contract at three locations. The source applies known
+record lifetimes and authorised fallback rules; the gateway uses heard samples and finite return
+opportunities; the centre compiles requirements and interprets received evidence. The experiments
+below isolate these components. Their complete composition is not assumed to outperform an
+ordinary stack containing the same mechanisms.
 
 \subsection{Record termination: deadline-aligned expiry}
 \label{sec:mech-record}
-At each upload opportunity the node deletes cached records with $d(s)\le t$ and sends survivors
+At each upload opportunity the node deletes cached records with $d_n(s)<t$ and sends survivors
 oldest-first. We implement two formulations: \texttt{deadline-purge}, keyed to the obligation
 cadence, and \texttt{generic-expiry}, an ordinary BPv7-style per-record lifetime assigned at
 creation, $\text{expires}=t_s+((P-t_s\bmod P)+P)=d(s)$, referencing no obligation id, slot
@@ -359,25 +318,21 @@ end-to-end business-deadline basis---not packet age, hop TTL or an estimated sin
 delay---zero-downlink source placement, and, decisively, cross-segment consistency, because the
 acknowledgement coupling means a gateway-only release does not free the source cache.
 
-\subsection{Configuration termination: guard and delivery-bounded lease}
+\subsection{Configuration fallback with ordinary protection}
 \label{sec:mech-lease}
-The implemented \emph{local clock guard} clamps sampling and reporting to sparse at night
-(hod $<06{:}00$ or $\geq18{:}00$) and leaves daytime commands untouched. It is off by default
-and bit-identical when off. A node-local SoC guard is a distinct ordinary comparator, not part
-of this clock-only implementation.
+The local clock guard clamps sampling and reporting to sparse at night and leaves daytime
+commands untouched. The configuration comparison additionally evaluates fixed TTLs, a rolling
+battery/expected-harvest check and an energy-derived stopping bound. TTL starts at the actual
+over-the-air dense-application edge. All compared configurations use the same source expiry,
+backup packing and permitted fallback profile.
 
-The configuration experiment adds an absolute revert time to each node's local guard at
-initialisation. At or after that time the node clamps a dense profile back to sparse without a
-downlink. This is a preloaded bound experiment: the bound is not received through the configuration
-command, renewed by its version, or computed from an online gateway evidence view.
-The earlier delivery-derived setting used the full schedule's downgrade time and rounded the
-last yellow deadline \emph{up} to the next backup slot; this can lie after the deadline, and thus
-is not the latest feasible slot defined in Eq.~\ref{eq:trelcfg}. That construction also predicted
-feasibility with a ledger that omitted the battery-capacity term, and its reading of ``zero deaths
-with no loss of yellow delivery'' was retracted: under the corrected ledger the energy-feasibility
-gates keep zero deaths but give up \cFiveEnergyLostA and \cFiveEnergyLostB deliveries
-(\ref{tab:lease}). The runs are retained as timing interventions, and the construction is not
-claimed to implement Eq.~\ref{eq:trelcfg}.
+Two information conditions are separated. Under announced validity, the node receives a known
+validity end with the configuration. Under runtime authorisation, a downgrade issued during the
+outage remains unknown in the field; local policies use their clock, measured battery and
+declared energy model. Announced validity is an informative comparator, not a same-information
+competitor to the latter policies. A separate quantised single-node stopping study compares
+ordinary rules with an exact non-prescient reference under a public task table. Its scope and
+findings are reported in \S\ref{sec:eval-lease}.
 
 \subsection{Partial-observability projector}
 \label{sec:mech-projector}
@@ -400,7 +355,7 @@ period delivered as independent fields, with cross-generation mixed configs dete
 hold-until-acknowledged edge cache, max-coverage backup packing, stochastic solar and cloud,
 absorbing brownout, and the non-prescient piecewise mission-view gate. Disabling the backup
 reproduces the v1.1 simulator bit-for-bit across five anchored invariants; the local guard and
-lease are default-off.
+fallback extensions are default-off.
 
 Two controlled episodes are used. \emph{Episode~I}, the v1.1 manifest point, upgrades to yellow at
 $t{=}6$~h with primary outage 4--20~h and the mission table reaching the gateway at 20~h; it drives
@@ -410,10 +365,10 @@ outage phasing and swept harvest: to place a daytime downgrade \emph{inside} an 
 uses yellow at $t{=}2$~h with a conferred downgrade at $t{=}6$~h and outage 4--20~h, phase~B uses
 yellow at $t{=}1$~h, downgrade at $t{=}8$~h and outage 6--22~h; $t{=}12$~h is sunset. Episode~II is
 an explicitly constructed controlled comparison for the configuration sub-problem, not a new field
-claim. Node deaths, deterministic and highly robust, are reported as totals over seeds 0--2;
+claim. Node deaths are reported as totals over seeds 0--2;
 sub-point mean-service differences at $n{=}3$ are treated as not significant; seeds 6--9 are a
-reused held-out confirmation set, not an untouched test set. Every figure is regenerated by a
-registered repository script and the suite reports 20/20 self-checks.
+reused held-out confirmation set, not an untouched test set. Tables are generated from registered result files, and the artifact provides deterministic
+checks and frozen reference results.
 
 \section{Evaluation}
 \label{sec:eval}
@@ -426,9 +381,9 @@ and report set differences over identical obligation ids. Relaxing backhaul to u
 4740 (0.627), relaxing energy (0.50~Wh, always-dense) gives 4089 (0.541), and both gives 6023
 (0.797); 1715 obligations are blocked by backhaul capacity alone, 1128 by battery alone, and 155
 (2.0\%) by both (Table~\ref{tab:walls}). These are intervention results on implemented strategies,
-not an exhaustive optimum; we make no zero-remainder or global-optimality claim. They establish
-that the large throughput gains are physical, which is why we then target \emph{state termination}
-rather than a smarter scheduler.
+not an exhaustive optimum; we make no zero-remainder or global-optimality claim. They locate substantial resource pressure at this operating point. The state-termination
+experiments address an additional execution effect under fixed resources; their motivation does
+not require proving that every scheduler has exhausted its headroom.
 
 \begin{table}[t]
 \centering\small
@@ -452,7 +407,7 @@ During the Episode~I outage 75 backup packets carry 750 records; under FIFO 219 
 already expired against 261 on-time (45.6\%; 1270 of 2782 payload bytes). Gateway-only suppression
 removes those sends but withholds the acknowledgement, and on-time delivery falls $202\to194$: cost
 moves to the access segment. Source-local deadline expiry reverses the sign, raising outage on-time
-delivery $\cThreeSeedZeroFifo\to\cThreeSeedZeroPurge$ and the deadline-valid fraction $0.54\to1.00$. Across ten seeds
+delivery $\cThreeSeedZeroFifo\to\cThreeSeedZeroPurge$ Across ten seeds
 (Table~\ref{tab:purgeexpiry}) expiry raises mean service $\cThreeSvcFifo\to\cThreeSvcPurge$, a paired $+\cThreePairedPoints$ points
 (95\% CI $+\cThreePairedLo$ to $+\cThreePairedHi$, positive on all ten), total outage on-time delivery $\cThreeTenSeedFifo\to\cThreeTenSeedPurge$
 (\cThreeRatio$\times$), expired backup records $\cThreeExpiredFifo\to\cThreeExpiredPurge$, and deaths $\cThreeDeathsFifo\to\cThreeDeathsPurge$; it beats AoI latest-only by
@@ -472,50 +427,50 @@ against \cThreeSeedZeroFifo for FIFO and \cThreeSeedZeroPurge for source expiry-
 \input{../generated/table_expiry.en.tex}
 \end{table}
 
-\subsection{Configuration leases: deaths under overcast skies, false release under short TTL}
+\subsection{Configuration protection and its algorithmic boundary}
 \label{sec:eval-lease}
-Holding record expiry fixed (\texttt{generic-expiry} with maxcov), Episode~II varies the
-preloaded local revert time. In phase~A the clock guard holds dense until sunset at $t{=}12$~h.
-For seed 0 at nominal harvest, reverting at 6~h reduces samples in the post-downgrade daytime
-window from 978 to 510, with yellow delivery unchanged at 356/672; reverting at 5~h reduces
-yellow delivery by 9. This identifies sensitivity to the revert time, not a proof of the earliest
-safe bound or of record-level no-false-release.
+Episode~II holds record expiry and maxcov packing fixed while comparing local fallback rules.
+The clock-only rule reacts at sunset; fixed-duration and energy rules can act earlier. The
+announced-validity row has advance mission-end information and is shown separately from policies
+that cannot observe a downgrade during the outage.
 
 \begin{table*}[t]
 \centering\small
-\caption{Preloaded configuration revert bounds across two outage phases (seeds
-0--\cFiveSeeds, \texttt{generic-expiry} and maxcov fixed). At $\eta{=}\cFivePeak$, a fixed
-8~h TTL yields zero deaths and $\cFiveTtlEightYellowA/\cFiveYellowNA$,
-$\cFiveTtlEightYellowB/\cFiveYellowNB$ yellow deliveries in the two phases; a bound derived
-from energy feasibility also yields zero deaths but only
-$\cFiveEnergyYellowA/\cFiveYellowNA$, $\cFiveEnergyYellowB/\cFiveYellowNB$
-(\cFiveEnergyLostA and \cFiveEnergyLostB fewer). The three energy arms (open-loop bound,
-receding-horizon gate, safety net) are cell-identical, so one row stands for them. None of this
-is a minimum-SoC or universal safety guarantee.}
+\caption{Configuration fallback across two outage phases (\cFiveSeeds\ seeds,
+\texttt{generic-expiry} and maxcov fixed). TTLs start at dense application. The announced-validity
+row has Task~1 information; the remaining adaptive/TTL policies use Task~2 information.
+The three reported energy variants have identical cell outcomes, so one row represents them.
+Zero observed deaths is not a universal survival guarantee.}
 \label{tab:lease}
 \input{../generated/table_lease.en.tex}
 \end{table*}
 
-At $\eta{=}\cFivePeak$ the clock guard leaves \cFiveNightfloorDeadA and
-\cFiveNightfloorDeadB deaths in phases A and B, whereas fixed TTL 4~h and 8~h both leave zero;
-TTL 4~h gives up \cFiveTtlFourLostB yellow deliveries in phase~B, while TTL 8~h preserves the
-aggregate yellow counts in both phases (the same counts as the announced validity, see
-Table~\ref{tab:lease}). A bound derived from energy feasibility also leaves zero deaths but
-gives up \cFiveEnergyLostA and \cFiveEnergyLostB deliveries: the gate reads ``predicted
-infeasible'' as ``the obligation may be dropped'', and the cost lands on yellow delivery.
-Consequently these results do not rule out a single fixed TTL across the tested phases, nor do
-they establish an increment for a delivery-derived lease over an ordinary one.
-At $\eta{=}0.01$, every tested arm incurs 40 deaths; this does not establish that every legal
-sparse policy is physically infeasible.
+At $\eta=\cFivePeak$, the clock guard leaves \cFiveNightfloorDeadA\ and
+\cFiveNightfloorDeadB\ deaths in phases A and B. Fixed TTL 8~h yields zero deaths and yellow
+delivery counts $\cFiveTtlEightYellowA/\cFiveYellowNA$ and
+$\cFiveTtlEightYellowB/\cFiveYellowNB$, whereas TTL 4~h loses
+\cFiveTtlFourLostB\ deliveries in phase B. The evaluated energy-derived gate also yields zero
+deaths but loses \cFiveEnergyLostA\ and \cFiveEnergyLostB\ yellow deliveries relative to TTL
+8~h. Its predictive load approximation is conservative relative to the measured radio load;
+these results characterise that implementation, not all predictive energy control.
+The matrix establishes the utility of local fallback while providing no independent increment
+for the proposed energy-derived lease.
 
-The proposed slot-derived interpretation needs separate validation. The earlier implementation
-computed 6.33 and 8.33~h by rounding the last yellow deadline upward and wrote the bound to nodes
-at initialisation, so it tested a supplied absolute revert time rather than online computation
-from install-time evidence; its ledger lacked the battery-capacity term, so its no-loss reading is
-superseded (\ref{tab:lease}). Further comparisons must give ordinary mission-validity
-expiry and a local SoC guard the same authorised information. They must distinguish stopping
-new dense acquisition from retaining samples that can still be forwarded, and report the lost
-obligation identities as well as aggregate delivery counts.
+\textbf{Same-information stopping reference.} To separate an implementation limitation from
+optimisation headroom, a quantised single-node model evaluates continued dense operation versus
+an absorbing return to sparse over the full physical horizon. Its public task table determines
+reward; cloud realisations remain unknown. The model is calibrated to the current simulator's
+sampling and radio load, and ordinary TTL, battery-threshold and rolling rules receive the same
+information. Across \cNineCells\ phase/harvest/variability cells and \cNineWeights\ declared death
+penalties, ordinary combinations match the exact non-prescient reference in service in
+\cNineServiceMatches/\cNineComparisons\ comparisons and in the priced objective up to numerical
+precision. The strict all-futures survival endpoint is infeasible at the declared tight-energy
+point, including for all-sparse operation. This is a risk-model boundary, not a claim that the
+monitoring mission or every physical implementation is infeasible.
+
+The negative result closes the tested single-node stopping family. It neither supplies a new
+configuration algorithm nor establishes optimality for shared network scheduling or unseen task
+tables. Standard fallback remains a component of the execution system.
 
 \subsection{What the field can attribute when the table arrives}
 \label{sec:eval-attr}
@@ -530,8 +485,8 @@ without evidence the gateway does not have, and must stay unknown, which is the 
 constraint. Compile-time geometry, needing no sample, emits 602 conditional no-return certificates
 of which 588 are true \stime, the 14 recovery-edge cases being excluded rather than certified; an
 optimistic-energy capacity certificate is impure (552 correct \scap, 571 actually \senergy, 193
-false positives), so capacity is left to the gateway. The design consequence is exactly Problem~1's:
-local record and configuration action must not wait on resolving these unknowns.
+false positives), so capacity is left to the gateway. The design consequence is that expiry under a known local deadline can proceed while the
+remote cause remains unresolved; configuration fallback separately requires prior authority.
 
 \begin{table}[t]
 \centering\small
@@ -549,13 +504,13 @@ A centre-side feasibility \emph{envelope}---a pure filter over any planner using
 configs, hearing counts, the authorised requirement and the clock---removes the command storm but
 cannot save the tightest seed, because a dusk downgrade must cross the backhaul and a Class~A
 window it misses. The same ``never stay dense overnight'' rule is a late, refusable suggestion at
-the centre and an invariant enforced every tick at the node (Table~\ref{tab:r39}). Naive centre
+the centre and an enforceable local clamp at the node (Table~\ref{tab:r39}). Naive centre
 compliance kills 13 of 14 nodes on all three seeds (39 total) at service 0.162; adding the
 node-local guard removes all deaths at unchanged service; with the guard present the envelope
 additionally cuts refused admission attempts to 222. A zero-command pre-provisioned rhythm reaches
 0.360 service, matching every centre-compiled arm for these static missions---a scoped negative
-result on centre sampling control for pre-provisioned tasks, which is exactly the gap the delivery
-lease targets for \emph{non}-pre-provisioned runtime changes.
+result on centre sampling control for pre-provisioned tasks. The ordinary local controller is
+therefore part of the baseline for any further runtime or Agent comparison.
 
 \begin{table*}[t]
 \centering\small
@@ -583,26 +538,23 @@ service significance. The live agent loop was not wired to the local guard, so t
 deaths are not cleared by the deterministic result of \S\ref{sec:eval-place}.
 
 \emph{Call accounting.} The 1089 decisions are not 1089 successful calls: 52 ended in a
-parse-failure hold from \texttt{max\_tokens} cutting the JSON mid-string, and 412 records carry a
-first-attempt error even when the retry succeeded, a logging artefact. Per-arm parse-failure rates
+parse-failure hold from \texttt{max\_tokens} cutting the JSON mid-string. Per-arm parse-failure rates
 are A0 7.1\% (28/396), A0s 6.4\% (19/297) and A1 1.3\% (5/396), so arm differences mix
 output-format reliability with any semantic effect.
 
 \emph{The interface fault, symmetrically scored.} The observation's \texttt{link} field carries
 only LoRa access receipts (\texttt{n\_heard}) and no backhaul state. In the forced outage window
-A0/A0s assert ``link up, commands can apply'' on 36/32 decisions, and A1 on 1 after token-boundary
-de-noising of an ``uplink-only'' substring---deterministically over-optimistic, since the primary
+A0/A0s assert ``link up, commands can apply'' on 36/32 decisions, and A1 on 1 under a
+token-aware statement check---over-optimistic, since the primary
 is down throughout, and accompanying the ineffective dense orders and deaths. In the opposite
 direction the v4 certificate asserted ``control plane not delivering'' whenever fewer than all
 nodes were heard, firing at five healthy-link times when the primary was in fact usable, twice
-after 13 of 14 nodes had already confirmed dense. The earlier false-report tally was invalid on
-three counts: it ran only on decisions that ordered dense, vacuous for the mostly-hold A1; it never
-ran on the healthy group, so those zeros were initialisation; and it counted keywords the
-certificate prompt itself taught, terms appearing in 317 A1 decisions and zero A0/A0s decisions.
+after 13 of 14 nodes had already confirmed dense. Statements are checked in both outage and
+healthy conditions, independently of whether the decision issued a command.
 Offline replay of an unknown-aware v5 projector on identical snapshots issues zero unreachable
 assertions without a network-side field, turning all five healthy false alarms into unconfirmed,
 and splits 528 blanket night kills into 189 genuinely energy-infeasible and 339 advisory, every
-near-dawn 04:30--06:00 case being advisory. The honest finding is that a missing backhaul-state
+near-dawn 04:30--06:00 case being advisory. The finding is that a missing backhaul-state
 signal causes bidirectional errors; isolating any independent increment of the projector requires a
 matched-capability arm receiving the same constants and heuristics without the projector,
 end-to-end v5 runs with an explicit backhaul-state field, and cross-model replication, all future
@@ -616,11 +568,9 @@ post-disaster topology planning~\cite{topollm}, and later systems let LLMs sched
 bandwidth, shape RL rewards or orchestrate recovery tools, including intent objects, budget and
 time constraints, candidate-plan checks, local repair and documented network-management
 APIs~\cite{icgrestore,ossgpt}. We claim no novelty for natural language to constraints, nor for
-tool orchestration. These decide network resources or compose recovery tools under an assumed
-reachable control path; they do not terminate state that must keep acting after that path dies, and
-do not maintain an unknown-aware three-class state over a long routine monitoring workflow. Agentic
-Wi-Fi likewise uses an LLM as a solver for a separately defined coordination protocol; we follow
-that ordering---problem first, agent optional.
+tool orchestration. Our comparison concerns a different execution setting: persistent field state, Class~A
+actuation and a separately interrupted return path. We use those works to position the controller
+interface and do not claim to have reproduced or refuted their original systems.
 
 \textbf{Scheduling, freshness, energy.} The closest state-model precedent is an LLM in-context
 data-collection scheduler with bounded per-sensor queues, exogenous arrivals, finite service
@@ -643,58 +593,67 @@ and use TTL or encounter drop~\cite{dtnarch,iranmaneshdtnqueue,rfc9171}, and cus
 transfer~\cite{rfc5050} moves retention responsibility as a forward hand-off, since migrated out of
 the BPv7 core. Rural LoRa--LEO systems schedule around estimated satellite contacts and exploit
 spatial gateway diversity~\cite{sateriot}. Our record disposition \emph{is} BPv7-style expiry and we
-demonstrate equivalence on the tested seeds; the proposed configuration lease reuses the
-TTL/lease primitive with a delivery-derived bound. The claimed deltas are narrow and explicit: an end-to-end business-deadline basis with
-cross-segment source/gateway consistency, since expired backhaul suppression alone back-pressures
-access, and the measured effect of preloaded configuration termination. Deriving and installing such a
-bound online, with an increment over equally informed ordinary leases, remains open.
+demonstrate equivalence on the tested seeds; ordinary TTL and battery protection also cover our evaluated configuration-stopping family.
+The measured system contribution is the placement and end-to-end effect of these primitives in
+the declared monitoring model. Custody transfer is a substantive alternative to central-ACK
+retention and must remain a comparator when feedback and storage responsibilities are changed.
 
 \section{Discussion, Limitations, and Threats to Validity}
 \label{sec:disc}
 
-\textbf{Scope.} The throughput negative result and the resource walls are scoped to the policy
-families and one operating point; they are not an optimum, and a better scheduler could exist. The
-configuration results cover two constructed phases, with five harvest levels in phase~A and
-two in phase~B. They show that earlier local reversion can avoid deaths left by a clock guard;
-a fixed 8~h TTL also succeeds in both phases by the reported death and yellow-delivery counts.
-The candidate bound uses the future downgrade time and is preloaded. Its derivation under
-install-time knowledge, command delivery, renewal and version semantics remain unvalidated.
-Future-authorised revisions must not enter the calculation. Wider physical sweeps can test
-robustness after this information boundary is enforced.
+\textbf{What the results establish.} Source expiry, local protection and partial attribution have
+separate evidence. Their common lesson is to place decisions where the required evidence and
+ability to act survive disconnection. The strongest positive result concerns source retention;
+configuration stopping is a boundary study showing where ordinary mechanisms suffice. A better
+scheduler would not invalidate the observed retention or unreachable-downgrade failures.
 
-\textbf{Model simplifications.} Central acknowledgement is synchronous and airtime-free, equally
-favouring every queue rule; gateway acknowledgements would consume Class~A windows in deployment.
-During Episode~I the node tests deadlines against the public pre-change cadence, with post-upgrade
-deadlines used only in offline accounting. Single fixed-period missions make obligation-keyed and
-deadline-keyed record release coincide; multi-obligation or overlapping mission versions require
-release keyed to a record's latest still-valid deadline. Episode~II is a controlled scenario for the
-configuration sub-problem, not an independent field measurement.
+\textbf{Composition and generalisation.} A complete execution runtime must be compared against
+an ordinary stack with the same expiry, local protection, configuration shadow, observations and
+planning tools. Component effects cannot be summed to infer an independent runtime gain. The
+present results cover a declared deployment and controlled episodes; outage phase, coupled
+access/backhaul failures and energy conditions delimit transfer. Firmware support for local
+fallback and expiry metadata, their signalling/storage cost, and hardware execution have not
+been established by the simulation results.
 
-\textbf{Agent evidence.} The live study is single-model, three seeds per arm, temperature 0, with
-large per-run variance and a confounded expert packet; it demonstrates the interface fault and the
-projector's offline effect, not an independent agent increment. The hardened harness---per-request
-accounting, symmetric scoring, unknown-aware projector and energy ledger, default-off local guard
-and lease---is in the repository so that matched-capability, end-to-end v5 and cross-model studies
-can run without re-litigating instrumentation; those are explicitly not claimed here.
+\textbf{Feedback and retention.} Central acknowledgement is synchronous and airtime-free in the
+model, equally favouring the compared queue rules. With an uplink-only backup, actual central
+delivery need not immediately become source knowledge. A deployed design must distinguish a
+local access receipt, durable gateway custody and central delivery, and account for any release
+notification sent through Class~A windows. Standard custody transfer, cumulative acknowledgements
+and source expiry are therefore essential ordinary comparators. Joint allocation of finite
+feedback and configuration capacity remains outside the evaluated model.
 
-\textbf{Provenance.} One standards channel was obtained from a document-sharing host, a top-grade
-document with a lower-grade copy chain, because the official host was unreachable by TLS; clause
-numbers were cross-checked from two independent copies, and unverified international
-LoRa-plus-satellite and vendor lines are not used as fact. We did not execute cited systems'
-implementations and claim no replication of them.
+\textbf{Mission and energy scope.} During Episode~I, the source assigns expiry using the locally
+known pre-change cadence; central scoring still uses the actual mission. Multiple overlapping
+obligations may require retaining a record until its last valid use. Harvesting is synthetic and
+brownout is absorbing in the main configuration. The exact stopping reference has a public task
+table and a declared quantised energy model; its optimality statement does not transfer to an
+unknown mission or a complete communication network.
+
+\textbf{Agent evidence and remaining interface question.} The live study uses one model and
+has both output-format and expert-information confounds. Its supported result is the interface
+failure and the projector's offline correction. A matched-capability end-to-end comparison must
+share local protection, evidence, deterministic tools and parsing budgets. The relevant outcome is
+whether an action-aware interface reduces harmful or ineffective execution while retaining
+beneficial changes, along with independently checked completion statements. Cross-model
+replication follows an isolated effect; more calls alone cannot establish it.
+
+\textbf{Provenance.} Standard clauses were checked against the repository's source copies;
+one copy chain uses a document-sharing host because the official endpoint was unavailable.
+The instance parameters distinguish published capabilities from research choices. Cited systems'
+implementations were not executed, and no reproduction of their reported performance is claimed.
 
 \section{Conclusion}
-After a backhaul failure the communication state installed beforehand keeps executing, and its
-termination cannot wait for the control path that failed. We formulated this as one local
-termination problem over two kinds of persistent installed state. Records carry a locally certain
-release time, the business deadline, and standard per-record expiry placed consistently at the
-source doubles outage on-time delivery while gateway-only suppression merely moves cost to the
-access segment. Configuration experiments show that preloaded local reversion can prevent deaths left by
-sunset-only control, with fixed TTL 8~h also succeeding in both tested phases. A delivery-derived
-lease remains a candidate whose online knowledge and installation semantics require validation.
-The evidence discipline applies throughout: an observer must distinguish confirmed outcomes from
-unknown state. An LLM is one candidate controller; the formative live study exposes access
-receipts being mistaken for backhaul state.
+Intermittent backhaul can remove control while installed communication state continues consuming
+resources. In the studied pre-disaster monitoring network, standard source expiry improves
+on-time service by \cThreePairedPoints\ percentage points and outage delivery by
+\cThreeRatio$\times$; local protection acts where a later central downgrade may be unreachable.
+Ordinary rules cover the evaluated configuration-stopping problem. The resulting design principle
+is to align retention and fallback with locally available evidence, authority and enforceable
+actuation, while keeping end-to-end completion distinct from intermediate receipts. An Agent can
+use this execution interface, but its independent benefit requires a matched ordinary-stack
+comparison. The present evidence supports the communication mechanisms and their boundaries,
+without making planner intelligence a prerequisite for correct local action.
 
 \bibliographystyle{IEEEtran}
 \bibliography{../refs}

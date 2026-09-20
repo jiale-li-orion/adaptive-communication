@@ -1,59 +1,45 @@
-# 论文工作稿 —— 英文稿 / 中文稿各一份
+# 论文工作稿
 
-**当前初稿。** 由 `docs/s8-report/latex/main.tex`（paper v0.8，提交 `59e5ef1`）压缩、剪枝而来：同一条论证链、同一批数字、同一批表格，删去重复陈述与内部过程说明。**未新增任何结果，未改动仿真实现与 `main.tex`。**
+当前稿件围绕**控制失联后持续执行的通信状态、现场证据与执行位置**组织。源端释放是主要正结果，配置回退与精确停止参照说明普通机制足够的范围，Agent 轨迹用于接口失效分析。配置租约和保留视界不再作为待兑现的新算法贡献。
 
-两份文档互为独立成稿，结构一一对应，不合并编排：中文稿是独立可读的中文论文，英文稿是独立可读的英文论文。二者共享同一份 [`refs.bib`](refs.bib)。
+两份稿件独立可读、章节对应，共享 [refs.bib](refs.bib)。本轮重写摘要、引言、问题定义、机制定位、配置评估、讨论与结论，使用现有在册证据；没有新增仿真或模型调用结果。
 
-> **本地材料说明。** 本文件引用的 `docs/…` 路径属于作者本地的过程文档与逐轮审计记录，不随本仓库发布；远端仓库只包含 `paper/`、`code/`、`results/`、`multipath_probe/` 与根 README。
+| 文件 | 版式 | 产物 |
+|---|---|---|
+| [en/main.tex](en/main.tex) | IEEEtran 双栏 | [英文 PDF](en/main.pdf) |
+| [zh/main.tex](zh/main.tex) | article 中文单栏 | [中文 PDF](zh/main.pdf) |
 
-| 文件 | 语言 | 版式 | 页数 |
-|---|---|---|---|
-| [`en/main.tex`](en/main.tex) → [`en/main.pdf`](en/main.pdf) | 英文 | IEEEtran journal，双栏 | 9 |
-| [`zh/main.tex`](zh/main.tex) → [`zh/main.pdf`](zh/main.pdf) | 中文 | article，单栏 | 14 |
+## 论文如何闭环
+
+[RESEARCH_PLAN.md](RESEARCH_PLAN.md) 是当前研究与写作安排，包含已探索方向排除表、一个新增的反馈预算假说，以及三项证据交付：同组件普通组合对照、有限迁移与部署成本、匹配能力的 Agent 接入。它不替代 [CLAIMS](../results/CLAIMS.md) 的主张状态。
+
+当前有可复现的组件正结果。完整系统的独立增量和适用范围仍是决定投稿价值的证据缺口；格式完整与构建通过不代表这些缺口已经完成。老师汇报中的失联配置问题继续保留，后续计划不再承诺配置有效期优于固定 TTL。
 
 ## 构建
 
+从根目录运行 `make paper`，或在本目录运行：
+
 ```bash
-./build.sh          # 两份都构建
-./build.sh en       # 只构建英文
-./build.sh zh       # 只构建中文
+./build.sh
+./build.sh en
+./build.sh zh
 ```
 
-英文用 `pdflatex` 加 IEEEtran，中文用 XeTeX。**本机没有 `xelatex` 命令，也没有 `ctex`/`xeCJK`/`luatexja`/`CJK` 任一中文宏包，LuaLaTeX 又缺 `luaotfload`**，因此中文路径由 `xetex -fmt=xelatex` 驱动：`build.sh` 首次运行会用 `xetex -ini -etex` 生成 `xelatex.fmt` 并缓存到 `.build/`（已忽略，不入版本控制）。中文断行由 `\XeTeXlinebreaklocale "zh"` 提供，字体为 Noto Serif CJK SC。
+英文使用 pdflatex + IEEEtran；中文使用 XeTeX、fontspec 与 Noto Serif CJK SC。当前环境通过 `xetex -fmt=xelatex` 构建，首次运行缓存格式到 `.build/`。构建末尾报告页数、overfull、缺字与未定义引用。
 
-在具备 `texlive-lang-chinese` 与 `xelatex` 的机器上，`zh/main.tex` 也可改用 `ctexart` 编译；当前写法不依赖该宏包，代价是拉丁文与数字沿用 CJK 字体的拉丁字形，等宽实体用 Latin Modern Mono。
+## 结果到正文
 
-## 表格由结果文件生成
+稿件通过 `\input` 引入生成表体和事实宏，生成器为 [`scripts/make_tables.py`](../scripts/make_tables.py)。
 
-两份稿件的五个表体不写在 `main.tex` 里，而是 `\input{../generated/table_<表>.<语言>.tex}`。
-生成物由 `python3 scripts/make_tables.py` 从结果文件产出，两份稿共用同一批数字，中英各行标签分开：
-同一张表只有一处数字，语言差异只落在行名上。
+| 内容 | 数值来源 |
+|---|---|
+| 资源反事实表 | `results/r30c_walls.json` |
+| 记录到期表 / C3 正文宏 | `results/r41_expiry_equiv.json` / `results/r37e_full_seeds.json` |
+| 配置回退表 / C5 正文宏 | `results/c5_matrix.json` |
+| 在线归因表 | `results/r40_local_attribution.json` |
+| 位置对照表 | `results/agent_traces/r39_table.json` |
+| C9 停止参照统计宏 | `results/c5_seqref.json` |
 
-| 表 | 生成物 | 数据来源 |
-|---|---|---|
-| 资源墙 | `table_walls.{en,zh}.tex` | `results/r30c_walls.json` |
-| 记录到期 | `table_expiry.{en,zh}.tex` | `results/r41_expiry_equiv.json` |
-| 配置终止 | `table_lease.{en,zh}.tex` | `results/c5_matrix.json`（修正后的当前证据；`r48_ttl_vs_lease.json` 的候选界行用修正前账本，其"交付不减"读数已随 C5 修正撤回，该文件仍登记为历史证据） |
-| 任务表归因 | `table_attribution.{en,zh}.tex` | `results/r40_local_attribution.json` |
-| 执行位置 | `table_placement.{en,zh}.tex` | `results/agent_traces/r39_table.json` |
+生成物在 `generated/` 入库，不手改。运行 `make tables ARGS=--check` 核对生成链，`make check` 核对仓库检查与联合层锚点。后续实验的期望收益只写在研究计划中，不进入摘要或结果段。
 
-正文与表说明里的 C5 数字同样不手抄：它们写成 `\cFive...` 宏，取值由同一脚本写入
-`paper/generated/facts.tex`（来源仍是 `results/c5_matrix.json`）。两份稿件在导言区
-`\input{../generated/facts.tex}`。`audit_tables.py` 断言宏取值与结果文件一致、两份稿件都引入它，
-并禁止几条已撤回的表述回流。
-
-规则：**生成物不手改。** 结果文件变动时在**同一次提交**里重新生成；`code/experiments/audit_tables.py`
-检查生成物与结果文件一致、且稿件里没有手写的表格行。数值按十进制四舍五入（`ROUND_HALF_UP`），
-按二进制格式化会让 `0.3695` 输出 `0.369` 而人写 `0.370`，同一份数据出现两种写法。
-
-## 与 `main.tex` 的编号差异
-
-`main.tex` 只给配置释放界编了号（`\eqref{eq:trelcfg}`），四条约束在 `align` 内未单独编号。本初稿把配置释放界编为式 (1)，目标函数为式 (2)，四条约束为式 (3)--(6)，并在中文稿中直接以 (C1)--(C4) 引用；交付链在中文稿中单独编为式 (1)。引用时按各自文件内的编号。
-
-## 自检读数
-
-两份文档的构建读数由 `build.sh` 末尾打印：页数、Overfull 数、缺字数、未定义引用数。当前两份均为 Overfull 0、缺字 0、未定义引用 0，参考文献各 22 条。
-
-## 状态
-
-论文正文的证据边界修订仍按 `docs/s7-method/v1.2/51-independent-review-paper-v06-2026-09-19.md` 与 `docs/s8-report/review-v0.6/experiment_todo.md` 推进；本初稿只做语言压缩与两分编排，未落实 doc51 的全部修订。
+历史版本通过 Git 与 `results/_withdrawn/` 定位；`adae80d` 保存本轮主线重写前的稿件与入口。作者本地 `docs/` 不是复现依赖。

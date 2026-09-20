@@ -285,11 +285,23 @@ def facts() -> dict:
         "cThreeLatestDelta": f(100 * (ss["deadline_purge"]["svc_mean"]
                                       - ss["latest_only"]["svc_mean"]), 2),
     })
-    lines = ["%% 由 scripts/make_tables.py 生成，勿手改；取值来自 results/c5_matrix.json 与 results/r37e_full_seeds.json。",
+    # 同信息停止参照只支持声明模型内的限定结论；正文使用生成统计量。
+    seq = load("results/c5_seqref.json")
+    priced = [p for cell in seq["cells"].values() for p in cell["priced"].values()]
+    defs.update({
+        "cNineCells": str(len(seq["cells"])),
+        "cNineWeights": str(len(seq["death_penalties"])),
+        "cNineComparisons": str(len(priced)),
+        "cNineServiceMatches": str(sum(abs(p["gaps"]["service_implementable"]) < 1e-9
+                                       for p in priced)),
+    })
+    lines = ["%% 由 scripts/make_tables.py 生成，勿手改；取值来自 C3/C5/C9 的在册结果。",
              "%% 正文与表说明里的这些数字只允许写成这些宏。"]
     for k in sorted(defs):
         lines.append("\\newcommand{\\%s}{%s}" % (k, defs[k]))
     return "\n".join(lines) + "\n", {"source": "results/c5_matrix.json", "peak": PEAK,
+                                     "sources": ["results/c5_matrix.json", "results/r37e_full_seeds.json",
+                                                 "results/c5_seqref.json"],
                                      "definitions": defs}
 
 
