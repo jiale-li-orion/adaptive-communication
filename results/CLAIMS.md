@@ -23,7 +23,7 @@
 | C2 | §5.1、§7.2 表 2 | `deadline-purge` 与 `generic-expiry` 在十个种子上逐位相同（服务、中断计数、死亡、交付集合） | `code/v3joint/r41_expiry_equiv.py` | `results/r41_expiry_equiv.json` | supported |
 | C3 | §7.2 | 源端按期限到期相对 FIFO 的十种子配对增益，以及仅在网关抑制造成的反压 | `code/v3joint/r37e_full_seeds.py` | `results/r37e_full_seeds.json` | supported |
 | C4 | §7.1 | 全时域时间感知归因：4535 条失约中 830 条由回传容量改记为接入迟到 | `code/v3joint/r44_fullhorizon_attribution.py` | `results/r44_fullhorizon_attribution.json` | supported |
-| C5 | §7.3 表 3 | 预置回退界相对日落回退的效果可复现；8 h TTL 在两相位也为零死亡且黄级交付总数不减。在线交付界推导、随命令安装及相对同信息普通租约的增量待验证 | `code/v3joint/r46_lease_sweep.py`、`code/v3joint/r47_lease_energy.py`、`code/v3joint/r48_ttl_vs_lease.py` | `results/r46_lease_sweep.json`、`results/r47_lease_energy.json`、`results/r48_ttl_vs_lease.json` | open |
+| C5 | §7.3 表 3 | 普通机制覆盖配置终止这一格：$\eta{=}.012$ 下固定 8~h TTL 与 Task-1 `valid_until` 在 A/B 两相位均为零死亡且黄级交付 849/2016、2020/3528；候选能量门（开环界、滚动门、安全网三等价）同为零死亡但降至 559/2016、1194/3528。该结论的成立条件是**非预知预测器加电池容量项**，不是“密采物理不可行” | `code/v3joint/c5_matrix.py` | `results/c5_matrix.json` | scoped-negative |
 | C6 | §7.5 表 5 | 同一规则在中心与节点的执行位置对照；节点本地门消除所测种子死亡并压低被拒准入 | `code/v3joint/r39_envelope.py` | `results/agent_traces/r39_table.json` | supported |
 | C7 | §7.4 表 4 | 任务表到达时仅凭网关本地证据的可判定覆盖与已判定精度 | `code/v3joint/r40_local_attribution.py` | `results/r40_local_attribution.json` | supported |
 | C8 | §7.6 | 真实 agent 十一轨迹、1089 次决策的对称计量；接口故障与解析失败账目 | `code/v3joint/r38_agent_three_arm.py`、`code/v3joint/r42_claim_relabel.py`、`code/v3joint/r43_cert_v5_replay.py` | `results/agent_traces/r38_three_arm_summary.json`、`results/r42_claim_relabel.json`、`results/r43_cert_v5_replay.json` | formative |
@@ -36,6 +36,7 @@
 | 固定资源下任何中心控制器都无空间（全局调度上界、零残差） | C1 | 干预与贪心装包不构成全体合法策略的上界；收窄为所测策略族上的限定负结果 | `e8ff1c4` |
 | 本地夜间规则构成普遍安全保证 | C6 | 规则仅依据时钟，未证明任意采能与初始电量下的存活不变量；收窄为所测种子的经验结果 | `e8ff1c4` |
 | 强制中断窗的 24/19 次「配置生效谎报」与 r38 零解析回退 | C8 | 原评分只在命令密集的决策上运行、在对照组从不运行、并统计提示词自身教会的词；决策数不等于成功请求数 | `e8ff1c4` |
+| 候选能量门在阴雨紧能量下保住存活且不损失黄级交付总数（开环交付界与滚动门同交付 849/2020） | C5 | 修正前的预测账本缺电池容量截断、任务发布门提前暴露未来 end；该读数的载体是 8be31d2 上的**未跟踪本地树**，从未入库。诚实账本下候选三臂降至 559/2016 与 1194/3528，而固定 8~h TTL 与 Task-1 有效期同样零死亡且 849/2020；详见 [归档](_withdrawn/2026-09-20-c5-precorrection.md) | `8be31d2` |
 | 固定 TTL 在两个相位都无法满足存活与无黄级交付总数损失；当前结果证明合法在线交付界租约的独立增量 | C5 | 8 h TTL 在两相位满足上述计数判据；候选界读取未来降级时间并预置，未通过命令安装；详见 [不可变归档](_withdrawn/2026-09-20-c5-lease-claims.md) | `59e5ef1` |
 
 ## 维护规则

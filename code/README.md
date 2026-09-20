@@ -17,6 +17,18 @@ code/
 
 各脚本头部注明依赖与输出。常用检查和数据准备见[根 README 的复现入口](../README.md#代码与复现)；旧 README 章节已`docs/早期状态/2026-09-19-README-history.md`。
 
+配置终止线（C5）的脚本与结果：
+
+| 脚本 | 作用 | 结果 |
+|---|---|---|
+| `code/v3joint/c5_common.py` | 本地终止策略的实验脚手架：含容量截断的预测账本（`_rollout_min`、逐步参照 `rollout_stepwise`、自检 `selfcheck_ledger`）与 `Node._apply_local_floor` 的在线策略补丁 | — |
+| `code/v3joint/c5_gate.py` | 任务 2 的外推发布门 `Task2Gate`：当前授权外推到任务终点，下一次更新到达才替换；`_Dispatch` 按臂分派任务 1／任务 2 | — |
+| `code/v3joint/c5_matrix.py` | 主矩阵：2 相位 × 2 采能 × 9 臂 × 3 种子 | `results/c5_matrix.json` |
+| `code/v3joint/c5_infocontract.py` | 非预知性契约 A1/A2/A3（含"两个未来视图必须相同"的判别测试） | `results/c5_infocontract.json` |
+| `code/v3joint/rerun_original_matrix.py` | 按修正前语义复跑，还原并审计对照 | `results/c5_matrix_precorrection.json` |
+
+`c5_*` 前缀偏离 `rNN_` 编号惯例，取的是家族可读性；脚本名在独立审查中被逐行引用，改名会切断审计链。
+
 当前联合层检查为 `python3 code/v3joint/test_joint.py`；仓库回归为 `python3 code/run_checks.py --quiet`。现有 Agent 轨迹的只读审计见 `docs/s8-report/review-v0.6/audit_traces.py`，不调用模型。论文证据边界见 `docs/s7-method/v1.2/51-independent-review-paper-v06-2026-09-19.md`。
 
 ## physics/ — 物理层
