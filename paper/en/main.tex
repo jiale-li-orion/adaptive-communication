@@ -40,7 +40,7 @@ release a record and to hold or relax a configuration, under no-false-release, e
 locality and no-false-completion constraints. A record's termination time is its business
 deadline, locally certain; the rule is bit-identical to standard Bundle-Protocol per-record
 expiry, and its \emph{cross-segment placement} decides the gain: source-local expiry raises
-outage on-time delivery $202\to434$ and 2.52-fold over ten seeds, whereas suppressing expired
+outage on-time delivery $\cThreeSeedZeroFifo\to\cThreeSeedZeroPurge$ and \cThreeRatio-fold over ten seeds, whereas suppressing expired
 sends at the gateway alone back-pressures access ($-8$). A configuration's termination time is
 not locally observable, because it depends on mission revisions travelling the failed path and
 on return-slot geometry held at the gateway. A clock night-guard suffices when the outage aligns
@@ -452,11 +452,11 @@ During the Episode~I outage 75 backup packets carry 750 records; under FIFO 219 
 already expired against 261 on-time (45.6\%; 1270 of 2782 payload bytes). Gateway-only suppression
 removes those sends but withholds the acknowledgement, and on-time delivery falls $202\to194$: cost
 moves to the access segment. Source-local deadline expiry reverses the sign, raising outage on-time
-delivery $202\to434$ and the deadline-valid fraction $0.54\to1.00$. Across ten seeds
-(Table~\ref{tab:purgeexpiry}) expiry raises mean service $0.373\to0.415$, a paired $+4.21$ points
-(95\% CI $+3.64$ to $+4.79$, positive on all ten), total outage on-time delivery $1691\to4265$
-(2.52$\times$), expired backup records $2538\to1$, and deaths $12\to0$; it beats AoI latest-only by
-$+5.73$ points (CI $+5.06$ to $+6.39$), because latest-only buys outage freshness by abandoning
+delivery $\cThreeSeedZeroFifo\to\cThreeSeedZeroPurge$ and the deadline-valid fraction $0.54\to1.00$. Across ten seeds
+(Table~\ref{tab:purgeexpiry}) expiry raises mean service $\cThreeSvcFifo\to\cThreeSvcPurge$, a paired $+\cThreePairedPoints$ points
+(95\% CI $+\cThreePairedLo$ to $+\cThreePairedHi$, positive on all ten), total outage on-time delivery $\cThreeTenSeedFifo\to\cThreeTenSeedPurge$
+(\cThreeRatio$\times$), expired backup records $\cThreeExpiredFifo\to\cThreeExpiredPurge$, and deaths $\cThreeDeathsFifo\to\cThreeDeathsPurge$; it beats AoI latest-only by
+$+\cThreeLatestDelta$ points, because latest-only buys outage freshness by abandoning
 post-recovery coverage. Crucially, \texttt{deadline-purge} and \texttt{generic-expiry} are
 bit-identical on every seed---service, outage counts, deaths and delivered set---so the record
 mechanism \emph{is} standard per-record expiration, and its measured value is the business-deadline
@@ -466,7 +466,7 @@ basis plus source/gateway cross-segment consistency, not a new discard algorithm
 \centering\small
 \caption{Ten-seed Episode~I sweep with the strong maxcov chooser fixed; only the edge disposition
 changes. Gateway-only suppression (not shown; same FIFO cache) gives 194 outage on-time at seed~0,
-against 202 for FIFO and 434 for source expiry---the cross-segment cost. $^{\dagger}$standard BPv7-style per-record lifetime; $^{\ddagger}$obligation-keyed purge, bit-identical to $^{\dagger}$.}
+against \cThreeSeedZeroFifo for FIFO and \cThreeSeedZeroPurge for source expiry---the cross-segment cost. $^{\dagger}$standard BPv7-style per-record lifetime; $^{\ddagger}$obligation-keyed purge, bit-identical to $^{\dagger}$.}
 \label{tab:purgeexpiry}
 \setlength{\tabcolsep}{3.5pt}\footnotesize
 \input{../generated/table_expiry.en.tex}

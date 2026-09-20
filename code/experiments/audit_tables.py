@@ -101,6 +101,10 @@ def main() -> int:
         ftext = open(facts, encoding="utf-8").read()
         defs = dict(re.findall(r"\\newcommand\{\\(\w+)\}\{([^}]*)\}", ftext))
         check("事实宏非空", bool(defs), f"{len(defs)} 个")
+        # TeX 控制序列名只能由字母组成：名字里带数字会被截断成另一个宏（实测：`\cThreeSeed0Fifo`
+        # 被解析为 `\cThreeSeed` + `0Fifo`，两份稿件同时报 Undefined control sequence）。
+        badnames = sorted(k for k in defs if not k.isalpha())
+        check("事实宏名只含字母（不含数字或下划线）", not badnames, ", ".join(badnames))
         for lang, path in ms:
             text = open(path, encoding="utf-8").read()
             check(f"{lang} 稿件引入事实宏", "generated/facts.tex" in text)

@@ -263,7 +263,29 @@ def facts() -> dict:
         "cFiveTtlFourRevertA": "6", "cFiveTtlEightRevertA": "10",
         "cFiveTtlFourRevertB": "5", "cFiveTtlEightRevertB": "9",
     }
-    lines = ["%% 由 scripts/make_tables.py 生成，勿手改；取值来自 results/c5_matrix.json。",
+    # C3（记录到期）：数字取自修正后的 results/r37e_full_seeds.json
+    r37 = load("results/r37e_full_seeds.json")
+    ss, pp = r37["summary"], r37["paired_purge_minus_fifo"]
+    defs.update({
+        "cThreeSeedZeroFifo": str(r37["per_seed"]["s0/fifo"]["d"]),
+        "cThreeSeedZeroPurge": str(r37["per_seed"]["s0/deadline_purge"]["d"]),
+        "cThreeTenSeedFifo": str(ss["fifo"]["outage_on_time_total"]),
+        "cThreeTenSeedPurge": str(ss["deadline_purge"]["outage_on_time_total"]),
+        "cThreeRatio": f(ss["deadline_purge"]["outage_on_time_total"]
+                         / ss["fifo"]["outage_on_time_total"], 2),
+        "cThreeExpiredFifo": str(ss["fifo"]["expired_total"]),
+        "cThreeExpiredPurge": str(ss["deadline_purge"]["expired_total"]),
+        "cThreeDeathsFifo": str(ss["fifo"]["deaths_total"]),
+        "cThreeDeathsPurge": str(ss["deadline_purge"]["deaths_total"]),
+        "cThreePairedPoints": f(pp["mean_points"], 2),
+        "cThreePairedLo": f(pp["ci95_points"][0], 2),
+        "cThreePairedHi": f(pp["ci95_points"][1], 2),
+        "cThreeSvcFifo": f(ss["fifo"]["svc_mean"], 3),
+        "cThreeSvcPurge": f(ss["deadline_purge"]["svc_mean"], 3),
+        "cThreeLatestDelta": f(100 * (ss["deadline_purge"]["svc_mean"]
+                                      - ss["latest_only"]["svc_mean"]), 2),
+    })
+    lines = ["%% 由 scripts/make_tables.py 生成，勿手改；取值来自 results/c5_matrix.json 与 results/r37e_full_seeds.json。",
              "%% 正文与表说明里的这些数字只允许写成这些宏。"]
     for k in sorted(defs):
         lines.append("\\newcommand{\\%s}{%s}" % (k, defs[k]))

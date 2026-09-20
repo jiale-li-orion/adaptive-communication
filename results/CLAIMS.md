@@ -20,8 +20,8 @@
 | Claim | 论文位置 | 证据 | 脚本 | 参考结果 | 状态 |
 |---|---|---|---|---|---|
 | C1 | §7.1 表 1 | 固定资源下各项物理资源单独放宽与同时放宽的反事实干预；集合分解显示仅回传容量阻塞 1715 条、仅电池阻塞 1128 条、两者耦合 155 条（2.0%） | `code/v3joint/r30c_walls.py` | `results/r30c_walls.json` | scoped-negative |
-| C2 | §5.1、§7.2 表 2 | `deadline-purge` 与 `generic-expiry` 在十个种子上逐位相同（服务、中断计数、死亡、交付集合） | `code/v3joint/r41_expiry_equiv.py` | `results/r41_expiry_equiv.json` | supported |
-| C3 | §7.2 | 源端按期限到期相对 FIFO 的十种子配对增益，以及仅在网关抑制造成的反压 | `code/v3joint/r37e_full_seeds.py` | `results/r37e_full_seeds.json` | supported |
+| C2 | §5.1、§7.2 表 2 | `deadline-purge` 与 `generic-expiry` 在十个种子上逐位相同（服务、中断计数、死亡、交付集合）；2026-09-20 边界修正后两条会删除的臂同改（种子 0 的 434→420），逐位等价结论不变 | `code/v3joint/r41_expiry_equiv.py` | `results/r41_expiry_equiv.json` | supported |
+| C3 | §7.2 | 源端按期限到期相对 FIFO 的十种子配对增益，以及仅在网关抑制造成的反压。**2026-09-20 边界修正后重测**：中断按期交付总数 1691→4145（2.45 倍）、过期备份记录 2538→120、死亡 12→0，配对 **+4.038 点（95%CI [+3.477,+4.599]，10/10 为正）**，相对 AoI `latest-only` 领先 +5.55 点；种子 0 的 202→420。修正前为 4265/1/+4.214；差异来自「保留截止当拍」的语义修正（见 C10） | `code/v3joint/r37e_full_seeds.py` | `results/r37e_full_seeds.json` | supported |
 | C4 | §7.1 | 全时域时间感知归因：4535 条失约中 830 条由回传容量改记为接入迟到 | `code/v3joint/r44_fullhorizon_attribution.py` | `results/r44_fullhorizon_attribution.json` | supported |
 | C5 | §7.3 表 3 | 普通机制覆盖配置终止这一格：$\eta{=}.012$ 下固定 8~h TTL 与 Task-1 `valid_until` 在 A/B 两相位均为零死亡且黄级交付 849/2016、2020/3528；候选能量门（开环界、滚动门、安全网三等价）同为零死亡但降至 559/2016、1194/3528。该结论的成立条件是**非预知预测器加电池容量项**，不是“密采物理不可行” | `code/v3joint/c5_matrix.py` | `results/c5_matrix.json` | scoped-negative |
 | C6 | §7.5 表 5 | 同一规则在中心与节点的执行位置对照；节点本地门消除所测种子死亡并压低被拒准入 | `code/v3joint/r39_envelope.py` | `results/agent_traces/r39_table.json` | supported |

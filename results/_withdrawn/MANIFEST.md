@@ -114,3 +114,24 @@
 ## 论文主张：C5 配置租约（2026-09-20）
 
 [主张快照](2026-09-20-c5-lease-claims.md) 保存固定 TTL 跨相位不可行、在线界已实现等被取代的解释。r46/r47/r48 的原始结果与冻结参考数字均保留；当前状态只由 `results/CLAIMS.md` 管理。
+
+## 记录到期的同拍边界（2026-09-20）
+
+`Node.batch` 在当拍上传/转发**之前**执行到期清理，原用 `expires_at <= t_s`；而评分接受
+`received_at <= deadline`。因此期限恰为当拍的记录被删而非发出，丢掉的正是该拍唯一还能得分的
+机会。修正为 `<`（保留截止当拍），`generic_expiry` 与 `deadline_purge` 两处同步改。
+
+依据：`results/retention_deadline_audit.json`（相位 A、peak .012、十种子：普通 expiry 只改边界即
++1.47 点，10/10 为正，其中 1674/1792 条被救样本的听到时刻恰等于真业务期限）。验收测试
+`code/experiments/test_instance.py` 的 [35] 组钉住"当拍仍进批次"与"过期即释放"两侧。
+
+影响面：`cache_service="fifo"` 与 `latest_only` 从不按期限删除，**读数逐字节不变**（`r30c_walls.json`
+的 3025 与 `latest_only` 的 4250 均未变）；只有会删除的臂受影响。
+
+| 文件 | 失效原因 |
+|---|---|
+| `2026-09-20-r41_expiry_equiv_prefix.json` | 修正前语义。两条会删除的臂在种子 0 上 434 → 修正后 420，`late` 0 → 14；**逐位等价结论不变**（两条臂同改，仍逐字节相同） |
+| `2026-09-20-r37e_full_seeds_prefix.json` | 修正前语义。十种子：purge 中断按期 4265 → 4145、过期 1 → 120、配对 +4.214 → +4.038 点（CI [3.477, 4.599]，10/10 仍为正）；fifo 与 latest_only 不变 |
+
+引用这些读数时必须说明是修正前语义；当前可引用的数值在 `results/` 同名活文件与
+`results/reference/` 冻结快照里。

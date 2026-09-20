@@ -2071,6 +2071,47 @@ def test_copy_window_interface_and_candidate_degeneracy() -> None:
           f"got {later}")
 
 
+
+def test_deadline_boundary_consistency():
+    """[35] 同拍次序：源端释放不得早于"该拍仍可能按期交付"。
+
+    评分接受 `received_at <= deadline`（`scoring.py`），而 `Node.batch` 在当拍上传/转发**之前**
+    执行到期清理。若清理用 `<=`，期限恰为当拍的记录会被删掉而不是发出去，丢掉的正是当拍唯一
+    还能得分的那次机会。本测试钉住三件事：
+
+      1. 期限**恰为当拍**的记录必须仍然进入本拍批次（可交付）；
+      2. 期限**已经过去**的记录不得再进批次（`<=` 修成 `<` 不能变成永不释放）；
+      3. 两个部署位置（`generic_expiry` 与 `deadline_purge`）使用同一条边界。
+
+    判别证据（十种子 +1.47 点、10/10 为正）见 `results/retention_deadline_audit.json`。
+    """
+    print("\n[35] 截止边界一致性（同拍次序）")
+
+    def _node(service, period):
+        dp = DeviceProfile(report_period_s=period, cache_service=service,
+                           obligation_period_s=period)
+        return Node(NODE, "displacement", dp, initial_wh=1.0)
+
+    def _fill(n, taken):
+        s = type("S", (), {"sample_id": f"{NODE}:{taken}", "taken_at": taken,
+                          "node_id": NODE, "measurand": "displacement"})()
+        n.cache.append(s)
+        n.transit[s.sample_id] = type("T", (), {"dropped_at": None})()
+        return n
+
+    P = 600
+    taken = 0
+    expiry = taken + ((P - taken % P) + P)          # = 1200，与业务期限同刻
+    for service in ("generic_expiry", "deadline_purge"):
+        n = _fill(_node(service, P), taken)
+        out = [s.sample_id for s in n.batch(expiry)]
+        check(f"{service}：期限恰为当拍的记录仍进批次（不被先删）",
+              out == [f"{NODE}:{taken}"], f"batch({expiry})={out}")
+        n2 = _fill(_node(service, P), taken)
+        out2 = [s.sample_id for s in n2.batch(expiry + 60)]
+        check(f"{service}：期限已过则释放且不再进批次",
+              out2 == [] and n2.dropped == 1, f"batch({expiry + 60})={out2} dropped={n2.dropped}")
+
 def main() -> int:
     print("实例层验收（Task Contract v1.1）")
     test_denominator_is_exogenous()
@@ -2108,6 +2149,7 @@ def main() -> int:
     test_cache_packing_disciplines_are_hand_checkable()
     test_conditional_plan_admission_and_faithfulness()
     test_copy_window_interface_and_candidate_degeneracy()
+    test_deadline_boundary_consistency()
     print("\n" + "-" * 74)
     if FAIL:
         print(f"  {len(FAIL)} 项失败: {', '.join(FAIL)}")

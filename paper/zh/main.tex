@@ -34,7 +34,7 @@
 \maketitle
 
 \begin{abstract}
-山地站点回传失效之后，网络继续执行的是失效之前安装进去的通信状态。未确认的记录继续占满仅有的几次恢复接入批次；一条再也撤不回的密集采样配置继续耗电过夜。本文研究这两类\textbf{持久安装状态（persistent installed state）}可以依据什么证据、在哪个位置终止，对象是电池加小光伏的 LoRaWAN Class~A 部署，网关现场自治，蜂窝主回传配按量计费的北斗短报文备用。两者归入\textbf{一个决策问题：部分证据下的本地终止}。节点只握有时钟、自身电量、缓存、最近接入收据与安装时刻携带的界，就此决定保留还是释放记录、维持还是退回配置，受无假释放、能量存续、证据局部性、无假完成四条约束。记录的终止时刻是业务期限，节点本地确定；该规则与标准 Bundle Protocol 的逐记录到期逐位相同，决定增益的是\textbf{跨段安置位置}：源端到期把中断按期交付从 202 提到 434、十种子 2.52 倍，而只在网关抑制过期发送会把代价反压到接入段，按期交付掉 8 条。配置的终止时刻在节点侧不完全可观测。阴雨天气下时钟夜门留下 \cFiveNightfloorDeadA 至 \cFiveNightfloorDeadB 个节点死亡；固定 8~h TTL 在两个相位都达到零死亡且黄级交付总数不减（$\cFiveTtlEightYellowA/\cFiveYellowNA$、$\cFiveTtlEightYellowB/\cFiveYellowNB$），而按能量可行性推导的回退界虽同样零死亡，却少交付 \cFiveEnergyLostA 与 \cFiveEnergyLostB 条黄级义务。配置回退界的\textbf{在线推导仍是空缺}：候选界由完整任务时刻表离线给出，本实验未验证其在线推导与随配置命令安装。形成性 LLM 研究定位出设计所针对的接口故障：LoRa 接入收据被读成回传状态。全部结论来自确定性、仓库可复现的运行，端到端与跨模型验证列为后续工作。
+山地站点回传失效之后，网络继续执行的是失效之前安装进去的通信状态。未确认的记录继续占满仅有的几次恢复接入批次；一条再也撤不回的密集采样配置继续耗电过夜。本文研究这两类\textbf{持久安装状态（persistent installed state）}可以依据什么证据、在哪个位置终止，对象是电池加小光伏的 LoRaWAN Class~A 部署，网关现场自治，蜂窝主回传配按量计费的北斗短报文备用。两者归入\textbf{一个决策问题：部分证据下的本地终止}。节点只握有时钟、自身电量、缓存、最近接入收据与安装时刻携带的界，就此决定保留还是释放记录、维持还是退回配置，受无假释放、能量存续、证据局部性、无假完成四条约束。记录的终止时刻是业务期限，节点本地确定；该规则与标准 Bundle Protocol 的逐记录到期逐位相同，决定增益的是\textbf{跨段安置位置}：源端到期把中断按期交付从 \cThreeSeedZeroFifo 提到 \cThreeSeedZeroPurge、十种子 \cThreeRatio 倍，而只在网关抑制过期发送会把代价反压到接入段，按期交付掉 8 条。配置的终止时刻在节点侧不完全可观测。阴雨天气下时钟夜门留下 \cFiveNightfloorDeadA 至 \cFiveNightfloorDeadB 个节点死亡；固定 8~h TTL 在两个相位都达到零死亡且黄级交付总数不减（$\cFiveTtlEightYellowA/\cFiveYellowNA$、$\cFiveTtlEightYellowB/\cFiveYellowNB$），而按能量可行性推导的回退界虽同样零死亡，却少交付 \cFiveEnergyLostA 与 \cFiveEnergyLostB 条黄级义务。配置回退界的\textbf{在线推导仍是空缺}：候选界由完整任务时刻表离线给出，本实验未验证其在线推导与随配置命令安装。形成性 LLM 研究定位出设计所针对的接口故障：LoRa 接入收据被读成回传状态。全部结论来自确定性、仓库可复现的运行，端到端与跨模型验证列为后续工作。
 \end{abstract}
 
 \noindent\textbf{关键词：}持久安装状态；间歇回传；LoRaWAN Class~A；卫星短报文；期限到期；配置租约；部分可观测；灾前监测。
@@ -184,11 +184,11 @@ Episode~I 的 7560 条例行义务上，强 maxcov/FIFO 基线交付 3025（0.40
 
 \subsection{记录到期：标准原语，位置决定成败}
 \label{sec:eval-record}
-Episode~I 中断期间 75 个备份包承载 750 条记录；FIFO 下 219 条到达中心时已经过期，按期 261 条（45.6\%；2782 载荷字节中用掉 1270）。仅在网关抑制会去掉这些发送，却扣住确认，按期交付从 202 掉到 194，代价被搬到接入段。源端按期限到期改变符号：中断按期交付 202 提到 434，按期有效比例 0.54 升到 1.00。十种子下（表~\ref{tab:purgeexpiry}）到期把平均服务从 0.373 提到 0.415，配对 $+4.21$ 点（95\% 区间 $+3.64$ 到 $+4.79$，十个种子全部为正）；中断按期交付总数 1691 升到 4265（2.52 倍），过期备份记录 2538 降到 1，死亡 12 降到 0；相对 AoI \texttt{latest-only} 领先 $+5.73$ 点（区间 $+5.06$ 到 $+6.39$），因为 latest-only 用放弃恢复后覆盖换取中断期新鲜度。\texttt{deadline-purge} 与 \texttt{generic-expiry} 在每种子上逐位相同（服务、中断计数、死亡与交付集合全部一致）：记录侧机制就是标准的逐记录到期，它的实测价值来自业务期限基准与源端网关跨段一致性，与新的丢弃算法无关。
+Episode~I 中断期间 75 个备份包承载 750 条记录；FIFO 下 219 条到达中心时已经过期，按期 261 条（45.6\%；2782 载荷字节中用掉 1270）。仅在网关抑制会去掉这些发送，却扣住确认，按期交付从 202 掉到 194，代价被搬到接入段。源端按期限到期改变符号：中断按期交付 \cThreeSeedZeroFifo 提到 \cThreeSeedZeroPurge，按期有效比例 0.54 升到 1.00。十种子下（表~\ref{tab:purgeexpiry}）到期把平均服务从 $\cThreeSvcFifo$ 提到 $\cThreeSvcPurge$，配对 $+\cThreePairedPoints$ 点（95\% 区间 $+\cThreePairedLo$ 到 $+\cThreePairedHi$，十个种子全部为正）；中断按期交付总数 \cThreeTenSeedFifo 升到 \cThreeTenSeedPurge（\cThreeRatio 倍），过期备份记录 \cThreeExpiredFifo 降到 \cThreeExpiredPurge，死亡 \cThreeDeathsFifo 降到 \cThreeDeathsPurge；相对 AoI \texttt{latest-only} 领先 $+\cThreeLatestDelta$ 点，因为 latest-only 用放弃恢复后覆盖换取中断期新鲜度。\texttt{deadline-purge} 与 \texttt{generic-expiry} 在每种子上逐位相同（服务、中断计数、死亡与交付集合全部一致）：记录侧机制就是标准的逐记录到期，它的实测价值来自业务期限基准与源端网关跨段一致性，与新的丢弃算法无关。
 
 \begin{table}[t]
 \centering\small
-\caption{固定强 maxcov 选择器的十种子 Episode~I 扫描，只变边缘处置。仅网关抑制（未列，同 FIFO 缓存）在种子 0 得 194，对比 FIFO 的 202 与源端到期的 434，即跨段代价。$^{\dagger}$标准 BPv7 式逐记录生命期；$^{\ddagger}$按义务索引的核销，与 $^{\dagger}$ 逐位相同。}
+\caption{固定强 maxcov 选择器的十种子 Episode~I 扫描，只变边缘处置。仅网关抑制（未列，同 FIFO 缓存）在种子 0 得 194，对比 FIFO 的 \cThreeSeedZeroFifo 与源端到期的 \cThreeSeedZeroPurge，即跨段代价。$^{\dagger}$标准 BPv7 式逐记录生命期；$^{\ddagger}$按义务索引的核销，与 $^{\dagger}$ 逐位相同。}
 \label{tab:purgeexpiry}
 \setlength{\tabcolsep}{4pt}
 \input{../generated/table_expiry.zh.tex}

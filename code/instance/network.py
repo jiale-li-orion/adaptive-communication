@@ -424,7 +424,8 @@ class Node:
             keep, drop = [], []
             for s in self.cache:
                 dl = (s.taken_at // period + 2) * period
-                (drop if dl <= t_s else keep).append(s)
+                # 同上：保留截止当拍，避免删掉本可在该拍交付的记录
+                (drop if dl < t_s else keep).append(s)
             if drop:
                 for old in drop:
                     self.transit[old.sample_id].dropped_at = t_s
@@ -441,7 +442,11 @@ class Node:
             keep, drop = [], []
             for s in self.cache:
                 expires_at = s.taken_at + ((period - s.taken_at % period) + period)
-                (drop if expires_at <= t_s else keep).append(s)
+                # **边界一致性**：评分接受 `received_at <= deadline`，而本函数在当拍上传/转发**之前**
+                # 执行；若此处用 `<=`，期限恰为当拍的记录会被删掉而不是发出去，丢掉的正是当拍本来
+                # 可以得分的那一次机会。改为 `<`：保留到截止当拍走完，此后不可能再按期交付才释放。
+                # 判别证据见 results/retention_deadline_audit.json（十种子 +1.47 点，10/10）。
+                (drop if expires_at < t_s else keep).append(s)
             if drop:
                 for old in drop:
                     self.transit[old.sample_id].dropped_at = t_s
