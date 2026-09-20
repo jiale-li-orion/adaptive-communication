@@ -28,7 +28,7 @@
 | C7 | §7.4 表 4 | 任务表到达时仅凭网关本地证据的可判定覆盖与已判定精度 | `code/v3joint/r40_local_attribution.py` | `results/r40_local_attribution.json` | supported |
 | C8 | §7.6 | 真实 agent 十一轨迹、1089 次决策的对称计量；接口故障与解析失败账目 | `code/v3joint/r38_agent_three_arm.py`、`code/v3joint/r42_claim_relabel.py`、`code/v3joint/r43_cert_v5_replay.py` | `results/agent_traces/r38_three_arm_summary.json`、`results/r42_claim_relabel.json`、`results/r43_cert_v5_replay.json` | formative |
 | C9 | §7.3 | 按预注册 v3 的单节点声明模型。**层级**：'全部未来零失电'是风险口径层的一个端点（α=0），不是任务要求——论文目标函数把死亡计为一项、评测按臂报告死亡、`v3joint_r02_restart.json` 记录'0 存活主要是吸收态产物'、r47 已写明不得外推为物理不可行。**结构**：strict 口径下精确最优**恰好等于**贪心可行性规则（序列内容为空，已逐状态核对），λ>0（与论文一致地给死亡计价）才出现真正的停止规则。**读数**：C5 实测格（峰值 .012、σ=.047）strict 端点不可行（稀疏最低 −0.0087 mWh < 0.47 mWh，临界 σ*=.0429），该结论只在该口径内成立；计价口径下非预知最优 48/48、死亡概率 3.5e-5，最强普通组合（`ttl7`+8 mWh 门）同样 48/48、3.5e-5 → 两个差额均 ≈ 0。**能力边界**：本模型是最优**停止**问题，不是调度问题，故不得据此谈密集预算的最优分配。v1/v2 口径下的结论均已撤回 | `code/v3joint/c5_seqref.py`、`code/experiments/measure_seqref_calibration.py`、`code/experiments/audit_seqref.py` | `results/c5_seqref.json`、`results/c5_seqref_calibration.json` | open |
-| C10 | §7.2 | 记录释放视界的预注册确认（`spec/prereg-retention-horizon-v1.md`，确认种子 100--109）：视界 = 信念期限 + 自有收据投递时延中位数。**主判据两格均成立**——峰值 .012 全时域服务 +1.49 点、95%CI [+1.30,+1.68]、10/10 为正；峰值 .010 +1.18 点、CI [+1.01,+1.36]、10/10 为正；机制为尝试预算：`generic_expiry` 的清理在 `Node.batch` 内按 `obligation_period_s` 执行，视界越长记录进入的上报批次越多，批次容量 32→128 无影响。**风险判据不成立**（.012 死亡 3→4、最低电量 0.199 mWh 低于安全线；.010 基线本身 135 死亡），故按预注册关闭条件记限定负结果；且 .012 上自适应与固定 2 倍区间不可分，按降级条款只支持“视界可调”。增益与每十种子约 1 次额外死亡的取舍取决于论文未给定的 λ_d | `code/v3joint/r49_retention_horizon.py` | `results/r49_retention_horizon.json` | scoped-negative |
+| C10 | §5.1、§7.2 | **源端到期的同拍次序缺陷及其修正**：现行实现于每次上报/转发**之前**按 `expires_at <= t_s` 删除记录，而评分接受 `received_at <= deadline`，故期限恰为当拍的记录被删而非上传（相位 A、peak .012、ttl8、十种子：`current` 到期当拍被听到 0 条）。只把边界改为保留截止当拍（普通 expiry，周期不变）即把全时域服务从 61.1081% 提到 **62.5778%（+1.47 点，95%CI [+1.28,+1.66]，10/10 为正）**，其中 1674/1792 条被救样本的听到时刻恰等于真业务期限；死亡 3→4、最低电量 0.162→0.182 mWh，故按 (服务, 死亡) 二元报告，不主张支配。**视界延长相对该修正无额外增益**：`fixed2` 与修正版逐位相同（27334 = 27334），`adaptive` 仅多 0.0183 点。网关侧不受影响（`maxcov` 不按期限排除，`salvage` 用 `dl <= t_s`）；该缺陷对 C3 不利，故 C3 的 +4.21 点未被抬高 | `code/analysis/retention_deadline_audit.py` | `results/retention_deadline_audit.json` | supported |
 
 ## 撤回表
 
@@ -42,6 +42,7 @@
 | C9 v1：受检格三方零差额、可实现差额为 0，据此"中间行已建成、方向已关闭" | C9 | v1 的求值器在黄级窗口终点替策略自动降档（隐藏授权终点改变了执行），且等权三点把偏移当标准差（实际 σ 只有声明值的 √(2/3)）；修正后该格在严格口径下无可行策略。见证见 [归档](_withdrawn/2026-09-20-c9-v1-semantics.md)；
 反例由 `code/experiments/audit_seqref.py` 与 `results/c5_seqref.json` 的 `counterexamples` 字段随仓库复现（独立审阅的本地记录不随仓库发布） | `a665642` |
 | C9 v2：紧能量格在严格口径下"无可行策略"，据此作为该格实质结论 | C9 | 把关口层级弄错：仓库目标函数把死亡计为一项、评测按臂报告死亡（r02 记录"0 存活主要是吸收态产物"），故"全部未来不得死亡"是风险口径的端点而非任务要求；此外 v2 的"序列最优"结构上等于贪心可行性规则。详见 [归档](_withdrawn/2026-09-20-c9-v2-semantics.md) | `1a36d52` |
+| C10 原陈述：视界跟随自有收据时延的自适应规则抬升全时域服务 1.49 点 | C10 | 公平的普通到期对照显示 98.7% 的增益来自同一拍内「先删后传」的次序缺陷：周期不变的普通 expiry 只改边界即得 +1.47 点，`fixed2` 与 `adaptive` 相对它分别追加 0.0000 与 0.0183 点。视界延长不构成独立机制 | `2db290e` |
 | 固定 TTL 在两个相位都无法满足存活与无黄级交付总数损失；当前结果证明合法在线交付界租约的独立增量 | C5 | 8 h TTL 在两相位满足上述计数判据；候选界读取未来降级时间并预置，未通过命令安装；详见 [不可变归档](_withdrawn/2026-09-20-c5-lease-claims.md) | `59e5ef1` |
 
 ## 维护规则

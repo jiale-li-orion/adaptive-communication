@@ -1,0 +1,2938 @@
+{
+ "script": "code/analysis/retention_deadline_audit.py",
+ "purpose": "截止边界一致性审计：C10 增益是否由 '评分允许当拍交付、源端当拍前已删' 造成",
+ "phase": "A",
+ "peak": 0.012,
+ "seeds": [
+  100,
+  101,
+  102,
+  103,
+  104,
+  105,
+  106,
+  107,
+  108,
+  109
+ ],
+ "arms": [
+  "current",
+  "boundary",
+  "fixed2",
+  "adaptive"
+ ],
+ "runs": {
+  "100": {
+   "current": {
+    "n_obligations": 4368,
+    "n_yellow": 672,
+    "svc": 0.5627289377289377,
+    "delivered": 2458,
+    "yellow": 123,
+    "dead": 0,
+    "min_soc_wh": 0.0035837306118371693,
+    "heard_exactly_at_expiry": 0,
+    "heard_at_expiry_is_true_deadline": 0,
+    "heard_at_expiry_after_deadline": 0,
+    "dropped_exactly_at_expiry": 1652,
+    "periods_seen": {
+     "600": 14
+    },
+    "witness_heard_at_expiry": [],
+    "witness_dropped_at_expiry": [
+     {
+      "sample_id": "gw0:rainfall:7800",
+      "taken": 7800,
+      "expiry": 9000,
+      "dropped": 9000,
+      "heard": 7800,
+      "received": 75600
+     },
+     {
+      "sample_id": "gw0:rainfall:10200",
+      "taken": 10200,
+      "expiry": 11400,
+      "dropped": 11400,
+      "heard": 10200,
+      "received": 75600
+     },
+     {
+      "sample_id": "gw0:rainfall:13800",
+      "taken": 13800,
+      "expiry": 15000,
+      "dropped": 15000,
+      "heard": 13800,
+      "received": 75600
+     },
+     {
+      "sample_id": "gw0:rainfall:15000",
+      "taken": 15000,
+      "expiry": 16200,
+      "dropped": 16200,
+      "heard": 15000,
+      "received": 75600
+     },
+     {
+      "sample_id": "gw0:rainfall:17400",
+      "taken": 17400,
+      "expiry": 18600,
+      "dropped": 18600,
+      "heard": 17400,
+      "received": 75600
+     }
+    ],
+    "sampled": 4130
+   },
+   "boundary": {
+    "n_obligations": 4368,
+    "n_yellow": 672,
+    "svc": 0.576007326007326,
+    "delivered": 2516,
+    "yellow": 114,
+    "dead": 0,
+    "min_soc_wh": 0.0033818797318370853,
+    "heard_exactly_at_expiry": 192,
+    "heard_at_expiry_is_true_deadline": 177,
+    "heard_at_expiry_after_deadline": 15,
+    "dropped_exactly_at_expiry": 0,
+    "periods_seen": {
+     "600": 14
+    },
+    "witness_heard_at_expiry": [
+     {
+      "sample_id": "n00:displacement:600",
+      "taken": 600,
+      "expiry": 1800,
+      "heard": 1800,
+      "received": 1800,
+      "dropped": null
+     },
+     {
+      "sample_id": "n00:displacement:17400",
+      "taken": 17400,
+      "expiry": 18600,
+      "heard": 18600,
+      "received": 75600,
+      "dropped": 19200
+     },
+     {
+      "sample_id": "n00:displacement:23400",
+      "taken": 23400,
+      "expiry": 24600,
+      "heard": 24600,
+      "received": 75600,
+      "dropped": 25200
+     },
+     {
+      "sample_id": "n00:displacement:48000",
+      "taken": 48000,
+      "expiry": 49200,
+      "heard": 49200,
+      "received": 75600,
+      "dropped": 49800
+     },
+     {
+      "sample_id": "n00:displacement:54600",
+      "taken": 54600,
+      "expiry": 55800,
+      "heard": 55800,
+      "received": 75600,
+      "dropped": 56400
+     }
+    ],
+    "witness_dropped_at_expiry": [],
+    "sampled": 4130
+   },
+   "fixed2": {
+    "n_obligations": 4368,
+    "n_yellow": 672,
+    "svc": 0.576007326007326,
+    "delivered": 2516,
+    "yellow": 114,
+    "dead": 0,
+    "min_soc_wh": 0.003299497131688225,
+    "heard_exactly_at_expiry": 192,
+    "heard_at_expiry_is_true_deadline": 177,
+    "heard_at_expiry_after_deadline": 15,
+    "dropped_exactly_at_expiry": 0,
+    "periods_seen": {
+     "600": 14
+    },
+    "witness_heard_at_expiry": [
+     {
+      "sample_id": "n00:displacement:600",
+      "taken": 600,
+      "expiry": 1800,
+      "heard": 1800,
+      "received": 1800,
+      "dropped": null
+     },
+     {
+      "sample_id": "n00:displacement:17400",
+      "taken": 17400,
+      "expiry": 18600,
+      "heard": 18600,
+      "received": 75600,
+      "dropped": 19200
+     },
+     {
+      "sample_id": "n00:displacement:23400",
+      "taken": 23400,
+      "expiry": 24600,
+      "heard": 24600,
+      "received": 75600,
+      "dropped": 25200
+     },
+     {
+      "sample_id": "n00:displacement:48000",
+      "taken": 48000,
+      "expiry": 49200,
+      "heard": 49200,
+      "received": 75600,
+      "dropped": 50400
+     },
+     {
+      "sample_id": "n00:displacement:54600",
+      "taken": 54600,
+      "expiry": 55800,
+      "heard": 55800,
+      "received": 75600,
+      "dropped": 56400
+     }
+    ],
+    "witness_dropped_at_expiry": [],
+    "sampled": 4130
+   },
+   "adaptive": {
+    "n_obligations": 4368,
+    "n_yellow": 672,
+    "svc": 0.5773809523809523,
+    "delivered": 2522,
+    "yellow": 123,
+    "dead": 0,
+    "min_soc_wh": 0.0034512659718371366,
+    "heard_exactly_at_expiry": 112,
+    "heard_at_expiry_is_true_deadline": 112,
+    "heard_at_expiry_after_deadline": 0,
+    "dropped_exactly_at_expiry": 1028,
+    "periods_seen": {
+     "600": 14
+    },
+    "witness_heard_at_expiry": [
+     {
+      "sample_id": "n00:displacement:91800",
+      "taken": 91800,
+      "expiry": 93000,
+      "heard": 93000,
+      "received": 93000,
+      "dropped": null
+     },
+     {
+      "sample_id": "n00:displacement:113400",
+      "taken": 113400,
+      "expiry": 114600,
+      "heard": 114600,
+      "received": 114600,
+      "dropped": null
+     },
+     {
+      "sample_id": "n00:displacement:132000",
+      "taken": 132000,
+      "expiry": 133200,
+      "heard": 133200,
+      "received": 136800,
+      "dropped": 133800
+     },
+     {
+      "sample_id": "n00:displacement:138000",
+      "taken": 138000,
+      "expiry": 139200,
+      "heard": 139200,
+      "received": 139200,
+      "dropped": null
+     },
+     {
+      "sample_id": "n00:displacement:142200",
+      "taken": 142200,
+      "expiry": 143400,
+      "heard": 143400,
+      "received": 143400,
+      "dropped": null
+     }
+    ],
+    "witness_dropped_at_expiry": [
+     {
+      "sample_id": "gw0:rainfall:7800",
+      "taken": 7800,
+      "expiry": 9000,
+      "dropped": 9000,
+      "heard": 7800,
+      "received": 75600
+     },
+     {
+      "sample_id": "gw0:rainfall:10200",
+      "taken": 10200,
+      "expiry": 11400,
+      "dropped": 11400,
+      "heard": 10200,
+      "received": 75600
+     },
+     {
+      "sample_id": "gw0:rainfall:13800",
+      "taken": 13800,
+      "expiry": 15000,
+      "dropped": 15000,
+      "heard": 13800,
+      "received": 75600
+     },
+     {
+      "sample_id": "gw0:rainfall:15000",
+      "taken": 15000,
+      "expiry": 16200,
+      "dropped": 16200,
+      "heard": 15000,
+      "received": 75600
+     },
+     {
+      "sample_id": "gw0:rainfall:17400",
+      "taken": 17400,
+      "expiry": 18600,
+      "dropped": 18600,
+      "heard": 17400,
+      "received": 75600
+     }
+    ],
+    "sampled": 4130
+   }
+  },
+  "101": {
+   "current": {
+    "n_obligations": 4368,
+    "n_yellow": 672,
+    "svc": 0.6758241758241759,
+    "delivered": 2952,
+    "yellow": 367,
+    "dead": 0,
+    "min_soc_wh": 0.00020101148483959384,
+    "heard_exactly_at_expiry": 0,
+    "heard_at_expiry_is_true_deadline": 0,
+    "heard_at_expiry_after_deadline": 0,
+    "dropped_exactly_at_expiry": 1861,
+    "periods_seen": {
+     "600": 14
+    },
+    "witness_heard_at_expiry": [],
+    "witness_dropped_at_expiry": [
+     {
+      "sample_id": "gw0:rainfall:600",
+      "taken": 600,
+      "expiry": 1800,
+      "dropped": 1800,
+      "heard": 600,
+      "received": 7200
+     },
+     {
+      "sample_id": "gw0:rainfall:1380",
+      "taken": 1380,
+      "expiry": 2400,
+      "dropped": 2400,
+      "heard": 1800,
+      "received": 7200
+     },
+     {
+      "sample_id": "gw0:rainfall:1680",
+      "taken": 1680,
+      "expiry": 2400,
+      "dropped": 2400,
+      "heard": 1800,
+      "received": 7200
+     },
+     {
+      "sample_id": "gw0:rainfall:1800",
+      "taken": 1800,
+      "expiry": 3000,
+      "dropped": 3000,
+      "heard": 1800,
+      "received": 7200
+     },
+     {
+      "sample_id": "gw0:rainfall:2940",
+      "taken": 2940,
+      "expiry": 3600,
+      "dropped": 3600,
+      "heard": 2940,
+      "received": 7200
+     }
+    ],
+    "sampled": 4754
+   },
+   "boundary": {
+    "n_obligations": 4368,
+    "n_yellow": 672,
+    "svc": 0.6923076923076923,
+    "delivered": 3024,
+    "yellow": 367,
+    "dead": 1,
+    "min_soc_wh": 0.0001824387266397399,
+    "heard_exactly_at_expiry": 161,
+    "heard_at_expiry_is_true_deadline": 154,
+    "heard_at_expiry_after_deadline": 7,
+    "dropped_exactly_at_expiry": 0,
+    "periods_seen": {
+     "600": 14
+    },
+    "witness_heard_at_expiry": [
+     {
+      "sample_id": "n00:displacement:4200",
+      "taken": 4200,
+      "expiry": 5400,
+      "heard": 5400,
+      "received": 7200,
+      "dropped": 6000
+     },
+     {
+      "sample_id": "n00:displacement:8100",
+      "taken": 8100,
+      "expiry": 9000,
+      "heard": 9000,
+      "received": 9000,
+      "dropped": null
+     },
+     {
+      "sample_id": "n00:displacement:24300",
+      "taken": 24300,
+      "expiry": 25200,
+      "heard": 25200,
+      "received": 72000,
+      "dropped": 25500
+     },
+     {
+      "sample_id": "n00:displacement:34500",
+      "taken": 34500,
+      "expiry": 35400,
+      "heard": 35400,
+      "received": 72000,
+      "dropped": 35700
+     },
+     {
+      "sample_id": "n00:displacement:40800",
+      "taken": 40800,
+      "expiry": 42000,
+      "heard": 42000,
+      "received": 72000,
+      "dropped": 42600
+     }
+    ],
+    "witness_dropped_at_expiry": [],
+    "sampled": 4753
+   },
+   "fixed2": {
+    "n_obligations": 4368,
+    "n_yellow": 672,
+    "svc": 0.6923076923076923,
+    "delivered": 3024,
+    "yellow": 367,
+    "dead": 1,
+    "min_soc_wh": 5.988640663969809e-05,
+    "heard_exactly_at_expiry": 161,
+    "heard_at_expiry_is_true_deadline": 154,
+    "heard_at_expiry_after_deadline": 7,
+    "dropped_exactly_at_expiry": 0,
+    "periods_seen": {
+     "600": 14
+    },
+    "witness_heard_at_expiry": [
+     {
+      "sample_id": "n00:displacement:4200",
+      "taken": 4200,
+      "expiry": 5400,
+      "heard": 5400,
+      "received": 7200,
+      "dropped": 6000
+     },
+     {
+      "sample_id": "n00:displacement:8100",
+      "taken": 8100,
+      "expiry": 9000,
+      "heard": 9000,
+      "received": 9000,
+      "dropped": null
+     },
+     {
+      "sample_id": "n00:displacement:24300",
+      "taken": 24300,
+      "expiry": 25200,
+      "heard": 25200,
+      "received": 72000,
+      "dropped": 26400
+     },
+     {
+      "sample_id": "n00:displacement:34500",
+      "taken": 34500,
+      "expiry": 35400,
+      "heard": 35400,
+      "received": 72000,
+      "dropped": 36000
+     },
+     {
+      "sample_id": "n00:displacement:40800",
+      "taken": 40800,
+      "expiry": 42000,
+      "heard": 42000,
+      "received": 72000,
+      "dropped": 43200
+     }
+    ],
+    "witness_dropped_at_expiry": [],
+    "sampled": 4753
+   },
+   "adaptive": {
+    "n_obligations": 4368,
+    "n_yellow": 672,
+    "svc": 0.6918498168498168,
+    "delivered": 3022,
+    "yellow": 367,
+    "dead": 1,
+    "min_soc_wh": 0.0001986588866397314,
+    "heard_exactly_at_expiry": 127,
+    "heard_at_expiry_is_true_deadline": 123,
+    "heard_at_expiry_after_deadline": 4,
+    "dropped_exactly_at_expiry": 776,
+    "periods_seen": {
+     "600": 14
+    },
+    "witness_heard_at_expiry": [
+     {
+      "sample_id": "n00:displacement:8100",
+      "taken": 8100,
+      "expiry": 9000,
+      "heard": 9000,
+      "received": 9000,
+      "dropped": null
+     },
+     {
+      "sample_id": "n00:displacement:24300",
+      "taken": 24300,
+      "expiry": 25200,
+      "heard": 25200,
+      "received": 72000,
+      "dropped": 25500
+     },
+     {
+      "sample_id": "n00:displacement:34500",
+      "taken": 34500,
+      "expiry": 35400,
+      "heard": 35400,
+      "received": 72000,
+      "dropped": 35700
+     },
+     {
+      "sample_id": "n00:displacement:40800",
+      "taken": 40800,
+      "expiry": 42000,
+      "heard": 42000,
+      "received": 72000,
+      "dropped": 42600
+     },
+     {
+      "sample_id": "n00:displacement:45600",
+      "taken": 45600,
+      "expiry": 46800,
+      "heard": 46800,
+      "received": 72000,
+      "dropped": 47400
+     }
+    ],
+    "witness_dropped_at_expiry": [
+     {
+      "sample_id": "gw0:rainfall:600",
+      "taken": 600,
+      "expiry": 1800,
+      "dropped": 1800,
+      "heard": 600,
+      "received": 7200
+     },
+     {
+      "sample_id": "gw0:rainfall:1380",
+      "taken": 1380,
+      "expiry": 2400,
+      "dropped": 2400,
+      "heard": 1380,
+      "received": 7200
+     },
+     {
+      "sample_id": "gw0:rainfall:1680",
+      "taken": 1680,
+      "expiry": 2400,
+      "dropped": 2400,
+      "heard": 1680,
+      "received": 7200
+     },
+     {
+      "sample_id": "gw0:rainfall:1800",
+      "taken": 1800,
+      "expiry": 3000,
+      "dropped": 3000,
+      "heard": 1800,
+      "received": 7200
+     },
+     {
+      "sample_id": "gw0:rainfall:2940",
+      "taken": 2940,
+      "expiry": 3600,
+      "dropped": 3600,
+      "heard": 2940,
+      "received": 7200
+     }
+    ],
+    "sampled": 4753
+   }
+  },
+  "102": {
+   "current": {
+    "n_obligations": 4368,
+    "n_yellow": 672,
+    "svc": 0.6254578754578755,
+    "delivered": 2732,
+    "yellow": 360,
+    "dead": 0,
+    "min_soc_wh": 0.0017961537881948605,
+    "heard_exactly_at_expiry": 0,
+    "heard_at_expiry_is_true_deadline": 0,
+    "heard_at_expiry_after_deadline": 0,
+    "dropped_exactly_at_expiry": 1991,
+    "periods_seen": {
+     "600": 14
+    },
+    "witness_heard_at_expiry": [],
+    "witness_dropped_at_expiry": [
+     {
+      "sample_id": "gw0:rainfall:15000",
+      "taken": 15000,
+      "expiry": 16200,
+      "dropped": 16200,
+      "heard": 15000,
+      "received": 82800
+     },
+     {
+      "sample_id": "gw0:rainfall:16200",
+      "taken": 16200,
+      "expiry": 17400,
+      "dropped": 17400,
+      "heard": 16200,
+      "received": 82800
+     },
+     {
+      "sample_id": "gw0:rainfall:17400",
+      "taken": 17400,
+      "expiry": 18600,
+      "dropped": 18600,
+      "heard": 17400,
+      "received": 82800
+     },
+     {
+      "sample_id": "gw0:rainfall:18600",
+      "taken": 18600,
+      "expiry": 19800,
+      "dropped": 19800,
+      "heard": 18600,
+      "received": 82800
+     },
+     {
+      "sample_id": "gw0:rainfall:19800",
+      "taken": 19800,
+      "expiry": 21000,
+      "dropped": 21000,
+      "heard": 19800,
+      "received": 82800
+     }
+    ],
+    "sampled": 4754
+   },
+   "boundary": {
+    "n_obligations": 4368,
+    "n_yellow": 672,
+    "svc": 0.6391941391941391,
+    "delivered": 2792,
+    "yellow": 360,
+    "dead": 0,
+    "min_soc_wh": 0.0015346921884349849,
+    "heard_exactly_at_expiry": 180,
+    "heard_at_expiry_is_true_deadline": 161,
+    "heard_at_expiry_after_deadline": 19,
+    "dropped_exactly_at_expiry": 0,
+    "periods_seen": {
+     "600": 14
+    },
+    "witness_heard_at_expiry": [
+     {
+      "sample_id": "n00:displacement:7500",
+      "taken": 7500,
+      "expiry": 8400,
+      "heard": 8400,
+      "received": 8400,
+      "dropped": null
+     },
+     {
+      "sample_id": "n00:displacement:13200",
+      "taken": 13200,
+      "expiry": 14400,
+      "heard": 14400,
+      "received": 82800,
+      "dropped": 14700
+     },
+     {
+      "sample_id": "n00:displacement:13500",
+      "taken": 13500,
+      "expiry": 14400,
+      "heard": 14400,
+      "received": 82800,
+      "dropped": 14700
+     },
+     {
+      "sample_id": "n00:displacement:17700",
+      "taken": 17700,
+      "expiry": 18600,
+      "heard": 18600,
+      "received": 82800,
+      "dropped": 18900
+     },
+     {
+      "sample_id": "n00:displacement:37800",
+      "taken": 37800,
+      "expiry": 39000,
+      "heard": 39000,
+      "received": 82800,
+      "dropped": 39600
+     }
+    ],
+    "witness_dropped_at_expiry": [],
+    "sampled": 4754
+   },
+   "fixed2": {
+    "n_obligations": 4368,
+    "n_yellow": 672,
+    "svc": 0.6391941391941391,
+    "delivered": 2792,
+    "yellow": 360,
+    "dead": 0,
+    "min_soc_wh": 0.0013364457884349882,
+    "heard_exactly_at_expiry": 180,
+    "heard_at_expiry_is_true_deadline": 161,
+    "heard_at_expiry_after_deadline": 19,
+    "dropped_exactly_at_expiry": 0,
+    "periods_seen": {
+     "600": 14
+    },
+    "witness_heard_at_expiry": [
+     {
+      "sample_id": "n00:displacement:7500",
+      "taken": 7500,
+      "expiry": 8400,
+      "heard": 8400,
+      "received": 8400,
+      "dropped": null
+     },
+     {
+      "sample_id": "n00:displacement:13200",
+      "taken": 13200,
+      "expiry": 14400,
+      "heard": 14400,
+      "received": 82800,
+      "dropped": 15600
+     },
+     {
+      "sample_id": "n00:displacement:13500",
+      "taken": 13500,
+      "expiry": 14400,
+      "heard": 14400,
+      "received": 82800,
+      "dropped": 15600
+     },
+     {
+      "sample_id": "n00:displacement:17700",
+      "taken": 17700,
+      "expiry": 18600,
+      "heard": 18600,
+      "received": 82800,
+      "dropped": 19200
+     },
+     {
+      "sample_id": "n00:displacement:37800",
+      "taken": 37800,
+      "expiry": 39000,
+      "heard": 39000,
+      "received": 82800,
+      "dropped": 39600
+     }
+    ],
+    "witness_dropped_at_expiry": [],
+    "sampled": 4754
+   },
+   "adaptive": {
+    "n_obligations": 4368,
+    "n_yellow": 672,
+    "svc": 0.6391941391941391,
+    "delivered": 2792,
+    "yellow": 360,
+    "dead": 0,
+    "min_soc_wh": 0.0016438645081948244,
+    "heard_exactly_at_expiry": 103,
+    "heard_at_expiry_is_true_deadline": 103,
+    "heard_at_expiry_after_deadline": 0,
+    "dropped_exactly_at_expiry": 1422,
+    "periods_seen": {
+     "600": 14
+    },
+    "witness_heard_at_expiry": [
+     {
+      "sample_id": "n00:displacement:109200",
+      "taken": 109200,
+      "expiry": 110400,
+      "heard": 110400,
+      "received": 110400,
+      "dropped": null
+     },
+     {
+      "sample_id": "n00:displacement:114000",
+      "taken": 114000,
+      "expiry": 115200,
+      "heard": 115200,
+      "received": 126000,
+      "dropped": 115800
+     },
+     {
+      "sample_id": "n00:displacement:154800",
+      "taken": 154800,
+      "expiry": 156000,
+      "heard": 156000,
+      "received": 156000,
+      "dropped": null
+     },
+     {
+      "sample_id": "n00:displacement:174000",
+      "taken": 174000,
+      "expiry": 175200,
+      "heard": 175200,
+      "received": 175200,
+      "dropped": null
+     },
+     {
+      "sample_id": "n01:displacement:36600",
+      "taken": 36600,
+      "expiry": 37800,
+      "heard": 37800,
+      "received": 82800,
+      "dropped": 38400
+     }
+    ],
+    "witness_dropped_at_expiry": [
+     {
+      "sample_id": "gw0:rainfall:15000",
+      "taken": 15000,
+      "expiry": 16200,
+      "dropped": 16200,
+      "heard": 15000,
+      "received": 82800
+     },
+     {
+      "sample_id": "gw0:rainfall:16200",
+      "taken": 16200,
+      "expiry": 17400,
+      "dropped": 17400,
+      "heard": 16200,
+      "received": 82800
+     },
+     {
+      "sample_id": "gw0:rainfall:17400",
+      "taken": 17400,
+      "expiry": 18600,
+      "dropped": 18600,
+      "heard": 17400,
+      "received": 82800
+     },
+     {
+      "sample_id": "gw0:rainfall:18600",
+      "taken": 18600,
+      "expiry": 19800,
+      "dropped": 19800,
+      "heard": 18600,
+      "received": 82800
+     },
+     {
+      "sample_id": "gw0:rainfall:19800",
+      "taken": 19800,
+      "expiry": 21000,
+      "dropped": 21000,
+      "heard": 19800,
+      "received": 82800
+     }
+    ],
+    "sampled": 4754
+   }
+  },
+  "103": {
+   "current": {
+    "n_obligations": 4368,
+    "n_yellow": 672,
+    "svc": 0.611492673992674,
+    "delivered": 2671,
+    "yellow": 359,
+    "dead": 0,
+    "min_soc_wh": 0.0030530897110062883,
+    "heard_exactly_at_expiry": 0,
+    "heard_at_expiry_is_true_deadline": 0,
+    "heard_at_expiry_after_deadline": 0,
+    "dropped_exactly_at_expiry": 2083,
+    "periods_seen": {
+     "600": 14
+    },
+    "witness_heard_at_expiry": [],
+    "witness_dropped_at_expiry": [
+     {
+      "sample_id": "gw0:rainfall:15000",
+      "taken": 15000,
+      "expiry": 16200,
+      "dropped": 16200,
+      "heard": 15000,
+      "received": 82800
+     },
+     {
+      "sample_id": "gw0:rainfall:16200",
+      "taken": 16200,
+      "expiry": 17400,
+      "dropped": 17400,
+      "heard": 16200,
+      "received": 82800
+     },
+     {
+      "sample_id": "gw0:rainfall:17400",
+      "taken": 17400,
+      "expiry": 18600,
+      "dropped": 18600,
+      "heard": 17400,
+      "received": 82800
+     },
+     {
+      "sample_id": "gw0:rainfall:18600",
+      "taken": 18600,
+      "expiry": 19800,
+      "dropped": 19800,
+      "heard": 18600,
+      "received": 82800
+     },
+     {
+      "sample_id": "gw0:rainfall:19800",
+      "taken": 19800,
+      "expiry": 21000,
+      "dropped": 21000,
+      "heard": 19800,
+      "received": 82800
+     }
+    ],
+    "sampled": 4754
+   },
+   "boundary": {
+    "n_obligations": 4368,
+    "n_yellow": 672,
+    "svc": 0.6236263736263736,
+    "delivered": 2724,
+    "yellow": 359,
+    "dead": 0,
+    "min_soc_wh": 0.0027980727510062606,
+    "heard_exactly_at_expiry": 179,
+    "heard_at_expiry_is_true_deadline": 164,
+    "heard_at_expiry_after_deadline": 15,
+    "dropped_exactly_at_expiry": 0,
+    "periods_seen": {
+     "600": 14
+    },
+    "witness_heard_at_expiry": [
+     {
+      "sample_id": "n00:displacement:10500",
+      "taken": 10500,
+      "expiry": 11400,
+      "heard": 11400,
+      "received": 11400,
+      "dropped": null
+     },
+     {
+      "sample_id": "n00:displacement:38400",
+      "taken": 38400,
+      "expiry": 39600,
+      "heard": 39600,
+      "received": 82800,
+      "dropped": 40200
+     },
+     {
+      "sample_id": "n00:displacement:42600",
+      "taken": 42600,
+      "expiry": 43800,
+      "heard": 43800,
+      "received": 82800,
+      "dropped": 44400
+     },
+     {
+      "sample_id": "n00:displacement:50400",
+      "taken": 50400,
+      "expiry": 51600,
+      "heard": 51600,
+      "received": 82800,
+      "dropped": 52200
+     },
+     {
+      "sample_id": "n00:displacement:85200",
+      "taken": 85200,
+      "expiry": 86400,
+      "heard": 86400,
+      "received": 86400,
+      "dropped": null
+     }
+    ],
+    "witness_dropped_at_expiry": [],
+    "sampled": 4754
+   },
+   "fixed2": {
+    "n_obligations": 4368,
+    "n_yellow": 672,
+    "svc": 0.6236263736263736,
+    "delivered": 2724,
+    "yellow": 359,
+    "dead": 0,
+    "min_soc_wh": 0.0026406088170829304,
+    "heard_exactly_at_expiry": 179,
+    "heard_at_expiry_is_true_deadline": 164,
+    "heard_at_expiry_after_deadline": 15,
+    "dropped_exactly_at_expiry": 0,
+    "periods_seen": {
+     "600": 14
+    },
+    "witness_heard_at_expiry": [
+     {
+      "sample_id": "n00:displacement:10500",
+      "taken": 10500,
+      "expiry": 11400,
+      "heard": 11400,
+      "received": 11400,
+      "dropped": null
+     },
+     {
+      "sample_id": "n00:displacement:38400",
+      "taken": 38400,
+      "expiry": 39600,
+      "heard": 39600,
+      "received": 82800,
+      "dropped": 40800
+     },
+     {
+      "sample_id": "n00:displacement:42600",
+      "taken": 42600,
+      "expiry": 43800,
+      "heard": 43800,
+      "received": 82800,
+      "dropped": 44400
+     },
+     {
+      "sample_id": "n00:displacement:50400",
+      "taken": 50400,
+      "expiry": 51600,
+      "heard": 51600,
+      "received": 82800,
+      "dropped": 52800
+     },
+     {
+      "sample_id": "n00:displacement:85200",
+      "taken": 85200,
+      "expiry": 86400,
+      "heard": 86400,
+      "received": 86400,
+      "dropped": null
+     }
+    ],
+    "witness_dropped_at_expiry": [],
+    "sampled": 4754
+   },
+   "adaptive": {
+    "n_obligations": 4368,
+    "n_yellow": 672,
+    "svc": 0.6231684981684982,
+    "delivered": 2722,
+    "yellow": 359,
+    "dead": 0,
+    "min_soc_wh": 0.0029287351510062765,
+    "heard_exactly_at_expiry": 100,
+    "heard_at_expiry_is_true_deadline": 100,
+    "heard_at_expiry_after_deadline": 0,
+    "dropped_exactly_at_expiry": 1426,
+    "periods_seen": {
+     "600": 14
+    },
+    "witness_heard_at_expiry": [
+     {
+      "sample_id": "n00:displacement:38400",
+      "taken": 38400,
+      "expiry": 39600,
+      "heard": 39600,
+      "received": 82800,
+      "dropped": 40200
+     },
+     {
+      "sample_id": "n00:displacement:85200",
+      "taken": 85200,
+      "expiry": 86400,
+      "heard": 86400,
+      "received": 86400,
+      "dropped": null
+     },
+     {
+      "sample_id": "n00:displacement:141600",
+      "taken": 141600,
+      "expiry": 142800,
+      "heard": 142800,
+      "received": 151200,
+      "dropped": 143400
+     },
+     {
+      "sample_id": "n00:displacement:150600",
+      "taken": 150600,
+      "expiry": 151800,
+      "heard": 151800,
+      "received": 151800,
+      "dropped": null
+     },
+     {
+      "sample_id": "n00:displacement:156600",
+      "taken": 156600,
+      "expiry": 157800,
+      "heard": 157800,
+      "received": 158400,
+      "dropped": 158400
+     }
+    ],
+    "witness_dropped_at_expiry": [
+     {
+      "sample_id": "gw0:rainfall:15000",
+      "taken": 15000,
+      "expiry": 16200,
+      "dropped": 16200,
+      "heard": 15000,
+      "received": 82800
+     },
+     {
+      "sample_id": "gw0:rainfall:16200",
+      "taken": 16200,
+      "expiry": 17400,
+      "dropped": 17400,
+      "heard": 16200,
+      "received": 82800
+     },
+     {
+      "sample_id": "gw0:rainfall:17400",
+      "taken": 17400,
+      "expiry": 18600,
+      "dropped": 18600,
+      "heard": 17400,
+      "received": 82800
+     },
+     {
+      "sample_id": "gw0:rainfall:18600",
+      "taken": 18600,
+      "expiry": 19800,
+      "dropped": 19800,
+      "heard": 18600,
+      "received": 82800
+     },
+     {
+      "sample_id": "gw0:rainfall:19800",
+      "taken": 19800,
+      "expiry": 21000,
+      "dropped": 21000,
+      "heard": 19800,
+      "received": 82800
+     }
+    ],
+    "sampled": 4754
+   }
+  },
+  "104": {
+   "current": {
+    "n_obligations": 4368,
+    "n_yellow": 672,
+    "svc": 0.6094322344322345,
+    "delivered": 2662,
+    "yellow": 238,
+    "dead": 0,
+    "min_soc_wh": 0.0019157325854145591,
+    "heard_exactly_at_expiry": 0,
+    "heard_at_expiry_is_true_deadline": 0,
+    "heard_at_expiry_after_deadline": 0,
+    "dropped_exactly_at_expiry": 2133,
+    "periods_seen": {
+     "600": 14
+    },
+    "witness_heard_at_expiry": [],
+    "witness_dropped_at_expiry": [
+     {
+      "sample_id": "gw0:rainfall:3840",
+      "taken": 3840,
+      "expiry": 4800,
+      "dropped": 4800,
+      "heard": 3840,
+      "received": 7200
+     },
+     {
+      "sample_id": "gw0:rainfall:4140",
+      "taken": 4140,
+      "expiry": 4800,
+      "dropped": 4800,
+      "heard": 4200,
+      "received": 7200
+     },
+     {
+      "sample_id": "gw0:rainfall:4800",
+      "taken": 4800,
+      "expiry": 6000,
+      "dropped": 6000,
+      "heard": 4800,
+      "received": 7200
+     },
+     {
+      "sample_id": "gw0:rainfall:5400",
+      "taken": 5400,
+      "expiry": 6600,
+      "dropped": 6600,
+      "heard": 5400,
+      "received": 7200
+     },
+     {
+      "sample_id": "gw0:rainfall:6420",
+      "taken": 6420,
+      "expiry": 7200,
+      "dropped": 7200,
+      "heard": 6420,
+      "received": 7200
+     }
+    ],
+    "sampled": 4754
+   },
+   "boundary": {
+    "n_obligations": 4368,
+    "n_yellow": 672,
+    "svc": 0.627518315018315,
+    "delivered": 2741,
+    "yellow": 238,
+    "dead": 0,
+    "min_soc_wh": 0.001674232425414568,
+    "heard_exactly_at_expiry": 178,
+    "heard_at_expiry_is_true_deadline": 168,
+    "heard_at_expiry_after_deadline": 10,
+    "dropped_exactly_at_expiry": 0,
+    "periods_seen": {
+     "600": 14
+    },
+    "witness_heard_at_expiry": [
+     {
+      "sample_id": "n00:displacement:4800",
+      "taken": 4800,
+      "expiry": 6000,
+      "heard": 6000,
+      "received": 7200,
+      "dropped": 6600
+     },
+     {
+      "sample_id": "n00:displacement:40800",
+      "taken": 40800,
+      "expiry": 42000,
+      "heard": 42000,
+      "received": 42000,
+      "dropped": null
+     },
+     {
+      "sample_id": "n00:displacement:44400",
+      "taken": 44400,
+      "expiry": 45600,
+      "heard": 45600,
+      "received": 75600,
+      "dropped": 46200
+     },
+     {
+      "sample_id": "n00:displacement:46800",
+      "taken": 46800,
+      "expiry": 48000,
+      "heard": 48000,
+      "received": 75600,
+      "dropped": 48600
+     },
+     {
+      "sample_id": "n00:displacement:58800",
+      "taken": 58800,
+      "expiry": 60000,
+      "heard": 60000,
+      "received": 75600,
+      "dropped": 60600
+     }
+    ],
+    "witness_dropped_at_expiry": [],
+    "sampled": 4754
+   },
+   "fixed2": {
+    "n_obligations": 4368,
+    "n_yellow": 672,
+    "svc": 0.627518315018315,
+    "delivered": 2741,
+    "yellow": 238,
+    "dead": 0,
+    "min_soc_wh": 0.0015183386654145756,
+    "heard_exactly_at_expiry": 178,
+    "heard_at_expiry_is_true_deadline": 168,
+    "heard_at_expiry_after_deadline": 10,
+    "dropped_exactly_at_expiry": 0,
+    "periods_seen": {
+     "600": 14
+    },
+    "witness_heard_at_expiry": [
+     {
+      "sample_id": "n00:displacement:4800",
+      "taken": 4800,
+      "expiry": 6000,
+      "heard": 6000,
+      "received": 7200,
+      "dropped": 7200
+     },
+     {
+      "sample_id": "n00:displacement:40800",
+      "taken": 40800,
+      "expiry": 42000,
+      "heard": 42000,
+      "received": 42000,
+      "dropped": null
+     },
+     {
+      "sample_id": "n00:displacement:44400",
+      "taken": 44400,
+      "expiry": 45600,
+      "heard": 45600,
+      "received": 75600,
+      "dropped": 46800
+     },
+     {
+      "sample_id": "n00:displacement:46800",
+      "taken": 46800,
+      "expiry": 48000,
+      "heard": 48000,
+      "received": 75600,
+      "dropped": 49200
+     },
+     {
+      "sample_id": "n00:displacement:58800",
+      "taken": 58800,
+      "expiry": 60000,
+      "heard": 60000,
+      "received": 75600,
+      "dropped": 61200
+     }
+    ],
+    "witness_dropped_at_expiry": [],
+    "sampled": 4754
+   },
+   "adaptive": {
+    "n_obligations": 4368,
+    "n_yellow": 672,
+    "svc": 0.627518315018315,
+    "delivered": 2741,
+    "yellow": 238,
+    "dead": 0,
+    "min_soc_wh": 0.0015255476254145903,
+    "heard_exactly_at_expiry": 141,
+    "heard_at_expiry_is_true_deadline": 135,
+    "heard_at_expiry_after_deadline": 6,
+    "dropped_exactly_at_expiry": 880,
+    "periods_seen": {
+     "600": 14
+    },
+    "witness_heard_at_expiry": [
+     {
+      "sample_id": "n00:displacement:40800",
+      "taken": 40800,
+      "expiry": 42000,
+      "heard": 42000,
+      "received": 42000,
+      "dropped": null
+     },
+     {
+      "sample_id": "n00:displacement:76800",
+      "taken": 76800,
+      "expiry": 78000,
+      "heard": 78000,
+      "received": 78000,
+      "dropped": null
+     },
+     {
+      "sample_id": "n00:displacement:83400",
+      "taken": 83400,
+      "expiry": 84600,
+      "heard": 84600,
+      "received": 84600,
+      "dropped": null
+     },
+     {
+      "sample_id": "n00:displacement:133200",
+      "taken": 133200,
+      "expiry": 134400,
+      "heard": 134400,
+      "received": 136800,
+      "dropped": 135600
+     },
+     {
+      "sample_id": "n00:displacement:135000",
+      "taken": 135000,
+      "expiry": 136200,
+      "heard": 136200,
+      "received": 136800,
+      "dropped": null
+     }
+    ],
+    "witness_dropped_at_expiry": [
+     {
+      "sample_id": "gw0:rainfall:3840",
+      "taken": 3840,
+      "expiry": 4800,
+      "dropped": 4800,
+      "heard": 3840,
+      "received": 7200
+     },
+     {
+      "sample_id": "gw0:rainfall:4140",
+      "taken": 4140,
+      "expiry": 4800,
+      "dropped": 4800,
+      "heard": 4140,
+      "received": 7200
+     },
+     {
+      "sample_id": "gw0:rainfall:4800",
+      "taken": 4800,
+      "expiry": 6000,
+      "dropped": 6000,
+      "heard": 4800,
+      "received": 7200
+     },
+     {
+      "sample_id": "gw0:rainfall:5400",
+      "taken": 5400,
+      "expiry": 6600,
+      "dropped": 6600,
+      "heard": 5400,
+      "received": 7200
+     },
+     {
+      "sample_id": "gw0:rainfall:6420",
+      "taken": 6420,
+      "expiry": 7200,
+      "dropped": 7200,
+      "heard": 6420,
+      "received": 7200
+     }
+    ],
+    "sampled": 4754
+   }
+  },
+  "105": {
+   "current": {
+    "n_obligations": 4368,
+    "n_yellow": 672,
+    "svc": 0.6023351648351648,
+    "delivered": 2631,
+    "yellow": 237,
+    "dead": 3,
+    "min_soc_wh": 0.0001621031181249079,
+    "heard_exactly_at_expiry": 0,
+    "heard_at_expiry_is_true_deadline": 0,
+    "heard_at_expiry_after_deadline": 0,
+    "dropped_exactly_at_expiry": 2186,
+    "periods_seen": {
+     "600": 14
+    },
+    "witness_heard_at_expiry": [],
+    "witness_dropped_at_expiry": [
+     {
+      "sample_id": "gw0:rainfall:3840",
+      "taken": 3840,
+      "expiry": 4800,
+      "dropped": 4800,
+      "heard": 3840,
+      "received": 10800
+     },
+     {
+      "sample_id": "gw0:rainfall:4140",
+      "taken": 4140,
+      "expiry": 4800,
+      "dropped": 4800,
+      "heard": 4200,
+      "received": 10800
+     },
+     {
+      "sample_id": "gw0:rainfall:5400",
+      "taken": 5400,
+      "expiry": 6600,
+      "dropped": 6600,
+      "heard": 5400,
+      "received": 10800
+     },
+     {
+      "sample_id": "gw0:rainfall:6420",
+      "taken": 6420,
+      "expiry": 7200,
+      "dropped": 7200,
+      "heard": 6420,
+      "received": 10800
+     },
+     {
+      "sample_id": "gw0:rainfall:7020",
+      "taken": 7020,
+      "expiry": 7800,
+      "dropped": 7800,
+      "heard": 7200,
+      "received": 10800
+     }
+    ],
+    "sampled": 4742
+   },
+   "boundary": {
+    "n_obligations": 4368,
+    "n_yellow": 672,
+    "svc": 0.6112637362637363,
+    "delivered": 2670,
+    "yellow": 236,
+    "dead": 3,
+    "min_soc_wh": 0.0003033759443446573,
+    "heard_exactly_at_expiry": 161,
+    "heard_at_expiry_is_true_deadline": 150,
+    "heard_at_expiry_after_deadline": 11,
+    "dropped_exactly_at_expiry": 0,
+    "periods_seen": {
+     "600": 14
+    },
+    "witness_heard_at_expiry": [
+     {
+      "sample_id": "n00:displacement:7800",
+      "taken": 7800,
+      "expiry": 9000,
+      "heard": 9000,
+      "received": 10800,
+      "dropped": 9600
+     },
+     {
+      "sample_id": "n00:displacement:11400",
+      "taken": 11400,
+      "expiry": 12600,
+      "heard": 12600,
+      "received": 12600,
+      "dropped": null
+     },
+     {
+      "sample_id": "n00:displacement:13200",
+      "taken": 13200,
+      "expiry": 14400,
+      "heard": 14400,
+      "received": 75600,
+      "dropped": 15000
+     },
+     {
+      "sample_id": "n00:displacement:33300",
+      "taken": 33300,
+      "expiry": 34200,
+      "heard": 34200,
+      "received": 75600,
+      "dropped": 34500
+     },
+     {
+      "sample_id": "n00:displacement:42900",
+      "taken": 42900,
+      "expiry": 43800,
+      "heard": 43800,
+      "received": 75600,
+      "dropped": 44400
+     }
+    ],
+    "witness_dropped_at_expiry": [],
+    "sampled": 4739
+   },
+   "fixed2": {
+    "n_obligations": 4368,
+    "n_yellow": 672,
+    "svc": 0.6112637362637363,
+    "delivered": 2670,
+    "yellow": 236,
+    "dead": 3,
+    "min_soc_wh": 0.00010603066434466904,
+    "heard_exactly_at_expiry": 161,
+    "heard_at_expiry_is_true_deadline": 150,
+    "heard_at_expiry_after_deadline": 11,
+    "dropped_exactly_at_expiry": 0,
+    "periods_seen": {
+     "600": 14
+    },
+    "witness_heard_at_expiry": [
+     {
+      "sample_id": "n00:displacement:7800",
+      "taken": 7800,
+      "expiry": 9000,
+      "heard": 9000,
+      "received": 10800,
+      "dropped": 9600
+     },
+     {
+      "sample_id": "n00:displacement:11400",
+      "taken": 11400,
+      "expiry": 12600,
+      "heard": 12600,
+      "received": 12600,
+      "dropped": null
+     },
+     {
+      "sample_id": "n00:displacement:13200",
+      "taken": 13200,
+      "expiry": 14400,
+      "heard": 14400,
+      "received": 75600,
+      "dropped": 15600
+     },
+     {
+      "sample_id": "n00:displacement:33300",
+      "taken": 33300,
+      "expiry": 34200,
+      "heard": 34200,
+      "received": 75600,
+      "dropped": 34800
+     },
+     {
+      "sample_id": "n00:displacement:42900",
+      "taken": 42900,
+      "expiry": 43800,
+      "heard": 43800,
+      "received": 75600,
+      "dropped": 44400
+     }
+    ],
+    "witness_dropped_at_expiry": [],
+    "sampled": 4739
+   },
+   "adaptive": {
+    "n_obligations": 4368,
+    "n_yellow": 672,
+    "svc": 0.611492673992674,
+    "delivered": 2671,
+    "yellow": 237,
+    "dead": 3,
+    "min_soc_wh": 0.0002952658643446624,
+    "heard_exactly_at_expiry": 128,
+    "heard_at_expiry_is_true_deadline": 128,
+    "heard_at_expiry_after_deadline": 0,
+    "dropped_exactly_at_expiry": 636,
+    "periods_seen": {
+     "600": 14
+    },
+    "witness_heard_at_expiry": [
+     {
+      "sample_id": "n00:displacement:33300",
+      "taken": 33300,
+      "expiry": 34200,
+      "heard": 34200,
+      "received": 75600,
+      "dropped": 34500
+     },
+     {
+      "sample_id": "n00:displacement:42900",
+      "taken": 42900,
+      "expiry": 43800,
+      "heard": 43800,
+      "received": 75600,
+      "dropped": 44400
+     },
+     {
+      "sample_id": "n00:displacement:54000",
+      "taken": 54000,
+      "expiry": 55200,
+      "heard": 55200,
+      "received": 75600,
+      "dropped": 55800
+     },
+     {
+      "sample_id": "n00:displacement:58800",
+      "taken": 58800,
+      "expiry": 60000,
+      "heard": 60000,
+      "received": 75600,
+      "dropped": 60600
+     },
+     {
+      "sample_id": "n00:displacement:71400",
+      "taken": 71400,
+      "expiry": 72600,
+      "heard": 72600,
+      "received": 75600,
+      "dropped": 73200
+     }
+    ],
+    "witness_dropped_at_expiry": [
+     {
+      "sample_id": "gw0:rainfall:3840",
+      "taken": 3840,
+      "expiry": 4800,
+      "dropped": 4800,
+      "heard": 3840,
+      "received": 10800
+     },
+     {
+      "sample_id": "gw0:rainfall:4140",
+      "taken": 4140,
+      "expiry": 4800,
+      "dropped": 4800,
+      "heard": 4140,
+      "received": 10800
+     },
+     {
+      "sample_id": "gw0:rainfall:5400",
+      "taken": 5400,
+      "expiry": 6600,
+      "dropped": 6600,
+      "heard": 5400,
+      "received": 10800
+     },
+     {
+      "sample_id": "gw0:rainfall:6420",
+      "taken": 6420,
+      "expiry": 7200,
+      "dropped": 7200,
+      "heard": 6420,
+      "received": 10800
+     },
+     {
+      "sample_id": "gw0:rainfall:7020",
+      "taken": 7020,
+      "expiry": 7800,
+      "dropped": 7800,
+      "heard": 7020,
+      "received": 10800
+     }
+    ],
+    "sampled": 4739
+   }
+  },
+  "106": {
+   "current": {
+    "n_obligations": 4368,
+    "n_yellow": 672,
+    "svc": 0.586996336996337,
+    "delivered": 2564,
+    "yellow": 120,
+    "dead": 0,
+    "min_soc_wh": 0.002191937657435335,
+    "heard_exactly_at_expiry": 0,
+    "heard_at_expiry_is_true_deadline": 0,
+    "heard_at_expiry_after_deadline": 0,
+    "dropped_exactly_at_expiry": 1567,
+    "periods_seen": {
+     "600": 14
+    },
+    "witness_heard_at_expiry": [],
+    "witness_dropped_at_expiry": [
+     {
+      "sample_id": "gw0:rainfall:7800",
+      "taken": 7800,
+      "expiry": 9000,
+      "dropped": 9000,
+      "heard": 7800,
+      "received": 72000
+     },
+     {
+      "sample_id": "gw0:rainfall:10200",
+      "taken": 10200,
+      "expiry": 11400,
+      "dropped": 11400,
+      "heard": 10200,
+      "received": 72000
+     },
+     {
+      "sample_id": "gw0:rainfall:11400",
+      "taken": 11400,
+      "expiry": 12600,
+      "dropped": 12600,
+      "heard": 11400,
+      "received": 72000
+     },
+     {
+      "sample_id": "gw0:rainfall:15000",
+      "taken": 15000,
+      "expiry": 16200,
+      "dropped": 16200,
+      "heard": 15000,
+      "received": 72000
+     },
+     {
+      "sample_id": "gw0:rainfall:17400",
+      "taken": 17400,
+      "expiry": 18600,
+      "dropped": 18600,
+      "heard": 17400,
+      "received": 72000
+     }
+    ],
+    "sampled": 4130
+   },
+   "boundary": {
+    "n_obligations": 4368,
+    "n_yellow": 672,
+    "svc": 0.6027930402930403,
+    "delivered": 2633,
+    "yellow": 114,
+    "dead": 0,
+    "min_soc_wh": 0.001994592377435267,
+    "heard_exactly_at_expiry": 211,
+    "heard_at_expiry_is_true_deadline": 194,
+    "heard_at_expiry_after_deadline": 17,
+    "dropped_exactly_at_expiry": 0,
+    "periods_seen": {
+     "600": 14
+    },
+    "witness_heard_at_expiry": [
+     {
+      "sample_id": "n00:displacement:13800",
+      "taken": 13800,
+      "expiry": 15000,
+      "heard": 15000,
+      "received": 72000,
+      "dropped": 15600
+     },
+     {
+      "sample_id": "n00:displacement:30000",
+      "taken": 30000,
+      "expiry": 31200,
+      "heard": 31200,
+      "received": 72000,
+      "dropped": 31800
+     },
+     {
+      "sample_id": "n00:displacement:43200",
+      "taken": 43200,
+      "expiry": 44400,
+      "heard": 44400,
+      "received": 72000,
+      "dropped": 45000
+     },
+     {
+      "sample_id": "n00:displacement:52200",
+      "taken": 52200,
+      "expiry": 53400,
+      "heard": 53400,
+      "received": 72000,
+      "dropped": 54000
+     },
+     {
+      "sample_id": "n00:displacement:54000",
+      "taken": 54000,
+      "expiry": 55200,
+      "heard": 55200,
+      "received": 72000,
+      "dropped": 55800
+     }
+    ],
+    "witness_dropped_at_expiry": [],
+    "sampled": 4130
+   },
+   "fixed2": {
+    "n_obligations": 4368,
+    "n_yellow": 672,
+    "svc": 0.6027930402930403,
+    "delivered": 2633,
+    "yellow": 114,
+    "dead": 0,
+    "min_soc_wh": 0.0019270083774352365,
+    "heard_exactly_at_expiry": 211,
+    "heard_at_expiry_is_true_deadline": 194,
+    "heard_at_expiry_after_deadline": 17,
+    "dropped_exactly_at_expiry": 0,
+    "periods_seen": {
+     "600": 14
+    },
+    "witness_heard_at_expiry": [
+     {
+      "sample_id": "n00:displacement:13800",
+      "taken": 13800,
+      "expiry": 15000,
+      "heard": 15000,
+      "received": 72000,
+      "dropped": 15600
+     },
+     {
+      "sample_id": "n00:displacement:30000",
+      "taken": 30000,
+      "expiry": 31200,
+      "heard": 31200,
+      "received": 72000,
+      "dropped": 32400
+     },
+     {
+      "sample_id": "n00:displacement:43200",
+      "taken": 43200,
+      "expiry": 44400,
+      "heard": 44400,
+      "received": 72000,
+      "dropped": 45600
+     },
+     {
+      "sample_id": "n00:displacement:52200",
+      "taken": 52200,
+      "expiry": 53400,
+      "heard": 53400,
+      "received": 72000,
+      "dropped": 54000
+     },
+     {
+      "sample_id": "n00:displacement:54000",
+      "taken": 54000,
+      "expiry": 55200,
+      "heard": 55200,
+      "received": 72000,
+      "dropped": 56400
+     }
+    ],
+    "witness_dropped_at_expiry": [],
+    "sampled": 4130
+   },
+   "adaptive": {
+    "n_obligations": 4368,
+    "n_yellow": 672,
+    "svc": 0.6039377289377289,
+    "delivered": 2638,
+    "yellow": 120,
+    "dead": 0,
+    "min_soc_wh": 0.0021703107774353487,
+    "heard_exactly_at_expiry": 120,
+    "heard_at_expiry_is_true_deadline": 120,
+    "heard_at_expiry_after_deadline": 0,
+    "dropped_exactly_at_expiry": 1034,
+    "periods_seen": {
+     "600": 14
+    },
+    "witness_heard_at_expiry": [
+     {
+      "sample_id": "n00:displacement:72000",
+      "taken": 72000,
+      "expiry": 73200,
+      "heard": 73200,
+      "received": 73200,
+      "dropped": null
+     },
+     {
+      "sample_id": "n00:displacement:90600",
+      "taken": 90600,
+      "expiry": 91800,
+      "heard": 91800,
+      "received": 91800,
+      "dropped": null
+     },
+     {
+      "sample_id": "n00:displacement:95400",
+      "taken": 95400,
+      "expiry": 96600,
+      "heard": 96600,
+      "received": 96600,
+      "dropped": null
+     },
+     {
+      "sample_id": "n00:displacement:117000",
+      "taken": 117000,
+      "expiry": 118200,
+      "heard": 118200,
+      "received": 118800,
+      "dropped": 118800
+     },
+     {
+      "sample_id": "n00:displacement:123600",
+      "taken": 123600,
+      "expiry": 124800,
+      "heard": 124800,
+      "received": 136800,
+      "dropped": 125400
+     }
+    ],
+    "witness_dropped_at_expiry": [
+     {
+      "sample_id": "gw0:rainfall:7800",
+      "taken": 7800,
+      "expiry": 9000,
+      "dropped": 9000,
+      "heard": 7800,
+      "received": 72000
+     },
+     {
+      "sample_id": "gw0:rainfall:10200",
+      "taken": 10200,
+      "expiry": 11400,
+      "dropped": 11400,
+      "heard": 10200,
+      "received": 72000
+     },
+     {
+      "sample_id": "gw0:rainfall:11400",
+      "taken": 11400,
+      "expiry": 12600,
+      "dropped": 12600,
+      "heard": 11400,
+      "received": 72000
+     },
+     {
+      "sample_id": "gw0:rainfall:15000",
+      "taken": 15000,
+      "expiry": 16200,
+      "dropped": 16200,
+      "heard": 15000,
+      "received": 72000
+     },
+     {
+      "sample_id": "gw0:rainfall:17400",
+      "taken": 17400,
+      "expiry": 18600,
+      "dropped": 18600,
+      "heard": 17400,
+      "received": 72000
+     }
+    ],
+    "sampled": 4130
+   }
+  },
+  "107": {
+   "current": {
+    "n_obligations": 4368,
+    "n_yellow": 672,
+    "svc": 0.6016483516483516,
+    "delivered": 2628,
+    "yellow": 366,
+    "dead": 0,
+    "min_soc_wh": 0.0016607346942137532,
+    "heard_exactly_at_expiry": 0,
+    "heard_at_expiry_is_true_deadline": 0,
+    "heard_at_expiry_after_deadline": 0,
+    "dropped_exactly_at_expiry": 2156,
+    "periods_seen": {
+     "600": 14
+    },
+    "witness_heard_at_expiry": [],
+    "witness_dropped_at_expiry": [
+     {
+      "sample_id": "gw0:rainfall:600",
+      "taken": 600,
+      "expiry": 1800,
+      "dropped": 1800,
+      "heard": 600,
+      "received": 3600
+     },
+     {
+      "sample_id": "gw0:rainfall:1380",
+      "taken": 1380,
+      "expiry": 2400,
+      "dropped": 2400,
+      "heard": 1800,
+      "received": 3600
+     },
+     {
+      "sample_id": "gw0:rainfall:1680",
+      "taken": 1680,
+      "expiry": 2400,
+      "dropped": 2400,
+      "heard": 1800,
+      "received": 3600
+     },
+     {
+      "sample_id": "gw0:rainfall:1800",
+      "taken": 1800,
+      "expiry": 3000,
+      "dropped": 3000,
+      "heard": 1800,
+      "received": 3600
+     },
+     {
+      "sample_id": "gw0:rainfall:2940",
+      "taken": 2940,
+      "expiry": 3600,
+      "dropped": 3600,
+      "heard": 2940,
+      "received": 3600
+     }
+    ],
+    "sampled": 4754
+   },
+   "boundary": {
+    "n_obligations": 4368,
+    "n_yellow": 672,
+    "svc": 0.6153846153846154,
+    "delivered": 2688,
+    "yellow": 366,
+    "dead": 0,
+    "min_soc_wh": 0.0013615628542137128,
+    "heard_exactly_at_expiry": 177,
+    "heard_at_expiry_is_true_deadline": 169,
+    "heard_at_expiry_after_deadline": 8,
+    "dropped_exactly_at_expiry": 0,
+    "periods_seen": {
+     "600": 14
+    },
+    "witness_heard_at_expiry": [
+     {
+      "sample_id": "n00:displacement:0",
+      "taken": 0,
+      "expiry": 1200,
+      "heard": 1200,
+      "received": 3600,
+      "dropped": 1800
+     },
+     {
+      "sample_id": "n00:displacement:39600",
+      "taken": 39600,
+      "expiry": 40800,
+      "heard": 40800,
+      "received": 79200,
+      "dropped": 41400
+     },
+     {
+      "sample_id": "n00:displacement:48000",
+      "taken": 48000,
+      "expiry": 49200,
+      "heard": 49200,
+      "received": 49200,
+      "dropped": null
+     },
+     {
+      "sample_id": "n00:displacement:58800",
+      "taken": 58800,
+      "expiry": 60000,
+      "heard": 60000,
+      "received": 79200,
+      "dropped": 60600
+     },
+     {
+      "sample_id": "n00:displacement:89400",
+      "taken": 89400,
+      "expiry": 90600,
+      "heard": 90600,
+      "received": 93600,
+      "dropped": 91200
+     }
+    ],
+    "witness_dropped_at_expiry": [],
+    "sampled": 4754
+   },
+   "fixed2": {
+    "n_obligations": 4368,
+    "n_yellow": 672,
+    "svc": 0.6153846153846154,
+    "delivered": 2688,
+    "yellow": 366,
+    "dead": 0,
+    "min_soc_wh": 0.001139887334213745,
+    "heard_exactly_at_expiry": 177,
+    "heard_at_expiry_is_true_deadline": 169,
+    "heard_at_expiry_after_deadline": 8,
+    "dropped_exactly_at_expiry": 0,
+    "periods_seen": {
+     "600": 14
+    },
+    "witness_heard_at_expiry": [
+     {
+      "sample_id": "n00:displacement:0",
+      "taken": 0,
+      "expiry": 1200,
+      "heard": 1200,
+      "received": 3600,
+      "dropped": 2400
+     },
+     {
+      "sample_id": "n00:displacement:39600",
+      "taken": 39600,
+      "expiry": 40800,
+      "heard": 40800,
+      "received": 79200,
+      "dropped": 42000
+     },
+     {
+      "sample_id": "n00:displacement:48000",
+      "taken": 48000,
+      "expiry": 49200,
+      "heard": 49200,
+      "received": 49200,
+      "dropped": null
+     },
+     {
+      "sample_id": "n00:displacement:58800",
+      "taken": 58800,
+      "expiry": 60000,
+      "heard": 60000,
+      "received": 79200,
+      "dropped": 61200
+     },
+     {
+      "sample_id": "n00:displacement:89400",
+      "taken": 89400,
+      "expiry": 90600,
+      "heard": 90600,
+      "received": 93600,
+      "dropped": 91200
+     }
+    ],
+    "witness_dropped_at_expiry": [],
+    "sampled": 4754
+   },
+   "adaptive": {
+    "n_obligations": 4368,
+    "n_yellow": 672,
+    "svc": 0.6153846153846154,
+    "delivered": 2688,
+    "yellow": 366,
+    "dead": 0,
+    "min_soc_wh": 0.0013345292542137784,
+    "heard_exactly_at_expiry": 122,
+    "heard_at_expiry_is_true_deadline": 122,
+    "heard_at_expiry_after_deadline": 0,
+    "dropped_exactly_at_expiry": 1222,
+    "periods_seen": {
+     "600": 14
+    },
+    "witness_heard_at_expiry": [
+     {
+      "sample_id": "n00:displacement:39600",
+      "taken": 39600,
+      "expiry": 40800,
+      "heard": 40800,
+      "received": 79200,
+      "dropped": 41400
+     },
+     {
+      "sample_id": "n00:displacement:48000",
+      "taken": 48000,
+      "expiry": 49200,
+      "heard": 49200,
+      "received": 49200,
+      "dropped": null
+     },
+     {
+      "sample_id": "n00:displacement:89400",
+      "taken": 89400,
+      "expiry": 90600,
+      "heard": 90600,
+      "received": 93600,
+      "dropped": 91200
+     },
+     {
+      "sample_id": "n00:displacement:95400",
+      "taken": 95400,
+      "expiry": 96600,
+      "heard": 96600,
+      "received": 96600,
+      "dropped": null
+     },
+     {
+      "sample_id": "n00:displacement:105600",
+      "taken": 105600,
+      "expiry": 106800,
+      "heard": 106800,
+      "received": 111600,
+      "dropped": 107400
+     }
+    ],
+    "witness_dropped_at_expiry": [
+     {
+      "sample_id": "gw0:rainfall:600",
+      "taken": 600,
+      "expiry": 1800,
+      "dropped": 1800,
+      "heard": 600,
+      "received": 3600
+     },
+     {
+      "sample_id": "gw0:rainfall:1380",
+      "taken": 1380,
+      "expiry": 2400,
+      "dropped": 2400,
+      "heard": 1380,
+      "received": 3600
+     },
+     {
+      "sample_id": "gw0:rainfall:1680",
+      "taken": 1680,
+      "expiry": 2400,
+      "dropped": 2400,
+      "heard": 1680,
+      "received": 3600
+     },
+     {
+      "sample_id": "gw0:rainfall:1800",
+      "taken": 1800,
+      "expiry": 3000,
+      "dropped": 3000,
+      "heard": 1800,
+      "received": 3600
+     },
+     {
+      "sample_id": "gw0:rainfall:2940",
+      "taken": 2940,
+      "expiry": 3600,
+      "dropped": 3600,
+      "heard": 2940,
+      "received": 3600
+     }
+    ],
+    "sampled": 4754
+   }
+  },
+  "108": {
+   "current": {
+    "n_obligations": 4368,
+    "n_yellow": 672,
+    "svc": 0.6279761904761905,
+    "delivered": 2743,
+    "yellow": 235,
+    "dead": 0,
+    "min_soc_wh": 0.0016542822903000932,
+    "heard_exactly_at_expiry": 0,
+    "heard_at_expiry_is_true_deadline": 0,
+    "heard_at_expiry_after_deadline": 0,
+    "dropped_exactly_at_expiry": 2021,
+    "periods_seen": {
+     "600": 14
+    },
+    "witness_heard_at_expiry": [],
+    "witness_dropped_at_expiry": [
+     {
+      "sample_id": "gw0:rainfall:3840",
+      "taken": 3840,
+      "expiry": 4800,
+      "dropped": 4800,
+      "heard": 3840,
+      "received": 7200
+     },
+     {
+      "sample_id": "gw0:rainfall:4140",
+      "taken": 4140,
+      "expiry": 4800,
+      "dropped": 4800,
+      "heard": 4200,
+      "received": 7200
+     },
+     {
+      "sample_id": "gw0:rainfall:4800",
+      "taken": 4800,
+      "expiry": 6000,
+      "dropped": 6000,
+      "heard": 4800,
+      "received": 7200
+     },
+     {
+      "sample_id": "gw0:rainfall:5400",
+      "taken": 5400,
+      "expiry": 6600,
+      "dropped": 6600,
+      "heard": 5400,
+      "received": 7200
+     },
+     {
+      "sample_id": "gw0:rainfall:6420",
+      "taken": 6420,
+      "expiry": 7200,
+      "dropped": 7200,
+      "heard": 6420,
+      "received": 7200
+     }
+    ],
+    "sampled": 4754
+   },
+   "boundary": {
+    "n_obligations": 4368,
+    "n_yellow": 672,
+    "svc": 0.6474358974358975,
+    "delivered": 2828,
+    "yellow": 235,
+    "dead": 0,
+    "min_soc_wh": 0.001382144050300086,
+    "heard_exactly_at_expiry": 168,
+    "heard_at_expiry_is_true_deadline": 158,
+    "heard_at_expiry_after_deadline": 10,
+    "dropped_exactly_at_expiry": 0,
+    "periods_seen": {
+     "600": 14
+    },
+    "witness_heard_at_expiry": [
+     {
+      "sample_id": "n00:displacement:19800",
+      "taken": 19800,
+      "expiry": 21000,
+      "heard": 21000,
+      "received": 72000,
+      "dropped": 21300
+     },
+     {
+      "sample_id": "n00:displacement:20100",
+      "taken": 20100,
+      "expiry": 21000,
+      "heard": 21000,
+      "received": 72000,
+      "dropped": 21300
+     },
+     {
+      "sample_id": "n00:displacement:38400",
+      "taken": 38400,
+      "expiry": 39600,
+      "heard": 39600,
+      "received": 72000,
+      "dropped": 40200
+     },
+     {
+      "sample_id": "n00:displacement:48000",
+      "taken": 48000,
+      "expiry": 49200,
+      "heard": 49200,
+      "received": 72000,
+      "dropped": 49800
+     },
+     {
+      "sample_id": "n00:displacement:91800",
+      "taken": 91800,
+      "expiry": 93000,
+      "heard": 93000,
+      "received": 93000,
+      "dropped": null
+     }
+    ],
+    "witness_dropped_at_expiry": [],
+    "sampled": 4754
+   },
+   "fixed2": {
+    "n_obligations": 4368,
+    "n_yellow": 672,
+    "svc": 0.6474358974358975,
+    "delivered": 2828,
+    "yellow": 235,
+    "dead": 0,
+    "min_soc_wh": 0.0011793920503000786,
+    "heard_exactly_at_expiry": 168,
+    "heard_at_expiry_is_true_deadline": 158,
+    "heard_at_expiry_after_deadline": 10,
+    "dropped_exactly_at_expiry": 0,
+    "periods_seen": {
+     "600": 14
+    },
+    "witness_heard_at_expiry": [
+     {
+      "sample_id": "n00:displacement:19800",
+      "taken": 19800,
+      "expiry": 21000,
+      "heard": 21000,
+      "received": 72000,
+      "dropped": 21600
+     },
+     {
+      "sample_id": "n00:displacement:20100",
+      "taken": 20100,
+      "expiry": 21000,
+      "heard": 21000,
+      "received": 72000,
+      "dropped": 21600
+     },
+     {
+      "sample_id": "n00:displacement:38400",
+      "taken": 38400,
+      "expiry": 39600,
+      "heard": 39600,
+      "received": 72000,
+      "dropped": 40800
+     },
+     {
+      "sample_id": "n00:displacement:48000",
+      "taken": 48000,
+      "expiry": 49200,
+      "heard": 49200,
+      "received": 72000,
+      "dropped": 50400
+     },
+     {
+      "sample_id": "n00:displacement:91800",
+      "taken": 91800,
+      "expiry": 93000,
+      "heard": 93000,
+      "received": 93000,
+      "dropped": null
+     }
+    ],
+    "witness_dropped_at_expiry": [],
+    "sampled": 4754
+   },
+   "adaptive": {
+    "n_obligations": 4368,
+    "n_yellow": 672,
+    "svc": 0.6474358974358975,
+    "delivered": 2828,
+    "yellow": 235,
+    "dead": 0,
+    "min_soc_wh": 0.001374033970300086,
+    "heard_exactly_at_expiry": 144,
+    "heard_at_expiry_is_true_deadline": 141,
+    "heard_at_expiry_after_deadline": 3,
+    "dropped_exactly_at_expiry": 660,
+    "periods_seen": {
+     "600": 14
+    },
+    "witness_heard_at_expiry": [
+     {
+      "sample_id": "n00:displacement:19800",
+      "taken": 19800,
+      "expiry": 21000,
+      "heard": 21000,
+      "received": 72000,
+      "dropped": 21300
+     },
+     {
+      "sample_id": "n00:displacement:20100",
+      "taken": 20100,
+      "expiry": 21000,
+      "heard": 21000,
+      "received": 72000,
+      "dropped": 21300
+     },
+     {
+      "sample_id": "n00:displacement:38400",
+      "taken": 38400,
+      "expiry": 39600,
+      "heard": 39600,
+      "received": 72000,
+      "dropped": 40200
+     },
+     {
+      "sample_id": "n00:displacement:48000",
+      "taken": 48000,
+      "expiry": 49200,
+      "heard": 49200,
+      "received": 72000,
+      "dropped": 49800
+     },
+     {
+      "sample_id": "n00:displacement:91800",
+      "taken": 91800,
+      "expiry": 93000,
+      "heard": 93000,
+      "received": 93000,
+      "dropped": null
+     }
+    ],
+    "witness_dropped_at_expiry": [
+     {
+      "sample_id": "gw0:rainfall:3840",
+      "taken": 3840,
+      "expiry": 4800,
+      "dropped": 4800,
+      "heard": 3840,
+      "received": 7200
+     },
+     {
+      "sample_id": "gw0:rainfall:4140",
+      "taken": 4140,
+      "expiry": 4800,
+      "dropped": 4800,
+      "heard": 4140,
+      "received": 7200
+     },
+     {
+      "sample_id": "gw0:rainfall:4800",
+      "taken": 4800,
+      "expiry": 6000,
+      "dropped": 6000,
+      "heard": 4800,
+      "received": 7200
+     },
+     {
+      "sample_id": "gw0:rainfall:5400",
+      "taken": 5400,
+      "expiry": 6600,
+      "dropped": 6600,
+      "heard": 5400,
+      "received": 7200
+     },
+     {
+      "sample_id": "gw0:rainfall:6420",
+      "taken": 6420,
+      "expiry": 7200,
+      "dropped": 7200,
+      "heard": 6420,
+      "received": 7200
+     }
+    ],
+    "sampled": 4754
+   }
+  },
+  "109": {
+   "current": {
+    "n_obligations": 4368,
+    "n_yellow": 672,
+    "svc": 0.6069139194139194,
+    "delivered": 2651,
+    "yellow": 248,
+    "dead": 0,
+    "min_soc_wh": 0.0006830628437682981,
+    "heard_exactly_at_expiry": 0,
+    "heard_at_expiry_is_true_deadline": 0,
+    "heard_at_expiry_after_deadline": 0,
+    "dropped_exactly_at_expiry": 2124,
+    "periods_seen": {
+     "600": 14
+    },
+    "witness_heard_at_expiry": [],
+    "witness_dropped_at_expiry": [
+     {
+      "sample_id": "gw0:rainfall:11400",
+      "taken": 11400,
+      "expiry": 12600,
+      "dropped": 12600,
+      "heard": 11400,
+      "received": 72000
+     },
+     {
+      "sample_id": "gw0:rainfall:12600",
+      "taken": 12600,
+      "expiry": 13800,
+      "dropped": 13800,
+      "heard": 12600,
+      "received": 72000
+     },
+     {
+      "sample_id": "gw0:rainfall:13800",
+      "taken": 13800,
+      "expiry": 15000,
+      "dropped": 15000,
+      "heard": 13800,
+      "received": 72000
+     },
+     {
+      "sample_id": "gw0:rainfall:15000",
+      "taken": 15000,
+      "expiry": 16200,
+      "dropped": 16200,
+      "heard": 15000,
+      "received": 72000
+     },
+     {
+      "sample_id": "gw0:rainfall:16200",
+      "taken": 16200,
+      "expiry": 17400,
+      "dropped": 17400,
+      "heard": 16200,
+      "received": 72000
+     }
+    ],
+    "sampled": 4754
+   },
+   "boundary": {
+    "n_obligations": 4368,
+    "n_yellow": 672,
+    "svc": 0.6222527472527473,
+    "delivered": 2718,
+    "yellow": 248,
+    "dead": 0,
+    "min_soc_wh": 0.00042624364376823976,
+    "heard_exactly_at_expiry": 185,
+    "heard_at_expiry_is_true_deadline": 179,
+    "heard_at_expiry_after_deadline": 6,
+    "dropped_exactly_at_expiry": 0,
+    "periods_seen": {
+     "600": 14
+    },
+    "witness_heard_at_expiry": [
+     {
+      "sample_id": "n00:displacement:1200",
+      "taken": 1200,
+      "expiry": 2400,
+      "heard": 2400,
+      "received": 2400,
+      "dropped": null
+     },
+     {
+      "sample_id": "n00:displacement:47400",
+      "taken": 47400,
+      "expiry": 48600,
+      "heard": 48600,
+      "received": 72000,
+      "dropped": 49200
+     },
+     {
+      "sample_id": "n00:displacement:49800",
+      "taken": 49800,
+      "expiry": 51000,
+      "heard": 51000,
+      "received": 72000,
+      "dropped": 51600
+     },
+     {
+      "sample_id": "n00:displacement:82200",
+      "taken": 82200,
+      "expiry": 83400,
+      "heard": 83400,
+      "received": 86400,
+      "dropped": 84000
+     },
+     {
+      "sample_id": "n00:displacement:96000",
+      "taken": 96000,
+      "expiry": 97200,
+      "heard": 97200,
+      "received": 97200,
+      "dropped": null
+     }
+    ],
+    "witness_dropped_at_expiry": [],
+    "sampled": 4754
+   },
+   "fixed2": {
+    "n_obligations": 4368,
+    "n_yellow": 672,
+    "svc": 0.6222527472527473,
+    "delivered": 2718,
+    "yellow": 248,
+    "dead": 0,
+    "min_soc_wh": 0.0002883722837682155,
+    "heard_exactly_at_expiry": 185,
+    "heard_at_expiry_is_true_deadline": 179,
+    "heard_at_expiry_after_deadline": 6,
+    "dropped_exactly_at_expiry": 0,
+    "periods_seen": {
+     "600": 14
+    },
+    "witness_heard_at_expiry": [
+     {
+      "sample_id": "n00:displacement:1200",
+      "taken": 1200,
+      "expiry": 2400,
+      "heard": 2400,
+      "received": 2400,
+      "dropped": null
+     },
+     {
+      "sample_id": "n00:displacement:47400",
+      "taken": 47400,
+      "expiry": 48600,
+      "heard": 48600,
+      "received": 72000,
+      "dropped": 49200
+     },
+     {
+      "sample_id": "n00:displacement:49800",
+      "taken": 49800,
+      "expiry": 51000,
+      "heard": 51000,
+      "received": 72000,
+      "dropped": 51600
+     },
+     {
+      "sample_id": "n00:displacement:82200",
+      "taken": 82200,
+      "expiry": 83400,
+      "heard": 83400,
+      "received": 86400,
+      "dropped": 84000
+     },
+     {
+      "sample_id": "n00:displacement:96000",
+      "taken": 96000,
+      "expiry": 97200,
+      "heard": 97200,
+      "received": 97200,
+      "dropped": null
+     }
+    ],
+    "witness_dropped_at_expiry": [],
+    "sampled": 4754
+   },
+   "adaptive": {
+    "n_obligations": 4368,
+    "n_yellow": 672,
+    "svc": 0.6222527472527473,
+    "delivered": 2718,
+    "yellow": 248,
+    "dead": 0,
+    "min_soc_wh": 0.0003586596437682685,
+    "heard_exactly_at_expiry": 135,
+    "heard_at_expiry_is_true_deadline": 135,
+    "heard_at_expiry_after_deadline": 0,
+    "dropped_exactly_at_expiry": 1096,
+    "periods_seen": {
+     "600": 14
+    },
+    "witness_heard_at_expiry": [
+     {
+      "sample_id": "n00:displacement:47400",
+      "taken": 47400,
+      "expiry": 48600,
+      "heard": 48600,
+      "received": 72000,
+      "dropped": 49200
+     },
+     {
+      "sample_id": "n00:displacement:49800",
+      "taken": 49800,
+      "expiry": 51000,
+      "heard": 51000,
+      "received": 72000,
+      "dropped": 51600
+     },
+     {
+      "sample_id": "n00:displacement:82200",
+      "taken": 82200,
+      "expiry": 83400,
+      "heard": 83400,
+      "received": 86400,
+      "dropped": 85800
+     },
+     {
+      "sample_id": "n00:displacement:96000",
+      "taken": 96000,
+      "expiry": 97200,
+      "heard": 97200,
+      "received": 97200,
+      "dropped": null
+     },
+     {
+      "sample_id": "n00:displacement:121200",
+      "taken": 121200,
+      "expiry": 122400,
+      "heard": 122400,
+      "received": 122400,
+      "dropped": null
+     }
+    ],
+    "witness_dropped_at_expiry": [
+     {
+      "sample_id": "gw0:rainfall:11400",
+      "taken": 11400,
+      "expiry": 12600,
+      "dropped": 12600,
+      "heard": 11400,
+      "received": 72000
+     },
+     {
+      "sample_id": "gw0:rainfall:12600",
+      "taken": 12600,
+      "expiry": 13800,
+      "dropped": 13800,
+      "heard": 12600,
+      "received": 72000
+     },
+     {
+      "sample_id": "gw0:rainfall:13800",
+      "taken": 13800,
+      "expiry": 15000,
+      "dropped": 15000,
+      "heard": 13800,
+      "received": 72000
+     },
+     {
+      "sample_id": "gw0:rainfall:15000",
+      "taken": 15000,
+      "expiry": 16200,
+      "dropped": 16200,
+      "heard": 15000,
+      "received": 72000
+     },
+     {
+      "sample_id": "gw0:rainfall:16200",
+      "taken": 16200,
+      "expiry": 17400,
+      "dropped": 17400,
+      "heard": 16200,
+      "received": 72000
+     }
+    ],
+    "sampled": 4754
+   }
+  }
+ },
+ "summary": {
+  "current": {
+   "svc_mean_pct": 61.1081,
+   "delivered_total": 26692,
+   "n_obligations_total": 43680,
+   "yellow_total": 2653,
+   "dead_total": 3,
+   "min_soc_wh": 0.0001621031181249079,
+   "heard_exactly_at_expiry_total": 0,
+   "heard_at_expiry_is_true_deadline_total": 0,
+   "heard_at_expiry_after_deadline_total": 0,
+   "dropped_exactly_at_expiry_total": 19774,
+   "sampled_total": 46280
+  },
+  "boundary": {
+   "svc_mean_pct": 62.5778,
+   "delivered_total": 27334,
+   "n_obligations_total": 43680,
+   "yellow_total": 2637,
+   "dead_total": 4,
+   "min_soc_wh": 0.0001824387266397399,
+   "heard_exactly_at_expiry_total": 1792,
+   "heard_at_expiry_is_true_deadline_total": 1674,
+   "heard_at_expiry_after_deadline_total": 118,
+   "dropped_exactly_at_expiry_total": 0,
+   "sampled_total": 46276,
+   "vs_current_points": 1.4698,
+   "vs_current_ci95": [
+    1.2819,
+    1.6576
+   ],
+   "vs_current_positive_seeds": 10
+  },
+  "fixed2": {
+   "svc_mean_pct": 62.5778,
+   "delivered_total": 27334,
+   "n_obligations_total": 43680,
+   "yellow_total": 2637,
+   "dead_total": 4,
+   "min_soc_wh": 5.988640663969809e-05,
+   "heard_exactly_at_expiry_total": 1792,
+   "heard_at_expiry_is_true_deadline_total": 1674,
+   "heard_at_expiry_after_deadline_total": 118,
+   "dropped_exactly_at_expiry_total": 0,
+   "sampled_total": 46276,
+   "vs_current_points": 1.4698,
+   "vs_current_ci95": [
+    1.2819,
+    1.6576
+   ],
+   "vs_current_positive_seeds": 10,
+   "vs_boundary_points": 0.0,
+   "vs_boundary_ci95": [
+    0.0,
+    0.0
+   ]
+  },
+  "adaptive": {
+   "svc_mean_pct": 62.5962,
+   "delivered_total": 27342,
+   "n_obligations_total": 43680,
+   "yellow_total": 2653,
+   "dead_total": 4,
+   "min_soc_wh": 0.0001986588866397314,
+   "heard_exactly_at_expiry_total": 1232,
+   "heard_at_expiry_is_true_deadline_total": 1219,
+   "heard_at_expiry_after_deadline_total": 13,
+   "dropped_exactly_at_expiry_total": 10180,
+   "sampled_total": 46276,
+   "vs_current_points": 1.4881,
+   "vs_current_ci95": [
+    1.3002,
+    1.676
+   ],
+   "vs_current_positive_seeds": 10,
+   "vs_boundary_points": 0.0183,
+   "vs_boundary_ci95": [
+    -0.0194,
+    0.056
+   ]
+  }
+ }
+}
