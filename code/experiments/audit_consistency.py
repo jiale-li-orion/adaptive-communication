@@ -585,6 +585,65 @@ def audit_manifest_matches_code() -> None:
           f"实测 {len(nodes)} 个：位移 {n_disp}、雨量 {n_rain}")
 
 
+#: 入口页（README）里关于配置终止线的数字，必须能在当前证据文件里找到出处。
+#: 这一项存在的原因：同一个漂移出现过三次——表 3 的来源、稿件正文、README 摘要与关键结果——
+#: 每次都是"结果文件改了、别处照着旧读数重写一遍"。黑名单挡不住新写法的旧数，所以这里改成
+#: **从结果文件反推允许值**：存下来的值、同格内同字段的差、以及声明的场景常数。
+README_CFG_BULLETS = ("- **Configuration termination", "- **配置终止**", "- **配置终止")
+#: 场景常数：周期、字节、小时、节点数、种子数、容量与峰值。它们不在结果文件里，来自论文 §4。
+STRUCTURAL_NUMBERS = {300, 600, 1200, 78, 58, 20, 240, 4, 6, 8, 10, 12, 14, 3, 49,
+                      0.05, 0.03, 0.012, 0.47, 2, 1, 0}
+#: 已撤回的读数与它们的上下文。列入的是**曾经真实出现在入口页上**的写法；
+#: 只用值做黑名单会误伤别的数字，所以连上下文一起匹配。
+RETIRED_README_PHRASES = (
+    "183 yellow deliveries", "loses 26", "183 条", "少 26 条",
+    "0.122", "0.117", "same aggregate yellow-delivery counts", "黄级交付总数均为",
+)
+
+
+def audit_readme_config_numbers() -> None:
+    """入口页的两个坑：配置线的数字要有出处，已撤回的读数不得回流。
+
+    这一项存在的原因：同一个漂移出现过三次——表 3 的来源、稿件正文、README 摘要与关键结果——
+    每次都是"结果文件改了、别处照着旧读数重写一遍"。数字出处由**结果文件反推**（存下来的值、
+    同格同字段的差、以及声明的场景常数），已撤回读数则由显式短语拦截。
+    """
+    with open(os.path.join(ROOT, "results", "c5_matrix.json"), encoding="utf-8") as fh:
+        cells = json.load(fh)["cells"]
+    allowed = set(STRUCTURAL_NUMBERS)
+    for cell in cells.values():
+        for k in ("dead_total", "yellow_delivered_total", "yellow_n_total", "svc_mean",
+                  "mean_final_soc", "min_soc_worst"):
+            v = cell.get(k)
+            if isinstance(v, (int, float)):
+                allowed.add(round(float(v), 5))
+        allowed.add(cell["yellow_n_total"] - cell["yellow_delivered_total"])
+    for key in cells:
+        ph, peak, _arm = key.split("|")
+        same = [c["yellow_delivered_total"] for k, c in cells.items()
+                if k.startswith(f"{ph}|{peak}|")]
+        for a in same:
+            for b in same:
+                allowed.add(abs(a - b))
+
+    for rel in ("README.md", "README.zh.md"):
+        path = os.path.join(ROOT, rel)
+        if not os.path.exists(path):
+            continue
+        text = open(path, encoding="utf-8").read()
+        bad = []
+        for line in text.split("\n"):
+            if not line.strip().startswith(README_CFG_BULLETS):
+                continue
+            for tok in re.findall(r"\d+(?:\.\d+)?", line):
+                if round(float(tok), 5) not in allowed:
+                    bad.append(tok)
+        check(f"{rel} 配置终止条目的数字都能在结果文件里找到出处", not bad,
+              ", ".join(sorted(set(bad))))
+        hit = [ph for ph in RETIRED_README_PHRASES if ph in text]
+        check(f"{rel} 不含已撤回的配置读数", not hit, ", ".join(hit))
+
+
 def main() -> int:
     print("一致性审计")
     audit_far_side_only_through_link()
@@ -600,6 +659,7 @@ def main() -> int:
     audit_result_index()
     audit_instance_figures()
     audit_manifest_matches_code()
+    audit_readme_config_numbers()
     print("\n" + "-" * 74)
     if FAIL:
         print(f"  {len(FAIL)} 项失败：")
