@@ -370,10 +370,14 @@ The configuration experiment adds an absolute revert time to each node's local g
 initialisation. At or after that time the node clamps a dense profile back to sparse without a
 downlink. This is a preloaded bound experiment: the bound is not received through the configuration
 command, renewed by its version, or computed from an online gateway evidence view.
-The candidate delivery-derived setting uses the full schedule's downgrade time. It rounds the
+The earlier delivery-derived setting used the full schedule's downgrade time and rounded the
 last yellow deadline \emph{up} to the next backup slot; this can lie after the deadline, and thus
-is not the latest feasible slot defined in Eq.~\ref{eq:trelcfg}. The numerical runs are retained
-as timing interventions, without claiming that this construction implements that equation.
+is not the latest feasible slot defined in Eq.~\ref{eq:trelcfg}. That construction also predicted
+feasibility with a ledger that omitted the battery-capacity term, and its reading of ``zero deaths
+with no loss of yellow delivery'' was retracted: under the corrected ledger the energy-feasibility
+gates keep zero deaths but give up \cFiveEnergyLostA and \cFiveEnergyLostB deliveries
+(\ref{tab:lease}). The runs are retained as timing interventions, and the construction is not
+claimed to implement Eq.~\ref{eq:trelcfg}.
 
 \subsection{Partial-observability projector}
 \label{sec:mech-projector}
@@ -504,10 +508,11 @@ they establish an increment for a delivery-derived lease over an ordinary one.
 At $\eta{=}0.01$, every tested arm incurs 40 deaths; this does not establish that every legal
 sparse policy is physically infeasible.
 
-The proposed slot-derived interpretation needs separate validation. The current implementation
-computes 6.33 and 8.33~h by rounding the last yellow deadline upward, and writes the bound to
-nodes at initialisation. It therefore tests a supplied absolute revert time, not online
-computation from install-time evidence. Further comparisons must give ordinary mission-validity
+The proposed slot-derived interpretation needs separate validation. The earlier implementation
+computed 6.33 and 8.33~h by rounding the last yellow deadline upward and wrote the bound to nodes
+at initialisation, so it tested a supplied absolute revert time rather than online computation
+from install-time evidence; its ledger lacked the battery-capacity term, so its no-loss reading is
+superseded (\ref{tab:lease}). Further comparisons must give ordinary mission-validity
 expiry and a local SoC guard the same authorised information. They must distinguish stopping
 new dense acquisition from retaining samples that can still be forwarded, and report the lost
 obligation identities as well as aggregate delivery counts.
