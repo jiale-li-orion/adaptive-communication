@@ -59,11 +59,13 @@ Current states below are a checked projection of [CLAIMS](results/CLAIMS.md), no
 
 ## 4. Remaining work
 
+**Primary research direction: Agent task planning and communication execution.** The present live harness mainly selects per-node periods from an already structured mission. The next discriminator is whether plan repair tied to outstanding obligations improves the same Agent over matched expert tools and ordinary guards. It need not beat the strongest deterministic controller to establish an Agent-system benefit. See [the Agent research brief](paper/AGENT_RESEARCH.md).
+
 1. **Composition:** fix the planner and resources; compare a same-component ordinary stack with evidence-driven action admission. Both receive expiry, local protection, shadows and deterministic tools. Measure service, harm, actual communication cost and rejected beneficial actions.
 2. **Transfer and deployment:** select a small set of existing outage phases, access/backhaul failures and harvesting conditions. Report required firmware capabilities and byte/storage cost; avoid a full Cartesian sweep or new scenario.
 3. **Agent integration:** compare the same Agent with matched expert rules versus the runtime, sharing observations, tools, local protection and parsing budgets. Isolate the effect with one model before cross-model confirmation.
 
-**One new research entry: retention responsibility under a finite reverse-channel budget.** The current simulator clears source records synchronously and without airtime when the centre receives them. An uplink-only backup does not automatically provide that feedback. The hypothesis concerns acknowledgement/custody receipts and configuration messages sharing Class A opportunities, with ordinary custody, cumulative/bitmap ACKs and piggybacking as strong comparators. First establish that the budget binds; charging formerly free feedback is not itself a method gain.
+**Secondary research entry: retention responsibility under a finite reverse-channel budget.** The current simulator clears source records synchronously and without airtime when the centre receives them. An uplink-only backup does not automatically provide that feedback. The hypothesis concerns acknowledgement/custody receipts and configuration messages sharing Class A opportunities, with ordinary custody, cumulative/bitmap ACKs and piggybacking as strong comparators. First establish that the budget binds; charging formerly free feedback is not itself a method gain.
 
 **Validation and new search remain separate.** Matched-capability v5 action-interface validation continues as unfinished existing work; joint control-opportunity admission remains paused. The [plan](paper/RESEARCH_PLAN.md) excludes previously tested leasing, stopping, retention, probing and conditional-plan directions and specifies prior art and entry conditions for the new hypothesis.
 
