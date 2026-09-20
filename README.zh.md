@@ -90,7 +90,7 @@ make tables   # 由结果文件重新生成论文表格
 | C5 | 配置终止：普通机制覆盖这一格 | `code/v3joint/c5_matrix.py` | `results/c5_matrix.json` |
 | C6 | 执行位置：中心与节点的对照 | `code/v3joint/r39_envelope.py` | `results/agent_traces/r39_table.json` |
 | C7 | 任务表到达时的可判定比例 | `code/v3joint/r40_local_attribution.py` | `results/r40_local_attribution.json` |
-| C9 | 非预知序列参照：先判可行性、两个差额分别给出（进行中） | `code/v3joint/c5_seqref.py`、`code/experiments/measure_seqref_calibration.py`、`code/experiments/audit_seqref.py` | `results/c5_seqref.json`、`results/c5_seqref_calibration.json` |
+| C9 | 非预知序列参照：风险口径作为被扫描的参数层、结构已核对（进行中） | `code/v3joint/c5_seqref.py`、`code/experiments/measure_seqref_calibration.py`、`code/experiments/audit_seqref.py` | `results/c5_seqref.json`、`results/c5_seqref_calibration.json` |
 | C8 | 形成性 agent 研究与接口故障 | `code/v3joint/r38_agent_three_arm.py`、`r42_claim_relabel.py`、`r43_cert_v5_replay.py` | `results/agent_traces/r38_three_arm_summary.json`、`results/r42_claim_relabel.json`、`results/r43_cert_v5_replay.json` |
 
 每个数字对应的脚本、口径与分母登记于 [`results/README.md`](results/README.md)；新增结果文件必须在该登记册中登记。[`results/CLAIMS.md`](results/CLAIMS.md) 给出每条主张的脚本、参考结果与唯一的当前状态；[`artifact/AE.md`](artifact/AE.md) 是评审人入口，逐主张给出命令与期望判定；[`results/reference/`](results/reference/README.md) 存放判定所比较的冻结值。论文表格由 `scripts/make_tables.py` 生成到 `paper/generated/`，稿件以 `\input` 引入；生成物入库，不手改。真实模型实验需配置 `DEEPSEEK_API_KEY`，并将请求、重试与解析计入账本，决策数不等于成功请求数。

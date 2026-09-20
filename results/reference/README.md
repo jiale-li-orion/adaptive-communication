@@ -16,6 +16,7 @@
 | `r38_three_arm_summary.json`、`r42_claim_relabel.json`、`r43_cert_v5_replay.json` | C8 | 保存的 agent 轨迹与其离线重放 |
 | `c5_seqref.json` | C9（open） | `code/v3joint/c5_seqref.py` |
 | `c5_seqref_v1_semantics.json` | —（v1 口径，已取代） | `code/v3joint/c5_seqref.py` 于 `a665642` |
+| `c5_seqref_v2_semantics.json` | —（v2 口径，已取代） | `code/v3joint/c5_seqref.py` 于 `1a36d52` |
 | `c5_seqref_calibration.json` | C9 | `code/experiments/measure_seqref_calibration.py` |
 
 更新规则：结果文件变动必须在**同一次提交**里更新本目录的对应快照，并说明变动原因。冻结值不与 `results/` 下的活文件自动同步，两者出现差异是**信号**，不是噪声：它说明某处改动了实验或其口径。

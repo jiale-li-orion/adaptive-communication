@@ -26,9 +26,9 @@ code/
 | `code/v3joint/c5_matrix.py` | 主矩阵：2 相位 × 2 采能 × 9 臂 × 3 种子 | `results/c5_matrix.json` |
 | `code/v3joint/c5_infocontract.py` | 非预知性契约 A1/A2/A3（含"两个未来视图必须相同"的判别测试） | `results/c5_infocontract.json` |
 | `code/v3joint/rerun_original_matrix.py` | 按修正前语义复跑，还原并审计对照 | `results/c5_matrix_precorrection.json` |
-| `code/v3joint/c5_seqref.py` | **非预知序列参照**（三方表，v2 口径）：动作覆盖整个地平线、隐藏终点不得改变执行；先判可行性，可行才跑三方表。口径见 [`spec/prereg-nonprescient-sequence-v2.md`](../spec/prereg-nonprescient-sequence-v2.md) （v1 已被取代，原文与结果保留） | `results/c5_seqref.json` |
+| `code/v3joint/c5_seqref.py` | **非预知序列参照**（v3 口径）：动作覆盖整个地平线、隐藏终点不进入执行；**风险口径是参数层**（`strict` 端点 + 与论文一致的计价口径 λ，全扫并报告 (服务, 死亡概率)）；含退化见证（strict 最优 == 贪心可行性规则）。口径见 [`spec/prereg-nonprescient-sequence-v3.md`](../spec/prereg-nonprescient-sequence-v3.md) （v1、v2 已被取代，原文与结果保留） | `results/c5_seqref.json` |
 | `code/experiments/measure_seqref_calibration.py` | 实测上述模型的两个负载常数与逐小时轨迹（相位 A、`ttl8`、seed 0、节点 `n00`） | `results/c5_seqref_calibration.json` |
-| `code/experiments/audit_seqref.py` | 判定预注册是否被兑现：登记与取代关系、常数同源、**离散化 σ 契约**、台账校准、**独立反例**（隐藏终点、无穷终止、单调性）、可行性前置、核例穷举与分辨力 | — |
+| `code/experiments/audit_seqref.py` | 判定预注册是否被兑现：登记与取代链、常数同源、离散化 σ 契约、台账校准、**口径层级证据**、**退化与停止规则见证**、执行语义（隐藏终点不改执行、窗口后仍执行）、独立反例、核例穷举与分辨力 | — |
 
 `c5_*` 前缀偏离 `rNN_` 编号惯例，取的是家族可读性；脚本名在独立审查中被逐行引用，改名会切断审计链。
 
