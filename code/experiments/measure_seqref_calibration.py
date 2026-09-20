@@ -75,11 +75,13 @@ def main() -> int:
     import network as net
 
     trace: dict[str, list] = collections.defaultdict(list)
+    allhour: dict[tuple[str, int], float] = collections.defaultdict(float)
     _orig_step = net.Node._step_power
     _orig_spend = net.Node.spend
 
     def step_power(self, t_s, truth):
         _orig_step(self, t_s, truth)
+        allhour[(self.node_id, t_s // 3600)] += truth.harvest_at(self.node_id, t_s)
         if self.node_id == NODE:
             trace["step"].append((t_s, truth.harvest_at(self.node_id, t_s), self.soc_wh,
                                   self.sample_interval_s, self.alive))
@@ -157,6 +159,28 @@ def main() -> int:
     dense_unspilled = [h for h in dense_hours if h["hour"] not in cap_hit]
     load_dense = float(np.median([h["load_from_spend_wh"] for h in dense_hours]))
 
+    # 云遮因子：全部节点 × 全部白天小时，只保留晴空基准足够大的小时（基准过小时比值噪声主导）
+    MIN_CLEAR_WH = 3.0e-3
+    factors_all = []
+    for (nid, hour), harv in sorted(allhour.items()):
+        c = clear_hour_wh(hour)
+        if c >= MIN_CLEAR_WH:
+            factors_all.append((nid, hour, harv / c))
+    fv = [f for _n, _h, f in factors_all]
+    p_cloud, atten = 0.35, 0.25
+    sigma_theory = (1 - atten) * float(np.sqrt(p_cloud * (1 - p_cloud) / 60.0))
+    cloud_stats = {
+        "min_clear_wh_for_ratio": MIN_CLEAR_WH,
+        "n_samples": len(fv),
+        "n_nodes": len({n for n, _h, _f in factors_all}),
+        "mean_factor": float(np.mean(fv)) if fv else None,
+        "std_factor": float(np.std(fv, ddof=1)) if len(fv) > 1 else None,
+        "theoretical_mean": (1 - p_cloud) + p_cloud * atten,
+        "theoretical_std": sigma_theory,
+        "note": ("逐拍 Bernoulli(p=.35, atten=.25) 的每小时均值：理论 std=(1-atten)*sqrt(p(1-p)/60)。"
+                 "这里给出实测值作为声明 sigma 的依据。"),
+    }
+
     out = {
         "provenance": {
             "script": "code/experiments/measure_seqref_calibration.py",
@@ -206,6 +230,7 @@ def main() -> int:
         "spend_counts": dict(spends),
         "spend_wh_by_site": {k: round(v, 9) for k, v in spend_wh.items()},
         "hourly": hourly,
+        "cloud_discretisation": cloud_stats,
         "cross_check": {
             "declared_vs_measured_sparse": 6 * (4.7e-4 + 3.099046e-5) - 6 * (
                 4.7e-4 + spend_wh["_charge_radio"] / max(1, spends["_charge_radio"])),

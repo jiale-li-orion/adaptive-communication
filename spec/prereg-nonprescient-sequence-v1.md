@@ -1,4 +1,10 @@
-# 非预知序列参照（预注册 v1）
+# 非预知序列参照（预注册 v1，**已被 v2 取代**）
+
+> **本文已被 [v2](prereg-nonprescient-sequence-v2.md) 取代，原文保留不改。**
+> v1 有两处契约错误（求值器在真值终点替策略自动降档；等权三点的实际标准差只有声明值的
+> `√(2/3)`），独立审阅给出了可直接运行的反例。按 v1 得出的"三方零差额、方向关闭"结论已撤回，
+> 归档见 [`results/_withdrawn/2026-09-20-c9-v1-semantics.md`](../results/_withdrawn/2026-09-20-c9-v1-semantics.md)。
+> v1 结果保留为 `results/c5_seqref_v1_semantics.json`。**不要按本文实现或引用本文的判定表。**
 
 **地位**：本文规定"同信息、非预知的序列优化参照"这一判别问题的**模型、动作能力、风险口径与判定规则**。
 `code/v3joint/c5_seqref.py` 按本文实现，`results/c5_seqref.json` 是它的一次运行结果，

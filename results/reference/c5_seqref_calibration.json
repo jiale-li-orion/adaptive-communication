@@ -652,6 +652,16 @@
    "n_samples": 6
   }
  ],
+ "cloud_discretisation": {
+  "min_clear_wh_for_ratio": 0.003,
+  "n_samples": 280,
+  "n_nodes": 14,
+  "mean_factor": 0.73876762222379,
+  "std_factor": 0.045204839348140555,
+  "theoretical_mean": 0.7375,
+  "theoretical_std": 0.046182383004777915,
+  "note": "逐拍 Bernoulli(p=.35, atten=.25) 的每小时均值：理论 std=(1-atten)*sqrt(p(1-p)/60)。这里给出实测值作为声明 sigma 的依据。"
+ },
  "cross_check": {
   "declared_vs_measured_sparse": 2.5548386323182015e-11,
   "declared_vs_measured_dense": 5.109677264636403e-11,

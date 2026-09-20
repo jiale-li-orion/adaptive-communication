@@ -14,7 +14,7 @@
 | 论文表格的数字 | `paper/generated/`（由 `scripts/make_tables.py` 生成） | 检查 [20]：生成物与结果文件一致，且两份稿件只经 `\input` 引入生成物 |
 | 评审入口与环境声明 | `artifact/AE.md` | `artifact/reproduce_all.sh` 的判定与文档写明的期望值比对 |
 | 三条声明的语义（confirmed / unconfirmed / unreachable） | 论文正文 §3.6 与两份稿件 | 人工审阅，无机械检查 |
-| 非预知序列参照的模型、动作能力、风险口径与判定规则 | [`prereg-nonprescient-sequence-v1.md`](prereg-nonprescient-sequence-v1.md) | 检查 [21]：`code/experiments/audit_seqref.py` 判定登记、常数同源、台账校准、核例穷举与分辨力、三方表与恒等式、非预知性、临界严重度 |
+| 非预知序列参照的模型、动作能力、**执行语义**、风险口径与判定规则 | [`prereg-nonprescient-sequence-v2.md`](prereg-nonprescient-sequence-v2.md)（v1 已被取代，原文保留） | 检查 [21]：`code/experiments/audit_seqref.py` 判定登记与取代关系、常数同源、离散化 σ 契约、台账校准、独立反例、可行性前置、核例穷举与分辨力 |
 
 ## 两条规则
 

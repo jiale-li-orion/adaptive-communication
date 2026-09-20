@@ -27,7 +27,7 @@
 | C6 | §7.5 表 5 | 同一规则在中心与节点的执行位置对照；节点本地门消除所测种子死亡并压低被拒准入 | `code/v3joint/r39_envelope.py` | `results/agent_traces/r39_table.json` | supported |
 | C7 | §7.4 表 4 | 任务表到达时仅凭网关本地证据的可判定覆盖与已判定精度 | `code/v3joint/r40_local_attribution.py` | `results/r40_local_attribution.json` | supported |
 | C8 | §7.6 | 真实 agent 十一轨迹、1089 次决策的对称计量；接口故障与解析失败账目 | `code/v3joint/r38_agent_three_arm.py`、`code/v3joint/r42_claim_relabel.py`、`code/v3joint/r43_cert_v5_replay.py` | `results/agent_traces/r38_three_arm_summary.json`、`results/r42_claim_relabel.json`、`results/r43_cert_v5_replay.json` | formative |
-| C9 | §7.3 表 3 | 按预注册口径（`spec/prereg-nonprescient-sequence-v1.md`）的单节点声明的模型上，同信息**非预知序列最优**、族内最强可行普通组合、**全知参照**在受检格（相位 A/B × 采光峰值 .012/.03 × 实测离散度 .047）都拿到满窗义务（A 48/48、B 84/84）：可实现策略差额、信息差额、保护代价与恒等式残差全为 0；且 $s_{\text{full}}{=}.0510>$ 实测 .047。核例中 $\Delta_{\text{可实现}}{=}{+}8$ 条/节点（DP 20.0 对最强安全固定租约 12.0，穷举 128 条规则验过），故该零差额结论有分辨力。**由 C5 的候选能量族损失不得读作"保护代价"**；边界（服务=被采集、单节点、云遮按小时）见预注册第 6 节 | `code/v3joint/c5_seqref.py`、`code/experiments/measure_seqref_calibration.py`、`code/experiments/audit_seqref.py` | `results/c5_seqref.json`、`results/c5_seqref_calibration.json` | supported |
+| C9 | §7.3 | 按预注册 v2（`spec/prereg-nonprescient-sequence-v2.md`）的单节点声明模型上，**先判可行性**：冻结实例的紧能量格（峰值 .012）在严格口径（声明全部未来不得死亡）下**不存在可行策略**——全程稀疏的最低电量为 $-0.0087$ mWh，低于 $0.47$ mWh 安全线，临界 $\\sigma^{*}=.0429$ 小于声明 $.047$；峰值 .016/.030 可行，那里非预知最优、最强普通组合与全知参照同为满窗，两个差额均为 0。核例 DP 20.0 = 穷举最优，最强安全固定租约 12.0（Δ=+8）。独立反例：'永远继续密集'必须被判不安全；`TTL8+8 mWh 门`物理执行到自己的结束时刻后破线；跨隐藏终点同一策略执行轨迹逐位相同。**v1 口径下的'三方零差额、方向关闭'已撤回**，归档见 `results/_withdrawn/2026-09-20-c9-v1-semantics.md`；该格（C5 使用的格）尚不能给出保护代价结论 | `code/v3joint/c5_seqref.py`、`code/experiments/measure_seqref_calibration.py`、`code/experiments/audit_seqref.py` | `results/c5_seqref.json`、`results/c5_seqref_calibration.json` | open |
 
 ## 撤回表
 
@@ -38,6 +38,8 @@
 | 本地夜间规则构成普遍安全保证 | C6 | 规则仅依据时钟，未证明任意采能与初始电量下的存活不变量；收窄为所测种子的经验结果 | `e8ff1c4` |
 | 强制中断窗的 24/19 次「配置生效谎报」与 r38 零解析回退 | C8 | 原评分只在命令密集的决策上运行、在对照组从不运行、并统计提示词自身教会的词；决策数不等于成功请求数 | `e8ff1c4` |
 | 候选能量门在阴雨紧能量下保住存活且不损失黄级交付总数（开环交付界与滚动门同交付 849/2020） | C5 | 修正前的预测账本缺电池容量截断、任务发布门提前暴露未来 end；该读数的载体是 8be31d2 上的**未跟踪本地树**，从未入库。诚实账本下候选三臂降至 559/2016 与 1194/3528，而固定 8~h TTL 与 Task-1 有效期同样零死亡且 849/2020；详见 [归档](_withdrawn/2026-09-20-c5-precorrection.md) | `8be31d2` |
+| C9 v1：受检格三方零差额、可实现差额为 0，据此"中间行已建成、方向已关闭" | C9 | v1 的求值器在黄级窗口终点替策略自动降档（隐藏授权终点改变了执行），且等权三点把偏移当标准差（实际 σ 只有声明值的 √(2/3)）；修正后该格在严格口径下无可行策略。见证见 [归档](_withdrawn/2026-09-20-c9-v1-semantics.md)；
+反例由 `code/experiments/audit_seqref.py` 与 `results/c5_seqref.json` 的 `counterexamples` 字段随仓库复现（独立审阅的本地记录不随仓库发布） | `a665642` |
 | 固定 TTL 在两个相位都无法满足存活与无黄级交付总数损失；当前结果证明合法在线交付界租约的独立增量 | C5 | 8 h TTL 在两相位满足上述计数判据；候选界读取未来降级时间并预置，未通过命令安装；详见 [不可变归档](_withdrawn/2026-09-20-c5-lease-claims.md) | `59e5ef1` |
 
 ## 维护规则
