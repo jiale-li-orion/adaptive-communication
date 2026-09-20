@@ -81,17 +81,17 @@ make tables   # 由结果文件重新生成论文表格
 
 `make check` 覆盖五组：**mechanism**（执行语义与冻结的机制隔离实验）、**monitoring**（业务闭环仿真）、**claims**（主张表：每条主张必须给出存在的脚本与参考结果）、**paper**（论文表格由结果文件生成而非手写）、**seqref**（非预知序列参照：声明常数同源、等权三点的实际标准差与声明一致、隐藏授权终点不得改变执行、先判可行性再谈差额、可手算核例与穷举一致且仍能分辨出真实差额）。两条获取命令执行完毕后，全部检查不再需要联网，也不需要凭据。
 
-| 主张 | 论文对象 | 脚本 | 结果 |
-|---|---|---|---|
-| C1 | 资源墙与固定资源下的负结果 | `code/v3joint/r30c_walls.py` | `results/r30c_walls.json` |
-| C2 | 与标准逐记录到期逐位等价 | `code/v3joint/r41_expiry_equiv.py` | `results/r41_expiry_equiv.json` |
-| C3 | 跨段位置：十种子配对增益 | `code/v3joint/r37e_full_seeds.py` | `results/r37e_full_seeds.json` |
-| C4 | 全时域时间感知归因 | `code/v3joint/r44_fullhorizon_attribution.py` | `results/r44_fullhorizon_attribution.json` |
-| C5 | 配置终止：普通机制覆盖这一格 | `code/v3joint/c5_matrix.py` | `results/c5_matrix.json` |
-| C6 | 执行位置：中心与节点的对照 | `code/v3joint/r39_envelope.py` | `results/agent_traces/r39_table.json` |
-| C7 | 任务表到达时的可判定比例 | `code/v3joint/r40_local_attribution.py` | `results/r40_local_attribution.json` |
-| C9 | 非预知序列参照：风险口径作为被扫描的参数层、结构已核对（进行中） | `code/v3joint/c5_seqref.py`、`code/experiments/measure_seqref_calibration.py`、`code/experiments/audit_seqref.py` | `results/c5_seqref.json`、`results/c5_seqref_calibration.json` |
-| C8 | 形成性 agent 研究与接口故障 | `code/v3joint/r38_agent_three_arm.py`、`r42_claim_relabel.py`、`r43_cert_v5_replay.py` | `results/agent_traces/r38_three_arm_summary.json`、`results/r42_claim_relabel.json`、`results/r43_cert_v5_replay.json` |
+| 主张 | 论文对象 | 脚本 | 结果 | 状态 |
+|---|---|---|---|---|
+| C1 | 资源墙与固定资源下的负结果 | `code/v3joint/r30c_walls.py` | `results/r30c_walls.json` | `scoped-negative` |
+| C2 | 与标准逐记录到期逐位等价 | `code/v3joint/r41_expiry_equiv.py` | `results/r41_expiry_equiv.json` | `supported` |
+| C3 | 跨段位置：十种子配对增益 | `code/v3joint/r37e_full_seeds.py` | `results/r37e_full_seeds.json` | `supported` |
+| C4 | 全时域时间感知归因 | `code/v3joint/r44_fullhorizon_attribution.py` | `results/r44_fullhorizon_attribution.json` | `supported` |
+| C5 | 配置终止：普通机制覆盖这一格 | `code/v3joint/c5_matrix.py` | `results/c5_matrix.json` | `scoped-negative` |
+| C6 | 执行位置：中心与节点的对照 | `code/v3joint/r39_envelope.py` | `results/agent_traces/r39_table.json` | `supported` |
+| C7 | 任务表到达时的可判定比例 | `code/v3joint/r40_local_attribution.py` | `results/r40_local_attribution.json` | `supported` |
+| C8 | 形成性 agent 研究与接口故障 | `code/v3joint/r38_agent_three_arm.py`、`r42_claim_relabel.py`、`r43_cert_v5_replay.py` | `results/agent_traces/r38_three_arm_summary.json`、`results/r42_claim_relabel.json`、`results/r43_cert_v5_replay.json` | `formative` |
+| C9 | 非预知序列参照：风险口径作为被扫描的参数层、结构已核对（进行中） | `code/v3joint/c5_seqref.py`、`code/experiments/measure_seqref_calibration.py`、`code/experiments/audit_seqref.py` | `results/c5_seqref.json`、`results/c5_seqref_calibration.json` | `open` |
 
 每个数字对应的脚本、口径与分母登记于 [`results/README.md`](results/README.md)；新增结果文件必须在该登记册中登记。[`results/CLAIMS.md`](results/CLAIMS.md) 给出每条主张的脚本、参考结果与唯一的当前状态；[`artifact/AE.md`](artifact/AE.md) 是评审人入口，逐主张给出命令与期望判定；[`results/reference/`](results/reference/README.md) 存放判定所比较的冻结值。论文表格由 `scripts/make_tables.py` 生成到 `paper/generated/`，稿件以 `\input` 引入；生成物入库，不手改。真实模型实验需配置 `DEEPSEEK_API_KEY`，并将请求、重试与解析计入账本，决策数不等于成功请求数。
 

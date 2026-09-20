@@ -116,6 +116,12 @@ def main() -> int:
     check("主张编号唯一", len(ids) == len(set(ids)),
           f"{len(ids)} 行，去重后 {len(set(ids))}")
 
+    # 当前主张表的状态，供 README 投影核对
+    status_now = {}
+    for row in active[1:]:
+        if len(row) > max(ci_id, ci_stat):
+            status_now[row[ci_id].strip().strip("`")] = row[ci_stat].strip().strip("`")
+
     for row in retract[1:]:
         if len(row) <= max(ri_sup, ri_com):
             continue
@@ -128,6 +134,21 @@ def main() -> int:
                            if any(r[ci_stat] == "retracted" for r in active[1:]
                                   if len(r) > ci_stat and r[ci_id] == i)]
     check("撤回主张不出现在当前主张表", not retracted_in_active, str(retracted_in_active))
+
+    # README 是入口页：它的状态列必须是本表的投影，不能各写一份
+    for rel in ("README.md", "README.zh.md"):
+        rp = os.path.join(ROOT, rel)
+        if not os.path.exists(rp):
+            continue
+        rtext = open(rp, encoding="utf-8").read()
+        head = [l for l in rtext.split("\n") if l.startswith("| Claim |") or l.startswith("| 主张 |")]
+        check(f"{rel} 主张表含状态列", bool(head) and ("Status" in head[0] or "状态" in head[0]),
+              head[0][:60] if head else "无表头")
+        for row in [l for l in rtext.split("\n") if re.match(r"^\| C\d+ \|", l)]:
+            cells = [c.strip().strip("`") for c in row.strip("|").split("|")]
+            cid, shown = cells[0], cells[-1]
+            check(f"{rel} {cid} 状态与主张表一致", status_now.get(cid) == shown,
+                  f"README={shown} CLAIMS={status_now.get(cid)}")
 
     print(f"\n  主张 {len(ids)} 条，撤回 {max(len(retract) - 1, 0)} 条")
     if FAIL:

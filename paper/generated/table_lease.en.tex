@@ -1,20 +1,22 @@
 % 由 scripts/make_tables.py 生成，勿手改；数字来自结果文件。
 \begin{tabular}{lcccc}
 \toprule
-Local revert bound & Deaths (3 seeds) & Mean svc & Mean final SoC & Yellow delivered\\
+Local revert bound & Deaths (3 seeds) & Mean svc & Mean final SoC & Yellow delivered / total\\
 \midrule
-\multicolumn{5}{l}{\emph{Phase A, overcast $\eta{=}0.012$ (upgrade 2~h, downgrade 6~h, outage 4--20~h)}}\\
-clock guard (sunset 12 h) & 20 & 0.5961 & 0.066 & 849\\
-fixed TTL 4 h (revert 6 h) & 0 & 0.5970 & 0.122 & 849\\
-fixed TTL 6 h (revert 8 h) & 0 & 0.5970 & 0.122 & 849\\
-fixed TTL 8 h (revert 10 h) & 0 & 0.5971 & 0.117 & 849\\
-\textbf{delivery lease ($\tau_L{=}6.33$~h)} & \textbf{0} & \textbf{0.5970} & \textbf{0.122} & \textbf{849}\\
+\multicolumn{5}{l}{\emph{Phase A, overcast $\eta{=}0.012$, seeds 0--2 (upgrade 2~h, downgrade 6~h, outage 4--20~h)}}\\
+never dense (blue only) & 0 & 0.5752 & 0.00610 & 547/2016\\
+clock guard (sunset 12~h) & 20 & 0.5961 & 0.00329 & 849/2016\\
+announced validity (6~h, Task~1) & 0 & 0.5970 & 0.00610 & 849/2016\\
+fixed TTL 4~h (revert 6~h) & 0 & 0.5970 & 0.00610 & 849/2016\\
+fixed TTL 8~h (revert 10~h) & \textbf{0} & \textbf{0.5971} & 0.00552 & \textbf{849/2016}\\
+energy gate, open-loop bound & \textbf{0} & \textbf{0.5771} & 0.00504 & \textbf{559/2016}\\
 \midrule
-\multicolumn{5}{l}{\emph{Phase B, overcast $\eta{=}0.012$ (upgrade 1~h, downgrade 8~h, outage 6--22~h)}}\\
-clock guard (sunset 12 h) & 31 & 0.5981 & 0.038 & 2020\\
-fixed TTL 4 h (revert 5 h) & 0 & 0.5881 & 0.122 & 1837\\
-fixed TTL 6 h (revert 7 h) & 0 & 0.5994 & 0.122 & 1994\\
-fixed TTL 8 h (revert 9 h) & 0 & 0.5996 & 0.122 & 2020\\
-\textbf{delivery lease ($\tau_L{=}8.33$~h)} & \textbf{0} & \textbf{0.5996} & \textbf{0.122} & \textbf{2020}\\
+\multicolumn{5}{l}{\emph{Phase B, overcast $\eta{=}0.012$, seeds 0--2 (upgrade 1~h, downgrade 8~h, outage 6--22~h)}}\\
+never dense (blue only) & 0 & 0.5399 & 0.00609 & 1168/3528\\
+clock guard (sunset 12~h) & 31 & 0.5982 & 0.00191 & 2020/3528\\
+announced validity (8~h, Task~1) & 0 & 0.5994 & 0.00609 & 2020/3528\\
+fixed TTL 4~h (revert 5~h) & 0 & 0.5928 & 0.00606 & 1916/3528\\
+fixed TTL 8~h (revert 9~h) & \textbf{0} & \textbf{0.5996} & 0.00606 & \textbf{2020/3528}\\
+energy gate, open-loop bound & \textbf{0} & \textbf{0.5431} & 0.00416 & \textbf{1194/3528}\\
 \bottomrule
 \end{tabular}

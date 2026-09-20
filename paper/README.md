@@ -33,9 +33,14 @@
 |---|---|---|
 | 资源墙 | `table_walls.{en,zh}.tex` | `results/r30c_walls.json` |
 | 记录到期 | `table_expiry.{en,zh}.tex` | `results/r41_expiry_equiv.json` |
-| 交付租约 | `table_lease.{en,zh}.tex` | `results/r48_ttl_vs_lease.json` |
+| 配置终止 | `table_lease.{en,zh}.tex` | `results/c5_matrix.json`（修正后的当前证据；`r48_ttl_vs_lease.json` 的候选界行用修正前账本，其"交付不减"读数已随 C5 修正撤回，该文件仍登记为历史证据） |
 | 任务表归因 | `table_attribution.{en,zh}.tex` | `results/r40_local_attribution.json` |
 | 执行位置 | `table_placement.{en,zh}.tex` | `results/agent_traces/r39_table.json` |
+
+正文与表说明里的 C5 数字同样不手抄：它们写成 `\cFive...` 宏，取值由同一脚本写入
+`paper/generated/facts.tex`（来源仍是 `results/c5_matrix.json`）。两份稿件在导言区
+`\input{../generated/facts.tex}`。`audit_tables.py` 断言宏取值与结果文件一致、两份稿件都引入它，
+并禁止几条已撤回的表述回流。
 
 规则：**生成物不手改。** 结果文件变动时在**同一次提交**里重新生成；`code/experiments/audit_tables.py`
 检查生成物与结果文件一致、且稿件里没有手写的表格行。数值按十进制四舍五入（`ROUND_HALF_UP`），

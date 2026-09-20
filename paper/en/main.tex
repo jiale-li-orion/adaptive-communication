@@ -7,6 +7,7 @@
 \usepackage[dvipsnames]{xcolor}
 \usepackage[colorlinks=true,linkcolor=NavyBlue,citecolor=PineGreen,urlcolor=NavyBlue]{hyperref}
 \usepackage{xspace}
+\input{../generated/facts.tex}   % 由 scripts/make_tables.py 生成，勿手改
 \raggedbottom   % 末页不满时按自然高度结束，避免 1pt 级的竖直溢出
 \newcommand{\stime}{$S_{\mathrm{time}}$\xspace}
 \newcommand{\scap}{$S_{\mathrm{cap}}$\xspace}
@@ -114,9 +115,11 @@ The experiments expose two placement effects. Suppressing expired records at the
 \emph{gateway} while leaving the source cache untouched withholds the acknowledgement: the
 record continues to fill the node's access batch and on-time delivery moves $202\to194$.
 Source-local expiry removes this retained state. For configurations, the clock guard acts only
-at dusk, leaving 20--31 deaths in two overcast scenarios. Earlier preloaded revert times avoid
-these deaths. A short 4~h TTL sacrifices yellow delivery in the longer dense phase, but a fixed
-8~h TTL avoids deaths and preserves aggregate yellow delivery in both phases. These observations
+at dusk, leaving \cFiveNightfloorDeadA--\cFiveNightfloorDeadB deaths in two overcast scenarios.
+Earlier preloaded revert times avoid these deaths. A short 4~h TTL gives up
+\cFiveTtlFourLostB yellow deliveries in the longer dense phase, whereas a fixed 8~h TTL avoids
+deaths and preserves the aggregate yellow delivery in both phases. A bound derived from energy
+feasibility also avoids deaths but gives up \cFiveEnergyLostA and \cFiveEnergyLostB deliveries. These observations
 motivate studying how to select and install a bound before disconnection; they do not establish
 an increment over ordinary leases. In particular, a downgrade authored after the control path
 fails cannot be used to compute a prior install-time bound.
@@ -138,8 +141,10 @@ access segment. Full-horizon time-aware attribution corrects an earlier accounti
 labelled 830 late-access failures as backhaul-capacity failures.
 \item \textbf{A controlled study of configuration termination}
 (\S\ref{sec:mech-lease}, \S\ref{sec:eval-lease}). Preloaded revert bounds eliminate the
-20--31 deaths left by the clock guard. A fixed 8~h TTL also eliminates those deaths in both
-phases, while shorter TTLs lose yellow delivery in the longer phase. We identify the information
+\cFiveNightfloorDeadA--\cFiveNightfloorDeadB deaths left by the clock guard. A fixed 8~h TTL
+also eliminates those deaths in both phases, while shorter TTLs lose yellow delivery in the
+longer phase. An energy-feasibility bound likewise avoids deaths but sacrifices
+\cFiveEnergyLostA and \cFiveEnergyLostB yellow deliveries. We identify the information
 and installation conditions that a delivery-derived lease must satisfy; its online increment
 remains open.
 \item \textbf{A formative real-agent study that locates the interface fault}
@@ -474,23 +479,28 @@ safe bound or of record-level no-false-release.
 
 \begin{table*}[t]
 \centering\small
-\caption{Preloaded configuration revert bounds across two outage phases (seeds 0--2,
-\texttt{generic-expiry} and maxcov fixed). At $\eta{=}0.012$, both fixed TTL 8~h and the
-candidate delivery-derived setting achieve zero deaths and preserve aggregate yellow delivery
-in both phases. The latter has higher mean final SoC in phase~A (0.122 versus 0.117) and ties
-phase~B. This is not a minimum-SoC or universal safety guarantee. The delivery-derived setting
-is supplied offline from the full mission schedule; online derivation and installation are not
-validated by this table.}
+\caption{Preloaded configuration revert bounds across two outage phases (seeds
+0--\cFiveSeeds, \texttt{generic-expiry} and maxcov fixed). At $\eta{=}\cFivePeak$, a fixed
+8~h TTL yields zero deaths and $\cFiveTtlEightYellowA/\cFiveYellowNA$,
+$\cFiveTtlEightYellowB/\cFiveYellowNB$ yellow deliveries in the two phases; a bound derived
+from energy feasibility also yields zero deaths but only
+$\cFiveEnergyYellowA/\cFiveYellowNA$, $\cFiveEnergyYellowB/\cFiveYellowNB$
+(\cFiveEnergyLostA and \cFiveEnergyLostB fewer). The three energy arms (open-loop bound,
+receding-horizon gate, safety net) are cell-identical, so one row stands for them. None of this
+is a minimum-SoC or universal safety guarantee.}
 \label{tab:lease}
 \input{../generated/table_lease.en.tex}
 \end{table*}
 
-Across five harvest levels in phase~A, all tested bounds yield zero deaths at
-$\eta\in\{0.03,0.02,0.015\}$. At $\eta{=}0.012$, sunset-only reversion leaves 20 deaths,
-whereas reverting at 6, 8 or 10~h leaves zero. The candidate setting likewise leaves zero deaths
-in phases A and B. Fixed TTL 4~h loses 183 aggregate yellow deliveries in phase~B and TTL 6~h
-loses 26; fixed TTL 8~h preserves the yellow counts in both phases and has zero deaths.
-Consequently these results do not rule out a single fixed TTL across the tested phases.
+At $\eta{=}\cFivePeak$ the clock guard leaves \cFiveNightfloorDeadA and
+\cFiveNightfloorDeadB deaths in phases A and B, whereas fixed TTL 4~h and 8~h both leave zero;
+TTL 4~h gives up \cFiveTtlFourLostB yellow deliveries in phase~B, while TTL 8~h preserves the
+aggregate yellow counts in both phases (the same counts as the announced validity, see
+Table~\ref{tab:lease}). A bound derived from energy feasibility also leaves zero deaths but
+gives up \cFiveEnergyLostA and \cFiveEnergyLostB deliveries: the gate reads ``predicted
+infeasible'' as ``the obligation may be dropped'', and the cost lands on yellow delivery.
+Consequently these results do not rule out a single fixed TTL across the tested phases, nor do
+they establish an increment for a delivery-derived lease over an ordinary one.
 At $\eta{=}0.01$, every tested arm incurs 40 deaths; this does not establish that every legal
 sparse policy is physically infeasible.
 

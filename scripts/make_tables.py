@@ -91,55 +91,69 @@ def table_expiry():
 
 
 def table_lease():
-    top = load("results/r48_ttl_vs_lease.json")
-    d, phases = top["results"], top["phases"]
-    arms = ["nightfloor", "ttl4", "ttl6", "ttl8", "delivery_geo"]
-    h = lambda sec: sec // 3600
+    """配置终止线：以**修正后的当前证据** `results/c5_matrix.json` 为源。
 
-    def arm_label(lang, arm, up_h):
-        """退回时刻由相位起点加 TTL 算出，不写死。"""
+    `r48_ttl_vs_lease.json` 里的 `delivery_geo` 行（候选交付推导界）用的是修正前的预测账本
+    （缺电池容量截断），其"零死亡且黄级交付不减"的读数已随 C5 修正撤回；该文件仍在
+    `results/README.md` 登记为历史证据，但不再作为本表的数字来源。
+    """
+    d = load("results/c5_matrix.json")
+    phases = load("results/r48_ttl_vs_lease.json")["phases"]   # 相位参数不在矩阵里，仍取登记过的来源
+    h = lambda sec: sec // 3600
+    PEAK = "0.012"
+    # 三臂逐格相同（修正矩阵把它作为一条结论登记），表里只列一条并在说明里写明
+    ARMS = ["all_sparse", "nightfloor", "valid_until", "ttl4", "ttl8", "energy_lease"]
+
+    def label(lang, arm, up_h, down_h):
+        names = {
+            "all_sparse": {"en": "never dense (blue only)", "zh": "从不密集（仅蓝级）"},
+            "nightfloor": {"en": f"clock guard (sunset {12}~h)", "zh": f"时钟门（日落 {12}~h）"},
+            "valid_until": {"en": f"announced validity ({down_h}~h, Task~1)",
+                            "zh": f"预告有效期（{down_h}~h，任务~1）"},
+            "ttl4": {"en": f"fixed TTL 4~h (revert {up_h + 4}~h)",
+                     "zh": f"固定 TTL 4~h（退回 {up_h + 4}~h）"},
+            "ttl8": {"en": f"fixed TTL 8~h (revert {up_h + 8}~h)",
+                     "zh": f"固定 TTL 8~h（退回 {up_h + 8}~h）"},
+            "energy_lease": {"en": "energy gate, open-loop bound", "zh": "能量门（开环界）"},
+        }
+        txt = names[arm][lang]
         if arm == "nightfloor":
-            return {"en": "clock guard (sunset 12 h)", "zh": "时钟门（日落 12~h）"}[lang]
-        if arm == "delivery_geo":
-            return {"en": "delivery lease", "zh": "交付租约"}[lang]
-        n = arm[-1]
-        return {"en": f"fixed TTL {n} h (revert {up_h + int(n)} h)",
-                "zh": f"固定 TTL {n}~h（退回 {up_h + int(n)}~h）"}[lang]
+            return {"en": "clock guard (sunset 12~h)", "zh": "时钟门（日落 12~h）"}[lang]
+        return txt
 
     def sep(lang, ph):
         up, dn = h(phases[ph]["up"]), h(phases[ph]["down"])
         a, b = phases[ph]["out_start"], phases[ph]["out_start"] + phases[ph]["out_hours"]
         if lang == "en":
-            return ("\\emph{Phase %s, overcast $\\eta{=}0.012$ (upgrade %d~h, downgrade %d~h, "
-                    "outage %d--%d~h)}" % (ph, up, dn, a, b))
-        return ("\\emph{相位 %s，阴雨 $\\eta{=}0.012$（升级 %d~h、降级 %d~h、中断 %d--%d~h）}"
-                % (ph, up, dn, a, b))
+            return ("\\emph{Phase %s, overcast $\\eta{=}%s$, seeds 0--2 (upgrade %d~h, "
+                    "downgrade %d~h, outage %d--%d~h)}" % (ph, PEAK, up, dn, a, b))
+        return ("\\emph{相位 %s，阴雨 $\\eta{=}%s$，种子 0--2（升级 %d~h、降级 %d~h、中断 %d--%d~h）}"
+                % (ph, PEAK, up, dn, a, b))
 
-    head = {"en": "Local revert bound & Deaths (3 seeds) & Mean svc & Mean final SoC & Yellow delivered",
-            "zh": "本地退回界 & 死亡（3 种子） & 平均服务 & 最终 SoC & 黄级交付"}
-    out, taus = {}, {}
+    head = {"en": "Local revert bound & Deaths (3 seeds) & Mean svc & Mean final SoC "
+                  "& Yellow delivered / total",
+            "zh": "本地退回界 & 死亡（3 种子） & 平均服务 & 最终 SoC & 黄级交付 / 总数"}
+    out = {}
     for lang in ("en", "zh"):
         rows = []
         for ph in ("A", "B"):
-            blk = d[ph]["peaks"]["0.012"]
-            taus[ph] = d[ph]["geo_tau_h"]
             up_h = h(phases[ph]["up"])
+            down_h = h(phases[ph]["down"])
             rows.append("\\multicolumn{5}{l}{%s}\\\\" % sep(lang, ph))
-            for a in arms:
-                r = blk[a]
-                name = arm_label(lang, a, up_h)
-                if a == "delivery_geo":
-                    name = f"\\textbf{{{name} ($\\tau_L{{=}}{f(d[ph]['geo_tau_h'], 2)}$~h)}}"
-                    b = lambda x: "\\textbf{%s}" % x
-                else:
-                    b = lambda x: x
-                rows.append(f"{name} & {b(str(r['dead_total']))} & {b(f(r['svc_mean'], 4))} & "
-                            f"{b(f(r['soc_mean'], 3))} & {b(str(r['yellow_delivered']))}")
+            for arm in ARMS:
+                r = d["cells"][f"{ph}|{PEAK}|{arm}"]
+                bold = (lambda x: "\\textbf{%s}" % x) if arm in ("ttl8", "energy_lease") \
+                    else (lambda x: x)
+                rows.append(f"{label(lang, arm, up_h, down_h)} & {bold(str(r['dead_total']))} & "
+                            f"{bold(f(r['svc_mean'], 4))} & {f(r['mean_final_soc'], 5)} & "
+                            f"{bold('%d/%d' % (r['yellow_delivered_total'], r['yellow_n_total']))}")
             if ph == "A":
                 rows.append("\\midrule")
         out[lang] = (head[lang], rows)
     return {"en": out["en"], "zh": out["zh"],
-            "meta": {"tau_A": taus["A"], "tau_B": taus["B"],
+            "meta": {"peak": PEAK, "seeds": 3, "source": "results/c5_matrix.json",
+                     "yellow_A": d["cells"][f"A|{PEAK}|ttl8"]["yellow_n_total"],
+                     "yellow_B": d["cells"][f"B|{PEAK}|ttl8"]["yellow_n_total"],
                      "upgrade_h_A": h(phases["A"]["up"]), "upgrade_h_B": h(phases["B"]["up"])}}
 
 
@@ -211,6 +225,52 @@ def table_placement():
     return out
 
 
+def facts() -> dict:
+    """正文与表说明里出现的 C5 数字，全部由结果文件算出并写成宏。
+
+    正文里"手抄一个数"与生成表体里"手抄一个数"是同一类问题，因此这里把口径要求的数字一并
+    生成：稿件只允许写 `\\cFive...` 宏，具体取值由本函数从 `results/c5_matrix.json` 取出。
+    """
+    d = load("results/c5_matrix.json")
+    PEAK = "0.012"
+    cell = lambda ph, arm: d["cells"][f"{ph}|{PEAK}|{arm}"]
+    defs = {
+        "cFivePeak": str(PEAK),
+        "cFiveSeeds": "3",
+        "cFiveYellowNA": str(cell("A", "ttl8")["yellow_n_total"]),
+        "cFiveYellowNB": str(cell("B", "ttl8")["yellow_n_total"]),
+        "cFiveTtlEightYellowA": str(cell("A", "ttl8")["yellow_delivered_total"]),
+        "cFiveTtlEightYellowB": str(cell("B", "ttl8")["yellow_delivered_total"]),
+        "cFiveTtlEightDeadA": str(cell("A", "ttl8")["dead_total"]),
+        "cFiveTtlEightDeadB": str(cell("B", "ttl8")["dead_total"]),
+        "cFiveEnergyYellowA": str(cell("A", "energy_lease")["yellow_delivered_total"]),
+        "cFiveEnergyYellowB": str(cell("B", "energy_lease")["yellow_delivered_total"]),
+        "cFiveEnergyDeadA": str(cell("A", "energy_lease")["dead_total"]),
+        "cFiveEnergyDeadB": str(cell("B", "energy_lease")["dead_total"]),
+        "cFiveNightfloorDeadA": str(cell("A", "nightfloor")["dead_total"]),
+        "cFiveNightfloorDeadB": str(cell("B", "nightfloor")["dead_total"]),
+        "cFiveAllSparseYellowA": str(cell("A", "all_sparse")["yellow_delivered_total"]),
+        "cFiveEnergyLostA": str(cell("A", "ttl8")["yellow_delivered_total"]
+                                - cell("A", "energy_lease")["yellow_delivered_total"]),
+        "cFiveEnergyLostB": str(cell("B", "ttl8")["yellow_delivered_total"]
+                                - cell("B", "energy_lease")["yellow_delivered_total"]),
+        "cFiveTtlFourYellowA": str(cell("A", "ttl4")["yellow_delivered_total"]),
+        "cFiveTtlFourYellowB": str(cell("B", "ttl4")["yellow_delivered_total"]),
+        "cFiveTtlFourLostB": str(cell("B", "ttl8")["yellow_delivered_total"]
+                                - cell("B", "ttl4")["yellow_delivered_total"]),
+        "cFiveValidUntilYellowA": str(cell("A", "valid_until")["yellow_delivered_total"]),
+        "cFiveValidUntilYellowB": str(cell("B", "valid_until")["yellow_delivered_total"]),
+        "cFiveTtlFourRevertA": "6", "cFiveTtlEightRevertA": "10",
+        "cFiveTtlFourRevertB": "5", "cFiveTtlEightRevertB": "9",
+    }
+    lines = ["%% 由 scripts/make_tables.py 生成，勿手改；取值来自 results/c5_matrix.json。",
+             "%% 正文与表说明里的这些数字只允许写成这些宏。"]
+    for k in sorted(defs):
+        lines.append("\\newcommand{\\%s}{%s}" % (k, defs[k]))
+    return "\n".join(lines) + "\n", {"source": "results/c5_matrix.json", "peak": PEAK,
+                                     "definitions": defs}
+
+
 TABLES = {
     "walls": table_walls,
     "expiry": table_expiry,
@@ -265,6 +325,21 @@ def main() -> int:
             meta_path = os.path.join(GEN, f"table_{name}.meta.json")
             with open(meta_path, "w", encoding="utf-8") as fh:
                 json.dump(spec["meta"], fh, ensure_ascii=False, indent=2, sort_keys=True)
+
+    # 数字宏文件：正文与表说明里的 C5 数字只允许写这些宏
+    facts_text, facts_meta = facts()
+    fp = os.path.join(GEN, "facts.tex")
+    fold = open(fp, encoding="utf-8").read() if os.path.exists(fp) else None
+    if fold != facts_text:
+        if args.check:
+            stale.append(os.path.relpath(fp, ROOT))
+        else:
+            with open(fp, "w", encoding="utf-8") as fh:
+                fh.write(facts_text)
+            written.append(os.path.relpath(fp, ROOT))
+    if not args.check:
+        with open(os.path.join(GEN, "facts.meta.json"), "w", encoding="utf-8") as fh:
+            json.dump(facts_meta, fh, ensure_ascii=False, indent=2, sort_keys=True)
 
     if args.check:
         if stale:
