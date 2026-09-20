@@ -1,5 +1,9 @@
 # -*- coding: utf-8 -*-
-"""c5_gate.py — LOCAL, UNTRACKED: Task-2 (runtime authorisation) obligation view.
+"""c5_gate.py — Task-2 (runtime authorisation) obligation view.
+
+**已在版本控制内**（`code/v3joint/`）：本文件是配置终止线（C5/C9）证据链的一部分，由
+`code/v3joint/c5_matrix.py` 使用，结果登记在 `results/c5_matrix.json`。早先的说明写它是未跟踪的
+本地文件，那是在 C5 修正重新入库之前。
 
 Why this file exists
 --------------------
@@ -22,7 +26,8 @@ from its start onward is replaced. The gateway never sees the next segment's rea
 Task 1 (announced validity: the upgrade command carries an absolute ``valid_until``) is a different
 information condition and keeps the pre-announced schedule; see ``_Dispatch``.
 
-Nothing here is imported by ``code/`` or ``scripts/``; the frozen repository is untouched.
+本文件被 `code/v3joint/c5_matrix.py` 导入。`MODE` 显式区分两种信息条件：``task1`` 是预告时刻表
+（tracked `mission_view.py` 的逐位行为），``task2`` 是运行时授权下的外推发布。
 """
 from __future__ import annotations
 

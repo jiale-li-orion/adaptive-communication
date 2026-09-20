@@ -1,12 +1,14 @@
 # -*- coding: utf-8 -*-
-"""c5_common.py — LOCAL, UNTRACKED experimental scaffold for the C5 config-lease question.
+"""c5_common.py — C5 configuration-termination family: prediction ledger and online strategies.
 
-NOT part of the frozen repository: lives under local_experiments/c5_lease/, never imported by
-code/ or scripts/, never writes results/ or paper/generated. It monkeypatches Node._apply_local_floor
-to add *online* config-termination strategies that use only information a node can lawfully have at
-the time (its own measured SoC, clock, public day/night curve, protocol period P, deployed task
-horizon, link reliability, pre-authorised fallback rights). Task-2 strategies never read the future
-downgrade time `down`.
+**已在版本控制内**（`code/v3joint/`）。早先的说明写它是"未跟踪的本地脚手架"，那是在 C5 修正
+重新入库之前；本文件现在是配置终止线（C5/C9）证据链的一部分，由 `code/v3joint/c5_matrix.py`
+使用、结果登记在 `results/c5_matrix.json`。过程材料（旧 FINDINGS、paper_v09、探针）仍留在
+`local_experiments/`，不进仓库。
+
+它 monkeypatch `Node._apply_local_floor`，加入*在线*配置终止策略；这些策略只能用节点在当时
+合法拥有的信息（自测电量、本地时钟、公开昼夜曲线、协议周期 P、已部署任务端点、链路可靠性、
+预授权回退权）。任务 2 的策略**不读**未来降级时刻 `down`。
 
 All arms share: clock night floor (dense->sparse at dusk), generic_expiry record cache, maxcov backup
 packing, identical install path (a dense config is detected at the node on the rising edge, i.e. when

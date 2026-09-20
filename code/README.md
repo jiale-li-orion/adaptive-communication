@@ -26,6 +26,9 @@ code/
 | `code/v3joint/c5_matrix.py` | 主矩阵：2 相位 × 2 采能 × 9 臂 × 3 种子 | `results/c5_matrix.json` |
 | `code/v3joint/c5_infocontract.py` | 非预知性契约 A1/A2/A3（含"两个未来视图必须相同"的判别测试） | `results/c5_infocontract.json` |
 | `code/v3joint/rerun_original_matrix.py` | 按修正前语义复跑，还原并审计对照 | `results/c5_matrix_precorrection.json` |
+| `code/v3joint/c5_seqref.py` | **非预知序列参照**（三方表）：单节点声明模型上，同信息非预知精确最优、族内最强普通组合、全知参照；含可手算核例（`--core`）。口径见 [`spec/prereg-nonprescient-sequence-v1.md`](../spec/prereg-nonprescient-sequence-v1.md) | `results/c5_seqref.json` |
+| `code/experiments/measure_seqref_calibration.py` | 实测上述模型的两个负载常数与逐小时轨迹（相位 A、`ttl8`、seed 0、节点 `n00`） | `results/c5_seqref_calibration.json` |
+| `code/experiments/audit_seqref.py` | 判定预注册是否被兑现：登记、常数同源、台账校准、核例穷举与分辨力、三方表与恒等式、非预知性、临界严重度 | — |
 
 `c5_*` 前缀偏离 `rNN_` 编号惯例，取的是家族可读性；脚本名在独立审查中被逐行引用，改名会切断审计链。
 

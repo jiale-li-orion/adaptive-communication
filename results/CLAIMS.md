@@ -27,6 +27,7 @@
 | C6 | §7.5 表 5 | 同一规则在中心与节点的执行位置对照；节点本地门消除所测种子死亡并压低被拒准入 | `code/v3joint/r39_envelope.py` | `results/agent_traces/r39_table.json` | supported |
 | C7 | §7.4 表 4 | 任务表到达时仅凭网关本地证据的可判定覆盖与已判定精度 | `code/v3joint/r40_local_attribution.py` | `results/r40_local_attribution.json` | supported |
 | C8 | §7.6 | 真实 agent 十一轨迹、1089 次决策的对称计量；接口故障与解析失败账目 | `code/v3joint/r38_agent_three_arm.py`、`code/v3joint/r42_claim_relabel.py`、`code/v3joint/r43_cert_v5_replay.py` | `results/agent_traces/r38_three_arm_summary.json`、`results/r42_claim_relabel.json`、`results/r43_cert_v5_replay.json` | formative |
+| C9 | §7.3 表 3 | 按预注册口径（`spec/prereg-nonprescient-sequence-v1.md`）的单节点声明的模型上，同信息**非预知序列最优**、族内最强可行普通组合、**全知参照**在受检格（相位 A/B × 采光峰值 .012/.03 × 实测离散度 .047）都拿到满窗义务（A 48/48、B 84/84）：可实现策略差额、信息差额、保护代价与恒等式残差全为 0；且 $s_{\text{full}}{=}.0510>$ 实测 .047。核例中 $\Delta_{\text{可实现}}{=}{+}8$ 条/节点（DP 20.0 对最强安全固定租约 12.0，穷举 128 条规则验过），故该零差额结论有分辨力。**由 C5 的候选能量族损失不得读作"保护代价"**；边界（服务=被采集、单节点、云遮按小时）见预注册第 6 节 | `code/v3joint/c5_seqref.py`、`code/experiments/measure_seqref_calibration.py`、`code/experiments/audit_seqref.py` | `results/c5_seqref.json`、`results/c5_seqref_calibration.json` | supported |
 
 ## 撤回表
 

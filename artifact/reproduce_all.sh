@@ -36,10 +36,11 @@ CLAIMS=(
 "C2|no|python3 code/v3joint/r41_expiry_equiv.py|results/r41_expiry_equiv.json"
 "C3|no|python3 code/v3joint/r37e_full_seeds.py|results/r37e_full_seeds.json"
 "C4|no|python3 code/v3joint/r44_fullhorizon_attribution.py|results/r44_fullhorizon_attribution.json"
-"C5|no|python3 code/v3joint/r46_lease_sweep.py && python3 code/v3joint/r47_lease_energy.py && python3 code/v3joint/r48_ttl_vs_lease.py|results/r46_lease_sweep.json,results/r47_lease_energy.json,results/r48_ttl_vs_lease.json"
+"C5|no|python3 code/v3joint/c5_matrix.py 0 1 2|results/c5_matrix.json"
 "C6|no|python3 code/v3joint/r39_envelope.py && python3 code/v3joint/merge_r39.py|results/agent_traces/r39_table.json"
 "C7|no|python3 code/v3joint/r40_local_attribution.py|results/r40_local_attribution.json"
 "C8|creds|python3 code/v3joint/r42_claim_relabel.py && python3 code/v3joint/r43_cert_v5_replay.py|results/r42_claim_relabel.json,results/r43_cert_v5_replay.json,results/agent_traces/r38_three_arm_summary.json"
+"C9|no|python3 code/v3joint/c5_seqref.py && python3 code/experiments/measure_seqref_calibration.py|results/c5_seqref.json,results/c5_seqref_calibration.json"
 )
 
 if [ "$ONLY" = "__LIST__" ]; then

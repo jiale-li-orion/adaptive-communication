@@ -18,8 +18,11 @@ Three groups, because they answer different questions:
               evidence for it from drifting apart across revisions.
   paper       the manuscripts' tables must be generated from the result files rather than typed
               into the text, so a re-run cannot leave a stale number in the paper.
+  seqref      the pre-registered non-prescient sequence reference: declared constants have one
+              source, the hand-checkable core matches exhaustive enumeration and still resolves a
+              real gap, and the tested cells' three-row table and identity hold.
 
-Run: python3 code/run_checks.py [--group mechanism|monitoring|claims|paper|all] [--quiet]
+Run: python3 code/run_checks.py [--group mechanism|monitoring|claims|paper|seqref|all] [--quiet]
 """
 from __future__ import annotations
 
@@ -60,13 +63,16 @@ CHECKS = {
     "paper": [
         ("experiments/audit_tables.py", "论文表格由结果文件生成，稿件不手写表体"),
     ],
+    "seqref": [
+        ("experiments/audit_seqref.py", "非预知序列参照：常数同源、台账校准、核例穷举、三方表与恒等式"),
+    ],
 }
 
 
 def main() -> int:
     ap = argparse.ArgumentParser()
     ap.add_argument("--group", default="all",
-                    choices=["mechanism", "monitoring", "claims", "paper", "all"])
+                    choices=["mechanism", "monitoring", "claims", "paper", "seqref", "all"])
     ap.add_argument("--quiet", action="store_true", help="print only failures")
     args = ap.parse_args()
 
