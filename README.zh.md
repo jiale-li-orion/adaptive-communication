@@ -56,7 +56,7 @@
 | C8 | 真实 Agent 接口失效 | formative |
 | C9 | 同信息单节点停止 | scoped-negative |
 | C10 | 到期边界修正 | supported |
-| C11 | 反向确认延迟界；候选 R1 关闭 | supported |
+| C11 | 反向确认延迟界（条件性）；R1 关闭理由已撤回 | supported |
 
 ## 4. 后续只推进三个闭环问题
 

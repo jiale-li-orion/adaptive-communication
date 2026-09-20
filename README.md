@@ -56,7 +56,7 @@ Current states below are a checked projection of [CLAIMS](results/CLAIMS.md), no
 | C8 | Live Agent interface failures | formative |
 | C9 | Same-information single-node stopping | scoped-negative |
 | C10 | Expiry-boundary correction | supported |
-| C11 | Reverse-acknowledgement delay bound; candidate R1 closed | supported |
+| C11 | Reverse-acknowledgement delay bound (conditional); R1-closure rationale retracted | supported |
 
 ## 4. Remaining work
 
