@@ -16,6 +16,7 @@
 | `r38_three_arm_summary.json`、`r42_claim_relabel.json`、`r43_cert_v5_replay.json` | C8 | 保存的 agent 轨迹与其离线重放 |
 | `c5_seqref.json` | C9（open） | `code/v3joint/c5_seqref.py` |
 | `c5_seqref_v1_semantics.json` | —（v1 口径，已取代） | `code/v3joint/c5_seqref.py` 于 `a665642` |
+| `r49_retention_horizon.json` | C10 | `code/v3joint/r49_retention_horizon.py` |
 | `c5_seqref_v2_semantics.json` | —（v2 口径，已取代） | `code/v3joint/c5_seqref.py` 于 `1a36d52` |
 | `c5_seqref_calibration.json` | C9 | `code/experiments/measure_seqref_calibration.py` |
 
