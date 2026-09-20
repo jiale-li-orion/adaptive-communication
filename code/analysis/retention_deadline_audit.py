@@ -10,10 +10,18 @@
 
 臂
 --
-`current`   现行：`expires_at <= t_s` 删除，周期 = 节点已知业务周期
+`prefix`    **修正前语义**：`expires_at <= t_s` 删除，周期 = 节点已知业务周期。这是 C10 的对照臂，
+            显式装回缺陷谓词，因此不随 `network.py` 的实现移动
+`current`   HEAD 现行实现（`_ORIG_BATCH`）。C10 修正后它**已经是**边界一致版本，故与 `boundary`
+            逐位相同；保留它是为了让"实现里现在是什么"始终可见
 `boundary`  普通 expiry，只把边界改成 `expires_at < t_s`（保留截止当拍），周期不变
 `fixed2`    周期 2 倍，`<=` 删除（r49 的探索最优点）
 `adaptive`  r49 预注册规则（信念期限 + 自有收据时延中位数）
+
+**为什么对照臂必须自己装回谓词。** 曾把 `current` 当成对照臂，它委托给 HEAD 的 `Node.batch`；C10
+的修法正好落在那段共享代码里，于是处理臂一动、对照臂跟着动，`boundary − current` 从 +1.47 点塌成
+0.0000，而登记行与冻结件仍引用 +1.47。任何"对照臂引用将被修改的共享实现"的写法都有这个失效模式，
+所以这里的对照臂是显式谓词，并且脚本自带非退化自检（见 `main` 末尾的 `对照臂与处理臂读数不得逐位相同`）。
 
 本脚本只做诊断，不改 `code/` 或已登记结果的语义；旧 r49 结果保留不覆盖。
 
@@ -46,8 +54,8 @@ import network as net
 H = lambda h: h * 3600
 SCHED = [(0, 600, "blue"), (H(2), 300, "yellow"), (H(6), 600, "blue")]
 PEAK = 0.012
-ARMS = ("current", "boundary", "fixed2", "adaptive")
-MODE = {"arm": "current"}
+ARMS = ("prefix", "current", "boundary", "fixed2", "adaptive")
+MODE = {"arm": "prefix"}
 
 _ORIG_BATCH = net.Node.batch
 WITNESS: dict = collections.defaultdict(collections.Counter)
@@ -67,32 +75,48 @@ def _true_deadline(taken: int) -> int:
     return taken + 2 * SCHED[-1][1]
 
 
+def _live(self) -> bool:
+    """复刻 `Node.batch` 开头两行。臂是整体替换 `Node.batch` 的（只改删除谓词、其余不动），
+    所以这两行必须自己带上：死节点或空缓存直接返回，事件上报配额照常递减。少了它，各臂就与
+    `current` 在"节点已死/无缓存"的拍上分歧——那是口径差异，不是被审计的边界差异。"""
+    if not self.alive or not self.cache:
+        return False
+    if self.event_upload_pending > 0:
+        self.event_upload_pending -= 1
+    return True
+
+
+def _purge(self, t_s: int, period: int, max_slots: int, *, inclusive: bool):
+    """按 `<=`（inclusive＝修正前）或 `<`（修正后）删除到期记录，返回本拍批次。
+
+    这是**显式谓词**：审计的对照与处理都由它实现，不引用 `network.py` 里会被修改的那段共享代码。
+    """
+    keep, drop = [], []
+    for s in self.cache:
+        exp = _expected_expiry(s.taken_at, period)
+        (drop if (exp <= t_s if inclusive else exp < t_s) else keep).append(s)
+    if drop:
+        for old in drop:
+            self.transit[old.sample_id].dropped_at = t_s
+            self.dropped += 1
+        self.cache = keep
+    return self.cache[:max_slots]
+
+
 def batch(self, t_s: int, max_slots: int = 32):
     arm = MODE["arm"]
     if arm == "current":
         return _ORIG_BATCH(self, t_s, max_slots)
+    if not _live(self):
+        return []
     period = max(1, int(self.p.obligation_period_s))
+    if arm == "prefix":
+        # 修正前语义：期限恰为当拍的记录被删（周期不变）。
+        return _purge(self, t_s, period, max_slots, inclusive=True)
     if arm == "boundary":
-        keep, drop = [], []
-        for s in self.cache:
-            (drop if _expected_expiry(s.taken_at, period) < t_s else keep).append(s)
-        if drop:
-            for old in drop:
-                self.transit[old.sample_id].dropped_at = t_s
-                self.dropped += 1
-            self.cache = keep
-        return self.cache[:max_slots]
+        return _purge(self, t_s, period, max_slots, inclusive=False)
     if arm == "fixed2":
-        period = 2 * period
-        keep, drop = [], []
-        for s in self.cache:
-            (drop if _expected_expiry(s.taken_at, period) <= t_s else keep).append(s)
-        if drop:
-            for old in drop:
-                self.transit[old.sample_id].dropped_at = t_s
-                self.dropped += 1
-            self.cache = keep
-        return self.cache[:max_slots]
+        return _purge(self, t_s, 2 * period, max_slots, inclusive=True)
     # adaptive：信念期限 + L̂（自有收据时延中位数，夹 [0,4P]）
     lat = []
     for sid, tr in getattr(self, "transit", {}).items():
@@ -239,23 +263,57 @@ def main() -> int:
         summary[a]["vs_current_points"] = round(m, 4)
         summary[a]["vs_current_ci95"] = [round(lo, 4), round(hi, 4)]
         summary[a]["vs_current_positive_seeds"] = sum(1 for x in d if x > 0)
+    # **C10 的对照是 prefix**：显式装回的修正前谓词。`vs_current` 只是"实现现状与修正后是否一致"
+    # 的旁证——C10 修正已落在 `network.py`，所以它应当是 0。
+    for a in ("current", "boundary", "fixed2", "adaptive"):
+        d = [100 * (b["svc"] - c["svc"]) for b, c in zip(per[a], per["prefix"])]
+        m, lo, hi = ci95(d)
+        summary[a]["vs_prefix_points"] = round(m, 4)
+        summary[a]["vs_prefix_ci95"] = [round(lo, 4), round(hi, 4)]
+        summary[a]["vs_prefix_positive_seeds"] = sum(1 for x in d if x > 0)
     for a in ("fixed2", "adaptive"):
         d = [100 * (b["svc"] - c["svc"]) for b, c in zip(per[a], per["boundary"])]
         m, lo, hi = ci95(d)
         summary[a]["vs_boundary_points"] = round(m, 4)
         summary[a]["vs_boundary_ci95"] = [round(lo, 4), round(hi, 4)]
+    # **非退化自检**：对照臂与处理臂若逐位相同，审计就没有对照，任何差额都是假的。这条自检存在
+    # 的原因是一次真实失效——对照臂曾委托给 `Node.batch`，C10 的修法落进那段共享代码后两条臂
+    # 变成同一条，`boundary − current` 从 +1.47 点塌成 0.0000 却无人报警。
+    degenerate = []
+    for s in args.seeds:
+        b, p = out["runs"][str(s)]["boundary"], out["runs"][str(s)]["prefix"]
+        if (b["delivered"], b["heard_exactly_at_expiry"]) == (p["delivered"], p["heard_exactly_at_expiry"]):
+            degenerate.append(s)
+    out["contrast_guard"] = {"compared": ["boundary", "prefix"], "degenerate_seeds": degenerate,
+                             "n_degenerate": len(degenerate)}
     out["summary"] = summary
     print("十种子合计（相位 A，peak .012，ttl8）：")
     for a in ARMS:
         s = summary[a]
-        extra = (f"  vs current {s.get('vs_current_points'):+.2f} 点 CI{s.get('vs_current_ci95')}"
-                 f" 正种子 {s.get('vs_current_positive_seeds')}/10" if a != "current" else "")
+        extra = ""
+        if a != "prefix":
+            extra += (f"  vs prefix {s['vs_prefix_points']:+.2f} 点 CI{s['vs_prefix_ci95']}"
+                      f" 正种子 {s['vs_prefix_positive_seeds']}/10")
+        if a not in ("prefix", "current"):
+            extra += f"  vs current {s['vs_current_points']:+.2f}"
+        if a in ("fixed2", "adaptive"):
+            extra += f"  vs boundary {s['vs_boundary_points']:+.2f}"
         print(f"  {a:9s} 服务 {s['svc_mean_pct']:.4f}%  交付 {s['delivered_total']}/{s['n_obligations_total']}"
               f"  黄级 {s['yellow_total']}  死亡 {s['dead_total']}  minSoC {s['min_soc_wh']*1000:.3f} mWh"
               f"  到期当拍听到 {s['heard_exactly_at_expiry_total']}"
               f"（其中恰等于真期限 {s['heard_at_expiry_is_true_deadline_total']}，"
               f"听到已过期 {s['heard_at_expiry_after_deadline_total']}）"
-              f"  vs boundary {s.get('vs_boundary_points')}{extra}")
+              f"  到期当拍删除 {s['dropped_exactly_at_expiry_total']}{extra}")
+    # 非退化自检：不过则不写结果文件，避免把"没有对照"的读数落成在册证据。
+    g = out["contrast_guard"]
+    if g["n_degenerate"]:
+        print(f"\nFAIL 对照臂退化：boundary 与 prefix 在 {g['n_degenerate']} 个种子上读数逐位相同"
+              f"（{g['degenerate_seeds']}）。此时 boundary − prefix 不构成因果对照，拒绝写入。")
+        return 1
+    if summary["current"]["vs_prefix_points"] == 0.0:
+        print("\nFAIL current 与 prefix 读数相同：说明 `network.py` 里的边界修正不在了，"
+              "C10 的前提已变，须先复核实现再解释任何差额。")
+        return 1
     path = args.out if os.path.isabs(args.out) else os.path.join(ROOT, args.out)
     os.makedirs(os.path.dirname(path), exist_ok=True)
     with open(path, "w", encoding="utf-8") as fh:

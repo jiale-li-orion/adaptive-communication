@@ -27,7 +27,15 @@
 传任何 `mission_mode` 都会让网关侧 `ObligationDeliveryPolicy` 分支不可达（实测得到
 `MissionChangePolicy` 且零下发）。本诊断因此传 `mission_mode=None`。
 
-Run: python3 code/analysis/control_deadline_witness.py [--delay 900] [--seed 0]
+跑法与产物边界
+--------------
+    python3 code/analysis/control_deadline_witness.py --seeds 0 1 2   # 写受控在册件
+    python3 code/analysis/control_deadline_witness.py --seed 102      # 探索：只落临时文件
+
+**只有多种子聚合写 `results/control_deadline_witness.json`。** 单种子运行属于探索，缺省落到系统
+临时目录并把路径打印出来。这条规则不是洁癖：用 `--seed` 逐种子循环跑过一次，就把三种子聚合件
+覆盖成了最后一个种子的单跑结果（`seed: 104`，无 `per_seed`/`summary`），而登记行、`CLAIMS` 与
+`results/reference/` 冻结件仍在引用聚合读数，活件与冻结件因此分叉且无人发现。
 """
 from __future__ import annotations
 
@@ -36,9 +44,22 @@ import collections
 import json
 import os
 import sys
+import tempfile
 
 HERE = os.path.dirname(os.path.abspath(__file__))
 ROOT = os.path.normpath(os.path.join(HERE, "..", ".."))
+
+#: 受控在册件。只有多种子聚合可以写它，见文件头"跑法与产物边界"。
+REGISTERED_OUT = os.path.join("results", "control_deadline_witness.json")
+
+
+def out_path(args, seed: int | None = None) -> str:
+    """输出路径：`--out` 显式给出时照用；否则多种子→受控在册件、单种子→系统临时文件。"""
+    if args.out:
+        return args.out if os.path.isabs(args.out) else os.path.join(ROOT, args.out)
+    if seed is None:
+        return os.path.join(ROOT, REGISTERED_OUT)
+    return os.path.join(tempfile.gettempdir(), f"control_deadline_witness_seed{seed}.json")
 for _d in ("v3joint", "instance", "physics", "runtime", "experiments", "analysis", "monitoring"):
     _p = os.path.join(ROOT, "code", _d)
     if _p not in sys.path:
@@ -152,6 +173,18 @@ def run(seed: int) -> dict:
                        ("backup_packets", "backup_bytes_sent", "backup_on", "backup_late")}}
 
 
+def rescue_witness(early: dict, late: dict) -> dict:
+    """见证 A 的计数：`early` 交付而 `late` 未交付（救回），以及反向位移。
+
+    单种子路径与多种子聚合共用这一个实现——判决措辞要引用救回/位移，而受控文字只能引用受控产物，
+    所以计数必须进聚合件，不能只留在 stdout 里。
+    """
+    rescued = sorted(early["delivered"] - late["delivered"])
+    displaced = sorted(late["delivered"] - early["delivered"])
+    return {"rescued": len(rescued), "displaced": len(displaced),
+            "rescued_oids": rescued, "displaced_oids": displaced}
+
+
 def timeline(rows, oid):
     for x in rows:
         if x["oid"] == oid:
@@ -186,15 +219,26 @@ def multi_seed(args) -> int:
                               "uplink_s": round(d["comm"]["airtime_uplink_h"] * 3600, 1),
                               "downlink_s": round(d["comm"]["airtime_downlink_h"] * 3600, 1),
                               "attempts": d["comm"]["downlink_attempts"]})
+        # **见证计数必须进聚合件**：`late` 的救回/位移是判决措辞要引用的量，而受控文字只能引用
+        # 受控产物。只把它留在 stdout 里，登记行就没法引用它——这正是"结论在文里、证据不在件里"
+        # 的老毛病。两个计数按种子记，同时给合计。
+        wa = rescue_witness(early, late)
+        per["early"][-1]["witness_a"] = {"rescued": wa["rescued"], "displaced": wa["displaced"],
+                                         "rescued_oids": wa["rescued_oids"][:5]}
+        per["early"][-1]["witness_b"] = {"svc_delta_quiet_vs_early":
+                                         quiet["result"]["routine"]["delivered"]
+                                         - early["result"]["routine"]["delivered"]}
         print(f"seed {seed}: early {early['result']['routine']['delivered']}"
               f"  table {table['result']['routine']['delivered']}"
               f"  tbl_lead {lead['result']['routine']['delivered']}"
               f"  quiet {quiet['result']['routine']['delivered']}"
-              f"  late {late['result']['routine']['delivered']}", flush=True)
+              f"  late {late['result']['routine']['delivered']}"
+              f"  救回 {wa['rescued']} 位移 {wa['displaced']}",
+              flush=True)
     diff = [e["svc"] - t["svc"] for e, t in zip(per["early"], per["table"])]
     diff_l = [e["svc"] - l["svc"] for e, l in zip(per["early"], per["tbl_lead"])]
     diff_q = [e["svc"] - q["svc"] for e, q in zip(per["early"], per["quiet"])]
-    print(f"\n三种子（{args.seeds}）：")
+    print(f"\n{len(args.seeds)} 种子（{args.seeds}）：")
     print(f"  early − table    {diff}  均值 {sum(diff)/len(diff):+.1f} 条")
     print(f"  early − tbl_lead {diff_l}  均值 {sum(diff_l)/len(diff_l):+.1f} 条")
     print(f"  early − quiet    {diff_q}  均值 {sum(diff_q)/len(diff_q):+.1f} 条")
@@ -211,8 +255,15 @@ def multi_seed(args) -> int:
                        "early_minus_quiet": diff_q,
                        "mean_early_minus_table": sum(diff) / len(diff),
                        "mean_early_minus_tbl_lead": sum(diff_l) / len(diff_l),
-                       "mean_early_minus_quiet": sum(diff_q) / len(diff_q)}}
-    path = args.out if os.path.isabs(args.out) else os.path.join(ROOT, args.out)
+                       "mean_early_minus_quiet": sum(diff_q) / len(diff_q),
+                       "rescued_total": sum(x["witness_a"]["rescued"] for x in per["early"]),
+                       "displaced_total": sum(x["witness_a"]["displaced"] for x in per["early"]),
+                       "rescued_per_seed": [x["witness_a"]["rescued"] for x in per["early"]],
+                       "displaced_per_seed": [x["witness_a"]["displaced"] for x in per["early"]],
+                       "witness_b_quiet_delta_per_seed": [x["witness_b"]["svc_delta_quiet_vs_early"]
+                                                          for x in per["early"]]}}
+    path = out_path(args)
+    os.makedirs(os.path.dirname(path), exist_ok=True)
     with open(path, "w", encoding="utf-8") as fh:
         json.dump(out, fh, ensure_ascii=False, indent=1)
     print("\nsaved", path)
@@ -225,7 +276,8 @@ def main() -> int:
     ap.add_argument("--seed", type=int, default=0)
     ap.add_argument("--seeds", type=int, nargs="*", default=None,
                     help="多种子聚合；给出时忽略 --seed")
-    ap.add_argument("--out", default=os.path.join("results", "control_deadline_witness.json"))
+    ap.add_argument("--out", default=None,
+                    help="显式输出路径；缺省时多种子写受控在册件、单种子写系统临时文件")
     args = ap.parse_args()
     CTL["delay_s"] = args.delay
 
@@ -255,8 +307,8 @@ def main() -> int:
               f"  备份包 {d['backup']['backup_packets']}"
               f"  死亡 {d['dead']}")
 
-    rescued = sorted(early["delivered"] - late["delivered"])
-    displaced = sorted(late["delivered"] - early["delivered"])
+    _wa = rescue_witness(early, late)
+    rescued, displaced = _wa["rescued_oids"], _wa["displaced_oids"]
     print(f"\n见证 A（下发时机）：救回 {len(rescued)} 条，反向位移 {len(displaced)} 条")
     for oid in rescued[:3]:
         print(f"  救回 {oid}")
@@ -300,7 +352,7 @@ def main() -> int:
                                   "svc": st, "svc_delta_vs_early": st - se,
                                   "phase_table_lead_edges": [list(e) for e in TABLE_EDGES_LEAD],
                                   "svc_lead": sl, "svc_lead_delta_vs_early": sl - se}}
-    path = args.out if os.path.isabs(args.out) else os.path.join(ROOT, args.out)
+    path = out_path(args, seed=args.seed)
     os.makedirs(os.path.dirname(path), exist_ok=True)
     with open(path, "w", encoding="utf-8") as fh:
         json.dump(out, fh, ensure_ascii=False, indent=1)

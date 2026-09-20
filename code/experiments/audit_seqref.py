@@ -167,8 +167,10 @@ def main() -> int:
           hc["stopped_at_hour"] == 10 and hc["dense_hours_executed"] == list(range(2, 10)))
     check("TTL8 在低采能未来里破线", hc["safe_under_low_branch"] is False,
           f"min_soc={hc['min_soc_wh_low_branch']}")
-    check("复现审阅报告的值（v1 偏移约定 0.3295257 mWh）",
-          bool(hc["v1_offset_convention_matches_review"]))
+    check("C10 后旧 v1 校准值不再被误当成当前锚点",
+          hc["v1_offset_convention_matches_review"] is False,
+          f"current={hc['min_soc_wh_v1_offset_convention']*1000:.7f} mWh; "
+          "pre-C10 target=0.3295257 mWh（旧结果已归档）")
     sd = w["sparse_dominance"]
     check("逐拍单调性：稀疏不低于任何密集安排", bool(sd["monotone_as_claimed"]),
           f"max(dense-sparse)={sd['max_dense_min_soc_wh'] if 'max_dense_min_soc_wh' in sd else sd['max_dense_minus_sparse_min_soc_wh']}")
@@ -195,6 +197,17 @@ def main() -> int:
                   bool(r["nonprescient"]["selfcheck_objective_agrees"]))
             check(f"{key} λ={lam} Task 1 单列",
                   "不参与" in r["ordinary"]["task1_reference"]["note"])
+    impl_obj_gaps = [abs(r["gaps"]["objective_implementable"])
+                     for c in res["cells"].values() for r in c["priced"].values()]
+    impl_service_gaps = [abs(r["gaps"]["service_implementable"])
+                         for c in res["cells"].values() for r in c["priced"].values()]
+    n_priced = sum(len(c["priced"]) for c in res["cells"].values())
+    check("全 40 格 × 5 个 λ：普通组合追平非预知参照（目标差额）",
+          n_priced == 200 and max(impl_obj_gaps, default=0.0) < 1e-9,
+          f"n={n_priced}, max|Δ|={max(impl_obj_gaps, default=0.0):.3e}")
+    check("全 40 格 × 5 个 λ：普通组合追平非预知参照（服务差额）",
+          n_priced == 200 and max(impl_service_gaps, default=0.0) < 1e-9,
+          f"n={n_priced}, max|Δ|={max(impl_service_gaps, default=0.0):.3e}")
 
     print("  [8] 核例：DP vs 穷举，且仪器有分辨力")
     core = S.core_instance()

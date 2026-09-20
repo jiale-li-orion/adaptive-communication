@@ -22,7 +22,20 @@
     "dead": 0,
     "uplink_s": 869.5,
     "downlink_s": 355.1,
-    "attempts": 2154
+    "attempts": 2154,
+    "witness_a": {
+     "rescued": 4,
+     "displaced": 5,
+     "rescued_oids": [
+      "n03:routine:t0082200",
+      "n06:routine:t0132600",
+      "n06:routine:t0159000",
+      "n15:routine:t0002400"
+     ]
+    },
+    "witness_b": {
+     "svc_delta_quiet_vs_early": -22
+    }
    },
    {
     "seed": 1,
@@ -31,7 +44,15 @@
     "dead": 0,
     "uplink_s": 910.3,
     "downlink_s": 351.7,
-    "attempts": 2133
+    "attempts": 2133,
+    "witness_a": {
+     "rescued": 0,
+     "displaced": 0,
+     "rescued_oids": []
+    },
+    "witness_b": {
+     "svc_delta_quiet_vs_early": -17
+    }
    },
    {
     "seed": 2,
@@ -40,7 +61,19 @@
     "dead": 0,
     "uplink_s": 886.6,
     "downlink_s": 362.4,
-    "attempts": 2198
+    "attempts": 2198,
+    "witness_a": {
+     "rescued": 3,
+     "displaced": 0,
+     "rescued_oids": [
+      "n03:routine:t0003000",
+      "n03:routine:t0003600",
+      "n07:routine:t0160200"
+     ]
+    },
+    "witness_b": {
+     "svc_delta_quiet_vs_early": -20
+    }
    }
   ],
   "late": [
@@ -178,6 +211,23 @@
   ],
   "mean_early_minus_table": 19.666666666666668,
   "mean_early_minus_tbl_lead": 19.666666666666668,
-  "mean_early_minus_quiet": 19.666666666666668
+  "mean_early_minus_quiet": 19.666666666666668,
+  "rescued_total": 7,
+  "displaced_total": 5,
+  "rescued_per_seed": [
+   4,
+   0,
+   3
+  ],
+  "displaced_per_seed": [
+   5,
+   0,
+   0
+  ],
+  "witness_b_quiet_delta_per_seed": [
+   -22,
+   -17,
+   -20
+  ]
  }
 }

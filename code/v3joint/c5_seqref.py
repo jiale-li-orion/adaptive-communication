@@ -66,7 +66,11 @@ TICK_S = 60
 TICKS_PER_HOUR = 3600 // TICK_S
 CAP_WH = 0.05
 SAMPLE_WH = 4.7e-4
-RADIO_WH_PER_REPORT = 3.099046e-5
+# 当前实例下每次上报的等效射频能耗锚点。该量不是芯片固定常数：
+# `ControlPlane` 按实际 payload airtime 计费，故记录到期边界会改变批次内容并改变实测均值。
+# 2026-09-20 的 C10 修正保留 deadline tick 后，重新运行
+# `code/experiments/measure_seqref_calibration.py` 得到下值；旧校准与旧 C9 结果已归档。
+RADIO_WH_PER_REPORT = 3.1867792516129184e-5
 LOAD_SPARSE_H = 6 * (SAMPLE_WH + RADIO_WH_PER_REPORT)
 LOAD_DENSE_H = 12 * (SAMPLE_WH + RADIO_WH_PER_REPORT)
 SUNRISE_H = 6.0

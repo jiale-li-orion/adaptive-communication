@@ -27,6 +27,7 @@ for _p in (_HERE, *(_os.path.join(_CODE, d) for d in ("physics", "runtime",
     if _p not in _sys.path:
         _sys.path.insert(0, _p)
 
+import hashlib
 import json
 import os
 import re
@@ -601,6 +602,37 @@ RETIRED_README_PHRASES = (
 )
 
 
+def audit_live_matches_frozen() -> None:
+    """活件与冻结件必须逐位一致（`results/reference/README.md` 的更新规则）。
+
+    这一项存在的原因：一夜之间两份在册证据被改写而无人发现——`retention_deadline_audit.json` 被
+    一次对照臂退化的运行覆盖（+1.47 点塌成 0.0000），`control_deadline_witness.json` 被单种子
+    循环覆盖成最后一个种子的读数（三种子聚合结构丢失）。两次都是"活件动了、冻结件与登记行没动"，
+    而当时全套检查 21/21 通过，因为没有任何一项读过这两个文件。冻结件的意义正是让这种漂移可见：
+    差异本身是信号，检查的职责是把它变成红灯，而不是留在盘上等人偶然发现。
+
+    例外只有一类：冻结目录里的**纯归档**（没有活件同名文件，如 agent 轨迹），由构造豁免。
+    """
+    ref_dir = os.path.join(ROOT, "results", "reference")
+    live_dir = os.path.join(ROOT, "results")
+    archived_only, diverged, identical = [], [], []
+    for name in sorted(os.listdir(ref_dir)):
+        if not name.endswith(".json"):
+            continue
+        rp, lp = os.path.join(ref_dir, name), os.path.join(live_dir, name)
+        if not os.path.exists(lp):
+            archived_only.append(name)
+            continue
+        with open(rp, "rb") as fh:
+            r = hashlib.md5(fh.read()).hexdigest()
+        with open(lp, "rb") as fh:
+            l = hashlib.md5(fh.read()).hexdigest()
+        (identical if r == l else diverged).append(name)
+    check("每个冻结件与同名活件逐位一致（差异必须在同一次提交里消解）", not diverged,
+          "、".join(diverged) + "（要么重跑并同提交重冻结，要么还原活件）" if diverged else
+          f"{len(identical)} 件一致，{len(archived_only)} 件为纯归档")
+
+
 def audit_readme_config_numbers() -> None:
     """入口页的两个坑：配置线的数字要有出处，已撤回的读数不得回流。
 
@@ -660,6 +692,7 @@ def main() -> int:
     audit_instance_figures()
     audit_manifest_matches_code()
     audit_readme_config_numbers()
+    audit_live_matches_frozen()
     print("\n" + "-" * 74)
     if FAIL:
         print(f"  {len(FAIL)} 项失败：")

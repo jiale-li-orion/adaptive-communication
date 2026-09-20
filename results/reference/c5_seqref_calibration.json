@@ -31,32 +31,32 @@
   "determinism": "stable_uniform 按 seed 取键；同 seed 同参数逐位可复现"
  },
  "declared_constants": {
-  "radio_wh_per_report": 3.099046e-05,
+  "radio_wh_per_report": 3.1867792516129184e-05,
   "sample_wh": 0.00047,
-  "load_sparse_wh_per_h": 0.0030059427599999997,
-  "load_dense_wh_per_h": 0.0060118855199999995,
+  "load_sparse_wh_per_h": 0.003011206755096775,
+  "load_dense_wh_per_h": 0.00602241351019355,
   "note": "模型的物理常数；结构 = 每小时采样数 × (sample_wh + 单次射频)。"
  },
  "measured_constants": {
-  "radio_wh_per_report": 3.0990455741935645e-05,
+  "radio_wh_per_report": 3.1867792516129184e-05,
   "sample_wh_from_code": 0.00047,
   "sample_wh_from_spend": 0.00046999999999999874,
-  "load_sparse_wh_per_h": 0.0030059427344516134,
-  "load_dense_wh_per_h": 0.006011885468903227
+  "load_sparse_wh_per_h": 0.003011206755096775,
+  "load_dense_wh_per_h": 0.00602241351019355
  },
  "measured": {
-  "load_sparse_wh_per_h": 0.003000931,
-  "load_dense_wh_per_h": 0.006050522,
-  "load_day_sparse_wh_per_h": 0.003000931,
+  "load_sparse_wh_per_h": 0.003006338,
+  "load_dense_wh_per_h": 0.006069446,
+  "load_day_sparse_wh_per_h": 0.003002733,
   "load_dense_wh_per_h_all_dense_hours": [
    0.005979907,
    0.006000961,
-   0.006037005,
-   0.006050522,
-   0.006050522,
-   0.006050522,
-   0.006052324,
-   0.006052324
+   0.006046918,
+   0.006069446,
+   0.006069446,
+   0.006069446,
+   0.006073951,
+   0.006073951
   ],
   "dense_hours_used_for_load": [
    2,
@@ -97,10 +97,10 @@
  },
  "node_totals": {
   "sampled": 342,
-  "harvested_wh": 0.126543076,
-  "consumed_wh": 0.171307745,
-  "final_soc_wh": 0.00523533,
-  "min_soc_wh": 0.004885405,
+  "harvested_wh": 0.126630485,
+  "consumed_wh": 0.171606917,
+  "final_soc_wh": 0.005023567,
+  "min_soc_wh": 0.004673642,
   "dead": []
  },
  "spend_counts": {
@@ -109,7 +109,7 @@
  },
  "spend_wh_by_site": {
   "_take": 0.16074,
-  "_charge_radio": 0.010567745
+  "_charge_radio": 0.010866917
  },
  "hourly": [
   {
@@ -118,9 +118,9 @@
    "intended_harvest_wh": 0.001178752,
    "clear_hour_wh": 0.001535961,
    "factor": 0.767436,
-   "soc_end_wh": 0.048179623,
+   "soc_end_wh": 0.048176019,
    "load_from_soc_delta_wh": null,
-   "load_from_spend_wh": 0.002999129,
+   "load_from_spend_wh": 0.003002733,
    "n_samples": 6
   },
   {
@@ -129,7 +129,7 @@
    "intended_harvest_wh": 0.003438373,
    "clear_hour_wh": 0.004554973,
    "factor": 0.754861,
-   "soc_end_wh": 0.048617066,
+   "soc_end_wh": 0.048613462,
    "load_from_soc_delta_wh": 0.003000931,
    "load_from_spend_wh": 0.003000931,
    "n_samples": 6
@@ -140,7 +140,7 @@
    "intended_harvest_wh": 0.005461751,
    "clear_hour_wh": 0.007263571,
    "factor": 0.751937,
-   "soc_end_wh": 0.04809891,
+   "soc_end_wh": 0.048095305,
    "load_from_soc_delta_wh": 0.005979907,
    "load_from_spend_wh": 0.005979907,
    "n_samples": 12
@@ -152,7 +152,7 @@
    "clear_hour_wh": 0.009477169,
    "factor": 0.836197,
    "soc_end_wh": 0.05,
-   "load_from_soc_delta_wh": 0.006023692,
+   "load_from_soc_delta_wh": 0.006020088,
    "load_from_spend_wh": 0.006000961,
    "n_samples": 12
   },
@@ -164,7 +164,7 @@
    "factor": 0.762141,
    "soc_end_wh": 0.05,
    "load_from_soc_delta_wh": 0.008417784,
-   "load_from_spend_wh": 0.006037005,
+   "load_from_spend_wh": 0.006046918,
    "n_samples": 12
   },
   {
@@ -175,7 +175,7 @@
    "factor": 0.687996,
    "soc_end_wh": 0.049844422,
    "load_from_soc_delta_wh": 0.008315187,
-   "load_from_spend_wh": 0.006050522,
+   "load_from_spend_wh": 0.006069446,
    "n_samples": 12
   },
   {
@@ -186,7 +186,7 @@
    "factor": 0.700271,
    "soc_end_wh": 0.049978616,
    "load_from_soc_delta_wh": 0.008175772,
-   "load_from_spend_wh": 0.006050522,
+   "load_from_spend_wh": 0.006069446,
    "n_samples": 12
   },
   {
@@ -197,7 +197,7 @@
    "factor": 0.736715,
    "soc_end_wh": 0.049799915,
    "load_from_soc_delta_wh": 0.008330378,
-   "load_from_spend_wh": 0.006050522,
+   "load_from_spend_wh": 0.006069446,
    "n_samples": 12
   },
   {
@@ -206,9 +206,9 @@
    "intended_harvest_wh": 0.007743384,
    "clear_hour_wh": 0.009508952,
    "factor": 0.814326,
-   "soc_end_wh": 0.049855666,
-   "load_from_soc_delta_wh": 0.007687633,
-   "load_from_spend_wh": 0.006052324,
+   "soc_end_wh": 0.04985116,
+   "load_from_soc_delta_wh": 0.007692138,
+   "load_from_spend_wh": 0.006073951,
    "n_samples": 12
   },
   {
@@ -217,9 +217,9 @@
    "intended_harvest_wh": 0.005121598,
    "clear_hour_wh": 0.007304992,
    "factor": 0.701109,
-   "soc_end_wh": 0.048924939,
-   "load_from_soc_delta_wh": 0.006052324,
-   "load_from_spend_wh": 0.006052324,
+   "soc_end_wh": 0.048898807,
+   "load_from_soc_delta_wh": 0.006073951,
+   "load_from_spend_wh": 0.006073951,
    "n_samples": 12
   },
   {
@@ -228,9 +228,9 @@
    "intended_harvest_wh": 0.003637349,
    "clear_hour_wh": 0.004603209,
    "factor": 0.790177,
-   "soc_end_wh": 0.049556852,
-   "load_from_soc_delta_wh": 0.003005436,
-   "load_from_spend_wh": 0.003005436,
+   "soc_end_wh": 0.049514499,
+   "load_from_soc_delta_wh": 0.003021657,
+   "load_from_spend_wh": 0.003021657,
    "n_samples": 6
   },
   {
@@ -239,9 +239,9 @@
    "intended_harvest_wh": 0.001256676,
    "clear_hour_wh": 0.001587725,
    "factor": 0.791495,
-   "soc_end_wh": 0.047812597,
-   "load_from_soc_delta_wh": 0.003000931,
-   "load_from_spend_wh": 0.003000931,
+   "soc_end_wh": 0.047762134,
+   "load_from_soc_delta_wh": 0.003009041,
+   "load_from_spend_wh": 0.003009041,
    "n_samples": 6
   },
   {
@@ -250,9 +250,9 @@
    "intended_harvest_wh": 0.0,
    "clear_hour_wh": 0.0,
    "factor": 0.25,
-   "soc_end_wh": 0.044811666,
-   "load_from_soc_delta_wh": 0.003000931,
-   "load_from_spend_wh": 0.003000931,
+   "soc_end_wh": 0.044755797,
+   "load_from_soc_delta_wh": 0.003006338,
+   "load_from_spend_wh": 0.003006338,
    "n_samples": 6
   },
   {
@@ -261,9 +261,9 @@
    "intended_harvest_wh": 0.0,
    "clear_hour_wh": 0.0,
    "factor": null,
-   "soc_end_wh": 0.041810735,
-   "load_from_soc_delta_wh": 0.003000931,
-   "load_from_spend_wh": 0.003000931,
+   "soc_end_wh": 0.041749459,
+   "load_from_soc_delta_wh": 0.003006338,
+   "load_from_spend_wh": 0.003006338,
    "n_samples": 6
   },
   {
@@ -272,9 +272,9 @@
    "intended_harvest_wh": 0.0,
    "clear_hour_wh": 0.0,
    "factor": null,
-   "soc_end_wh": 0.038808002,
-   "load_from_soc_delta_wh": 0.003002733,
-   "load_from_spend_wh": 0.003002733,
+   "soc_end_wh": 0.038737715,
+   "load_from_soc_delta_wh": 0.003011744,
+   "load_from_spend_wh": 0.003011744,
    "n_samples": 6
   },
   {
@@ -283,9 +283,9 @@
    "intended_harvest_wh": 0.0,
    "clear_hour_wh": 0.0,
    "factor": null,
-   "soc_end_wh": 0.035807071,
-   "load_from_soc_delta_wh": 0.003000931,
-   "load_from_spend_wh": 0.003000931,
+   "soc_end_wh": 0.035731377,
+   "load_from_soc_delta_wh": 0.003006338,
+   "load_from_spend_wh": 0.003006338,
    "n_samples": 6
   },
   {
@@ -294,9 +294,9 @@
    "intended_harvest_wh": 0.0,
    "clear_hour_wh": 0.0,
    "factor": null,
-   "soc_end_wh": 0.032806141,
-   "load_from_soc_delta_wh": 0.003000931,
-   "load_from_spend_wh": 0.003000931,
+   "soc_end_wh": 0.03272504,
+   "load_from_soc_delta_wh": 0.003006338,
+   "load_from_spend_wh": 0.003006338,
    "n_samples": 6
   },
   {
@@ -305,9 +305,9 @@
    "intended_harvest_wh": 0.0,
    "clear_hour_wh": 0.0,
    "factor": null,
-   "soc_end_wh": 0.02980521,
-   "load_from_soc_delta_wh": 0.003000931,
-   "load_from_spend_wh": 0.003000931,
+   "soc_end_wh": 0.029718702,
+   "load_from_soc_delta_wh": 0.003006338,
+   "load_from_spend_wh": 0.003006338,
    "n_samples": 6
   },
   {
@@ -316,9 +316,9 @@
    "intended_harvest_wh": 0.0,
    "clear_hour_wh": 0.0,
    "factor": null,
-   "soc_end_wh": 0.026802477,
-   "load_from_soc_delta_wh": 0.003002733,
-   "load_from_spend_wh": 0.003002733,
+   "soc_end_wh": 0.026706958,
+   "load_from_soc_delta_wh": 0.003011744,
+   "load_from_spend_wh": 0.003011744,
    "n_samples": 6
   },
   {
@@ -327,9 +327,9 @@
    "intended_harvest_wh": 0.0,
    "clear_hour_wh": 0.0,
    "factor": null,
-   "soc_end_wh": 0.023801546,
-   "load_from_soc_delta_wh": 0.003000931,
-   "load_from_spend_wh": 0.003000931,
+   "soc_end_wh": 0.02370062,
+   "load_from_soc_delta_wh": 0.003006338,
+   "load_from_spend_wh": 0.003006338,
    "n_samples": 6
   },
   {
@@ -338,9 +338,9 @@
    "intended_harvest_wh": 0.0,
    "clear_hour_wh": 0.0,
    "factor": null,
-   "soc_end_wh": 0.020800615,
-   "load_from_soc_delta_wh": 0.003000931,
-   "load_from_spend_wh": 0.003000931,
+   "soc_end_wh": 0.020696986,
+   "load_from_soc_delta_wh": 0.003003634,
+   "load_from_spend_wh": 0.003003634,
    "n_samples": 6
   },
   {
@@ -349,7 +349,7 @@
    "intended_harvest_wh": 0.0,
    "clear_hour_wh": 0.0,
    "factor": null,
-   "soc_end_wh": 0.017805091,
+   "soc_end_wh": 0.017701462,
    "load_from_soc_delta_wh": 0.002995524,
    "load_from_spend_wh": 0.002995524,
    "n_samples": 6
@@ -360,7 +360,7 @@
    "intended_harvest_wh": 0.0,
    "clear_hour_wh": 0.0,
    "factor": null,
-   "soc_end_wh": 0.014809567,
+   "soc_end_wh": 0.014705938,
    "load_from_soc_delta_wh": 0.002995524,
    "load_from_spend_wh": 0.002995524,
    "n_samples": 6
@@ -371,9 +371,9 @@
    "intended_harvest_wh": 0.0,
    "clear_hour_wh": 0.0,
    "factor": null,
-   "soc_end_wh": 0.011806834,
-   "load_from_soc_delta_wh": 0.003002733,
-   "load_from_spend_wh": 0.003002733,
+   "soc_end_wh": 0.011697798,
+   "load_from_soc_delta_wh": 0.00300814,
+   "load_from_spend_wh": 0.00300814,
    "n_samples": 6
   },
   {
@@ -382,9 +382,9 @@
    "intended_harvest_wh": 0.001214679,
    "clear_hour_wh": 0.001535961,
    "factor": 0.790827,
-   "soc_end_wh": 0.010015176,
-   "load_from_soc_delta_wh": 0.003006338,
-   "load_from_spend_wh": 0.003006338,
+   "soc_end_wh": 0.00989803,
+   "load_from_soc_delta_wh": 0.003014448,
+   "load_from_spend_wh": 0.003014448,
    "n_samples": 6
   },
   {
@@ -393,9 +393,9 @@
    "intended_harvest_wh": 0.003248451,
    "clear_hour_wh": 0.004554973,
    "factor": 0.713166,
-   "soc_end_wh": 0.0102663,
-   "load_from_soc_delta_wh": 0.002997326,
-   "load_from_spend_wh": 0.002997326,
+   "soc_end_wh": 0.010146451,
+   "load_from_soc_delta_wh": 0.00300003,
+   "load_from_spend_wh": 0.00300003,
    "n_samples": 6
   },
   {
@@ -404,9 +404,9 @@
    "intended_harvest_wh": 0.004809968,
    "clear_hour_wh": 0.007263571,
    "factor": 0.662204,
-   "soc_end_wh": 0.012073535,
-   "load_from_soc_delta_wh": 0.003002733,
-   "load_from_spend_wh": 0.003002733,
+   "soc_end_wh": 0.01194828,
+   "load_from_soc_delta_wh": 0.00300814,
+   "load_from_spend_wh": 0.00300814,
    "n_samples": 6
   },
   {
@@ -415,9 +415,9 @@
    "intended_harvest_wh": 0.007240335,
    "clear_hour_wh": 0.009477169,
    "factor": 0.763977,
-   "soc_end_wh": 0.016307532,
-   "load_from_soc_delta_wh": 0.003006338,
-   "load_from_spend_wh": 0.003006338,
+   "soc_end_wh": 0.01616876,
+   "load_from_soc_delta_wh": 0.003019854,
+   "load_from_spend_wh": 0.003019854,
    "n_samples": 6
   },
   {
@@ -426,9 +426,9 @@
    "intended_harvest_wh": 0.008695227,
    "clear_hour_wh": 0.011044913,
    "factor": 0.787261,
-   "soc_end_wh": 0.021996422,
-   "load_from_soc_delta_wh": 0.003006338,
-   "load_from_spend_wh": 0.003006338,
+   "soc_end_wh": 0.021844133,
+   "load_from_soc_delta_wh": 0.003019854,
+   "load_from_spend_wh": 0.003019854,
    "n_samples": 6
   },
   {
@@ -437,9 +437,9 @@
    "intended_harvest_wh": 0.008743249,
    "clear_hour_wh": 0.011859965,
    "factor": 0.737207,
-   "soc_end_wh": 0.027740542,
-   "load_from_soc_delta_wh": 0.002999129,
-   "load_from_spend_wh": 0.002999129,
+   "soc_end_wh": 0.02758555,
+   "load_from_soc_delta_wh": 0.003001832,
+   "load_from_spend_wh": 0.003001832,
    "n_samples": 6
   },
   {
@@ -448,7 +448,7 @@
    "intended_harvest_wh": 0.008893587,
    "clear_hour_wh": 0.01186678,
    "factor": 0.749452,
-   "soc_end_wh": 0.033636803,
+   "soc_end_wh": 0.03348181,
    "load_from_soc_delta_wh": 0.002997326,
    "load_from_spend_wh": 0.002997326,
    "n_samples": 6
@@ -459,7 +459,7 @@
    "intended_harvest_wh": 0.00815757,
    "clear_hour_wh": 0.011064893,
    "factor": 0.737248,
-   "soc_end_wh": 0.038797047,
+   "soc_end_wh": 0.038642054,
    "load_from_soc_delta_wh": 0.002997326,
    "load_from_spend_wh": 0.002997326,
    "n_samples": 6
@@ -470,7 +470,7 @@
    "intended_harvest_wh": 0.006161378,
    "clear_hour_wh": 0.009508952,
    "factor": 0.647955,
-   "soc_end_wh": 0.041961098,
+   "soc_end_wh": 0.041806106,
    "load_from_soc_delta_wh": 0.002997326,
    "load_from_spend_wh": 0.002997326,
    "n_samples": 6
@@ -481,7 +481,7 @@
    "intended_harvest_wh": 0.005806042,
    "clear_hour_wh": 0.007304992,
    "factor": 0.794805,
-   "soc_end_wh": 0.044768012,
+   "soc_end_wh": 0.044613019,
    "load_from_soc_delta_wh": 0.002999129,
    "load_from_spend_wh": 0.002999129,
    "n_samples": 6
@@ -492,9 +492,9 @@
    "intended_harvest_wh": 0.003174802,
    "clear_hour_wh": 0.004603209,
    "factor": 0.689693,
-   "soc_end_wh": 0.044945487,
-   "load_from_soc_delta_wh": 0.002997326,
-   "load_from_spend_wh": 0.002997326,
+   "soc_end_wh": 0.044787791,
+   "load_from_soc_delta_wh": 0.00300003,
+   "load_from_spend_wh": 0.00300003,
    "n_samples": 6
   },
   {
@@ -503,9 +503,9 @@
    "intended_harvest_wh": 0.001161453,
    "clear_hour_wh": 0.001587725,
    "factor": 0.73152,
-   "soc_end_wh": 0.043104207,
-   "load_from_soc_delta_wh": 0.003002733,
-   "load_from_spend_wh": 0.003002733,
+   "soc_end_wh": 0.042943808,
+   "load_from_soc_delta_wh": 0.003005436,
+   "load_from_spend_wh": 0.003005436,
    "n_samples": 6
   },
   {
@@ -514,9 +514,9 @@
    "intended_harvest_wh": 0.0,
    "clear_hour_wh": 0.0,
    "factor": 0.25,
-   "soc_end_wh": 0.04009787,
-   "load_from_soc_delta_wh": 0.003006338,
-   "load_from_spend_wh": 0.003006338,
+   "soc_end_wh": 0.039926657,
+   "load_from_soc_delta_wh": 0.003017151,
+   "load_from_spend_wh": 0.003017151,
    "n_samples": 6
   },
   {
@@ -525,9 +525,9 @@
    "intended_harvest_wh": 0.0,
    "clear_hour_wh": 0.0,
    "factor": null,
-   "soc_end_wh": 0.037095137,
-   "load_from_soc_delta_wh": 0.003002733,
-   "load_from_spend_wh": 0.003002733,
+   "soc_end_wh": 0.036915814,
+   "load_from_soc_delta_wh": 0.003010843,
+   "load_from_spend_wh": 0.003010843,
    "n_samples": 6
   },
   {
@@ -536,9 +536,9 @@
    "intended_harvest_wh": 0.0,
    "clear_hour_wh": 0.0,
    "factor": null,
-   "soc_end_wh": 0.034096008,
-   "load_from_soc_delta_wh": 0.002999129,
-   "load_from_spend_wh": 0.002999129,
+   "soc_end_wh": 0.033913982,
+   "load_from_soc_delta_wh": 0.003001832,
+   "load_from_spend_wh": 0.003001832,
    "n_samples": 6
   },
   {
@@ -547,9 +547,9 @@
    "intended_harvest_wh": 0.0,
    "clear_hour_wh": 0.0,
    "factor": null,
-   "soc_end_wh": 0.031095077,
-   "load_from_soc_delta_wh": 0.003000931,
-   "load_from_spend_wh": 0.003000931,
+   "soc_end_wh": 0.030910348,
+   "load_from_soc_delta_wh": 0.003003634,
+   "load_from_spend_wh": 0.003003634,
    "n_samples": 6
   },
   {
@@ -558,7 +558,7 @@
    "intended_harvest_wh": 0.0,
    "clear_hour_wh": 0.0,
    "factor": null,
-   "soc_end_wh": 0.028097751,
+   "soc_end_wh": 0.027913021,
    "load_from_soc_delta_wh": 0.002997326,
    "load_from_spend_wh": 0.002997326,
    "n_samples": 6
@@ -569,9 +569,9 @@
    "intended_harvest_wh": 0.0,
    "clear_hour_wh": 0.0,
    "factor": null,
-   "soc_end_wh": 0.02509682,
-   "load_from_soc_delta_wh": 0.003000931,
-   "load_from_spend_wh": 0.003000931,
+   "soc_end_wh": 0.024909387,
+   "load_from_soc_delta_wh": 0.003003634,
+   "load_from_spend_wh": 0.003003634,
    "n_samples": 6
   },
   {
@@ -580,9 +580,9 @@
    "intended_harvest_wh": 0.0,
    "clear_hour_wh": 0.0,
    "factor": null,
-   "soc_end_wh": 0.022094087,
-   "load_from_soc_delta_wh": 0.003002733,
-   "load_from_spend_wh": 0.003002733,
+   "soc_end_wh": 0.021898544,
+   "load_from_soc_delta_wh": 0.003010843,
+   "load_from_spend_wh": 0.003010843,
    "n_samples": 6
   },
   {
@@ -591,7 +591,7 @@
    "intended_harvest_wh": 0.0,
    "clear_hour_wh": 0.0,
    "factor": null,
-   "soc_end_wh": 0.019096761,
+   "soc_end_wh": 0.018901218,
    "load_from_soc_delta_wh": 0.002997326,
    "load_from_spend_wh": 0.002997326,
    "n_samples": 6
@@ -602,7 +602,7 @@
    "intended_harvest_wh": 0.0,
    "clear_hour_wh": 0.0,
    "factor": null,
-   "soc_end_wh": 0.016097632,
+   "soc_end_wh": 0.015902089,
    "load_from_soc_delta_wh": 0.002999129,
    "load_from_spend_wh": 0.002999129,
    "n_samples": 6
@@ -613,9 +613,9 @@
    "intended_harvest_wh": 0.0,
    "clear_hour_wh": 0.0,
    "factor": null,
-   "soc_end_wh": 0.013094899,
-   "load_from_soc_delta_wh": 0.003002733,
-   "load_from_spend_wh": 0.003002733,
+   "soc_end_wh": 0.012896653,
+   "load_from_soc_delta_wh": 0.003005436,
+   "load_from_spend_wh": 0.003005436,
    "n_samples": 6
   },
   {
@@ -624,9 +624,9 @@
    "intended_harvest_wh": 0.0,
    "clear_hour_wh": 0.0,
    "factor": null,
-   "soc_end_wh": 0.010092166,
-   "load_from_soc_delta_wh": 0.003002733,
-   "load_from_spend_wh": 0.003002733,
+   "soc_end_wh": 0.00988581,
+   "load_from_soc_delta_wh": 0.003010843,
+   "load_from_spend_wh": 0.003010843,
    "n_samples": 6
   },
   {
@@ -635,9 +635,9 @@
    "intended_harvest_wh": 0.0,
    "clear_hour_wh": 0.0,
    "factor": null,
-   "soc_end_wh": 0.007093037,
-   "load_from_soc_delta_wh": 0.002999129,
-   "load_from_spend_wh": 0.002999129,
+   "soc_end_wh": 0.006883978,
+   "load_from_soc_delta_wh": 0.003001832,
+   "load_from_spend_wh": 0.003001832,
    "n_samples": 6
   },
   {
@@ -646,9 +646,9 @@
    "intended_harvest_wh": 0.001143224,
    "clear_hour_wh": 0.001535961,
    "factor": 0.744305,
-   "soc_end_wh": 0.00523533,
-   "load_from_soc_delta_wh": 0.003000931,
-   "load_from_spend_wh": 0.003000931,
+   "soc_end_wh": 0.005023567,
+   "load_from_soc_delta_wh": 0.003003634,
+   "load_from_spend_wh": 0.003003634,
    "n_samples": 6
   }
  ],
@@ -663,10 +663,10 @@
   "note": "逐拍 Bernoulli(p=.35, atten=.25) 的每小时均值：理论 std=(1-atten)*sqrt(p(1-p)/60)。这里给出实测值作为声明 sigma 的依据。"
  },
  "cross_check": {
-  "declared_vs_measured_sparse": 2.5548386323182015e-11,
-  "declared_vs_measured_dense": 5.109677264636403e-11,
-  "hourly_sparse_median_vs_declared": -5.011759999999643e-06,
-  "hourly_dense_median_vs_declared": 3.863648000000056e-05
+  "declared_vs_measured_sparse": 0.0,
+  "declared_vs_measured_dense": 0.0,
+  "hourly_sparse_median_vs_declared": -4.868755096774924e-06,
+  "hourly_dense_median_vs_declared": 4.703248980645041e-05
  },
  "note": "逐小时负载由**花费账本**给出（与容量溢出无关）；`load_from_soc_delta_wh` 只在未触顶的可信小时上作旁证，触顶小时的差值含溢出。本文件只出实测数据，判定见 code/experiments/audit_seqref.py。"
 }

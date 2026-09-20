@@ -192,10 +192,12 @@ def main() -> int:
         },
         # **声明值**：与 `code/v3joint/c5_seqref.py` 用同一组字面量与同一表达式，逐位可比。
         "declared_constants": {
-            "radio_wh_per_report": 3.099046e-5,
+            # C10 将 generic_expiry 改为保留 deadline tick 后，实际上传批次内容会改变；
+            # 空口能耗按 payload airtime 计，因此这里的等效每报告能耗也必须随当前语义重标定。
+            "radio_wh_per_report": 3.1867792516129184e-5,
             "sample_wh": 4.7e-4,
-            "load_sparse_wh_per_h": 6 * (4.7e-4 + 3.099046e-5),
-            "load_dense_wh_per_h": 12 * (4.7e-4 + 3.099046e-5),
+            "load_sparse_wh_per_h": 6 * (4.7e-4 + 3.1867792516129184e-5),
+            "load_dense_wh_per_h": 12 * (4.7e-4 + 3.1867792516129184e-5),
             "note": "模型的物理常数；结构 = 每小时采样数 × (sample_wh + 单次射频)。",
         },
         # **实测值**：全精度，作为声明值的来源与旁证。
@@ -232,12 +234,12 @@ def main() -> int:
         "hourly": hourly,
         "cloud_discretisation": cloud_stats,
         "cross_check": {
-            "declared_vs_measured_sparse": 6 * (4.7e-4 + 3.099046e-5) - 6 * (
+            "declared_vs_measured_sparse": 6 * (4.7e-4 + 3.1867792516129184e-5) - 6 * (
                 4.7e-4 + spend_wh["_charge_radio"] / max(1, spends["_charge_radio"])),
-            "declared_vs_measured_dense": 12 * (4.7e-4 + 3.099046e-5) - 12 * (
+            "declared_vs_measured_dense": 12 * (4.7e-4 + 3.1867792516129184e-5) - 12 * (
                 4.7e-4 + spend_wh["_charge_radio"] / max(1, spends["_charge_radio"])),
-            "hourly_sparse_median_vs_declared": load_sparse - 6 * (4.7e-4 + 3.099046e-5),
-            "hourly_dense_median_vs_declared": load_dense - 12 * (4.7e-4 + 3.099046e-5),
+            "hourly_sparse_median_vs_declared": load_sparse - 6 * (4.7e-4 + 3.1867792516129184e-5),
+            "hourly_dense_median_vs_declared": load_dense - 12 * (4.7e-4 + 3.1867792516129184e-5),
         },
         "note": ("逐小时负载由**花费账本**给出（与容量溢出无关）；`load_from_soc_delta_wh` 只在"
                  "未触顶的可信小时上作旁证，触顶小时的差值含溢出。"

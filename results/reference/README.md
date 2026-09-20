@@ -14,10 +14,11 @@
 | `r39_table.json` | C6 | `code/v3joint/r39_envelope.py` 经 `merge_r39.py` 汇总 |
 | `r40_local_attribution.json` | C7 | `code/v3joint/r40_local_attribution.py` |
 | `r38_three_arm_summary.json`、`r42_claim_relabel.json`、`r43_cert_v5_replay.json` | C8 | 保存的 agent 轨迹与其离线重放 |
-| `c5_seqref.json` | C9（open） | `code/v3joint/c5_seqref.py` |
+| `c5_seqref.json` | C9（scoped-negative） | `code/v3joint/c5_seqref.py` |
 | `c5_seqref_v1_semantics.json` | —（v1 口径，已取代） | `code/v3joint/c5_seqref.py` 于 `a665642` |
 | `control_deadline_witness.json` | 阶段 1 见证（无主张，供 §3 判决） | `code/analysis/control_deadline_witness.py` |
-| `retention_deadline_audit.json` | C10（修正后） | `code/analysis/retention_deadline_audit.py` |
+| `control_deadline_witness_seeds100_104.json` | 阶段 1 见证的第二组种子 | 同脚本，`--seeds 100 101 102 103 104` |
+| `retention_deadline_audit.json` | C10（修正后，对照臂 `prefix`） | `code/analysis/retention_deadline_audit.py` |
 | `r49_retention_horizon.json` | C10（原陈述，已由本条取代） | `code/v3joint/r49_retention_horizon.py` |
 | `c5_seqref_v2_semantics.json` | —（v2 口径，已取代） | `code/v3joint/c5_seqref.py` 于 `1a36d52` |
 | `c5_seqref_calibration.json` | C9 | `code/experiments/measure_seqref_calibration.py` |
