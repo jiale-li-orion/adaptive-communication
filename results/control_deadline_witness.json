@@ -1,161 +1,183 @@
 {
  "script": "code/analysis/control_deadline_witness.py",
- "seed": 0,
- "delay_s": 900,
- "t0_first_issue_s": 300,
- "arms": {
-  "early": {
-   "svc": 2697,
-   "n": 7560,
-   "comm": {
-    "airtime_uplink_h": 0.24152689777776526,
-    "airtime_downlink_h": 0.09864362666666746,
-    "downlink_attempts": 2154
-   },
-   "backup": {
-    "backup_packets": 75,
-    "backup_bytes_sent": 5848,
-    "backup_on": null,
-    "backup_late": null
-   }
-  },
-  "late": {
-   "svc": 2698,
-   "n": 7560,
-   "comm": {
-    "airtime_uplink_h": 0.24071367111109862,
-    "airtime_downlink_h": 0.09585009777777855,
-    "downlink_attempts": 2093
-   },
-   "backup": {
-    "backup_packets": 75,
-    "backup_bytes_sent": 5848,
-    "backup_on": null,
-    "backup_late": null
-   }
-  },
-  "quiet": {
-   "svc": 2675,
-   "n": 7560,
-   "comm": {
-    "airtime_uplink_h": 0.21635470222221498,
-    "airtime_downlink_h": 0.0,
-    "downlink_attempts": 0
-   },
-   "backup": {
-    "backup_packets": 75,
-    "backup_bytes_sent": 5848,
-    "backup_on": null,
-    "backup_late": null
-   }
-  }
- },
- "witness_a": {
-  "rescued": 4,
-  "displaced": 5,
-  "rescued_oids": [
-   "n03:routine:t0082200",
-   "n06:routine:t0132600",
-   "n06:routine:t0159000",
-   "n15:routine:t0002400"
-  ],
-  "examples": [
+ "contract": "§3 控制时机见证（local_experiments/c5_lease/review/PLAN-AFTER-C10）",
+ "seeds": [
+  0,
+  1,
+  2
+ ],
+ "arms_order": [
+  "early",
+  "late",
+  "quiet",
+  "table",
+  "tbl_lead"
+ ],
+ "per_seed": {
+  "early": [
    {
-    "oid": "n03:routine:t0082200",
-    "early": {
-     "release_at": 82200,
-     "deadline": 82800,
-     "first_heard_at": 82500,
-     "first_received_at": 82500,
-     "latency_s": 300,
-     "delivered": true,
-     "heard_on_time": true,
-     "received_on_time": true
-    },
-    "late": {
-     "release_at": 82200,
-     "deadline": 82800,
-     "first_heard_at": 82800,
-     "first_received_at": 90000,
-     "latency_s": null,
-     "delivered": false,
-     "heard_on_time": true,
-     "received_on_time": false
-    }
+    "seed": 0,
+    "svc": 2697,
+    "n": 7560,
+    "dead": 0,
+    "uplink_s": 869.5,
+    "downlink_s": 355.1,
+    "attempts": 2154
    },
    {
-    "oid": "n06:routine:t0132600",
-    "early": {
-     "release_at": 132600,
-     "deadline": 133200,
-     "first_heard_at": 132900,
-     "first_received_at": 133200,
-     "latency_s": 600,
-     "delivered": true,
-     "heard_on_time": true,
-     "received_on_time": true
-    },
-    "late": {
-     "release_at": 132600,
-     "deadline": 133200,
-     "first_heard_at": 133800,
-     "first_received_at": 133800,
-     "latency_s": null,
-     "delivered": false,
-     "heard_on_time": false,
-     "received_on_time": false
-    }
+    "seed": 1,
+    "svc": 2370,
+    "n": 7560,
+    "dead": 0,
+    "uplink_s": 910.3,
+    "downlink_s": 351.7,
+    "attempts": 2133
    },
    {
-    "oid": "n06:routine:t0159000",
-    "early": {
-     "release_at": 159000,
-     "deadline": 159600,
-     "first_heard_at": 159300,
-     "first_received_at": 159300,
-     "latency_s": 300,
-     "delivered": true,
-     "heard_on_time": true,
-     "received_on_time": true
-    },
-    "late": {
-     "release_at": 159000,
-     "deadline": 159600,
-     "first_heard_at": 160200,
-     "first_received_at": 160200,
-     "latency_s": null,
-     "delivered": false,
-     "heard_on_time": false,
-     "received_on_time": false
-    }
-   },
-   {
-    "oid": "n15:routine:t0002400",
-    "early": {
-     "release_at": 2400,
-     "deadline": 3600,
-     "first_heard_at": 2700,
-     "first_received_at": 3600,
-     "latency_s": 1200,
-     "delivered": true,
-     "heard_on_time": true,
-     "received_on_time": true
-    },
-    "late": {
-     "release_at": 2400,
-     "deadline": 3600,
-     "first_heard_at": 4200,
-     "first_received_at": 4200,
-     "latency_s": null,
-     "delivered": false,
-     "heard_on_time": false,
-     "received_on_time": false
-    }
+    "seed": 2,
+    "svc": 2536,
+    "n": 7560,
+    "dead": 0,
+    "uplink_s": 886.6,
+    "downlink_s": 362.4,
+    "attempts": 2198
    }
   ],
-  "apply_changes_early": {}
+  "late": [
+   {
+    "seed": 0,
+    "svc": 2698,
+    "n": 7560,
+    "dead": 0,
+    "uplink_s": 866.6,
+    "downlink_s": 345.1,
+    "attempts": 2093
+   },
+   {
+    "seed": 1,
+    "svc": 2370,
+    "n": 7560,
+    "dead": 0,
+    "uplink_s": 911.4,
+    "downlink_s": 351.0,
+    "attempts": 2129
+   },
+   {
+    "seed": 2,
+    "svc": 2533,
+    "n": 7560,
+    "dead": 0,
+    "uplink_s": 886.0,
+    "downlink_s": 359.6,
+    "attempts": 2181
+   }
+  ],
+  "quiet": [
+   {
+    "seed": 0,
+    "svc": 2675,
+    "n": 7560,
+    "dead": 0,
+    "uplink_s": 778.9,
+    "downlink_s": 0.0,
+    "attempts": 0
+   },
+   {
+    "seed": 1,
+    "svc": 2353,
+    "n": 7560,
+    "dead": 0,
+    "uplink_s": 802.7,
+    "downlink_s": 0.0,
+    "attempts": 0
+   },
+   {
+    "seed": 2,
+    "svc": 2516,
+    "n": 7560,
+    "dead": 0,
+    "uplink_s": 787.2,
+    "downlink_s": 0.0,
+    "attempts": 0
+   }
+  ],
+  "table": [
+   {
+    "seed": 0,
+    "svc": 2675,
+    "n": 7560,
+    "dead": 0,
+    "uplink_s": 944.8,
+    "downlink_s": 12.7,
+    "attempts": 77
+   },
+   {
+    "seed": 1,
+    "svc": 2353,
+    "n": 7560,
+    "dead": 0,
+    "uplink_s": 967.2,
+    "downlink_s": 11.7,
+    "attempts": 71
+   },
+   {
+    "seed": 2,
+    "svc": 2516,
+    "n": 7560,
+    "dead": 0,
+    "uplink_s": 950.3,
+    "downlink_s": 11.2,
+    "attempts": 68
+   }
+  ],
+  "tbl_lead": [
+   {
+    "seed": 0,
+    "svc": 2675,
+    "n": 7560,
+    "dead": 0,
+    "uplink_s": 943.5,
+    "downlink_s": 11.7,
+    "attempts": 71
+   },
+   {
+    "seed": 1,
+    "svc": 2353,
+    "n": 7560,
+    "dead": 0,
+    "uplink_s": 965.8,
+    "downlink_s": 11.0,
+    "attempts": 67
+   },
+   {
+    "seed": 2,
+    "svc": 2516,
+    "n": 7560,
+    "dead": 0,
+    "uplink_s": 948.7,
+    "downlink_s": 10.9,
+    "attempts": 66
+   }
+  ]
  },
- "witness_b": {
-  "svc_delta": -22
+ "summary": {
+  "early_minus_table": [
+   22,
+   17,
+   20
+  ],
+  "early_minus_tbl_lead": [
+   22,
+   17,
+   20
+  ],
+  "early_minus_quiet": [
+   22,
+   17,
+   20
+  ],
+  "mean_early_minus_table": 19.666666666666668,
+  "mean_early_minus_tbl_lead": 19.666666666666668,
+  "mean_early_minus_quiet": 19.666666666666668
  }
 }
