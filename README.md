@@ -1,5 +1,7 @@
 English | [中文](README.zh.md)
 
+> **Current work direction (exploratory).** The active line is **candidate-direction exploration**, not a new claim. The question under test: can an Agent contribute anything where the trusted task authority does not already fix execution — that is, interpreting operator requirements that are not yet fully structured, and requesting exactly the information whose resolution would change a legal plan, under intermittent backhaul? This is exploratory work in progress. No result here is published, no claim status changes, and the closed lines (configuration leasing, single-node stopping, retention-horizon tuning) stay closed; [CLAIMS](results/CLAIMS.md) remains the sole claim-state ledger. Directions under evaluation, entry conditions and open questions are kept in the [research plan](paper/RESEARCH_PLAN.md).
+
 # Local Communication Control for Pre-Disaster Monitoring with Intermittent Backhaul
 
 This repository studies battery/solar mountain geohazard monitoring: LoRaWAN Class A nodes reach a field gateway, which uses cellular backhaul and an uplink-only BeiDou short-message backup. Monitoring requirements and warning-level changes are externally authorised. The system executes their communication requirements.
