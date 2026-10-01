@@ -70,7 +70,7 @@ SAMPLE_WH = 4.7e-4
 # `ControlPlane` 按实际 payload airtime 计费，故记录到期边界会改变批次内容并改变实测均值。
 # 2026-09-20 的 C10 修正保留 deadline tick 后，重新运行
 # `code/experiments/measure_seqref_calibration.py` 得到下值；旧校准与旧 C9 结果已归档。
-RADIO_WH_PER_REPORT = 3.1867792516129184e-5
+RADIO_WH_PER_REPORT = 3.218225961290337e-5
 LOAD_SPARSE_H = 6 * (SAMPLE_WH + RADIO_WH_PER_REPORT)
 LOAD_DENSE_H = 12 * (SAMPLE_WH + RADIO_WH_PER_REPORT)
 SUNRISE_H = 6.0

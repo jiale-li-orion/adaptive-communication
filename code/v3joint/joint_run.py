@@ -44,23 +44,34 @@ def run_joint(seed: int = 0, task_hours: int = 12, tail_hours: int = 1,
               harvest_wh_per_hour: float = 3.0, capacity_wh: float = 0.05,
               initial_soc: float = 1.0, harvest_mode: str = "uniform",
               harvest_peak_wh_per_hour: float = 0.06,
+              irradiance_year: int = 2023, irradiance_start_hour: int = 0,
               blackout_frac: float = 0.0, blackout_start_h: float = 0.0,
               low_frac: float = 0.4, low_wh_per_hour: float = 0.005,
               uplink_p_arrive: float = 0.74, backhaul_p_good: float = 0.62,
               burst_p_gb: float | None = None, burst_p_bg: float | None = None,
               outage_start_h: float | None = None, outage_hours: float = 0.0,
               access_outage_start_h: float = 4.0, access_outage_hours: float = 0.0,
+              access_outage_predicate=None,
+              access_assist_windows=None,
+              access_assist_controller=None,
+              terminal_dts=None,
+              terminal_dts_enabled: bool = True,
               # ---- 备用腿 ----
               enable_backup: bool = True, backup_rate_s: int = 120,
               backup_bytes: int = 200, backup_header_bytes: int = 20,
               backup_chooser: str = "edf", backup_failover: bool = True,
               backup_suppress: bool = True,
               backup_p_succ: float = 1.0,
+              backup_boost_windows=None, backup_boost_rate_s: int | None = None,
+              backup_boost_bytes: int | None = None,
+              backup_boost_controller=None,
               cache_service: str = "fifo",
               cup_use_window: bool = True, cup_lead_s: int = 900, cup_gate_sampling: bool = True,
               odp_gate_sampling: bool = True, odp_use_backup_phase: bool = True,
               trace: bool = False,
               collect_rows: bool = False, placement: str = "center",
+              send_contract_fields: bool = False,
+              atomic_generation: bool = False,
               # ---- 顺序2: 外生授权任务变更(doc35) ----
               mission_schedule=None, mission_mode: str | None = None,
               mission_scope=None, mission_healthy_wh: float = 0.010,
@@ -68,7 +79,10 @@ def run_joint(seed: int = 0, task_hours: int = 12, tail_hours: int = 1,
               local_floor: bool = False, floor_day_start: float = 6.0,
               floor_dusk: float = 18.0, floor_sparse: int | None = None,
               floor_dense: int | None = None, local_dayfeed: bool = False,
-              floor_lease_end_s: float | None = None):
+              floor_lease_end_s: float | None = None,
+              execution_feedback: bool = False,
+              execution_feedback_bytes: int = 18,
+              shared_access_controller=None):
     hours = task_hours + tail_hours
     dep = build_deployment(groups=groups, per_group=per_group)
     prof = DeviceProfile(sample_interval_s=sample_interval_s,
@@ -87,7 +101,8 @@ def run_joint(seed: int = 0, task_hours: int = 12, tail_hours: int = 1,
             nodes.keys(), int(hours), seed, peak_wh_per_hour=harvest_peak_wh_per_hour)
     elif harvest_mode == "irradiance":
         harvest, temp = irradiance_harvest(
-            nodes.keys(), int(hours), seed, peak_wh_per_hour=harvest_peak_wh_per_hour)
+            nodes.keys(), int(hours), seed, peak_wh_per_hour=harvest_peak_wh_per_hour,
+            year=irradiance_year, start_hour=irradiance_start_hour)
     elif harvest_mode == "hetero":
         harvest, temp = hetero_harvest(
             nodes.keys(), int(hours), seed, low_frac=low_frac,
@@ -110,7 +125,8 @@ def run_joint(seed: int = 0, task_hours: int = 12, tail_hours: int = 1,
         # 在线变更新任务采用半开窗口独立观测语义(doc38 §4); 单段无变更回退闭区间, 与旧版一致。
         obs = piecewise_routine_obligations(
             meas, int(task_hours), mission_schedule,
-            half_open_after_first=len(mission_schedule) >= 2)
+            half_open_after_first=len(mission_schedule) >= 2,
+            scope=mission_scope)
     else:
         obs = routine_obligations_by_node(meas, int(task_hours), period_s=routine_period_s)
     obs = obs + rule_obligations_for_truth(truth, spacing_s=event_spacing_s)
@@ -120,7 +136,8 @@ def run_joint(seed: int = 0, task_hours: int = 12, tail_hours: int = 1,
     # 发布; 单段/固定任务 gate=None, 与旧版逐位一致。独立 scorer 始终持 obligations 全集真值。
     mission_gate = None
     if mission_schedule is not None and len(mission_schedule) >= 2:
-        mission_gate = MissionViewGate(meas, int(task_hours), mission_schedule)
+        mission_gate = MissionViewGate(
+            meas, int(task_hours), mission_schedule, scope=mission_scope)
 
     cup_observer = None
     if mission_policy_obj is not None:
@@ -158,8 +175,18 @@ def run_joint(seed: int = 0, task_hours: int = 12, tail_hours: int = 1,
         acc = (int(access_outage_start_h * 3600),
                int((access_outage_start_h + access_outage_hours) * 3600))
     inst = Instance(nodes, truth, seed=seed, policy=pol, access_outage=acc,
+                    access_outage_predicate=access_outage_predicate,
+                    access_assist_windows=access_assist_windows,
+                    access_assist_controller=access_assist_controller,
+                    terminal_dts=terminal_dts,
+                    terminal_dts_enabled=terminal_dts_enabled,
                     burst_p_gb=burst_p_gb, burst_p_bg=burst_p_bg,
-                    placement=placement, trace=trace)
+                    placement=placement, trace=trace,
+                    send_contract_fields=send_contract_fields,
+                    atomic_generation=atomic_generation,
+                    execution_feedback=execution_feedback,
+                    execution_feedback_bytes=execution_feedback_bytes,
+                    shared_access_controller=shared_access_controller)
     inst.plane.uplink_p_arrive = uplink_p_arrive
     inst.plane.backhaul_p_good = backhaul_p_good
     for pth in inst.plane.paths:
@@ -197,9 +224,20 @@ def run_joint(seed: int = 0, task_hours: int = 12, tail_hours: int = 1,
         obligation_period_s=routine_period_s, grace_s=routine_period_s,
         obligations=obligations, suppress_duplicates=backup_suppress,
         backup_p_succ=backup_p_succ, backup_loss_seed=seed,
-        mission_gate=mission_gate, nodes_ref=nodes)
+        mission_gate=mission_gate, nodes_ref=nodes,
+        backup_boost_windows=backup_boost_windows,
+        backup_boost_rate_s=backup_boost_rate_s,
+        backup_boost_bytes=backup_boost_bytes,
+        backup_boost_controller=backup_boost_controller)
     if cup_observer is not None:
         cup_observer.plane = inst.plane       # 绑定后策略才能读主路状态/备用相位
+
+    # Experimental policies may need a handle to *their own* running instance for
+    # bookkeeping that is already observable at the center (e.g. arrived samples),
+    # or for an explicitly labelled oracle/reference arm.  Default policies do not
+    # implement this hook, so existing runs remain bit-identical.
+    if hasattr(pol, "bind_instance"):
+        pol.bind_instance(inst)
 
     log = inst.run(int(hours))
     res = evaluate(obligations, log, int(hours), nodes.keys(),
@@ -207,6 +245,26 @@ def run_joint(seed: int = 0, task_hours: int = 12, tail_hours: int = 1,
                    plane=inst.plane, task_hours=int(task_hours), outage=outage,
                    collect_rows=collect_rows)
     res["backup"] = inst.plane.backup_summary()
+    res["repair"] = {
+        "access_assist_duration_s": inst.access_assist_duration_s(),
+        "access_assist_dynamic_s": inst.access_assist_dynamic_ticks * 60,
+        "access_assist_bypassed": inst.access_assist_bypassed,
+        "access_assist_controller": (inst.access_assist_controller.summary()
+                                     if inst.access_assist_controller is not None and
+                                     hasattr(inst.access_assist_controller, "summary") else None),
+        "terminal_dts_attempts": inst.terminal_dts_attempts,
+        "terminal_dts_success": inst.terminal_dts_success,
+        "terminal_dts_records": inst.terminal_dts_records,
+        "terminal_dts_energy_wh": inst.terminal_dts_energy_wh,
+        "backup_boost_duration_s": inst.plane.backup_boost_duration_s(),
+        "backup_boost_packets": inst.plane.backup_boost_packets,
+        "backup_boost_bytes_sent": inst.plane.backup_boost_bytes_sent,
+        "backup_boost_records": inst.plane.backup_boost_records,
+        "backup_boost_dynamic_s": inst.plane.backup_boost_dynamic_ticks * 60,
+        "backup_boost_controller": (inst.plane.backup_boost_controller.summary()
+                                    if inst.plane.backup_boost_controller is not None and
+                                    hasattr(inst.plane.backup_boost_controller, "summary") else None),
+    }
     res["deployment"] = dep.summary()
     res["command_counters"] = dict(inst.counters)
     _refusals = getattr(pol, "refusals", None)

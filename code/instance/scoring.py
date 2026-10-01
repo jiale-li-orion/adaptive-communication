@@ -219,6 +219,7 @@ def _routine_block(outcomes, log, node_ids, end_s, by_key) -> dict:
     # 拿一个实体去算它没有的那个测项，会把整段时间记成"无观测"（实测踩过：43200 s 全段）。
     pairs = sorted({(o.node_id, o.measurand) for o in rows})
     aoi_sum, aoi_ticks, no_obs_ticks = 0, 0, 0
+    aoi_values: list[int] = []
     for node_id, measurand in pairs:
         # **必须按「中心收到的时刻」排序，不是按「采集时刻」。**（2026-09-13 修）
         #
@@ -251,8 +252,11 @@ def _routine_block(outcomes, log, node_ids, end_s, by_key) -> dict:
             if newest is None:
                 no_obs_ticks += 1
             else:
-                aoi_sum += t - newest
+                age = t - newest
+                aoi_sum += age
                 aoi_ticks += 1
+                aoi_values.append(age)
+    latencies = [o.latency_s for o in rows if o.latency_s is not None]
     return {
         "n": len(rows),
         "delivered": sum(o.delivered for o in rows),
@@ -261,9 +265,14 @@ def _routine_block(outcomes, log, node_ids, end_s, by_key) -> dict:
                                 for o in rows),
         "censored": sum(o.censored for o in rows),
         "aoi_mean_s": (aoi_sum / aoi_ticks) if aoi_ticks else None,
+        "aoi_p50_s": _pct(aoi_values, 50),
+        "aoi_p90_s": _pct(aoi_values, 90),
+        "aoi_p95_s": _pct(aoi_values, 95),
         "no_observation_s": no_obs_ticks * TICK_S,
-        "latency_mean_s": _mean([o.latency_s for o in rows if o.latency_s is not None]),
-        "latency_p90_s": _pct([o.latency_s for o in rows if o.latency_s is not None], 90),
+        "latency_mean_s": _mean(latencies),
+        "latency_p50_s": _pct(latencies, 50),
+        "latency_p90_s": _pct(latencies, 90),
+        "latency_p95_s": _pct(latencies, 95),
     }
 
 
@@ -283,7 +292,9 @@ def _event_block(obligations, outcomes) -> dict:
         "match_rate": (sum(o.collected for o in rows) / len(rows)) if rows else None,
         "deliver_rate": (sum(o.delivered for o in rows) / len(rows)) if rows else None,
         "delivery_latency_mean_s": _mean(lat),
+        "delivery_latency_p50_s": _pct(lat, 50),
         "delivery_latency_p90_s": _pct(lat, 90),
+        "delivery_latency_p95_s": _pct(lat, 95),
         "censored": sum(o.censored for o in rows),
         # 成功 CDF：未完成的不消失（留在分母里）
         "delivery_cdf": _cdf(lat, len(rows), (0, 300, 600, 1800, 3600)),

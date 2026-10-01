@@ -196,17 +196,17 @@ def table_placement():
              "dayfeed-c+floor", "env-comply+floor", "pure-local"]
     lab = {"en": {"comply": "comply (naive, unprotected)",
                   "dayfeed-c": "dayfeed-c (centre day/night rule)",
-                  "env-comply": "envelope(comply), centre only",
+                  "env-comply": "legacy clock envelope(comply), centre only",
                   "comply+floor": "comply + local guard",
                   "dayfeed-c+floor": "dayfeed-c + local guard",
-                  "env-comply+floor": "envelope(comply) + local guard",
+                  "env-comply+floor": "legacy clock envelope(comply) + local guard",
                   "pure-local": "pure-local (pre-provisioned, 0 cmds)"},
            "zh": {"comply": "comply（朴素，无保护）",
                   "dayfeed-c": "dayfeed-c（中心昼夜规则）",
-                  "env-comply": "envelope(comply)，仅中心",
+                  "env-comply": "历史时钟 envelope(comply)，仅中心",
                   "comply+floor": "comply + 本地门",
                   "dayfeed-c+floor": "dayfeed-c + 本地门",
-                  "env-comply+floor": "envelope(comply) + 本地门",
+                  "env-comply+floor": "历史时钟 envelope(comply) + 本地门",
                   "pure-local": "pure-local（预置，0 命令）"}}
     head = {"en": "Configuration & Mean svc & Deaths & Cmds sent & Refused",
             "zh": "配置（除注明外均在中心） & 平均服务 & 死亡 & 发送 & 被拒"}

@@ -83,9 +83,32 @@ def applied300(obs):
         sum(1 for x in ns if str(x.get("id", "")).startswith("n"))
 
 
-def orders_dense(rec):
+def parser_expanded_orders_dense(rec):
+    """历史 parser-normalized action map。
+
+    r38 旧 parser 会把 omitted nodes 用 current config 自动补全，因此这个量不是模型显式下单数。
+    保留它只为审计旧结果。
+    """
     a = rec.get("actions") or {}
     return any(str(k).startswith("n") and isinstance(v, list) and v and v[0] == 300 for k, v in a.items())
+
+
+def raw_explicit_orders_dense(rec):
+    """模型 raw JSON 中是否显式要求任一传感节点 sample=300。"""
+    raw = rec.get("raw")
+    if not raw:
+        return False
+    try:
+        obj = json.loads(raw)
+    except Exception:
+        return False
+    for a in obj.get("actions", []) or []:
+        if not isinstance(a, dict):
+            continue
+        nid = str(a.get("node_id", ""))
+        if nid.startswith("n") and a.get("sample_period_s") == 300:
+            return True
+    return False
 
 
 def main():
@@ -93,7 +116,9 @@ def main():
     ldown_nolink_examples = []
     for (tag, arm, seed), fn in sorted(FINAL.items(), key=lambda kv: (kv[0][0], kv[0][1], kv[0][2])):
         recs = [json.loads(l) for l in open(os.path.join(T, fn), encoding="utf-8")]
-        st = dict(decisions=0, parse_hold=0, dense_orders=0, l_up=0, l_up_in_forced_outage=0,
+        st = dict(decisions=0, parse_hold=0,
+                  dense_orders_parser_expanded=0, dense_orders_raw_explicit=0,
+                  l_up=0, l_up_in_forced_outage=0,
                   l_down=0, claim_applied=0, claim_applied_false=0, plan_dense=0, infeas_word=0,
                   window_decisions=0)
         for rec in recs:
@@ -106,8 +131,10 @@ def main():
             in_forced = tag == "outage" and OUT_LO <= t < OUT_HI
             if in_forced:
                 st["window_decisions"] += 1
-            if orders_dense(rec):
-                st["dense_orders"] += 1
+            if parser_expanded_orders_dense(rec):
+                st["dense_orders_parser_expanded"] += 1
+            if raw_explicit_orders_dense(rec):
+                st["dense_orders_raw_explicit"] += 1
             up = bool(RE_LUP.search(note)); down = bool(RE_LDOWN.search(note))
             applied = bool(RE_APPLIED.search(note))
             plan = bool(RE_PLAN.search(note)); infeas = bool(RE_INFEAS_WORD.search(note))
@@ -133,11 +160,13 @@ def main():
         summary[f"{tag}|{arm}|s{seed}"] = st
 
     print("== r42 symmetric claim relabel (final 11 traces; denominators reported) ==")
-    hdr = (f"{'trace':<20}{'dec':>4}{'parseHold':>9}{'denseOrd':>9}{'L_up':>5}{'L_up@forcedOut':>14}"
+    hdr = (f"{'trace':<20}{'dec':>4}{'parseHold':>9}{'denseRaw':>9}{'denseLegacy':>12}"
+           f"{'L_up':>5}{'L_up@forcedOut':>14}"
            f"{'L_down':>7}{'claimAppl':>9}{'claimFalse':>10}{'planDense':>10}{'infeasWord':>10}")
     print(hdr)
     for k, st in summary.items():
-        print(f"{k:<20}{st['decisions']:>4}{st['parse_hold']:>9}{st['dense_orders']:>9}"
+        print(f"{k:<20}{st['decisions']:>4}{st['parse_hold']:>9}"
+              f"{st['dense_orders_raw_explicit']:>9}{st['dense_orders_parser_expanded']:>12}"
               f"{st['l_up']:>5}{st['l_up_in_forced_outage']:>14}{st['l_down']:>7}"
               f"{st['claim_applied']:>9}{st['claim_applied_false']:>10}{st['plan_dense']:>10}{st['infeas_word']:>10}")
 
@@ -159,8 +188,11 @@ def main():
 
     # old scorer denominators restated
     print("\n== old-scorer denominator restatement ==")
-    print("A1 outage dense orders:", [summary[f'outage|A1|s{s}']['dense_orders'] for s in range(3)],
-          "-> the old 'false claim applied' check ran only on these; A1 outage holds dominate.")
+    print("A1 outage raw-explicit dense orders:",
+          [summary[f'outage|A1|s{s}']['dense_orders_raw_explicit'] for s in range(3)])
+    print("A1 outage legacy parser-expanded dense orders:",
+          [summary[f'outage|A1|s{s}']['dense_orders_parser_expanded'] for s in range(3)],
+          "-> old r38 parser auto-filled omitted nodes, so this legacy count is not a model-order count.")
     print("nolinkout group had outage window (None,None): the old healthy-group claim scorer never ran;")
     print("its zero counts are initialisation zeros, not measurements.")
 

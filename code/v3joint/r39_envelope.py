@@ -52,12 +52,15 @@ def main():
         arms = [
             ("comply", ScriptedDecider("comply"), False, False),
             ("dayfeed-c", ScriptedDecider("dayfeed"), False, False),
-            ("env-comply", EnvelopeDecider(ScriptedDecider("comply"), tag="env-comply"), False, False),
-            ("env-dayfeed", EnvelopeDecider(ScriptedDecider("dayfeed"), tag="env-dayfeed"), False, False),
+            ("env-comply", EnvelopeDecider(ScriptedDecider("comply"), tag="env-comply",
+                                            mode="legacy_clock"), False, False),
+            ("env-dayfeed", EnvelopeDecider(ScriptedDecider("dayfeed"), tag="env-dayfeed",
+                                             mode="legacy_clock"), False, False),
             # 推荐架构：中心 planner/envelope + 节点本地能量自治底座
             ("comply+floor", ScriptedDecider("comply"), True, False),
             ("dayfeed-c+floor", ScriptedDecider("dayfeed"), True, False),
-            ("env-comply+floor", EnvelopeDecider(ScriptedDecider("comply"), tag="env-comply"), True, False),
+            ("env-comply+floor", EnvelopeDecider(ScriptedDecider("comply"), tag="env-comply",
+                                                  mode="legacy_clock"), True, False),
             # 最强本地自治反方：任务表预装、节点本地昼夜执行、零有效中心下行
             ("local-full", ScriptedDecider("comply"), True, True),
         ]

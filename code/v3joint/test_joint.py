@@ -8,6 +8,7 @@
 from __future__ import annotations
 
 import os as _os, sys as _sys
+from types import SimpleNamespace
 _HERE = _os.path.dirname(_os.path.abspath(__file__))
 _CODE = _os.path.dirname(_HERE)
 for _p in (_HERE, *(_os.path.join(_CODE, d) for d in ("physics", "runtime", "experiments",
@@ -17,6 +18,7 @@ for _p in (_HERE, *(_os.path.join(_CODE, d) for d in ("physics", "runtime", "exp
 
 from instance_run import one_seed           # noqa: E402
 from joint_run import run_joint             # noqa: E402
+from joint_plane import JointControlPlane   # noqa: E402
 
 COMPARE_BLOCKS = ("routine", "event", "communication", "energy")
 
@@ -90,6 +92,76 @@ def test_no_duplicate_delivery():
     # 每条 transit 记录至多一个 received_at（HopLog 单值），且收到数=主路+备用记账之和量级一致
     n_recv = sum(1 for t in inst.log.transit.values() if t.received_at is not None)
     assert n_recv >= res["backup"]["backup_records"]
+
+
+# ---------------------------------------------------------------- A5 deadline equality 仍可发送
+def test_backup_deadline_equal_is_still_ontime():
+    """发送发生在 deadline 当拍仍可得分；ontime chooser 不能提前一拍判 terminal。"""
+    plane = object.__new__(JointControlPlane)
+    plane.backup_chooser = "maxcov_ontime"
+    plane.sample_bytes = {"displacement": 6}
+    plane._cover_seen = set()
+    plane._obl_index = {}
+    plane.period_s = 600
+    sample = SimpleNamespace(sample_id="s0", node_id="n0", measurand="displacement",
+                             taken_at=0)
+    item = SimpleNamespace(heard_at_s=600, node_id="n0", payload=[sample])
+    # Fallback deadline = (floor(0/600)+2)*600 = 1200.  At exactly t=1200,
+    # scorer semantics received_at <= deadline still accepts this sample.
+    picked, used = plane._cover_family_pack(
+        [((1200, 600, "n0"), item, sample, frozenset({"obl0"}))],
+        t_s=1200, cap=6)
+    assert used == 6, "deadline 当拍仍应允许占用备份包"
+    assert [s.sample_id for _it, samples in picked.values() for s in samples] == ["s0"]
+
+
+# ---------------------------------------------------------------- A6 repair actuator: access assist
+def test_access_assist_window_is_bounded_and_audited():
+    """接入补强只在声明窗口内绕过强制 outage，并留下时长/命中账。"""
+    base, ib, _ = run_joint(
+        seed=0, task_hours=10, tail_hours=1, groups=1, per_group=4, arm="local",
+        access_outage_start_h=4.0, access_outage_hours=4.0,
+        enable_backup=False, collect_rows=True)
+    got, ig, _ = run_joint(
+        seed=0, task_hours=10, tail_hours=1, groups=1, per_group=4, arm="local",
+        access_outage_start_h=4.0, access_outage_hours=4.0,
+        access_assist_windows=[(5 * 3600, 6 * 3600)],
+        enable_backup=False, collect_rows=True)
+    assert got["repair"]["access_assist_duration_s"] == 3600
+    assert ig.access_assist_bypassed > 0
+    assert ig.access_blocked < ib.access_blocked
+    # 这是能力窗口，不是“保证服务单调”的定理；这里只钉住执行语义和审计账。
+    assert got["repair"]["backup_boost_duration_s"] == 0
+
+
+# ---------------------------------------------------------------- A7 repair actuator: backup boost
+def test_backup_boost_window_is_bounded_and_audited():
+    """备用回传增强只在窗口内换 profile，并单独计增强期包/字节。"""
+    got, _ig, _ = run_joint(
+        seed=0, task_hours=10, tail_hours=1, groups=1, per_group=4, arm="local",
+        outage_start_h=4.0, outage_hours=4.0,
+        enable_backup=True, backup_rate_s=1200, backup_bytes=78,
+        backup_boost_windows=[(5 * 3600, 6 * 3600)],
+        backup_boost_rate_s=60, backup_boost_bytes=100000)
+    rep = got["repair"]
+    assert rep["backup_boost_duration_s"] == 3600
+    assert rep["backup_boost_packets"] > 0
+    assert rep["backup_boost_bytes_sent"] > 0
+    assert got["backup"]["backup_boost_bytes_sent"] == rep["backup_boost_bytes_sent"]
+
+
+# ---------------------------------------------------------------- A8 explicit empty windows == default
+def test_empty_repair_windows_are_default_semantics():
+    """显式空 repair schedule 不得改变任何主评分/通信/能量块。"""
+    a, _, _ = run_joint(seed=2, task_hours=8, tail_hours=1, groups=1, per_group=4,
+                        arm="local", outage_start_h=3.0, outage_hours=3.0,
+                        access_outage_start_h=4.0, access_outage_hours=2.0)
+    b, _, _ = run_joint(seed=2, task_hours=8, tail_hours=1, groups=1, per_group=4,
+                        arm="local", outage_start_h=3.0, outage_hours=3.0,
+                        access_outage_start_h=4.0, access_outage_hours=2.0,
+                        access_assist_windows=[], backup_boost_windows=[])
+    assert _blocks(a) == _blocks(b)
+    assert a["backup"] == b["backup"]
 
 
 def _run_all():

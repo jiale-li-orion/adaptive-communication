@@ -1,0 +1,89 @@
+{
+  "experiment_id": "o2-risk-escalation-v1",
+  "variant": "global",
+  "status": "exploratory infrastructure + deterministic conformance",
+  "design_authority": "research/EXPERIMENT-DESIGN-v1.md",
+  "system_model": "docs/s6-model/system-model.md",
+  "scenario": "spec/instance-v1-manifest.md",
+  "operational_task": {
+    "task_id": "o2-risk-escalation-v1",
+    "task_revision": 1,
+    "family": "risk_escalation",
+    "principal": "external-emergency-monitoring-authority",
+    "target_node_ids": [],
+    "measurands": [
+      "displacement"
+    ],
+    "phases": [
+      {
+        "start_s": 0,
+        "required_period_s": 3600,
+        "level": "blue"
+      },
+      {
+        "start_s": 21600,
+        "required_period_s": 300,
+        "level": "yellow"
+      }
+    ],
+    "task_horizon_s": 43200,
+    "authorized_effects": [
+      "communication.config.set_sampling_interval",
+      "communication.config.set_report_period"
+    ],
+    "source_refs": [
+      "S04",
+      "task-contract-v1.1"
+    ],
+    "scoring_profile_ref": "communication-physical-v1",
+    "metadata": {
+      "risk_authority": "external",
+      "primary_metric": "timely_obligation_delivery_rate"
+    }
+  },
+  "arms": [
+    "legacy_comply",
+    "task_conditioned",
+    "full_dump"
+  ],
+  "agent_planner_consumer": "DeterministicComplyPlannerConsumer",
+  "seeds": [
+    0,
+    1,
+    2,
+    3,
+    4
+  ],
+  "simulator": {
+    "task_hours": 12,
+    "tail_hours": 1,
+    "groups": 2,
+    "sample_interval_s": 3600,
+    "report_period_s": 3600,
+    "routine_period_s": 3600,
+    "harvest_mode": "irradiance",
+    "harvest_peak_wh_per_hour": 0.01,
+    "irradiance_year": 2023,
+    "irradiance_start_hour": 3624,
+    "capacity_wh": 0.05,
+    "initial_soc": 1.0,
+    "outage_start_h": 4.0,
+    "outage_hours": 4.0,
+    "enable_backup": true,
+    "backup_rate_s": 120,
+    "backup_bytes": 200,
+    "execution_feedback": true
+  },
+  "simulator_authority": "code/agentic_communication/run.py::DEFAULT_FULLSIM",
+  "primary_metrics": [
+    "timely_delivery_rate",
+    "collection_rate",
+    "delivery_latency_p90_s",
+    "total_consumed_wh",
+    "backup_bytes",
+    "physical_action_confirmation_rate",
+    "context_sufficiency_recall",
+    "mean_materialized_bytes"
+  ],
+  "claim_ceiling": "This run validates the unified runtime and measures the O2 deterministic slice. It is not a claim that task-conditioned context improves physical service, because the deterministic planner is intentionally behavior-equivalent to legacy comply."
+}

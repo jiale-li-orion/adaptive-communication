@@ -1,6 +1,12 @@
 # -*- coding: utf-8 -*-
 """r38 — doc38 三层臂端到端真实 agent 对照（A0 / A0-structured / A1）。
 
+HISTORICAL COLLECTION HARNESS.  C8 的注册证据是已经冻结的 11 条 trace 及其离线 relabel，
+不是“今天用当前 AgentMission/提示词再调用一次模型”的结果。2026-09-21 之后 harness 已修正
+omission/sticky-target、pending 可见性、control-plane refusal 与 ACCESS 证据语义；外部模型本身也
+不提供跨日期逐 token 可重复性。因此本脚本只保留为历史收集入口/参考实现：任何新闭环 Agent
+验证必须另开实验编号与结果文件，不能覆盖 `r38_three_arm_summary.json` 或把新物理读数写成 C8。
+
 同 seed、同物理实现、同 CenterView、同工具/历史/动作空间，唯一差别是 decider 的信息块：
   A0  : LLMDecider(structured_state=False)
   A0s : LLMDecider(structured_state=True)   普通工程未决命令清单

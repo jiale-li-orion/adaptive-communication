@@ -1,0 +1,76 @@
+{
+  "task_source_refs": [
+    "S04",
+    "task-contract-v1.1"
+  ],
+  "source_inventory": "research/sources.json",
+  "dataset_authority": "spec/datasets.md",
+  "instance_authority": "spec/instance-v1-manifest.md",
+  "artifacts": [
+    {
+      "id": "srtm1_n29e094",
+      "path": "data/dem/hgt/N29E094.hgt",
+      "authority": "terrain/ITM geometry",
+      "exists": true,
+      "bytes": 25934402,
+      "sha256": "dd3adbbc830a7fe3fb2b020f25b5b6c05d82d2f5734a34edb87f0b8fd6341922"
+    },
+    {
+      "id": "srtm1_n29e095",
+      "path": "data/dem/hgt/N29E095.hgt",
+      "authority": "terrain/ITM geometry",
+      "exists": true,
+      "bytes": 25934402,
+      "sha256": "4d87eada595c3bc5e22d13d05183512986765458d60351f8a1ec8ef91f70fc28"
+    },
+    {
+      "id": "srtm1_n30e094",
+      "path": "data/dem/hgt/N30E094.hgt",
+      "authority": "terrain/ITM geometry",
+      "exists": true,
+      "bytes": 25934402,
+      "sha256": "7d846b9b7395dc76e94b3d0032e7698f2437717e062c4e7bf967bbc920de36dc"
+    },
+    {
+      "id": "srtm1_n30e095",
+      "path": "data/dem/hgt/N30E095.hgt",
+      "authority": "terrain/ITM geometry",
+      "exists": true,
+      "bytes": 25934402,
+      "sha256": "584db853f83aefec865b4450213ec96f7ff81ce16bf364ac9497b09fdff751df"
+    },
+    {
+      "id": "nasa_power_2023",
+      "path": "data/downloads/nasa_power_irradiance/power_hourly_2023_30.33N_94.78E.csv",
+      "authority": "irradiance/temperature exogenous trace",
+      "exists": true,
+      "bytes": 207571,
+      "sha256": "548afa25f9b0eaa68ac554fcceda7ea1288788af09c533fcd1a09ab0c1d56c8b"
+    },
+    {
+      "id": "chirpbox_loss_model",
+      "path": "results/loss_model.json",
+      "authority": "derived temporal link model",
+      "exists": true,
+      "bytes": 477,
+      "sha256": "0ce971fad6dc1552bb505f83daa8b44e1af644249570b5503e5de37d1163aeb3"
+    },
+    {
+      "id": "chirpbox_outage_model",
+      "path": "results/outage_distribution.json",
+      "authority": "derived outage-duration model",
+      "exists": true,
+      "bytes": 2560,
+      "sha256": "a9b2d417b398ca4de1418e450c083f3d364d0095773392f4917fdf6ff58ab73d"
+    }
+  ],
+  "chirpbox_raw": {
+    "path": "data/downloads/chirpbox.csv",
+    "source": "Zenodo 10.5281/zenodo.5527877",
+    "note": "raw file is large; experiment manifest freezes the small derived model artifacts used by the simulator"
+  },
+  "nasa_power_window": {
+    "year": 2023,
+    "start_hour": 3624
+  }
+}

@@ -1,0 +1,105 @@
+{
+  "experiment_id": "communication-baseline-matrix-v1",
+  "task": {
+    "task_id": "o2-risk-escalation-v1",
+    "task_revision": 1,
+    "family": "risk_escalation",
+    "principal": "external-emergency-monitoring-authority",
+    "target_node_ids": [],
+    "measurands": [
+      "displacement"
+    ],
+    "phases": [
+      {
+        "start_s": 0,
+        "required_period_s": 3600,
+        "level": "blue"
+      },
+      {
+        "start_s": 21600,
+        "required_period_s": 300,
+        "level": "yellow"
+      }
+    ],
+    "task_horizon_s": 43200,
+    "authorized_effects": [
+      "communication.config.set_sampling_interval",
+      "communication.config.set_report_period"
+    ],
+    "source_refs": [
+      "S04",
+      "task-contract-v1.1"
+    ],
+    "scoring_profile_ref": "communication-physical-v1",
+    "metadata": {
+      "risk_authority": "external",
+      "primary_metric": "timely_obligation_delivery_rate"
+    }
+  },
+  "seeds": [
+    0,
+    1,
+    2,
+    3,
+    4
+  ],
+  "simulator": {
+    "task_hours": 12,
+    "tail_hours": 1,
+    "groups": 2,
+    "sample_interval_s": 3600,
+    "report_period_s": 3600,
+    "routine_period_s": 3600,
+    "harvest_mode": "irradiance",
+    "harvest_peak_wh_per_hour": 0.01,
+    "irradiance_year": 2023,
+    "irradiance_start_hour": 3624,
+    "capacity_wh": 0.05,
+    "initial_soc": 1.0,
+    "outage_start_h": 4.0,
+    "outage_hours": 4.0,
+    "enable_backup": true,
+    "backup_rate_s": 120,
+    "backup_bytes": 200,
+    "execution_feedback": true
+  },
+  "simulator_authority": "code/agentic_communication/run.py::DEFAULT_FULLSIM",
+  "online_arms": {
+    "local_edf": {
+      "baseline_id": "comm.local_policy",
+      "arm": "local",
+      "backup_chooser": "edf"
+    },
+    "local_maxcov": {
+      "baseline_id": "comm.backup_maxcov",
+      "arm": "local",
+      "backup_chooser": "maxcov"
+    },
+    "aoi_edf": {
+      "baseline_id": "comm.aoi",
+      "arm": "aoi",
+      "backup_chooser": "edf"
+    },
+    "energy_aware_edf": {
+      "baseline_id": "comm.energy_aware",
+      "arm": "energy_aware",
+      "backup_chooser": "edf"
+    },
+    "mission_comply_edf": {
+      "baseline_id": "comm.mission_comply",
+      "arm": "local",
+      "mission_mode": "comply",
+      "backup_chooser": "edf"
+    }
+  },
+  "evaluator_only_oracles": [
+    "oracle.dynamic_energy",
+    "oracle.delivery"
+  ],
+  "fairness": {
+    "center_policy_comparison": "backup chooser fixed to EDF",
+    "backup_chooser_comparison": "center policy fixed to LocalPolicy",
+    "delivery_oracle_coordinate": "primary-only (gateway backup disabled) because code/instance/oracle.py::delivery_oracle is primary-path-only"
+  },
+  "claim_ceiling": "Pre-API communication-controller/oracle baseline only. Online controller results may be compared under the same O2 task and simulator. Evaluator-only oracle values are upper-bound diagnostics and must not be ranked as online policies."
+}

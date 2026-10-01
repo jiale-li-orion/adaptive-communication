@@ -223,6 +223,11 @@ class Node:
         # 计数器（供手工核算）
         self.sampled = 0
         self.dropped = 0
+        # Ordinary cumulative execution counters.  They are local bookkeeping only;
+        # they become remotely visible only when an Instance explicitly enables the
+        # execution-feedback snapshot extension below.
+        self.uplink_attempts = 0
+        self.uplink_records_attempted = 0
         self.dead_at: int | None = None
         self.idle_ticks = 0
         self.restarts = 0          # R02：欠压停机后回充复机次数
@@ -445,7 +450,8 @@ class Node:
                 # **边界一致性**：评分接受 `received_at <= deadline`，而本函数在当拍上传/转发**之前**
                 # 执行；若此处用 `<=`，期限恰为当拍的记录会被删掉而不是发出去，丢掉的正是当拍本来
                 # 可以得分的那一次机会。改为 `<`：保留到截止当拍走完，此后不可能再按期交付才释放。
-                # 判别证据见 results/retention_deadline_audit.json（十种子 +1.47 点，10/10）。
+                # 当前修正后判别证据见 post-fix C10 审计：十种子约 +1.50 点，10/10 为正；
+                # registered result 在本轮 batch reconciliation 后同步刷新。
                 (drop if expires_at < t_s else keep).append(s)
             if drop:
                 for old in drop:
@@ -568,8 +574,16 @@ class Instance:
                  hold_every: int = 0, hold_s: int = 0, hold_op: str | None = None,
                  atomic_generation: bool = False,
                  access_outage: tuple[int, int] | None = None,
+                 access_outage_predicate=None,
+                 access_assist_windows: list[tuple[int, int]] | tuple[tuple[int, int], ...] | None = None,
+                 access_assist_controller=None,
+                 terminal_dts=None,
+                 terminal_dts_enabled: bool = True,
                  placement: str = "center",
-                 trace: bool = False) -> None:
+                 trace: bool = False,
+                 execution_feedback: bool = False,
+                 execution_feedback_bytes: int = 18,
+                 shared_access_controller=None) -> None:
         # 节点是**每次运行的状态**：缓存与传递台账都属于这一次运行。把同一批节点交给两个
         # Instance 会在第二次运行里看到上一次残留的缓存，而 `sample_id` 是按时刻命名的，
         # 于是旧样本会被当成新样本发出去——静默混合两次运行。**响亮地失败，不要静默。**
@@ -608,6 +622,18 @@ class Instance:
         if placement not in ("center", "gateway"):
             raise ValueError(f"placement must be 'center' or 'gateway', got {placement!r}")
         self.placement = placement
+        # Default-off ordinary feedback extension used by the policy-trial probe.
+        # The compact wire budget is accounted on every source uplink carrying the
+        # snapshot; default False preserves historical payload sizes bit-for-bit.
+        self.execution_feedback = bool(execution_feedback)
+        self.execution_feedback_bytes = (max(0, int(execution_feedback_bytes))
+                                         if self.execution_feedback else 0)
+        # Optional, default-off shared-medium stressor.  The controller sees the
+        # complete set of source uplinks that are due *this tick* before any are
+        # processed, so results do not depend on dictionary iteration order.  It
+        # may only suppress access attempts; the native per-link loss model still
+        # decides success for attempts it allows.
+        self.shared_access_controller = shared_access_controller
         #: **网关自己保存的遥测**：它听到过的每台节点的最近一份状态快照与听到时刻。
         #: 必须独立于 `plane.gateway_pending` 存——因为 `backhaul_forward()` 会把已转发的条目
         #: 从 `gateway_pending` 里**移走**，网关若只靠那张表就会被"转发"这个动作抹掉记忆。
@@ -657,7 +683,32 @@ class Instance:
         #: 接入中断窗 (start_s, end_s)：**节点仍有电、仍在采样，只是上行到不了网关**。
         #: 与回传中断的区别是丢失发生在哪一跳，而这两跳的业务后果不同（v1.1 §5.3）。
         self.access_outage = access_outage
+        self.access_outage_predicate = access_outage_predicate
+        #: **接入补强窗口**：现实动作可对应 relay / route assistance / temporary gateway。
+        #: 这里仅表达“这段时间接入故障被补上”，不声称具体 UAV/中继 PHY，也不改变正常
+        #: `uplink_p_arrive` 随机接入损耗。默认空集，必须与旧语义逐位相同。
+        self.access_assist_windows = tuple(
+            (int(lo), int(hi)) for lo, hi in (access_assist_windows or ()) if int(hi) > int(lo))
+        #: Agent/runtime 临时补强窗。默认空；与静态 windows 使用同一物理路径与成本口径。
+        self.agent_access_assist_windows: list[tuple[int, int]] = []
+        self.access_assist_controller = access_assist_controller
+        self.access_assist_dynamic_ticks = 0
+        self._access_assist_eval_t: int | None = None
+        self._access_assist_eval_value = False
         self.access_blocked = 0
+        self.access_assist_bypassed = 0
+        # Optional terminal-level direct-to-satellite capability. It is deliberately
+        # separate from the gateway backup leg: a successful direct send reaches the
+        # center without creating gateway evidence. The profile is experiment-owned
+        # and must expose opportunity(t_s, node_id), tx_energy_wh, and optional p_succ.
+        self.terminal_dts = terminal_dts
+        #: Agent 只控制既有 terminal-DtS profile 是否可用；不改 profile 的机会、能耗或成功率。
+        self.terminal_dts_enabled = bool(terminal_dts_enabled)
+        self.terminal_dts_attempts = 0
+        self.terminal_dts_success = 0
+        self.terminal_dts_records = 0
+        self.terminal_dts_energy_wh = 0.0
+
         #: 中心下发的**意图**日志：(t_s, node_id, 目标周期)。用于算"中心自己的意图有没有在位"。
         #: 它与"外部配置要求"不同——v1.1 §9 只对后者算错配时长，这里是意图达成度，不是正确性。
         self.intent_log: list[tuple[int, str, int]] = []
@@ -684,12 +735,81 @@ class Instance:
         self.soc_model = _SocModel()
         self.held_dispatched = 0
 
+    def _snapshot(self, node: Node, t_s: int) -> dict:
+        """Node snapshot plus optional ordinary execution counters.
+
+        Fields are deliberately mundane: applied/config generation and cumulative
+        source action counts.  They do not reveal link truth, future state, or the
+        scorer.  Their incremental first-hop wire cost is charged separately by
+        ``execution_feedback_bytes``.
+        """
+        snap = node.snapshot(t_s)
+        if self.execution_feedback:
+            snap.update({
+                "config_generation": node.config_generation,
+                "field_generation_interval": node.field_generation.get("interval"),
+                "field_generation_period": node.field_generation.get("period"),
+                "sampled_total": int(node.sampled),
+                "uplink_attempts_total": int(node.uplink_attempts),
+                "uplink_records_attempted_total": int(node.uplink_records_attempted),
+            })
+        return snap
+
     # -------------------------------------------------- 一个 tick
+
+    def access_outage_active(self, t_s: int, node_id: str | None = None) -> bool:
+        if self.access_outage_predicate is not None:
+            return bool(self.access_outage_predicate(int(t_s), node_id))
+        return bool(self.access_outage is not None and
+                    self.access_outage[0] <= t_s < self.access_outage[1])
+
+    def access_assist_active(self, t_s: int) -> bool:
+        static = any(
+            lo <= t_s < hi
+            for lo, hi in (*self.access_assist_windows, *self.agent_access_assist_windows)
+        )
+        dynamic = False
+        if self.access_assist_controller is not None:
+            # This actuator is area-level, so a stateful budget controller must be evaluated once
+            # per tick, not once per node upload attempt.
+            if self._access_assist_eval_t != t_s:
+                from repair_runtime import AccessRepairView
+                in_forced_outage = self.access_outage_active(t_s)
+                v = AccessRepairView(now_s=int(t_s), tick_s=TICK_S,
+                                     access_available=not in_forced_outage)
+                self._access_assist_eval_value = bool(self.access_assist_controller.decide(v))
+                self._access_assist_eval_t = int(t_s)
+                if self._access_assist_eval_value:
+                    self.access_assist_dynamic_ticks += 1
+            dynamic = self._access_assist_eval_value
+        return static or dynamic
+
+    def access_assist_duration_s(self) -> int:
+        """配置的补强时长（窗口并集），用于成本账；不按流量计费。"""
+        all_windows = tuple(self.access_assist_windows) + tuple(self.agent_access_assist_windows)
+        if not all_windows:
+            return 0
+        ws = sorted(all_windows)
+        total = 0
+        lo, hi = ws[0]
+        for a, b in ws[1:]:
+            if a <= hi:
+                hi = max(hi, b)
+            else:
+                total += hi - lo
+                lo, hi = a, b
+        return total + hi - lo
 
     def tick(self, t_s: int) -> dict:
         """推进一个 tick，返回本 tick 的事件计数（供手工核算）。"""
         counters = {"sampled": 0, "uplinks": 0, "heard": 0, "forwarded": 0}
         hour = t_s // 3600
+
+        # Area-level access assist is paid in wall-clock activation time, not only when a node
+        # happens to upload.  Evaluate the stateful controller exactly once every simulation tick;
+        # later node upload paths read the cached decision for this same `t_s`.
+        if self.access_assist_controller is not None:
+            self.access_assist_active(t_s)
 
         # 0) **过期的下发命令按时间清理，与投递路径无关。**
         #
@@ -732,6 +852,138 @@ class Instance:
         #                   命令直接进网关队列（位置在下游，命令不必再经回传）。
         view = (self._gateway_view(t_s) if self.placement == "gateway"
                 else self._center_view(t_s))
+        # Optional Agentic-Communication observation broker.  It exposes only
+        # legal owner surfaces and request outcomes; the policy never receives
+        # ``Instance`` or environment truth.  Legacy policies do not implement
+        # this hook, so historical behavior remains bit-for-bit unchanged.
+        _bind_obs = getattr(self.policy, "bind_observation_provider", None)
+        if callable(_bind_obs):
+            def _provider(capability_id: str, resource: str | None = None, _t: int = t_s):
+                if capability_id in (
+                    "communication.gateway.receipt_summary",
+                    "communication.gateway.primary_health",
+                ):
+                    # A center-side remote read must cross the same primary
+                    # backhaul abstraction.  Gateway placement is already local.
+                    if self.placement != "gateway" and not self.plane.path_available(_t // 3600, 0):
+                        return {
+                            "status": "blocked",
+                            "observation_class": "unreachable",
+                            "failure_code": "primary_backhaul_unreachable",
+                            "cost": {
+                                "transport_cost": "unmodeled",
+                                "network_bytes": None,
+                                "airtime_s": None,
+                                "energy_wh": None,
+                            },
+                        }
+                    return {
+                        "status": "succeeded",
+                        "observation_class": "gateway_owner_observation",
+                        "view": self._gateway_view(_t),
+                        "cost": {
+                            "transport_cost": "unmodeled",
+                            "network_bytes": None,
+                            "airtime_s": None,
+                            "energy_wh": None,
+                        },
+                    }
+                return {
+                    "status": "blocked",
+                    "observation_class": "unsupported_binding",
+                    "failure_code": "unsupported_observation_capability",
+                    "cost": {},
+                }
+            _bind_obs(_provider)
+        _bind_action = getattr(self.policy, "bind_action_provider", None)
+        if callable(_bind_action):
+            def _action_provider(capability_id: str, resource: str,
+                                 arguments: dict, _t: int = t_s):
+                if capability_id == "communication.fallback.gateway_backup":
+                    if resource != "gw0" or not hasattr(self.plane, "enable_backup"):
+                        return {
+                            "status": "blocked",
+                            "failure_code": "gateway_backup_unavailable",
+                            "observation_class": "unsupported_binding",
+                            "effect_receipt": {},
+                            "cost": {},
+                        }
+                    enabled = bool(arguments.get("enabled", True))
+                    before = bool(self.plane.enable_backup)
+                    self.plane.enable_backup = enabled
+                    return {
+                        "status": "succeeded",
+                        "observation_class": "gateway_local_effect",
+                        "effect_receipt": {
+                            "lifecycle_stage": "applied",
+                            "enabled": enabled,
+                            "changed": before != enabled,
+                            "applied_at_s": int(_t),
+                        },
+                        # Actual transmission cost is owned by JointControlPlane
+                        # counters; toggling the software gate itself is not
+                        # assigned an invented byte/energy price.
+                        "cost": {"authority": "JointControlPlane physical counters"},
+                    }
+                if capability_id == "communication.fallback.terminal_dts":
+                    if self.terminal_dts is None:
+                        return {
+                            "status": "blocked",
+                            "failure_code": "terminal_dts_unavailable",
+                            "observation_class": "unavailable",
+                            "effect_receipt": {},
+                            "cost": {},
+                        }
+                    enabled = bool(arguments.get("enabled", True))
+                    before = bool(self.terminal_dts_enabled)
+                    self.terminal_dts_enabled = enabled
+                    return {
+                        "status": "succeeded",
+                        "observation_class": "terminal_local_effect",
+                        "effect_receipt": {
+                            "lifecycle_stage": "applied",
+                            "enabled": enabled,
+                            "changed": before != enabled,
+                            "applied_at_s": int(_t),
+                        },
+                        "cost": {
+                            "authority": "terminal_dts_attempts/energy counters; gate toggle has no invented transport cost"
+                        },
+                    }
+                if capability_id == "communication.fallback.access_assist":
+                    duration_s = int(arguments.get("duration_s", 0) or 0)
+                    if duration_s <= 0:
+                        return {
+                            "status": "blocked",
+                            "failure_code": "invalid_duration",
+                            "observation_class": "invalid_arguments",
+                            "effect_receipt": {},
+                            "cost": {},
+                        }
+                    start_s = int(_t)
+                    end_s = start_s + duration_s
+                    self.agent_access_assist_windows.append((start_s, end_s))
+                    return {
+                        "status": "succeeded",
+                        "observation_class": "access_runtime_effect",
+                        "effect_receipt": {
+                            "lifecycle_stage": "applied",
+                            "active_from_s": start_s,
+                            "active_until_s": end_s,
+                            "duration_s": duration_s,
+                        },
+                        "cost": {
+                            "authority": "Instance.access_assist_duration_s/access_assist_bypassed"
+                        },
+                    }
+                return {
+                    "status": "blocked",
+                    "failure_code": "unsupported_device_capability",
+                    "observation_class": "unsupported_binding",
+                    "effect_receipt": {},
+                    "cost": {},
+                }
+            _bind_action(_action_provider)
         # 跳过原因要带时刻；`_skip_t` **只用于记录**，不参与判断。
         self.policy._skip_t = t_s
         for node_id, payload in self.policy.plan(view):
@@ -755,6 +1007,21 @@ class Instance:
             self._send_command(node_id, payload, t_s, origin=self.placement)
 
         # 2) 到上报周期的节点发一批（缓存里全是未确认记录 → 自动补发）
+        _shared_allowed = None
+        if self.shared_access_controller is not None:
+            contenders = []
+            for node in self.nodes.values():
+                if node.is_gateway or not node.upload_due(t_s) or not node.cache:
+                    continue
+                # A forced access outage blocks before the radio/gateway shared
+                # medium in this model unless access assist is active.
+                if self.access_outage_active(t_s, node.node_id) and \
+                        not self.access_assist_active(t_s):
+                    continue
+                contenders.append(node.node_id)
+            _shared_allowed = set(self.shared_access_controller.prepare(
+                int(t_s), tuple(sorted(contenders)), self.nodes, self.plane.profile))
+
         for node in self.nodes.values():
             if not node.upload_due(t_s):
                 continue
@@ -771,18 +1038,82 @@ class Instance:
                 self._note_gateway_heard(node, t_s, batch)
                 self.plane.gateway_ingest(node.node_id, t_s,
                                           [s.sample_id for s in batch],
-                                          node.snapshot(t_s), payload=list(batch))
+                                          self._snapshot(node, t_s), payload=list(batch))
                 continue
-            if self.access_outage is not None and \
-                    self.access_outage[0] <= t_s < self.access_outage[1]:
+            if self.access_outage_active(t_s, node.node_id) and \
+                    not self.access_assist_active(t_s):
+                # A terminal DtS radio can bypass the failed node->gateway segment.
+                # It must pay terminal energy and it must not fabricate gateway
+                # heard_at state. Failed/absent opportunities fall through to the
+                # existing blocked-access semantics.
+                sent_direct = False
+                dts = self.terminal_dts if self.terminal_dts_enabled else None
+                if dts is not None and hasattr(dts, "equipped") and not bool(dts.equipped(node.node_id)):
+                    dts = None
+                dts_allowed = True
+                if dts is not None and hasattr(dts, "should_send"):
+                    # Optional *ordinary terminal-local* admission rule.  It may
+                    # inspect only the current node/cache/time; no future access,
+                    # gateway state, global quota, or center oracle is exposed.
+                    dts_allowed = bool(dts.should_send(t_s, node))
+                dts_equipped = (dts is not None and
+                                (not hasattr(dts, "equipped") or bool(dts.equipped(node.node_id))))
+                if dts_equipped and dts_allowed and bool(dts.opportunity(t_s, node.node_id)):
+                    cost = float(getattr(dts, "tx_energy_wh", 0.0))
+                    if node.soc_wh >= cost:
+                        self.terminal_dts_attempts += 1
+                        if cost > 0.0:
+                            node.spend(cost)
+                            self.terminal_dts_energy_wh += cost
+                            if node.soc_wh <= 0.0:
+                                node.soc_wh = 0.0
+                                node.power.soc_wh = 0.0
+                                if node.alive:
+                                    node.alive = False
+                                    node.dead_at = t_s
+                                    node.power.dead_at_s = t_s
+                                continue
+                        p = float(getattr(dts, "p_succ", 1.0))
+                        # Optional source-grounded shared-load adversary.  The
+                        # default remains exactly the old independent-success
+                        # semantics.  A policy may reduce per-attempt success as
+                        # a function of simultaneous/aggregate offered load.
+                        if hasattr(dts, "success_probability"):
+                            p = float(dts.success_probability(t_s, node.node_id, p))
+                        ok = stable_uniform(self.seed, "terminal-dts", node.node_id,
+                                            t_s, self.terminal_dts_attempts) < p
+                        if ok:
+                            from opportunity import GatewayItem
+                            item = GatewayItem(node_id=node.node_id, heard_at_s=t_s,
+                                               sample_ids=tuple(s.sample_id for s in batch),
+                                               snapshot=self._snapshot(node, t_s), payload=list(batch))
+                            self.center.receive(item, t_s)
+                            for sample in batch:
+                                tr = self.log.transit[sample.sample_id]
+                                if tr.received_at is None or t_s < tr.received_at:
+                                    tr.received_at = t_s
+                            node.ack([s.sample_id for s in batch])
+                            self.terminal_dts_success += 1
+                            self.terminal_dts_records += len(batch)
+                            counters["forwarded"] += 1
+                            sent_direct = True
+                if sent_direct:
+                    continue
                 # 接入中断：上行根本没到网关。**节点照常采样与缓存**，因此这里的损失全部是
                 # 交付侧，采集侧不受影响——与失电的区别正在于此。
                 self.access_blocked += 1
                 continue
-            payload_bytes = max(16, 12 * len(batch))
+            if self.access_outage_active(t_s, node.node_id) and \
+                    self.access_assist_active(t_s):
+                self.access_assist_bypassed += 1
+            node.uplink_attempts += 1
+            node.uplink_records_attempted += len(batch)
+            payload_bytes = max(16, 12 * len(batch)) + self.execution_feedback_bytes
             rec = self.plane.uplink(node.node_id, hour=hour, sf=9,
                                     payload_bytes=payload_bytes,
-                                    attempt_index=t_s // TICK_S)
+                                    attempt_index=t_s // TICK_S,
+                                    access_gate=(None if _shared_allowed is None
+                                                 else node.node_id in _shared_allowed))
             counters["uplinks"] += 1
             for delivery in rec.delivered:
                 ident = delivery.message.identity
@@ -810,7 +1141,7 @@ class Instance:
             self._note_gateway_heard(node, t_s, batch)
             self.plane.gateway_ingest(node.node_id, t_s,
                                       [s.sample_id for s in batch],
-                                      node.snapshot(t_s), payload=list(batch))
+                                      self._snapshot(node, t_s), payload=list(batch))
 
         # 2.5 命令在接收窗口里送达 → 落到节点上。**送达才是生效**，不是发出。
         # （下发在 uplink 内部完成，此处只统计；应用已在 `_apply_delivery` 里做。）
@@ -869,7 +1200,7 @@ class Instance:
         "转发"这个动作会把网关对自己收到过什么的记忆抹掉——那是伪造出来的失忆，
         不是任何真实设备的行为。
         """
-        self.gateway_reports[node.node_id] = node.snapshot(t_s)
+        self.gateway_reports[node.node_id] = self._snapshot(node, t_s)
         self.gateway_report_at[node.node_id] = t_s
         _per = self._obligation_period_s
         for _s in batch:
@@ -980,6 +1311,7 @@ class Instance:
             self.policy.note_command_sent(node_id, payload)
         else:
             self.counters["commands_refused"] += 1
+            self.policy.note_command_refused(node_id, payload)
 
     def _note_intent_reason(self, node_id: str, payload: dict, view) -> None:
         """给每条**刚生成的**意图归类它的**生成原因**。三类互斥且完备。

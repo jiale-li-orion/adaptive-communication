@@ -1,5 +1,5 @@
 {
-  "retrieved_at": "2026-09-30",
+  "retrieved_at": "2026-10-01",
   "scope": "bounded research-direction lookup, not exhaustive or systematic review",
   "venues_not_inferred_from_search_snippets": true,
   "queries": [
@@ -12,11 +12,153 @@
     "NetArena agents network operations benchmark",
     "NetOpsBench arxiv",
     "Active Feature Acquisition Generative Surrogate ICML 2021",
-    "LENS 2608.16185"
+    "LENS 2608.16185",
+    "2026 北斗短报文 按条计费 通信管理局",
+    "北斗三号区域短报文通信应用服务平台 用户平台 接口技术要求 20264580-T-801"
   ],
   "metadata_endpoints": [
     "https://export.arxiv.org/api/query?id_list=2507.14201,2608.16178,2506.03231,2105.06845,2608.08277,2605.13037,2605.11633,2411.00319&max_results=20",
     "https://api.crossref.org/works/10.1109%2FTCOMM.2022.3141786"
+  ],
+  "scenario_cost_and_interface_checks": [
+    {
+      "id": "S01",
+      "title": "新疆开通北斗短报文应急通信服务",
+      "publisher": "新疆通信管理局",
+      "published_at": "2026-09-20",
+      "url": "https://xjca.miit.gov.cn/xwdt/gzdt/art/2026/art_2a513c98341f42719841b0e87958a8c3.html",
+      "verified_scope": "public mobile Beidou emergency SMS uses no-use-no-charge / per-message charging during the flood season; receiving is free",
+      "reuse_in": "Task utility validity check",
+      "boundary": "public mobile emergency SMS, not an industrial unattended geohazard-monitoring terminal tariff; no numeric cost weight or quota is transferred"
+    },
+    {
+      "id": "S02",
+      "title": "江苏省开通基层北斗短报文业务 持续筑牢保底通信防线",
+      "publisher": "工业和信息化部 / 江苏省通信管理局",
+      "published_at": "2026-09-01",
+      "url": "https://wap.miit.gov.cn/xwfb/gxdt/dfdt/art/2026/art_f021659b2d7143298af9192cc6878b22.html",
+      "verified_scope": "grass-roots emergency Beidou short-message service explicitly uses no monthly rental / no-use-no-charge / per-message charging",
+      "reuse_in": "Task utility validity check",
+      "boundary": "emergency-management personnel service; supports message count as a real cost axis but does not calibrate monitoring-terminal prices, budgets, or SLAs"
+    },
+    {
+      "id": "S03",
+      "title": "北斗三号区域短报文通信应用服务平台与用户平台接口技术要求",
+      "publisher": "全国标准信息公共服务平台",
+      "publication_status": "national-standard plan 20264580-T-801, drafting",
+      "issued_at": "2026-08-28",
+      "url": "https://std.samr.gov.cn/gb/search/gbDetailed?id=5A7BF2612B678434E06397BE0A0AC1BB",
+      "verified_scope": "official standard plan for the interface between Beidou-3 regional short-message application service and user platforms; led by China Time and Space Information Group",
+      "reuse_in": "future real CapabilityBinding/interface semantics",
+      "boundary": "drafting plan, not a released interface specification; no runtime message or receipt semantics are inferred beyond the published scope"
+    },
+    {
+      "id": "S04",
+      "title": "重庆市群测群防智能化监测预警设备通信/接入测试公开材料",
+      "publisher": "重庆市规划和自然资源局",
+      "published_at": "2020",
+      "url": "https://ghzrzyj.cq.gov.cn/zwxx_186/tzgg/202005/P020200527440877815913.pdf",
+      "verified_scope": "public technical material contains remote read/write semantics for reporting period, sampling interval and communication mode, with sequence/reply semantics",
+      "reuse_in": "Task/action reality; remote configuration CapabilityContract; request/ack semantics",
+      "boundary": "does not establish persistent idempotency, transactional application, or satellite-switch semantics"
+    },
+    {
+      "id": "S05",
+      "title": "LoRaWAN Class A receive-window behavior",
+      "publisher": "Semtech Learning Center",
+      "url": "https://learn.semtech.com/mod/book/view.php?chapterid=127&id=172",
+      "verified_scope": "Class A downlink receive opportunities follow uplink transmission windows",
+      "reuse_in": "communication opportunity / query-action contention model",
+      "boundary": "Class A is the repository's selected access configuration; it is not asserted as the protocol used by every cited field deployment"
+    },
+    {
+      "id": "S06",
+      "title": "关于加强极端场景应急通信能力建设的意见",
+      "publisher": "工业和信息化部等十四部门",
+      "document_number": "工信部联信管〔2024〕256号",
+      "published_at": "2024-12-31",
+      "url": "https://wap.miit.gov.cn/jgsj/xgj/gzdt/art/2025/art_8ba85168e1664c41a7546e0d63577a14.html",
+      "verified_scope": "official policy recognizes road/power/network disruption and the role of satellite/BeiDou short-message resources in resilient emergency communications",
+      "reuse_in": "scenario grounding and resilient-communications capability boundary",
+      "boundary": "policy-level grounding; it does not provide packet-level budgets, geohazard-monitoring SLAs, or a network-wide message quota"
+    },
+    {
+      "id": "S07",
+      "title": "西藏无市电/无手机信号水文监测北斗通信案例",
+      "publisher": "平升电子",
+      "url": "https://www.data86.net/xzmdjybdtxdswjcxmalfx.html",
+      "verified_scope": "vendor-reported off-grid stations use BeiDou communication, solar/battery supply, and scheduled power-on/acquire/upload/power-off operation",
+      "reuse_in": "planned sleep, intermittent reachability and low-power engineering plausibility",
+      "boundary": "adjacent hydrology deployment and vendor report; not independent geohazard field validation or a universal battery/traffic model"
+    },
+    {
+      "id": "S08",
+      "title": "A LoRa-enabled IoT platform for landslide monitoring",
+      "publisher": "Frontiers in Earth Science",
+      "published_at": "2022",
+      "url": "https://www.frontiersin.org/journals/earth-science/articles/10.3389/feart.2022.899509/full",
+      "verified_scope": "field landslide-monitoring deployment with LoRa-to-gateway/4G architecture, solar/battery supply and different normal/abnormal acquisition/transmission frequencies",
+      "reuse_in": "monitoring-mode/task grounding and mountain sensing architecture",
+      "boundary": "does not establish that the deployment used LoRaWAN Class A or that its numeric parameters transfer directly to the Tibet-oriented simulator"
+    },
+    {
+      "id": "S09",
+      "title": "Wireless sensor network landslide monitoring deployment with heterogeneous connectivity/energy constraints",
+      "publisher": "Wireless Networks / Springer",
+      "url": "https://link.springer.com/article/10.1007/s11276-019-02059-7",
+      "verified_scope": "deployment evidence for asymmetric communication, weather/solar-energy limitations and multi-WAN recovery in landslide monitoring",
+      "reuse_in": "separate modeling of access, backhaul and energy failures",
+      "boundary": "does not provide Tibet-specific failure rates or the repository's LoRa parameters"
+    },
+    {
+      "id": "S10",
+      "title": "TRIGRS - A Fortran Program for Transient Rainfall Infiltration and Grid-Based Regional Slope-Stability Analysis, Version 2.0",
+      "publisher": "U.S. Geological Survey",
+      "published_at": "2008-06-14",
+      "url": "https://www.usgs.gov/publications/trigrs-a-fortran-program-transient-rainfall-infiltration-and-grid-based-regional-0",
+      "verified_scope": "TRIGRS models shallow rainfall-induced landslide timing/distribution by transient rainfall infiltration, pore-pressure change, and a cell-wise infinite-slope factor of safety.",
+      "reuse_in": "optional hazard-to-Operational-Task generator; rainfall/infiltration/pore-pressure/slope-stability system-model layer",
+      "boundary": "not calibrated to the repository's Tibet-oriented synthetic deployment; no TRIGRS output is treated as field truth or as the communication Agent's direct prediction target"
+    },
+    {
+      "id": "S11",
+      "title": "IMERG: Integrated Multi-satellitE Retrievals for GPM",
+      "publisher": "NASA Global Precipitation Measurement Mission",
+      "url": "https://gpm.nasa.gov/data/imerg",
+      "verified_scope": "official IMERG products provide precipitation at 30-minute temporal products (with Early/Late/Final processing streams); usable as external rainfall forcing",
+      "reuse_in": "optional rainfall forcing for hazard/task-generation transfer experiments",
+      "boundary": "satellite precipitation is not site rain-gauge truth and does not calibrate slope geotechnical parameters; main communication benchmark does not require IMERG"
+    },
+    {
+      "id": "S12",
+      "title": "Grfin Tools—User guide and methods for modeling landslide runout and debris-flow growth and inundation",
+      "publisher": "U.S. Geological Survey",
+      "published_at": "2025-02-21",
+      "url": "https://www.usgs.gov/publications/grfin-tools-user-guide-and-methods-modeling-landslide-runout-and-debris-flow-growth",
+      "verified_scope": "Grfin estimates landslide runout/debris-flow inundation on a DEM using computationally efficient empirical models with relatively few parameters",
+      "reuse_in": "optional post-initiation topology-damage/runout mask generator",
+      "boundary": "not part of the pre-disaster main experiment; output requires scenario-specific assumptions and is not a substitute for calibrated debris-flow dynamics"
+    },
+    {
+      "id": "S13",
+      "title": "D-Claw - A library for the simulation of granular-fluid flows, v1.0.0",
+      "publisher": "U.S. Geological Survey",
+      "published_at": "2025-03-27",
+      "url": "https://www.usgs.gov/software/d-claw-a-library-simulation-granular-fluid-flows-v100",
+      "verified_scope": "D-Claw is a depth-averaged granular-fluid flow model over variable topography; USGS documentation describes the coupled two-phase mass/momentum formulation and pore-pressure/solid-fraction state",
+      "reuse_in": "high-fidelity optional debris-flow/landslide dynamics extension only when a post-initiation topology-damage study has calibrated inputs",
+      "boundary": "explicitly excluded from the default pre-disaster communication benchmark because the repository lacks site-calibrated geotechnical and two-phase-flow parameters"
+    },
+    {
+      "id": "S14",
+      "title": "Deformation Prediction of Unstable Slopes Based on Real-Time Monitoring and DeepAR Model",
+      "publisher": "Sensors / MDPI",
+      "published_at": "2021",
+      "url": "https://www.mdpi.com/1424-8220/21/1/14",
+      "verified_scope": "field monitoring on Qili connection-line high-steep slopes reports that deformation rates increased during the 21 April–7 June 2016 heavy-rainfall period (637 mm), followed by stabilization; monitoring included GPS and other in-situ sensors",
+      "reuse_in": "secondary source-derived Operational Task phase schedule; validates that external hazard/monitoring authority can replace a hand-authored task schedule without changing the communication Agent method",
+      "boundary": "the benchmark preserves only the reported phase ordering. Equal-duration benchmark phases and the 3600 s/300 s communication profiles are A-layer workload transforms, not field warning thresholds, calibrated landslide probabilities, or a claim that one benchmark hour equals one real day"
+    }
   ],
   "records": [
     {
@@ -86,10 +228,12 @@
     {
       "id": "R08",
       "title": "Can LLM Agents Respond to Disasters? Benchmarking Heterogeneous Geospatial Reasoning in Emergency Operations",
-      "publication_status": "2026 preprint; NeurIPS Oral claim and official code URL unverified",
+      "publication_status": "NeurIPS 2026 Oral (author page verified 2026-10-01); arXiv v1 2026-05-12",
       "url": "https://arxiv.org/html/2605.11633v1",
-      "verified_scope": "task/tool definition, main results, tool-order ablation",
-      "reuse_in": "task and evaluation",
+      "venue_status_source": "https://junjuewang.top/",
+      "verified_scope": "Operational Task tuple (Q,D,T*,A*), 515 tasks / 45 events / 10 disaster types, 108 typed MCP tools, 3500 gold tool-call steps, deterministic replay annotation, trajectory/final/efficiency metrics, gold tool-order ablation, trajectory-length failure analysis",
+      "reuse_in": "benchmark construction; typed capability evaluation; deterministic replay; parameter grounding; oracle replacement; DORA-facing limitation comparison",
+      "boundary": "DORA is a geospatial disaster-operation workflow benchmark over recorded/curated data. It does not provide this repo's communication-state traces (battery, gateway receipt, Class-A opportunity, config apply/confirm, backup/DtS). Official code/data URL is not pinned in this source inventory as of 2026-10-01; paper states a purpose-built MCP library is released.",
       "reproduced": false
     },
     {

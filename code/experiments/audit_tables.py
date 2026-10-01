@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """audit_tables.py — 论文表格必须由结果文件生成，不能手写。
 
-检查五件事：
+检查六件事：
 
   1. `scripts/make_tables.py --check` 通过：`paper/generated/` 的内容与结果文件当前推出的内容
      一致。不一致说明结果变了而表格没重新生成，或者有人手改了生成物；
@@ -11,6 +11,8 @@
      取值都等于结果文件里对应的数（正文与表说明里的数字因此也走生成链，不只是表体）；
   5. **已撤回的读数不得回流**：几条被撤回的表述（"候选界交付总数不减"等）在稿件与生成物里都不得
      再出现——它们曾经真实存在过，所以要让它们回来时必然变红，而不是靠人记得。
+  6. Agentic Communication 的新结果也必须通过生成链：paper/generated 表、research README 受控
+     区块、results README 登记区块均由冻结 aggregate/audit/source manifest 生成。
 
 第 3 条与第 4 条是这个检查的核心：它们堵住"数字写回正文"这条路。生成物被手改时它不一定能发现
 （那由第 1 条负责），但把 `\\input` 换回手抄行、或把宏换成字面量，一定会红。
@@ -77,6 +79,25 @@ def main() -> int:
     else:
         check("scripts/make_tables.py 存在", False, gen)
 
+    agentic_gen = os.path.join(ROOT, "scripts", "make_agentic_artifacts.py")
+    if os.path.exists(agentic_gen):
+        proc = subprocess.run([sys.executable, agentic_gen, "--check"],
+                              cwd=ROOT, capture_output=True, text=True)
+        tail = (proc.stdout.strip().splitlines() or [""])[-1][:110]
+        check("Agentic 表/研究摘要/结果登记与冻结结果一致", proc.returncode == 0, tail)
+    else:
+        check("scripts/make_agentic_artifacts.py 存在", False, agentic_gen)
+
+    agentic_facts = os.path.join(GENERATED, "agentic_facts.tex")
+    check("Agentic 事实宏文件存在", os.path.exists(agentic_facts),
+          os.path.relpath(agentic_facts, ROOT))
+    if os.path.exists(agentic_facts):
+        aftext = open(agentic_facts, encoding="utf-8").read()
+        afdefs = dict(re.findall(r"\\newcommand\{\\(\w+)\}\{([^}]*)\}", aftext))
+        check("Agentic 事实宏非空", bool(afdefs), f"{len(afdefs)} 个")
+        badnames = sorted(k for k in afdefs if not k.isalpha())
+        check("Agentic 事实宏名只含字母", not badnames, ", ".join(badnames))
+
     ms = manuscripts()
     if not ms:
         # 新仓库起步时还没有稿件。这里**显式**打印一条 SKIP，而不是静默通过：无声的跳过会让人
@@ -93,6 +114,36 @@ def main() -> int:
         handmade = "\\toprule" in text.replace("\\toprule{", "")
         check(f"{lang} 稿件无手写表体", not handmade,
               "找到 toprule" if handmade else "")
+        if "generated/table_agentic_" in text:
+            check(f"{lang} 使用 Agentic 表时引入 Agentic 事实宏",
+                  "generated/agentic_facts.tex" in text)
+
+    # 当前 Agentic 主稿采用 paper/agentic/en/main.tex，刻意不塞进旧的
+    # paper/<语言>/main.tex 双稿发现/成对生成规则。这里单独审计其生成链与实际构建。
+    agentic_main = os.path.join(PAPER, "agentic", "en", "main.tex")
+    agentic_build = os.path.join(PAPER, "agentic", "build.sh")
+    check("Agentic 当前主稿存在", os.path.isfile(agentic_main),
+          os.path.relpath(agentic_main, ROOT))
+    if os.path.isfile(agentic_main):
+        atext = open(agentic_main, encoding="utf-8").read()
+        apat = re.compile(r"\\input\{\.\./\.\./generated/([^}]+)\}")
+        ainputs = apat.findall(atext)
+        check("Agentic 主稿经 input 引入生成物", bool(ainputs), f"{len(ainputs)} 处")
+        for rel in ainputs:
+            check(f"Agentic 引入目标存在 {rel}",
+                  os.path.exists(os.path.join(GENERATED, rel)))
+        check("Agentic 主稿引入 Agentic 事实宏",
+              "../../generated/agentic_facts.tex" in atext)
+        handmade = "\\toprule" in atext.replace("\\toprule{", "")
+        check("Agentic 主稿无手写表体", not handmade,
+              "找到 toprule" if handmade else "")
+        if os.path.isfile(agentic_build):
+            proc = subprocess.run(["bash", agentic_build], cwd=os.path.dirname(agentic_build),
+                                  capture_output=True, text=True)
+            tail = (proc.stdout.strip().splitlines() or [""])[-1][:140]
+            check("Agentic 主稿可构建且排版/引用检查通过", proc.returncode == 0, tail)
+        else:
+            check("Agentic build.sh 存在", False, os.path.relpath(agentic_build, ROOT))
 
     # 事实宏：正文/说明里的数字也必须来自结果文件
     facts = os.path.join(GENERATED, "facts.tex")

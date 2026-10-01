@@ -1,0 +1,314 @@
+{
+  "runs": [
+    {
+      "coordinate_id": "weather:early",
+      "trace": "/home/orion/Communications/应急通信/project1/adaptive-communication/results/agentic/robustness-matrix-v1/runtime_traces/weather-early.jsonl",
+      "passed": true,
+      "R0": {
+        "level": "R0",
+        "passed": true,
+        "events": 204,
+        "task_contracts": 1,
+        "evidence_revisions": 11,
+        "contexts": 11,
+        "prompt_assemblies": 11,
+        "capability_requests": 28,
+        "capability_results": 28,
+        "failures": []
+      },
+      "R1": {
+        "level": "R1",
+        "passed": true,
+        "frozen_prompt_assemblies": 11,
+        "note": "consumer/model substitution API ready; no model result is asserted by this audit"
+      },
+      "R2": {
+        "level": "R2",
+        "passed": true,
+        "context_mode": "task_conditioned",
+        "contexts": 11,
+        "exact_assembly_matches": 11,
+        "failures": []
+      }
+    },
+    {
+      "coordinate_id": "weather:late",
+      "trace": "/home/orion/Communications/应急通信/project1/adaptive-communication/results/agentic/robustness-matrix-v1/runtime_traces/weather-late.jsonl",
+      "passed": true,
+      "R0": {
+        "level": "R0",
+        "passed": true,
+        "events": 204,
+        "task_contracts": 1,
+        "evidence_revisions": 11,
+        "contexts": 11,
+        "prompt_assemblies": 11,
+        "capability_requests": 28,
+        "capability_results": 28,
+        "failures": []
+      },
+      "R1": {
+        "level": "R1",
+        "passed": true,
+        "frozen_prompt_assemblies": 11,
+        "note": "consumer/model substitution API ready; no model result is asserted by this audit"
+      },
+      "R2": {
+        "level": "R2",
+        "passed": true,
+        "context_mode": "task_conditioned",
+        "contexts": 11,
+        "exact_assembly_matches": 11,
+        "failures": []
+      }
+    },
+    {
+      "coordinate_id": "outage:short-early",
+      "trace": "/home/orion/Communications/应急通信/project1/adaptive-communication/results/agentic/robustness-matrix-v1/runtime_traces/outage-short-early.jsonl",
+      "passed": true,
+      "R0": {
+        "level": "R0",
+        "passed": true,
+        "events": 406,
+        "task_contracts": 1,
+        "evidence_revisions": 18,
+        "contexts": 24,
+        "prompt_assemblies": 24,
+        "capability_requests": 52,
+        "capability_results": 52,
+        "failures": []
+      },
+      "R1": {
+        "level": "R1",
+        "passed": true,
+        "frozen_prompt_assemblies": 24,
+        "note": "consumer/model substitution API ready; no model result is asserted by this audit"
+      },
+      "R2": {
+        "level": "R2",
+        "passed": true,
+        "context_mode": "task_conditioned",
+        "contexts": 24,
+        "exact_assembly_matches": 24,
+        "failures": []
+      }
+    },
+    {
+      "coordinate_id": "outage:long-late",
+      "trace": "/home/orion/Communications/应急通信/project1/adaptive-communication/results/agentic/robustness-matrix-v1/runtime_traces/outage-long-late.jsonl",
+      "passed": true,
+      "R0": {
+        "level": "R0",
+        "passed": true,
+        "events": 388,
+        "task_contracts": 1,
+        "evidence_revisions": 23,
+        "contexts": 25,
+        "prompt_assemblies": 25,
+        "capability_requests": 38,
+        "capability_results": 38,
+        "failures": []
+      },
+      "R1": {
+        "level": "R1",
+        "passed": true,
+        "frozen_prompt_assemblies": 25,
+        "note": "consumer/model substitution API ready; no model result is asserted by this audit"
+      },
+      "R2": {
+        "level": "R2",
+        "passed": true,
+        "context_mode": "task_conditioned",
+        "contexts": 25,
+        "exact_assembly_matches": 25,
+        "failures": []
+      }
+    },
+    {
+      "coordinate_id": "scope:global",
+      "trace": "/home/orion/Communications/应急通信/project1/adaptive-communication/results/agentic/robustness-matrix-v1/runtime_traces/scope-global.jsonl",
+      "passed": true,
+      "R0": {
+        "level": "R0",
+        "passed": true,
+        "events": 1008,
+        "task_contracts": 2,
+        "evidence_revisions": 73,
+        "contexts": 74,
+        "prompt_assemblies": 74,
+        "capability_requests": 174,
+        "capability_results": 174,
+        "failures": []
+      },
+      "R1": {
+        "level": "R1",
+        "passed": true,
+        "frozen_prompt_assemblies": 74,
+        "note": "consumer/model substitution API ready; no model result is asserted by this audit"
+      },
+      "R2": {
+        "level": "R2",
+        "passed": true,
+        "context_mode": "task_conditioned",
+        "contexts": 74,
+        "exact_assembly_matches": 74,
+        "failures": []
+      }
+    },
+    {
+      "coordinate_id": "scope:localized",
+      "trace": "/home/orion/Communications/应急通信/project1/adaptive-communication/results/agentic/robustness-matrix-v1/runtime_traces/scope-localized.jsonl",
+      "passed": true,
+      "R0": {
+        "level": "R0",
+        "passed": true,
+        "events": 671,
+        "task_contracts": 2,
+        "evidence_revisions": 64,
+        "contexts": 65,
+        "prompt_assemblies": 65,
+        "capability_requests": 60,
+        "capability_results": 60,
+        "failures": []
+      },
+      "R1": {
+        "level": "R1",
+        "passed": true,
+        "frozen_prompt_assemblies": 65,
+        "note": "consumer/model substitution API ready; no model result is asserted by this audit"
+      },
+      "R2": {
+        "level": "R2",
+        "passed": true,
+        "context_mode": "task_conditioned",
+        "contexts": 65,
+        "exact_assembly_matches": 65,
+        "failures": []
+      }
+    },
+    {
+      "coordinate_id": "owner:center-only",
+      "trace": "/home/orion/Communications/应急通信/project1/adaptive-communication/results/agentic/robustness-matrix-v1/runtime_traces/owner-center-only.jsonl",
+      "passed": true,
+      "R0": {
+        "level": "R0",
+        "passed": true,
+        "events": 274,
+        "task_contracts": 1,
+        "evidence_revisions": 18,
+        "contexts": 18,
+        "prompt_assemblies": 18,
+        "capability_requests": 28,
+        "capability_results": 28,
+        "failures": []
+      },
+      "R1": {
+        "level": "R1",
+        "passed": true,
+        "frozen_prompt_assemblies": 18,
+        "note": "consumer/model substitution API ready; no model result is asserted by this audit"
+      },
+      "R2": {
+        "level": "R2",
+        "passed": true,
+        "context_mode": "task_conditioned",
+        "contexts": 18,
+        "exact_assembly_matches": 18,
+        "failures": []
+      }
+    },
+    {
+      "coordinate_id": "owner:center-gateway",
+      "trace": "/home/orion/Communications/应急通信/project1/adaptive-communication/results/agentic/robustness-matrix-v1/runtime_traces/owner-center-gateway.jsonl",
+      "passed": true,
+      "R0": {
+        "level": "R0",
+        "passed": true,
+        "events": 338,
+        "task_contracts": 1,
+        "evidence_revisions": 21,
+        "contexts": 21,
+        "prompt_assemblies": 21,
+        "capability_requests": 34,
+        "capability_results": 34,
+        "failures": []
+      },
+      "R1": {
+        "level": "R1",
+        "passed": true,
+        "frozen_prompt_assemblies": 21,
+        "note": "consumer/model substitution API ready; no model result is asserted by this audit"
+      },
+      "R2": {
+        "level": "R2",
+        "passed": true,
+        "context_mode": "task_conditioned",
+        "contexts": 21,
+        "exact_assembly_matches": 21,
+        "failures": []
+      }
+    },
+    {
+      "coordinate_id": "scale:one-group",
+      "trace": "/home/orion/Communications/应急通信/project1/adaptive-communication/results/agentic/robustness-matrix-v1/runtime_traces/scale-one-group.jsonl",
+      "passed": true,
+      "R0": {
+        "level": "R0",
+        "passed": true,
+        "events": 224,
+        "task_contracts": 1,
+        "evidence_revisions": 18,
+        "contexts": 18,
+        "prompt_assemblies": 18,
+        "capability_requests": 18,
+        "capability_results": 18,
+        "failures": []
+      },
+      "R1": {
+        "level": "R1",
+        "passed": true,
+        "frozen_prompt_assemblies": 18,
+        "note": "consumer/model substitution API ready; no model result is asserted by this audit"
+      },
+      "R2": {
+        "level": "R2",
+        "passed": true,
+        "context_mode": "task_conditioned",
+        "contexts": 18,
+        "exact_assembly_matches": 18,
+        "failures": []
+      }
+    },
+    {
+      "coordinate_id": "scale:two-group",
+      "trace": "/home/orion/Communications/应急通信/project1/adaptive-communication/results/agentic/robustness-matrix-v1/runtime_traces/scale-two-group.jsonl",
+      "passed": true,
+      "R0": {
+        "level": "R0",
+        "passed": true,
+        "events": 274,
+        "task_contracts": 1,
+        "evidence_revisions": 18,
+        "contexts": 18,
+        "prompt_assemblies": 18,
+        "capability_requests": 28,
+        "capability_results": 28,
+        "failures": []
+      },
+      "R1": {
+        "level": "R1",
+        "passed": true,
+        "frozen_prompt_assemblies": 18,
+        "note": "consumer/model substitution API ready; no model result is asserted by this audit"
+      },
+      "R2": {
+        "level": "R2",
+        "passed": true,
+        "context_mode": "task_conditioned",
+        "contexts": 18,
+        "exact_assembly_matches": 18,
+        "failures": []
+      }
+    }
+  ]
+}

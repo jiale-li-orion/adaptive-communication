@@ -1,17 +1,9 @@
 import math
-from itmlogic.preparatory_subroutines.qlrpfl import qlrpfl
-from itmlogic.lrprop import lrprop
+from mountain_lora_link import itm_loss
 
 def run(freq_mhz, dist_km, elevs, hg=(2.0,2.0)):
-    npts=len(elevs)
-    spacing=dist_km/(npts-1)
-    pfl=[npts-1, spacing]+list(elevs)  # pfl[0]=n_intervals, pfl[1]=spacing(km), pfl[2:]=elevations
-    prop={'pfl':pfl,'hg':list(hg),'freq':freq_mhz,'ens':301.0,'gme':157e-9,
-          'klim':5,'mdvar':3,'pol':1,'eps':15.0,'sgm':0.005,'mdp':-1}
-    prop=qlrpfl(prop)
-    prop['d']=dist_km
-    aref,prop=lrprop(dist_km,prop)
-    return aref
+    losses, _aref, _fs = itm_loss(freq_mhz, dist_km, hg, elevs, qr_pct=(50.0,))
+    return losses[50.0]
 
 if __name__=='__main__':
     fs=lambda d,f=868.0: 20*math.log10(max(d,1e-3))+20*math.log10(f)+32.44

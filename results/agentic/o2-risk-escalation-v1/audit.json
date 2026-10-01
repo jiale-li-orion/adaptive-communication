@@ -1,0 +1,81 @@
+{
+  "status": "PASS",
+  "episode_rows": 15,
+  "expected_episode_rows": 15,
+  "trace_files": 10,
+  "expected_trace_files": 10,
+  "physical_equivalence_to_legacy_comply": [
+    {
+      "seed": 0,
+      "arm": "task_conditioned",
+      "physical_equal": true
+    },
+    {
+      "seed": 0,
+      "arm": "full_dump",
+      "physical_equal": true
+    },
+    {
+      "seed": 1,
+      "arm": "task_conditioned",
+      "physical_equal": true
+    },
+    {
+      "seed": 1,
+      "arm": "full_dump",
+      "physical_equal": true
+    },
+    {
+      "seed": 2,
+      "arm": "task_conditioned",
+      "physical_equal": true
+    },
+    {
+      "seed": 2,
+      "arm": "full_dump",
+      "physical_equal": true
+    },
+    {
+      "seed": 3,
+      "arm": "task_conditioned",
+      "physical_equal": true
+    },
+    {
+      "seed": 3,
+      "arm": "full_dump",
+      "physical_equal": true
+    },
+    {
+      "seed": 4,
+      "arm": "task_conditioned",
+      "physical_equal": true
+    },
+    {
+      "seed": 4,
+      "arm": "full_dump",
+      "physical_equal": true
+    }
+  ],
+  "all_physical_equivalent": true,
+  "all_replay_exact": true,
+  "replay_audit": "replay_audit.json",
+  "hidden_truth_policy_check": "AgenticCommunicationPolicy receives CenterView only; bind_instance is audit-only and is never read by plan().",
+  "result_hashes": {
+    "aggregate.json": "21d5ac9117947a49b368b4cfbc986b9a1eedaf21c0257a9c043a94835f064553",
+    "experiment_contract.json": "b2a67d3f7991f32ed1fd2b29eee161d49a5bac0bc67a3c0d95739a40fd6d67eb",
+    "per_episode_results.jsonl": "d16f2da355b3b0a7d79093829097d93f33cd72cfa6dfd61a2a37fc96b04f95a8",
+    "replay_audit.json": "9dcdaea163958ab5c7dafafcc9d8721af97d942c766c1b0f72759b6c88b7f98a",
+    "run_manifest.json": "83ec77d7075e6e763eb53fc9b6f7aff3dfd83754eee51b1776ddf49c17d324eb",
+    "runtime_traces/seed-000-full_dump.jsonl": "30b86543fc545f8d4ca17d0cf04acd62b299270bf92eee1d270a35919ee89147",
+    "runtime_traces/seed-000-task_conditioned.jsonl": "806edb102422acdba0b617a9d84c2d30d24f5305c81ca55344e83ee84e25251a",
+    "runtime_traces/seed-001-full_dump.jsonl": "078ef212e43ba56e2ebf86fde4c71e43f648f4ea9dd5f088e555a9cd51ee6916",
+    "runtime_traces/seed-001-task_conditioned.jsonl": "580a7b031ab8205795eeb3bf2d14aca21228d6b252fa3b90ecd524aad527a747",
+    "runtime_traces/seed-002-full_dump.jsonl": "831589f41f8ab5fdb4fc797b4eca95e1a5af166df2bca58b621c6c5698e410a0",
+    "runtime_traces/seed-002-task_conditioned.jsonl": "669c52dc9f198990a5fe1fb61599fbab15569fc420040528459599e45844f358",
+    "runtime_traces/seed-003-full_dump.jsonl": "b94ee0daa3cc9e29fb540eef6de70ddd2f1da5857ce4df69e354c80cd3c82092",
+    "runtime_traces/seed-003-task_conditioned.jsonl": "6a03f5eae80f7decace326a033f6b60bdfd82a7a397872688aefe276d0d6347e",
+    "runtime_traces/seed-004-full_dump.jsonl": "3016385f12fa4a79dbeadd645b9e8b0caaeda04f5c45f857aca1985f7a8af8b9",
+    "runtime_traces/seed-004-task_conditioned.jsonl": "d88cad1763a8bf9a7c9f078094e42b7223ad28e3ed3712d2eb211d63b8515518",
+    "source_manifest.json": "40a632f6b855fd89137e7a89660713153d04f09db35004447797fdebde8aba9b"
+  }
+}

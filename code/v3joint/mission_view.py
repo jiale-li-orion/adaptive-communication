@@ -36,7 +36,7 @@ class MissionViewGate:
     def __init__(self, measurands: dict[str, str], hours: int,
                  schedule: list[tuple[int, int, str]],
                  window_s: int | None = None, grace_s: int | None = None,
-                 half_open_after_first: bool = True):
+                 half_open_after_first: bool = True, scope=None):
         self.schedule = sorted(schedule, key=lambda x: x[0])
         assert self.schedule[0][0] == 0, "首段必须从 t=0 开始"
         self.meas = dict(measurands)
@@ -44,12 +44,13 @@ class MissionViewGate:
         self.H = int(hours) * 3600
         self.sparse = self.schedule[0][1]
         self.half_open_after_first = bool(half_open_after_first)
+        self.scope = None if scope is None else set(scope)
 
         # 真值例行义务（scorer 分母同源的分段表；变更后段用半开独立观测语义）与现场初始信念
         #（首段节奏全程外推，沿用旧任务闭区间窗口覆盖）。
         self.truth_routine = piecewise_routine_obligations(
             self.meas, hours, self.schedule, window_s=window_s, grace_s=grace_s,
-            half_open_after_first=self.half_open_after_first)
+            half_open_after_first=self.half_open_after_first, scope=self.scope)
         self.belief_routine = routine_obligations_by_node(
             self.meas, hours, period_s=self.sparse,
             window_s=window_s, grace_s=grace_s)

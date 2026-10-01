@@ -165,7 +165,7 @@ Agent、确定性规则和求解器都可使用同一契约；共同动作空间
 
 \subsection{固定资源下的损失位置}
 \label{sec:eval-frontier}
-Episode~I 的 7560 条例行义务上，强 maxcov/FIFO 基线交付 3025（0.400）。对称的逐义务反事实每次只放宽一项物理资源、从不改策略，在相同义务 id 上比较集合差。回传放宽到无限得 4740（0.627），能量放宽（0.50~Wh、全程密集）得 4089（0.541），两者同时放宽得 6023（0.797）；仅被回传容量阻塞 1715 条，仅被电池阻塞 1128 条，两者共同阻塞 155 条（2.0\%），见表~\ref{tab:walls}。这些是在已实现策略上的干预读数，不是穷尽最优；本文不作零残差或全局最优主张。它们定位了该工作点的资源压力；状态终止实验处理同资源下的额外执行后果，其动机不依赖证明所有调度器都已耗尽优化空间。
+Episode~I 的 7560 条例行义务上，强 maxcov/FIFO 基线交付 3065（0.405）。对称的逐义务反事实每次只放宽一项物理资源、从不改策略，在相同义务 id 上比较集合差。回传放宽到无限得 4740（0.627），能量放宽（0.50~Wh、全程密集）得 4128（0.546），两者同时放宽得 6023（0.797）；4495 条失约中，仅被回传容量阻塞 1675 条、仅被电池阻塞 1065 条、两者共同阻塞 218 条（4.8\%），另有 1537 条不属于这两个单资源集合，见表~\ref{tab:walls}。这些是在已实现策略上的干预读数，不是穷尽最优；本文不作零残差或全局最优主张。它们定位了该工作点的资源压力；状态终止实验处理同资源下的额外执行后果，其动机不依赖证明所有调度器都已耗尽优化空间。
 
 \begin{table}[t]
 \centering\small
@@ -174,15 +174,15 @@ Episode~I 的 7560 条例行义务上，强 maxcov/FIFO 基线交付 3025（0.40
 \input{../generated/table_walls.zh.tex}
 \end{table}
 
-把 4535 条失约按首个失败环节记账，且"听到"必须发生在期限之前（而非此后任意时刻），得到 \senergy~2002 条（44.1\%）、\scap~1115 条（24.6\%）、\saccess~830 条（18.3\%）、\stime~588 条（13.0\%）。此前的"曾经听到"口径报 \scap~1945、\saccess~0：被挪动的 830 条实际上都采到了，只是首次被网关听到晚于期限，属于接入迟到，与回传容量无关。两种口径下交付数（3025）相同；纠正改变的是损失记在哪一段，因而改变哪条机制能够处理它。
+把 4495 条失约按首个失败环节记账，且"听到"必须发生在期限之前（而非此后任意时刻），得到 \senergy~2002 条（44.5\%）、\scap~1091 条（24.3\%）、\saccess~814 条（18.1\%）、\stime~588 条（13.1\%）。此前的"曾经听到"口径报 \scap~1905、\saccess~0：被挪动的 814 条实际上都采到了，只是首次被网关听到晚于期限，属于接入迟到，与回传容量无关。两种口径下交付数（3065）相同；纠正改变的是损失记在哪一段，因而改变哪条机制能够处理它。
 
 \subsection{记录到期：标准原语，位置决定成败}
 \label{sec:eval-record}
-Episode~I 中断期间 75 个备份包承载 750 条记录；FIFO 下 219 条到达中心时已经过期，按期 261 条（45.6\%；2782 载荷字节中用掉 1270）。仅在网关抑制会去掉这些发送，却扣住确认，按期交付从 202 掉到 194，代价被搬到接入段。源端按期限到期改变符号：中断按期交付 \cThreeSeedZeroFifo 提到 \cThreeSeedZeroPurge。十种子下（表~\ref{tab:purgeexpiry}）到期把平均服务从 $\cThreeSvcFifo$ 提到 $\cThreeSvcPurge$，配对 $+\cThreePairedPoints$ 点（95\% 区间 $+\cThreePairedLo$ 到 $+\cThreePairedHi$，十个种子全部为正）；中断按期交付总数 \cThreeTenSeedFifo 升到 \cThreeTenSeedPurge（\cThreeRatio 倍），过期备份记录 \cThreeExpiredFifo 降到 \cThreeExpiredPurge，死亡 \cThreeDeathsFifo 降到 \cThreeDeathsPurge；相对 AoI \texttt{latest-only} 领先 $+\cThreeLatestDelta$ 点，因为 latest-only 用放弃恢复后覆盖换取中断期新鲜度。\texttt{deadline-purge} 与 \texttt{generic-expiry} 在每种子上逐位相同（服务、中断计数、死亡与交付集合全部一致）：记录侧机制就是标准的逐记录到期，它的实测价值来自业务期限基准与源端网关跨段一致性，与新的丢弃算法无关。
+修正共享 deadline 边界后，源端到期直接与 FIFO 和 AoI latest-only 对比。早先 gateway-only suppression 的 $202\to194$ 见证在同一修正后变成 $226\to248$，方向翻转，因此本文撤回它，不再把它当作跨段机制证据。源端按期限到期把种子 0 的中断按期交付从 \cThreeSeedZeroFifo 提到 \cThreeSeedZeroPurge。十种子下（表~\ref{tab:purgeexpiry}）到期把平均服务从 $\cThreeSvcFifo$ 提到 $\cThreeSvcPurge$，配对 $+\cThreePairedPoints$ 点（95\% 区间 $+\cThreePairedLo$ 到 $+\cThreePairedHi$，十个种子全部为正）；中断按期交付总数 \cThreeTenSeedFifo 升到 \cThreeTenSeedPurge（\cThreeRatio 倍），过期备份记录 \cThreeExpiredFifo 降到 \cThreeExpiredPurge，死亡 \cThreeDeathsFifo 降到 \cThreeDeathsPurge；相对 AoI \texttt{latest-only} 领先 $+\cThreeLatestDelta$ 点。\texttt{deadline-purge} 与 \texttt{generic-expiry} 在每种子上逐位相同（服务、中断计数、死亡与交付集合全部一致）：记录侧机制就是标准的逐记录到期，与新的丢弃算法无关。
 
 \begin{table}[t]
 \centering\small
-\caption{固定强 maxcov 选择器的十种子 Episode~I 扫描，只变边缘处置。仅网关抑制（未列，同 FIFO 缓存）在种子 0 得 194，对比 FIFO 的 \cThreeSeedZeroFifo 与源端到期的 \cThreeSeedZeroPurge，即跨段代价。$^{\dagger}$标准 BPv7 式逐记录生命期；$^{\ddagger}$按义务索引的核销，与 $^{\dagger}$ 逐位相同。}
+\caption{固定强 maxcov 选择器的十种子 Episode~I 扫描，只变边缘处置。早先仅网关抑制的见证在修正 gateway deadline 边界后发生符号翻转，故不再用于当前主张。$^{\dagger}$标准 BPv7 式逐记录生命期；$^{\ddagger}$按义务索引的核销，与 $^{\dagger}$ 逐位相同。}
 \label{tab:purgeexpiry}
 \setlength{\tabcolsep}{4pt}
 \input{../generated/table_expiry.zh.tex}
@@ -199,7 +199,7 @@ Episode~II 固定源端到期与 maxcov 装包，对比不同本地回退。时�
 \input{../generated/table_lease.zh.tex}
 \end{table*}
 
-$\eta=\cFivePeak$ 时，时钟门在 A、B 相位留下 \cFiveNightfloorDeadA 与 \cFiveNightfloorDeadB 个死亡。固定 8~h TTL 为零死亡，黄级交付为 $\cFiveTtlEightYellowA/\cFiveYellowNA$ 与 $\cFiveTtlEightYellowB/\cFiveYellowNB$；4~h TTL 在 B 相位少交付 \cFiveTtlFourLostB 条。受检能量门同样零死亡，但相对 8~h TTL 分别少交付 \cFiveEnergyLostA 与 \cFiveEnergyLostB 条。其预测负载相对实测射频负载偏保守，这组结果限定于该实现，不能否定全部预测能量控制。矩阵支持本地回退的作用，未提供新能量推导租约的独立增量。
+$\eta=\cFivePeak$ 时，时钟门在 A、B 相位留下 \cFiveNightfloorDeadA 与 \cFiveNightfloorDeadB 个死亡。固定 8~h TTL 为零死亡，黄级交付为 $\cFiveTtlEightYellowA/\cFiveYellowNA$ 与 $\cFiveTtlEightYellowB/\cFiveYellowNB$；4~h TTL 在 B 相位少交付 \cFiveTtlFourLostB 条。受检能量门相对 8~h TTL 分别少交付 \cFiveEnergyLostA 与 \cFiveEnergyLostB 条；A 相位为零死亡，B 相位则出现 1 个死亡，而普通预告有效期与 TTL-8 在两相位都保持零死亡。其预测负载相对实测射频负载偏保守，这组结果限定于该实现，不能否定全部预测能量控制。矩阵支持本地回退的作用，未提供新能量推导租约的独立增量。
 
 \textbf{同信息停止参照。} 为区分实现局限与优化空间，量化单节点模型在完整物理地平线上选择继续密采或吸收式退回稀疏。公开任务表决定奖励，云遮未来仍未知；模型按当前仿真采样与射频负载标定，普通 TTL、电量阈值与滚动规则获得相同信息。在 \cNineCells 个相位、采能与离散度格及 \cNineWeights 个死亡权重上，普通组合在 \cNineServiceMatches/\cNineComparisons 项比较中与精确非预知参照服务一致，计价目标在数值精度内相同。声明的紧能量点上，全部未来存活的严格端点对全程稀疏也不可行；这是风险模型边界，不表示监测任务或所有物理实现不可行。
 
@@ -207,11 +207,11 @@ $\eta=\cFivePeak$ 时，时钟门在 A、B 相位留下 \cFiveNightfloorDeadA �
 
 \subsection{任务表到达时的可判定范围}
 \label{sec:eval-attr}
-Episode~I 中延迟的任务表在 $t_a{=}20$~h 到达网关，此时 2136 条黄级义务已过期限。离线时间感知归因把 2136 条全部标对（\stime~588、\scap~327、\saccess~650、\senergy~571）。只用网关在 $t_a$ 之前合法持有的证据，可标注 1138/2136（53.3\%）——全部几何 \stime（588 条）、全部按期听到但未回传的 \scap（327 条）、以及 223 条可证迟到的 \saccess——在已标注子集上精度 100\%；998 条（46.7\%）保持 unknown，其离线真值是 571 条从未采样、427 条在 $t_a$ 之后才被听到，见表~\ref{tab:attribution}。"从未采样"与"采到但尚未听到"在缺少网关手里没有的证据时无法分离，必须保持 unknown，这正是原始的 G5 约束。编译期几何不需要样本，输出 602 条条件性无回传证书，其中 588 条为真 \stime，14 条恢复边界情形不予认证、直接排除；乐观能量容量证书不纯（552 条正确 \scap、571 条实为 \senergy、193 条假阳），因此容量判定留给网关。已知期限下的源端到期可以在远端原因未明时执行；配置回退则另需事先授权。
+Episode~I 中延迟的任务表在 $t_a{=}20$~h 到达网关，此时 2112 条黄级义务已过期限。离线时间感知归因把 2112 条全部标对（\stime~588、\scap~321、\saccess~632、\senergy~571）。只用网关在 $t_a$ 之前合法持有的证据，可标注 1114/2112（52.7\%）——全部几何 \stime（588 条）、全部按期听到但未回传的 \scap（321 条）、以及 205 条可证迟到的 \saccess——在已标注子集上精度 100\%；998 条（47.3\%）保持 unknown，其离线真值是 571 条从未采样、427 条在 $t_a$ 之后才被听到，见表~\ref{tab:attribution}。"从未采样"与"采到但尚未听到"在缺少网关手里没有的证据时无法分离，必须保持 unknown，这正是原始的 G5 约束。已知期限下的源端到期可以在远端原因未明时执行；配置回退则另需事先授权。
 
 \begin{table}[t]
 \centering\small
-\caption{任务表到达网关时已经错过 2136 条升级义务的到达时刻归因（Episode~I）。在线投影器精确但部分；427 条匹配样本在 $t_a$ 之后才首次被听到，650 条晚于各自期限。}
+\caption{任务表到达网关时已经错过 2112 条升级义务的到达时刻归因（Episode~I）。在线投影器精确但部分；427 条匹配样本在 $t_a$ 之后才首次被听到，632 条晚于各自期限。}
 \label{tab:attribution}
 \setlength{\tabcolsep}{4pt}
 \input{../generated/table_attribution.zh.tex}
@@ -219,11 +219,11 @@ Episode~I 中延迟的任务表在 $t_a{=}20$~h 到达网关，此时 2136 条�
 
 \subsection{执行位置决定存活}
 \label{sec:eval-place}
-中心侧可行性信封（对任何规划器做纯过滤，输入只用已确认配置、听到计数、授权要求与时钟）去掉命令风暴，却救不了最紧的种子：日落降级命令必须穿过回传与一个它错过的 Class~A 窗口。同一条"勿整夜密集"规则在中心是迟到、可被拒的建议，在节点成为每拍可执行的本地钳制（表~\ref{tab:r39}）。朴素中心合规在三个种子上都杀死 14 个节点中的 13 个（合计 39 个），服务 0.162；加上节点本地门后全部死亡消除而服务不变；有门在场时，信封进一步把被拒准入尝试压到 222。零命令预置节奏达到 0.360 服务，与这些静态任务上各中心编译臂相当——这是针对预置任务的中心采样控制的限定负结果；普通本地控制器应进入后续 runtime 与 Agent 比较的共同底座。
+这里保留 r39 登记实验使用的历史时钟 envelope 来做执行位置对照：它在夜间/黄昏强制 sparse，并在当时的接口中把 ACCESS 听到数不足全员当成中心控制未确认。后一条推断已被后续证据审计撤回，当前 evidence envelope 不再这样解释 ACCESS；本表保留旧规则只是为了比较同一时钟钳制放在中心还是节点。修正交付 deadline 边界后，朴素中心合规服务为 0.168，三个种子合计死亡 39；历史中心 envelope 把服务抬到 0.366，但最紧种子仍留下 12 个死亡；与之匹配的“历史 envelope + 节点本地时钟门”服务同为 0.366，死亡降为 0，被拒准入尝试为 222。零命令预置节奏服务为 0.362。这些是预置规则的点特定位置结果，普通本地控制器因此进入后续 runtime 与 Agent 比较的共同底座，不作为 Agent 贡献。
 
 \begin{table}[t]
 \centering\small
-\caption{确定性 Episode~I 执行位置研究（无 LLM）。本地门在所测种子上消除全部永久死亡且服务不变，仅中心信封做不到。被拒命令在准入处退回、从未发出，属命令卫生而非计费节省。点特定经验结果，不是生存不变量或最优界。}
+\caption{确定性 Episode~I 执行位置研究（无 LLM）。登记的中心臂使用历史时钟 envelope；匹配的“历史 envelope + 本地门”在服务同为 0.366 时把所测永久死亡全部消除。被拒命令在准入处退回、从未发出。点特定经验结果，不是生存不变量或最优界。}
 \label{tab:r39}
 \setlength{\tabcolsep}{4pt}
 \input{../generated/table_placement.zh.tex}
@@ -233,7 +233,7 @@ Episode~I 中延迟的任务表在 $t_a{=}20$~h 到达网关，此时 2136 条�
 \label{sec:eval-agent}
 在 Episode~I 中断上实跑 deepseek-flash：无辅助 agent（A0）、带普通待决命令清单的 agent（A0s）、带证书的 agent（A1）各三个种子，另加两个健康链路对照；每 30 分钟一次真实模型调用，每条轨迹 99 次，合计 1089 次决策。各臂共享 harness、合法观测、工具、历史与动作空间。这项研究用于激发并压力测试接口，不用来确立确定性机制。
 
-\textbf{服务与存活（$n{=}3$，噪声大）。}A1 平均服务 0.358，与 0.360 的确定性安全底线持平，死亡 4；A0 为 0.296、死亡 35；A0s 为 0.222、死亡 39；健康链路对照下 A0 为 0.275、死亡 13，A1 为 0.511、死亡 0。逐种子服务区间重叠，故不就服务作显著性判断。实跑 agent 回路未接本地门，因此 A1 在种子 1 的 4 个死亡不由 \S\ref{sec:eval-place} 的确定性结果清除。
+\textbf{服务与存活（$n{=}3$，噪声大）。}冻结的历史轨迹中，A1 平均服务 0.358、死亡 4；A0 为 0.296、死亡 35；A0s 为 0.222、死亡 39；健康链路对照下 A0 为 0.275、死亡 13，A1 为 0.511、死亡 0。逐种子服务区间重叠，故不就服务作显著性判断。这些物理读数属于修正前冻结的 Agent 语料，不再与修正 deadline 后的位置表做数值等值比较。实跑 agent 回路未接本地门，因此 A1 在种子 1 的 4 个死亡不由 \S\ref{sec:eval-place} 的确定性结果清除。
 
 \textbf{调用账。}1089 次决策中有 52 次因 \texttt{max\_tokens} 截断 JSON 而解析失败、退回 hold。逐臂解析失败率为 A0 7.1\%（28/396）、A0s 6.4\%（19/297）、A1 1.3\%（5/396），因此臂间差异混合了输出格式可靠性与语义效应。
 

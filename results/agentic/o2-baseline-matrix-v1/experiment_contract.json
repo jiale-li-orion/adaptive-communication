@@ -1,0 +1,63 @@
+{
+  "experiment_id": "o2-baseline-matrix-v1",
+  "seeds": [
+    0,
+    1,
+    2,
+    3,
+    4
+  ],
+  "task_id": "o2-risk-escalation-v1",
+  "arm_specs": {
+    "deterministic_comply": {
+      "context_mode": "task_conditioned",
+      "planner_consumer": "DeterministicComplyPlannerConsumer"
+    },
+    "evidence_aware": {
+      "context_mode": "task_conditioned",
+      "planner_consumer": "EvidenceAwareComplyPlannerConsumer"
+    },
+    "diagnosis_first": {
+      "context_mode": "task_conditioned",
+      "planner_consumer": "DiagnosisFirstPlannerConsumer"
+    },
+    "fixed_order_eager": {
+      "context_mode": "task_conditioned",
+      "planner_consumer": "FixedOrderEagerPlannerConsumer"
+    },
+    "generic_react": {
+      "context_mode": "generic_react",
+      "planner_consumer": "DeterministicComplyPlannerConsumer"
+    }
+  },
+  "arms": [
+    "deterministic_comply",
+    "evidence_aware",
+    "diagnosis_first",
+    "fixed_order_eager",
+    "generic_react"
+  ],
+  "simulator": {
+    "task_hours": 12,
+    "tail_hours": 1,
+    "groups": 2,
+    "sample_interval_s": 3600,
+    "report_period_s": 3600,
+    "routine_period_s": 3600,
+    "harvest_mode": "irradiance",
+    "harvest_peak_wh_per_hour": 0.01,
+    "irradiance_year": 2023,
+    "irradiance_start_hour": 3624,
+    "capacity_wh": 0.05,
+    "initial_soc": 1.0,
+    "outage_start_h": 4.0,
+    "outage_hours": 4.0,
+    "enable_backup": true,
+    "backup_rate_s": 120,
+    "backup_bytes": 200,
+    "execution_feedback": true
+  },
+  "simulator_authority": "code/agentic_communication/run.py::DEFAULT_FULLSIM",
+  "primary_comparison": "paired runtime overhead under identical physical policy/outcome; deterministic_comply is the reference arm",
+  "claim_ceiling": "O2 deterministic baseline comparison only. Supports statements about unnecessary Agent/runtime work under the same paired physical outcome; does not establish LLM quality or a communication-service gain."
+}

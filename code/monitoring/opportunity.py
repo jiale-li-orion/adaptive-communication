@@ -432,7 +432,7 @@ class ControlPlane:
         return forwarded
 
     def uplink(self, node_id: str, hour: int, sf: int, payload_bytes: int,
-               attempt_index: int = 0) -> UplinkRecord:
+               attempt_index: int = 0, access_gate: bool | None = None) -> UplinkRecord:
         """The node transmits. An opportunity exists only if the gateway heard it.
 
         The node opens RX1/RX2 after every transmission regardless, but the gateway can only use
@@ -456,7 +456,15 @@ class ControlPlane:
 
         # `uplink` 的 `hour` 是**小时索引**（旧约定，不改签名），`prune` 收绝对秒。
         self.prune(node_id, hour * 3600)
-        if self.uplink_burst_p_gb is not None and self.uplink_burst_p_bg is not None:
+        # Optional shared-medium gate.  ``False`` can only remove an otherwise
+        # available uplink; ``True`` does not manufacture success and therefore
+        # still passes through the native per-link loss process.  Default ``None``
+        # is bit-identical to the historical model.  Instance-level experiments
+        # use this to overlay a contention stress without duplicating the Class-A
+        # opportunity/energy bookkeeping here.
+        if access_gate is False:
+            heard = False
+        elif self.uplink_burst_p_gb is not None and self.uplink_burst_p_bg is not None:
             heard = self._ul_burst_state(node_id, hour)
         else:
             heard = stable_uniform(self.seed, "ul", node_id, hour,

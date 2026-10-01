@@ -1,0 +1,56 @@
+{
+  "status": "PASS",
+  "n_seeds": 5,
+  "schedules": {
+    "hand_authored_o2": {
+      "n": 5,
+      "physical_equal_reference": true,
+      "replay_exact": true,
+      "mean": {
+        "timely_delivery_rate": 0.3243589743589744,
+        "collection_rate": 0.5106227106227106,
+        "delivery_latency_p90_s": 468.0,
+        "backup_bytes": 2141.6,
+        "total_consumed_wh": 0.35076595036160035
+      }
+    },
+    "qili_source_derived": {
+      "n": 5,
+      "physical_equal_reference": true,
+      "replay_exact": true,
+      "mean": {
+        "timely_delivery_rate": 0.19107142857142856,
+        "collection_rate": 0.21428571428571427,
+        "delivery_latency_p90_s": 3600.0,
+        "backup_bytes": 768.4,
+        "total_consumed_wh": 0.1012668623872
+      }
+    }
+  },
+  "all_physical_equal_reference": true,
+  "all_replay_exact": true,
+  "source_schedule_differs_from_hand_authored": true,
+  "same_runtime_and_planner": true,
+  "qili_source_ref_present": true,
+  "trace_files": 10,
+  "expected_trace_files": 10,
+  "claim_ceiling": "Secondary task-authority transfer only. Supports that a literature-derived monitoring regime can be compiled and executed through the unchanged Agentic Communication runtime with paired physical equivalence. Cross-schedule metric differences are task-demand differences, not method gains; the compressed schedule is not a Qili field warning threshold.",
+  "result_hashes": {
+    "aggregate.json": "87f2d3fcf928ee0c6302b7714b8cc016ff7eb7040ed5a9d969088171313e4e66",
+    "experiment_contract.json": "5354e7a66598ee6fbb21a1753d36784b7db7ee3a0348b996664e468705cc20a2",
+    "per_episode_results.jsonl": "56431d1c6c45049173cf275068bc1074b875140c0ead5f3bebc2006981e66b87",
+    "replay_audit.json": "3004c8a5b84b5a01d6b6c7aec1b25b40223ab6bb8860462c877bae732bf35b97",
+    "run_manifest.json": "3fd1f5c8f547193bd1629aa083f19e6c7e65dec6301492bc75bb241c74892257",
+    "runtime_traces/seed-000-hand_authored_o2.jsonl": "806edb102422acdba0b617a9d84c2d30d24f5305c81ca55344e83ee84e25251a",
+    "runtime_traces/seed-000-qili_source_derived.jsonl": "6544e517eaba73f9e3c677ff96dc1e55caf8b003a356bf1228ef0433f150c178",
+    "runtime_traces/seed-001-hand_authored_o2.jsonl": "580a7b031ab8205795eeb3bf2d14aca21228d6b252fa3b90ecd524aad527a747",
+    "runtime_traces/seed-001-qili_source_derived.jsonl": "33634417a005157344a188cc03537b6302efd8039209b7f3f507864119686f08",
+    "runtime_traces/seed-002-hand_authored_o2.jsonl": "669c52dc9f198990a5fe1fb61599fbab15569fc420040528459599e45844f358",
+    "runtime_traces/seed-002-qili_source_derived.jsonl": "0c235055bb6f69c41bf38d726c91123bc3c7240b5be1219fe6004f6520eec717",
+    "runtime_traces/seed-003-hand_authored_o2.jsonl": "6a03f5eae80f7decace326a033f6b60bdfd82a7a397872688aefe276d0d6347e",
+    "runtime_traces/seed-003-qili_source_derived.jsonl": "0451d160b11b0483cce6d468908c654d596409bf1a4d2ee77e06a2edfee6dd94",
+    "runtime_traces/seed-004-hand_authored_o2.jsonl": "d88cad1763a8bf9a7c9f078094e42b7223ad28e3ed3712d2eb211d63b8515518",
+    "runtime_traces/seed-004-qili_source_derived.jsonl": "1a68e869f586420c046a63d01d97a24dd8cbab987bc96cb3c9862a9c54e35737",
+    "source_manifest.json": "0d7bd549fb60444f9be57cfd34b8d02241aa1614cde0efe19d81eeadab7c44d6"
+  }
+}

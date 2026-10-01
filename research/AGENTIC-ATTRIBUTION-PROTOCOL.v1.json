@@ -1,0 +1,121 @@
+{
+  "cumulative_order": [
+    "gold_task",
+    "gold_evidence_need",
+    "gold_percept",
+    "gold_context",
+    "gold_capability_selection",
+    "gold_capability_order",
+    "gold_capability_arguments",
+    "gold_policy",
+    "physical_oracle"
+  ],
+  "layers": [
+    {
+      "artifact_refs": [
+        "runtime_task_contract"
+      ],
+      "execution_mode": "model_rerun",
+      "interpretation": "runtime/method ablation under the current architecture; not an LLM error by default",
+      "layer": "gold_task",
+      "order": 1,
+      "owner": "runtime",
+      "replaces": "Runtime TaskContract interpretation/materialization"
+    },
+    {
+      "artifact_refs": [
+        "evidence_needs"
+      ],
+      "execution_mode": "model_rerun",
+      "interpretation": "runtime evidence-acquisition ablation; changed model input requires model rerun",
+      "layer": "gold_evidence_need",
+      "order": 2,
+      "owner": "runtime",
+      "replaces": "open EvidenceNeed set and stop/reopen state"
+    },
+    {
+      "artifact_refs": [
+        "recent_capability_outcomes"
+      ],
+      "execution_mode": "model_rerun",
+      "interpretation": "runtime/tool-result interpretation ablation; changed model input requires model rerun",
+      "layer": "gold_percept",
+      "order": 3,
+      "owner": "runtime",
+      "replaces": "CapabilityResult-to-Percept / recent outcome interpretation"
+    },
+    {
+      "artifact_refs": [
+        "resource_inventory",
+        "investigation_state",
+        "evidence_slice",
+        "capability_catalog"
+      ],
+      "execution_mode": "model_rerun",
+      "interpretation": "context-construction ablation; model must be rerun on the replacement assembly",
+      "layer": "gold_context",
+      "order": 4,
+      "owner": "runtime",
+      "replaces": "ContextManifest/materialized resource, state, evidence and capability fragments"
+    },
+    {
+      "artifact_refs": [
+        "PlannerDecision.invocations[].capability_id"
+      ],
+      "execution_mode": "posthoc_decision",
+      "interpretation": "planner/model diagnostic; candidate arguments are preserved when possible",
+      "layer": "gold_capability_selection",
+      "order": 5,
+      "owner": "planner_model",
+      "replaces": "capability identity multiset"
+    },
+    {
+      "artifact_refs": [
+        "PlannerDecision.invocations[] order"
+      ],
+      "execution_mode": "posthoc_decision",
+      "interpretation": "planner/model sequencing diagnostic independent from argument grounding",
+      "layer": "gold_capability_order",
+      "order": 6,
+      "owner": "planner_model",
+      "replaces": "capability invocation order"
+    },
+    {
+      "artifact_refs": [
+        "PlannerDecision.invocations[].resource",
+        "PlannerDecision.invocations[].canonical_arguments"
+      ],
+      "execution_mode": "posthoc_decision",
+      "interpretation": "planner/model parameter-grounding diagnostic",
+      "layer": "gold_capability_arguments",
+      "order": 7,
+      "owner": "planner_model",
+      "replaces": "resource and canonical capability arguments"
+    },
+    {
+      "artifact_refs": [
+        "PlannerDecision"
+      ],
+      "execution_mode": "full_r3_rerun",
+      "interpretation": "replace planner decisions and rerun physics to measure downstream communication consequence",
+      "layer": "gold_policy",
+      "order": 8,
+      "owner": "planner_model",
+      "replaces": "entire planner capability/action trajectory"
+    },
+    {
+      "artifact_refs": [
+        "evaluator_oracles",
+        "physical_signature"
+      ],
+      "execution_mode": "full_r3_rerun",
+      "interpretation": "upper-bound decomposition only; never an online Agent arm",
+      "layer": "physical_oracle",
+      "order": 9,
+      "owner": "evaluator",
+      "replaces": "online policy with evaluator-side physical reference/upper bound"
+    }
+  ],
+  "revision": "agentic-attribution-v1",
+  "rule": "runtime-owned upstream replacements are method/runtime ablations under the current architecture; planner-owned selection/order/argument/policy replacements may be attributed to the planner/model"
+}

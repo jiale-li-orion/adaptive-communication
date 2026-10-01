@@ -1,0 +1,42 @@
+{
+  "status": "PASS",
+  "n_coordinates": 10,
+  "all_physical_equal_reference": true,
+  "all_replay_exact": true,
+  "all_expected_owners_met": true,
+  "axis_activation": {
+    "weather_window": true,
+    "backhaul_outage": true,
+    "target_scope": true,
+    "evidence_owner": true,
+    "deployment_scale": true
+  },
+  "axes": [
+    "backhaul_outage",
+    "deployment_scale",
+    "evidence_owner",
+    "target_scope",
+    "weather_window"
+  ],
+  "trace_files": 10,
+  "expected_trace_files": 10,
+  "result_hashes": {
+    "aggregate.json": "6d85f547e8358c447273a8aa612bf3a145d84d2bca05712bc0fb3d96f152f47b",
+    "experiment_contract.json": "a8b58500f65b6cd3e627adb29dfa9b7e1e1690565c1df195f815c015aa4c7c3d",
+    "per_episode_results.jsonl": "ba77238328c3f71cae59d90913461dd7053dfebd89ca9147c228ecc371780acf",
+    "replay_audit.json": "39f6a0b98335ee09db379d1b56b6e4f45acfff1caf3cc530196fc283960b8f6c",
+    "run_manifest.json": "eebe2fd8323636da8fc2a523aad084913e0cbe79d9e3913e88ab6db860d84320",
+    "runtime_traces/outage-long-late.jsonl": "c2ad45638593343cb66e1e0fa249bb070648fef84a391793268d0951a8162248",
+    "runtime_traces/outage-short-early.jsonl": "1896f3471937b79a54ecc95c69378c6b5017a06e474ca42ba15cb205acd40510",
+    "runtime_traces/owner-center-gateway.jsonl": "3589b1abed1a0d2f9b6e2a41fe3405f750627092681ed001b2f65d5bbfe1c01f",
+    "runtime_traces/owner-center-only.jsonl": "f3794870e3012cc91267e0a2916ff41d985d02ad71e1e255a7e506cee1a58e32",
+    "runtime_traces/scale-one-group.jsonl": "783d917d35b62930eb186fe5b8df69426a84cdb8bb5c84c67e2c9c96441d3924",
+    "runtime_traces/scale-two-group.jsonl": "f3794870e3012cc91267e0a2916ff41d985d02ad71e1e255a7e506cee1a58e32",
+    "runtime_traces/scope-global.jsonl": "df4bc3c8d2d366d138f74cb26a3302903f02eaf9b3cdd28603db6e017ca6e16e",
+    "runtime_traces/scope-localized.jsonl": "0e601ff21c125113e9f31734eba0145e7e6757dec8ec85af38cb1706954971fd",
+    "runtime_traces/weather-early.jsonl": "2afeeee3c0dc97f50862878751b6b4cb9cda073c931d4bdf8062331061bc2848",
+    "runtime_traces/weather-late.jsonl": "ef13f5f0353c0dc9f0616b2e6aa00d375d0c3e30441df2991399b45efc072fb1",
+    "source_manifest.json": "9d8fa5c2e89745ca04ff6a5fff6294c6a63fb905c28e009d72aea19b2ca36546"
+  },
+  "claim_ceiling": "Infrastructure/benchmark robustness gate only. It validates that weather/outage/scope/owner/scale coordinates reach the real simulator/runtime while preserving paired reference physics; it does not establish a method gain on any robustness axis."
+}

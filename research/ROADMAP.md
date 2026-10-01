@@ -1,136 +1,189 @@
-# 方法路线：面向通信行动的自主 context 构造
+# Roadmap：Evidence World + Closed-Loop Agent Runtime
 
-日期：2026-09-30。本文是建设计划；公式、算法及预期机制均为候选设计，尚无新增收益读数。业务场景、授权、设备能力和执行底座沿用仓库现有约束。
+日期：2026-10-01。实验语义与指标由 [`EXPERIMENT-DESIGN-v1.md`](EXPERIMENT-DESIGN-v1.md) 持有，本文只拥有建设顺序。
 
-## 1. 主研究对象与研究节奏
+## P0 — Design freeze
 
-研究对象是一条持续运行的 Agent 工作流：从当前监测义务提出证据需求，主动查询和连接现场记录，形成带来源及时间含义的 context，决定下一步通信政策，再依据实际返回更新 context。第一主任务为 `urgent_delivery_recovery`，任务变化来自已有节点、义务窗口、授权、截止时间和可用路径，不人为增加灾后救援任务。
+已完成：
 
-下一阶段交付应当是一套能运行的方法原型及其失败剖面。小型精确参照用于指出值得改进的部件；每个局部负结果都要回答“哪个部件已经足够、哪个假设限制了性能、下一项实现如何调整”。只有该候选的同能力差额被充分覆盖时才关闭它，不将探针数量当研究进度。
+- Operational Task / Runtime TaskContract 两层语义；
+- Evidence World / Runtime Trace / Communication × Agent metric contract；
+- 14-node 当前系统模型；
+- 9 个 communication capability 的 domain registry；
+- source-grounded hybrid simulation 数据边界。
 
-三项设计属于同一方法的可消融部件。建议先做 A，再接 B；C 用连续任务检验。无需三个部件各自成为独立新算法。
+## P1 — Unified runtime harness
 
-## 2. A：任务绑定的反向证据追溯（首要实现）
+当前状态：**统一 runtime 主干已经可用，当前从基础设施建设转入 baseline / LLM / robustness 扩展。**
 
-### 输入、输出与算法
+已落代码：
 
-输入是合法任务及当前可访问的 source catalog：节点报告、网关收据、中心接收记录、命令接受/确认记录、已有路径机会描述。Agent 从候选动作的前置条件反向查证，输出一份只为该任务服务的 evidence subgraph。
+```text
+code/agentic_communication/runtime_contracts.py
+code/agentic_communication/contracts.py
+code/agentic_communication/task_compiler.py
+code/agentic_communication/evidence_world.py
+code/agentic_communication/capabilities.py
+code/agentic_communication/context_runtime.py
+code/agentic_communication/planner.py
+code/agentic_communication/replay.py
+code/agentic_communication/trajectory_eval.py
+code/agentic_communication/r1_evaluation.py
+code/agentic_communication/gold_replacement.py
+code/agentic_communication/model_protocol.py
+code/agentic_communication/baselines.py
+code/agentic_communication/benchmark_split.py
+code/agentic_communication/policy.py
+code/agentic_communication/trace.py
+code/agentic_communication/metrics.py
+code/agentic_communication/run.py
+```
 
-一个查询至少绑定 `subject / relation / window / owner / as_of`；一个结论至少绑定 `claim / supports / unresolved / applicable_action`。例如，网关健康、网关收到 n00 的某条记录、该记录落在本义务窗口、中心已收到该记录，分别拥有不同支持链。Agent 可以选择查询、连接与停止，不能把故障标签当作工具返回。
+已完成：
 
-最小算法：列出当前候选政策的前置条件 → 用已有 evidence 支持可判定项 → 找出会改变行动选择的未决项 → 反向检索其 producer 与相关实体/窗口 → 获取并连接记录 → 更新支持集合。可用束搜索维护少量证据计划；初版无需训练。关系模板来自已有接口与业务定义，模型只提出实际查询参数与组合，确定性检查器核实句柄、来源和时间关系。
+- O2 deterministic R3：task-conditioned/full-dump 两臂与旧 `mission-comply` 在 5/5 seeds 上 physical signature 逐项一致；
+- `ModelRequest / ModelAttempt / ModelUsage / PlannerDecision` live ledger；
+- generic `PlannerConsumer` interface，deterministic / callable model / gold wrapper 共用；
+- R0 protocol、R1 frozen model input、R2 exact context reconstruction、R3 full simulator；
+- owner-scoped gateway evidence：可达时产生 typed Percept，主回传中断时返回 `UNREACHABLE`；
+- multi-round `Context -> evidence capability -> Evidence World revision -> Context -> device policy`；
+- config device capabilities 与 `gateway_backup` 已经从 PlannerDecision 真实作用到现有 full simulator；
+- cumulative live gold replacement 可在 R3 上替换 capability selection / order / arguments / policy；
+- R1 frozen-input evaluator 已能计算 stopping、tool selection、order、argument grounding。
+- model-facing protocol 已冻结为 `communication-planner-json-v1`，带稳定 hash、typed proposal schema 与 evaluator-truth leakage guard；
+- `BackendPlannerConsumer` 可复用仓库现有 `complete(messages)` backend；R1/R3 model CLI 已落，缺 endpoint/key 时硬失败，不回退 scripted backend。
 
-具体从 `urgent_delivery_recovery` 开始：中心缺一条义务交付时，先绑定目标节点、采样窗口和截止时刻，再检查合法可见的接收记录。邻居节点最近上报、目标节点收到命令、目标样本已到网关，分别支持不同结论。Agent 应追溯目标记录所在位置及可执行路径；某来源不可达就保留该项 unknown，并比较剩余合法动作。当前五世界 probe 中 A1/A2 可以共享 `terminal_dts`，这类相同决策的世界不必被强行分开。上述恢复动作仅使用该实例已授权的能力。
+当前 capability registry 明确区分“已声明”与“已接入 Agent runtime”：3 个 live observation、5 个 live device、1 个 baseline-only。5 个 device capability 均已走 typed PlannerDecision -> existing full-sim effect：sampling interval、report period、gateway backup、terminal-DtS、access assist。`center.full_dump` 只保留为 baseline materializer，不作为正常 planner tool。
 
-### 可检验的算法性质与增量
+## P2 — Operational Task benchmark
 
-输出中的每条行动依据都应能由合法证据重算；没有得到支持的前置条件留为 unknown。这是可测试接口性质，尚不代表对真实世界的完全正确性保证。候选增量是避免把正确字段绑定到错误节点、记录、窗口或通信段，进而减少无效恢复和错失恢复。
+已完成 O1–O6 可重放 episode catalog：
 
-基线包含 FullDump + 专家说明、固定 task rule、普通关系查询/标准 join、WirelessOpsAgent 风格规范化与依赖检查。同样的 source catalog 和领域解释向各臂开放。用“普通结构化账本”与“任务条件反向追溯”对照，拆开账本工程与方法的作用。
+1. Monitoring Continuity；
+2. Risk Escalation；
+3. Backhaul-Outage Sustainment；
+4. Energy-Constrained Monitoring；
+5. Recovery & Reconciliation；
+6. Compound Long-Horizon Operation。
 
-### 与旧方向的区别
+O1–O6 已用同一个 typed live planner 做过 R3 catalog smoke，6/6 task families 与 legacy comply reference physical signature 逐项一致；该结果只证明 benchmark/runtime conformance，不构成方法收益。
 
-不恢复 TTL、版本 fencing 或配置持久化主张；这些继续由共同执行底座提供。也不研究如何自动发现新硬件能力。A 研究现有合法证据如何形成任务相关行动依据，输入不能已经是人工整理的三个故障布尔值。
+每个 episode coordinate 冻结：Operational Task、source refs、NASA POWER year/start window、link/outage seed、capability registry revision、scorer revision 与 evaluator-only world coordinate。
 
-## 3. B：保留行动机会的多步取证（通信侧主候选）
+source-period split 已落为 [`AGENTIC-BENCHMARK-SPLIT.v1.json`](AGENTIC-BENCHMARK-SPLIT.v1.json)：2022=train、2023=dev、2024=test，source year 先于 random seed。O4 跨 2022/2023/2024 的 full-sim smoke 已验证三个 source hash 与实际 harvested-energy outcome 均分离，同时每个年份 typed runtime 与 paired deterministic reference 保持 physical-equivalent。窗口位置属于 A-layer benchmark coordinate，不冒充真实历史灾害日期。
 
-### 决策空间
+## P3 — Deterministic baselines / oracle
 
-在每个状态比较：使用已有证据立即行动、等待既有上报、查询一种可达证据、执行已授权 fallback。获取证据与执行动作共享环境时钟；仅在已实现通路上计入真实字节、空口、能耗和机会占用。本地日志读取不虚构无线费用。
+当前已有机器可读 registry：[`AGENTIC-BASELINE-REGISTRY.v1.json`](AGENTIC-BASELINE-REGISTRY.v1.json)，canonical owner 为 `code/agentic_communication/baselines.py`。online baseline 与 evaluator-only oracle 使用不同 class。
 
-用动作可实现价值评价取证计划，而非仅评价诊断熵：
+### Communication：已注册
 
-\[
-\Delta(q\mid h)=\mathbb E_y[J(h\oplus(q,y),t+\tau_q,r-c_q)]-J(h,t,r).
-\]
+- local autonomy / local floor；
+- mission-comply deterministic reference；
+- AoI / EnergyAware ordinary controllers；
+- gateway backup EDF / maxcov；
+- existing local autonomy；
+- `dynamic_oracle` / `delivery_oracle` evaluator-only reference。
 
-这里 J 是在原业务目标和声明资源/风险约束下，后续合法政策可实现的价值；状态演化、控制等待和查询失败都包含在分支中。不能把当前可行政策的价值原样搬到查询结束后。预算 r 沿用实例定义，不额外调权重追求正结果。
+### Agent/runtime：已注册 / 已实现
 
-第一版用深度 2–3 的分支前瞻和滚动重规划；用很小实例的同信息 DP 校验。双证据互补可能让单步贪心误判“查任何一条都无用”，而前瞻能评价完整链。长链的搜索成本可由动作前置条件裁剪，重复证据结果缓存；算法上限由计划深度与分支预算控制。
+- FullDump；
+- task-conditioned Context；
+- deterministic comply planner；
+- diagnosis-first fixed-probe baseline；
+- fixed-order eager baseline；
+- typed callable planner interface；
+- live R3 gold replacement；
+- R1 frozen-input diagnostic evaluator。
 
-同一条分支需要检查：
+O2 Agent baseline matrix 已有正式 5-seed paired result：deterministic comply / evidence-aware / diagnosis-first / fixed-order eager / generic-ReAct 五臂均通过 physical-equivalence 与 replay audit。数值只从 `results/agentic/o2-baseline-matrix-v1/aggregate.json` 进入 [`README.md`](README.md) 的自动生成区块和 `paper/generated/`，本文不复制实验数字。
 
-\[
-t+T_{obs}(q)+T_{ctrl}(a\mid q)+T_{effect}(a)\le d_o.
-\]
+传统 communication baseline matrix 也已完成 5-seed 正式运行：Local / AoI / EnergyAware / mission-comply 在同一 O2 / `DEFAULT_FULLSIM` 下比较，backup chooser 的 EDF / maxcov 采用固定 LocalPolicy 的单因素对照；`dynamic_oracle` 与 `delivery_oracle` 保持 evaluator-only 身份。冻结结果位于 `results/agentic/communication-baseline-matrix-v1/`，生成器只从该目录的 aggregate/audit 更新 research/results 摘要。
 
-预计控制等待与查询使用的机会可能相关，应由同一机会账本计算。随机延迟使用已声明概率或可信界，不读未来随机数。
+generic ReAct context baseline 已完成：模型侧只保留 Runtime TaskContract、resource inventory、合法 raw evidence、capability catalog 与 recent tool outcomes，不暴露 EvidenceNeed / InvestigationState / task-conditioned selection；同一 deterministic planner 下已通过 paired physical-equivalence，且正式 O2 baseline matrix 已包含该臂。ordinary deterministic compiler/keyed-join baseline 由 `DeterministicComplyPlannerConsumer` 直接承担，不再新增同义实体。
 
-### 可争取的技术结果
+P3 当前只保留 generic VoI/active acquisition 为条件项。VoI 必须等 evidence acquisition 的 latency/bytes/airtime/energy/opportunity-cost 至少有一套 source-backed 或 simulator-authoritative cost model后再启用；当前 gateway remote-read transport cost 明确标记为 `unmodeled`，因此不会用任意权重制造一个看似很强的 VoI baseline。除此之外，接 API 前可执行的 deterministic Agent baseline、传统 communication controller、oracle/reference、source-period、robustness、task-transfer、attribution infrastructure 与 frozen model inputs 已由 `make agentic-preapi` 统一覆盖。
 
-研究是否存在清楚的“停止取证区”和“先取哪组证据”的结构，并用实例证明有用查询也可能因消耗最后行动机会而净有害。可尝试推导局部支配规则：在明确的时间/成本/信息支配条件下排除查询，不承诺一般 POMDP 的新最优性定理。若短视界已经充分，保留轻量实现；若确有复杂条件分布，再接 R03 的生成代理模型估计观测价值。
+### Method ablation
 
-比较固定条件树、单位/成本敏感 EC²、单步 VoI、deadline-aware 规则和同信息精确参照。B 的目标是形成可解释且可运行的通信约束方法，不要求胜过精确最优值。
+- raw/flat telemetry vs Evidence World；
+- EvidenceNeed tracing on/off；
+- communication-aware capability planning on/off；
+- context dependency refresh on/off；
+- typed evidence-use/device-use capability runtime on/off。
 
-## 4. C：按决策稳定性更新 context（连续任务扩展）
+## P4 — LLM Agent benchmark
 
-字段变旧不一定改变动作，字段仍“新鲜”也可能跨过决策阈值。C 维护证据依赖与动作适用范围，只有任务变化或新证据使当前动作不再有充分支持时才局部重查。禁止用模型自报置信度替代物理支持。
+Planner-level gold replacement 已经可执行：capability selection / order / arguments / policy 可以在同一 R3 episode 中累计替换并重跑物理系统。模型横向比较之外，完整目标仍是：
 
-如果能从合法历史、公开负载及已声明变化界构造状态集合 B(h)，且存在动作 a 满足：
+```text
+Full Agent
++ Gold Runtime TaskContract
++ Gold EvidenceNeed
++ Gold Capability selection
++ Gold Capability arguments
++ Gold CapabilityResult / Percept
++ Gold ContextManifest/materialization
++ Gold Policy
++ Physical Oracle
+```
 
-\[
-\forall x\in B(h):\quad a\text{ 合法，且 }V^*(x)-V(a,x)\le\epsilon,
-\]
+目标不是只报“哪个模型最高分”，而是沿 Runtime Trace 定位 task grounding、evidence、tool/capability、context、policy 和 physical execution 各层的 failure contribution。
 
-则当前 context 对该容差下的动作选择足够。初版取精确动作集合；数值 \epsilon 只作为声明的敏感性参数，不称现实 SLA。没有来源或校准支持的变化界，就保持 unknown，不能构造虚假的确定性包络。
+P4 当前 transport、三-context model matrix 与 attribution matrix infrastructure 均已就绪，但尚无真实模型结果：环境未配置可用 endpoint/key，因此没有发外部 API，也没有 scripted 结果冒充模型结果。`results/agentic/model-context-inputs-v1/global/seed-000/` 已冻结 task-conditioned / FullDump / generic-ReAct 三套 O2 输入，三者共享 Operational Task、capability surface 与 paired physical reference，且 R0/R1/R2 replay exact。`run_model_context_matrix.py` 支持先 R1 frozen-input diagnosis，再对选中的 model/context 进入 R3；缺凭证会在任何模型实验前显式失败。upstream gold replacement 已覆盖 Task / EvidenceNeed / Percept / Context；planner-level live replacement 已覆盖 capability selection / order / arguments / policy；`results/agentic/attribution-matrix-infra-v1/` 已验证两类 replacement 按协议累计组合且层间不偷渡。真实模型接入后直接复用该协议跑实际 failure attribution。
 
-这里允许不同世界各有多个可接受动作：只要它们存在共同可接受动作，就可能停止。无需要求每个世界都映射到唯一且相同的 policy label。这个停止语义借用决策区域判定思想，比五世界分类 probe 更适合真实政策集合。
+[`AGENTIC-ATTRIBUTION-PROTOCOL.v1.json`](AGENTIC-ATTRIBUTION-PROTOCOL.v1.json) 已冻结 layer ownership：当前架构下 Task/EvidenceNeed/Percept/Context 属于 runtime/method ablation，替换后必须重新跑模型；capability selection/order/arguments 属于 planner/model post-hoc diagnostic；Gold Policy 与 Physical Oracle 必须回到 R3 才能评价通信后果。
 
-更新粒度为受影响的证据依赖子图，例如 primary-health 的变化不必触发所有节点历史重读；新任务窗口到来则可能使旧记录失去关联。与固定 freshness TTL、全量每轮刷新、普通增量缓存、事件触发阈值作对照。收益必须体现为真实通信/决策延迟或任务结果；纯缓存/token 节省只作附属结果。
+## P5 — Full-sim communication evaluation
 
-这与旧配置 TTL 的控制对象不同：C 不延长配置授权，也不终止节点行为；它决定工作上下文哪些依据需重新取得。事件触发和依赖失效属于成熟思想，贡献需要由本场景中任务、时间和通信机会的联合行为支撑。
+primary：
 
-## 5. 一条连续的工程与研究路线
+- Timely Obligation Delivery Rate；
+- Feasible-Obligation Delivery Rate；
+- collection / delivery / missing / censored；
+- latency p50/p90/p95 / AoI / observation gap；
+- config install / mismatch / command lifecycle；
+- node survival / residual energy；
+- backup packets/bytes；
+- DtS attempts/energy；
+- uplink/downlink/control airtime；
+- recovery latency / historical completeness。
 
-| 里程碑 | 建设产物 | 验证与下一步 |
-|---|---|---|
-| M1 可运行的证据调查 | 合法 owner adapter、任务/记录关联、至少一条完整 Agent 查询到实际动作轨迹；普通结构化 Agent 和确定性参照可运行 | 从已存在的 source-backed 义务产生任务；不同地点分别比较，查询失败和不可执行动作正常计分 |
-| M2 方法 A+B | 反向证据计划、两步前瞻、停止与 fallback；相同模型/执行底座下有无 A/B 的消融 | 先小批真实闭环定位失效，再冻结确认批；每个差异落到时间线与物理结果 |
-| M3 连续任务与 C | context 跨义务复用、依赖更新、局部刷新；按任务阶段/故障过程留出 | 评估保持服务的取证成本，以及陈旧 context 导致的额外损害；不只测单次回答 |
-| M4 论文闭环 | 任务来源、方法与算法、传统/Agent 双层参照、消融、外推边界、可复现 artifact | 仅将有证据的部件升为 claim；未产生增量的部件留在基线或删去 |
+Agent diagnostics 同时报告，但不与通信指标硬加权成一个 overall score。
 
-M1/M2 应优先于跨模型大规模运行和 RL。微型真实 Agent 批次用于测量方法的实际消费者，无需等待某个传统通信原语先成为新算法。模型选择、调用次数、计费预算沿用已有配置；本次路线文档不发起 API 请求。
+## P6 — Robustness / transfer
 
-### 直接复用现有代码的接线位置
+已完成两层 robustness gate：
 
-| 已有部件 | 第一轮如何复用 |
-|---|---|
-| [`AgentMissionPolicy._observation`](../code/v3joint/agent_mission.py) | 保留同信息 FullDump 参照；在其前增加取证与 context 组装接口，不修改普通执行卫生或扩大候选臂可见字段 |
-| [`Instance._center_view / _gateway_view`](../code/instance/network.py) | 用作 owner adapter 的权限边界；远程读取必须经过实际支持的取得通路，禁止直接读取另一位置的内部 view |
-| [`CenterView` 与普通政策](../code/instance/center.py) | 复用已知规则和合法状态；将其作为 Agent 可调用的专家工具，避免重新发明控制策略 |
-| 本地 `agentic_perception_context_probe.py` | 复用任务名、工具语义及相同决策世界的单元例；其手写五世界和 unit cost 不升格为主实验 |
+- source-period gate：NASA POWER 2022/2023/2024 跨年 full-sim；
+- five-axis paired gate：weather window、backhaul outage、target scope、evidence owner、deployment scale，共 10 个 coordinate，全部通过 paired physical-equivalence、R0/R1/R2 replay 与 axis-activation audit。
+- secondary task-authority transfer：S14/Qili 公开监测文献的阶段顺序映射为 source-derived Operational Task；5 seeds 下 hand-authored 与 source-derived schedule 均通过 paired physical-equivalence / replay，且 hand-authored arm 逐项复现主 O2 aggregate。时间压缩与通信 profile 仍是 A-layer benchmark transform，不当作现场预警阈值。
 
-第一份实现交付是单个 episode 的可运行串联：任务 → 证据查询 → context → 既有政策 → 实际执行 → 评分。保存每轮“为什么需要该证据、实际收到什么、用了多久、动作何时生效”的轨迹。先让这条链工作，再扩大节点和任务数量；新增代码按 A/B/C 部件分开，避免又形成一个包含所有逻辑的 Agent loop。
+当前正式 coordinate 由 [`AGENTIC-ROBUSTNESS-MATRIX.v1.json`](AGENTIC-ROBUSTNESS-MATRIX.v1.json) 持有，结果由 `results/agentic/robustness-matrix-v1/` 持有。下一步扩展：
 
-近期探索的接续以 `paper/AGENT_RESEARCH.md` 当前记录为线索：优先接已有的 support-valid omission 和 owner-scoped alias 轨迹。前者需要面对完整合法 context 中已有的普通区分规则；后者必须承认中心无法实时取得现场证据的边界。两者适合作为不同难度的任务切片，不自动构成新算法收益。记录中 C5 新鲜电量未改变最优动作的负例也保留，不再把 energy snapshot 单独包装为新取证任务。
+- NASA POWER 2022/2023/2024 与不同 start window；
+- source-grounded vs synthetic harvest；
+- access outage duration/phase；
+- 更细 target subset / evidence owner count；
+- context revision length；
+- deployment scale / reachable subset；
+- model family；
+- raw monitoring-data / rainfall-hydrology-slope-stability generator 驱动的 Operational Task transfer。
 
-## 6. 数据、学习与现实证据
+地灾 physics 只作为上游 task generator；主 Agent 不承担灾害预测。
 
-**任务生成。** 借鉴 ExCyTIn-Bench，从已有业务义务和执行事件图选择锚点；保留真实的实体、时间、记录与路径关系。人工核验首批模板，证明问题能由合法证据回答或确实不可判定。多种合法证据链均可接受，不能只奖励与一条 gold trace 同序。
+## P7 — Artifact / paper freeze
 
-**闭环。** 借鉴 NetArena，把查询延迟和动作效果交回原 simulator。初始 external randomness 可配对，Agent 改变行为后的 endogenous state 重新演进。离线 trace 负责找问题，不代替重执行后的通信结果。
+每个 confirmatory experiment 必须有：
 
-**学习扩展。** 若 A 的绑定经常失败，用已有接口说明和证据链产生监督样本；若 B 的条件价值估计成为瓶颈，用开发 episode 的分叉执行生成“query/stop/action”目标，训练小型排序器或观测结果模型。两者分开训练和消融，RL 留到奖励与环境接线稳定后。测试隔离到 episode/故障过程，避免相邻 tick 泄漏；不让模型读离线真值字段。
+```text
+experiment_contract.json
+run_manifest.json
+source_manifest.json
+per_episode_results.jsonl
+runtime_traces/
+aggregate.json
+audit.json
+```
 
-**来源补强。** 最需要的现场材料是脱敏后的节点上报格式、网关收据/缓存记录、中心工单和时间字段语义。即使暂时拿不到，也可先由现有协议及仿真输出建立原型；论文应明确 synthetic operational traces 与真实部署材料的边界，不能把 simulator 的异构 JSON 等同为真实运维异构性。
-
-## 7. 研究评判应指导迭代
-
-| 观察到的结果 | 建设性后续 |
-|---|---|
-| 缓存证据已经足够，但 Agent 绑定错 | 优先 A；不要额外制造远程查询费用 |
-| A 稳定，取证顺序导致错过机会 | 接 B，拆出 query-time 与 actuation-time 的影响 |
-| 单次任务无差异，重复任务反复重查或错误复用 | 接 C，并与普通增量缓存比较；只有真实存在才研究 |
-| 普通规则在某类 episode 已最优 | 作为该区域专家策略保留，研究方法负责何时选它及何时需要更多证据 |
-| 同知识普通 Agent 与候选端到端一致 | 删除相应组件的新颖性主张；以失败归因决定修哪个部件，不盲目增加提示词 |
-| 决策更正确但通信结果未改善 | 检查执行可达性与剩余机会；按不可行动边界报告，不把表达正确当交付成功 |
-
-每轮输出至少包括一个可复用实现或数据接口、一份明确的错误分布、一次有针对性的算法更新。无需把所有实验都写成 GO/STOP 文档。
-
-## 8. 论文的目标形态
-
-可争取的主张是：在灾前山区间歇通信中，Agent 通过任务绑定的证据追溯和考虑行动时机的 context 更新，在相同设备、授权及执行底座下减少错误恢复与过晚恢复，改善监测义务交付或实际取证成本。
-
-正文可以按“通信 evidence 的取得与消费模型 → A/B 算法及可验证性质 → 连续任务 C → 传统与 Agent 对照 → 现场来源和外推边界”展开。核心图展示一条取得证据后改变实际通信行动的时间线；核心表分列交付、损害、通信成本与生效延迟。来源 benchmark 是方法的测试床，底层普通机制是可靠运行条件。
-
-理论目标优先选择可证明的小性质：证据支持关系的保持、停止条件的充分性、在声明支配条件下的查询剪枝。系统目标是完整 Agent 闭环和跨 episode 的独立增量。二者均需真实成立，不靠把成熟部件重新命名充当新算法。
+要求 paired seed、baseline success、oracle success、metric denominator 一致、无 hidden-truth leakage、无 post-hoc exclusion，并由结果文件生成 paper 表图。

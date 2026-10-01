@@ -1,39 +1,39 @@
 {
   "ka_s": 72000,
-  "n_past_deadline": 2136,
+  "n_past_deadline": 2112,
   "truth_segments": {
     "S_time": 588,
-    "S_cap": 327,
+    "S_cap": 321,
     "S_energy": 571,
-    "S_access": 650
+    "S_access": 632
   },
   "offline": {
-    "labelled": 2136,
-    "correct": 2136,
+    "labelled": 2112,
+    "correct": 2112,
     "accuracy": 1.0,
     "segments": {
       "S_time": 588,
-      "S_cap": 327,
+      "S_cap": 321,
       "S_energy": 571,
-      "S_access": 650
+      "S_access": 632
     }
   },
   "online": {
     "segments": {
       "S_time": 588,
-      "S_cap": 327,
+      "S_cap": 321,
       "unknown": 998,
-      "S_access": 223
+      "S_access": 205
     },
-    "coverage": 0.5327715355805244,
+    "coverage": 0.5274621212121212,
     "unknown": 998,
-    "unknown_frac": 0.46722846441947563,
-    "labelled_correct": 1138,
+    "unknown_frac": 0.4725378787878788,
+    "labelled_correct": 1114,
     "labelled_accuracy": 1.0,
     "confusion": {
       "S_time->S_time": 588,
-      "S_cap->S_cap": 327,
-      "S_access->S_access": 223
+      "S_cap->S_cap": 321,
+      "S_access->S_access": 205
     },
     "unknown_truth_composition": {
       "S_energy": 571,
@@ -41,8 +41,14 @@
     }
   },
   "obligations_with_sample_heard_after_ka": 427,
-  "obligations_with_sample_heard_after_deadline": 650,
+  "obligations_with_sample_heard_after_deadline": 632,
   "examples_heard_after_ka": [
+    [
+      "gw0:routine:t0058800",
+      "gw0:rainfall:58800",
+      58800,
+      72600
+    ],
     [
       "gw0:routine:t0059400",
       "gw0:rainfall:59400",
@@ -66,44 +72,38 @@
       "gw0:rainfall:61200",
       61200,
       72600
-    ],
-    [
-      "gw0:routine:t0061800",
-      "gw0:rainfall:61800",
-      61800,
-      72600
     ]
   ],
   "examples_heard_after_deadline": [
     [
+      "gw0:routine:t0046200",
+      "gw0:rainfall:46200",
+      46200,
+      47400
+    ],
+    [
+      "gw0:routine:t0046800",
+      "gw0:rainfall:46800",
+      46800,
+      48600
+    ],
+    [
       "gw0:routine:t0047400",
       "gw0:rainfall:47400",
       47400,
-      48600
+      49800
     ],
     [
       "gw0:routine:t0048000",
       "gw0:rainfall:48000",
       48000,
-      49800
+      51000
     ],
     [
       "gw0:routine:t0048600",
       "gw0:rainfall:48600",
       48600,
-      51000
-    ],
-    [
-      "gw0:routine:t0049200",
-      "gw0:rainfall:49200",
-      49200,
       52200
-    ],
-    [
-      "gw0:routine:t0049800",
-      "gw0:rainfall:49800",
-      49800,
-      53400
     ]
   ]
 }

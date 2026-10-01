@@ -24,6 +24,10 @@ import os
 import numpy as np
 
 HERE = os.path.dirname(os.path.abspath(__file__))
+ROOT = os.path.normpath(os.path.join(HERE, "..", ".."))
+VENDORED_PYLIBS = os.path.join(ROOT, "libs", "pylibs")
+if VENDORED_PYLIBS not in sys.path:
+    sys.path.insert(0, VENDORED_PYLIBS)
 HGT_DIR = os.path.normpath(os.path.join(HERE, "..", "..", "data", "dem", "hgt"))
 S3 = "https://s3.amazonaws.com/elevation-tiles-prod/skadi"
 

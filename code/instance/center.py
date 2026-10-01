@@ -186,6 +186,9 @@ class CenterPolicy:
     def note_command_sent(self, node_id: str, payload: dict) -> None:
         """中心自己的记账：它发过什么。**这不是回执**，回执只能来自节点上报。"""
 
+    def note_command_refused(self, node_id: str, payload: dict) -> None:
+        """控制面在提交阶段明确拒绝该命令。默认策略不记；需要执行历史的策略可覆盖。"""
+
     # ------------------------------------------------ 跳过原因（诊断，不改变行为）
 
     def _skip(self, reason: str, node_id: str | None = None) -> None:

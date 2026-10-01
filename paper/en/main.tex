@@ -375,12 +375,13 @@ checks and frozen reference results.
 
 \subsection{Where the fixed-resource loss is}
 \label{sec:eval-frontier}
-Over Episode~I's 7560 routine obligations the strong maxcov/FIFO baseline delivers 3025 (0.400).
+Over Episode~I's 7560 routine obligations the strong maxcov/FIFO baseline delivers 3065 (0.405).
 Symmetric per-obligation counterfactuals widen one physical resource at a time, never the policy,
 and report set differences over identical obligation ids. Relaxing backhaul to unlimited gives
-4740 (0.627), relaxing energy (0.50~Wh, always-dense) gives 4089 (0.541), and both gives 6023
-(0.797); 1715 obligations are blocked by backhaul capacity alone, 1128 by battery alone, and 155
-(2.0\%) by both (Table~\ref{tab:walls}). These are intervention results on implemented strategies,
+4740 (0.627), relaxing energy (0.50~Wh, always-dense) gives 4128 (0.546), and both gives 6023
+(0.797); of the 4495 misses, 1675 are blocked by backhaul capacity alone, 1065 by battery alone,
+218 (4.8\%) by both and 1537 remain outside those two single-resource sets
+(Table~\ref{tab:walls}). These are intervention results on implemented strategies,
 not an exhaustive optimum; we make no zero-remainder or global-optimality claim. They locate substantial resource pressure at this operating point. The state-termination
 experiments address an additional execution effect under fixed resources; their motivation does
 not require proving that every scheduler has exhausted its headroom.
@@ -393,21 +394,22 @@ tested configurations; not an upper bound over all legal policies.}
 \input{../generated/table_walls.en.tex}
 \end{table}
 
-Charging each of the 4535 failures to its first failing segment, with ``heard'' required
-\emph{by the deadline} rather than at any later time, gives \senergy\ 2002 (44.1\%), \scap\ 1115
-(24.6\%), \saccess\ 830 (18.3\%) and \stime\ 588 (13.0\%). An earlier heard-ever accounting had
-reported \scap\ 1945 and \saccess\ 0: all 830 moved obligations were in fact sampled but first
+Charging each of the 4495 failures to its first failing segment, with ``heard'' required
+\emph{by the deadline} rather than at any later time, gives \senergy\ 2002 (44.5\%), \scap\ 1091
+(24.3\%), \saccess\ 814 (18.1\%) and \stime\ 588 (13.1\%). An earlier heard-ever accounting had
+reported \scap\ 1905 and \saccess\ 0: all 814 moved obligations were in fact sampled but first
 heard at the gateway after their deadline, late access rather than backhaul capacity. The
-delivered count (3025) is identical under both accountings; the correction changes \emph{where the
+delivered count (3065) is identical under both accountings; the correction changes \emph{where the
 loss is charged}, and therefore which mechanism could address it.
 
 \subsection{Record expiry: standard primitive, decisive placement}
 \label{sec:eval-record}
-During the Episode~I outage 75 backup packets carry 750 records; under FIFO 219 arrive centrally
-already expired against 261 on-time (45.6\%; 1270 of 2782 payload bytes). Gateway-only suppression
-removes those sends but withholds the acknowledgement, and on-time delivery falls $202\to194$: cost
-moves to the access segment. Source-local deadline expiry reverses the sign, raising outage on-time
-delivery $\cThreeSeedZeroFifo\to\cThreeSeedZeroPurge$ Across ten seeds
+Under the corrected deadline boundary, source-local expiration is evaluated directly against FIFO
+and AoI latest-only. An earlier gateway-only suppression witness had suggested a $202\to194$
+cross-segment penalty, but the same comparison becomes $226\to248$ after the shared gateway
+deadline correction; we therefore withdraw that witness rather than use it as mechanism evidence.
+Source-local deadline expiry raises seed-0 outage on-time delivery
+$\cThreeSeedZeroFifo\to\cThreeSeedZeroPurge$. Across ten seeds
 (Table~\ref{tab:purgeexpiry}) expiry raises mean service $\cThreeSvcFifo\to\cThreeSvcPurge$, a paired $+\cThreePairedPoints$ points
 (95\% CI $+\cThreePairedLo$ to $+\cThreePairedHi$, positive on all ten), total outage on-time delivery $\cThreeTenSeedFifo\to\cThreeTenSeedPurge$
 (\cThreeRatio$\times$), expired backup records $\cThreeExpiredFifo\to\cThreeExpiredPurge$, and deaths $\cThreeDeathsFifo\to\cThreeDeathsPurge$; it beats AoI latest-only by
@@ -420,8 +422,9 @@ basis plus source/gateway cross-segment consistency, not a new discard algorithm
 \begin{table}[t]
 \centering\small
 \caption{Ten-seed Episode~I sweep with the strong maxcov chooser fixed; only the edge disposition
-changes. Gateway-only suppression (not shown; same FIFO cache) gives 194 outage on-time at seed~0,
-against \cThreeSeedZeroFifo for FIFO and \cThreeSeedZeroPurge for source expiry---the cross-segment cost. $^{\dagger}$standard BPv7-style per-record lifetime; $^{\ddagger}$obligation-keyed purge, bit-identical to $^{\dagger}$.}
+changes. The earlier gateway-only suppression witness is omitted because its sign flips under the
+corrected gateway deadline boundary and is not used for the claim. $^{\dagger}$standard BPv7-style
+per-record lifetime; $^{\ddagger}$obligation-keyed purge, bit-identical to $^{\dagger}$.}
 \label{tab:purgeexpiry}
 \setlength{\tabcolsep}{3.5pt}\footnotesize
 \input{../generated/table_expiry.en.tex}
@@ -449,9 +452,10 @@ At $\eta=\cFivePeak$, the clock guard leaves \cFiveNightfloorDeadA\ and
 \cFiveNightfloorDeadB\ deaths in phases A and B. Fixed TTL 8~h yields zero deaths and yellow
 delivery counts $\cFiveTtlEightYellowA/\cFiveYellowNA$ and
 $\cFiveTtlEightYellowB/\cFiveYellowNB$, whereas TTL 4~h loses
-\cFiveTtlFourLostB\ deliveries in phase B. The evaluated energy-derived gate also yields zero
-deaths but loses \cFiveEnergyLostA\ and \cFiveEnergyLostB\ yellow deliveries relative to TTL
-8~h. Its predictive load approximation is conservative relative to the measured radio load;
+\cFiveTtlFourLostB\ deliveries in phase B. The evaluated energy-derived gate loses
+\cFiveEnergyLostA\ and \cFiveEnergyLostB\ yellow deliveries relative to TTL 8~h; it has zero
+deaths in phase A but one death in phase B, while the ordinary announced-validity and TTL-8 arms
+remain zero-death in both. Its predictive load approximation is conservative relative to the measured radio load;
 these results characterise that implementation, not all predictive energy control.
 The matrix establishes the utility of local fallback while providing no independent increment
 for the proposed energy-derived lease.
@@ -474,12 +478,12 @@ tables. Standard fallback remains a component of the execution system.
 
 \subsection{What the field can attribute when the table arrives}
 \label{sec:eval-attr}
-In Episode~I the delayed mission table reaches the gateway at $t_a{=}20$~h, by which point 2136
-yellow obligations are past deadline. Offline time-aware attribution labels all 2136 correctly
-(\stime\ 588, \scap\ 327, \saccess\ 650, \senergy\ 571). Using only evidence the gateway lawfully
-holds by $t_a$ labels 1138/2136 (53.3\%)---all geometric \stime\ (588), all in-time-not-returned
-\scap\ (327) and 223 provably late \saccess---at 100\% precision on the labelled subset; 998
-(46.7\%) remain unknown, whose offline truth is 571 never-sampled and 427 heard only after $t_a$
+In Episode~I the delayed mission table reaches the gateway at $t_a{=}20$~h, by which point 2112
+yellow obligations are past deadline. Offline time-aware attribution labels all 2112 correctly
+(\stime\ 588, \scap\ 321, \saccess\ 632, \senergy\ 571). Using only evidence the gateway lawfully
+holds by $t_a$ labels 1114/2112 (52.7\%)---all geometric \stime\ (588), all in-time-not-returned
+\scap\ (321) and 205 provably late \saccess---at 100\% precision on the labelled subset; 998
+(47.3\%) remain unknown, whose offline truth is 571 never-sampled and 427 heard only after $t_a$
 (Table~\ref{tab:attribution}). ``Never sampled'' and ``sampled but not yet heard'' are inseparable
 without evidence the gateway does not have, and must stay unknown, which is the original G5
 constraint. Compile-time geometry, needing no sample, emits 602 conditional no-return certificates
@@ -490,9 +494,9 @@ remote cause remains unresolved; configuration fallback separately requires prio
 
 \begin{table}[t]
 \centering\small
-\caption{Arrival-time attribution of the 2136 upgraded obligations already missed when their table
+\caption{Arrival-time attribution of the 2112 upgraded obligations already missed when their table
 reaches the gateway (Episode~I). The online projector is exact but partial; 427 matching samples
-are first heard after $t_a$ and 650 after their deadline.}
+are first heard after $t_a$ and 632 after their deadline.}
 \label{tab:attribution}
 \setlength{\tabcolsep}{3.5pt}\footnotesize
 \input{../generated/table_attribution.en.tex}
@@ -500,24 +504,25 @@ are first heard after $t_a$ and 650 after their deadline.}
 
 \subsection{Enforcement placement determines survival}
 \label{sec:eval-place}
-A centre-side feasibility \emph{envelope}---a pure filter over any planner using only confirmed
-configs, hearing counts, the authorised requirement and the clock---removes the command storm but
-cannot save the tightest seed, because a dusk downgrade must cross the backhaul and a Class~A
-window it misses. The same ``never stay dense overnight'' rule is a late, refusable suggestion at
-the centre and an enforceable local clamp at the node (Table~\ref{tab:r39}). Naive centre
-compliance kills 13 of 14 nodes on all three seeds (39 total) at service 0.162; adding the
-node-local guard removes all deaths at unchanged service; with the guard present the envelope
-additionally cuts refused admission attempts to 222. A zero-command pre-provisioned rhythm reaches
-0.360 service, matching every centre-compiled arm for these static missions---a scoped negative
-result on centre sampling control for pre-provisioned tasks. The ordinary local controller is
-therefore part of the baseline for any further runtime or Agent comparison.
+This placement experiment retains the historical clock envelope used by the registered r39 study:
+it hard-clamps dense operation at night/dusk and, in that historical interface, also treated a
+partial ACCESS receipt count as an unconfirmed centre-control condition. We preserve that rule only
+to isolate where the same clock clamp executes; the later evidence interface no longer makes the
+ACCESS-to-control inference. Under the corrected delivery-deadline boundary, naive centre compliance
+kills 13 of 14 nodes on all three seeds (39 total) at service 0.168. The historical centre envelope
+raises service to 0.366 but still leaves 12 deaths in the tight seed; placing the clock guard at the
+node gives the matched envelope-plus-local arm the same 0.366 service with zero deaths and 222
+refused admission attempts. A zero-command pre-provisioned rhythm reaches 0.362 service. These are
+point-specific placement results for a pre-provisioned rule, so the ordinary local controller enters
+later runtime/Agent comparisons as a baseline rather than as an Agent contribution.
 
 \begin{table*}[t]
 \centering\small
-\caption{Deterministic Episode~I placement study, no LLM. The local guard removes all permanent
-deaths in the tested seeds at unchanged service; the centre envelope alone cannot. Refused commands
-are rejected at admission and never transmitted, which is command hygiene rather than billing
-saving. Point-specific empirical results, not a survival invariant or optimal bound.}
+\caption{Deterministic Episode~I placement study, no LLM. The registered centre arm uses the
+historical clock envelope; the matched historical-envelope + local-guard pair keeps service at
+0.366 while removing all permanent deaths in the tested seeds. Refused commands are rejected at
+admission and never transmitted. Point-specific empirical results, not a survival invariant or
+optimal bound.}
 \label{tab:r39}
 \input{../generated/table_placement.en.tex}
 \end{table*}
@@ -531,11 +536,13 @@ decisions in total; all arms share harness, legal observation, tools, history an
 The study motivates and stress-tests the interface and is not used to establish the deterministic
 mechanisms.
 
-\emph{Service and survival, noisy at $n{=}3$.} A1 attains mean service 0.358, level with the 0.360
-deterministic safe floor, with 4 deaths; A0 0.296 with 35 deaths and A0s 0.222 with 39; the
+\emph{Service and survival, noisy at $n{=}3$.} In the frozen historical traces, A1 attains mean
+service 0.358 with 4 deaths; A0 0.296 with 35 deaths and A0s 0.222 with 39; the
 healthy-link controls give A0 0.275/13 and A1 0.511/0. Per-seed service overlaps, so we draw no
-service significance. The live agent loop was not wired to the local guard, so the four A1 seed-1
-deaths are not cleared by the deterministic result of \S\ref{sec:eval-place}.
+service significance. These physical values belong to the frozen pre-correction Agent corpus and
+are not numerically equated with the corrected-boundary placement table. The live agent loop was
+not wired to the local guard, so the four A1 seed-1 deaths are not cleared by the deterministic
+result of \S\ref{sec:eval-place}.
 
 \emph{Call accounting.} The 1089 decisions are not 1089 successful calls: 52 ended in a
 parse-failure hold from \texttt{max\_tokens} cutting the JSON mid-string. Per-arm parse-failure rates

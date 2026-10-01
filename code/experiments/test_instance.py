@@ -2083,7 +2083,8 @@ def test_deadline_boundary_consistency():
       2. 期限**已经过去**的记录不得再进批次（`<=` 修成 `<` 不能变成永不释放）；
       3. 两个部署位置（`generic_expiry` 与 `deadline_purge`）使用同一条边界。
 
-    判别证据（十种子 +1.47 点、10/10 为正）见 `results/retention_deadline_audit.json`。
+    当前修正后判别证据为十种子约 +1.50 点、10/10 为正；registered result 在本轮
+    batch reconciliation 后同步刷新。
     """
     print("\n[35] 截止边界一致性（同拍次序）")
 
@@ -2100,17 +2101,24 @@ def test_deadline_boundary_consistency():
         return n
 
     P = 600
-    taken = 0
-    expiry = taken + ((P - taken % P) + P)          # = 1200，与业务期限同刻
-    for service in ("generic_expiry", "deadline_purge"):
-        n = _fill(_node(service, P), taken)
-        out = [s.sample_id for s in n.batch(expiry)]
-        check(f"{service}：期限恰为当拍的记录仍进批次（不被先删）",
-              out == [f"{NODE}:{taken}"], f"batch({expiry})={out}")
-        n2 = _fill(_node(service, P), taken)
-        out2 = [s.sample_id for s in n2.batch(expiry + 60)]
-        check(f"{service}：期限已过则释放且不再进批次",
-              out2 == [] and n2.dropped == 1, f"batch({expiry + 60})={out2} dropped={n2.dropped}")
+    # 不只测整周期边界 taken=0：deadline_purge 的 `(taken//P+2)P` 与
+    # generic_expiry 的 `taken + (P-taken%P) + P` 应对任意相位严格同值。
+    for taken in (0, 60, 599, 600, 750, 1199):
+        expiry_generic = taken + ((P - taken % P) + P)
+        expiry_deadline = (taken // P + 2) * P
+        check(f"两种同期限公式逐相位相等 taken={taken}",
+              expiry_generic == expiry_deadline,
+              f"generic={expiry_generic} deadline={expiry_deadline}")
+        for service in ("generic_expiry", "deadline_purge"):
+            n = _fill(_node(service, P), taken)
+            out = [s.sample_id for s in n.batch(expiry_generic)]
+            check(f"{service}：期限恰为当拍仍进批次 taken={taken}",
+                  out == [f"{NODE}:{taken}"], f"batch({expiry_generic})={out}")
+            n2 = _fill(_node(service, P), taken)
+            out2 = [s.sample_id for s in n2.batch(expiry_generic + 60)]
+            check(f"{service}：期限已过释放 taken={taken}",
+                  out2 == [] and n2.dropped == 1,
+                  f"batch({expiry_generic + 60})={out2} dropped={n2.dropped}")
 
 def main() -> int:
     print("实例层验收（Task Contract v1.1）")

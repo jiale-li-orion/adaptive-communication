@@ -1,0 +1,14 @@
+{
+  "aggregate_sha256": "6d85f547e8358c447273a8aa612bf3a145d84d2bca05712bc0fb3d96f152f47b",
+  "audit_status": "PASS",
+  "axis_activation": {
+    "backhaul_outage": true,
+    "deployment_scale": true,
+    "evidence_owner": true,
+    "target_scope": true,
+    "weather_window": true
+  },
+  "claim_ceiling": "Infrastructure/benchmark robustness gate only. It validates that weather/outage/scope/owner/scale coordinates reach the real simulator/runtime while preserving paired reference physics; it does not establish a method gain on any robustness axis.",
+  "generator": "scripts/make_agentic_artifacts.py",
+  "result_root": "results/agentic/robustness-matrix-v1"
+}

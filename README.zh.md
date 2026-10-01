@@ -1,14 +1,16 @@
 中文 | [English](README.md)
 
-> **当前工作方向（探索中）。** 现在推进的是**候选方向探索**，不是新主张。待检验的问题：在可信任务权威尚未替它决定执行的地方，Agent 是否还有增量——也就是解释尚未完全结构化的操作要求，并且只索取那些「解开后会改变合法计划」的信息（在断续回传下）。这是进行中的探索：不发布任何结果、不改动任何主张状态，配置租约、单节点停止与保留视界调参保持关闭；[CLAIMS](results/CLAIMS.md) 仍是唯一的主张状态账本。正在评估的方向、进入条件与开放问题记在[论文闭环计划](paper/RESEARCH_PLAN.md)里。
+> **当前工作方向（探索中）。** 当前主线是**Evidence-Grounded Closed-Loop Agentic Communication**。方法分两层：①把现有通信 Data Plane 的 node/gateway/center/执行事件组织成带 provenance、owner、time、revision、freshness/reachability/status 的 **Evidence World**；②把 benchmark/业务层 **Operational Task** 编译成自包含的 **Runtime TaskContract / TaskRun**，由 `ContextManifest + Capability` 支撑多轮 reasoning，并把 evidence-use tool 与 communication-device tool 统一进同一 typed capability runtime。当前实验设计 authority 见 [Experiment Design v1](research/EXPERIMENT-DESIGN-v1.md)，建设顺序见 [ROADMAP](research/ROADMAP.md)；[CLAIMS](results/CLAIMS.md) 仍只持有历史冻结实验主张。
 
 # 间歇回传下灾前监测的本地通信控制
 
 研究电池与光伏供电的山区地灾监测网：LoRaWAN Class A 节点接入现场网关，蜂窝主回传配北斗短报文备用；备用仅上行，控制下行会随主回传中断。任务与预警等级由外部授权，系统负责监测要求的通信执行。
 
-**当前论文主线：失联后持续执行的通信状态，怎样依靠现场证据得到正确处置。** 未确认记录会继续占用重传批次，已安装密采配置会继续耗电；中心的正确判断仍可能因控制路径中断而无法执行。论文以这些物理后果为对象，研究源端释放、本地回退与分段证据接口。
+**原系统论文主线（已收敛为当前研究底座）：失联后持续执行的通信状态，怎样依靠现场证据得到正确处置。** 未确认记录会继续占用重传批次，已安装密采配置会继续耗电；中心即使做出正确判断，也可能因控制路径中断而无法执行。此前工作围绕这些物理后果研究源端期限释放、本地回退、分段执行证据与控制路径失效，并形成了当前 simulator、执行机制、信息边界和结果台账。相关结论继续按 [CLAIMS](results/CLAIMS.md) 的既有范围成立，也继续作为后续 Agent 研究必须复用的共同底座。
 
-**当前阶段：系统论文工作稿。** 已有组件级正结果；完整 runtime 相对同组件普通组合的独立增量、有限迁移验证和匹配能力的 Agent 验证仍待完成。配置租约、单节点停止与保留视界不再承担新算法主张。详细取舍与下一轮交付见 [论文闭环计划](paper/RESEARCH_PLAN.md)；每个主张的唯一状态见 [CLAIMS](results/CLAIMS.md)。
+**原系统论文阶段（历史状态）：系统论文工作稿。** 这一阶段已经得到组件级正结果，同时确认配置租约、单节点停止、保留视界等候选不承担新算法主张；完整 runtime 相对同组件普通组合的独立增量、有限迁移验证与匹配能力 Agent 验证当时仍未闭合。该阶段的设计取舍、负结果和未完成项继续保存在 [论文闭环计划](paper/RESEARCH_PLAN.md) 与 [CLAIMS](results/CLAIMS.md) 中，不因当前方向演进而删除。
+
+**当前研究主线：在上述同一场景、数据、通信能力和执行底座上，构造 Evidence World 与完整 Agent Runtime。** benchmark 层先定义 Operational Task，例如持续监测、风险升级、主回传中断维持、能源受限监测和恢复收口；harness 再把它编译成 Runtime TaskContract，组装 Context、发起多轮 evidence/device capability use，并将 action 真实作用到通信系统。最终同时评价通信结果（obligation delivery、latency、energy、backup/DtS cost、config execution）与 Agent runtime（Task grounding、EvidenceNeed、capability selection/arguments、Context sufficiency、stop/policy/failure attribution）。
 
 ## 1. 论文与阅读入口
 
@@ -16,7 +18,8 @@
 |---|---|
 | 中文稿 | [PDF](paper/zh/main.pdf) · [LaTeX](paper/zh/main.tex) |
 | 英文稿 | [PDF](paper/en/main.pdf) · [LaTeX](paper/en/main.tex) |
-| 技术选择、剩余证据与退出条件 | [RESEARCH_PLAN](paper/RESEARCH_PLAN.md) |
+| 当前 Agent 实验设计 | [Experiment Design v1](research/EXPERIMENT-DESIGN-v1.md) · [research/README](research/README.md) · [ROADMAP](research/ROADMAP.md) |
+| 系统论文闭环计划（历史阶段） | [RESEARCH_PLAN](paper/RESEARCH_PLAN.md) |
 | 逐主张复现 | [artifact/AE.md](artifact/AE.md) |
 | 结果来源 / 主张状态 / 部署条件 | [结果登记](results/README.md) · [CLAIMS](results/CLAIMS.md) · [spec](spec/README.md) |
 
@@ -36,10 +39,10 @@
 
 ## 3. 代表结果
 
-- **源端到期**：十种子相对 FIFO，按期服务配对 **+4.04 个百分点**，95% CI **[+3.48, +4.60]**；中断按期交付 **1691→4145（2.45 倍）**，过期备份记录 **2538→120**，死亡 **12→0**。这是标准逐记录到期在所测缓存模型中的安置效果，不是新的删除算法。[C3 结果](results/r37e_full_seeds.json)
+- **源端到期**：修正网关 deadline 边界后，十种子相对 FIFO，按期服务配对 **+3.59 个百分点**，95% CI **[+3.00, +4.19]**；中断按期交付 **2009→4227（2.10 倍）**，过期备份记录 **2100→0**，死亡 **12→0**。这是标准逐记录到期在所测缓存模型中的安置效果，不是新的删除算法。[C3 结果](results/r37e_full_seeds.json)
 - **配置终止**：固定 TTL 在两个受检相位覆盖候选的存活与黄级交付工作点。候选能量门没有独立收益；单节点声明模型中的普通组合也追平所扫风险权重下的同信息精确停止参照。
   [配置矩阵](results/c5_matrix.json) · [序列参照](results/c5_seqref.json)
-- **在线可知范围**：任务表到达时，网关凭当时合法证据可归因 1138/2136 条（53.3%），已判定部分全对，其余保持 unknown。这支持局部证据接口，不意味着任意时刻均能完整诊断。[C7 结果](results/r40_local_attribution.json)
+- **在线可知范围**：修正 deadline 边界后，任务表到达时网关凭当时合法证据可归因 **1114/2112 条（52.7%）**，已判定部分全对，**998 条**保持 unknown。这支持局部证据接口，不意味着任意时刻均能完整诊断。[C7 结果](results/r40_local_attribution.json)
 - **Agent 接口**：真实模型轨迹暴露了将 LoRa 接入收据当作回传状态的双向错误。v5 离线重放改善声明；独立的端到端机制增益尚未验证。[C8 入口](results/CLAIMS.md)
 
 资源放宽实验用于说明容量与能源压力，不作为所有调度器的上界。C10 到期边界修正归入实现语义，后续比较使用修正后的普通 expiry。
@@ -60,17 +63,11 @@
 | C10 | 到期边界修正 | supported |
 | C11 | 反向确认延迟界（条件性）；R1 关闭理由已撤回 | supported |
 
-## 4. 后续只推进三个闭环问题
+## 4. 当前实验阶段
 
-**主探索方向仍是 Agent 的任务规划与通信执行。** 当前真实模型实验主要是在结构化任务上选择逐节点周期。下一项判别是：针对剩余义务的计划修复，能否让同一个 Agent 超过同能力专家工具与普通保护组合。建立 Agent 系统收益不必先超过最强确定性控制器，具体设计见 [Agent 研究说明](paper/AGENT_RESEARCH.md)。
+当前不再继续寻找新的 toy perception case 作为开工前置条件，直接进入统一实验基础设施：`Operational Task -> Runtime TaskContract -> Evidence World / Context -> capability use -> physical execution -> Communication × Agent metrics`。09-28～10-01 的 action-closure 与 resource negative results继续保留，用于 benchmark validity、ordinary-baseline 与 ablation，不再阻塞 harness、LLM benchmark 或 full-sim 实验。
 
-1. **同组件组合有没有增量？** 固定 planner 和资源，比较普通组合与证据驱动动作准入；源端 expiry、本地保护、影子和确定性工具向两者开放。验证实际服务、损害和通信成本，以及有益动作误拒。
-2. **位置效果能迁移到哪些既有条件？** 选少量中断相位、接入/回传故障和采能条件，报告部署能力与字节/存储成本。保持现有场景，不做全轴乘积扫描。
-3. **同一个 Agent 接入后是否少做了有害动作？** 同能力专家规则对照与 runtime 对照共用观测、工具、本地保护和解析预算；先单模型隔离，再视结果跨模型确认。
-
-**次级研究入口：有限反向预算下的保留责任。** 当前中心收数后，仿真同步、零空口清除源缓存；真实的仅上行备用不自动提供这条反馈。候选研究确认/托管收据与配置消息共享 Class A 机会时，如何减少有效期内的重复执行。先证明预算确实绑定，并与普通托管、累计/位图 ACK 和允许捎带的组合比较；未发现差额就关闭，不把免费 ACK 改为付费本身认作收益。
-
-**已有工作闭环与新搜索分开。** v5 证据到动作的匹配能力验证继续推进，但不作为新构想；控制机会联合准入暂不扩展。租约、停止、视界、付费探测、条件计划等已走过方向的排除依据，以及上述新入口的先行工作和进入条件，均在 [计划](paper/RESEARCH_PLAN.md)。
+当前 pre-API 实验基础设施已经闭环。O1–O6 Operational Task 均可通过同一 typed runtime/full simulator 执行；O2 的 global/localized R3、R0/R1/R2 replay、ModelRequest/Attempt/Usage ledger、upstream/planner gold replacement 与 attribution evaluator 已落地。Agent 侧已有 deterministic comply、task-conditioned evidence-aware、diagnosis-first、fixed-order eager、generic-ReAct 五臂 5-seed baseline matrix；通信侧已有 Local、AoI、EnergyAware、mission-comply、backup EDF/maxcov 与 evaluator-only dynamic/delivery oracle 的 5-seed matrix。NASA POWER 2022/2023/2024 source-period、weather/outage/scope/owner/scale 五轴 robustness、S14/Qili source-derived Task transfer 与三种 model-context frozen inputs 也已通过审计。当前没有用 scripted backend 冒充模型结果；下一阶段直接接真实 API，先做 R1 frozen-input diagnosis，再进入 R3 physical consequence 与 failure attribution。
 
 ## 5. 场景与能力边界
 
@@ -85,12 +82,13 @@ make deps
 make data
 make check
 make tables ARGS=--check
+make agentic-preapi
 make paper
 ```
 
 两份稿件共享 [refs.bib](paper/refs.bib)，英文由 pdflatex 构建，中文由 XeTeX 构建。[构建说明](paper/README.md)列出环境与生成链。论文表格和事实宏由 `scripts/make_tables.py` 从结果文件生成，不手改 `paper/generated/`。
 
-`make check` 包括仿真、执行语义、主张、表格和序列参照检查及联合层锚点；不调用模型 API。逐主张命令与冻结参考见 [artifact/AE.md](artifact/AE.md) 和 [results/reference](results/reference/README.md)。模型调用需要另外配置凭据；决策数、请求数和解析失败分列。
+`make check` 包括仿真、执行语义、主张、表格、序列参照、Agent runtime 与联合层锚点；不调用模型 API。`make agentic-preapi` 统一重跑当前所有无需模型凭据的 Agent/communication baseline、source-period、robustness、task-transfer、attribution 与 model-input freeze，并从结果 JSON 自动刷新研究/结果文档。逐主张命令与冻结参考见 [artifact/AE.md](artifact/AE.md) 和 [results/reference](results/reference/README.md)。真实模型调用需要另外配置 endpoint/key；缺凭据时 runner 显式失败，不回退 scripted backend。
 
 ## 7. 仓库结构
 

@@ -245,7 +245,8 @@ def piecewise_routine_obligations(measurands: dict[str, str], hours: int,
                                   schedule: list[tuple[int, int, str]],
                                   window_s: int | None = None,
                                   grace_s: int | None = None,
-                                  half_open_after_first: bool = False) -> list[Obligation]:
+                                  half_open_after_first: bool = False,
+                                  scope=None) -> list[Obligation]:
     """按**外部授权的预警等级调度表**分段生成周期义务(DZ/T 0460 §5.3.3/§8.4.2)。
 
     ``schedule`` 为 ``[(start_s, period_s, level), ...]``,按 start 升序,首段 start=0;
@@ -267,6 +268,7 @@ def piecewise_routine_obligations(measurands: dict[str, str], hours: int,
     window,不解析 oid 格式。
     """
     schedule = sorted(schedule, key=lambda x: x[0])
+    scope_set = None if scope is None else set(scope)
     if len(schedule) == 1:
         return routine_obligations_by_node(measurands, hours, period_s=schedule[0][1],
                                            window_s=window_s, grace_s=grace_s)
@@ -274,7 +276,15 @@ def piecewise_routine_obligations(measurands: dict[str, str], hours: int,
     seg_ends = [seg[0] for seg in schedule[1:]] + [H]
     out: list[Obligation] = []
     for node_id, measurand in sorted(measurands.items()):
-        for (start, period, _level), end in zip(schedule, seg_ends):
+        # Operational Task scope only changes the nodes explicitly authorized by the task.
+        # Nodes outside scope continue the first-segment baseline for the whole run.  This keeps
+        # the business denominator aligned with the same scope seen by the planner/context.
+        node_schedule = schedule
+        node_seg_ends = seg_ends
+        if scope_set is not None and node_id not in scope_set:
+            node_schedule = [(0, schedule[0][1], schedule[0][2])]
+            node_seg_ends = [H]
+        for (start, period, _level), end in zip(node_schedule, node_seg_ends):
             w = period if window_s is None else window_s
             g = period if grace_s is None else grace_s
             k = 0

@@ -1,0 +1,25 @@
+{
+  "all_physical_equivalent": true,
+  "arms": [
+    "legacy_comply",
+    "task_conditioned",
+    "full_dump"
+  ],
+  "audit_status": "PASS",
+  "claim_ceiling": "This run validates the unified runtime and measures the O2 deterministic slice. It is not a claim that task-conditioned context improves physical service, because the deterministic planner is intentionally behavior-equivalent to legacy comply.",
+  "generator": "scripts/make_agentic_artifacts.py",
+  "result_root": "results/agentic/o2-localized-risk-escalation-v1",
+  "seeds": [
+    0,
+    1,
+    2,
+    3,
+    4
+  ],
+  "source_sha256": {
+    "aggregate.json": "6f7cb41d3f076664981f6843b135f0d8d739db4fef4aed36232d96b27c704993",
+    "experiment_contract.json": "e041c5c1a5e72b40e09ab615c9012ef7e3190ca22ffd5079c08df44db2a47d49",
+    "source_manifest.json": "48d357369b0efe7b91b7dca5ca41b6d98e1ce9538cd75628d386bcd1190a9250"
+  },
+  "table": "agentic_o2_localized"
+}

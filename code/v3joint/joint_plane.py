@@ -28,6 +28,7 @@ for _p in (_os.path.join(_HERE, "..", "monitoring"), _os.path.join(_HERE, "..", 
         _sys.path.insert(0, _p)
 
 from opportunity import ControlPlane, GatewayItem  # noqa: E402
+from repair_runtime import BackupDemand, BackupRepairView  # noqa: E402
 
 #: 接入段每条样本的线上编码字节（node_model.SAMPLE_BYTES），用于估算回传段占用。
 DEFAULT_SAMPLE_BYTES = {"displacement": 6, "rainfall": 4}
@@ -45,7 +46,11 @@ class JointControlPlane(ControlPlane):
               grace_s: int = 3600, sample_bytes: dict | None = None,
               obligations=None, suppress_duplicates: bool = True,
               backup_p_succ: float = 1.0, backup_loss_seed: int = 0,
-              mission_gate=None, nodes_ref=None) -> "JointControlPlane":
+              mission_gate=None, nodes_ref=None,
+              backup_boost_windows: list[tuple[int, int]] | tuple[tuple[int, int], ...] | None = None,
+              backup_boost_rate_s: int | None = None,
+              backup_boost_bytes: int | None = None,
+              backup_boost_controller=None) -> "JointControlPlane":
         obj = object.__new__(cls)
         obj.__dict__.update(src.__dict__)          # 同构接管：不丢任何 v1.1 状态
         obj.enable_backup = bool(enable_backup)
@@ -78,6 +83,18 @@ class JointControlPlane(ControlPlane):
         obj.backup_bytes_sent = 0        # 经备用发出的估算字节
         obj.backup_suppressed = 0        # 因同义务已送而抑制、未占稀缺窗的冗余样本
         obj.backup_local_purge = 0       # cert_purge: 网关本地核销的确定失约样本(不发、不占资费, 但ack释放节点重传)
+        #: **备用回传增强窗口**：现实动作可对应临时蜂窝/卫星/RDSS 高容量回传。
+        #: 仅在指定窗口内替换 `rate/bytes`，默认空集保持历史语义。成本账同时记录增强期
+        #: 实际发送的包/字节，不把“能力开启”伪装成免费。
+        obj.backup_boost_windows = tuple(
+            (int(lo), int(hi)) for lo, hi in (backup_boost_windows or ()) if int(hi) > int(lo))
+        obj.backup_boost_rate_s = int(backup_boost_rate_s or backup_rate_s)
+        obj.backup_boost_bytes = int(backup_boost_bytes or backup_bytes)
+        obj.backup_boost_packets = 0
+        obj.backup_boost_bytes_sent = 0
+        obj.backup_boost_records = 0
+        obj.backup_boost_controller = backup_boost_controller
+        obj.backup_boost_dynamic_ticks = 0
         # **主路专属**成功时刻：只在主回传真的交出数据时更新，备用成功不算主路恢复。
         # Instance 的 gateway_last_forward_ok_at 会把备用返回项也算作"转发成功"，策略要区分
         # "主路是否健康"时必须用这个干净信号。
@@ -179,7 +196,7 @@ class JointControlPlane(ControlPlane):
         _ONTIME_ONLY = ("maxcov_ontime", "cert_purge")
         if v in ("maxcov",) + _ONTIME_ONLY:
             # 阶段1: 反复选 边际新增有效义务覆盖/字节 最大者; tie=期限早, 再 tie=更新。
-            # maxcov 与 maxcov_ontime 的阶段1逐位相同(都只取 dl>t 的可挽救样本),
+            # maxcov 与 maxcov_ontime 的阶段1逐位相同(都只取 dl>=t 的可挽救样本),
             # 故两者的 on-time 义务覆盖集合一致; 差异仅在阶段2是否用已过期样本补满。
             while True:
                 best, bk = None, None
@@ -188,7 +205,10 @@ class JointControlPlane(ControlPlane):
                         continue
                     if used > 0 and used + e["b"] > cap:
                         continue
-                    fresh = [o for o in e["ok"] if o not in seen] if e["dl"] > t_s else []
+                    # Scorer accepts received_at <= deadline, and this method runs
+                    # before the current backup send.  Therefore deadline equality
+                    # is still a legal final opportunity; only dl < t is terminal.
+                    fresh = [o for o in e["ok"] if o not in seen] if e["dl"] >= t_s else []
                     if not fresh:
                         continue
                     key = (-len(fresh) / e["b"], e["dl"], -e["heard"])
@@ -199,10 +219,10 @@ class JointControlPlane(ControlPlane):
                 if take(best):
                     seen |= best["ok"]
             # 阶段2: 剩余容量最新优先补满。
-            #  maxcov        : 不因无新覆盖停发, 用最新样本(含已过期 dl<=t)补满 -> 资费花在过期样本;
-            #  maxcov_ontime : 证书感知, 只补仍可按期交付(dl>t)的样本, 已过期不补、槽宁可空。
+            #  maxcov        : 不因无新覆盖停发, 用最新样本(含已过期 dl<t)补满 -> 资费花在过期样本;
+            #  maxcov_ontime : 证书感知, 只补仍可按期交付(dl>=t)的样本, 已过期不补、槽宁可空。
             def _stage2_ok(e):
-                if v in _ONTIME_ONLY and e["dl"] <= t_s:
+                if v in _ONTIME_ONLY and e["dl"] < t_s:
                     return False
                 return True
             for e in sorted((e for e in E
@@ -210,9 +230,9 @@ class JointControlPlane(ControlPlane):
                             key=lambda e: (-e["heard"], e["dl"])):
                 take(e)
         else:
-            # 层0: 纯新增(义务与 seen 不相交)且仍可挽救(dl>t), dl 升序
+            # 层0: 纯新增(义务与 seen 不相交)且仍可挽救(dl>=t), dl 升序
             def _fresh0(e):
-                return (e["dl"] > t_s) and (not e["ok"] or e["ok"].isdisjoint(seen))
+                return (e["dl"] >= t_s) and (not e["ok"] or e["ok"].isdisjoint(seen))
             for e in sorted(E, key=lambda e: (e["dl"], e["heard"])):
                 if not _fresh0(e):
                     continue                      # 循环内用最新 seen 动态重判 disjoint
@@ -235,12 +255,55 @@ class JointControlPlane(ControlPlane):
         return picked, used
 
     # ---- 关键覆写：主回传之后，在同一拍叠加备用腿 ----
+    def _backup_repair_view(self, t_s: int) -> BackupRepairView:
+        demands = []
+        for it in self.gateway_pending:
+            for s in (it.payload or []):
+                dl, _, _ = self._sample_obl(s)
+                if dl < t_s:
+                    continue
+                b = self.sample_bytes.get(getattr(s, "measurand", "displacement"), 6)
+                demands.append(BackupDemand(deadline_s=int(dl), payload_bytes=int(b)))
+        return BackupRepairView(
+            now_s=int(t_s), tick_s=60,
+            primary_available=bool(self.backhaul_available(int(t_s // 3600))),
+            live_demands=tuple(demands),
+            base_rate_s=int(self.backup_rate_s),
+            base_payload_bytes=max(0, int(self.backup_bytes - self.backup_header_bytes)),
+        )
+
+    def backup_boost_active(self, t_s: int) -> bool:
+        static = any(lo <= t_s < hi for lo, hi in self.backup_boost_windows)
+        dynamic = False
+        if self.backup_boost_controller is not None:
+            dynamic = bool(self.backup_boost_controller.decide(self._backup_repair_view(t_s)))
+            if dynamic:
+                self.backup_boost_dynamic_ticks += 1
+        return static or dynamic
+
+    def backup_boost_duration_s(self) -> int:
+        if not self.backup_boost_windows:
+            return 0
+        ws = sorted(self.backup_boost_windows)
+        total = 0
+        lo, hi = ws[0]
+        for a, b in ws[1:]:
+            if a <= hi:
+                hi = max(hi, b)
+            else:
+                total += hi - lo
+                lo, hi = a, b
+        return total + hi - lo
+
     def backhaul_forward(self, t_s: int, delay_s: int = 0) -> list[GatewayItem]:
         self._pump_mission(t_s)   # 在线任务表更新随主回传可达性到达（默认 gate=None，零行为）
         primary = super().backhaul_forward(t_s, delay_s)   # 主路 down 时为 []，且保留 pending
         if primary:
             self.last_primary_ok_at = t_s                  # 主路专属成功（备用不计入）
-        if not self.enable_backup or t_s % self.backup_rate_s != 0:
+        boosted = self.backup_boost_active(t_s)
+        rate_s = self.backup_boost_rate_s if boosted else self.backup_rate_s
+        bytes_cap = self.backup_boost_bytes if boosted else self.backup_bytes
+        if not self.enable_backup or t_s % rate_s != 0:
             return primary
         # delay 未到的项本轮两种路径都不可发，与父类口径一致
         candidates = [i for i in self.gateway_pending
@@ -252,7 +315,7 @@ class JointControlPlane(ControlPlane):
             self.backup_gated += 1
             return primary
         self.backup_opportunities += 1
-        cap = self.backup_bytes - self.backup_header_bytes   # 净荷容量（整包只一个固定头）
+        cap = bytes_cap - self.backup_header_bytes   # 净荷容量（整包只一个固定头）
         # 展开为**跨节点样本流**：obligation 档按真实义务截止期全局排序（event 600s 自然先于
         # routine ~2h）；edf 档保留 item 级周期公式，作为"不看真实义务"的消融对照。
         stream = []
@@ -261,7 +324,7 @@ class JointControlPlane(ControlPlane):
             for s in (it.payload or []):
                 dl, _, okeys = self._sample_obl(s)
                 # salvage: 已过义务截止、再发也无法按期交付的样本不占稀缺包位
-                if self.backup_chooser == "salvage" and dl <= t_s:
+                if self.backup_chooser == "salvage" and dl < t_s:
                     self.backup_suppressed += 1
                     continue
                 if self.backup_chooser in ("obligation", "salvage"):
@@ -327,7 +390,7 @@ class JointControlPlane(ControlPlane):
                 remain.append(it)
         self.gateway_pending = remain
         if self.backup_chooser == "cert_purge" and self._nodes_ref is not None:
-            # 完整证书动作: 对"已听到、压在网关、按网关口径确定失约(dl<=t)"的剩余样本,
+            # 完整证书动作: 对"已听到、压在网关、按网关口径确定失约(dl<t)"的剩余样本,
             # 不花备份资费发送, 但**本地核销**——等价一次确认, 清掉节点未确认缓存, 使节点
             # FIFO 自动补发不再反复重传无可挽回记录、占满每拍批次名额(r37b: 只抑制发送而
             # 不核销, 会经节点重传把成本推回接入段, 拖慢新鲜样本 heard)。
@@ -341,7 +404,7 @@ class JointControlPlane(ControlPlane):
                 keep_s, drop_s = [], []
                 for s in pl:
                     dl, _, _ = self._sample_obl(s)
-                    (drop_s if dl <= t_s else keep_s).append(s)
+                    (drop_s if dl < t_s else keep_s).append(s)
                 if drop_s:
                     purge_n += len(drop_s)
                     _node = self._nodes_ref.get(it.node_id)
@@ -356,6 +419,10 @@ class JointControlPlane(ControlPlane):
             self.backup_local_purge += purge_n
         self.backup_packets += 1
         self.backup_bytes_sent += used + self.backup_header_bytes
+        if boosted:
+            self.backup_boost_packets += 1
+            self.backup_boost_bytes_sent += used + self.backup_header_bytes
+            self.backup_boost_records += sum(len(sp) for _, sp in picked_of.values())
         # 可选整包丢包(默认1.0不抽签、逐位锚点不变):整包以 p_succ 到达;失败则样本已移出 pending、
         # 资费照计但不进 out(不重传;对各 chooser 同等施加)。
         if self.backup_p_succ < 1.0 and self._bk_rng.random() > self.backup_p_succ:
@@ -371,4 +438,10 @@ class JointControlPlane(ControlPlane):
                 "backup_suppressed": self.backup_suppressed,
                 "backup_local_purge": self.backup_local_purge,
                 "backup_rate_s": self.backup_rate_s, "backup_bytes": self.backup_bytes,
-                "backup_chooser": self.backup_chooser, "backup_failover": self.backup_failover}
+                "backup_chooser": self.backup_chooser, "backup_failover": self.backup_failover,
+                "backup_boost_duration_s": self.backup_boost_duration_s(),
+                "backup_boost_rate_s": self.backup_boost_rate_s,
+                "backup_boost_bytes": self.backup_boost_bytes,
+                "backup_boost_packets": self.backup_boost_packets,
+                "backup_boost_bytes_sent": self.backup_boost_bytes_sent,
+                "backup_boost_records": self.backup_boost_records}

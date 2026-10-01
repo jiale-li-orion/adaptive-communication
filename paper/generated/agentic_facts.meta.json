@@ -1,0 +1,87 @@
+{
+  "definitions": {
+    "agenticDiagnosisCapabilityRequests": "4.00",
+    "agenticDiagnosisContexts": "2.00",
+    "agenticDiagnosisMaterializedBytes": "65046.8",
+    "agenticDiagnosisModelRequests": "2.00",
+    "agenticDiagnosisPercepts": "4.00",
+    "agenticEvidenceAwareExtraCapabilities": "0.00",
+    "agenticFixedOrderCapabilityRequests": "28.00",
+    "agenticFixedOrderMaterializedBytes": "480537.8",
+    "agenticFixedOrderModelRequests": "14.00",
+    "agenticFullDumpProtocolBytes": "31293.4",
+    "agenticGenericReactCapabilityRequests": "0.00",
+    "agenticGenericReactContexts": "0.00",
+    "agenticGenericReactMaterializedBytes": "-377527.4",
+    "agenticGenericReactModelRequests": "0.00",
+    "agenticGenericReactProtocolBytes": "26943.2",
+    "agenticGlobalBackupBytes": "2141.6",
+    "agenticGlobalCollection": "0.51062",
+    "agenticGlobalEnergy": "0.35077",
+    "agenticGlobalLatencyP": "468.0",
+    "agenticGlobalTdr": "0.32436",
+    "agenticLocalCollection": "0.61124",
+    "agenticLocalConfirmRate": "85.00",
+    "agenticLocalDumpBytes": "29575.6",
+    "agenticLocalDumpEvidence": "27.32",
+    "agenticLocalLatencyP": "3000.0",
+    "agenticLocalSufficiency": "1.000",
+    "agenticLocalTaskBytes": "19763.6",
+    "agenticLocalTaskEvidence": "10.32",
+    "agenticLocalTdr": "0.45020",
+    "agenticRobustnessAxes": "5",
+    "agenticRobustnessCoordinates": "10",
+    "agenticSourceHarvestTwentyFour": "0.09480",
+    "agenticSourceHarvestTwentyThree": "0.14674",
+    "agenticSourceHarvestTwentyTwo": "0.14604",
+    "agenticTaskContextProtocolBytes": "31293.4"
+  },
+  "generator": "scripts/make_agentic_artifacts.py",
+  "sources": {
+    "baseline_matrix": {
+      "aggregate_sha256": "c55d08255e51bd66cd876066fe3312cc53f9d49d71e90dc278ac37ff85dd4a14",
+      "all_physical_equal_reference": true,
+      "audit_status": "PASS",
+      "root": "results/agentic/o2-baseline-matrix-v1"
+    },
+    "diagnosis_first": {
+      "aggregate_sha256": "c1f3b67ccc00b24467270696431f8b54cbe164b8edff8ec04c03a47baf28ee60",
+      "all_physical_equal": true,
+      "audit_status": "PASS",
+      "root": "results/agentic/o2-diagnosis-first-v1"
+    },
+    "global": {
+      "aggregate_sha256": "21d5ac9117947a49b368b4cfbc986b9a1eedaf21c0257a9c043a94835f064553",
+      "all_physical_equivalent": true,
+      "audit_status": "PASS",
+      "root": "results/agentic/o2-risk-escalation-v1"
+    },
+    "localized": {
+      "aggregate_sha256": "6f7cb41d3f076664981f6843b135f0d8d739db4fef4aed36232d96b27c704993",
+      "all_physical_equivalent": true,
+      "audit_status": "PASS",
+      "root": "results/agentic/o2-localized-risk-escalation-v1"
+    },
+    "model_context_inputs": {
+      "path": "results/agentic/model-context-inputs-v1/global/seed-000/frozen_input_manifest.json",
+      "sha256": "7b58a76a6ec2dd47bb3e1f4cca8dd270350f835cf749ea7c943e3eebbe4f3e5a"
+    },
+    "robustness": {
+      "aggregate_sha256": "6d85f547e8358c447273a8aa612bf3a145d84d2bca05712bc0fb3d96f152f47b",
+      "audit_status": "PASS",
+      "axis_activation": {
+        "backhaul_outage": true,
+        "deployment_scale": true,
+        "evidence_owner": true,
+        "target_scope": true,
+        "weather_window": true
+      },
+      "root": "results/agentic/robustness-matrix-v1"
+    },
+    "source_period": {
+      "path": "results/agentic/source-period-smoke-v1.json",
+      "sha256": "30a3b66a1ab72c2aec68fd2f98192968a9783cae316fd4ae3969329fe73bf825",
+      "status": "PASS"
+    }
+  }
+}

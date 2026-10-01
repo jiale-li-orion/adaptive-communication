@@ -1,0 +1,145 @@
+{
+  "experiment_id": "task-transfer-qili-v1",
+  "seeds": [
+    0,
+    1,
+    2,
+    3,
+    4
+  ],
+  "task_schedules": {
+    "hand_authored_o2": {
+      "task_id": "o2-risk-escalation-v1",
+      "task_revision": 1,
+      "family": "risk_escalation",
+      "principal": "external-emergency-monitoring-authority",
+      "target_node_ids": [],
+      "measurands": [
+        "displacement"
+      ],
+      "phases": [
+        {
+          "start_s": 0,
+          "required_period_s": 3600,
+          "level": "blue"
+        },
+        {
+          "start_s": 21600,
+          "required_period_s": 300,
+          "level": "yellow"
+        }
+      ],
+      "task_horizon_s": 43200,
+      "authorized_effects": [
+        "communication.config.set_sampling_interval",
+        "communication.config.set_report_period"
+      ],
+      "source_refs": [
+        "S04",
+        "task-contract-v1.1"
+      ],
+      "scoring_profile_ref": "communication-physical-v1",
+      "metadata": {
+        "risk_authority": "external",
+        "primary_metric": "timely_obligation_delivery_rate"
+      }
+    },
+    "qili_source_derived": {
+      "task_id": "transfer:qili-2016-rainfall-deformation-v1:12h",
+      "task_revision": 1,
+      "family": "risk_escalation",
+      "principal": "external-emergency-monitoring-authority",
+      "target_node_ids": [],
+      "measurands": [
+        "displacement"
+      ],
+      "phases": [
+        {
+          "start_s": 0,
+          "required_period_s": 3600,
+          "level": "blue"
+        },
+        {
+          "start_s": 14400,
+          "required_period_s": 300,
+          "level": "yellow"
+        },
+        {
+          "start_s": 28800,
+          "required_period_s": 3600,
+          "level": "blue"
+        }
+      ],
+      "task_horizon_s": 43200,
+      "authorized_effects": [
+        "communication.config.set_sampling_interval",
+        "communication.config.set_report_period"
+      ],
+      "source_refs": [
+        "S14"
+      ],
+      "scoring_profile_ref": "communication-physical-v1",
+      "metadata": {
+        "risk_authority": "external-source-derived",
+        "source_site": "Qili connection-line monitored high-steep slopes, Zhejiang, China",
+        "source_profile_id": "qili-2016-rainfall-deformation-v1",
+        "transform_rule": "ordered-regime transfer: published pre-heavy-rain / heavy-rain deformation-acceleration / post-heavy-rain stabilization sequence -> three equal 4 h benchmark phases",
+        "claim_boundary": "source-derived phase ordering only; 3600 s/300 s communication profiles and equal-duration compression are benchmark A-layer choices, not Qili field warning thresholds",
+        "source_phases": [
+          {
+            "label": "pre-heavy-rain relative stability",
+            "real_period": "2016-01-31/2016-04-20",
+            "source_ref": "S14",
+            "source_observation": "reported deformation was relatively stable before the heavy-rain interval",
+            "benchmark_start_s": 0,
+            "required_period_s": 3600,
+            "level": "blue"
+          },
+          {
+            "label": "heavy-rain deformation acceleration",
+            "real_period": "2016-04-21/2016-06-07",
+            "source_ref": "S14",
+            "source_observation": "637 mm heavy rainfall and increased GPS deformation rates were reported",
+            "benchmark_start_s": 14400,
+            "required_period_s": 300,
+            "level": "yellow"
+          },
+          {
+            "label": "post-heavy-rain stabilization",
+            "real_period": "after 2016-06-07",
+            "source_ref": "S14",
+            "source_observation": "reported deformation rate subsequently stabilized",
+            "benchmark_start_s": 28800,
+            "required_period_s": 3600,
+            "level": "blue"
+          }
+        ]
+      }
+    }
+  },
+  "planner_consumer": "DeterministicComplyPlannerConsumer",
+  "context_mode": "task_conditioned",
+  "simulator": {
+    "task_hours": 12,
+    "tail_hours": 1,
+    "groups": 2,
+    "sample_interval_s": 3600,
+    "report_period_s": 3600,
+    "routine_period_s": 3600,
+    "harvest_mode": "irradiance",
+    "harvest_peak_wh_per_hour": 0.01,
+    "irradiance_year": 2023,
+    "irradiance_start_hour": 3624,
+    "capacity_wh": 0.05,
+    "initial_soc": 1.0,
+    "outage_start_h": 4.0,
+    "outage_hours": 4.0,
+    "enable_backup": true,
+    "backup_rate_s": 120,
+    "backup_bytes": 200,
+    "execution_feedback": true
+  },
+  "simulator_authority": "code/agentic_communication/run.py::DEFAULT_FULLSIM",
+  "method_invariant": "same deployment/exogenous communication world/runtime/capabilities/planner/scorer; only Operational Task authority/schedule changes",
+  "claim_ceiling": "Secondary task-authority transfer only. Supports that a literature-derived monitoring regime can be compiled and executed through the unchanged Agentic Communication runtime with paired physical equivalence. Cross-schedule metric differences are task-demand differences, not method gains; the compressed schedule is not a Qili field warning threshold."
+}

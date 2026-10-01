@@ -1,0 +1,255 @@
+{
+  "coordinates": [
+    {
+      "axis": "weather_window",
+      "coordinate_id": "weather:early",
+      "expected_owner_classes": [
+        "center"
+      ],
+      "level": "early",
+      "notes": "A-layer weather-window coordinate over source-grounded NASA POWER input",
+      "seed": 0,
+      "simulator_overrides": {
+        "backhaul_p_good": 1.0,
+        "capacity_wh": 0.03,
+        "execution_feedback": true,
+        "harvest_mode": "irradiance",
+        "harvest_peak_wh_per_hour": 0.003,
+        "initial_soc": 0.1,
+        "irradiance_start_hour": 728,
+        "irradiance_year": 2023,
+        "outage_hours": 0.0,
+        "tail_hours": 1,
+        "task_hours": 4
+      },
+      "task_hours": 4,
+      "task_key": "O4"
+    },
+    {
+      "axis": "weather_window",
+      "coordinate_id": "weather:late",
+      "expected_owner_classes": [
+        "center"
+      ],
+      "level": "late",
+      "notes": "same task/deployment, different source-data window",
+      "seed": 0,
+      "simulator_overrides": {
+        "backhaul_p_good": 1.0,
+        "capacity_wh": 0.03,
+        "execution_feedback": true,
+        "harvest_mode": "irradiance",
+        "harvest_peak_wh_per_hour": 0.003,
+        "initial_soc": 0.1,
+        "irradiance_start_hour": 6488,
+        "irradiance_year": 2023,
+        "outage_hours": 0.0,
+        "tail_hours": 1,
+        "task_hours": 4
+      },
+      "task_hours": 4,
+      "task_key": "O4"
+    },
+    {
+      "axis": "backhaul_outage",
+      "coordinate_id": "outage:short-early",
+      "expected_owner_classes": [
+        "center",
+        "gateway"
+      ],
+      "level": "short_early",
+      "notes": "",
+      "seed": 0,
+      "simulator_overrides": {
+        "backhaul_p_good": 1.0,
+        "enable_backup": true,
+        "execution_feedback": true,
+        "harvest_mode": "uniform",
+        "harvest_wh_per_hour": 3.0,
+        "outage_hours": 1.0,
+        "outage_start_h": 0.5,
+        "tail_hours": 1,
+        "task_hours": 4
+      },
+      "task_hours": 4,
+      "task_key": "O3"
+    },
+    {
+      "axis": "backhaul_outage",
+      "coordinate_id": "outage:long-late",
+      "expected_owner_classes": [
+        "center",
+        "gateway"
+      ],
+      "level": "long_late",
+      "notes": "",
+      "seed": 0,
+      "simulator_overrides": {
+        "backhaul_p_good": 1.0,
+        "enable_backup": true,
+        "execution_feedback": true,
+        "harvest_mode": "uniform",
+        "harvest_wh_per_hour": 3.0,
+        "outage_hours": 3.0,
+        "outage_start_h": 2.0,
+        "tail_hours": 1,
+        "task_hours": 6
+      },
+      "task_hours": 6,
+      "task_key": "O3"
+    },
+    {
+      "axis": "target_scope",
+      "coordinate_id": "scope:global",
+      "expected_owner_classes": [
+        "center"
+      ],
+      "level": "global",
+      "notes": "",
+      "seed": 0,
+      "simulator_overrides": {},
+      "task_hours": 12,
+      "task_key": "O2"
+    },
+    {
+      "axis": "target_scope",
+      "coordinate_id": "scope:localized",
+      "expected_owner_classes": [
+        "center"
+      ],
+      "level": "localized",
+      "notes": "",
+      "seed": 0,
+      "simulator_overrides": {},
+      "task_hours": 12,
+      "task_key": "O2_LOCAL"
+    },
+    {
+      "axis": "evidence_owner",
+      "coordinate_id": "owner:center-only",
+      "expected_owner_classes": [
+        "center"
+      ],
+      "level": "center_only",
+      "notes": "",
+      "seed": 0,
+      "simulator_overrides": {
+        "backhaul_p_good": 1.0,
+        "execution_feedback": true,
+        "harvest_mode": "uniform",
+        "harvest_wh_per_hour": 3.0,
+        "outage_hours": 0.0,
+        "tail_hours": 1,
+        "task_hours": 4
+      },
+      "task_hours": 4,
+      "task_key": "O1"
+    },
+    {
+      "axis": "evidence_owner",
+      "coordinate_id": "owner:center-gateway",
+      "expected_owner_classes": [
+        "center",
+        "gateway"
+      ],
+      "level": "center_gateway",
+      "notes": "",
+      "seed": 0,
+      "simulator_overrides": {
+        "backhaul_p_good": 1.0,
+        "enable_backup": true,
+        "execution_feedback": true,
+        "harvest_mode": "uniform",
+        "harvest_wh_per_hour": 3.0,
+        "outage_hours": 0.0,
+        "tail_hours": 1,
+        "task_hours": 4
+      },
+      "task_hours": 4,
+      "task_key": "O3"
+    },
+    {
+      "axis": "deployment_scale",
+      "coordinate_id": "scale:one-group",
+      "expected_owner_classes": [
+        "center"
+      ],
+      "level": "one_group",
+      "notes": "",
+      "seed": 0,
+      "simulator_overrides": {
+        "backhaul_p_good": 1.0,
+        "execution_feedback": true,
+        "groups": 1,
+        "harvest_mode": "uniform",
+        "harvest_wh_per_hour": 3.0,
+        "outage_hours": 0.0,
+        "tail_hours": 1,
+        "task_hours": 4
+      },
+      "task_hours": 4,
+      "task_key": "O1"
+    },
+    {
+      "axis": "deployment_scale",
+      "coordinate_id": "scale:two-group",
+      "expected_owner_classes": [
+        "center"
+      ],
+      "level": "two_group",
+      "notes": "",
+      "seed": 0,
+      "simulator_overrides": {
+        "backhaul_p_good": 1.0,
+        "execution_feedback": true,
+        "groups": 2,
+        "harvest_mode": "uniform",
+        "harvest_wh_per_hour": 3.0,
+        "outage_hours": 0.0,
+        "tail_hours": 1,
+        "task_hours": 4
+      },
+      "task_hours": 4,
+      "task_key": "O1"
+    }
+  ],
+  "rule": "axis-wise paired coordinates validate that robustness axes reach the real full simulator; this manifest is not a Cartesian sweep and carries no method-gain claim",
+  "schema_revision": "1",
+  "summary": {
+    "backhaul_outage": {
+      "levels": [
+        "short_early",
+        "long_late"
+      ],
+      "n_coordinates": 2
+    },
+    "deployment_scale": {
+      "levels": [
+        "one_group",
+        "two_group"
+      ],
+      "n_coordinates": 2
+    },
+    "evidence_owner": {
+      "levels": [
+        "center_only",
+        "center_gateway"
+      ],
+      "n_coordinates": 2
+    },
+    "target_scope": {
+      "levels": [
+        "global",
+        "localized"
+      ],
+      "n_coordinates": 2
+    },
+    "weather_window": {
+      "levels": [
+        "early",
+        "late"
+      ],
+      "n_coordinates": 2
+    }
+  }
+}

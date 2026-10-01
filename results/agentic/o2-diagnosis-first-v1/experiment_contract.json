@@ -1,0 +1,38 @@
+{
+  "experiment_id": "o2-diagnosis-first-v1",
+  "seeds": [
+    0,
+    1,
+    2,
+    3,
+    4
+  ],
+  "task_id": "o2-risk-escalation-v1",
+  "arms": [
+    "deterministic_comply",
+    "diagnosis_first_fixed"
+  ],
+  "context_mode": "task_conditioned",
+  "simulator": {
+    "task_hours": 12,
+    "tail_hours": 1,
+    "groups": 2,
+    "sample_interval_s": 3600,
+    "report_period_s": 3600,
+    "routine_period_s": 3600,
+    "harvest_mode": "irradiance",
+    "harvest_peak_wh_per_hour": 0.01,
+    "irradiance_year": 2023,
+    "irradiance_start_hour": 3624,
+    "capacity_wh": 0.05,
+    "initial_soc": 1.0,
+    "outage_start_h": 4.0,
+    "outage_hours": 4.0,
+    "enable_backup": true,
+    "backup_rate_s": 120,
+    "backup_bytes": 200,
+    "execution_feedback": true
+  },
+  "simulator_authority": "code/agentic_communication/run.py::DEFAULT_FULLSIM",
+  "claim_ceiling": "Deterministic efficiency baseline only: on O2, a fixed gateway diagnosis phase can increase Agent/model/tool/context work without changing the paired communication policy or physical outcome. No LLM-quality or general communication gain is claimed."
+}

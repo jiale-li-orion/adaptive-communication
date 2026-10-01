@@ -1,0 +1,347 @@
+\documentclass[journal,10pt]{IEEEtran}
+\usepackage{amsmath,amssymb}
+\usepackage{booktabs}
+\usepackage{array}
+\usepackage{graphicx}
+\usepackage[dvipsnames]{xcolor}
+\usepackage[colorlinks=true,linkcolor=NavyBlue,citecolor=PineGreen,urlcolor=NavyBlue]{hyperref}
+\usepackage{xspace}
+\input{../../generated/agentic_facts.tex}
+\raggedbottom
+
+\title{\textbf{Can LLM Agents Keep Disaster Monitoring Alive?\\
+An Evidence-Grounded Closed-Loop Benchmark for Agentic Communication}}
+
+\author{Working draft --- \texttt{adaptive-communication} repository}
+\date{}
+
+\begin{document}
+\maketitle
+
+\begin{abstract}
+Disaster-agent benchmarks typically expose a heterogeneous data environment and ask an agent to
+assemble evidence, call tools, and produce an answer. Real pre-disaster monitoring adds a harder
+constraint: evidence acquisition, context freshness, control actions, and the physical outcome
+are coupled through the same intermittent communication system. We formulate this setting as
+\emph{evidence-grounded closed-loop Agentic Communication}. A source-grounded physical/data
+plane produces a versioned Evidence World; an externally authorised Operational Task is compiled
+into a typed Agent runtime with explicit EvidenceNeed, Context, and Capability contracts; and
+device actions execute on the same battery, LoRaWAN Class~A, backhaul, backup, and direct-to-
+satellite simulator used for communication scoring. The benchmark separates model diagnostics
+from physical outcome through R0--R3 replay, owner-scoped evidence semantics, action lifecycle
+tracking, strong deterministic baselines, evaluator-only oracles, and cumulative gold
+replacement. Current deterministic validation establishes runtime/physics equivalence, exposes
+the cost of eager diagnosis and fixed-order probing, validates source-period and robustness
+coordinates, and verifies layer-wise attribution without fabricating model scores. The remaining
+model study uses frozen task-conditioned, FullDump, and generic-ReAct inputs under the same
+capability surface and physical reference.
+\end{abstract}
+
+\begin{IEEEkeywords}
+Agentic communication, disaster monitoring, LLM agents, intermittent connectivity, evidence,
+context, LoRaWAN, resilient sensing, benchmark.
+\end{IEEEkeywords}
+
+\section{Introduction}
+Recent disaster-agent benchmarks demonstrate that language-model agents can orchestrate
+heterogeneous geospatial data and typed tools across long workflows~\cite{dora2026}. Their world,
+however, is primarily a readable computational environment: once a dataset or tool endpoint is
+available, the agent can invoke it without changing the underlying disaster-monitoring network.
+That abstraction omits a central difficulty of field operations. In a mountain monitoring
+system, the evidence an agent needs may reside at a node or gateway, the path needed to retrieve
+it may be the path that has failed, and the same scarce communication opportunity may also be
+needed to install the corrective action.
+
+We study this closed loop in pre-disaster geohazard monitoring. Battery/solar sensor nodes report
+through LoRaWAN Class~A to a field gateway; cellular backhaul can fail intermittently; backup,
+terminal direct-to-satellite (DtS), access assist, and remote sampling/report configuration are
+available communication capabilities. Hazard authority remains external: the Agent does not
+predict a landslide or invent a warning level. Its job is to execute an authorised monitoring
+task while evidence, context, and actuation are constrained by the communication system itself.
+
+The paper is organised around two method objects:
+\begin{equation}
+\boxed{\text{Physical/Data Plane}\rightarrow\text{Evidence World}}
+\label{eq:method-evidence}
+\end{equation}
+and
+\begin{equation}
+\boxed{\text{Operational Task}\rightarrow\text{Task-conditioned Agent Runtime}}.
+\label{eq:method-runtime}
+\end{equation}
+The first gives observations explicit provenance, owner, revision, freshness, reachability and
+status semantics. The second turns a benchmark-level monitoring task into Runtime TaskContracts,
+EvidenceNeeds, versioned Context, typed evidence-use/device-use capabilities, structured planner
+decisions, and physical effects. Both are evaluated on the same simulator and scorer as ordinary
+communication baselines.
+
+\subsection{Contributions and current boundary}
+The current artifact makes four concrete contributions.
+\begin{enumerate}
+\item \textbf{A closed-loop benchmark abstraction.} We distinguish Operational Task semantics
+from Agent-runtime TaskContracts, and define a typed Evidence World that never exposes simulator
+hidden truth as Agent evidence.
+\item \textbf{A unified capability/runtime interface.} Evidence reads and communication-device
+actions share authority, owner/path, failure, lifecycle, latency/resource, and effect contracts;
+five device capabilities execute through existing physical mechanisms.
+\item \textbf{Communication $\times$ Agent evaluation.} Physical monitoring outcome remains
+primary while R0--R3 replay, frozen-input trajectory metrics, model-call ledgers, oracles, and
+gold replacement localise failures without collapsing them into an arbitrary overall score.
+\item \textbf{A reproducible experimental substrate.} O1--O6 tasks, source-period splits,
+robustness coordinates, deterministic Agent baselines, source-derived task transfer, and all
+paper tables are generated from frozen manifests/results.
+\end{enumerate}
+No real LLM score is claimed in the current snapshot: the model protocol and transport are
+frozen, while model runs require an external endpoint/key and cannot silently fall back to a
+scripted consumer.
+
+\section{Scenario and System Model}
+\label{sec:system}
+We consider pre-disaster mountain monitoring with nodes $i\in\mathcal N$, a gateway $g$, and a
+centre $c$. Time is slotted. A monitoring obligation
+\begin{equation}
+o=(i,m,r_o,[s_o,e_o],d_o)
+\end{equation}
+requires measurand $m$ from node $i$ to be sampled within $[s_o,e_o]$ and delivered centrally by
+$d_o$. Its success indicator is $I_o^{\rm succ}$ and the primary service metric is
+\begin{equation}
+\mathrm{TDR}=\frac{1}{|\mathcal O|}\sum_{o\in\mathcal O} I_o^{\rm succ}.
+\label{eq:tdr}
+\end{equation}
+Collection, missing delivery, censoring, latency, Age of Information (AoI), recovery and resource
+metrics are reported separately; the Agent never removes an obligation from the denominator.
+
+Each node maintains battery $B_{i,t}$, source cache $Q_{i,t}$ and installed configuration
+$C_{i,t}$. Battery evolution follows
+\begin{equation}
+\begin{aligned}
+B_{i,t+1}=\min\!\Bigl\{B_i^{\max},\bigl[&B_{i,t}+H_{i,t}
+-E^{\rm sense}_{i,t}-E^{\rm UL}_{i,t}\\
+&-E^{\rm DL}_{i,t}-E^{\rm DtS}_{i,t}-E^{\rm other}_{i,t}\bigr]^+\Bigr\},
+\end{aligned}
+\label{eq:battery}
+\end{equation}
+where $H_{i,t}$ can be driven by source-period-separated NASA POWER irradiance. A successful
+Class~A uplink opens bounded receive opportunities; a centre-originated configuration therefore
+requires both a return/control path and a valid access opportunity. Gateway backup, terminal DtS,
+and access-assist reuse their existing physical implementations and counters rather than Agent-
+reported success.
+
+The complete physical state is $x_t$ and exogenous process is $\xi_t$:
+\begin{equation}
+x_{t+1}=F(x_t,a_t,\xi_t;\phi).
+\label{eq:physics}
+\end{equation}
+The Agent does not observe $x_t$. At owner/location $\ell$, only a legal observation
+$z_t=H(x_{\le t},a_{<t},\xi_{\le t},\ell)$ can enter the runtime.
+
+\section{Data and Evidence World}
+\label{sec:evidence}
+A typed evidence item is
+\begin{equation}
+e_j=(p_j,v_j,s_j,o_j,t_j^{\rm gen},t_j^{\rm obs},\rho_j,\nu_j,\sigma_j),
+\label{eq:evidence}
+\end{equation}
+containing proposition/value, source/provenance, owner, generation/observation times, revision,
+freshness semantics and status. Status distinguishes at least CURRENT, STALE, NONE\_RECENT,
+UNREACHABLE, TIMEOUT and NEGATIVE observation. These distinctions prevent an absent packet from
+being silently interpreted as a negative fact.
+
+The Evidence World at time $t$ is
+\begin{equation}
+\mathcal E_t=\{e_j:t_j^{\rm obs}\le t,\ e_j\text{ passes the runtime gate}\}.
+\end{equation}
+Evidence revision changes only when factual content changes; age and AoI are derived at
+materialisation time. Owner-scoped gateway reads cross the same backhaul abstraction: when that
+path is unavailable the Agent receives UNREACHABLE rather than gateway truth.
+
+The primary benchmark uses a source-grounded hybrid simulator: SRTM/ITM terrain propagation,
+NASA POWER irradiance/temperature, ChirpBox-derived temporal link processes, public communication
+and geohazard-monitoring constraints, and the frozen event-driven monitoring simulator. Source
+years are split before random seeds; the current manifest uses 2022/2023/2024 as train/dev/test
+source periods. Hazard physics may later generate Operational Tasks, but landslide prediction is
+outside the Agent control loop.
+
+\section{Agent Abstraction and Runtime}
+\label{sec:runtime}
+We separate two meanings of ``task.'' An \emph{Operational Task} is the benchmark/business
+objective: target nodes/measurands, monitoring profile, windows/deadlines, authorised effects and
+scoring profile. A \emph{Runtime TaskContract} is an Agent program object with desired state,
+evidence contract, temporal contract, effect ceiling and completion predicate.
+
+For a runtime task $T_j$, the ContextManifest is
+\begin{equation}
+C_t=M(T_j,S_t,\mathcal E_t,K_t),
+\end{equation}
+where $S_t$ is InvestigationState and $K_t$ is the visible capability catalogue. The model input
+is $P_t=\mathrm{Materialize}(C_t)$; a planner emits
+\begin{equation}
+(q_t,a_t,\Delta S_t,stop_t)=\pi(T_j,P_t,K_t).
+\label{eq:planner}
+\end{equation}
+Capabilities split into evidence-use $\mathcal K^E$ and device-action $\mathcal K^A$ but share one
+contract surface. An action lifecycle distinguishes requested, accepted/refused, delivered,
+applied and confirmed. Hence lack of confirmation never implies that an action was not applied.
+
+The live runtime supports multi-round execution:
+\begin{equation}
+C_t^{(k)}\rightarrow q_t^{(k)}\rightarrow \mathcal E_t^{(k+1)}
+\rightarrow C_t^{(k+1)}\rightarrow a_t.
+\label{eq:multiround}
+\end{equation}
+In particular, a planner can request gateway-owner evidence, trigger an Evidence World revision,
+then decide whether to configure a node or invoke a communication fallback.
+
+\section{Benchmark Tasks and Experimental Protocol}
+\label{sec:protocol}
+The benchmark contains six Operational Task families: O1 monitoring continuity, O2 risk
+escalation, O3 backhaul-outage sustainment, O4 energy-constrained monitoring, O5 recovery and
+reconciliation, and O6 compound long-horizon operation. The same deployment, physical transition,
+scorer and information boundary are reused across methods.
+
+We use four replay levels. R0 replays protocol/state transitions; R1 substitutes a planner on
+frozen model inputs; R2 reconstructs exact Context materialisation; R3 reruns the full simulator.
+The model-facing protocol records ModelRequest, ModelAttempt, ModelUsage and PlannerDecision. R1
+diagnostics include stopping correctness, tool selection precision/recall, order LCS and argument
+grounding. R3 reports their physical communication consequence.
+
+Online baselines and evaluator-only oracles are typed separately. Current online references
+include local/ordinary communication control, deterministic task comply, task-conditioned
+evidence, diagnosis-first, fixed-order eager probing, FullDump, and generic-ReAct context.
+Delivery/energy oracles are evaluator-only and never appear as online Agent arms. A generic VoI
+baseline is intentionally deferred until evidence-acquisition cost/value has a source-backed or
+simulator-authoritative scale; arbitrary weights would manufacture a comparison rather than
+strengthen it.
+
+Gold replacement follows the cumulative order
+\begin{equation}
+\begin{aligned}
+\text{Task}&\rightarrow\text{EvidenceNeed}\rightarrow\text{Percept}\rightarrow\text{Context}\\
+&\rightarrow\text{Selection}\rightarrow\text{Order}\rightarrow\text{Arguments}\\
+&\rightarrow\text{Policy}\rightarrow\text{Physical Oracle}.
+\end{aligned}
+\end{equation}
+Runtime-owned upstream replacements require a model rerun; planner-owned selection/order/argument
+layers are frozen-input diagnostics; policy/oracle replacements return to R3.
+
+\section{Current Deterministic Validation}
+\label{sec:current-results}
+This section reports infrastructure and deterministic evidence only. It is intentionally separate
+from the future real-model evaluation.
+
+\subsection{Runtime/physics conformance}
+The self-contained runtime, task-conditioned context and FullDump materialiser reproduce the
+paired deterministic communication reference while emitting typed Evidence/Context/Capability
+traces. The global O2 physical summary is generated in Table~\ref{tab:o2-global}.
+\begin{table}[t]
+\centering\small
+\caption{O2 global runtime conformance. All values are generated from frozen result JSON.}
+\label{tab:o2-global}
+\resizebox{\columnwidth}{!}{\input{../../generated/table_agentic_o2_global.en.tex}}
+\end{table}
+
+For a localised O2 scope, task-conditioned materialisation selects fewer irrelevant records while
+maintaining Context sufficiency and the same physical result (Table~\ref{tab:o2-local}).
+\begin{table}[t]
+\centering\small
+\caption{Localised O2 Context materialisation under paired physical execution.}
+\label{tab:o2-local}
+\resizebox{\columnwidth}{!}{\input{../../generated/table_agentic_o2_localized.en.tex}}
+\end{table}
+
+\subsection{Deterministic Agent/runtime baselines}
+Table~\ref{tab:agent-baselines} holds the physical policy fixed and varies the runtime/context
+strategy. Diagnosis-first and fixed-order eager probing add tool/model/context work without
+changing physical outcome. Generic-ReAct context removes explicit EvidenceNeed/InvestigationState
+artifacts and therefore isolates their model-input footprint without changing the tool surface.
+\begin{table}[t]
+\centering\small
+\caption{Paired O2 runtime overhead relative to direct deterministic comply.}
+\label{tab:agent-baselines}
+\resizebox{\columnwidth}{!}{\input{../../generated/table_agentic_o2_baselines.en.tex}}
+\end{table}
+
+\subsection{Robustness coordinates and task transfer}
+The current source-period gate reaches the physical energy model rather than only changing a
+manifest. A broader five-axis gate checks weather, backhaul outage, task scope, evidence owner and
+deployment scale; these are infrastructure validations, not claims of method robustness.
+\begin{table}[t]
+\centering\small
+\caption{Source-period separation reaches the physical simulator.}
+\label{tab:source-period}
+\resizebox{\columnwidth}{!}{\input{../../generated/table_agentic_source_period.en.tex}}
+\end{table}
+
+\begin{table}[t]
+\centering\small
+\caption{Five-axis paired robustness-coordinate activation.}
+\label{tab:robustness}
+\resizebox{\columnwidth}{!}{\input{../../generated/table_agentic_robustness.en.tex}}
+\end{table}
+
+The first source-derived task-transfer experiment maps a published monitoring-stage sequence into
+the external-authority Operational Task while keeping runtime, planner, capability surface and
+scorer fixed (Table~\ref{tab:task-transfer}).
+\begin{table}[t]
+\centering\small
+\caption{Operational Task transfer under an unchanged communication runtime.}
+\label{tab:task-transfer}
+\resizebox{\columnwidth}{!}{\input{../../generated/table_agentic_task_transfer.en.tex}}
+\end{table}
+
+\subsection{Attribution protocol self-check}
+Before applying gold replacement to a real model, we inject controlled upstream and planner
+corruptions into frozen O2 R1 turns. Table~\ref{tab:attribution-infra} verifies that upstream
+replacement restores the gold assembly, selection repair does not smuggle gold arguments, and
+argument grounding reaches the gold value only at the argument layer. This table validates the
+evaluator; it is not a model result.
+\begin{table}[t]
+\centering\small
+\caption{Cumulative attribution-protocol infrastructure validation.}
+\label{tab:attribution-infra}
+\resizebox{\columnwidth}{!}{\input{../../generated/table_agentic_attribution_infra.en.tex}}
+\end{table}
+
+\section{Real-Model Evaluation Plan}
+\label{sec:model-eval}
+The model study uses frozen task-conditioned, FullDump and generic-ReAct inputs that share the
+same O2 task, capability catalogue, simulator and paired physical reference. R1 first measures
+planner diagnostics on identical frozen turns. Only model/context combinations passing the
+declared validity and budget gates proceed to R3, where communication outcome, model/tool calls,
+latency and physical resources are measured jointly. No result is reported here until a real
+backend run is present in the frozen result registry.
+
+\section{Related Work}
+\label{sec:related}
+DORA~\cite{dora2026} establishes a valuable benchmark pattern for heterogeneous disaster data,
+typed tools, expert trajectories and trajectory-level diagnostics. Our benchmark adopts the
+discipline of typed tools, replayable trajectories and final-primary/trajectory-diagnostic
+evaluation, while changing the system boundary: evidence is dynamic and owner-scoped, tool access
+can be unreachable, device actions have delivery/apply/confirm lifecycles, and the final score is
+a physical monitoring outcome rather than only an answer. Existing LLM-based network planning
+and emergency-network work~\cite{topollm,icldc,icgrestore,ossgpt} motivates the Agent interface;
+our emphasis is a shared physical communication substrate for evidence acquisition and action.
+
+\section{Limitations and Next Experiments}
+The current artifact has four explicit boundaries. First, real LLM scores are pending an external
+model endpoint; no scripted backend is substituted. Second, a generic VoI baseline is deferred
+until observation cost/value admits a defensible scale. Third, current hazard physics remains an
+optional upstream task generator rather than a claimed landslide predictor. Fourth, the first
+source-derived transfer validates task translation rather than real-site end-to-end deployment.
+
+Next experiments therefore focus on real model families under the frozen three-context matrix,
+R1-to-R3 failure propagation through the attribution protocol, additional access-outage/reachable-
+subset/context-length/owner-count robustness coordinates, and additional source-derived or
+physics-generated Operational Tasks.
+
+\section{Conclusion}
+Agentic Communication becomes materially different from static tool use when the evidence needed
+to reason and the actions needed to repair the system share the same impaired network. The current
+artifact closes the benchmark/runtime/evaluation loop needed to study that setting without hidden
+state, arbitrary task changes or handwritten result tables. Its next claim-bearing step is the
+real-model experiment, not another change to the underlying communication simulator.
+
+\bibliographystyle{IEEEtran}
+\bibliography{../../refs}
+
+\end{document}
