@@ -24,6 +24,7 @@ other_repo/
 # ---- 大型运行流水：正式 claim 只发布 compact summary / aggregate / audit ----
 # live-model / simulator trace 可由正式 runner 重新生成，本地保留但不进远端。
 /results/agentic/*
+!/results/agentic/README.md
 /results/agentic/**/runtime_trace.jsonl
 /results/agentic/**/runtime_traces/
 /results/agentic/**/runner.log
