@@ -1,0 +1,50 @@
+{
+  "schema_version": "0.2",
+  "status_enum": [
+    "SOURCE_GAP",
+    "SOURCE_SUPPORTED",
+    "SIMULATOR_GAP",
+    "HISTORICALLY_CLOSED",
+    "ADMISSION_READY",
+    "BENCHMARK_ADMIT"
+  ],
+  "hardness_axis_enum": [
+    "H0_CONFORMANCE",
+    "H1_PARTIAL_OBSERVATION",
+    "H2_ACTIVE_EVIDENCE_ACQUISITION",
+    "H3_RESOURCE_CONFLICT",
+    "H4_LONG_HORIZON_OPPORTUNITY",
+    "H5_RECOVERY_WITH_DIVERGENT_STATE"
+  ],
+  "required_fields": [
+    "candidate_id",
+    "provisional_family",
+    "canonical_operational_objects",
+    "operational_obligation",
+    "source_bundle",
+    "evidence_strength",
+    "known_unknowns",
+    "authority",
+    "observation_boundary",
+    "candidate_actions",
+    "shared_ordinary_mechanisms",
+    "resource_constraints",
+    "time_semantics",
+    "oracle_definition",
+    "success_predicate",
+    "historical_semantic_match",
+    "simulator_mapping",
+    "simulator_gaps",
+    "hardness_axes",
+    "heldout_axes",
+    "status",
+    "blocking_evidence"
+  ],
+  "source_bundle_fields": [
+    "requirement",
+    "field",
+    "standard_or_government",
+    "capability",
+    "parameter"
+  ]
+}

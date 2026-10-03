@@ -6,11 +6,13 @@
 
 1. `Original requirement`：山区供电不足、通信间歇中断导致节点失联/数据无法回传，目标是灾前低功耗持续稳定监测。
 2. `Source grounding`：field deployment、standard、government/industry material 分别证明 operational need、能力和约束；证据等级与未知项保留。
-3. `Operational need`：归纳真实运行目标，不先固定动作答案。
-4. `Task specification`：给 goal、hard constraints、resource budgets、authority/effect envelope、time window 与 provenance。
-5. `Frozen physical scenario`：在 shared substrate 上实例化，不为算法调 physics。
-6. `Policy envelope/replay`：先用 deterministic/search/ordinary baselines 确认存在多个合法且结果不同的策略。
-7. `Validity + hardness`：通过后才进入 Agent/learned-policy evaluation。
+3. `Operational corpus`：先逐条抽取 obligation、authority、observation、action、constraint、transition、outcome，不从 simulator 反推题目。
+4. `Taxonomy`：由 corpus 聚类产生 Operational Family，并与 Agentic Capability / Hardness / Operating Regime 正交。
+5. `Historical semantic dedupe`：candidate 产生后才查旧 repo；语义等价直接继承旧 verdict，不重复跑实验。
+6. `Task specification`：给 goal、hard constraints、resource budgets、authority/effect envelope、time window 与 provenance。
+7. `Simulator mapping`：外部 source 支持而 simulator 缺失的 state/action 记为 SIMULATOR_GAP，不因当前跑不了而删题。
+8. `Case generator + oracle`：从 source-backed profiles 生成大量 case，并构建 external oracle。
+9. `Validity + hardness`：完成 shortcut、ordinary baseline、held-out 与 non-toy coverage 审计后才进入 policy evaluation。
 
 ## Validity / hardness gate
 
@@ -20,4 +22,24 @@
 
 `CONFORMANCE-SPLIT.v1.json` 与 `CONFORMANCE-ROBUSTNESS-MATRIX.v1.json` 保留 O1–O6 的 source-period、scope、owner、outage、scale 等坐标，用于 Runtime/physics/conformance 回归。A7 的 123/123 唯一 ready supported plan 说明这些开发状态大量已由 compiler 闭合，因此它们不再代表完整 Decision Benchmark。
 
-本地 source/task lineage 位于 `../../local_research/benchmark-grounding/`；其中旧 `task-challenge-pivot`、scenario-interface bridge、source audits 与 pain-point extraction 是本层的 provenance，不作为新文件重复发明。
+本地 source/task lineage 位于 `../../local_research/current/benchmark/`；其中旧 `task-challenge-pivot`、scenario-interface bridge、source audits 与 pain-point extraction 是本层的 provenance，不作为新文件重复发明。
+
+
+## Construction authority
+
+Formal benchmark construction, admission, validity, hardness, non-toy coverage, baseline and release rules are owned by BENCHMARK-CONSTRUCTION-PROTOCOL.v0.1.md.
+
+Candidate records follow CANDIDATE-SCHEMA.v0.1.json. Status now separates SOURCE_GAP / SOURCE_SUPPORTED / SIMULATOR_GAP / HISTORICALLY_CLOSED / ADMISSION_READY / BENCHMARK_ADMIT.
+
+Construction order is fixed:
+
+    external operational corpus
+    → canonical operational objects
+    → provisional taxonomy
+    → candidate family + source validation
+    → historical semantic dedupe
+    → state/action/transition/oracle contract
+    → simulator mapping / explicit gaps
+    → case generator
+    → task/outcome validity
+    → hardness + non-toy coverage
