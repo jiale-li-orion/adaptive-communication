@@ -1,32 +1,34 @@
 中文 | [English](README.md)
 
-> **当前主线：Evidence-Grounded Closed-Loop Agentic Communication。** 方法分两层：①把现有通信 Data Plane 的 node/gateway/center/执行事件组织成带 provenance、owner、time、revision、freshness/reachability/status 的 **Evidence World**；②把 benchmark/业务层 **Operational Task** 编译成自包含的 **Runtime TaskContract / TaskRun**，由 `ContextManifest + Capability` 支撑多轮 reasoning，并把 evidence-use tool 与 communication-device tool 统一进同一 typed capability runtime。当前实验设计 authority 见 [Experiment Design v1](research/README.md)，实验状态见 [research/README](research/README.md) 与 [ROADMAP](research/README.md)。[CLAIMS](results/CLAIMS.md) 始终是整个仓库唯一的 claim-state authority：`C*` 保存系统论文/通信底座主张，`A*` 保存当前 Agentic deterministic/infrastructure 主张。
+> **当前研究结构：Benchmark → Decision-Semantic Compiler → Policy。** Layer 1 从山区灾前监测的原始现实需求出发，构造 source-grounded Emergency Communication Benchmark，并要求任务在不确定性、资源冲突和时间约束下存在真实 policy choice；Layer 2 将 `Task + Evidence + Capability + Execution` 编译成 typed live decision surface、EvidenceNeed、semantic commitment 与 persistent execution；Layer 3 只有在 Layer 1 通过 validity / hardness gate 后，才比较 deterministic/search、LLM、GNN、offline RL 或 hybrid policy。当前主瓶颈在 **Layer 1**。O1–O6 与 A7–A11 继续作为 conformance / mechanism evidence 保留，但不再被当成已经成立的 policy-hard benchmark。[research/README](research/README.md) 是当前研究控制面；[CLAIMS](results/CLAIMS.md) 仍是唯一 claim-state authority。
 
 # 间歇回传下灾前监测的本地通信控制
 
 研究电池与光伏供电的山区地灾监测网：LoRaWAN Class A 节点接入现场网关，蜂窝主回传配北斗短报文备用；备用仅上行，控制下行会随主回传中断。任务与预警等级由外部授权，系统负责监测要求的通信执行。
 
-**原系统论文主线（已收敛为当前研究底座）：失联后持续执行的通信状态，怎样依靠现场证据得到正确处置。** 待确认记录持续占用重传批次，已安装密采配置持续消耗能量；控制路径中断时，中心决策与现场执行成为两个独立事件。此前工作围绕这些物理后果研究源端期限释放、本地回退、分段执行证据与控制路径失效，并形成了当前 simulator、执行机制、信息边界和结果台账。相关结论继续按 [CLAIMS](results/CLAIMS.md) 的既有范围成立，也继续作为后续 Agent 研究复用的共同底座。
+**原始现实需求始终是一等约束。** 山区灾前长期监测面对供电不足和通信间歇中断，需要低功耗、低成本地维持有效感知与数据回传。仓库不能为了激活 Agent 或 learning 算法反向发明通信任务；新的 Task 必须从有来源支撑的 operational need 正向构造，并回到物理底座检验。
+
+**共享通信底座：** 此前系统工作围绕控制路径失效后的持续通信状态，研究了源端期限释放、本地回退、分段执行证据、backup/DtS 与执行位置，并形成当前 simulator、信息边界、执行机制和结果台账。相关结论继续按 [CLAIMS](results/CLAIMS.md) 的范围成立，作为 Layer 1 / 2 / 3 共用的通信 substrate。
 
 **原系统论文阶段（历史状态）：系统论文工作稿。** 这一阶段已经得到组件级正结果，并把配置租约、单节点停止、保留视界等候选收敛为 scoped-negative 边界；完整 runtime 增量、迁移验证与匹配能力 Agent 验证则留给后续阶段。该阶段的设计取舍、负结果和开放问题继续保存在 [论文闭环计划](paper/RESEARCH_PLAN.md) 与 [CLAIMS](results/CLAIMS.md) 中，作为研究谱系的一部分长期保留。
 
-**当前研究主线：在上述同一场景、数据、通信能力和执行底座上，构造 Evidence World 与完整 Agent Runtime。** benchmark 层先定义 Operational Task，例如持续监测、风险升级、主回传中断维持、能源受限监测和恢复收口；harness 再把它编译成 Runtime TaskContract，组装 Context、发起多轮 evidence/device capability use，并将 action 真实作用到通信系统。最终同时评价通信结果（obligation delivery、latency、energy、backup/DtS cost、config execution）与 Agent runtime（Task grounding、EvidenceNeed、capability selection/arguments、Context sufficiency、stop/policy/failure attribution）。
+**当前研究主线：先重建 source-grounded Decision Benchmark。** Task 定义 mission constraint，而不是预先指定唯一动作；只有当同一 evidence/capability/execution boundary 下存在多个合法策略，并且策略差异真实进入 physical outcome，才继续比较 Decision-Semantic Compiler 之上的 deterministic/search/LLM/GNN/offline-RL policy。
 
 ## 1. 当前论文、历史稿与权威入口
 
 | 内容 | 入口 |
 |---|---|
-| 当前 Agentic Communication 主稿 | [英文 PDF](paper/agentic/en/main.pdf) · [LaTeX](paper/agentic/en/main.tex) · [workspace README](paper/agentic/README.md) |
+| 最新可构建 Agentic 稿件快照 | [英文 PDF](paper/agentic/en/main.pdf) · [LaTeX](paper/agentic/en/main.tex) · [workspace README](paper/agentic/README.md) |
 | 系统论文兼容稿（持续接受 claim 纠错传播） | [英文](paper/en/main.tex) · [中文](paper/zh/main.tex) · [paper/README](paper/README.md) |
 | Agentic 转向前系统稿不可变快照 | [paper/_archive/system-paper-2026-09-20](paper/_archive/system-paper-2026-09-20/README.md) · source commit `dd4f31a` |
-| 当前 Agent 实验设计 | [Experiment Design v1](research/README.md) · [research/README](research/README.md) · [ROADMAP](research/README.md) |
+| 当前研究控制面 | [research/README](research/README.md) · [Benchmark](research/benchmark/README.md) · [Compiler](research/compiler/README.md) · [Policy](research/policy/README.md) |
 | 当前数学系统模型 | [SYSTEM-MODEL-v1](research/substrate/SYSTEM-MODEL-v1.md) |
 | Runtime/domain ownership contract | [OWNERSHIP-v1](research/compiler/RUNTIME-DOMAIN-OWNERSHIP-v1.md) |
 | 系统论文闭环计划（历史阶段） | [RESEARCH_PLAN](paper/RESEARCH_PLAN.md) |
 | 逐主张复现 | [artifact/AE.md](artifact/AE.md) |
 | 结果来源 / 主张状态 / 部署条件 | [结果登记](results/README.md) · [CLAIMS](results/CLAIMS.md) · [spec](spec/README.md) |
 
-当前稿与旧稿形成一条连续谱系。`paper/en|zh` 保存系统阶段的最新纠错版本，使旧 `C*` 主张持续与当前冻结结果一致；`paper/_archive/system-paper-2026-09-20/` 保存 Agentic 转向前的确切源文件；`paper/agentic/` 承担当前投稿叙事。README 聚焦当前状态与长期 authority，逐轮历史通过 Git、`results/history/withdrawn/`、`paper/_archive/` 和作者本地 `docs/_archive/` 追溯。
+当前稿与旧稿形成一条连续谱系。`paper/en|zh` 保存系统阶段的最新纠错版本；`paper/_archive/system-paper-2026-09-20/` 保存 Agentic 转向前的确切源文件；`paper/agentic/` 是最新可构建的 Agentic 稿件快照。2026-10-04 的 benchmark-validity 复盘之后，它不再拥有全局研究方向。README 只维护当前 ownership；完整演化通过 Git、`results/history/`、`paper/_archive/` 与本地 research episodes 追溯。
 
 ## 2. 仓库 authority 与长期约束
 
@@ -62,9 +64,9 @@
 
 系统由成熟原语组成。新的系统价值通过组合、执行位置和实际业务后果来验证；模块统一、对象规范与 Agent 接口则承担工程复用价值。
 
-## 4. 当前 Agentic Communication 系统
+## 4. Decision-Semantic Compiler 与当前 Conformance Suite
 
-当前研究继续使用同一个山区灾前监测 physical/data plane，benchmark 直接建立在通信系统执行链上：
+Decision-Semantic Compiler 继续使用同一个山区灾前监测 physical/data plane，把合法的 Task/Evidence/Capability/Execution 状态编译成模型可消费的 live decision surface：
 
 ```text
 Physical/Data Plane
@@ -81,9 +83,9 @@ Physical/Data Plane
 
 **两层 Task 明确分开。** Operational Task 是 benchmark/业务语义，回答“这个山区监测系统现在要完成什么”；Runtime TaskContract 是一次 Agent harness 执行实例的程序语义，回答“本次 run 的 target、evidence contract、effect ceiling、temporal contract、completion predicate 是什么”。两层对象各自拥有稳定 schema 与 revision。
 
-### 4.1 Operational Task catalog
+### 4.1 O1–O6 Conformance Catalog
 
-当前 O1–O6 共用同一部署、通信能力与 scorer，只改变业务任务或受控扰动：
+当前 O1–O6 共用同一部署、通信能力与 scorer，只改变业务任务或受控扰动。**它们当前的角色是 conformance suite，而不是最终 Layer-1 decision benchmark。** 其中多项 Task 会收敛到唯一 supported plan；这对协议/runtime 验证有价值，但不足以支持 policy-learning claim。
 
 | Task | 通信场景语义 | 主要评价对象 |
 |---|---|---|
@@ -191,7 +193,7 @@ make agentic-preapi
 make paper
 ```
 
-当前 Agentic 主稿与历史系统稿共享 [refs.bib](paper/refs.bib)。[构建说明](paper/README.md)列出三套稿件的角色和构建链。论文表格和事实宏由 `scripts/make_tables.py` / `scripts/make_agentic_artifacts.py` 从结果文件生成，`paper/generated/` 由生成链统一维护。
+最新可构建 Agentic 稿件快照与历史系统稿共享 [refs.bib](paper/refs.bib)。[构建说明](paper/README.md)列出三套稿件的角色和构建链。论文表格和事实宏由 `scripts/make_tables.py` / `scripts/make_agentic_artifacts.py` 从结果文件生成，`paper/generated/` 由生成链统一维护。
 
 `make check` 包括仿真、执行语义、主张、表格、序列参照、Agent runtime 与联合层锚点。`make agentic-preapi` 重跑 credential-free Agent/communication substrate；A7–A11 live-model 结果单独冻结，并只向远端发布 compact aggregate/audit/result authority，不发布大型 raw trace。逐主张命令与冻结参考见 [artifact/AE.md](artifact/AE.md) 和 [results/reference](results/reference/README.md)。
 
@@ -199,16 +201,24 @@ make paper
 
 | 路径 | 内容 |
 |---|---|
-| `paper/agentic/` | 当前 Agentic Communication 主稿 |
-| `paper/en/`、`paper/zh/` | 系统论文兼容稿；继续接收 claim 纠错传播，当前投稿定位由 `paper/agentic/` 持有 |
+| `paper/agentic/` | 最新可构建 Agentic 稿件快照；不再承担全局研究控制面 |
+| `paper/en/`、`paper/zh/` | 系统论文兼容稿；继续接收 claim 纠错传播 |
 | `paper/_archive/` | 不可变论文/计划快照；包含 Agentic 转向前系统稿 |
-| `spec/` | 部署、信息边界与生效实验契约 |
-| `research/` | 当前 Experiment Design、registry、benchmark split、baseline/robustness/attribution protocol 与研究入口 |
-| `code/substrate/instance/`、`code/substrate/joint/` | 当前物理仿真、联合通信机制与 Agent 接口 |
-| `code/agentic_communication/` | self-contained Task/Evidence/Context/Capability/Planner/Replay/Evaluation runtime |
-| `code/analysis/`、`code/experiments/` | 诊断、复现和检查 |
-| `results/` | 登记结果、唯一主张状态、冻结参考与撤回档案 |
+| `research/substrate/` | 通信/world model 与长期系统语义 |
+| `research/benchmark/` | Layer-1 benchmark validity、hardness、conformance split 与构造契约 |
+| `research/compiler/` | Layer-2 Task/Evidence/Capability/Execution 语义与 Decision-Semantic Compiler |
+| `research/policy/` | Layer-3 policy / baseline ownership |
+| `spec/substrate/`、`spec/history/` | 当前部署/数据 authority 与历史 prereg contract |
+| `code/substrate/` | 物理仿真、联合通信机制、校准与 substrate tests |
+| `code/agentic_communication/` | Task/Evidence/Context/Capability/Planner/Replay runtime |
+| `code/evaluation/` | 当前 Agentic evaluation、claim audit 与论文检查 |
+| `code/legacy-communication/` | 为复现保留的历史通信方法 runner |
+| `results/communication-substrate/` | 当前 C* 通信底座证据 |
+| `results/agentic/` | A* 实验产物；研究角色由 `ROLE-MANIFEST.*` 索引 |
+| `results/reference/`、`results/history/`、`results/legacy-communication/` | 冻结对照、撤回/历史与旧结果族 |
+| `results/CLAIMS.md` | 唯一 claim-state ledger |
 | `artifact/`、`scripts/` | 评审入口、依赖获取、结果到论文的生成链 |
+| `tooling/` | 与研究 ownership 分离的可复用仓库/论文工具 |
 
 ## 10. 远端仓库与本地研究区
 

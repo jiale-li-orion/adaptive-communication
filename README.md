@@ -1,32 +1,34 @@
 English | [中文](README.zh.md)
 
-> **Current line: Evidence-Grounded Closed-Loop Agentic Communication.** The method has two layers: (i) convert node/gateway/centre events from the existing communication Data Plane into a provenance-preserving **Evidence World** with owner/time/revision/freshness/reachability/status semantics; (ii) compile benchmark/business **Operational Tasks** into self-contained **Runtime TaskContracts / TaskRuns**, assemble `ContextManifest`s, perform multi-round evidence-use and communication-device capability calls, and execute decisions back on the physical simulator. [Experiment Design v1](research/README.md) is the design authority; [research/README](research/README.md) and [ROADMAP](research/README.md) record the current experiment state. [CLAIMS](results/CLAIMS.md) remains the repository's sole claim-state authority: `C*` denotes systems-paper/communication-substrate claims and `A*` current Agentic deterministic/infrastructure claims.
+> **Current research architecture: Benchmark → Decision-Semantic Compiler → Policy.** Layer 1 reconstructs a source-grounded emergency-communication benchmark from the original mountain pre-disaster monitoring requirement and must expose genuine policy choice under uncertainty, resource conflict, and temporal constraints. Layer 2 compiles `Task + Evidence + Capability + Execution` into a typed live decision surface, EvidenceNeed, semantic commitment, and persistent execution. Layer 3 compares deterministic/search, LLM, GNN, offline-RL, or hybrid policies only after Layer 1 passes validity and hardness gates. The current bottleneck is **Layer 1**. O1–O6 and A7–A11 remain valuable conformance/mechanism evidence, but they are not by themselves a policy-hard benchmark. [research/README](research/README.md) is the current control plane; [CLAIMS](results/CLAIMS.md) remains the sole claim-state authority.
 
 # Local Communication Control for Pre-Disaster Monitoring with Intermittent Backhaul
 
 This repository studies battery/solar mountain geohazard monitoring: LoRaWAN Class A nodes reach a field gateway, which uses cellular backhaul and an uplink-only BeiDou short-message backup. Monitoring requirements and warning-level changes are externally authorised. The system executes their communication requirements.
 
-**Original systems-paper line, now the substrate for the current research:** how should persistent communication state be handled when the control path fails, using only evidence available at the relevant location? Unacknowledged records continue to occupy retransmission batches, installed dense profiles continue consuming energy, and even a correct central decision may be impossible to install after backhaul loss. Earlier work studied source-local expiry, local fallback, segment-specific execution evidence and control-path failure. Those results, the simulator, the information boundaries and the execution mechanisms remain in force under the scopes registered in [CLAIMS](results/CLAIMS.md) and are reused as the common substrate for the Agent line.
+**Original field requirement:** pre-disaster mountain monitoring must keep useful sensing and return paths alive despite limited power and intermittent communication. This requirement remains first-order. The repository must not invent a communication task merely to activate an Agent or a learning algorithm; new Tasks are derived from source-backed operational needs and tested against the physical substrate.
+
+**Shared communication substrate:** earlier systems work studied persistent communication state under control-path failure using source-local expiry, local fallback, segment-specific execution evidence, backup/DtS, and execution placement. Those results, the simulator, information boundaries, and execution mechanisms remain valid under the scopes registered in [CLAIMS](results/CLAIMS.md). They now serve as the common substrate beneath all three research layers.
 
 **Historical systems-paper stage:** that stage produced component-level positive results and narrowed configuration leasing, single-node stopping and retention-horizon tuning into scoped-negative boundaries. The systems-paper compatibility copies, immutable archive, `CLAIMS`, Git and withdrawn-result snapshots preserve those design choices, negative results and open questions as part of the research lineage.
 
-**Current research line:** on the same scenario, data, communication capabilities and execution substrate, construct an Evidence World and a complete Agent runtime, then evaluate Communication outcome and Agent-runtime quality together.
+**Current research line:** first construct a **source-grounded Decision Benchmark** whose Task defines mission constraints rather than a preselected action. Only after the benchmark exposes multiple legal policies with materially different physical outcomes do we evaluate the Decision-Semantic Compiler and policy learners on the same evidence/capability/execution boundary.
 
 ## 1. Current paper, historical manuscripts, and authority entry points
 
 | Material | Entry |
 |---|---|
-| Current Agentic Communication manuscript | [English PDF](paper/agentic/en/main.pdf) · [LaTeX](paper/agentic/en/main.tex) · [workspace README](paper/agentic/README.md) |
+| Latest buildable Agentic manuscript snapshot | [English PDF](paper/agentic/en/main.pdf) · [LaTeX](paper/agentic/en/main.tex) · [workspace README](paper/agentic/README.md) |
 | Systems-paper compatibility copies (still receive claim-correction propagation) | [English](paper/en/main.tex) · [Chinese](paper/zh/main.tex) · [paper/README](paper/README.md) |
 | Immutable pre-Agentic systems-paper snapshot | [paper/_archive/system-paper-2026-09-20](paper/_archive/system-paper-2026-09-20/README.md) · source commit `dd4f31a` |
-| Current Agent experiment design | [Experiment Design v1](research/README.md) · [research/README](research/README.md) · [ROADMAP](research/README.md) |
+| Current research control plane | [research/README](research/README.md) · [Benchmark](research/benchmark/README.md) · [Compiler](research/compiler/README.md) · [Policy](research/policy/README.md) |
 | Current mathematical system model | [SYSTEM-MODEL-v1](research/substrate/SYSTEM-MODEL-v1.md) |
 | Runtime/domain ownership contract | [OWNERSHIP-v1](research/compiler/RUNTIME-DOMAIN-OWNERSHIP-v1.md) |
 | Systems-paper completion plan (historical stage) | [RESEARCH_PLAN](paper/RESEARCH_PLAN.md) |
 | Claim-by-claim reproduction | [artifact/AE.md](artifact/AE.md) |
 | Provenance, claim states, deployment | [Results](results/README.md) · [CLAIMS](results/CLAIMS.md) · [spec](spec/README.md) |
 
-The manuscript lineage is continuous. `paper/en|zh` remain corrected compatibility copies so the historical `C*` claims continue to build against current frozen semantics; `paper/_archive/system-paper-2026-09-20/` is an immutable source snapshot from before the Agentic pivot; `paper/agentic/` is the active submission workspace. README focuses on current state and long-lived authority, while Git, `results/history/withdrawn/`, `paper/_archive/`, and the author's local `docs/_archive/` preserve research history.
+The manuscript lineage is continuous. `paper/en|zh` remain corrected compatibility copies so historical `C*` claims continue to build against current frozen semantics; `paper/_archive/system-paper-2026-09-20/` is the immutable pre-Agentic snapshot; `paper/agentic/` is the latest buildable Agentic manuscript snapshot. It no longer owns the global research direction after the 2026-10-04 benchmark-validity reset. README focuses on current ownership; Git, `results/history/`, `paper/_archive/`, and local research episodes preserve the full lineage.
 
 ## 2. Repository authority and long-lived constraints
 
@@ -62,9 +64,9 @@ A monitoring obligation requires an in-window sample, LoRa access to the gateway
 
 The system uses mature primitives. Research value is demonstrated through composition, execution placement and physical outcomes; unified naming, object models and Agent interfaces provide engineering reuse.
 
-## 4. Current Agentic Communication system
+## 4. Decision-Semantic Compiler and current conformance suite
 
-The current work stays on the same mountain pre-disaster monitoring physical/data plane, and the benchmark is built directly on its execution chain:
+The Decision-Semantic Compiler stays on the same mountain pre-disaster monitoring physical/data plane and maps lawful Task/Evidence/Capability/Execution state into a model-facing decision surface:
 
 ```text
 Physical/Data Plane
@@ -81,9 +83,9 @@ Physical/Data Plane
 
 **The two meanings of Task are frozen separately.** An Operational Task is benchmark/business semantics: what this mountain monitoring system must accomplish. A Runtime TaskContract is one Agent-harness execution instance: its targets, evidence contract, effect ceiling, temporal contract, and completion predicate. Each layer owns a stable schema and revision.
 
-### 4.1 Operational Task catalog
+### 4.1 O1–O6 conformance catalog
 
-O1–O6 share deployment, communication capabilities and scorer; they vary the business task or controlled disturbance rather than creating unrelated disaster questions.
+O1–O6 share deployment, communication capabilities and scorer; they vary the business task or controlled disturbance rather than creating unrelated disaster questions. **They are retained as a conformance suite, not treated as the final Layer-1 decision benchmark.** In the current suite, several Tasks collapse to a unique supported plan; this is useful for protocol/runtime validation but insufficient for policy-learning claims.
 
 | Task | Communication scenario semantics | Main evaluation object |
 |---|---|---|
@@ -191,7 +193,7 @@ make agentic-preapi
 make paper
 ```
 
-The current Agentic manuscript and historical systems-paper copies share [refs.bib](paper/refs.bib). [Build notes](paper/README.md) describe the role and build path of all manuscript trees. Tables and factual macros are generated from result files by `scripts/make_tables.py` / `scripts/make_agentic_artifacts.py`, with `paper/generated/` owned by that generation chain.
+The latest Agentic manuscript snapshot and historical systems-paper copies share [refs.bib](paper/refs.bib). [Build notes](paper/README.md) describe the role and build path of all manuscript trees. Tables and factual macros are generated from result files by `scripts/make_tables.py` / `scripts/make_agentic_artifacts.py`, with `paper/generated/` owned by that generation chain.
 
 `make check` covers simulation, execution semantics, claims, tables, the stopping reference, Agent runtime and joint-layer anchors. `make agentic-preapi` reruns the credential-free Agent/communication substrate; A7–A11 live-model artifacts are frozen separately and represented in compact aggregate/audit/result files rather than raw traces. Claim-level commands and frozen references are in [artifact/AE.md](artifact/AE.md) and [results/reference](results/reference/README.md).
 
@@ -199,16 +201,24 @@ The current Agentic manuscript and historical systems-paper copies share [refs.b
 
 | Path | Contents |
 |---|---|
-| `paper/agentic/` | current Agentic Communication manuscript |
-| `paper/en/`, `paper/zh/` | systems-paper compatibility copies; still receive claim-correction propagation, while `paper/agentic/` owns the active submission positioning |
+| `paper/agentic/` | latest buildable Agentic manuscript snapshot; not the global research control plane |
+| `paper/en/`, `paper/zh/` | systems-paper compatibility copies that still receive claim-correction propagation |
 | `paper/_archive/` | immutable manuscript/plan snapshots, including the pre-Agentic systems-paper source |
-| `spec/` | deployment, information boundaries and active experiment contracts |
-| `research/` | current Experiment Design, registries, benchmark split, baseline/robustness/attribution protocols and research entry points |
-| `code/substrate/instance/`, `code/substrate/joint/` | physical simulation, joint communication mechanisms and Agent interface |
-| `code/agentic_communication/` | self-contained Task/Evidence/Context/Capability/Planner/Replay/Evaluation runtime |
-| `code/analysis/`, `code/experiments/` | diagnostics, reproduction and checks |
-| `results/` | registered results, sole claim-state ledger, frozen references and withdrawals |
+| `research/substrate/` | communication/world model and long-lived system semantics |
+| `research/benchmark/` | Layer-1 benchmark validity, hardness, conformance split and construction contract |
+| `research/compiler/` | Layer-2 Task/Evidence/Capability/Execution semantics and Decision-Semantic Compiler |
+| `research/policy/` | Layer-3 policy/baseline ownership |
+| `spec/substrate/`, `spec/history/` | current deployment/data authority and historical prereg contracts |
+| `code/substrate/` | physical simulation, joint communication mechanisms, calibration and substrate tests |
+| `code/agentic_communication/` | Task/Evidence/Context/Capability/Planner/Replay runtime |
+| `code/evaluation/` | current Agentic evaluation, claim audits and paper-facing checks |
+| `code/legacy-communication/` | historical communication-method runners retained for reproducibility |
+| `results/communication-substrate/` | current C* communication-substrate evidence |
+| `results/agentic/` | A* experiment artifacts; semantic role is indexed by `ROLE-MANIFEST.*` |
+| `results/reference/`, `results/history/`, `results/legacy-communication/` | frozen comparators, withdrawn/history, and historical result families |
+| `results/CLAIMS.md` | sole claim-state ledger |
 | `artifact/`, `scripts/` | reviewer entry, dependency acquisition and the result-to-paper pipeline |
+| `tooling/` | reusable repository/paper tooling, separate from research ownership |
 
 ## 10. Remote repository versus local research zones
 
