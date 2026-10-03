@@ -622,14 +622,13 @@ audit.json
 
 ## 13. 当前方法冻结后的实验顺序
 
-通用 runtime / replay / metric / baseline 基础设施已经完成，真实模型开发阶段也已越过事件级 probe。当前工程顺序冻结为：
+通用 runtime / replay / metric / baseline、真实模型主表、强基线、transfer、机制消融与 query-positive acquisition 均已冻结。当前工程顺序改为：
 
-1. protocol-v6 formal main table：`localized O2 / O5 / O6 × seeds0..4 × {action-conditioned compact, task-conditioned, FullDump, generic-ReAct}`；
-2. Method 15 rows 先通过预注册 gate：`effect_scope_inexact=0`、`extra observation=0`、`physical==candidate==legacy`；该 gate 当前已 `15/15 PASS`，剩余 45 baseline rows 正在同一 frozen source manifest 下运行；
-3. 完整 60-row aggregate 通过后，先冻结 machine-checkable claim candidate，再决定是否进入 `results/CLAIMS.md`；
-4. formal result 成立后做 full-episode component ablation，只解释 action-conditioned projection / plan-local dependency / decision sufficiency / semantic-state replanning 的因果贡献，不新增方法实体；
-5. component ablation 之后再决定第二模型 confirmatory；
-6. query-positive safety case、composed fallback closure、decision-equivalent Context compression 属于 coverage/cost extension，等待主结果与因果解释冻结后再开放。
+1. **冻结 A7–A11 方法/结果，不再新增模型 API 实验。** protocol-v6 formal main table 已 60/60 完成，A7 已进入 `results/CLAIMS.md`；
+2. **保留机制归因而不继续扩方法实体。** CF/CS causal probe、retired-dependency projection、compiled checklist 与 v6 mechanism-activation audit 已覆盖当前关键机制；
+3. **第二模型与 query-positive gap 已闭合。** held-out Qili/NASA-POWER-2024 上 DeepSeek/MiMo transfer 已冻结；gateway-backup family 已完成 DeepSeek/MiMo 五种子 owner-query → guard closure → physical effect；
+4. **basis-selection side study 已按 kill criterion 终止。** A7/A10/A11 的 235 个正式 model requests 没有真实 alternative-proof / multi-source / shared-blocking / duplicate-evidence choice，不实现人为构造的 minimum-basis optimizer；
+5. **当前唯一主线是 paper/artifact freeze。** 论文数字由 `results/agentic/paper-v1/paper-results.json` 进入生成表；related work 与 novelty boundary 由 `NOVELTY-BOUNDARY-v1.md` 约束。
 
 当前不重新开放 automatic safe-action-prefix solver：在修正 global Task scope 后，ordinary backward slicing + current-state partial evaluation 已对 `453/453` runtime-unresolved dependency rows exact。只有未来 benchmark 出现该 ordinary compiler 不能重建的真实依赖缺口，才重新把 automatic dependency construction 升格为方法问题。
 
@@ -662,7 +661,14 @@ Semantic decision-state replanning               DONE
 Compact shadow-only control projection           DONE
 No-action decision sufficiency                    DONE (protocol v6)
 Protocol-v6 Method 5-seed confirmatory gate      DONE (15/15 rows)
-Protocol-v6 45 baseline confirmatory rows         RUNNING
+Protocol-v6 full 60-row confirmatory               DONE (A7)
+WirelessOpsAgent-style same-interface baseline     DONE (A8)
+Held-out Qili/NASA-POWER-2024 two-model transfer  DONE (A9)
+Query-positive DeepSeek five-seed acquisition      DONE (A10)
+Query-positive MiMo five-seed acquisition          DONE (A11)
+CF/CS + retired-dependency causal probes           DONE
+Basis-selection frozen-input headroom audit        DONE -> KILL (no real choice space)
+Paper-v1 four-table result authority               FROZEN
 ```
 
 当前 R3 实验入口：
@@ -687,16 +693,16 @@ AND R0 protocol audit PASS
 AND R2 PromptAssembly exact replay PASS
 ```
 
-R1/R3 已接入真实 DeepSeek Flash backend；缺 endpoint/key 时仍硬失败，不回退 scripted backend。真实模型结果必须保留 `ModelRequest / ModelAttempt / ModelUsage / PlannerDecision` ledger，并以当前 protocol revision 与 source manifest 区分开发批次；旧 protocol / scope-bug 结果只保留作 diagnosis，不与当前 confirmatory 拼表。
+R1/R3 已接入真实 DeepSeek Flash 与 MiMo v2.6 Flash backend；缺 endpoint/key 时仍硬失败，不回退 scripted backend。真实模型结果保留 `ModelRequest / ModelAttempt / ModelUsage / PlannerDecision` ledger，并以 protocol/context revision 与 source manifest 区分开发批次；旧 protocol / scope-bug 结果保留为 development diagnosis，不与 A7–A11 formal result 拼表。
 
 结果到文档使用单向生成链：
 
 ```text
 experiment runner
   -> aggregate.json / audit.json / replay_audit.json / source_manifest.json
-  -> scripts/make_agentic_artifacts.py
+  -> scripts/make_agentic_artifacts.py / scripts/make_agentic_paper_v1.py
   -> paper/generated/* + research/generated/*
   -> controlled blocks in research/README.md and results/README.md
 ```
 
-`make tables ARGS=--check` 与 `code/experiments/audit_tables.py` 会检查结果和生成物是否漂移；公开叙事不再手抄实验数字。
+`make tables ARGS=--check` 与 `code/experiments/audit_tables.py` 会检查结果和生成物是否漂移；公开叙事不再手抄实验数字。Agentic 实验资产的 formal/supporting/development/substrate 分层见 `results/agentic/README.md`。

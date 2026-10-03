@@ -6,6 +6,8 @@
 \usepackage[dvipsnames]{xcolor}
 \usepackage[colorlinks=true,linkcolor=NavyBlue,citecolor=PineGreen,urlcolor=NavyBlue]{hyperref}
 \usepackage{xspace}
+\usepackage{tikz}
+\usetikzlibrary{arrows.meta,positioning,fit,calc}
 \input{../../generated/agentic_facts.tex}
 \input{../../generated/agentic_paper_v1_facts.tex}
 \raggedbottom
@@ -113,10 +115,59 @@ minimum certificate selection, provenance witness minimization, or value of info
 problems are covered by established work~\cite{javdani2014drd,huang2022asr,deshpande2013sbfe,hellerstein2022adaptivity,green2007provenance,lin2026blip}.
 The frozen real-model claim ceiling is A7--A11 in the repository claim ledger.
 
+\begin{figure*}[t]
+\centering
+\resizebox{\textwidth}{!}{%
+\begin{tikzpicture}[
+  >=Latex,
+  node distance=5mm and 6mm,
+  box/.style={draw, rounded corners=2pt, align=center, inner sep=4pt, font=\footnotesize,
+              minimum height=8mm},
+  smallbox/.style={draw, rounded corners=2pt, align=center, inner sep=3pt, font=\scriptsize,
+                   minimum height=7mm},
+  flow/.style={->, thick},
+  note/.style={font=\scriptsize, align=center}
+]
+\node[box, fill=blue!6, minimum width=26mm] (world) {Physical / Data Plane\\battery, cache, links, config};
+\node[box, fill=green!7, right=of world, minimum width=24mm] (evidence) {Evidence World\\owner, time, provenance};
+\node[box, fill=orange!8, right=of evidence, minimum width=28mm] (compile) {Decision-Semantic\\Compiler};
+\node[box, fill=yellow!10, right=of compile, minimum width=28mm] (surface) {$R_t^{\rm model}$\\live plans + EvidenceNeed};
+\node[box, fill=purple!7, right=of surface, minimum width=25mm] (planner) {LLM Planner\\select / query / hold};
+\node[box, fill=red!6, right=of planner, minimum width=29mm] (exec) {Persistent Execution\\requested$\rightarrow$confirmed};
+
+\draw[flow] (world) -- (evidence);
+\draw[flow] (evidence) -- (compile);
+\draw[flow] (compile) -- (surface);
+\draw[flow] (surface) -- (planner);
+\draw[flow] (planner) -- (exec);
+\draw[flow] (exec.south) |- ++(0,-8mm) -| node[note, pos=.42, below] {physical effect changes the next world} (world.south);
+
+\node[smallbox, below=8mm of compile, minimum width=28mm] (task) {Operational Task\\authority + effect ceiling};
+\node[smallbox, below=8mm of surface, minimum width=28mm] (audit) {$R_t^{\rm audit}$\\full replayable relation};
+\node[smallbox, below=8mm of planner, minimum width=27mm] (cap) {Capability Surface\\owner / path / cost / failure};
+\draw[flow] (task) -- (compile);
+\draw[flow] (compile) -- (audit);
+\draw[flow] (cap) -- (planner);
+\draw[flow] (planner) -- node[note, right] {blocking query} (cap);
+
+\node[note, below=2mm of audit] {retired dependencies stay auditable but leave the model-facing surface};
+\end{tikzpicture}
+}
+\caption{Closed-loop decision-semantic compilation. The compiler does not recover complete world
+state. It maintains a typed relation between currently legal plans and their supporting/blocking
+evidence. A sufficient relation produces a persistent semantic commitment; a blocked relation
+produces an owner-scoped query whose result re-enters the same compiler.}
+\label{fig:method-overview}
+\end{figure*}
+
 \section{Scenario and System Model}
 \label{sec:system}
-We consider pre-disaster mountain monitoring with nodes $i\in\mathcal N$, a gateway $g$, and a
-centre $c$. Time is slotted. A monitoring obligation
+We consider the same source-grounded deployment used by the preceding systems study: fourteen
+battery/solar monitoring nodes in two groups, a field gateway, LoRaWAN Class~A access, cellular
+primary backhaul, and a sparse field-to-centre backup channel. The backup is not a hidden control
+path: it can carry authorised field-to-centre traffic but does not silently install node
+configuration. Nodes $i\in\mathcal N$, gateway $g$, and centre $c$ evolve in slotted time. A
+monitoring obligation
 \begin{equation}
 o=(i,m,r_o,[s_o,e_o],d_o)
 \end{equation}
@@ -258,6 +309,61 @@ The benchmark contains six Operational Task families: O1 monitoring continuity, 
 escalation, O3 backhaul-outage sustainment, O4 energy-constrained monitoring, O5 recovery and
 reconciliation, and O6 compound long-horizon operation. The same deployment, physical transition,
 scorer and information boundary are reused across methods.
+
+\begin{table*}[t]
+\centering\small
+\caption{Operational Task families. Tasks change authorised objectives/disturbances while reusing
+the same communication substrate, evidence semantics, capability registry, and scorer.}
+\label{tab:tasks}
+\resizebox{\textwidth}{!}{\input{../../generated/table_agentic_tasks.en.tex}}
+\end{table*}
+
+\subsection{Source-grounded workload and splits}
+The deployment geometry is derived from SRTM1 terrain; propagation and coverage use the repository
+ITM/LoRa model; temporal link behavior is grounded by a ChirpBox-derived process; and solar input
+uses NASA POWER hourly irradiance/temperature. We split source periods before random seeds: 2022,
+2023, and 2024 form source-separated train/development/test periods in the benchmark substrate.
+The held-out transfer in A9 additionally replaces the development task schedule with a Qili
+source-derived Operational Task and evaluates NASA POWER 2024. Random seeds $0,\ldots,4$ are used
+for the formal five-seed tables; seeds never grant the Agent evaluator-only future traces.
+
+The query-positive family is an O3-style gateway-backup coordinate with backup initially disabled
+and delayed primary forwarding. It was chosen only after a centre-originated variant exposed a
+real transport/freshness contradiction: with long delay, the observation returned after its legal
+freshness window; with shorter delay, the backlog had already cleared. We did not relax the
+freshness rule to create a positive example. The final gateway-owner coordinate uses an already
+implemented local observation path and an already implemented backup effect.
+
+\subsection{Models, protocol, and inference budget}
+A7/A8 use DeepSeek Flash through the official provider with temperature 0, low reasoning effort,
+JSON-object output, a maximum of 8192 generated tokens, and at most 32 model calls per episode.
+All four A7 arms share the same Task, capability surface, physical simulator, model budget, and
+decision-state replan mode; only the model-facing Context construction differs. A8 keeps the same
+candidate menu, plan-ID expander, persistent executor, and model budget while replacing the Method
+projection with the WirelessOpsAgent-style assurance adaptation.
+
+The held-out/query-positive transfer adds MiMo v2.6 Flash through its official provider. MiMo uses
+temperature 0, thinking disabled, JSON-object output, the same 8192-token ceiling, and the same
+32-call episode ceiling. The planner JSON contract remains the no-action-sufficiency protocol; v7
+refers to the Context projection change that removes unresolved conditions from retired
+rejected/dominated plans, not to a different hidden action space.
+
+\subsection{Metrics and fairness}
+Physical task outcome remains primary. We report Timely Obligation Delivery Rate, delivery
+latency/AoI/recovery where relevant, configuration lifecycle state, communication energy/airtime,
+and fallback use. Agent/runtime diagnostics report effect-scope exactness, observation/tool calls,
+stopping behavior, model attempts, model tokens, and planner latency. A packet or tool success is
+never relabeled as task success; the obligation denominator is evaluator-owned and cannot be
+changed by the Agent.
+
+All online baselines share the same authorised capabilities, information boundary, local autonomy,
+and effect ceiling. FullDump exposes all legal materialized evidence but no hidden simulator truth.
+generic-ReAct removes EvidenceNeed/InvestigationState harness structure while preserving the same
+tool surface. Deterministic comply/checklist consumers validate compiler and physics semantics but
+are not counted as model results. Evaluator-only delivery/energy oracles remain outside the online
+comparison. Every confirmatory result freezes source/code manifests and checks seed/task
+completeness, retry/exception state, denominator integrity, source version, hidden-truth leakage,
+and post-hoc exclusion before claim promotion.
 
 We use four replay levels. R0 replays protocol/state transitions; R1 substitutes a planner on
 frozen model inputs; R2 reconstructs exact Context materialisation; R3 reruns the full simulator.

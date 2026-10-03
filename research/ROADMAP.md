@@ -116,7 +116,7 @@ P3 当前只保留 generic VoI/active acquisition 为条件项。VoI 必须等 e
 
 其中 persistent intent、plan-id expansion、scoped execution 等属于 ordinary Runtime substrate，不单列为算法 novelty。automatic safe-action-prefix / dependency solver 只有在现有 ordinary dependency compiler 出现真实缺口后才重新开放；当前正确 global scope 下 `backward slice + current-state partial evaluation` 对 `453/453` runtime-unresolved dependency rows exact。
 
-## P4 — LLM Agent benchmark / 当前主线
+## P4 — LLM Agent benchmark / 已冻结
 
 Planner-level gold replacement 已经可执行：capability selection / order / arguments / policy 可以在同一 R3 episode 中累计替换并重跑物理系统。模型横向比较之外，完整目标仍是：
 
@@ -134,7 +134,7 @@ Full Agent
 
 目标不是只报“哪个模型最高分”，而是沿 Runtime Trace 定位 task grounding、evidence、tool/capability、context、policy 和 physical execution 各层的 failure contribution。
 
-P4 已进入真实 DeepSeek Flash full-episode confirmatory 阶段。开发过程先后暴露并修复了三类接口/语义错误：
+P4 已完成真实 DeepSeek Flash full-episode confirmatory，并通过第二模型与 query-positive 结果收口。开发过程先后暴露并修复了三类接口/语义错误：
 
 ```text
 global Task scope 被 report availability 错误缩窄
@@ -142,21 +142,21 @@ candidate semantic plan 被要求由模型机械重写大量 invocations
 closed zero-effect hold state 在 compact control surface 上被误标为 undetermined
 ```
 
-当前 protocol v6 下，localized O2 / O5 / O6 × seeds0..4 的 Method-first confirmatory gate 已完成 `15/15`：所有成功 planner turns effect-scope exact、0 observation、candidate/legacy physical exact；剩余 45 个 baseline rows 正在冻结 source manifest 下顺序运行。正式模型方法 claim 仍等待完整 60-row aggregate，不提前写入 `results/CLAIMS.md`。
+当前 protocol v6 下，localized O2 / O5 / O6 × seeds0..4 × 4 arms 的 60-row confirmatory 已完成并冻结为 A7。Method 15/15 episodes physical exact、123/123 successful planner turns effect-scope exact、0 extra observation。该结果只解释已编译 control semantics 的可靠消费：123/123 Method requests 都是 unique ready supported plan，visible EvidenceNeed=0。
 
 当前 Method v1 的方法对象是 [`PLAN-EVIDENCE-EXECUTION-v1.md`](PLAN-EVIDENCE-EXECUTION-v1.md) 所定义的 control-relevant Plan–Evidence–Execution relation：完整 audit graph、control-eligible surface、model-facing projection 与 persistent execution surface 分层；Decision Sufficiency 只描述当前 plan/no-action 是否仍被 decision-changing evidence 阻塞，不宣称新提出一般 decision-region 或 action-sufficient representation。
 
-当前建设顺序冻结为：
+后续结果已经按下列顺序闭合：
 
 ```text
-1. 完成 protocol-v6 5-seed main-table confirmatory
-2. 冻结 formal result / candidate A7 claim
-3. 做 full-episode component ablation，解释现有收益来自哪里
-4. 再决定第二模型 confirmatory
-5. query-positive safety case / composed fallback closure 作为 coverage extension
+1. A7 protocol-v6 5-seed main-table confirmatory                DONE
+2. A8 same-interface WirelessOpsAgent-style strong comparison    DONE
+3. CF/CS / checklist / retired-dependency mechanism attribution  DONE
+4. A9 held-out Qili/NASA-POWER-2024 two-model transfer           DONE
+5. A10/A11 query-positive owner acquisition loop                 DONE
 ```
 
-在第 1 项完成前，不开发 safe-action-prefix solver、Context compression、新 invalidation algorithm 或新的 runtime entity。
+当前不再开发 safe-action-prefix solver、Context compression、新 invalidation algorithm 或新的 runtime entity。frozen-input basis-selection audit 已证明当前正式 workload 没有真实 proof-choice headroom；若未来 workload 自然产生普通 compiler 无法覆盖的动态结构，再重新立项。
 
 [`AGENTIC-ATTRIBUTION-PROTOCOL.v1.json`](AGENTIC-ATTRIBUTION-PROTOCOL.v1.json) 已冻结 layer ownership：当前架构下 Task/EvidenceNeed/Percept/Context 属于 runtime/method ablation，替换后必须重新跑模型；capability selection/order/arguments 属于 planner/model post-hoc diagnostic；Gold Policy 与 Physical Oracle 必须回到 R3 才能评价通信后果。
 
@@ -185,7 +185,7 @@ Agent diagnostics 同时报告，但不与通信指标硬加权成一个 overall
 - five-axis paired gate：weather window、backhaul outage、target scope、evidence owner、deployment scale，共 10 个 coordinate，全部通过 paired physical-equivalence、R0/R1/R2 replay 与 axis-activation audit。
 - secondary task-authority transfer：S14/Qili 公开监测文献的阶段顺序映射为 source-derived Operational Task；5 seeds 下 hand-authored 与 source-derived schedule 均通过 paired physical-equivalence / replay，且 hand-authored arm 逐项复现主 O2 aggregate。时间压缩与通信 profile 仍是 A-layer benchmark transform，不当作现场预警阈值。
 
-当前正式 coordinate 由 [`AGENTIC-ROBUSTNESS-MATRIX.v1.json`](AGENTIC-ROBUSTNESS-MATRIX.v1.json) 持有，结果由 `results/agentic/robustness-matrix-v1/` 持有。下一步扩展：
+当前正式 coordinate 由 [`AGENTIC-ROBUSTNESS-MATRIX.v1.json`](AGENTIC-ROBUSTNESS-MATRIX.v1.json) 持有，结果由 `results/agentic/robustness-matrix-v1/` 持有。A9 已额外完成 Qili/NASA-POWER-2024 held-out task/source/model transfer。其余扩展不再作为当前论文 blocker：
 
 - NASA POWER 2022/2023/2024 与不同 start window；
 - source-grounded vs synthetic harvest；
@@ -199,6 +199,8 @@ Agent diagnostics 同时报告，但不与通信指标硬加权成一个 overall
 地灾 physics 只作为上游 task generator；主 Agent 不承担灾害预测。
 
 ## P7 — Artifact / paper freeze
+
+当前状态：**主线。** A7–A11 已冻结；`results/agentic/paper-v1/paper-results.json` 是四张正文结果表的 compact numeric authority；`paper/agentic/en/main.tex` 是当前投稿工作稿。大型 raw trace 本地保留，formal compact authority 与生成表进入 Git。
 
 每个 confirmatory experiment 必须有：
 

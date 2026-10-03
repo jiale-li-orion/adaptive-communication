@@ -51,6 +51,44 @@ def main() -> int:
         raise RuntimeError("paper-results.json is not FROZEN")
     tables = data["tables"]
 
+    task_rows = [
+        ("O1", "Monitoring continuity", "maintain the authorised profile under ordinary intermittent delivery", "TDR, latency, AoI, resource use"),
+        ("O2", "Risk escalation", "install denser externally authorised sampling/reporting, globally or on a target subset", "effect scope, install correctness, physical reference"),
+        ("O3", "Backhaul-outage sustainment", "sustain service when the primary return path degrades and fallback may become useful", "gateway evidence, backup decision, historical delivery"),
+        ("O4", "Energy-constrained monitoring", "execute the same monitoring task under NASA POWER-derived or declared low harvest", "task completion, survival, residual energy, gaps"),
+        ("O5", "Recovery and reconciliation", "reconcile configuration/history as disconnected paths recover", "requested/applied/confirmed state, stale or duplicate effects, recovery"),
+        ("O6", "Compound long horizon", "combine task revision, access/backhaul interruption, energy pressure, and recovery", "Context evolution, stopping, execution fidelity"),
+    ]
+    lines = [
+        r"\begin{tabular}{p{0.07\textwidth}p{0.20\textwidth}p{0.37\textwidth}p{0.27\textwidth}}",
+        r"\toprule",
+        r"Task & Operational change & Decision surface & Primary diagnostic / outcome \\",
+        r"\midrule",
+    ]
+    for task, change, surface, outcome in task_rows:
+        lines.append(f"{esc(task)} & {esc(change)} & {esc(surface)} & {esc(outcome)} \\\\")
+    lines += [r"\bottomrule", r"\end{tabular}"]
+    write("table_agentic_tasks.en.tex", "\n".join(lines))
+
+    task_rows_zh = [
+        ("O1", "监测连续性", "普通间歇交付下维持既定授权监测 profile", "TDR、时延、AoI、资源使用"),
+        ("O2", "风险升级", "全局或局部目标上安装外部授权的更密采样/上报配置", "effect scope、安装正确性、物理参照"),
+        ("O3", "回传中断维持", "主回传退化时维持服务并判断是否启用 fallback", "网关证据、backup 决策、历史交付"),
+        ("O4", "能量受限监测", "NASA POWER 派生或声明低采能条件下执行同一监测任务", "任务完成、存活、剩余能量、监测缺口"),
+        ("O5", "恢复与调和", "断连路径恢复后调和配置与历史数据", "requested/applied/confirmed、陈旧/重复 effect、恢复"),
+        ("O6", "复合长时运行", "任务修订、接入/回传中断、能量压力与恢复共同发生", "Context 演化、停止、执行一致性"),
+    ]
+    lines = [
+        r"\begin{tabular}{p{0.07\textwidth}p{0.20\textwidth}p{0.37\textwidth}p{0.27\textwidth}}",
+        r"\toprule",
+        r"任务 & 业务变化 & 决策面 & 主要诊断 / 结果 \\",
+        r"\midrule",
+    ]
+    for task, change, surface, outcome in task_rows_zh:
+        lines.append(f"{esc(task)} & {esc(change)} & {esc(surface)} & {esc(outcome)} \\\\")
+    lines += [r"\bottomrule", r"\end{tabular}"]
+    write("table_agentic_tasks.zh.tex", "\n".join(lines))
+
     lines = [
         r"\begin{tabular}{llrrrrrr}",
         r"\toprule",
