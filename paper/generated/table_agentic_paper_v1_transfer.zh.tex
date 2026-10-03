@@ -1,0 +1,10 @@
+\begin{tabular}{p{0.18\textwidth}p{0.12\textwidth}rrrrp{0.20\textwidth}}
+\toprule
+设置 & 模型 & Effect exact & 物理一致 & 查询 & 收益 \\
+\midrule
+留出 Qili/NASA-POWER-2024 & DeepSeek Flash & 29/29 & 5/5 & 0 & N/A (query-negative transfer) \\
+留出 Qili/NASA-POWER-2024 & MiMo v2.6 Flash & 29/30 & 5/5 & 1 & N/A (query-negative transfer) \\
+Query-positive 网关备用链路 & DeepSeek Flash & 56/56 & 5/5 execution-equivalent (4 direct + 1 recovered) & 16 & TDR +5.238 pp; AoI -1150.7 s \\
+Query-positive 网关备用链路 & MiMo v2.6 Flash & 56/56 & 5/5 direct & 16 & TDR +5.238 pp; AoI -1150.7 s \\
+\bottomrule
+\end{tabular}

@@ -1,0 +1,34 @@
+{
+  "arms": [
+    "action_conditioned_compact",
+    "task_conditioned",
+    "full_dump",
+    "generic_react"
+  ],
+  "audit_status": "PASS",
+  "claim_boundary": "Confirmatory evidence is limited to DeepSeek Flash, three development tasks and five simulator seeds. Candidate/legacy physical equality is fidelity to the declared comply reference, not proof of global communication-policy optimality.",
+  "generator": "scripts/make_agentic_artifacts.py",
+  "model": "deepseek-flash",
+  "protocol_revision": "communication-planner-json-v6-no-action-sufficiency",
+  "result_root": "results/agentic/main-table-v6-confirmatory/deepseek-flash",
+  "seeds": [
+    0,
+    1,
+    2,
+    3,
+    4
+  ],
+  "source_sha256": {
+    "aggregate.json": "ba6f242f048dfd0d7d4bcd14674e1391ea2fa29156a04200ad7570b1bc1a3cfb",
+    "audit.json": "a845cace0e6f5cd7cb68276625a04b67dd82fac523710daaecc155afc488d8bc",
+    "experiment_contract.json": "d91184309bca03037fb4f10d32554c7cfcedc242504e67dd4f073c7d5d3cb4d4",
+    "per_episode_results.jsonl": "155bca070fd988b5f62772679b4f17ddd3b8764468d706dcca227f1b425865f0",
+    "run_manifest.json": "19180d4a358a3c7fb70e7817fc4e86e2bea4f52268a647013894cc467f9f5008",
+    "source-manifest.json": "10ad6cd61cc09fbb80a8429b0f09ff037b85c67bb2f6c3ba7e62da03c6e0d0ec"
+  },
+  "tasks": [
+    "localized-o2",
+    "o5",
+    "o6"
+  ]
+}

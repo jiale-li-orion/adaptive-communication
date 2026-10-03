@@ -1,0 +1,10 @@
+\begin{tabular}{p{0.18\columnwidth}p{0.30\columnwidth}p{0.42\columnwidth}}
+\toprule
+机制 & 干预 & 结果 \\
+\midrule
+证据投影 & CF: same candidate, needs, sufficiency + FullDump evidence & O5 action exact=True; O6 hold exact=True; FullDump input increases model cost (see T2) \\
+显式 no-action sufficiency & CS: remove explicit sufficiency from same compact input & O6 hold stop\_exact=False; spurious observations=2 \\
+退役依赖投影 & M keep retired unresolved vs P prune retired-plan unresolved vs D prune more & M effect exact 1/3, obs=4; P 3/3, obs=0; D 3/3, obs=0 \\
+决策条件取证 & Full loop vs no-acquisition control & 5/5 TDR improved; 5/5 AoI improved; mean TDR +5.238 pp; mean AoI -1150.7 s \\
+\bottomrule
+\end{tabular}

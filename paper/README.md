@@ -1,24 +1,23 @@
 # 论文工作稿
 
-当前论文主线已经进入 **Evidence-Grounded Closed-Loop Agentic Communication**。新主稿位于 [`agentic/en/main.tex`](agentic/en/main.tex)；原 `en/`、`zh/` 两份系统论文工作稿继续保留，用于历史机制/claim 追溯，不被当前稿覆盖。
+当前论文主线已经进入 **Evidence-Grounded Closed-Loop Agentic Communication**。新主稿位于 [`agentic/en/main.tex`](agentic/en/main.tex)。原 `en/`、`zh/` 两份系统论文工作稿继续作为**兼容纠错稿**保留：它们允许接收 C* claim 的语义修正、生成表和冻结结果传播，因此不是“不可变历史快照”。Agentic 转向前最后一版共同修改稿已经单独冻结到 [`_archive/system-paper-2026-09-20/`](_archive/system-paper-2026-09-20/README.md)，source commit 为 `dd4f31a`，该目录不再修改。
 
 历史系统稿围绕**控制失联后持续执行的通信状态、现场证据与执行位置**组织。源端释放是主要正结果，配置回退与精确停止参照说明普通机制足够的范围，Agent 轨迹用于接口失效分析。配置租约和保留视界不再作为待兑现的新算法贡献。当前 `agentic/` 稿在这套物理与实验底座上进一步组织 Evidence World、Operational Task、typed Capability、Agent Runtime 与 Communication $\times$ Agent evaluation。
 
-三份工作稿共享 [refs.bib](refs.bib)，但主张边界分开：旧中英文稿保留系统阶段证据；Agentic 英文稿只使用已经冻结的 Agentic deterministic/infrastructure 结果，并把真实模型结果明确留空。
+三份工作稿共享 [refs.bib](refs.bib)，但主张边界分开：旧中英文兼容稿承载系统阶段 `C*` 证据；Agentic 英文稿使用当前 A7–A11 正式 Agentic 结果。所有 claim 的**当前状态仍只有一处**：[`../results/CLAIMS.md`](../results/CLAIMS.md)。论文目录本身不建立第二份状态表。
 
 | 文件 | 定位 | 版式 | 产物 |
 |---|---|---|---|
 | [agentic/en/main.tex](agentic/en/main.tex) | 当前 Agentic Communication 工作稿 | IEEEtran 双栏 | [英文 PDF](agentic/en/main.pdf) |
-| [en/main.tex](en/main.tex) | 历史系统论文英文工作稿 | IEEEtran 双栏 | [英文 PDF](en/main.pdf) |
-| [zh/main.tex](zh/main.tex) | 历史系统论文中文工作稿 | article 中文单栏 | [中文 PDF](zh/main.pdf) |
+| [en/main.tex](en/main.tex) | 系统论文英文兼容纠错稿 | IEEEtran 双栏 | [英文 PDF](en/main.pdf) |
+| [zh/main.tex](zh/main.tex) | 系统论文中文兼容纠错稿 | article 中文单栏 | [中文 PDF](zh/main.pdf) |
+| [_archive/system-paper-2026-09-20/](_archive/system-paper-2026-09-20/README.md) | Agentic 转向前系统稿不可变源快照 | source snapshot | `dd4f31a` |
 
 ## 论文如何闭环
 
 本目录当前保存**原系统论文工作稿及其历史研究计划**。`RESEARCH_PLAN.md` 与 `AGENT_RESEARCH.md` 现在是 compatibility pointer，原正文已进入 `paper/_archive/`；它们继续服务旧代码/claim 追溯，不再拥有当前 Agentic Communication 的实验顺序。
 
-当前 Agent 研究与实验工程请从 [`../research/README.md`](../research/README.md)、[`../research/EXPERIMENT-DESIGN-v1.md`](../research/EXPERIMENT-DESIGN-v1.md) 和 [`../research/ROADMAP.md`](../research/ROADMAP.md) 开始。`agentic/` 正文只引用已经冻结并通过 audit 的 deterministic/infrastructure 结果；真实 LLM 结果仍为空，因为当前环境没有可用 endpoint/key，任何 scripted backend 都不得冒充模型分数。
-
-当前有可复现的组件正结果。完整系统的独立增量和适用范围仍是决定投稿价值的证据缺口；格式完整与构建通过不代表这些缺口已经完成。老师汇报中的失联配置问题继续保留，后续计划不再承诺配置有效期优于固定 TTL。
+当前 Agent 研究与实验工程请从 [`../research/README.md`](../research/README.md)、[`../research/EXPERIMENT-DESIGN-v1.md`](../research/EXPERIMENT-DESIGN-v1.md) 和 [`../research/NOVELTY-BOUNDARY-v1.md`](../research/NOVELTY-BOUNDARY-v1.md) 开始。`agentic/` 正文只引用已经冻结并通过 audit 的 A7–A11 结果；scripted backend 仍不得冒充模型结果。当前方法/结果已经进入 paper freeze，后续工作以正文、related work、artifact 和 repository consistency 为主，不再把“继续跑更多模型”当默认下一步。
 
 ## 构建
 
@@ -56,8 +55,13 @@ make agentic-paper
 | Agentic source-period gate | `results/agentic/source-period-smoke-v1.json` |
 | Agentic five-axis robustness gate | `results/agentic/robustness-matrix-v1/aggregate.json` + `audit.json` |
 | Agentic source-derived task transfer | `results/agentic/task-transfer-qili-v1/aggregate.json` + `audit.json` |
+| Agentic v6 live-model main table / A7 | `results/agentic/main-table-v6-confirmatory/deepseek-flash/aggregate.json` + `audit.json` |
+| WirelessOpsAgent-style comparison / A8 | `results/agentic/woa-style-baseline-v1/deepseek-flash/confirmatory-{aggregate,audit,analysis}.json` |
+| Held-out task/source/model transfer / A9 | `results/agentic/heldout-qili-2024-w1/model-transfer-v7/confirmatory-{aggregate,audit}.json` |
+| Query-positive acquisition / A10–A11 | `results/agentic/query-positive-gateway-backup-v1/` compact aggregate/audit/summary authorities |
+| Agentic paper-v1 four-table authority | `results/agentic/paper-v1/paper-results.json` |
 
-生成物在 `generated/` 入库，不手改。运行 `make tables ARGS=--check` 会同时核对旧表、Agentic 新表、研究摘要和结果登记；`make check` 核对整仓检查与联合层锚点。后续实验的期望收益只写在研究计划中，不进入摘要或结果段。
+生成物在 `generated/` 入库，不手改。运行 `make tables ARGS=--check` 会同时核对旧表、Agentic 新表、研究摘要和结果登记；`make check` 核对整仓检查与联合层锚点。当前论文正文数字以 `paper-v1` frozen authority 为准，不再手工复制模型结果。
 
 O2 当前端到端流水线可直接运行：
 
@@ -69,4 +73,4 @@ make agentic-robustness
 make agentic-transfer
 ```
 
-历史版本通过 Git 与 `results/_withdrawn/` 定位；`adae80d` 保存本轮主线重写前的稿件与入口。作者本地 `docs/` 不是复现依赖。
+历史版本通过 Git、`paper/_archive/` 与 `results/_withdrawn/` 定位。系统稿 source snapshot 固定在 `dd4f31a`；兼容稿后续的修改只用于把 claim 纠错传播到可构建稿件，不能据此改写历史版本。作者本地 `docs/` 不是复现依赖。

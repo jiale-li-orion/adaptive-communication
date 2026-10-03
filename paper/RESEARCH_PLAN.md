@@ -8,8 +8,9 @@
 
 - [`../research/README.md`](../research/README.md)
 - [`../research/EXPERIMENT-DESIGN-v1.md`](../research/EXPERIMENT-DESIGN-v1.md)
+- [`../research/SYSTEM-MODEL-v1.md`](../research/SYSTEM-MODEL-v1.md)
+- [`../research/OWNERSHIP-v1.md`](../research/OWNERSHIP-v1.md)
 - [`../research/ROADMAP.md`](../research/ROADMAP.md)
-- [`../docs/Agentic-Communication-后续研究Ownership.md`](../docs/Agentic-Communication-后续研究Ownership.md)
 - [`../results/CLAIMS.md`](../results/CLAIMS.md)
 
 旧代码中 `paper/RESEARCH_PLAN.md §X` 的引用应回看归档正文，不代表重新开放历史候选。

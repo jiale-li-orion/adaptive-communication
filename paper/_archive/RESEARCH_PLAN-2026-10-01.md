@@ -1,5 +1,11 @@
 # 论文主线与闭环计划
 
+superseded_by: `research/EXPERIMENT-DESIGN-v1.md` + `research/ROADMAP.md`
+
+reason: 2026-10-01 后研究对象转入 Evidence-Grounded Closed-Loop Agentic Communication；本文件保存系统论文阶段的闭环、feedback-budget、repair 与旧 evidence-delivery 计划，只作历史 provenance，不再定义当前实验顺序。
+
+source_commit: `5633fd0`（本 archive 首次冻结入库的提交）
+
 决策日期：2026-09-20。证据基线：`adae80d`。本文负责研究取舍与写作安排；主张状态仍唯一取自 [`results/CLAIMS.md`](../results/CLAIMS.md)，实验口径取自 `spec/`，不在此另建状态表。既往叙事可由该提交恢复。
 
 > **2026-09-21 晚间探索状态（不改变 CLAIMS）。** deadline 修正后的 C1--C11 已完成统一注册；旧 V1 probe+repair、retention-horizon、固定资源 Candidate C 吞吐增量均维持关闭。现实场景中的 access assist（relay/route/temporary gateway）与 backup backhaul（cellular/satellite/BeiDou-RDSS）已作为**有代价能力**进入 action space。强普通对照 `AccessHealthBudget + DeadlinePressureBudget` 已吃掉同预算 offline timing oracle 的 **99.7%** 交付：oracle 仅多 `+19/+12/+4` 条，均值约 `0.25%`，且代价略高。故 **service-gain Gate A 已关闭，不实现 StageRepairIR**。当前只保留 Gate B：在相同交付下能否 materially 减少 access activation、backup activation 或 boost bytes；若普通 1--4 h budget Pareto 面已出现低成本平台，则该方法线整体关闭。详细 gate 见 `local_experiments/agent_repair/astra_review_2026-09-21/79-GPT-REOPEN-CANDIDATE-C-CAPABILITY-REPAIR.md`。

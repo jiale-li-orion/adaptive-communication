@@ -18,6 +18,23 @@ other_repo/
 # ---- 本地探索与审阅材料：不上传远端 ----
 /local_experiments/
 
+# ---- 本地长任务 / worker 编排：研究过程态，不作为论文依赖 ----
+/worker_pool/
+
+# ---- 大型运行流水：正式 claim 只发布 compact summary / aggregate / audit ----
+# live-model / simulator trace 可由正式 runner 重新生成，本地保留但不进远端。
+/results/agentic/*
+/results/agentic/**/runtime_trace.jsonl
+/results/agentic/**/runtime_traces/
+/results/agentic/**/runner.log
+/results/agentic/**/progress.jsonl
+/results/agentic/**/per_episode_results.jsonl
+/results/agentic/**/authorization_records.json
+/results/agentic/**/driver-rc.txt
+/results/agentic/**/confirmatory-safe-driver-rc.txt
+/results/agentic/**/mimo-seed0-driver-rc.txt
+/results/agentic/**/mimo-confirmatory-safe-driver-rc.txt
+
 # ---- 系统与工具文件 ----
 .DS_Store
 Thumbs.db

@@ -6,7 +6,8 @@
 
 - [`../research/README.md`](../research/README.md)
 - [`../research/EXPERIMENT-DESIGN-v1.md`](../research/EXPERIMENT-DESIGN-v1.md)
+- [`../research/SYSTEM-MODEL-v1.md`](../research/SYSTEM-MODEL-v1.md)
+- [`../research/OWNERSHIP-v1.md`](../research/OWNERSHIP-v1.md)
 - [`../research/ROADMAP.md`](../research/ROADMAP.md)
-- [`../docs/Agentic-Communication-后续研究Ownership.md`](../docs/Agentic-Communication-后续研究Ownership.md)
 
 代码或旧结果中若仍写 `paper/AGENT_RESEARCH.md §X`，其历史章节内容应在归档正文中追溯；这些引用不表示该旧计划仍是当前研究 authority。

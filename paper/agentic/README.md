@@ -7,7 +7,8 @@
 正文定义与实验协议从以下文件读取：
 
 - `research/EXPERIMENT-DESIGN-v1.md`
-- `docs/s6-model/system-model.md`
+- `research/SYSTEM-MODEL-v1.md`
+- `research/OWNERSHIP-v1.md`
 - `research/COMMUNICATION-DOMAIN-REGISTRY.v0.1.json`
 - `research/AGENTIC-BASELINE-REGISTRY.v1.json`
 - `research/AGENTIC-BENCHMARK-SPLIT.v1.json`
@@ -21,14 +22,17 @@
 - `paper/generated/table_agentic_robustness.*.tex`
 - `paper/generated/table_agentic_task_transfer.*.tex`
 - `paper/generated/table_agentic_attribution_infra.*.tex`
+- `paper/generated/table_agentic_v6_confirmatory.*.tex`（仅在正式 confirmatory `audit.json=PASS` 后生成）
 
 禁止手抄实验数字到正文。
 
 ## Current claim ceiling
 
-当前可以写入 Results 的是 runtime/physics conformance、Context materialization、deterministic baseline overhead、source-period/robustness gate、source-derived Operational Task transfer、attribution-protocol infrastructure。
+当前正文 claim ceiling 为 `results/CLAIMS.md` A7–A11。A1–A6 继续承担 runtime/fairness/infrastructure 证据；A7–A11 已覆盖 v6 live-model main table、same-interface WirelessOpsAgent-style comparison、held-out task/source/model transfer，以及 DeepSeek/MiMo query-positive evidence-acquisition loop。
 
-当前**不能**写成完成结果的是 LLM model quality。仓库已有 `communication-planner-json-v1` protocol、R1/R3 CLI 和三-context frozen inputs，但当前环境无 endpoint/key；模型分数必须来自真实 backend run，不能回退 scripted consumer。
+论文不得把 A7 解释成复杂多候选推理：123/123 Method requests 均只有一个 ready supported plan 且 visible EvidenceNeed 为空。A8 只支持同可靠性下的模型成本差异，不支持“比 WirelessOpsAgent 更可靠”。A10/A11 只支持一个 frozen gateway-backup acquisition family 的双模型闭环，不支持全局最优 evidence acquisition。
+
+当前方法进入 paper freeze。novelty boundary 由 `research/NOVELTY-BOUNDARY-v1.md` 约束；basis-selection side study 已因 frozen workloads 不存在真实 alternative-proof choice 而按 kill criterion 终止。模型实验始终禁止回退 scripted consumer。
 
 ## Build
 

@@ -9,7 +9,7 @@ PY   := python3
 # 与 code/run_checks.py 内部设置的 PYTHONPATH 一致，保证从根目录与从子目录运行等价。
 export PYTHONPATH := $(ROOT)/libs/pylibs:$(ROOT)/code/v3joint:$(ROOT)/code/instance:$(ROOT)/code/physics:$(ROOT)/code/runtime:$(ROOT)/code/experiments:$(ROOT)/code/analysis:$(ROOT)/code/monitoring
 
-.PHONY: all check paper agentic-paper tables agentic-o2 agentic-diagnosis agentic-baselines agentic-communication-baselines agentic-source-smoke agentic-robustness agentic-transfer agentic-model-inputs agentic-model-matrix agentic-r1-model agentic-r3-model agentic-preapi deps data clean help
+.PHONY: all check paper agentic-paper tables agentic-o2 agentic-diagnosis agentic-baselines agentic-communication-baselines agentic-source-smoke agentic-robustness agentic-transfer agentic-action-context agentic-context-transition agentic-control-opportunity agentic-context-transition-r1 agentic-model-inputs agentic-model-matrix agentic-r1-model agentic-r3-model agentic-preapi deps data clean help
 
 AGENTIC_SEEDS ?= 0,1,2,3,4
 
@@ -27,6 +27,10 @@ help:
 	@echo "make agentic-source-smoke  跑 O4 NASA POWER 2022/2023/2024 source-period full-sim gate"
 	@echo "make agentic-robustness  跑 weather/outage/scope/owner/scale 五轴 paired full-sim gate"
 	@echo "make agentic-transfer  跑 S14/Qili source-derived Operational Task 5-seed transfer gate"
+	@echo "make agentic-action-context  跑 localized O2 action-conditioned Context method probe，并冻结 4 个预注册真实模型事件点"
+	@echo "make agentic-context-transition  跑 O5 Task-revision consequence、冻结 Context update 四臂并做 pre-model validate"
+	@echo "make agentic-control-opportunity  跑 O5 execution-layer audit + 20-seed remote-evidence/control-opportunity mechanism robustness"
+	@echo "make agentic-context-transition-r1 MODEL=<id> [ARGS='...']  在 8 个冻结 Task-transition 输入上跑真实模型 R1"
 	@echo "make agentic-model-inputs  冻结 task-conditioned/full-dump/generic-ReAct 三套 O2 R1 输入（无需 API）"
 	@echo "make agentic-model-matrix MODEL=<id> [ARGS='...']  同模型三 context 的 R1→R3 统一流水线；需真实 endpoint/key"
 	@echo "make agentic-preapi  重跑全部无需 API 的正式 Agentic/communication baseline、robustness、transfer、attribution 与 frozen inputs"
@@ -64,12 +68,32 @@ tables:
 	$(PY) scripts/make_agentic_baseline_registry.py $(ARGS)
 	$(PY) scripts/make_agentic_robustness_manifest.py $(ARGS)
 	$(PY) scripts/make_agentic_attribution_protocol.py $(ARGS)
+	$(PY) scripts/make_agentic_paper_v1.py $(ARGS)
 
 # Agentic Communication 第一条正式实验流水线：结果 -> audit -> research/results/paper 生成物。
 agentic-o2:
 	$(PY) code/experiments/agentic/run_o2_risk_escalation.py --variant global --seeds $(AGENTIC_SEEDS)
 	$(PY) code/experiments/agentic/run_o2_risk_escalation.py --variant localized --seeds $(AGENTIC_SEEDS)
 	$(PY) scripts/make_agentic_artifacts.py
+
+agentic-context-transition:
+	$(PY) code/experiments/agentic/run_o5_task_revision_consequence.py
+	$(PY) code/experiments/agentic/freeze_o5_context_transition_devset.py
+	$(PY) code/experiments/agentic/freeze_o5_context_update_ablation.py
+	$(PY) code/experiments/agentic/run_o5_transition_context_model_probe.py --stage validate
+	$(PY) code/experiments/agentic/run_o5_context_update_model_probe.py --stage validate
+
+agentic-control-opportunity:
+	$(PY) code/experiments/agentic/run_o5_task_revision_consequence.py
+	$(PY) code/experiments/agentic/freeze_o5_context_transition_devset.py
+	$(PY) code/experiments/agentic/run_o5_execution_layer_audit.py
+	$(PY) code/experiments/agentic/run_o5_query_delay_multiseed.py --seeds 0:20 --backhaul-delays 0,180,240,300
+	$(PY) scripts/make_agentic_artifacts.py
+
+agentic-context-transition-r1:
+	@test -n "$(MODEL)" || { echo "MODEL=<model-id> is required"; exit 2; }
+	$(PY) code/experiments/agentic/run_o5_transition_context_model_probe.py --stage r1 --model "$(MODEL)" $(ARGS)
+	$(PY) code/experiments/agentic/run_o5_context_update_model_probe.py --stage r1 --model "$(MODEL)" $(ARGS)
 	$(PY) scripts/make_agentic_benchmark_manifest.py
 	$(PY) scripts/make_agentic_baseline_registry.py
 
@@ -101,6 +125,17 @@ agentic-transfer:
 	$(PY) code/experiments/agentic/run_task_transfer_qili.py --seeds $(AGENTIC_SEEDS)
 	$(PY) scripts/make_agentic_artifacts.py
 
+agentic-action-context:
+	$(PY) code/experiments/agentic/run_action_conditioned_context_probe.py --seeds $(AGENTIC_SEEDS)
+	$(PY) code/experiments/agentic/run_model_context_matrix.py --stage freeze --variant localized --freeze-seed 0 --contexts task_conditioned,full_dump,generic_react,action_conditioned,action_candidates_full_dump
+	$(PY) code/experiments/agentic/freeze_action_context_devset.py
+	$(PY) code/experiments/agentic/run_o5_task_revision_consequence.py
+	$(PY) code/experiments/agentic/freeze_o5_context_transition_devset.py
+	$(PY) code/experiments/agentic/freeze_o5_context_update_ablation.py
+	$(PY) code/experiments/agentic/run_o5_transition_context_model_probe.py --stage validate
+	$(PY) code/experiments/agentic/run_o5_context_update_model_probe.py --stage validate
+	$(PY) scripts/make_agentic_artifacts.py
+
 agentic-model-inputs:
 	$(PY) code/experiments/agentic/run_model_context_matrix.py --stage freeze --variant global --freeze-seed 0 $(ARGS)
 	$(PY) scripts/make_agentic_artifacts.py
@@ -120,7 +155,14 @@ agentic-preapi:
 	$(PY) code/experiments/agentic/run_robustness_matrix.py
 	$(PY) code/experiments/agentic/run_task_transfer_qili.py --seeds $(AGENTIC_SEEDS)
 	$(PY) code/experiments/agentic/run_attribution_matrix_infra.py --turns 20
+	$(PY) code/experiments/agentic/run_action_conditioned_context_probe.py --seeds $(AGENTIC_SEEDS)
 	$(PY) code/experiments/agentic/run_model_context_matrix.py --stage freeze --variant global --freeze-seed 0
+	$(PY) code/experiments/agentic/run_model_context_matrix.py --stage freeze --variant localized --freeze-seed 0 --contexts task_conditioned,full_dump,generic_react,action_conditioned,action_candidates_full_dump
+	$(PY) code/experiments/agentic/freeze_action_context_devset.py
+	$(PY) code/experiments/agentic/run_o5_task_revision_consequence.py
+	$(PY) code/experiments/agentic/freeze_o5_context_transition_devset.py
+	$(PY) code/experiments/agentic/run_o5_execution_layer_audit.py
+	$(PY) code/experiments/agentic/run_o5_query_delay_multiseed.py --seeds 0:20 --backhaul-delays 0,180,240,300
 	$(PY) scripts/make_agentic_artifacts.py
 	$(PY) scripts/make_agentic_benchmark_manifest.py --check
 	$(PY) scripts/make_agentic_baseline_registry.py --check
