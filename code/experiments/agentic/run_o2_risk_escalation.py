@@ -167,7 +167,7 @@ def main() -> int:
         "variant": args.variant,
         "status": "exploratory infrastructure + deterministic conformance",
         "design_authority": "research/EXPERIMENT-DESIGN-v1.md",
-        "system_model": "docs/s6-model/system-model.md",
+        "system_model": "research/SYSTEM-MODEL-v1.md",
         "scenario": "spec/instance-v1-manifest.md",
         "operational_task": task.model_dump(mode="json"),
         "arms": list(ARMS),

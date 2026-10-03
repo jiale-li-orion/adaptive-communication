@@ -6,6 +6,7 @@ mission-comply controller while emitting typed Evidence/Context/Capability trace
 """
 from __future__ import annotations
 
+import json
 import os
 import sys
 
@@ -76,7 +77,10 @@ def main() -> int:
     assert am["runtime_task_contracts"] == 2, am
     assert am["context_manifests"] > 0 and am["capability_requests"] > 0, am
     assert am["contexts"] < 3 * 60, "context refreshed every tick instead of on evidence/task revision"
-    assert len(policy.catalog.contracts) == 9, len(policy.catalog.contracts)
+    registry = json.loads(policy.catalog.registry_path.read_text(encoding="utf-8"))
+    assert len(policy.catalog.contracts) == len(registry["capabilities"]), (
+        len(policy.catalog.contracts), len(registry["capabilities"])
+    )
     assert full_policy.trace.events and policy.trace.events
 
     # A target-scoped Operational Task must constrain the business denominator and context using

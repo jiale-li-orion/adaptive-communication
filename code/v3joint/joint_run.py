@@ -33,7 +33,8 @@ from scoring import evaluate                                  # noqa: E402
 from joint_plane import JointControlPlane                     # noqa: E402
 from joint_policy import DeliveryOpportunisticPolicy, GatewayObserver  # noqa: E402
 from obligation_policy import ObligationDeliveryPolicy  # noqa: E402
-from mission_policy import MissionChangePolicy  # noqa: E402
+from mission_policy import (DelegatedCenterFallbackPolicy, MissionChangePolicy,
+                            NotifiedMissionPolicy)  # noqa: E402
 from mission_view import MissionViewGate  # noqa: E402
 
 
@@ -48,6 +49,7 @@ def run_joint(seed: int = 0, task_hours: int = 12, tail_hours: int = 1,
               blackout_frac: float = 0.0, blackout_start_h: float = 0.0,
               low_frac: float = 0.4, low_wh_per_hour: float = 0.005,
               uplink_p_arrive: float = 0.74, backhaul_p_good: float = 0.62,
+              backhaul_delay_s: int = 0,
               burst_p_gb: float | None = None, burst_p_bg: float | None = None,
               outage_start_h: float | None = None, outage_hours: float = 0.0,
               access_outage_start_h: float = 4.0, access_outage_hours: float = 0.0,
@@ -75,7 +77,16 @@ def run_joint(seed: int = 0, task_hours: int = 12, tail_hours: int = 1,
               # ---- 顺序2: 外生授权任务变更(doc35) ----
               mission_schedule=None, mission_mode: str | None = None,
               mission_scope=None, mission_healthy_wh: float = 0.010,
-              mission_policy_obj=None,
+              mission_policy_obj=None, mission_policy_placement: str | None = None,
+              mission_gateway_delegate: bool = False,
+              mission_gateway_delegate_center_fallback: bool = False,
+              mission_notice_lead_s: int = 0,
+              mission_segment_payload_bytes: int = 32,
+              mission_preparation_lead_s: int = 0,
+              mission_record_trace: bool = False,
+              mission_preparation_resource_guard: bool = False,
+              mission_preparation_correction_s: int | None = None,
+              mission_preparation_reserve_wh: float = 0.0,
               local_floor: bool = False, floor_day_start: float = 6.0,
               floor_dusk: float = 18.0, floor_sparse: int | None = None,
               floor_dense: int | None = None, local_dayfeed: bool = False,
@@ -137,17 +148,45 @@ def run_joint(seed: int = 0, task_hours: int = 12, tail_hours: int = 1,
     mission_gate = None
     if mission_schedule is not None and len(mission_schedule) >= 2:
         mission_gate = MissionViewGate(
-            meas, int(task_hours), mission_schedule, scope=mission_scope)
+            meas, int(task_hours), mission_schedule, scope=mission_scope,
+            notice_lead_s=mission_notice_lead_s,
+            segment_payload_bytes=mission_segment_payload_bytes)
 
     cup_observer = None
+    secondary_pol = None
+    secondary_placement = "gateway"
     if mission_policy_obj is not None:
         # 顺序3: 外部构造的任务策略(真实 Agent / 脚本对照), 与 MissionChangePolicy 同放置、同链路。
         pol = mission_policy_obj
-        placement = "center"
+        placement = mission_policy_placement or "center"
     elif mission_mode is not None:
-        pol = MissionChangePolicy(mission_schedule, mode=mission_mode, scope=mission_scope,
-                                  healthy_wh=mission_healthy_wh)
-        placement = "center"
+        if mission_gateway_delegate:
+            if mission_gate is None:
+                raise ValueError("mission_gateway_delegate requires a multi-segment mission_schedule")
+            delegated_pol = NotifiedMissionPolicy(
+                mission_gate, mode=mission_mode, scope=mission_scope,
+                healthy_wh=mission_healthy_wh,
+                preparation_lead_s=mission_preparation_lead_s,
+                record_trace=mission_record_trace,
+                preparation_resource_guard=mission_preparation_resource_guard,
+                preparation_sample_wh=prof.sample_wh,
+                preparation_capacity_wh=prof.capacity_wh,
+                preparation_correction_s=mission_preparation_correction_s,
+                preparation_reserve_wh=mission_preparation_reserve_wh)
+            if mission_gateway_delegate_center_fallback:
+                pol = DelegatedCenterFallbackPolicy(
+                    mission_gate, mission_schedule, mode=mission_mode, scope=mission_scope,
+                    healthy_wh=mission_healthy_wh)
+                placement = "center"
+                secondary_pol = delegated_pol
+                secondary_placement = "gateway"
+            else:
+                pol = delegated_pol
+                placement = "gateway"
+        else:
+            pol = MissionChangePolicy(mission_schedule, mode=mission_mode, scope=mission_scope,
+                                      healthy_wh=mission_healthy_wh)
+            placement = "center"
     elif arm == "cup":
         cup_observer = GatewayObserver(backup_rate_s=backup_rate_s,
                                        enable_backup=enable_backup)
@@ -180,8 +219,12 @@ def run_joint(seed: int = 0, task_hours: int = 12, tail_hours: int = 1,
                     access_assist_controller=access_assist_controller,
                     terminal_dts=terminal_dts,
                     terminal_dts_enabled=terminal_dts_enabled,
+                    backhaul_delay_s=backhaul_delay_s,
                     burst_p_gb=burst_p_gb, burst_p_bg=burst_p_bg,
-                    placement=placement, trace=trace,
+                    placement=placement,
+                    secondary_policy=secondary_pol,
+                    secondary_placement=secondary_placement,
+                    trace=trace,
                     send_contract_fields=send_contract_fields,
                     atomic_generation=atomic_generation,
                     execution_feedback=execution_feedback,
@@ -238,6 +281,8 @@ def run_joint(seed: int = 0, task_hours: int = 12, tail_hours: int = 1,
     # implement this hook, so existing runs remain bit-identical.
     if hasattr(pol, "bind_instance"):
         pol.bind_instance(inst)
+    if secondary_pol is not None and hasattr(secondary_pol, "bind_instance"):
+        secondary_pol.bind_instance(inst)
 
     log = inst.run(int(hours))
     res = evaluate(obligations, log, int(hours), nodes.keys(),
@@ -272,8 +317,13 @@ def run_joint(seed: int = 0, task_hours: int = 12, tail_hours: int = 1,
         res["mission_refusals"] = [
             {"node": n, "req_period_s": rq, "at_s": t, "soc_wh": soc}
             for (n, rq, t, soc) in _refusals]
+    if hasattr(pol, "preparation_gate_report"):
+        res["preparation_gate"] = pol.preparation_gate_report()
+    if secondary_pol is not None and hasattr(secondary_pol, "preparation_gate_report"):
+        res["secondary_preparation_gate"] = secondary_pol.preparation_gate_report()
     if mission_gate is not None:
         res["mission_timing"] = mission_gate.timing()
+        res["mission_transport"] = mission_gate.transport_summary()
     res["survival"] = {
         "alive": sum(1 for n in nodes.values() if getattr(n, "alive", True)),
         "n": len(nodes),

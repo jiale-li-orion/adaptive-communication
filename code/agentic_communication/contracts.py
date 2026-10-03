@@ -56,6 +56,17 @@ class OperationalTask(BaseModel):
             raise ValueError("OperationalTask first phase must start at t=0")
         if starts[-1] >= self.task_horizon_s:
             raise ValueError("OperationalTask phase starts must lie inside task horizon")
+        notices = self.metadata.get("phase_notices")
+        if notices is not None:
+            if not isinstance(notices, dict):
+                raise ValueError("metadata.phase_notices must be an object keyed by phase index")
+            for raw_idx, raw_notice in notices.items():
+                idx = int(raw_idx)
+                if idx <= 0 or idx >= len(self.phases):
+                    raise ValueError("phase notice index must name a non-initial phase")
+                notice = int(raw_notice)
+                if notice < 0 or notice > self.phases[idx].start_s:
+                    raise ValueError("phase notice must lie in [0, phase.start_s]")
         return self
 
     def phase_index(self, t_s: int) -> int:
@@ -72,6 +83,35 @@ class OperationalTask(BaseModel):
 
     def mission_schedule(self) -> list[tuple[int, int, str]]:
         return [(p.start_s, p.required_period_s, p.level) for p in self.phases]
+
+    def phase_notice_at(self, phase_index: int) -> int:
+        """When external authority makes a future phase legally known.
+
+        Existing tasks have no explicit notice metadata and therefore become
+        known only at their effective ``start_s``.  This preserves historical
+        benchmark semantics exactly.
+        """
+        idx = int(phase_index)
+        notices = self.metadata.get("phase_notices") or {}
+        raw = notices.get(str(idx), notices.get(idx)) if isinstance(notices, dict) else None
+        return int(self.phases[idx].start_s if raw is None else raw)
+
+    def announced_future_phases(self, t_s: int) -> list[dict[str, JsonValue]]:
+        """Future Task revisions already authorized by ``t_s`` but not effective yet."""
+        out: list[dict[str, JsonValue]] = []
+        for idx, phase in enumerate(self.phases[1:], start=1):
+            notice = self.phase_notice_at(idx)
+            if notice <= int(t_s) < int(phase.start_s):
+                out.append(
+                    {
+                        "phase_index": idx,
+                        "notice_at_s": notice,
+                        "effective_at_s": int(phase.start_s),
+                        "required_period_s": int(phase.required_period_s),
+                        "level": phase.level,
+                    }
+                )
+        return out
 
 
 class EvidenceStatus(StrEnum):

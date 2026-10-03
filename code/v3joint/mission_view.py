@@ -36,7 +36,8 @@ class MissionViewGate:
     def __init__(self, measurands: dict[str, str], hours: int,
                  schedule: list[tuple[int, int, str]],
                  window_s: int | None = None, grace_s: int | None = None,
-                 half_open_after_first: bool = True, scope=None):
+                 half_open_after_first: bool = True, scope=None,
+                 notice_lead_s: int = 0, segment_payload_bytes: int = 32):
         self.schedule = sorted(schedule, key=lambda x: x[0])
         assert self.schedule[0][0] == 0, "首段必须从 t=0 开始"
         self.meas = dict(measurands)
@@ -45,6 +46,8 @@ class MissionViewGate:
         self.sparse = self.schedule[0][1]
         self.half_open_after_first = bool(half_open_after_first)
         self.scope = None if scope is None else set(scope)
+        self.notice_lead_s = max(0, int(notice_lead_s))
+        self.segment_payload_bytes = max(1, int(segment_payload_bytes))
 
         # 真值例行义务（scorer 分母同源的分段表；变更后段用半开独立观测语义）与现场初始信念
         #（首段节奏全程外推，沿用旧任务闭区间窗口覆盖）。
@@ -60,9 +63,20 @@ class MissionViewGate:
         # 仅 k>=1 的段需要"到达后发布"；首段在初始视图里。
         self.segments: list[dict] = []
         for (start, period, level), end in zip(self.schedule[1:], bounds[1:]):
-            self.segments.append({"start": start, "end": end, "period": period,
-                                  "level": level, "notified": False, "gw_at": None})
+            self.segments.append({
+                "start": start, "end": end, "period": period,
+                "level": level,
+                "notice_at": max(0, int(start) - self.notice_lead_s),
+                "notified": False, "gw_at": None,
+                "installed": False, "installed_at": None,
+                "attempt_hours": set(),
+            })
         self._plane = None  # 由 JointControlPlane.adopt 回填
+        self.transport_attempts = 0
+        self.transport_refused = 0
+        self.transport_accepted = 0
+        self.transport_bytes_attempted = 0
+        self.transport_bytes_delivered = 0
 
     # ---- 现场在收到任何任务更新前的合法视图 ----
     def initial_view(self, all_obligations):
@@ -77,21 +91,64 @@ class MissionViewGate:
         add = [o for o in self.truth_routine if lo <= o.release_at < hi]
         return remove, add
 
-    # ---- 每 tick 由网关调用：把已生效且主回传此刻可达的段发布到现场 ----
+    def visible_schedule(self) -> list[tuple[int, int, str]]:
+        """Gateway-visible Task schedule: initial segment + actually received revisions only."""
+        out = [self.schedule[0]]
+        out.extend(
+            (int(s["start"]), int(s["period"]), str(s["level"]))
+            for s in self.segments if s["notified"]
+        )
+        return sorted(out, key=lambda x: x[0])
+
+    def revision_received_for_time(self, t_s: int) -> bool:
+        """Whether the gateway already owns the non-initial Task revision active at ``t_s``.
+
+        The initial schedule is deployment state, not a delegated runtime revision, so it returns
+        False before the first revision.  Center fallback can therefore remain responsible until a
+        future-effective revision has actually crossed the backhaul.
+        """
+        t_s = int(t_s)
+        for seg in self.segments:
+            if int(seg["start"]) <= t_s < int(seg["end"]):
+                return bool(seg["notified"])
+        return False
+
+    # ---- 每 tick 由网关调用：先传 future-effective segment，再在 effective time 安装义务视图 ----
     def poll(self, t_s: int, path_available):
         due = []
         hour = t_s // 3600
         for seg in self.segments:
-            if seg["notified"] or t_s < seg["start"]:
-                continue
-            if path_available(hour):
-                seg["notified"] = True
-                seg["gw_at"] = t_s
+            if not seg["notified"] and t_s >= seg["notice_at"] and hour not in seg["attempt_hours"]:
+                seg["attempt_hours"].add(hour)
+                self.transport_attempts += 1
+                self.transport_bytes_attempted += self.segment_payload_bytes
+                if path_available(hour):
+                    seg["notified"] = True
+                    seg["gw_at"] = t_s
+                    self.transport_accepted += 1
+                    self.transport_bytes_delivered += self.segment_payload_bytes
+                else:
+                    self.transport_refused += 1
+            if seg["notified"] and not seg["installed"] and t_s >= seg["start"]:
+                seg["installed"] = True
+                seg["installed_at"] = t_s
                 due.append(seg)
         return due
 
     def timing(self) -> list[dict]:
-        """四时间戳中的 issued(=center_received) 与 gateway_received；node_applied 由配置侧记。"""
+        """Task revision notice/effective/received/installed 时间戳；node_applied 由配置侧记。"""
         return [{"level": s["level"], "period_s": s["period"],
-                 "issued_at": s["start"], "gateway_received_at": s["gw_at"]}
+                 "issued_at": s["notice_at"], "effective_at": s["start"],
+                 "gateway_received_at": s["gw_at"],
+                 "gateway_effective_at": s["installed_at"]}
                 for s in self.segments]
+
+    def transport_summary(self) -> dict:
+        return {
+            "segment_payload_bytes": self.segment_payload_bytes,
+            "attempts": self.transport_attempts,
+            "refused": self.transport_refused,
+            "accepted": self.transport_accepted,
+            "bytes_attempted": self.transport_bytes_attempted,
+            "bytes_delivered": self.transport_bytes_delivered,
+        }

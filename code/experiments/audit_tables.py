@@ -88,6 +88,15 @@ def main() -> int:
     else:
         check("scripts/make_agentic_artifacts.py 存在", False, agentic_gen)
 
+    paper_v1_gen = os.path.join(ROOT, "scripts", "make_agentic_paper_v1.py")
+    if os.path.exists(paper_v1_gen):
+        proc = subprocess.run([sys.executable, paper_v1_gen, "--check"],
+                              cwd=ROOT, capture_output=True, text=True)
+        tail = (proc.stdout.strip().splitlines() or [""])[-1][:110]
+        check("Agentic paper-v1 表/事实宏与冻结结果一致", proc.returncode == 0, tail)
+    else:
+        check("scripts/make_agentic_paper_v1.py 存在", False, paper_v1_gen)
+
     agentic_facts = os.path.join(GENERATED, "agentic_facts.tex")
     check("Agentic 事实宏文件存在", os.path.exists(agentic_facts),
           os.path.relpath(agentic_facts, ROOT))

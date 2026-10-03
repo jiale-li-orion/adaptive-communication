@@ -59,6 +59,11 @@ from agentic_communication.run import run_agentic_episode, run_reference_comply 
 
 
 DEFAULT_CONTEXTS = ("task_conditioned", "full_dump", "generic_react")
+SUPPORTED_CONTEXTS = DEFAULT_CONTEXTS + (
+    "action_conditioned",
+    "action_conditioned_compact",
+    "action_candidates_full_dump",
+)
 
 
 def _safe(value: str) -> str:
@@ -278,7 +283,7 @@ def main() -> int:
     args = ap.parse_args()
 
     contexts = [x.strip() for x in args.contexts.split(",") if x.strip()]
-    bad = sorted(set(contexts) - set(DEFAULT_CONTEXTS))
+    bad = sorted(set(contexts) - set(SUPPORTED_CONTEXTS))
     if bad:
         raise SystemExit(f"unsupported contexts: {bad}")
     seeds = [int(x) for x in args.seeds.split(",") if x.strip()]

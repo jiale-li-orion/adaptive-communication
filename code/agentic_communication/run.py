@@ -110,6 +110,7 @@ def run_agentic_episode(
     context_mode: str = "task_conditioned",
     planner_mode: str = "comply",
     planner_consumer=None,
+    planner_replan_mode: str = "every_context",
     simulator_kwargs: dict | None = None,
 ) -> tuple[dict, AgenticCommunicationPolicy, object, object]:
     policy = AgenticCommunicationPolicy(
@@ -118,6 +119,7 @@ def run_agentic_episode(
         context_mode=context_mode,
         planner_mode=planner_mode,
         planner_consumer=planner_consumer,
+        planner_replan_mode=planner_replan_mode,
     )
     kw = dict(DEFAULT_FULLSIM)
     kw.update(simulator_kwargs or {})
@@ -143,6 +145,7 @@ def run_agentic_episode(
         "operational_task": operational_task.model_dump(mode="json"),
         "context_mode": context_mode,
         "planner_mode": planner_mode,
+        "planner_replan_mode": planner_replan_mode,
         "communication_metrics": communication_metrics(result),
         "agent_metrics": agent_metrics(policy),
         "evaluator_oracles": evaluator_oracles,

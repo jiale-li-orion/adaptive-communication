@@ -7,6 +7,9 @@ runtime after this conformance slice is stable.
 """
 from __future__ import annotations
 
+from copy import deepcopy
+from hashlib import sha256
+import json
 from pathlib import Path
 import sys
 
@@ -39,6 +42,7 @@ from .runtime_contracts import (
 )
 from .planner import PlannerConsumer, invoke_consumer
 from .task_compiler import CommunicationTaskCompiler
+from .timebase import sim_datetime
 from .trace import RuntimeTrace
 
 
@@ -65,6 +69,7 @@ class AgenticCommunicationPolicy(CenterPolicy):
         context_mode: str = "task_conditioned",
         planner_mode: str = "comply",
         planner_consumer: PlannerConsumer | None = None,
+        planner_replan_mode: str = "every_context",
         dwell_s: int = 1800,
     ) -> None:
         super().__init__()
@@ -73,6 +78,9 @@ class AgenticCommunicationPolicy(CenterPolicy):
         self.context_mode = context_mode
         self.planner_mode = planner_mode
         self.planner_consumer = planner_consumer
+        if planner_replan_mode not in {"every_context", "decision_state"}:
+            raise ValueError(f"unsupported planner_replan_mode {planner_replan_mode!r}")
+        self.planner_replan_mode = planner_replan_mode
         self.dwell_s = int(dwell_s)
         self.catalog = CommunicationCapabilityCatalog()
         self.compiler = CommunicationTaskCompiler()
@@ -98,7 +106,27 @@ class AgenticCommunicationPolicy(CenterPolicy):
         self._last_gateway_query_hour: int | None = None
         self._latest_assembly = None
         self._latest_planner_decision: PlannerDecision | None = None
+        self._latest_planner_decision_t_s: int | None = None
+        self._last_planner_decision_state_hash: str | None = None
+        self._latest_shared_candidate_context: dict | None = None
+        # Model turns and physical execution progress on different clocks.  A
+        # later observation-only turn must not accidentally erase a previously
+        # selected configuration plan that is still waiting on ordinary runtime
+        # admission (in-flight/dwell/Class-A execution).  Keep the latest config
+        # effect intent separately from the latest PlannerDecision.  This is a
+        # private runtime substrate, not a second planner contract.
+        self._persistent_config_intent: dict[str, dict[str, int]] = {}
         self._model_request_seq = 0
+        # Failed/blocked observation attempts are runtime information. Preserve
+        # them for one simulator hour so context refreshes do not repeatedly
+        # request the same unreachable owner-scoped evidence every telemetry tick.
+        self._recent_observation_outcomes: dict[tuple[str, str], dict] = {}
+        # Remote owner reads are asynchronous with respect to the planner.  The
+        # simulator runs policy before gateway->center forwarding within a tick,
+        # so a center-side request issued at t cannot affect another model
+        # decision at the same t.  Pending rows are completed on a later tick
+        # using the provider's simulator-owned ``available_at_s``.
+        self._pending_observations: list[dict] = []
 
     def bind_instance(self, inst) -> None:
         # Stored only for end-of-run audit; planning never reads simulator truth.
@@ -210,34 +238,34 @@ class AgenticCommunicationPolicy(CenterPolicy):
                     capability_id=cap_id,
                     view=raw["view"],
                 )
+                refs = [
+                    e.evidence_id for e in snapshot.evidence if e.proposition == cap_id
+                ]
                 result = CapabilityResult(
                     request_id=request_id,
                     status=CapabilityResultStatus.SUCCEEDED,
-                    canonical_output={
-                        "evidence_refs": [
-                            e.evidence_id for e in snapshot.evidence if e.proposition == cap_id
-                        ]
-                    },
+                    canonical_output={"evidence_refs": refs},
                     observation_class=raw.get("observation_class", "gateway_owner_observation"),
                     provenance={"owner": "gateway", "world_revision": snapshot.revision},
                     latency={"simulated_s": 0},
                     cost=dict(raw.get("cost") or {}),
+                    failure_code=(None if refs else "none_recent"),
                 )
-                refs = list(result.canonical_output.get("evidence_refs") or [])
                 percept = Percept(
                     percept_id=f"percept:{request_id}",
                     request_id=request_id,
                     target_refs=["gw0"],
-                    observed_propositions=[
+                    observed_propositions=([
                         ObservedProposition(
                             statement=f"gateway owner observation acquired: {cap_id}",
                             support_refs=refs,
                             source_groups=["gateway"],
                             freshness={"world_revision": snapshot.revision},
                         )
-                    ],
+                    ] if refs else []),
                     evidence_refs=refs,
                     source_roles=["gateway"],
+                    unresolved=([] if refs else [cap_id]),
                     cost=dict(result.cost),
                 )
             else:
@@ -275,6 +303,11 @@ class AgenticCommunicationPolicy(CenterPolicy):
         contract = self.compiler.compile(self.operational_task, view.t_s)
         new_run = contract.task_contract_id != self._active_contract_id
         if new_run:
+            # Task authority changed.  Old configuration intent must never leak
+            # across TaskContract revisions; the next planner turn must select
+            # an effect under the new desired state.
+            self._persistent_config_intent.clear()
+            self._last_planner_decision_state_hash = None
             self._active_contract_id = contract.task_contract_id
             phase_idx = self.operational_task.phase_index(view.t_s)
             self._active_run_id = (
@@ -381,6 +414,147 @@ class AgenticCommunicationPolicy(CenterPolicy):
             percept_refs.append(percept.percept_id)
         return percept_refs
 
+    @staticmethod
+    def _decision_state_hash_from_parts(*, task: dict, candidate: dict, needs: list[dict]) -> str:
+        """Hash only state that can change the semantic plan/dependency region.
+
+        Execution progress such as "which config target was confirmed this
+        minute" is deliberately excluded: persistent execution intent already
+        owns that convergence.  Task authority, candidate feasibility/guards,
+        blocking EvidenceNeeds and non-config effect semantics remain included.
+        """
+        plans: list[dict] = []
+        for plan in candidate.get("candidate_plans", []):
+            invocation_semantics: list[dict] = []
+            seen: set[str] = set()
+            for invocation in plan.get("invocations") or []:
+                capability_id = str(invocation.get("capability_id", ""))
+                row = {
+                    "capability_id": capability_id,
+                    "canonical_arguments": dict(invocation.get("canonical_arguments") or {}),
+                }
+                # Resource membership is part of semantic action scope even for
+                # configuration.  It often shrinks as execution confirms, but it
+                # can also *expand again* when an older in-flight generation lands
+                # after a Task revision and turns a previously at-target node back
+                # into a mismatch.  Hiding config resources from this hash made
+                # that real scope expansion invisible to the planner.
+                row["resource"] = invocation.get("resource")
+                key = json.dumps(row, ensure_ascii=False, sort_keys=True, separators=(",", ":"))
+                if key in seen:
+                    continue
+                seen.add(key)
+                invocation_semantics.append(row)
+            plans.append(
+                {
+                    "plan_id": plan.get("plan_id"),
+                    "kind": plan.get("kind"),
+                    "feasibility": plan.get("feasibility"),
+                    "decision_guards": plan.get("decision_guards") or {},
+                    "invocation_semantics": invocation_semantics,
+                    "unresolved_conditions": plan.get("unresolved_conditions") or [],
+                }
+            )
+
+        sufficiency = candidate.get("decision_sufficiency") or {}
+        normalized_sufficiency = {
+            "status": sufficiency.get("status"),
+            "primary_plan_id": sufficiency.get("primary_plan_id"),
+            "primary_plan_feasibility": sufficiency.get("primary_plan_feasibility"),
+            "blocking_need_count": len(sufficiency.get("blocking_need_ids") or []),
+        }
+        normalized_needs = [
+            {
+                "proposition_or_question": need.get("proposition_or_question"),
+                "target_objects": need.get("target_objects") or [],
+                "blocking_plan_ids": need.get("blocking_plan_ids") or [],
+                "status": need.get("status"),
+            }
+            for need in needs
+            if isinstance(need, dict)
+        ]
+        payload = {
+            "task_contract_id": task.get("task_contract_id"),
+            "desired_state": task.get("desired_state") or {},
+            "target_resources": task.get("target_resources") or [],
+            "effect_ceiling": task.get("effect_ceiling"),
+            "candidate_plans": plans,
+            "decision_sufficiency": normalized_sufficiency,
+            "evidence_needs": normalized_needs,
+            "fallback_relevance": candidate.get("fallback_relevance") or {},
+            "action_closure": candidate.get("action_closure") or {},
+        }
+        return sha256(
+            json.dumps(
+                payload,
+                ensure_ascii=False,
+                sort_keys=True,
+                separators=(",", ":"),
+            ).encode("utf-8")
+        ).hexdigest()
+
+    @classmethod
+    def _planner_decision_state_hash(cls, assembly) -> str | None:
+        """Legacy/public helper: derive a decision hash from exposed Context.
+
+        Full-episode comparison now uses a representation-independent hidden
+        semantic trigger (see ``_shared_planner_decision_state_hash``).  This
+        helper remains useful for tests and for inspecting action-conditioned
+        PromptAssembly objects directly.
+        """
+        fragments = {fragment.kind: fragment.content for fragment in assembly.fragments}
+        candidate = fragments.get("candidate_action_context")
+        if not isinstance(candidate, dict):
+            return None
+        return cls._decision_state_hash_from_parts(
+            task=dict(fragments.get("runtime_task_contract") or {}),
+            candidate=candidate,
+            needs=[row for row in (fragments.get("evidence_needs") or []) if isinstance(row, dict)],
+        )
+
+    def _shared_planner_decision_state_hash(
+        self,
+        *,
+        view,
+        contract,
+        snapshot,
+        capability_ids: list[str],
+        recent_capability_outcomes: list[dict],
+    ) -> str:
+        """Representation-independent semantic replan trigger.
+
+        Context representation is an experimental variable. Replan timing is
+        ordinary runtime substrate and must therefore be shared by FullDump,
+        task-conditioned, generic-ReAct and action-conditioned arms.  Compute
+        the same candidate/dependency state for all arms without materializing
+        it into non-method prompts.
+        """
+        selection = self.context_runtime.action_selector.select(
+            operational_task=self.operational_task,
+            task=contract,
+            task_run_id=self._active_run_id or "",
+            evidence_world=snapshot,
+            capability_ids=capability_ids,
+            resource_ids=list(view.node_ids),
+            recent_capability_outcomes=recent_capability_outcomes,
+            t_s=int(view.t_s),
+            now=sim_datetime(int(view.t_s)),
+        )
+        self._latest_shared_candidate_context = selection.candidate_context
+        decision_needs = self.context_runtime._control_relevant_needs(
+            selection.candidate_context,
+            selection.needs,
+        )
+        decision_candidate = self.context_runtime._compact_candidate_projection(
+            selection.candidate_context,
+            decision_needs,
+        )
+        return self._decision_state_hash_from_parts(
+            task=contract.model_dump(mode="json"),
+            candidate=decision_candidate,
+            needs=[need.model_dump(mode="json") for need in decision_needs],
+        )
+
     def _refresh_context(
         self,
         view,
@@ -398,6 +572,28 @@ class AgenticCommunicationPolicy(CenterPolicy):
         if self.planner_consumer is None:
             self._evidence_use_trace(view, contract, snapshot)
         self._context_revision += 1
+        cached_outcomes: list[dict] = []
+        for key, row in list(self._recent_observation_outcomes.items()):
+            observed_t = int(row.get("t_s", -10**9))
+            if int(view.t_s) - observed_t >= 3600:
+                self._recent_observation_outcomes.pop(key, None)
+                continue
+            cached_outcomes.append(dict(row.get("outcome") or {}))
+        merged_outcomes: list[dict] = []
+        seen_outcomes: set[tuple[str, str, str]] = set()
+        for row in [*cached_outcomes, *(recent_capability_outcomes or [])]:
+            if not isinstance(row, dict):
+                continue
+            result = row.get("result") or {}
+            key = (
+                str(row.get("capability_id", "")),
+                str(row.get("resource", "")),
+                str(result.get("status", "")),
+            )
+            if key in seen_outcomes:
+                continue
+            seen_outcomes.add(key)
+            merged_outcomes.append(row)
         visible = [c.capability_id for c in self.catalog.visible(contract)]
         capability_specs = self.catalog.planner_specs(contract)
         state, needs, manifest, assembly, stats = self.context_runtime.build(
@@ -408,7 +604,7 @@ class AgenticCommunicationPolicy(CenterPolicy):
             capability_ids=visible,
             capability_specs=capability_specs,
             resource_ids=list(view.node_ids),
-            recent_capability_outcomes=recent_capability_outcomes,
+            recent_capability_outcomes=merged_outcomes,
             t_s=view.t_s,
             context_revision=self._context_revision,
             parent_context_id=self._parent_context_id,
@@ -421,30 +617,254 @@ class AgenticCommunicationPolicy(CenterPolicy):
         self.trace.append("prompt_assembly", view.t_s, assembly, task_run_id=self._active_run_id)
         self._latest_assembly = assembly
         if self.planner_consumer is not None:
-            self._model_request_seq += 1
-            inv = invoke_consumer(
-                assembly=assembly,
-                consumer=self.planner_consumer,
-                request_id=f"model:{self.seed}:{view.t_s}:{self._model_request_seq}",
-            )
-            self.trace.append("model_request", view.t_s, inv.request, task_run_id=self._active_run_id)
-            self.trace.append("model_attempt", view.t_s, inv.attempt, task_run_id=self._active_run_id)
-            self.trace.append(
-                "model_usage",
-                view.t_s,
-                inv.attempt.usage.model_dump(mode="json"),
-                task_run_id=self._active_run_id,
-            )
-            if inv.decision is not None:
-                self._latest_planner_decision = inv.decision
-                self.trace.append(
-                    "planner_decision", view.t_s, inv.decision, task_run_id=self._active_run_id
+            decision_state_hash = None
+            if self.planner_replan_mode == "decision_state":
+                decision_state_hash = self._shared_planner_decision_state_hash(
+                    view=view,
+                    contract=contract,
+                    snapshot=snapshot,
+                    capability_ids=visible,
+                    recent_capability_outcomes=merged_outcomes,
                 )
-            else:
-                self._latest_planner_decision = None
+                self.trace.append(
+                    "planner_decision_state",
+                    view.t_s,
+                    {
+                        "state_hash": decision_state_hash,
+                        "basis": "shared_hidden_action_dependency_state",
+                    },
+                    task_run_id=self._active_run_id,
+                )
+                # Evaluator-only semantic reference. It stays in RuntimeTrace,
+                # never PromptAssembly, so Context arms share one scoring surface
+                # without leaking action-conditioned structure to the model.
+                candidate = self._latest_shared_candidate_context or {}
+                sufficiency = candidate.get("decision_sufficiency") or {}
+                primary_plan_id = sufficiency.get("primary_plan_id")
+                plans = list(candidate.get("candidate_plans") or [])
+                expected_plan = next(
+                    (row for row in plans if row.get("plan_id") == primary_plan_id),
+                    None,
+                )
+                if expected_plan is None:
+                    supported_effect = [
+                        row
+                        for row in plans
+                        if row.get("feasibility") == "supported" and row.get("invocations")
+                    ]
+                    expected_plan = supported_effect[0] if len(supported_effect) == 1 else None
+                self.trace.append(
+                    "planner_semantic_reference",
+                    view.t_s,
+                    {
+                        "state_hash": decision_state_hash,
+                        "primary_plan_id": primary_plan_id,
+                        "expected_effect_invocations": list(
+                            (expected_plan or {}).get("invocations") or []
+                        ),
+                        "source": "hidden_shared_candidate_surface",
+                    },
+                    task_run_id=self._active_run_id,
+                )
+            # A planner-requested observation result must be consumed at least
+            # once by the planner that asked for it.  Semantic gating resumes
+            # after that follow-up turn.  Otherwise a baseline can deadlock in
+            # "query -> result arrives -> hidden decision relation unchanged",
+            # never getting a chance to act on its own observation.
+            consume_tool_outcome = bool(recent_capability_outcomes)
+            should_invoke = consume_tool_outcome or not (
+                self.planner_replan_mode == "decision_state"
+                and decision_state_hash == self._last_planner_decision_state_hash
+            )
+            if should_invoke:
+                self._model_request_seq += 1
+                inv = invoke_consumer(
+                    assembly=assembly,
+                    consumer=self.planner_consumer,
+                    request_id=f"model:{self.seed}:{view.t_s}:{self._model_request_seq}",
+                )
+                self.trace.append("model_request", view.t_s, inv.request, task_run_id=self._active_run_id)
+                self.trace.append("model_attempt", view.t_s, inv.attempt, task_run_id=self._active_run_id)
+                self.trace.append(
+                    "model_usage",
+                    view.t_s,
+                    inv.attempt.usage.model_dump(mode="json"),
+                    task_run_id=self._active_run_id,
+                )
+                if inv.decision is not None:
+                    self._latest_planner_decision = inv.decision
+                    self._latest_planner_decision_t_s = int(view.t_s)
+                    self._update_persistent_config_intent(inv.decision)
+                    if self.planner_replan_mode == "decision_state":
+                        self._last_planner_decision_state_hash = decision_state_hash
+                    self.trace.append(
+                        "planner_decision", view.t_s, inv.decision, task_run_id=self._active_run_id
+                    )
+                else:
+                    # A failed model turn must not erase an already selected
+                    # persistent config intent. Leave the state hash unchanged so
+                    # the same semantic decision state is retried later.
+                    self._latest_planner_decision = None
+                    self._latest_planner_decision_t_s = None
         self.context_stats.append({"t_s": view.t_s, **stats})
         self._parent_context_id = manifest.context_id
         self._last_context_world_revision = snapshot.revision
+
+    def _update_persistent_config_intent(self, decision: PlannerDecision) -> None:
+        """Update runtime-owned config execution intent from a planner turn.
+
+        Observation-only/stop decisions are intentionally non-destructive: they may
+        start an investigation while an already-selected independent config plan
+        keeps progressing through runtime admission.  A new config proposal
+        supersedes the previous config intent as one semantic plan.  The current
+        PlannerDecision schema has no explicit cancel/supersede operation, so a
+        no-effect turn must not be overloaded into cancellation.  Task revision
+        and observed target satisfaction retire intent explicitly.
+        """
+        proposed: dict[str, dict[str, int]] = {}
+        for invocation in decision.invocations:
+            if invocation.capability_id not in {
+                "communication.config.set_sampling_interval",
+                "communication.config.set_report_period",
+            }:
+                continue
+            target_s = invocation.canonical_arguments.get("target_s")
+            if target_s is None:
+                continue
+            proposed.setdefault(invocation.resource, {})[invocation.capability_id] = int(target_s)
+        if proposed:
+            self._persistent_config_intent = proposed
+
+    def _complete_gateway_observation(
+        self,
+        *,
+        t_s: int,
+        request_id: str,
+        cap_id: str,
+        resource: str,
+        snapshot,
+        raw: dict,
+        requested_at_s: int,
+    ):
+        latency = dict(raw.get("latency") or {})
+        latency.setdefault("simulated_s", max(0, int(t_s) - int(requested_at_s)))
+        if raw.get("status") == "succeeded" and raw.get("view") is not None:
+            new_snapshot = self.evidence_world.merge_gateway_observation(
+                capability_id=cap_id,
+                view=raw["view"],
+                resource=resource,
+            )
+            refs = [e.evidence_id for e in new_snapshot.evidence if e.proposition == cap_id]
+            if cap_id == "communication.gateway.node_report":
+                refs = [
+                    e.evidence_id for e in new_snapshot.evidence
+                    if e.proposition == cap_id and e.subject_ref == resource
+                ]
+            result = CapabilityResult(
+                request_id=request_id,
+                status=(CapabilityResultStatus.SUCCEEDED if refs else CapabilityResultStatus.PARTIAL),
+                canonical_output={"evidence_refs": refs},
+                observation_class=(
+                    raw.get("observation_class", "gateway_owner_observation")
+                    if refs else "none_recent"
+                ),
+                provenance={
+                    "owner": "gateway",
+                    "world_revision": new_snapshot.revision,
+                    "requested_at_s": int(requested_at_s),
+                    "completed_at_s": int(t_s),
+                },
+                latency=latency,
+                cost=dict(raw.get("cost") or {}),
+            )
+            percept = Percept(
+                percept_id=f"percept:{request_id}",
+                request_id=request_id,
+                target_refs=[resource],
+                observed_propositions=[
+                    ObservedProposition(
+                        statement=f"planner acquired {cap_id}",
+                        support_refs=refs,
+                        source_groups=["gateway"],
+                        freshness={"world_revision": new_snapshot.revision},
+                    )
+                ],
+                evidence_refs=refs,
+                source_roles=["gateway"],
+                cost=dict(result.cost),
+            )
+        else:
+            new_snapshot = snapshot
+            result = CapabilityResult(
+                request_id=request_id,
+                status=CapabilityResultStatus.BLOCKED,
+                canonical_output={"evidence_refs": []},
+                observation_class=raw.get("observation_class", "unreachable"),
+                provenance={
+                    "owner": "gateway",
+                    "world_revision": snapshot.revision,
+                    "requested_at_s": int(requested_at_s),
+                    "completed_at_s": int(t_s),
+                },
+                latency=latency,
+                cost=dict(raw.get("cost") or {}),
+                failure_code=raw.get("failure_code", "unreachable"),
+            )
+            percept = Percept(
+                percept_id=f"percept:{request_id}",
+                request_id=request_id,
+                target_refs=[resource],
+                observed_propositions=[],
+                evidence_refs=[],
+                source_roles=["gateway"],
+                unresolved=[cap_id],
+                cost=dict(result.cost),
+            )
+        self.trace.append("capability_result", t_s, result, task_run_id=self._active_run_id)
+        self.trace.append("percept", t_s, percept, task_run_id=self._active_run_id)
+        return new_snapshot, result, percept
+
+    def _drain_pending_observations(self, view, snapshot):
+        ready = [
+            row for row in self._pending_observations
+            if int(row["available_at_s"]) <= int(view.t_s)
+        ]
+        self._pending_observations = [
+            row for row in self._pending_observations
+            if int(row["available_at_s"]) > int(view.t_s)
+        ]
+        outcomes: list[dict] = []
+        for row in ready:
+            snapshot, result, percept = self._complete_gateway_observation(
+                t_s=int(view.t_s),
+                request_id=str(row["request_id"]),
+                cap_id=str(row["capability_id"]),
+                resource=str(row["resource"]),
+                snapshot=snapshot,
+                raw=dict(row["raw"]),
+                requested_at_s=int(row["requested_at_s"]),
+            )
+            outcome = {
+                "capability_id": row["capability_id"],
+                "resource": row["resource"],
+                "result": result.model_dump(mode="json"),
+                "percept": percept.model_dump(mode="json"),
+            }
+            outcomes.append(outcome)
+            key = (str(row["capability_id"]), str(row["resource"]))
+            if result.status in {
+                CapabilityResultStatus.BLOCKED,
+                CapabilityResultStatus.TIMED_OUT,
+                CapabilityResultStatus.FAILED,
+                CapabilityResultStatus.PARTIAL,
+            }:
+                self._recent_observation_outcomes[key] = {
+                    "t_s": int(view.t_s),
+                    "outcome": outcome,
+                }
+            else:
+                self._recent_observation_outcomes.pop(key, None)
+        return snapshot, outcomes
 
     def _execute_planner_observation(self, view, contract, invocation, snapshot):
         cap_id = invocation.capability_id
@@ -471,61 +891,44 @@ class AgenticCommunicationPolicy(CenterPolicy):
         if cap_id in {
             "communication.gateway.primary_health",
             "communication.gateway.receipt_summary",
+            "communication.gateway.node_report",
         } and self._observation_provider is not None:
             raw = self._observation_provider(cap_id, invocation.resource)
-            if raw.get("status") == "succeeded" and raw.get("view") is not None:
-                new_snapshot = self.evidence_world.merge_gateway_observation(
-                    capability_id=cap_id,
-                    view=raw["view"],
+            available_at_s = int(raw.get("available_at_s", view.t_s))
+            if available_at_s > int(view.t_s):
+                self._pending_observations.append(
+                    {
+                        "request_id": request_id,
+                        "capability_id": cap_id,
+                        "resource": invocation.resource,
+                        "requested_at_s": int(view.t_s),
+                        "available_at_s": available_at_s,
+                        # GatewayView contains mutable dictionaries owned by the
+                        # Instance; freeze the owner observation at request time.
+                        "raw": deepcopy(raw),
+                    }
                 )
-                refs = [e.evidence_id for e in new_snapshot.evidence if e.proposition == cap_id]
-                result = CapabilityResult(
-                    request_id=request_id,
-                    status=CapabilityResultStatus.SUCCEEDED,
-                    canonical_output={"evidence_refs": refs},
-                    observation_class=raw.get("observation_class", "gateway_owner_observation"),
-                    provenance={"owner": "gateway", "world_revision": new_snapshot.revision},
-                    latency={"simulated_s": 0},
-                    cost=dict(raw.get("cost") or {}),
+                self.trace.append(
+                    "capability_pending",
+                    view.t_s,
+                    {
+                        "request_id": request_id,
+                        "capability_id": cap_id,
+                        "resource": invocation.resource,
+                        "available_at_s": available_at_s,
+                    },
+                    task_run_id=self._active_run_id,
                 )
-                percept = Percept(
-                    percept_id=f"percept:{request_id}",
-                    request_id=request_id,
-                    target_refs=[invocation.resource],
-                    observed_propositions=[
-                        ObservedProposition(
-                            statement=f"planner acquired {cap_id}",
-                            support_refs=refs,
-                            source_groups=["gateway"],
-                            freshness={"world_revision": new_snapshot.revision},
-                        )
-                    ],
-                    evidence_refs=refs,
-                    source_roles=["gateway"],
-                    cost=dict(result.cost),
-                )
-            else:
-                new_snapshot = snapshot
-                result = CapabilityResult(
-                    request_id=request_id,
-                    status=CapabilityResultStatus.BLOCKED,
-                    canonical_output={"evidence_refs": []},
-                    observation_class=raw.get("observation_class", "unreachable"),
-                    provenance={"owner": "gateway", "world_revision": snapshot.revision},
-                    latency={"simulated_s": 0},
-                    cost=dict(raw.get("cost") or {}),
-                    failure_code=raw.get("failure_code", "unreachable"),
-                )
-                percept = Percept(
-                    percept_id=f"percept:{request_id}",
-                    request_id=request_id,
-                    target_refs=[invocation.resource],
-                    observed_propositions=[],
-                    evidence_refs=[],
-                    source_roles=["gateway"],
-                    unresolved=[cap_id],
-                    cost=dict(result.cost),
-                )
+                return snapshot, None, None
+            return self._complete_gateway_observation(
+                t_s=int(view.t_s),
+                request_id=request_id,
+                cap_id=cap_id,
+                resource=invocation.resource,
+                snapshot=snapshot,
+                raw=raw,
+                requested_at_s=int(view.t_s),
+            )
         else:
             # Planner-requested center reads can be resolved from the already
             # acquired Evidence World without creating another world revision.
@@ -577,6 +980,7 @@ class AgenticCommunicationPolicy(CenterPolicy):
             before = snapshot.revision
             attempted_any = False
             recent_outcomes: list[dict] = []
+            deferred_any = False
             for invocation in observation_invocations:
                 key = (invocation.capability_id, invocation.resource)
                 if key in attempted_without_revision:
@@ -585,17 +989,36 @@ class AgenticCommunicationPolicy(CenterPolicy):
                 snapshot, result, percept = self._execute_planner_observation(
                     view, contract, invocation, snapshot
                 )
-                recent_outcomes.append(
-                    {
-                        "capability_id": invocation.capability_id,
-                        "resource": invocation.resource,
-                        "result": result.model_dump(mode="json"),
-                        "percept": percept.model_dump(mode="json"),
-                    }
-                )
+                if result is None or percept is None:
+                    deferred_any = True
+                    continue
+                outcome = {
+                    "capability_id": invocation.capability_id,
+                    "resource": invocation.resource,
+                    "result": result.model_dump(mode="json"),
+                    "percept": percept.model_dump(mode="json"),
+                }
+                recent_outcomes.append(outcome)
+                if result.status in {
+                    CapabilityResultStatus.BLOCKED,
+                    CapabilityResultStatus.TIMED_OUT,
+                    CapabilityResultStatus.FAILED,
+                    CapabilityResultStatus.PARTIAL,
+                }:
+                    self._recent_observation_outcomes[
+                        (invocation.capability_id, invocation.resource)
+                    ] = {"t_s": int(view.t_s), "outcome": outcome}
+                else:
+                    self._recent_observation_outcomes.pop(
+                        (invocation.capability_id, invocation.resource), None
+                    )
                 if snapshot.revision == before:
                     attempted_without_revision.add(key)
             if not attempted_any:
+                break
+            if deferred_any:
+                # Remote evidence is allowed to complete later in simulator
+                # time.  Do not manufacture a second model turn at the same t.
                 break
             if snapshot.revision != before:
                 self.trace.append(
@@ -688,6 +1111,9 @@ class AgenticCommunicationPolicy(CenterPolicy):
         self._update_confirmations(view)
         contract, new_run = self._ensure_task_run(view)
         snapshot = self.evidence_world.observe(view)
+        pending_outcomes: list[dict] = []
+        if self.planner_consumer is not None:
+            snapshot, pending_outcomes = self._drain_pending_observations(view, snapshot)
         if self.planner_consumer is None:
             snapshot = self._query_gateway_evidence(view, contract, snapshot)
         if new_run or snapshot.revision != self._last_context_world_revision:
@@ -697,7 +1123,13 @@ class AgenticCommunicationPolicy(CenterPolicy):
                 snapshot,
                 task_run_id=self._active_run_id,
             )
-        self._refresh_context(view, contract, snapshot, force=new_run)
+        self._refresh_context(
+            view,
+            contract,
+            snapshot,
+            force=(new_run or bool(pending_outcomes)),
+            recent_capability_outcomes=pending_outcomes,
+        )
 
         if self.planner_consumer is not None:
             snapshot = self._run_planner_evidence_rounds(view, contract, snapshot)
@@ -750,29 +1182,47 @@ class AgenticCommunicationPolicy(CenterPolicy):
 
     def _actions_from_planner_decision(self, view, contract):
         decision = self._latest_planner_decision
-        if decision is None or decision.stop:
-            return []
         allowed = set(self.operational_task.authorized_effects)
-        per_node: dict[str, dict[str, int]] = {}
-        for invocation in decision.invocations:
-            if invocation.capability_id not in allowed:
-                continue
-            if invocation.capability_id in {
-                "communication.fallback.gateway_backup",
-                "communication.fallback.terminal_dts",
-                "communication.fallback.access_assist",
-            }:
-                self._execute_runtime_device_action(view, contract, invocation)
-                continue
-            if invocation.resource not in self._targets(view):
-                continue
-            target_s = invocation.canonical_arguments.get("target_s")
-            if target_s is None:
-                continue
-            per_node.setdefault(invocation.resource, {})[invocation.capability_id] = int(target_s)
+        # Configuration effects execute from persistent semantic intent rather
+        # than directly from the latest model turn.  This keeps ordinary
+        # admission/retry semantics alive across observation-only turns.
+        per_node: dict[str, dict[str, int]] = {
+            nid: dict(wants) for nid, wants in self._persistent_config_intent.items()
+        }
+        if decision is not None and self._latest_planner_decision_t_s == int(view.t_s):
+            for invocation in decision.invocations:
+                if invocation.capability_id not in allowed:
+                    continue
+                if invocation.capability_id in {
+                    "communication.fallback.gateway_backup",
+                    "communication.fallback.terminal_dts",
+                    "communication.fallback.access_assist",
+                }:
+                    self._execute_runtime_device_action(view, contract, invocation)
+                    continue
+                if invocation.resource not in self._targets(view):
+                    continue
+                # Config invocations have already been compiled into persistent
+                # intent above.  Do not rebuild them from the latest turn here.
+                if invocation.capability_id in {
+                    "communication.config.set_sampling_interval",
+                    "communication.config.set_report_period",
+                }:
+                    continue
 
         actions: list[tuple[str, dict]] = []
         for nid, wants in sorted(per_node.items()):
+            if nid not in self._targets(view):
+                self._persistent_config_intent.pop(nid, None)
+                continue
+            wants = {
+                capability_id: target_s
+                for capability_id, target_s in wants.items()
+                if capability_id in allowed
+            }
+            if not wants:
+                self._persistent_config_intent.pop(nid, None)
+                continue
             if nid in view.in_flight:
                 self._skip("in_flight", nid)
                 continue
@@ -805,6 +1255,7 @@ class AgenticCommunicationPolicy(CenterPolicy):
                     payloads.append({"op": OP_SET_REPORT_PERIOD, "period_s": report})
             if not payloads:
                 self._skip("at_target", nid)
+                self._persistent_config_intent.pop(nid, None)
                 continue
             self._last_cmd_at[nid] = view.t_s
             stamped: list[dict]
@@ -893,6 +1344,34 @@ class AgenticCommunicationPolicy(CenterPolicy):
 
     def trace_summary(self) -> dict:
         contexts = self.context_stats
+        request_caps: dict[str, str] = {}
+        remote_request_ids: set[str] = set()
+        for event in self.trace.events:
+            if event.event_type != "capability_request":
+                continue
+            request_id = str(event.payload.get("request_id", ""))
+            capability_id = str(event.payload.get("capability_id", ""))
+            request_caps[request_id] = capability_id
+            if capability_id.startswith("communication.gateway."):
+                remote_request_ids.add(request_id)
+        remote_results = [
+            event for event in self.trace.events
+            if event.event_type == "capability_result"
+            and str(event.payload.get("request_id", "")) in remote_request_ids
+        ]
+        remote_waits = [
+            float((event.payload.get("latency") or {}).get("simulated_s", 0.0) or 0.0)
+            for event in remote_results
+        ]
+        remote_unknown_transport = sum(
+            1
+            for event in remote_results
+            if (event.payload.get("cost") or {}).get("transport_cost") == "unmodeled"
+        )
+        model_requests_by_t: dict[int, int] = {}
+        for event in self.trace.events:
+            if event.event_type == "model_request":
+                model_requests_by_t[event.t_s] = model_requests_by_t.get(event.t_s, 0) + 1
         return {
             "events": len(self.trace.events),
             "runtime_task_contracts": self.trace.count("runtime_task_contract"),
@@ -907,6 +1386,15 @@ class AgenticCommunicationPolicy(CenterPolicy):
             "model_attempts": self.trace.count("model_attempt"),
             "model_usage_records": self.trace.count("model_usage"),
             "physical_effects_confirmed": self.trace.count("physical_effect"),
+            "remote_observation_requests": len(remote_request_ids),
+            "remote_observation_pending_events": self.trace.count("capability_pending"),
+            "remote_observation_results": len(remote_results),
+            "remote_observation_simulated_wait_s_total": sum(remote_waits),
+            "remote_observation_simulated_wait_s_mean": (
+                sum(remote_waits) / len(remote_waits) if remote_waits else 0.0
+            ),
+            "remote_observation_unknown_transport_cost_results": remote_unknown_transport,
+            "max_model_requests_per_tick": max(model_requests_by_t.values(), default=0),
             "accepted_requests": len(self._accepted),
             "confirmed_requests": len(self._confirmed),
             "unconfirmed_requests": len(self._accepted) - len(self._confirmed),

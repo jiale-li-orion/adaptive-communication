@@ -122,6 +122,7 @@ class EvidenceNeed(BaseModel):
     preferred_source_roles: list[str] = Field(default_factory=list)
     freshness_requirement: dict[str, JsonValue] = Field(default_factory=dict)
     completion_predicate: dict[str, JsonValue] = Field(default_factory=dict)
+    blocking_plan_ids: list[str] = Field(default_factory=list)
     priority: int = Field(default=50, ge=0, le=100)
     status: EvidenceNeedStatus = EvidenceNeedStatus.OPEN
     resolution_evidence_refs: list[str] = Field(default_factory=list)
@@ -436,6 +437,13 @@ class PlannerDecisionProposal(BaseModel):
     """Model-facing decision schema before runtime-owned IDs are attached."""
 
     stop: bool = False
+    selected_plan_id: str | None = Field(
+        default=None,
+        description=(
+            "Optional Runtime-generated candidate plan to execute. When supplied, Runtime expands "
+            "that supported candidate's declared invocations; the model need not copy them."
+        ),
+    )
     invocations: list[PlannedCapabilityInvocation] = Field(default_factory=list)
     state_patch: dict[str, JsonValue] = Field(default_factory=dict)
     reason_codes: list[str] = Field(default_factory=list)
@@ -451,6 +459,7 @@ class PlannerDecision(BaseModel):
     decision_id: str
     request_id: str
     stop: bool = False
+    selected_plan_id: str | None = None
     invocations: list[PlannedCapabilityInvocation] = Field(default_factory=list)
     state_patch: dict[str, JsonValue] = Field(default_factory=dict)
     reason_codes: list[str] = Field(default_factory=list)

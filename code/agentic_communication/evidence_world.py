@@ -169,6 +169,7 @@ class CommunicationEvidenceWorld:
         *,
         capability_id: str,
         view,
+        resource: str | None = None,
     ) -> EvidenceWorldSnapshot:
         """Merge a legally acquired gateway-owner observation into the world.
 
@@ -199,24 +200,72 @@ class CommunicationEvidenceWorld:
             prop = capability_id
             source = "gateway-view.receipt-state"
             subject = "gw0"
+        elif capability_id == "communication.gateway.node_report":
+            if not resource:
+                raise ValueError("gateway.node_report requires a node resource")
+            snap = dict(view.reports.get(resource) or {})
+            if not snap:
+                # A successful owner read can still truthfully return no report.
+                # Do not manufacture a negative node state from absence.
+                return self._snapshot or EvidenceWorldSnapshot.build(
+                    revision=max(1, self._revision),
+                    observed_at_s=int(view.t_s),
+                    evidence=base,
+                )
+            value = {
+                k: snap.get(k)
+                for k in (
+                    "alive",
+                    "soc_wh",
+                    "sample_interval_s",
+                    "report_period_s",
+                    "cache_level",
+                    "read_at",
+                    "config_generation",
+                    "field_generation",
+                )
+                if k in snap
+            }
+            prop = capability_id
+            source = "gateway-view.reports"
+            subject = str(resource)
         else:
             raise ValueError(f"unsupported gateway evidence capability {capability_id!r}")
 
+        observed_at = int(view.report_at.get(subject, view.t_s)) if capability_id == "communication.gateway.node_report" else int(view.t_s)
+        generated_at = (
+            value.get("read_at")
+            if capability_id == "communication.gateway.node_report" and isinstance(value, dict)
+            else None
+        )
         row = CommunicationEvidence(
-            evidence_id=_eid(prop, subject, int(view.t_s), value),
+            evidence_id=_eid(prop, subject, observed_at, value),
             proposition=prop,
             subject_ref=subject,
             value=value,
             source_id=source,
             source_role="gateway",
             owner_location="gateway",
-            observed_at_s=int(view.t_s),
+            generated_at_s=(None if generated_at is None else int(generated_at)),
+            observed_at_s=observed_at,
             world_revision=next_revision,
             status=EvidenceStatus.CURRENT,
-            freshness={"basis": "gateway_owner_observation"},
+            freshness={
+                "basis": (
+                    "node read_at plus gateway receipt time"
+                    if capability_id == "communication.gateway.node_report"
+                    else "gateway_owner_observation"
+                )
+            },
             provenance={"surface": "GatewayView", "capability_id": capability_id},
         )
-        base = [e for e in base if e.proposition != capability_id]
+        if capability_id == "communication.gateway.node_report":
+            base = [
+                e for e in base
+                if not (e.proposition == capability_id and e.subject_ref == subject)
+            ]
+        else:
+            base = [e for e in base if e.proposition != capability_id]
         base.append(row)
         candidate = EvidenceWorldSnapshot.build(
             revision=next_revision,

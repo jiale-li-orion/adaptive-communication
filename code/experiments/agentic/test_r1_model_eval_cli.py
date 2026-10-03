@@ -30,7 +30,7 @@ def main() -> int:
     payload = json.loads(proc.stdout)
     assert payload["dry_run"] is True
     assert payload["api_key_present"] is False
-    assert payload["protocol_revision"] == "communication-planner-json-v1"
+    assert payload["protocol_revision"] == "communication-planner-json-v6-no-action-sufficiency"
     assert len(payload["trace_sha256"]) == 64
     print("PASS R1 model-eval CLI: dry-run freezes trace/protocol and never requires/fakes a model backend")
     return 0

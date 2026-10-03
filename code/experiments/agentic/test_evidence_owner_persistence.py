@@ -10,7 +10,7 @@ if CODE not in sys.path:
     sys.path.insert(0, CODE)
 
 from agentic_communication.episodes import o3_backhaul_outage_sustainment_task  # noqa: E402
-from agentic_communication.metrics import physical_signature  # noqa: E402
+from agentic_communication.metrics import communication_metrics  # noqa: E402
 from agentic_communication.planner import EvidenceAwareComplyPlannerConsumer  # noqa: E402
 from agentic_communication.run import run_agentic_episode, run_reference_comply  # noqa: E402
 
@@ -34,7 +34,14 @@ def main() -> int:
         planner_consumer=EvidenceAwareComplyPlannerConsumer(),
         simulator_kwargs=sim,
     )
-    assert physical_signature(reference) == physical_signature(result)
+    # Persisting owner evidence itself must preserve service correctness in this
+    # always-up case.  The remote acquisition round is no longer a free
+    # same-tick RPC, so control-plane command/retry counters may legitimately
+    # differ from the legacy direct reference.
+    ref_m = communication_metrics(reference)
+    got_m = communication_metrics(result)
+    assert ref_m["timely_delivery_rate"] == got_m["timely_delivery_rate"]
+    assert ref_m["collection_rate"] == got_m["collection_rate"]
     gateway_requests = [
         e
         for e in policy.trace.events
@@ -46,6 +53,9 @@ def main() -> int:
     assert 2 <= len(gateway_requests) <= 8, len(gateway_requests)
     summary = policy.trace_summary()
     assert summary["model_requests"] < 40, summary
+    assert summary["remote_observation_requests"] == len(gateway_requests)
+    assert summary["remote_observation_simulated_wait_s_mean"] == 60.0
+    assert summary["max_model_requests_per_tick"] == 1
     gateway_rows = []
     for event in policy.trace.events:
         if event.event_type != "evidence_world_revision":
@@ -58,7 +68,7 @@ def main() -> int:
     assert gateway_rows
     print(
         "PASS evidence owner persistence: gateway evidence survives center updates, "
-        "refreshes on freshness boundary, physical outcome unchanged"
+        "refreshes on freshness boundary, service outcome preserved across async owner reads"
     )
     return 0
 

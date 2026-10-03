@@ -51,6 +51,70 @@ def _hash_json(value) -> str:
     return sha256(raw).hexdigest()
 
 
+def _expand_selected_candidate_plan(
+    decision: PlannerDecision,
+    assembly: PromptAssembly,
+) -> PlannerDecision:
+    """Deterministically expand a model-selected Runtime candidate plan.
+
+    Candidate construction is Runtime-owned.  The model still chooses the plan;
+    this helper only removes mechanical repetition of an already-declared typed
+    invocation list.  Additional explicit invocations (typically observations)
+    are preserved, allowing query+effect mixed decisions.
+    """
+    plan_id = decision.selected_plan_id
+    if plan_id is None:
+        return decision
+    fragments = {
+        fragment.kind: fragment.content
+        for fragment in assembly.fragments
+    }
+    candidate = fragments.get("candidate_action_context")
+    if not isinstance(candidate, dict):
+        raise ValueError("selected_plan_id requires model-visible candidate_action_context")
+    matches = [
+        row
+        for row in candidate.get("candidate_plans", [])
+        if isinstance(row, dict) and row.get("plan_id") == plan_id
+    ]
+    if len(matches) != 1:
+        raise ValueError(f"selected_plan_id {plan_id!r} is not one visible candidate plan")
+    plan = matches[0]
+    if plan.get("feasibility") != "supported":
+        raise ValueError(
+            f"selected_plan_id {plan_id!r} is not supported: {plan.get('feasibility')!r}"
+        )
+    if plan.get("unresolved_conditions"):
+        raise ValueError(f"selected_plan_id {plan_id!r} still has unresolved conditions")
+
+    expanded = [
+        PlannedCapabilityInvocation.model_validate(row)
+        for row in (plan.get("invocations") or [])
+    ]
+    if decision.stop and (expanded or decision.invocations):
+        raise ValueError(
+            f"selected_plan_id {plan_id!r} has effects and cannot be combined with stop=true"
+        )
+    merged: list[PlannedCapabilityInvocation] = []
+    seen: set[tuple[str, str, str]] = set()
+    for invocation in [*expanded, *decision.invocations]:
+        key = (
+            invocation.capability_id,
+            invocation.resource,
+            json.dumps(
+                invocation.canonical_arguments,
+                ensure_ascii=False,
+                sort_keys=True,
+                separators=(",", ":"),
+            ),
+        )
+        if key in seen:
+            continue
+        seen.add(key)
+        merged.append(invocation)
+    return decision.model_copy(update={"invocations": merged})
+
+
 def invoke_consumer(
     *,
     assembly: PromptAssembly,
@@ -69,6 +133,8 @@ def invoke_consumer(
     try:
         decision, usage = consumer.decide(request, assembly)
         usage = usage.model_copy(update={"input_bytes": max(usage.input_bytes, input_bytes)})
+        # Ledger the model's actual parsed output before Runtime candidate-plan
+        # expansion.  Token usage already comes from the backend itself.
         out = decision.model_dump(mode="json")
         output_bytes = len(json.dumps(out, ensure_ascii=False, sort_keys=True).encode("utf-8"))
         usage = usage.model_copy(update={"output_bytes": max(usage.output_bytes, output_bytes)})
@@ -81,6 +147,7 @@ def invoke_consumer(
             usage=usage,
             output_hash=_hash_json(out),
         )
+        decision = _expand_selected_candidate_plan(decision, assembly)
         return PlannerInvocationResult(request=request, attempt=attempt, decision=decision)
     except Exception as exc:
         attempt = ModelAttempt(
@@ -398,6 +465,170 @@ class EvidenceAwareComplyPlannerConsumer(DeterministicComplyPlannerConsumer):
                 ModelUsage(),
             )
         return super().decide(request, assembly)
+
+
+class ActionConditionedReferencePlannerConsumer(DeterministicComplyPlannerConsumer):
+    """Deterministic reference consumer for the action-conditioned method path.
+
+    The selector owns candidate generation and evidence dependencies.  This
+    consumer first resolves active unresolved dependencies, then executes the
+    supported ordinary configuration candidate.  It exists to validate the
+    end-to-end method path before a real model replaces plan selection.
+    """
+
+    consumer_id = "action-conditioned-reference-v1"
+    model = "action-conditioned-reference"
+
+    def decide(self, request: ModelRequest, assembly: PromptAssembly) -> tuple[PlannerDecision, ModelUsage]:
+        candidate = self._fragment(assembly, "candidate_action_context") or {}
+        specs = self._fragment(assembly, "capability_catalog") or []
+        visible = {
+            row.get("capability_id")
+            for row in specs
+            if isinstance(row, dict) and row.get("capability_id")
+        }
+        queries: list[PlannedCapabilityInvocation] = []
+        for dep in candidate.get("dependencies", []):
+            if dep.get("fresh") or dep.get("acquisition") != "active_capability":
+                continue
+            cid = str(dep.get("proposition", ""))
+            subject = str(dep.get("subject", ""))
+            if cid not in visible:
+                continue
+            if cid == "communication.gateway.node_report":
+                args = {"node_id": subject}
+            elif cid.startswith("communication.gateway."):
+                args = {"gateway_id": subject}
+            else:
+                args = {}
+            queries.append(
+                PlannedCapabilityInvocation(
+                    capability_id=cid,
+                    resource=subject,
+                    canonical_arguments=args,
+                )
+            )
+        if queries:
+            # Preserve order while removing duplicate dependency calls.
+            unique: list[PlannedCapabilityInvocation] = []
+            seen: set[tuple[str, str]] = set()
+            for q in queries:
+                key = (q.capability_id, q.resource)
+                if key not in seen:
+                    seen.add(key)
+                    unique.append(q)
+            return (
+                PlannerDecision(
+                    decision_id=f"decision:{request.request_id}",
+                    request_id=request.request_id,
+                    stop=False,
+                    invocations=unique,
+                    reason_codes=["resolve-action-conditioned-dependencies"],
+                ),
+                ModelUsage(),
+            )
+
+        plans = list(candidate.get("candidate_plans", []))
+        install = next(
+            (
+                p
+                for p in plans
+                if p.get("plan_id") == "install_required_profile"
+                and p.get("feasibility") == "supported"
+            ),
+            None,
+        )
+        if install is not None and install.get("invocations"):
+            return (
+                PlannerDecision(
+                    decision_id=f"decision:{request.request_id}",
+                    request_id=request.request_id,
+                    stop=False,
+                    invocations=[
+                        PlannedCapabilityInvocation.model_validate(row)
+                        for row in install.get("invocations", [])
+                    ],
+                    reason_codes=["execute-supported-action-conditioned-plan"],
+                ),
+                ModelUsage(),
+            )
+        return (
+            PlannerDecision(
+                decision_id=f"decision:{request.request_id}",
+                request_id=request.request_id,
+                stop=True,
+                invocations=[],
+                reason_codes=["supported-hold-or-await-passive-evidence"],
+            ),
+            ModelUsage(),
+        )
+
+
+class CompiledChecklistPlannerConsumer(DeterministicComplyPlannerConsumer):
+    """Ordinary structured baseline over the same compact candidate interface.
+
+    This consumer intentionally ignores ``decision_sufficiency`` and any
+    Method-specific primary-plan certificate.  It applies one ordinary checklist:
+
+    * consider only model-visible candidate plans;
+    * a plan is ready when ``feasibility == supported`` and it has no unresolved
+      conditions;
+    * if exactly one ready plan exists, select that plan by ID;
+    * a zero-effect ready plan means hold/stop;
+    * otherwise do not invent a decision.
+
+    The goal is to test how much of the current benchmark is already solved by
+    ordinary compilation plus the shared candidate-plan interface, without an LLM.
+    """
+
+    consumer_id = "compiled-checklist-v1"
+    provider = "runtime"
+    model = "deterministic-compiled-checklist"
+
+    def decide(
+        self,
+        request: ModelRequest,
+        assembly: PromptAssembly,
+    ) -> tuple[PlannerDecision, ModelUsage]:
+        candidate = self._fragment(assembly, "candidate_action_context") or {}
+        plans = [row for row in candidate.get("candidate_plans", []) if isinstance(row, dict)]
+        ready = [
+            row
+            for row in plans
+            if row.get("feasibility") == "supported"
+            and not bool(row.get("unresolved_conditions"))
+        ]
+        if len(ready) == 1:
+            plan = ready[0]
+            plan_id = str(plan.get("plan_id") or "")
+            if plan_id:
+                has_effect = bool(plan.get("invocations"))
+                return (
+                    PlannerDecision(
+                        decision_id=f"decision:{request.request_id}",
+                        request_id=request.request_id,
+                        stop=not has_effect,
+                        selected_plan_id=plan_id,
+                        invocations=[],
+                        reason_codes=["compiled-checklist-unique-supported-plan"],
+                    ),
+                    ModelUsage(),
+                )
+
+        return (
+            PlannerDecision(
+                decision_id=f"decision:{request.request_id}",
+                request_id=request.request_id,
+                stop=True,
+                invocations=[],
+                reason_codes=[
+                    "compiled-checklist-no-unique-supported-plan"
+                    if not ready
+                    else "compiled-checklist-ambiguous-supported-plans"
+                ],
+            ),
+            ModelUsage(),
+        )
 
 
 class FixedOrderEagerPlannerConsumer(DeterministicComplyPlannerConsumer):

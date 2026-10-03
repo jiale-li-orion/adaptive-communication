@@ -3,7 +3,7 @@
 
 检查四件事，任何一件不成立就红：
 
-  1. 主张编号唯一，且形如 C<数字>；
+  1. 主张编号唯一，且形如 C<数字>（系统论文/通信底座）或 A<数字>（当前 Agentic Communication）；
   2. 状态取自固定集合（supported / scoped-negative / formative / open /
      reproduced-externally / retracted）；
   3. 每行给出的脚本与参考结果在磁盘上存在——指向不存在的文件的主张等于没有证据；
@@ -103,7 +103,7 @@ def main() -> int:
         # 单元格可能写成 `supported` 或 supported；检查不该对 markdown 装饰敏感。
         cid, status = row[ci_id].strip().strip("`"), row[ci_stat].strip().strip("`")
         ids.append(cid)
-        check(f"{cid} 编号格式", bool(re.fullmatch(r"C\d+", cid)), cid)
+        check(f"{cid} 编号格式", bool(re.fullmatch(r"[CA]\d+", cid)), cid)
         check(f"{cid} 状态取自集合", status in STATUS, status)
         for p in paths_in(row[ci_scr]):
             check(f"{cid} 脚本存在", os.path.exists(os.path.join(ROOT, p)), p)
@@ -144,11 +144,19 @@ def main() -> int:
         head = [l for l in rtext.split("\n") if l.startswith("| Claim |") or l.startswith("| 主张 |")]
         check(f"{rel} 主张表含状态列", bool(head) and ("Status" in head[0] or "状态" in head[0]),
               head[0][:60] if head else "无表头")
-        for row in [l for l in rtext.split("\n") if re.match(r"^\| C\d+ \|", l)]:
+        projection_rows = [l for l in rtext.split("\n") if re.match(r"^\| [CA]\d+ \|", l)]
+        projection_ids = []
+        for row in projection_rows:
             cells = [c.strip().strip("`") for c in row.strip("|").split("|")]
             cid, shown = cells[0], cells[-1]
+            projection_ids.append(cid)
             check(f"{rel} {cid} 状态与主张表一致", status_now.get(cid) == shown,
                   f"README={shown} CLAIMS={status_now.get(cid)}")
+        check(
+            f"{rel} 完整投影全部当前主张",
+            set(projection_ids) == set(ids) and len(projection_ids) == len(ids),
+            f"README={sorted(projection_ids)} CLAIMS={sorted(ids)}",
+        )
 
     print(f"\n  主张 {len(ids)} 条，撤回 {max(len(retract) - 1, 0)} 条")
     if FAIL:

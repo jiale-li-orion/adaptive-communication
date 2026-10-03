@@ -54,6 +54,17 @@ def _paths(cap: dict) -> tuple[list[str], list[str], list[str]]:
 
 
 def _schemas(capability_id: str) -> tuple[dict, dict]:
+    if capability_id == "communication.gateway.node_report":
+        return (
+            {"node_id": "string"},
+            {
+                "soc_wh": "number?",
+                "sample_interval_s": "integer?",
+                "report_period_s": "integer?",
+                "cache_level": "integer?",
+                "read_at": "integer?",
+            },
+        )
     if capability_id == "communication.config.set_sampling_interval":
         return (
             {"node_id": "string", "target_s": "integer>=60"},
@@ -84,6 +95,7 @@ class CommunicationCapabilityCatalog:
         self.registry_revision = raw["registry_revision"]
         self.contracts: dict[str, CapabilityContract] = {}
         self.bindings: dict[str, CapabilityBinding] = {}
+        self.runtime_status: dict[str, str] = {}
         for cap in raw["capabilities"]:
             effect = EffectSemantics(cap["effect_semantics"])
             input_schema, output_schema = _schemas(cap["capability_id"])
@@ -123,10 +135,18 @@ class CommunicationCapabilityCatalog:
             )
             self.contracts[contract.capability_id] = contract
             self.bindings[binding.capability_id] = binding
+            self.runtime_status[contract.capability_id] = str(
+                cap.get("runtime_status", "live_planner_device")
+            )
 
     def visible(self, task: TaskContract) -> list[CapabilityContract]:
         return sorted(
-            (c for c in self.contracts.values() if capability_visible_for_task(task, c)),
+            (
+                c
+                for c in self.contracts.values()
+                if self.runtime_status.get(c.capability_id) != "baseline_materializer_only"
+                and capability_visible_for_task(task, c)
+            ),
             key=lambda c: c.capability_id,
         )
 

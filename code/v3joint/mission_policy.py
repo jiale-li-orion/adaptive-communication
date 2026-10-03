@@ -25,6 +25,7 @@ from __future__ import annotations
 
 from center import (CenterPolicy, CenterView, OP_SET_REPORT_PERIOD,
                     OP_SET_SAMPLING_INTERVAL)
+from admission import ResourceGate, hourly_load
 
 
 def required_period(schedule, t_s: int) -> int:
@@ -62,6 +63,11 @@ class MissionChangePolicy(CenterPolicy):
         #: 诊断/指标：因能量拒绝加密的（节点, 要求周期, 时刻, 所见SoC）。H1 不可兑现声明的雏形。
         self.refusals: list[tuple[str, int, int, float | None]] = []
         self._last_req: dict[str, int] = {}
+        #: energy_gate 的一次性准入结果必须在**同一个 Task revision 整段内持久**。
+        #: 第一版只把 `_last_req` 推进到新 req，却没有保存“这次升级被拒后仍应保持的 target”。
+        #: 结果是拒绝只生效一个 planner tick：下一 tick 看到 `req == prev_req` 后又把节点改成 dense。
+        #: 这里保存该节点当前 Task revision 下真正被准入的 target period；只有 req 再次变化时重判。
+        self._energy_gate_target: dict[str, int] = {}
         #: sustain 模式的逐节点滞回状态（策略自身记忆，非环境真值）。
         self._dense_mode: dict[str, bool] = {}
         self._streak: dict[str, tuple[bool, int]] = {}
@@ -93,14 +99,23 @@ class MissionChangePolicy(CenterPolicy):
             elif self.mode == "comply":
                 target_i = target_p = req
             elif self.mode == "energy_gate":
-                # 一次性门限：仅在“要求变密的那一刻”按当时 SoC 决定，之后不随耗电回退（消融用）。
-                if req < prev_req:
-                    healthy = self.send_when_unknown if soc is None else soc >= self.healthy_wh
-                    if not healthy and (nid, req) not in {(r[0], r[1]) for r in self.refusals}:
-                        self.refusals.append((nid, req, view.t_s, soc))
-                    target_i = target_p = req if healthy else prev_req
+                # 一次性门限：仅在**Task requirement revision** 时按当时 SoC 决定，
+                # 然后把准入结果持久到下一次 requirement revision。拒绝升级意味着继续跑
+                # 上一档已准入 target，而不是“只拒绝这一分钟、下一分钟又照单全收”。
+                previous_target = self._energy_gate_target.get(nid, prev_req)
+                if req != prev_req:
+                    if req < prev_req:
+                        healthy = self.send_when_unknown if soc is None else soc >= self.healthy_wh
+                        if not healthy and (nid, req) not in {(r[0], r[1]) for r in self.refusals}:
+                            self.refusals.append((nid, req, view.t_s, soc))
+                        target = req if healthy else previous_target
+                    else:
+                        # 降级总是放行，主动回到新的较疏 Task target。
+                        target = req
+                    self._energy_gate_target[nid] = target
                 else:
-                    target_i = target_p = req        # 降级/持平照走
+                    target = self._energy_gate_target.get(nid, req)
+                target_i = target_p = target
             elif self.mode == "sustain":
                 # 持续滞回能量门限（S0 强普通规则）：升级态下随回报 SoC 在密档 req 与常态 sparse
                 # 之间粘滞切换，电被耗低会真的退回疏档，电恢复再加密。
@@ -147,3 +162,210 @@ class MissionChangePolicy(CenterPolicy):
             out.append((nid, a))
             out.append((nid, b))
         return out
+
+
+class NotifiedMissionPolicy(MissionChangePolicy):
+    """Gateway policy that can use only Task revisions actually delivered by MissionViewGate."""
+
+    def __init__(self, mission_gate, mode: str = "comply", scope=None,
+                 preparation_lead_s: int = 0, record_trace: bool = False,
+                 preparation_resource_guard: bool = False,
+                 preparation_sample_wh: float | None = None,
+                 preparation_capacity_wh: float | None = None,
+                 preparation_correction_s: int | None = None,
+                 preparation_reserve_wh: float = 0.0,
+                 **kwargs) -> None:
+        self.mission_gate = mission_gate
+        self.preparation_lead_s = max(0, int(preparation_lead_s))
+        self.record_trace = bool(record_trace)
+        self.decision_trace: list[dict] = []
+        self.preparation_resource_guard = bool(preparation_resource_guard)
+        if self.preparation_resource_guard and mode != "comply":
+            raise ValueError("preparation_resource_guard currently isolates comply-mode preparation only")
+        self._prep_gate = None
+        if self.preparation_resource_guard:
+            if preparation_sample_wh is None or preparation_capacity_wh is None:
+                raise ValueError("resource-guarded preparation requires sample_wh and capacity_wh")
+            self._prep_gate = ResourceGate(
+                sample_wh=float(preparation_sample_wh),
+                capacity_wh=float(preparation_capacity_wh),
+                correction_s=preparation_correction_s,
+                reserve_wh=float(preparation_reserve_wh),
+            )
+        self._prep_sample_wh = None if preparation_sample_wh is None else float(preparation_sample_wh)
+        self._prep_denied: dict[str, int] = {}
+        self._prep_denied_reasons: dict[str, int] = {}
+        super().__init__([mission_gate.schedule[0]], mode=mode, scope=scope, **kwargs)
+        self.name = f"mission-notified-{mode}"
+
+    def _trace_view(self, view: CenterView, visible) -> None:
+        if not self.record_trace or view.t_s % 3600 != 0:
+            return
+        nodes = [nid for nid in view.node_ids if self._in_scope(nid)]
+        soc = [view.soc_of(nid) for nid in nodes]
+        soc_known = [float(x) for x in soc if x is not None]
+        ages = [view.soc_age_s(nid) for nid in nodes]
+        ages_known = [int(x) for x in ages if x is not None]
+        aois = [view.aoi_s(nid) for nid in nodes]
+        aois_known = [int(x) for x in aois if x is not None]
+        self.decision_trace.append({
+            "t_s": int(view.t_s),
+            "visible_schedule": [list(x) for x in visible],
+            "report_count": sum(1 for nid in nodes if nid in view.reports),
+            "in_flight_count": sum(1 for nid in nodes if nid in view.in_flight),
+            "soc_known": len(soc_known),
+            "soc_mean": (sum(soc_known) / len(soc_known)) if soc_known else None,
+            "soc_min": min(soc_known) if soc_known else None,
+            "soc_max": max(soc_known) if soc_known else None,
+            "soc_age_mean": (sum(ages_known) / len(ages_known)) if ages_known else None,
+            "soc_age_max": max(ages_known) if ages_known else None,
+            "aoi_mean": (sum(aois_known) / len(aois_known)) if aois_known else None,
+            "aoi_max": max(aois_known) if aois_known else None,
+            "gateway_last_forward_age_s": (
+                None if view.gateway_last_forward_ok_at is None
+                else int(view.t_s - view.gateway_last_forward_ok_at)),
+            "gateway_pending_depth": view.gateway_pending_depth,
+            "gateway_oldest_pending_age_s": view.gateway_oldest_pending_age_s,
+            "nodes": {
+                nid: {
+                    "soc_wh": view.soc_of(nid),
+                    "soc_age_s": view.soc_age_s(nid),
+                    "aoi_s": view.aoi_s(nid),
+                    "in_flight": nid in view.in_flight,
+                    "sample_interval_s": (view.reports.get(nid) or {}).get("sample_interval_s"),
+                    "report_period_s": (view.reports.get(nid) or {}).get("report_period_s"),
+                    "cache_level": (view.reports.get(nid) or {}).get("cache_level"),
+                }
+                for nid in nodes
+            },
+        })
+
+    def plan(self, view: CenterView):
+        # No direct read of future gate.segments: visible_schedule is the information boundary.
+        visible = self.mission_gate.visible_schedule()
+        self._trace_view(view, visible)
+        # A delegated future Task must not make the gateway re-enforce the current deployment
+        # profile before there is something useful to prepare/execute.  This keeps "Task intent
+        # arrived early" separate from "start dense monitoring early" and avoids shifting the
+        # ordinary dwell/retry clock merely because the contract was delivered.
+        densification_starts = []
+        prev = int(visible[0][1])
+        for start, period, _level in visible[1:]:
+            start, period = int(start), int(period)
+            if period < prev:
+                densification_starts.append(max(0, start - self.preparation_lead_s))
+            prev = period
+        if densification_starts and view.t_s < min(densification_starts):
+            return []
+        if len(visible) == 1:
+            return []
+        if self.preparation_lead_s <= 0:
+            self.schedule = visible
+            return super().plan(view)
+
+        # A received future densification may be staged earlier to buy Class-A
+        # installation opportunities.  Sparse/recovery revisions are never
+        # pulled earlier because that would under-serve the still-active task.
+        staged = [visible[0]]
+        prev_period = int(visible[0][1])
+        for start, period, level in visible[1:]:
+            start, period = int(start), int(period)
+            if period < prev_period:
+                staged.append((max(0, start - self.preparation_lead_s), period,
+                               f"prepare:{level}"))
+            staged.append((start, period, level))
+            prev_period = period
+        self.schedule = sorted(staged, key=lambda x: x[0])
+        actual_req = required_period(visible, view.t_s)
+        staged_req = required_period(self.schedule, view.t_s)
+        early_preparation = staged_req < actual_req
+        if not early_preparation or self._prep_gate is None:
+            return super().plan(view)
+
+        # Resource admission applies only to the *extra early* action.  Snapshot
+        # state first so a rejected preparation does not advance MissionChangePolicy
+        # dwell/generation state and therefore cannot suppress the authoritative
+        # command when the real Task becomes effective.
+        before = {
+            nid: {
+                "last": self._last.get(nid),
+                "last_req": self._last_req.get(nid),
+                "target": self.target.get(nid),
+                "generation": self.generation.get(nid),
+            }
+            for nid in view.node_ids
+        }
+        proposals = super().plan(view)
+        by_node: dict[str, list[tuple[str, dict]]] = {}
+        for nid, payload in proposals:
+            by_node.setdefault(nid, []).append((nid, payload))
+        out = []
+        for nid, rows in by_node.items():
+            snap = view.reports.get(nid) or {}
+            cur = (
+                int(snap.get("sample_interval_s") or self.mission_gate.schedule[0][1]),
+                int(snap.get("report_period_s") or self.mission_gate.schedule[0][1]),
+            )
+            pair = list(cur)
+            for _nn, payload in rows:
+                if payload.get("op") == OP_SET_SAMPLING_INTERVAL:
+                    pair[0] = int(payload["interval_s"])
+                elif payload.get("op") == OP_SET_REPORT_PERIOD:
+                    pair[1] = int(payload["period_s"])
+            soc = view.soc_of(nid)
+            age = view.soc_age_s(nid)
+            if soc is None or age is None or self._prep_sample_wh is None:
+                ok, why = False, "no_evidence"
+            else:
+                soc_lo = float(soc) - hourly_load(*cur, self._prep_sample_wh) * (float(age) / 3600.0)
+                # Protect until the next *visible* relaxation.  If no recovery
+                # Task has reached the gateway yet, conservatively protect to the
+                # Task horizon rather than reading an unseen future revision.
+                end_s = int(self.mission_gate.H)
+                for start, period, _level in visible:
+                    if int(start) > view.t_s and int(period) > staged_req:
+                        end_s = int(start)
+                        break
+                ok, why = self._prep_gate.check(soc_lo, tuple(pair), max(0, end_s - view.t_s))
+            if ok:
+                out.extend(rows)
+                continue
+            self._prep_denied[nid] = self._prep_denied.get(nid, 0) + 1
+            self._prep_denied_reasons[why] = self._prep_denied_reasons.get(why, 0) + 1
+            old = before[nid]
+            for mapping, key in ((self._last, "last"), (self._last_req, "last_req"),
+                                 (self.target, "target"), (self.generation, "generation")):
+                if old[key] is None:
+                    mapping.pop(nid, None)
+                else:
+                    mapping[nid] = old[key]
+        return out
+
+    def preparation_gate_report(self) -> dict | None:
+        if self._prep_gate is None:
+            return None
+        return {
+            "denied_nodes": len(self._prep_denied),
+            "denied_total": sum(self._prep_denied.values()),
+            "denied_reasons": dict(self._prep_denied_reasons),
+            "gate": self._prep_gate.report(),
+        }
+
+
+class DelegatedCenterFallbackPolicy(MissionChangePolicy):
+    """Center-side ordinary fallback for a gateway-delegated Task revision.
+
+    The center keeps its full authorized Task schedule.  It suppresses only the *currently active*
+    non-initial revision after the runtime has positive evidence that the gateway received that
+    revision.  Thus delegation is an additive safety composition, not an owner replacement.
+    """
+
+    def __init__(self, mission_gate, schedule, mode: str = "comply", scope=None, **kwargs) -> None:
+        self.mission_gate = mission_gate
+        super().__init__(schedule, mode=mode, scope=scope, **kwargs)
+        self.name = f"mission-center-fallback-{mode}"
+
+    def plan(self, view: CenterView):
+        if self.mission_gate.revision_received_for_time(view.t_s):
+            return []
+        return super().plan(view)

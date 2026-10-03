@@ -26,24 +26,37 @@ class CommunicationTaskCompiler:
             if phase_idx + 1 < len(task.phases)
             else task.task_horizon_s
         )
+        announced = task.announced_future_phases(t_s)
+        notice_key = ",".join(str(row["phase_index"]) for row in announced)
         contract_id = f"communication:{task.task_id}:phase:{phase_idx}"
+        if notice_key:
+            contract_id += f":announced:{notice_key}"
         targets = task.target_node_ids or ["monitoring-network"]
+        desired_state = {
+            "domain": "pre_disaster_mountain_monitoring",
+            "operational_task_id": task.task_id,
+            "operational_task_family": task.family.value,
+            "phase_index": phase_idx,
+            "monitoring_level": phase.level,
+            "required_period_s": phase.required_period_s,
+            "measurands": list(task.measurands),
+            "scoring_profile_ref": task.scoring_profile_ref,
+        }
+        temporal_contract = {
+            "phase_start_s": phase.start_s,
+            "phase_end_s": next_start,
+            "task_horizon_s": task.task_horizon_s,
+        }
+        if announced:
+            desired_state["announced_future_phases"] = announced
+            temporal_contract["announced_future_phases"] = announced
         return TaskContract(
             task_contract_id=contract_id,
             contract_revision=task.task_revision,
             principal=task.principal,
             task_kind=_KIND_MAP[task.family],
             target_resources=list(targets),
-            desired_state={
-                "domain": "pre_disaster_mountain_monitoring",
-                "operational_task_id": task.task_id,
-                "operational_task_family": task.family.value,
-                "phase_index": phase_idx,
-                "monitoring_level": phase.level,
-                "required_period_s": phase.required_period_s,
-                "measurands": list(task.measurands),
-                "scoring_profile_ref": task.scoring_profile_ref,
-            },
+            desired_state=desired_state,
             evidence_contract={
                 "authority": "communication_evidence_world",
                 "truth_access": "forbidden",
@@ -60,11 +73,7 @@ class CommunicationTaskCompiler:
                 "type": "communication_policy_decision",
                 "physical_outcome_primary": True,
             },
-            temporal_contract={
-                "phase_start_s": phase.start_s,
-                "phase_end_s": next_start,
-                "task_horizon_s": task.task_horizon_s,
-            },
+            temporal_contract=temporal_contract,
             effect_ceiling=EffectCeiling.EXTERNAL_SIDE_EFFECT,
             completion_predicate={
                 "type": "operational_phase_execution",

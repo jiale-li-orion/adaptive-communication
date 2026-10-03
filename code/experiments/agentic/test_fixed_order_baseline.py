@@ -57,17 +57,27 @@ def main() -> int:
         planner_consumer=FixedOrderEagerPlannerConsumer(),
         simulator_kwargs=sim,
     )
-    assert physical_signature(direct) == physical_signature(fixed)
+    # Fixed-order eager probing is a real execution baseline, not a prompt-only
+    # ablation.  Remote probes consume decision time and may therefore change
+    # downstream command timing / energy / sampling trajectory.
+    assert physical_signature(direct) != physical_signature(fixed)
     a, b = p0.trace_summary(), p1.trace_summary()
-    assert b["capability_requests"] > a["capability_requests"], (a, b)
     assert b["model_requests"] > a["model_requests"], (a, b)
+    assert a["remote_observation_requests"] == 0, a
+    assert b["remote_observation_requests"] > 0, b
+    assert b["remote_observation_pending_events"] == b["remote_observation_requests"], b
+    assert b["remote_observation_simulated_wait_s_total"] > 0, b
+    assert b["max_model_requests_per_tick"] == 1, b
     gateway_calls = [
         e for e in p1.trace.events
         if e.event_type == "capability_request"
         and str(e.payload.get("capability_id", "")).startswith("communication.gateway.")
     ]
     assert gateway_calls
-    print("PASS fixed-order eager baseline: same physics, strictly more irrelevant probing overhead")
+    print(
+        "PASS fixed-order eager baseline: irrelevant remote probing consumes simulator time "
+        "and changes the control trajectory"
+    )
     return 0
 
 

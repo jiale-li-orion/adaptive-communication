@@ -634,44 +634,30 @@ def audit_live_matches_frozen() -> None:
 
 
 def audit_readme_config_numbers() -> None:
-    """入口页的两个坑：配置线的数字要有出处，已撤回的读数不得回流。
+    """入口页只保留配置线的 source links，禁止旧数字回流。
 
-    这一项存在的原因：同一个漂移出现过三次——表 3 的来源、稿件正文、README 摘要与关键结果——
-    每次都是"结果文件改了、别处照着旧读数重写一遍"。数字出处由**结果文件反推**（存下来的值、
-    同格同字段的差、以及声明的场景常数），已撤回读数则由显式短语拦截。
+    早期审计要求 README 的配置终止 bullet 重复一组结果数字，再从结果文件反推“允许数字”。
+    这本身违反论文仓库 I2：README 于是成了第三份数字来源，而且 `C5/C6/C9` 里的 claim ID
+    还会被正则误识别成实验数字。当前 contract 更简单：入口页给出结论边界并链接 canonical
+    `c5_matrix.json` 与 `c5_seqref.json`；实际数字只存在 results/generated paper 中。历史撤回短语
+    仍显式拦截，避免旧读数重新进入入口页。
     """
-    with open(os.path.join(ROOT, "results", "c5_matrix.json"), encoding="utf-8") as fh:
-        cells = json.load(fh)["cells"]
-    allowed = set(STRUCTURAL_NUMBERS)
-    for cell in cells.values():
-        for k in ("dead_total", "yellow_delivered_total", "yellow_n_total", "svc_mean",
-                  "mean_final_soc", "min_soc_worst"):
-            v = cell.get(k)
-            if isinstance(v, (int, float)):
-                allowed.add(round(float(v), 5))
-        allowed.add(cell["yellow_n_total"] - cell["yellow_delivered_total"])
-    for key in cells:
-        ph, peak, _arm = key.split("|")
-        same = [c["yellow_delivered_total"] for k, c in cells.items()
-                if k.startswith(f"{ph}|{peak}|")]
-        for a in same:
-            for b in same:
-                allowed.add(abs(a - b))
-
     for rel in ("README.md", "README.zh.md"):
         path = os.path.join(ROOT, rel)
         if not os.path.exists(path):
             continue
         text = open(path, encoding="utf-8").read()
-        bad = []
-        for line in text.split("\n"):
-            if not line.strip().startswith(README_CFG_BULLETS):
-                continue
-            for tok in re.findall(r"\d+(?:\.\d+)?", line):
-                if round(float(tok), 5) not in allowed:
-                    bad.append(tok)
-        check(f"{rel} 配置终止条目的数字都能在结果文件里找到出处", not bad,
-              ", ".join(sorted(set(bad))))
+        config_lines = [
+            line for line in text.split("\n")
+            if line.strip().startswith(README_CFG_BULLETS)
+        ]
+        check(f"{rel} 保留配置终止摘要", len(config_lines) == 1,
+              f"found={len(config_lines)}")
+        line = config_lines[0] if config_lines else ""
+        check(f"{rel} 配置终止摘要链接 canonical matrix",
+              "results/c5_matrix.json" in line)
+        check(f"{rel} 配置终止摘要链接 same-information reference",
+              "results/c5_seqref.json" in line)
         hit = [ph for ph in RETIRED_README_PHRASES if ph in text]
         check(f"{rel} 不含已撤回的配置读数", not hit, ", ".join(hit))
 

@@ -12,7 +12,8 @@ import json
 from .runtime_contracts import PlannerDecisionProposal, PromptAssembly
 
 
-PROTOCOL_REVISION = "communication-planner-json-v1"
+PROTOCOL_REVISION = "communication-planner-json-v6-no-action-sufficiency"
+PROTOCOL_REVISION_V7 = "communication-planner-json-v7-retired-plan-projection"
 
 
 def _fragments(assembly: PromptAssembly) -> dict[str, object]:
@@ -36,6 +37,34 @@ def render_planner_protocol(assembly: PromptAssembly) -> dict:
         planner_rules.append(
             "Observation capabilities may be used when additional evidence is required before choosing a device effect."
         )
+    if "candidate_action_context" in fragments:
+        candidate_context = fragments.get("candidate_action_context")
+        has_decision_sufficiency = (
+            isinstance(candidate_context, dict)
+            and isinstance(candidate_context.get("decision_sufficiency"), dict)
+        )
+        planner_rules.append(
+            "candidate_action_context contains Runtime-generated legal candidate plans and the evidence dependencies that distinguish them; compare those plans against the supplied evidence before selecting capabilities."
+        )
+        planner_rules.append(
+            "When a supported candidate plan already represents the intended device effect, prefer selected_plan_id instead of copying that plan's invocation list. Runtime deterministically expands the selected supported plan. Explicit invocations may still be used for additional observation calls in the same decision."
+        )
+        planner_rules.append(
+            "Do not select a candidate plan whose feasibility is conditional, rejected, or dominated, or whose unresolved_conditions are non-empty."
+        )
+        planner_rules.append(
+            "A zero-effect supported plan such as hold_current_profile may be selected together with stop=true. A selected plan with device effects must use stop=false."
+        )
+        planner_rules.append(
+            "For an open evidence_need with non-empty blocking_plan_ids, that need blocks only those candidate plans; it does not delay a different supported plan whose own unresolved_conditions are empty."
+        )
+        if has_decision_sufficiency:
+            planner_rules.append(
+                "If candidate_action_context.decision_sufficiency.status is sufficient_for_primary_action, execute that supported primary plan without first resolving evidence needs listed as nonblocking_open_need_ids."
+            )
+            planner_rules.append(
+                "If candidate_action_context.decision_sufficiency.status is sufficient_for_no_action, select that zero-effect primary plan and stop; do not acquire extra evidence when blocking_need_ids is empty."
+            )
     planner_rules.extend(
         [
             "External side effects must remain within the Runtime TaskContract effect ceiling.",
@@ -63,6 +92,8 @@ def render_planner_protocol(assembly: PromptAssembly) -> dict:
         payload["investigation_state"] = fragments["investigation_state"]
     if "evidence_needs" in fragments:
         payload["evidence_needs"] = fragments["evidence_needs"]
+    if "candidate_action_context" in fragments:
+        payload["candidate_action_context"] = fragments["candidate_action_context"]
     return payload
 
 

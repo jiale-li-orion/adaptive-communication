@@ -10,7 +10,7 @@ if CODE not in sys.path:
     sys.path.insert(0, CODE)
 
 from agentic_communication.episodes import o3_backhaul_outage_sustainment_task  # noqa: E402
-from agentic_communication.metrics import physical_signature  # noqa: E402
+from agentic_communication.metrics import agent_metrics, communication_metrics  # noqa: E402
 from agentic_communication.planner import EvidenceAwareComplyPlannerConsumer  # noqa: E402
 from agentic_communication.run import run_agentic_episode, run_reference_comply  # noqa: E402
 
@@ -34,7 +34,11 @@ def main() -> int:
         planner_consumer=EvidenceAwareComplyPlannerConsumer(),
         simulator_kwargs=sim,
     )
-    assert physical_signature(ref) == physical_signature(cur), "evidence-use round changed physical policy"
+    # Service outcome stays equal in this easy always-up case, while the honest
+    # cross-tick evidence round is allowed to change control-plane cost/retry
+    # timing.  Physical bit-equality was the old synchronous-RPC assumption.
+    assert communication_metrics(ref)["timely_delivery_rate"] == \
+        communication_metrics(cur)["timely_delivery_rate"]
     decisions = [e for e in policy.trace.events if e.event_type == "planner_decision"]
     assert decisions
     assert any(
@@ -50,14 +54,28 @@ def main() -> int:
         and ":communication.gateway." in e.payload.get("request_id", "")
     ]
     assert gateway_results and all(e.payload.get("status") == "succeeded" for e in gateway_results)
-    # At least one simulator tick must contain two model requests: pre-evidence
-    # context, then revised context after the owner-scoped observation.
-    per_t = {}
-    for e in policy.trace.events:
-        if e.event_type == "model_request":
-            per_t[e.t_s] = per_t.get(e.t_s, 0) + 1
-    assert max(per_t.values(), default=0) >= 2, per_t
-    print("PASS multi-round runtime: Context -> evidence tool -> world revision -> Context -> device policy")
+    req_t = {
+        e.payload["request_id"]: e.t_s
+        for e in policy.trace.events
+        if e.event_type == "capability_request"
+        and str(e.payload.get("capability_id", "")).startswith("communication.gateway.")
+    }
+    remote_results = [
+        e for e in policy.trace.events
+        if e.event_type == "capability_result" and e.payload.get("request_id") in req_t
+    ]
+    assert remote_results
+    assert all(e.t_s - req_t[e.payload["request_id"]] == 60 for e in remote_results)
+    assert all((e.payload.get("latency") or {}).get("simulated_s") == 60 for e in remote_results)
+    metrics = agent_metrics(policy)
+    assert metrics["remote_observation_pending_events"] == metrics["remote_observation_requests"]
+    assert metrics["max_model_requests_per_tick"] == 1, metrics
+    assert metrics["remote_observation_unknown_transport_cost_results"] == \
+        metrics["remote_observation_results"]
+    print(
+        "PASS multi-round runtime: remote evidence crosses simulator tick; "
+        "Context revision happens on the next legal planner turn"
+    )
     return 0
 
 

@@ -580,6 +580,8 @@ class Instance:
                  terminal_dts=None,
                  terminal_dts_enabled: bool = True,
                  placement: str = "center",
+                 secondary_policy: CenterPolicy | None = None,
+                 secondary_placement: str = "gateway",
                  trace: bool = False,
                  execution_feedback: bool = False,
                  execution_feedback_bytes: int = 18,
@@ -605,6 +607,7 @@ class Instance:
                                   backhaul_delay_s=backhaul_delay_s)
         #: 中心策略。默认不下发任何命令——**这是所有方法的共同起点**，现场自治照常工作。
         self.policy: CenterPolicy = policy or LocalPolicy()
+        self.secondary_policy: CenterPolicy | None = secondary_policy
         #: 执行层开关：报文是否携带稳定逻辑身份与单调版本。
         self.send_contract_fields = send_contract_fields
         #: **按世代原子应用**：一次配置决策的两个字段要么都生效、要么都不生效。
@@ -622,6 +625,10 @@ class Instance:
         if placement not in ("center", "gateway"):
             raise ValueError(f"placement must be 'center' or 'gateway', got {placement!r}")
         self.placement = placement
+        if secondary_placement not in ("center", "gateway"):
+            raise ValueError(
+                f"secondary_placement must be 'center' or 'gateway', got {secondary_placement!r}")
+        self.secondary_placement = secondary_placement
         # Default-off ordinary feedback extension used by the policy-trial probe.
         # The compact wire budget is accounted on every source uplink carrying the
         # snapshot; default False preserves historical payload sizes bit-for-bit.
@@ -862,7 +869,45 @@ class Instance:
                 if capability_id in (
                     "communication.gateway.receipt_summary",
                     "communication.gateway.primary_health",
+                    "communication.gateway.node_report",
                 ):
+                    # Policy evaluation (phase 1.5) precedes gateway->center
+                    # forwarding (phase 3) within the same 60 s simulator tick.
+                    # A center-side owner read therefore cannot influence a
+                    # second planner turn at the same t; the next legal decision
+                    # point is the following tick.  Gateway-local execution has
+                    # no such owner-crossing barrier.
+                    if self.placement == "gateway":
+                        remote_wait_s = 0
+                    else:
+                        # The gateway->center response uses the same store-and-
+                        # forward delay parameter as ordinary gateway telemetry.
+                        # A response that becomes forwardable during phase 3 of
+                        # a tick is only visible to policy phase 1.5 on the next
+                        # tick, hence the additional decision-boundary tick.
+                        backhaul_delay_s = max(0, int(self.plane.backhaul_delay_s))
+                        transport_ticks = (
+                            (backhaul_delay_s + TICK_S - 1) // TICK_S
+                        )
+                        remote_wait_s = (transport_ticks + 1) * TICK_S
+                    latency = {
+                        "simulated_s": remote_wait_s,
+                        "authority": "Instance.tick phase ordering",
+                        "backhaul_delay_s": int(self.plane.backhaul_delay_s),
+                        "request_phase": "policy:1.5",
+                        "response_visible_phase": (
+                            "policy:1.5 same tick"
+                            if remote_wait_s == 0
+                            else "next policy tick after gateway_to_center:3"
+                        ),
+                    }
+                    cost = {
+                        "authority": "ControlPlane reachability + Instance tick ordering",
+                        "transport_cost": "unmodeled",
+                        "network_bytes": None,
+                        "airtime_s": None,
+                        "energy_wh": None,
+                    }
                     # A center-side remote read must cross the same primary
                     # backhaul abstraction.  Gateway placement is already local.
                     if self.placement != "gateway" and not self.plane.path_available(_t // 3600, 0):
@@ -870,23 +915,17 @@ class Instance:
                             "status": "blocked",
                             "observation_class": "unreachable",
                             "failure_code": "primary_backhaul_unreachable",
-                            "cost": {
-                                "transport_cost": "unmodeled",
-                                "network_bytes": None,
-                                "airtime_s": None,
-                                "energy_wh": None,
-                            },
+                            "available_at_s": int(_t + remote_wait_s),
+                            "latency": latency,
+                            "cost": cost,
                         }
                     return {
                         "status": "succeeded",
                         "observation_class": "gateway_owner_observation",
                         "view": self._gateway_view(_t),
-                        "cost": {
-                            "transport_cost": "unmodeled",
-                            "network_bytes": None,
-                            "airtime_s": None,
-                            "energy_wh": None,
-                        },
+                        "available_at_s": int(_t + remote_wait_s),
+                        "latency": latency,
+                        "cost": cost,
                     }
                 return {
                     "status": "blocked",
@@ -1004,7 +1043,28 @@ class Instance:
                      # episode 聚合要按"同一个 target 的所有重试属于同一 episode"来切，
                      # 而切分依据正是这三类语义——**复用现有语义，不新造一套**。
                      self._last_reason.get(node_id)))
-            self._send_command(node_id, payload, t_s, origin=self.placement)
+            self._send_command(node_id, payload, t_s, origin=self.placement,
+                               policy_obj=self.policy)
+
+        # Optional ordinary dual-owner composition.  It is deliberately much smaller than the
+        # Agent hook above: secondary policies receive only their legal owner view and share the
+        # exact same command queue / Class-A opportunity / node execution path.
+        if self.secondary_policy is not None:
+            secondary_view = (
+                self._gateway_view(t_s) if self.secondary_placement == "gateway"
+                else self._center_view(t_s)
+            )
+            self.secondary_policy._skip_t = t_s
+            for node_id, payload in self.secondary_policy.plan(secondary_view):
+                if self.trace:
+                    self.trace_events.append(
+                        (t_s, node_id, "secondary_plan", self.secondary_placement,
+                         payload.get("op"),
+                         payload.get("period_s", payload.get("interval_s")),
+                         secondary_view.soc_age_s(node_id)))
+                self._send_command(
+                    node_id, payload, t_s, origin=self.secondary_placement,
+                    policy_obj=self.secondary_policy)
 
         # 2) 到上报周期的节点发一批（缓存里全是未确认记录 → 自动补发）
         _shared_allowed = None
@@ -1248,13 +1308,14 @@ class Instance:
                               for nid in self.nodes})
 
     def _send_command(self, node_id: str, payload: dict, t_s: int,
-                      origin: str = "center") -> None:
+                      origin: str = "center", policy_obj=None) -> None:
         """把一条意图放进回传。**它此刻还没有到达任何地方。**
 
         契约字段由**臂**决定发不发：`send_contract_fields=True` 时随报文带上稳定逻辑身份与单调
         版本，远端据此能识别重复、拒绝更旧的写入。两条臂用同一条中心策略、同一套动作，差别只在
         这两个字段——这满足 v1.1 §10"执行层的差异应在同一动作集合下体现"。
         """
+        policy_obj = policy_obj or self.policy
         self.command_seq += 1
         body = dict(payload)
         if self.send_contract_fields:
@@ -1308,10 +1369,10 @@ class Instance:
             if hold_it:
                 self.hold_until[f"cmd{self.command_seq:05d}"] = t_s + self.hold_s
                 self.counters["held"] = self.counters.get("held", 0) + 1
-            self.policy.note_command_sent(node_id, payload)
+            policy_obj.note_command_sent(node_id, payload)
         else:
             self.counters["commands_refused"] += 1
-            self.policy.note_command_refused(node_id, payload)
+            policy_obj.note_command_refused(node_id, payload)
 
     def _note_intent_reason(self, node_id: str, payload: dict, view) -> None:
         """给每条**刚生成的**意图归类它的**生成原因**。三类互斥且完备。

@@ -19,6 +19,7 @@ for _p in (_HERE, *(_os.path.join(_CODE, d) for d in ("physics", "runtime", "exp
 from instance_run import one_seed           # noqa: E402
 from joint_run import run_joint             # noqa: E402
 from joint_plane import JointControlPlane   # noqa: E402
+from mission_policy import MissionChangePolicy  # noqa: E402
 
 COMPARE_BLOCKS = ("routine", "event", "communication", "energy")
 
@@ -162,6 +163,79 @@ def test_empty_repair_windows_are_default_semantics():
                         access_assist_windows=[], backup_boost_windows=[])
     assert _blocks(a) == _blocks(b)
     assert a["backup"] == b["backup"]
+
+
+# ------------------------------------------------------ A9 custom mission placement
+def test_custom_mission_policy_placement_default_is_center_and_gateway_is_explicit():
+    """外部 mission policy 默认仍在 center；显式 gateway placement 才能产生 gateway-origin commands。"""
+    schedule = [(0, 3600, "blue"), (4 * 3600, 300, "yellow")]
+    common = dict(
+        seed=0,
+        task_hours=8,
+        tail_hours=1,
+        groups=1,
+        per_group=4,
+        arm="local",
+        outage_start_h=3.0,
+        outage_hours=4.0,
+        mission_schedule=schedule,
+    )
+    implicit, _, _ = run_joint(
+        mission_policy_obj=MissionChangePolicy(schedule, mode="comply"),
+        **common,
+    )
+    explicit_center, _, _ = run_joint(
+        mission_policy_obj=MissionChangePolicy(schedule, mode="comply"),
+        mission_policy_placement="center",
+        **common,
+    )
+    gateway, _, _ = run_joint(
+        mission_policy_obj=MissionChangePolicy(schedule, mode="comply"),
+        mission_policy_placement="gateway",
+        **common,
+    )
+    assert _blocks(implicit) == _blocks(explicit_center)
+    assert implicit["communication"] == explicit_center["communication"]
+    assert implicit["command_counters"].get("commands_sent_by_gateway", 0) == 0
+    assert explicit_center["command_counters"].get("commands_sent_by_gateway", 0) == 0
+    assert gateway["command_counters"].get("commands_sent_by_gateway", 0) > 0
+
+
+def test_future_task_notice_reaches_gateway_before_effect_without_early_execution():
+    """future-effective mission revision may arrive early, but obligation view changes only at effect time."""
+    schedule = [(0, 3600, "blue"), (4 * 3600, 300, "yellow")]
+    common = dict(
+        seed=0,
+        task_hours=8,
+        tail_hours=1,
+        groups=1,
+        per_group=4,
+        arm="local",
+        outage_start_h=3.0,
+        outage_hours=4.0,
+        mission_schedule=schedule,
+        mission_mode="comply",
+    )
+    base, _, _ = run_joint(**common)
+    zero, _, _ = run_joint(mission_notice_lead_s=0, **common)
+    assert _blocks(base) == _blocks(zero)
+    assert base["mission_timing"] == zero["mission_timing"]
+    assert base["mission_transport"] == zero["mission_transport"]
+
+    delegated, _, _ = run_joint(
+        mission_gateway_delegate=True,
+        mission_notice_lead_s=3 * 3600,
+        mission_segment_payload_bytes=32,
+        **common,
+    )
+    timing = delegated["mission_timing"][0]
+    assert timing["issued_at"] == 3600
+    assert timing["effective_at"] == 4 * 3600
+    assert timing["gateway_received_at"] is not None
+    assert timing["gateway_received_at"] < timing["effective_at"]
+    assert timing["gateway_effective_at"] == timing["effective_at"]
+    assert delegated["mission_transport"]["bytes_delivered"] == 32
+    assert delegated["command_counters"].get("commands_sent_by_gateway", 0) > 0
 
 
 def _run_all():

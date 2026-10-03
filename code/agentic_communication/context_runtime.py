@@ -1,8 +1,11 @@
 """Evidence World -> InvestigationState -> ContextManifest -> PromptAssembly."""
 from __future__ import annotations
 
+import hashlib
+import json
 from uuid import NAMESPACE_URL, uuid5
 
+from .action_context import ActionConditionedContextSelector
 from .contracts import EvidenceWorldSnapshot, OperationalTask, OperationalTaskFamily
 from .runtime_contracts import (
     ContextManifest,
@@ -23,6 +26,219 @@ from .timebase import sim_datetime
 
 class CommunicationContextRuntime:
     revision = "communication-context-runtime-v1"
+
+    def __init__(self) -> None:
+        self.action_selector = ActionConditionedContextSelector()
+
+    @staticmethod
+    def _shadow_plan_ids(candidate_context: dict) -> set[str]:
+        disagreement = candidate_context.get("candidate_disagreement") or {}
+        closure = disagreement.get("action_closure") or {}
+        eligibility = str(closure.get("control_eligibility") or "eligible")
+        if not eligibility.startswith("shadow_only"):
+            return set()
+        return {
+            str(row.get("plan_id"))
+            for row in candidate_context.get("candidate_plans", [])
+            if isinstance(row, dict)
+            and row.get("plan_id")
+            and row.get("kind") in {"fallback", "future_task_preparation"}
+        }
+
+    @classmethod
+    def _control_relevant_needs(
+        cls,
+        candidate_context: dict,
+        needs: list[EvidenceNeed],
+    ) -> list[EvidenceNeed]:
+        """Drop acquisition needs that can only refine a shadow-only branch."""
+        shadow_ids = cls._shadow_plan_ids(candidate_context)
+        if not shadow_ids:
+            return list(needs)
+        visible_plan_ids = {
+            str(row.get("plan_id"))
+            for row in candidate_context.get("candidate_plans", [])
+            if isinstance(row, dict)
+            and row.get("plan_id")
+            and str(row.get("plan_id")) not in shadow_ids
+        }
+        out: list[EvidenceNeed] = []
+        for need in needs:
+            scoped = set(need.blocking_plan_ids)
+            if scoped and not (scoped & visible_plan_ids):
+                continue
+            out.append(need)
+        return out
+
+    @classmethod
+    def _compact_candidate_projection(
+        cls,
+        candidate_context: dict,
+        needs: list[EvidenceNeed] | None = None,
+        *,
+        retire_inactive_unresolved: bool = False,
+    ) -> dict:
+        """Project the full candidate audit object into model-facing Context.
+
+        The full action-context object intentionally carries enough detail for
+        audit/replay (all dependency rows, pair graph, greedy shadow cover).  A
+        model does not need resolved audit rows after deterministic guard
+        evaluation.  Compact mode keeps executable candidate semantics,
+        unresolved evidence dependencies and a digest of the full audit object.
+        """
+        canonical = json.dumps(
+            candidate_context,
+            ensure_ascii=False,
+            sort_keys=True,
+            separators=(",", ":"),
+        ).encode("utf-8")
+        shadow_ids = cls._shadow_plan_ids(candidate_context)
+        visible_plan_ids = {
+            str(row.get("plan_id"))
+            for row in candidate_context.get("candidate_plans", [])
+            if isinstance(row, dict)
+            and row.get("plan_id")
+            and str(row.get("plan_id")) not in shadow_ids
+        }
+        plans: list[dict] = []
+        for row in candidate_context.get("candidate_plans", []):
+            if str(row.get("plan_id")) in shadow_ids:
+                continue
+            projected = {
+                key: row[key]
+                for key in (
+                    "plan_id",
+                    "kind",
+                    "feasibility",
+                    "decision_guards",
+                    "affected_resources",
+                    "invocations",
+                    "unresolved_conditions",
+                    "contradicted_by",
+                    "reason",
+                )
+                if key in row
+            }
+            if (
+                retire_inactive_unresolved
+                and projected.get("feasibility") in {"rejected", "dominated"}
+            ):
+                projected.pop("unresolved_conditions", None)
+            plans.append(projected)
+
+        control_needs = cls._control_relevant_needs(candidate_context, list(needs or []))
+        ready_supported = [
+            plan
+            for plan in plans
+            if plan.get("feasibility") == "supported"
+            and not bool(plan.get("unresolved_conditions"))
+        ]
+        live_visible = [
+            plan
+            for plan in plans
+            if plan.get("feasibility") not in {"dominated", "rejected"}
+        ]
+        decision_sufficiency: dict = {
+            "status": "undetermined",
+            "primary_plan_id": None,
+            "blocking_need_ids": [],
+            "nonblocking_open_need_ids": [],
+        }
+        if len(ready_supported) == 1:
+            primary = ready_supported[0]
+            primary_plan_id = str(primary.get("plan_id"))
+            has_effect = bool(primary.get("invocations"))
+            # A supported effect may be safely committed while a different
+            # conditional branch remains unresolved, provided its open needs do
+            # not block the primary plan. A zero-effect hold is stronger: it is
+            # only decision-complete when no other control-visible live plan
+            # remains, otherwise evidence may still justify a real effect.
+            zero_effect_closed = has_effect or len(live_visible) == 1
+            if zero_effect_closed:
+                blocking_need_ids: list[str] = []
+                nonblocking_need_ids: list[str] = []
+                for need in control_needs:
+                    scoped = list(need.blocking_plan_ids)
+                    if not scoped or primary_plan_id in scoped:
+                        blocking_need_ids.append(need.need_id)
+                    else:
+                        nonblocking_need_ids.append(need.need_id)
+                if has_effect:
+                    status = (
+                        "sufficient_for_primary_action"
+                        if not blocking_need_ids
+                        else "blocked_for_primary_action"
+                    )
+                else:
+                    status = (
+                        "sufficient_for_no_action"
+                        if not blocking_need_ids
+                        else "blocked_for_no_action"
+                    )
+                decision_sufficiency = {
+                    "status": status,
+                    "primary_plan_id": primary_plan_id,
+                    "primary_plan_feasibility": "supported",
+                    "blocking_need_ids": sorted(blocking_need_ids),
+                    "nonblocking_open_need_ids": sorted(nonblocking_need_ids),
+                    "interpretation": (
+                        "model-visible control surface is decision-complete for the primary plan; "
+                        "open evidence attached only to alternative plans does not block that plan"
+                    ),
+                }
+            if row.get("support_refs"):
+                plans[-1]["support_ref_count"] = len(row["support_refs"])
+
+        unresolved_dependencies = []
+        for row in candidate_context.get("dependencies", []):
+            if bool(row.get("fresh")):
+                continue
+            scoped = set(str(x) for x in (row.get("blocking_plan_ids") or []))
+            if scoped and not (scoped & visible_plan_ids):
+                continue
+            unresolved_dependencies.append(
+                {
+                    key: row.get(key)
+                    for key in (
+                        "proposition",
+                        "subject",
+                        "purpose",
+                        "scope_reason",
+                        "evidence_ref",
+                        "age_s",
+                        "acquisition",
+                        "blocked_recently",
+                    )
+                }
+            )
+
+        disagreement = candidate_context.get("candidate_disagreement") or {}
+        return {
+            "selector_revision": candidate_context.get("selector_revision"),
+            "operational_task_id": candidate_context.get("operational_task_id"),
+            "task_contract_id": candidate_context.get("task_contract_id"),
+            "phase_index": candidate_context.get("phase_index"),
+            "required_period_s": candidate_context.get("required_period_s"),
+            "action_scope": candidate_context.get("action_scope", []),
+            "evidence_scope": candidate_context.get("evidence_scope", []),
+            "candidate_plans": plans,
+            "shadow_candidate_plan_ids": sorted(shadow_ids),
+            "decision_sufficiency": decision_sufficiency,
+            "fallback_relevance": (
+                None if shadow_ids else candidate_context.get("fallback_relevance")
+            ),
+            "unresolved_dependencies": unresolved_dependencies,
+            "open_dependency_count": len(unresolved_dependencies),
+            "action_closure": {
+                "model_control_surface": "eligible_plans_only",
+                "shadow_candidate_count": len(shadow_ids),
+                "full_audit_control_eligibility": (
+                    (disagreement.get("action_closure") or {}).get("control_eligibility")
+                ),
+            },
+            "selection_rule": candidate_context.get("selection_rule"),
+            "full_candidate_audit_sha256": hashlib.sha256(canonical).hexdigest(),
+        }
 
     def build(
         self,
@@ -70,6 +286,14 @@ class CommunicationContextRuntime:
             if result.get("status") in {"blocked", "timed_out", "failed", "partial"}:
                 blocked_observations[(str(row.get("capability_id", "")), str(row.get("resource", "")))] = row
 
+        action_mode = context_mode in {
+            "action_conditioned",
+            "action_conditioned_compact",
+            "action_conditioned_compact_v7",
+            "action_candidates_full_dump",
+            "woa_style",
+        }
+        candidate_context: dict | None = None
         gateway_needed = operational_task.family in {
             OperationalTaskFamily.BACKHAUL_OUTAGE_SUSTAINMENT,
             OperationalTaskFamily.RECOVERY_RECONCILIATION,
@@ -86,7 +310,30 @@ class CommunicationContextRuntime:
             }
             and int(t_s) - int(e.observed_at_s) <= gateway_max_age_s
         }
-        if gateway_needed:
+        if action_mode:
+            selection = self.action_selector.select(
+                operational_task=operational_task,
+                task=task,
+                task_run_id=task_run_id,
+                evidence_world=evidence_world,
+                capability_ids=capability_ids,
+                resource_ids=resource_ids,
+                recent_capability_outcomes=recent_outcomes,
+                t_s=t_s,
+                now=now,
+            )
+            needs = selection.needs
+            confirmed = selection.confirmed
+            unknowns = selection.unknowns
+            required_refs = selection.required_refs
+            candidate_context = selection.candidate_context
+            if context_mode in {
+                "action_conditioned_compact",
+                "action_conditioned_compact_v7",
+                "woa_style",
+            }:
+                needs = self._control_relevant_needs(candidate_context, needs)
+        elif gateway_needed:
             for prop, purpose in (
                 (
                     "communication.gateway.primary_health",
@@ -157,7 +404,7 @@ class CommunicationContextRuntime:
                         )
                     )
 
-        for nid in sorted(targets):
+        for nid in ([] if action_mode else sorted(targets)):
             ev = reports.get(nid)
             if ev is None:
                 need_id = f"need:{task_run_id}:{nid}:confirmed_config"
@@ -229,8 +476,12 @@ class CommunicationContextRuntime:
             updated_at=now,
         )
 
-        if context_mode in {"full_dump", "generic_react"}:
+        if context_mode in {"full_dump", "generic_react", "action_candidates_full_dump", "woa_style"}:
             selected = list(evidence_world.evidence)
+        elif context_mode in {"action_conditioned_compact", "action_conditioned_compact_v7"}:
+            selected = list(selection.compact_selected)
+        elif context_mode == "action_conditioned":
+            selected = list(selection.selected)
         elif context_mode == "task_conditioned":
             selected = [
                 e
@@ -331,6 +582,37 @@ class CommunicationContextRuntime:
                 selection_reason="task_visible_capabilities",
             ),
         ]
+        if candidate_context is not None:
+            model_candidate_context = (
+                self._compact_candidate_projection(
+                    candidate_context,
+                    needs,
+                    retire_inactive_unresolved=(context_mode == "action_conditioned_compact_v7"),
+                )
+                if context_mode
+                in {"action_conditioned_compact", "action_conditioned_compact_v7", "woa_style"}
+                else candidate_context
+            )
+            if context_mode == "woa_style":
+                # Strong WirelessOpsAgent-style baseline: share the exact same
+                # control-eligible candidate menu, but do not expose the Method's
+                # explicit decision-sufficiency certificate.  The assurance layer
+                # must reconstruct authorization from public evidence, candidate
+                # state and execution contract instead.
+                model_candidate_context = dict(model_candidate_context)
+                model_candidate_context.pop("decision_sufficiency", None)
+            fragments.insert(
+                2,
+                MaterializedFragment.build(
+                    kind="candidate_action_context",
+                    source_ref=f"action-context:{task_run_id}",
+                    source_revision=self.action_selector.revision,
+                    trust_class=FragmentTrustClass.RUNTIME_CONTROL,
+                    cache_class=FragmentCacheClass.STATE_DYNAMIC,
+                    content=model_candidate_context,
+                    selection_reason="candidate_action_backward_evidence_tracing",
+                ),
+            )
         if context_mode != "generic_react":
             # Harness-specific cognitive artifacts.  The generic ReAct baseline
             # deliberately omits them while preserving the same legal raw
@@ -378,5 +660,15 @@ class CommunicationContextRuntime:
             "fragment_count": len(fragments),
             "materialized_bytes": len(assembly.model_dump_json().encode("utf-8")),
             "harness_cognitive_fragments_exposed": context_mode != "generic_react",
+            "candidate_action_plans": (
+                0
+                if candidate_context is None
+                else len(candidate_context.get("candidate_plans", []))
+            ),
+            "candidate_dependencies": (
+                0
+                if candidate_context is None
+                else len(candidate_context.get("dependencies", []))
+            ),
         }
         return state, needs, manifest, assembly, stats

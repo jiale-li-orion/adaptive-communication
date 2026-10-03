@@ -187,7 +187,11 @@ class ScriptedBackend:
 
 
 def make_real_backend(model: str | None = None, base_url: str | None = None,
-                      api_key: str | None = None, timeout: float = 30.0):
+                      api_key: str | None = None, timeout: float = 30.0,
+                      temperature: float | None = 0.0,
+                      max_tokens: int | None = None,
+                      reasoning_effort: str | None = None,
+                      json_object: bool = False):
     """A real OpenAI-compatible backend, or (None, reason) when it cannot be built or reached.
 
     The reachability probe is a real request, not a check for the presence of an environment
@@ -217,10 +221,49 @@ def make_real_backend(model: str | None = None, base_url: str | None = None,
         def __init__(self, client, model):
             self.client = client
             self.model = model
+            self.last_metadata = None
+            # BackendPlannerConsumer reads cumulative token counters before/after
+            # each call to build a per-request ModelUsage ledger.
+            self.usage = {
+                "prompt_tokens": 0,
+                "completion_tokens": 0,
+                "total_tokens": 0,
+            }
 
         def complete(self, messages):
-            resp = self.client.chat.completions.create(
-                model=self.model, messages=messages, temperature=0.0)
+            kwargs = {"model": self.model, "messages": messages}
+            if temperature is not None:
+                kwargs["temperature"] = temperature
+            if max_tokens is not None:
+                kwargs["max_tokens"] = max_tokens
+            if reasoning_effort is not None:
+                kwargs["reasoning_effort"] = reasoning_effort
+            if json_object:
+                kwargs["response_format"] = {"type": "json_object"}
+            resp = self.client.chat.completions.create(**kwargs)
+            usage = getattr(resp, "usage", None)
+            choice = resp.choices[0]
+            prompt_tokens = getattr(usage, "prompt_tokens", None)
+            completion_tokens = getattr(usage, "completion_tokens", None)
+            total_tokens = getattr(usage, "total_tokens", None)
+            if prompt_tokens is not None:
+                self.usage["prompt_tokens"] += int(prompt_tokens)
+            if completion_tokens is not None:
+                self.usage["completion_tokens"] += int(completion_tokens)
+            if total_tokens is not None:
+                self.usage["total_tokens"] += int(total_tokens)
+            self.last_metadata = {
+                "requested_model": self.model,
+                "actual_model": getattr(resp, "model", None),
+                "finish_reason": getattr(choice, "finish_reason", None),
+                "prompt_tokens": prompt_tokens,
+                "completion_tokens": completion_tokens,
+                "total_tokens": total_tokens,
+                "temperature": temperature,
+                "max_tokens": max_tokens,
+                "reasoning_effort": reasoning_effort,
+                "response_format": "json_object" if json_object else "text",
+            }
             return resp.choices[0].message.content
 
     return _Backend(client, model or "gpt-4o-mini"), None
