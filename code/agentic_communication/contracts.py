@@ -182,13 +182,13 @@ class RuntimeTraceEvent(BaseModel):
 class ExperimentSpec(BaseModel):
     experiment_id: str
     design_revision: str = "experiment-design-v1"
-    scenario_ref: str = "spec/instance-v1-manifest.md"
+    scenario_ref: str = "spec/substrate/instance-v1-manifest.md"
     operational_task: OperationalTask
     arm: str
     seeds: list[int]
     context_mode: str = "task_conditioned"
-    capability_registry_ref: str = "research/COMMUNICATION-DOMAIN-REGISTRY.v0.1.json"
-    scorer_ref: str = "code/instance/scoring.py::evaluate"
-    fullsim_ref: str = "code/v3joint/joint_run.py::run_joint"
+    capability_registry_ref: str = "research/compiler/COMMUNICATION-DOMAIN-REGISTRY.v0.1.json"
+    scorer_ref: str = "code/substrate/instance/scoring.py::evaluate"
+    fullsim_ref: str = "code/substrate/joint/joint_run.py::run_joint"
     source_refs: list[str] = Field(default_factory=list)
     simulator_kwargs: dict[str, JsonValue] = Field(default_factory=dict)

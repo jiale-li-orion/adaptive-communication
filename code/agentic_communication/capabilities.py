@@ -15,7 +15,7 @@ from .runtime_contracts import (
 
 
 ROOT = Path(__file__).resolve().parents[2]
-DEFAULT_REGISTRY = ROOT / "research" / "COMMUNICATION-DOMAIN-REGISTRY.v0.1.json"
+DEFAULT_REGISTRY = ROOT / "research" / "compiler" / "COMMUNICATION-DOMAIN-REGISTRY.v0.1.json"
 
 
 def _execution_class(cap: dict) -> ExecutionClass:

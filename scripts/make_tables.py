@@ -5,7 +5,7 @@
 因此一张表只有一份数字，中英稿不会各自漂移。
 
 生成物入库：评审人看到的就是实际使用的数字。结果文件一旦变动，必须在同一次提交里重新生成，
-否则 `code/experiments/audit_tables.py` 会红。
+否则 `code/evaluation/audits/audit_tables.py` 会红。
 
 行标签按语言各一份（两份稿件用各自的语言书写行名），数字来自同一处。
 
@@ -46,7 +46,7 @@ def f(x: float, nd: int) -> str:
 # ---------------------------------------------------------------- 各表的构造
 
 def table_walls():
-    d = load("results/r30c_walls.json")
+    d = load("results/communication-substrate/claims/r30c_walls.json")
     runs, dec = d["runs"], d["decomposition"]
     rows = [
         ("base", "dayfeed, 0.05 Wh", "1200 s/78 B"),
@@ -72,7 +72,7 @@ def table_walls():
 
 
 def table_expiry():
-    d = load("results/r41_expiry_equiv.json")["queues"]
+    d = load("results/communication-substrate/claims/r41_expiry_equiv.json")["queues"]
     order = ["fifo", "latest_only", "generic_expiry", "deadline_purge"]
     lab = {"en": {"fifo": "FIFO (baseline)", "latest_only": "latest-only (AoI)",
                   "generic_expiry": "\\texttt{generic-expiry}$^{\\dagger}$",
@@ -91,14 +91,14 @@ def table_expiry():
 
 
 def table_lease():
-    """配置终止线：以**修正后的当前证据** `results/c5_matrix.json` 为源。
+    """配置终止线：以**修正后的当前证据** `results/communication-substrate/claims/c5_matrix.json` 为源。
 
     `r48_ttl_vs_lease.json` 里的 `delivery_geo` 行（候选交付推导界）用的是修正前的预测账本
     （缺电池容量截断），其"零死亡且黄级交付不减"的读数已随 C5 修正撤回；该文件仍在
     `results/README.md` 登记为历史证据，但不再作为本表的数字来源。
     """
-    d = load("results/c5_matrix.json")
-    phases = load("results/r48_ttl_vs_lease.json")["phases"]   # 相位参数不在矩阵里，仍取登记过的来源
+    d = load("results/communication-substrate/claims/c5_matrix.json")
+    phases = load("results/legacy-communication/config-stopping/r48_ttl_vs_lease.json")["phases"]   # 相位参数不在矩阵里，仍取登记过的来源
     h = lambda sec: sec // 3600
     PEAK = "0.012"
     # 三臂逐格相同（修正矩阵把它作为一条结论登记），表里只列一条并在说明里写明
@@ -151,14 +151,14 @@ def table_lease():
                 rows.append("\\midrule")
         out[lang] = (head[lang], rows)
     return {"en": out["en"], "zh": out["zh"],
-            "meta": {"peak": PEAK, "seeds": 3, "source": "results/c5_matrix.json",
+            "meta": {"peak": PEAK, "seeds": 3, "source": "results/communication-substrate/claims/c5_matrix.json",
                      "yellow_A": d["cells"][f"A|{PEAK}|ttl8"]["yellow_n_total"],
                      "yellow_B": d["cells"][f"B|{PEAK}|ttl8"]["yellow_n_total"],
                      "upgrade_h_A": h(phases["A"]["up"]), "upgrade_h_B": h(phases["B"]["up"])}}
 
 
 def table_attribution():
-    d = load("results/r40_local_attribution.json")
+    d = load("results/communication-substrate/claims/r40_local_attribution.json")
     truth, on = d["truth_segments"], d["online"]["segments"]
     seg = [("S_time", "\\stime"), ("S_cap", "\\scap"),
            ("S_access", "\\saccess"), ("S_energy", "\\senergy")]
@@ -190,7 +190,7 @@ def table_attribution():
 
 
 def table_placement():
-    d = load("results/agent_traces/r39_table.json")["aggregate"]
+    d = load("results/communication-substrate/claims/r39_table.json")["aggregate"]
     by = {a["arm"]: a for a in d}
     order = ["comply", "dayfeed-c", "env-comply", "comply+floor",
              "dayfeed-c+floor", "env-comply+floor", "pure-local"]
@@ -229,9 +229,9 @@ def facts() -> dict:
     """正文与表说明里出现的 C5 数字，全部由结果文件算出并写成宏。
 
     正文里"手抄一个数"与生成表体里"手抄一个数"是同一类问题，因此这里把口径要求的数字一并
-    生成：稿件只允许写 `\\cFive...` 宏，具体取值由本函数从 `results/c5_matrix.json` 取出。
+    生成：稿件只允许写 `\\cFive...` 宏，具体取值由本函数从 `results/communication-substrate/claims/c5_matrix.json` 取出。
     """
-    d = load("results/c5_matrix.json")
+    d = load("results/communication-substrate/claims/c5_matrix.json")
     PEAK = "0.012"
     cell = lambda ph, arm: d["cells"][f"{ph}|{PEAK}|{arm}"]
     defs = {
@@ -263,8 +263,8 @@ def facts() -> dict:
         "cFiveTtlFourRevertA": "6", "cFiveTtlEightRevertA": "10",
         "cFiveTtlFourRevertB": "5", "cFiveTtlEightRevertB": "9",
     }
-    # C3（记录到期）：数字取自修正后的 results/r37e_full_seeds.json
-    r37 = load("results/r37e_full_seeds.json")
+    # C3（记录到期）：数字取自修正后的 results/communication-substrate/claims/r37e_full_seeds.json
+    r37 = load("results/communication-substrate/claims/r37e_full_seeds.json")
     ss, pp = r37["summary"], r37["paired_purge_minus_fifo"]
     defs.update({
         "cThreeSeedZeroFifo": str(r37["per_seed"]["s0/fifo"]["d"]),
@@ -286,7 +286,7 @@ def facts() -> dict:
                                       - ss["latest_only"]["svc_mean"]), 2),
     })
     # 同信息停止参照只支持声明模型内的限定结论；正文使用生成统计量。
-    seq = load("results/c5_seqref.json")
+    seq = load("results/communication-substrate/claims/c5_seqref.json")
     priced = [p for cell in seq["cells"].values() for p in cell["priced"].values()]
     defs.update({
         "cNineCells": str(len(seq["cells"])),
@@ -299,9 +299,9 @@ def facts() -> dict:
              "%% 正文与表说明里的这些数字只允许写成这些宏。"]
     for k in sorted(defs):
         lines.append("\\newcommand{\\%s}{%s}" % (k, defs[k]))
-    return "\n".join(lines) + "\n", {"source": "results/c5_matrix.json", "peak": PEAK,
-                                     "sources": ["results/c5_matrix.json", "results/r37e_full_seeds.json",
-                                                 "results/c5_seqref.json"],
+    return "\n".join(lines) + "\n", {"source": "results/communication-substrate/claims/c5_matrix.json", "peak": PEAK,
+                                     "sources": ["results/communication-substrate/claims/c5_matrix.json", "results/communication-substrate/claims/r37e_full_seeds.json",
+                                                 "results/communication-substrate/claims/c5_seqref.json"],
                                      "definitions": defs}
 
 

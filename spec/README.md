@@ -1,23 +1,8 @@
-# spec/ —— 规范性文件
+# Specifications
 
-本目录存放**评审人需要的规范性内容**：论文所依据、且必须与代码保持一致的声明。它与 `docs/` 分工明确：`docs/` 是作者本地的过程档案与逐轮审计，不上传远端；`spec/` 随仓库发布，是数字与契约的规范来源。**生效判别的预注册属于规范来源，因此放在本目录随仓库发布**——口径若不公开，读者无法判断结论是不是事后挑出来的。
+`spec/` 只保存可作为实现/复现实例输入的规范，不再混放研究路线。
 
-## 规范性来源地图
+- `substrate/`：当前共享通信 deployment 与 dataset contract。
+- `history/legacy-communication/`：早期 C5/C9/retention 等已结束通信方法的预注册规范，仅用于复现历史结果。
 
-同一件事只允许有一个规范来源。下表写明每类内容归谁，避免出现第二个副本。
-
-| 内容 | 规范来源 | 由什么保证一致 |
-|---|---|---|
-| 部署条件（站点几何、拓扑、时间、能量、采能、链路、存储） | [`instance-v1-manifest.md`](instance-v1-manifest.md) | `code/run_checks.py` 的检查 [11]：manifest 数值与 `deployment.py`、`network.py` 的实算值逐项比对 |
-| 结果文件的脚本、命令、口径与分母 | `results/README.md` | 检查 [6]：登记册与磁盘文件互为子集；检查 [10]：实例层文档数字与结果文件对齐 |
-| 被测主张及其状态 | `results/CLAIMS.md` | 检查 [19]：每行的脚本与参考结果必须存在，状态必须取自固定集合 |
-| 论文表格的数字 | `paper/generated/`（由 `scripts/make_tables.py` 生成） | 检查 [20]：生成物与结果文件一致，且两份稿件只经 `\input` 引入生成物 |
-| 评审入口与环境声明 | `artifact/AE.md` | `artifact/reproduce_all.sh` 的判定与文档写明的期望值比对 |
-| 三条声明的语义（confirmed / unconfirmed / unreachable） | 论文正文 §3.6 与两份稿件 | 人工审阅，无机械检查 |
-| 非预知序列参照的模型、动作能力、**执行语义**、风险口径与判定规则 | [`prereg-nonprescient-sequence-v3.md`](prereg-nonprescient-sequence-v3.md)（v1、v2 均已被取代，原文保留） | 检查 [21]：`code/experiments/audit_seqref.py` 判定登记与取代链、常数同源、离散化 σ 契约、台账校准、**口径层级证据**、**退化与停止规则见证**、执行语义、独立反例、核例穷举与分辨力 |
-
-## 两条规则
-
-**数值按数值比，不按字符串比。** 同一件事有 `4.7e-4` 与 `0.00047` 两种合理写法，按字符串比较会把它们判成不一致，产生噪声；被噪声化的核对很快会被无视，比没有核对更糟。检查 [11] 因此解析出全部数值再比较。
-
-**代码为准。** 本目录的数值是**从代码读出来的当前真值**，不是设计意图。改代码就改这里；两边不一致时以代码为准，并让检查变红，直到两者重新一致。
+Operational Task / Decision Benchmark 的新规范将在通过 `research/benchmark/README.md` 的 source-grounding 与 validity gate 后进入独立 benchmark spec；当前不把 O1–O6 conformance catalog 冒充完整 Decision Benchmark。

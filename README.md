@@ -1,6 +1,6 @@
 English | [中文](README.zh.md)
 
-> **Current line: Evidence-Grounded Closed-Loop Agentic Communication.** The method has two layers: (i) convert node/gateway/centre events from the existing communication Data Plane into a provenance-preserving **Evidence World** with owner/time/revision/freshness/reachability/status semantics; (ii) compile benchmark/business **Operational Tasks** into self-contained **Runtime TaskContracts / TaskRuns**, assemble `ContextManifest`s, perform multi-round evidence-use and communication-device capability calls, and execute decisions back on the physical simulator. [Experiment Design v1](research/EXPERIMENT-DESIGN-v1.md) is the design authority; [research/README](research/README.md) and [ROADMAP](research/ROADMAP.md) record the current experiment state. [CLAIMS](results/CLAIMS.md) remains the repository's sole claim-state authority: `C*` denotes systems-paper/communication-substrate claims and `A*` current Agentic deterministic/infrastructure claims.
+> **Current line: Evidence-Grounded Closed-Loop Agentic Communication.** The method has two layers: (i) convert node/gateway/centre events from the existing communication Data Plane into a provenance-preserving **Evidence World** with owner/time/revision/freshness/reachability/status semantics; (ii) compile benchmark/business **Operational Tasks** into self-contained **Runtime TaskContracts / TaskRuns**, assemble `ContextManifest`s, perform multi-round evidence-use and communication-device capability calls, and execute decisions back on the physical simulator. [Experiment Design v1](research/README.md) is the design authority; [research/README](research/README.md) and [ROADMAP](research/README.md) record the current experiment state. [CLAIMS](results/CLAIMS.md) remains the repository's sole claim-state authority: `C*` denotes systems-paper/communication-substrate claims and `A*` current Agentic deterministic/infrastructure claims.
 
 # Local Communication Control for Pre-Disaster Monitoring with Intermittent Backhaul
 
@@ -19,26 +19,26 @@ This repository studies battery/solar mountain geohazard monitoring: LoRaWAN Cla
 | Current Agentic Communication manuscript | [English PDF](paper/agentic/en/main.pdf) · [LaTeX](paper/agentic/en/main.tex) · [workspace README](paper/agentic/README.md) |
 | Systems-paper compatibility copies (still receive claim-correction propagation) | [English](paper/en/main.tex) · [Chinese](paper/zh/main.tex) · [paper/README](paper/README.md) |
 | Immutable pre-Agentic systems-paper snapshot | [paper/_archive/system-paper-2026-09-20](paper/_archive/system-paper-2026-09-20/README.md) · source commit `dd4f31a` |
-| Current Agent experiment design | [Experiment Design v1](research/EXPERIMENT-DESIGN-v1.md) · [research/README](research/README.md) · [ROADMAP](research/ROADMAP.md) |
-| Current mathematical system model | [SYSTEM-MODEL-v1](research/SYSTEM-MODEL-v1.md) |
-| Runtime/domain ownership contract | [OWNERSHIP-v1](research/OWNERSHIP-v1.md) |
+| Current Agent experiment design | [Experiment Design v1](research/README.md) · [research/README](research/README.md) · [ROADMAP](research/README.md) |
+| Current mathematical system model | [SYSTEM-MODEL-v1](research/substrate/SYSTEM-MODEL-v1.md) |
+| Runtime/domain ownership contract | [OWNERSHIP-v1](research/compiler/RUNTIME-DOMAIN-OWNERSHIP-v1.md) |
 | Systems-paper completion plan (historical stage) | [RESEARCH_PLAN](paper/RESEARCH_PLAN.md) |
 | Claim-by-claim reproduction | [artifact/AE.md](artifact/AE.md) |
 | Provenance, claim states, deployment | [Results](results/README.md) · [CLAIMS](results/CLAIMS.md) · [spec](spec/README.md) |
 
-The manuscript lineage is continuous. `paper/en|zh` remain corrected compatibility copies so the historical `C*` claims continue to build against current frozen semantics; `paper/_archive/system-paper-2026-09-20/` is an immutable source snapshot from before the Agentic pivot; `paper/agentic/` is the active submission workspace. README focuses on current state and long-lived authority, while Git, `results/_withdrawn/`, `paper/_archive/`, and the author's local `docs/_archive/` preserve research history.
+The manuscript lineage is continuous. `paper/en|zh` remain corrected compatibility copies so the historical `C*` claims continue to build against current frozen semantics; `paper/_archive/system-paper-2026-09-20/` is an immutable source snapshot from before the Agentic pivot; `paper/agentic/` is the active submission workspace. README focuses on current state and long-lived authority, while Git, `results/history/withdrawn/`, `paper/_archive/`, and the author's local `docs/_archive/` preserve research history.
 
 ## 2. Repository authority and long-lived constraints
 
-This repository is both an implementation and an evidence system. The following ownership rules recur across the README history, the current experiment design, and the [paper-repository standard](PAPER-REPO-STANDARD.md); future refactors continue to use the same authority structure.
+This repository is both an implementation and an evidence system. The following ownership rules recur across the README history, the current experiment design, and the [paper-repository standard](tooling/paper-repository/PAPER-REPO-STANDARD.md); future refactors continue to use the same authority structure.
 
 | Authority / invariant | Current rule |
 |---|---|
 | Claim truth | `results/CLAIMS.md` is the sole claim-state authority; README presents its current projection |
 | Numeric truth | Experimental numbers originate in `results/` and reach papers/generated facts through `scripts/make_tables.py` or `scripts/make_agentic_artifacts.py` |
-| Scenario and parameters | `spec/instance-v1-manifest.md`, `spec/datasets.md`, and the source registry own deployment/data provenance; every method shares the same frozen scenario |
-| Mathematical model | `research/SYSTEM-MODEL-v1.md` is the public equation/model authority; local `docs/` may retain derivation notes while release dependencies remain in the tracked tree |
-| Runtime/domain ownership | `research/OWNERSHIP-v1.md` owns canonical Task/Evidence/Context/Capability/physical-substrate boundaries; parallel schemas and hidden-truth shortcuts are contract violations |
+| Scenario and parameters | `spec/substrate/instance-v1-manifest.md`, `spec/substrate/datasets.md`, and the source registry own deployment/data provenance; every method shares the same frozen scenario |
+| Mathematical model | `research/substrate/SYSTEM-MODEL-v1.md` is the public equation/model authority; local `docs/` may retain derivation notes while release dependencies remain in the tracked tree |
+| Runtime/domain ownership | `research/compiler/RUNTIME-DOMAIN-OWNERSHIP-v1.md` owns canonical Task/Evidence/Context/Capability/physical-substrate boundaries; parallel schemas and hidden-truth shortcuts are contract violations |
 | Task authority | Risk levels, monitoring requirements, and Operational Tasks are externally authorised; the Agent owns communication execution while the scorer independently owns the obligation denominator |
 | Evidence boundary | node/gateway/centre only see lawful owner-scoped evidence; missing, stale, unreachable, and negative observations are distinct; simulator hidden truth belongs only to evaluator/oracle paths |
 | Action / capability boundary | the Capability registry owns the legal communication action surface; new capabilities enter through source, authority, binding, cost and failure semantics |
@@ -46,7 +46,7 @@ This repository is both an implementation and an evidence system. The following 
 | Contribution criterion | task/evidence/tool/policy semantics or physical/business outcome carry research contribution; unified objects, interfaces and Context structure carry systems-engineering value |
 | Evaluation layers | Communication outcome is primary; Task grounding, EvidenceNeed, tool selection/order/arguments, Context, model calls and latency provide failure attribution |
 | Model results | scripted/deterministic consumers own infrastructure/reference validation; real backend runs own model-effect claims |
-| History | Git, `paper/_archive/`, and `results/_withdrawn/` preserve superseded manuscripts and readings while current documents maintain current semantics |
+| History | Git, `paper/_archive/`, and `results/history/withdrawn/` preserve superseded manuscripts and readings while current documents maintain current semantics |
 
 ## 3. Systems substrate: established technical object and evidence
 
@@ -102,7 +102,7 @@ The runtime now executes a real multi-round loop: `Context@k -> evidence capabil
 
 ### 4.3 Capability surface
 
-The communication registry is [`research/COMMUNICATION-DOMAIN-REGISTRY.v0.1.json`](research/COMMUNICATION-DOMAIN-REGISTRY.v0.1.json). The normal planner surface currently contains three live observation capabilities and five live device capabilities; FullDump is separate and baseline-only:
+The communication registry is [`research/compiler/COMMUNICATION-DOMAIN-REGISTRY.v0.1.json`](research/compiler/COMMUNICATION-DOMAIN-REGISTRY.v0.1.json). The normal planner surface currently contains three live observation capabilities and five live device capabilities; FullDump is separate and baseline-only:
 
 - evidence-use: gateway receipt summary, gateway primary-health, centre node report;
 - configuration device: set sampling interval, set report period;
@@ -124,9 +124,9 @@ Gold replacement covers upstream `Task / EvidenceNeed / Percept / Context` and p
 
 ## 5. Current reproducible evidence and claim projection
 
-- **Source expiry:** under the corrected gateway deadline boundary, standard per-record expiry remains a supported cross-segment placement result in the tested cache model. Numeric effect sizes and paired intervals are owned by the frozen result / generated paper table rather than this entry page. [C3 data](results/r37e_full_seeds.json)
-- **Configuration termination:** a fixed TTL covers the candidate's survival and yellow-delivery operating points in the two tested phases. The energy-derived candidate collapses to the ordinary mechanism frontier, and ordinary combinations match the same-information exact stopping reference across the declared risk-weight sweep. [Matrix](results/c5_matrix.json) · [Reference](results/c5_seqref.json)
-- **Online knowledge:** under the corrected deadline boundary, legal gateway evidence supports a correct-but-partial attribution interface while unresolved obligations remain unknown; exact counts/rates are owned by the frozen result / generated table. [C7 data](results/r40_local_attribution.json)
+- **Source expiry:** under the corrected gateway deadline boundary, standard per-record expiry remains a supported cross-segment placement result in the tested cache model. Numeric effect sizes and paired intervals are owned by the frozen result / generated paper table rather than this entry page. [C3 data](results/communication-substrate/claims/r37e_full_seeds.json)
+- **Configuration termination:** a fixed TTL covers the candidate's survival and yellow-delivery operating points in the two tested phases. The energy-derived candidate collapses to the ordinary mechanism frontier, and ordinary combinations match the same-information exact stopping reference across the declared risk-weight sweep. [Matrix](results/communication-substrate/claims/c5_matrix.json) · [Reference](results/communication-substrate/claims/c5_seqref.json)
+- **Online knowledge:** under the corrected deadline boundary, legal gateway evidence supports a correct-but-partial attribution interface while unresolved obligations remain unknown; exact counts/rates are owned by the frozen result / generated table. [C7 data](results/communication-substrate/claims/r40_local_attribution.json)
 - **Agent interface:** historical live traces expose bidirectional errors caused by interpreting LoRa receipts as backhaul state. Offline v5 replay improves statements; C8 keeps this evidence at the formative-interface level. [C8 entry](results/CLAIMS.md)
 
 Resource relaxations characterise capacity and energy pressure within the tested strategy family. C10 records the expiry-boundary implementation correction. Subsequent comparisons use corrected ordinary expiry.
@@ -172,7 +172,7 @@ The next stage is paper freeze and repository release, not another model search.
 
 ## 7. Scenario, physical model and extrapolation boundary
 
-The [instance manifest](spec/instance-v1-manifest.md) defines deployment, sources and parameters. The main point has fourteen nodes, finite Class A windows and sparse short-message return opportunities. The action space contains registered sampling/reporting controls and communication capabilities; external authority supplies hazard/risk state, while satellite/backup resources enter through registry and instance budgets.
+The [instance manifest](spec/substrate/instance-v1-manifest.md) defines deployment, sources and parameters. The main point has fourteen nodes, finite Class A windows and sparse short-message return opportunities. The action space contains registered sampling/reporting controls and communication capabilities; external authority supplies hazard/risk state, while satellite/backup resources enter through registry and instance budgets.
 
 Synchronous airtime-free central acknowledgements, synthetic harvesting and absorbing brownout in the main configuration define the current extrapolation boundary. Episode I studies an upgrade, outage and recovery. Episode II isolates fallback across two authorised upgrade/downgrade phases. The exact stopping reference applies to a public task table, declared energy process and quantised single-node state; larger networks and new missions receive their own benchmark coordinates.
 
@@ -204,7 +204,7 @@ The current Agentic manuscript and historical systems-paper copies share [refs.b
 | `paper/_archive/` | immutable manuscript/plan snapshots, including the pre-Agentic systems-paper source |
 | `spec/` | deployment, information boundaries and active experiment contracts |
 | `research/` | current Experiment Design, registries, benchmark split, baseline/robustness/attribution protocols and research entry points |
-| `code/instance/`, `code/v3joint/` | physical simulation, joint communication mechanisms and Agent interface |
+| `code/substrate/instance/`, `code/substrate/joint/` | physical simulation, joint communication mechanisms and Agent interface |
 | `code/agentic_communication/` | self-contained Task/Evidence/Context/Capability/Planner/Replay/Evaluation runtime |
 | `code/analysis/`, `code/experiments/` | diagnostics, reproduction and checks |
 | `results/` | registered results, sole claim-state ledger, frozen references and withdrawals |
@@ -212,7 +212,7 @@ The current Agentic manuscript and historical systems-paper copies share [refs.b
 
 ## 10. Remote repository versus local research zones
 
-The repository follows [PAPER-REPO-STANDARD](PAPER-REPO-STANDARD.md): clone-verifiable, one numeric source, one current state per claim, traceable history. The remote repository contains paper-relevant implementation, specifications, compact frozen results, generated artifacts and auditable archives. Large `runtime_trace.jsonl` files, live-model per-run logs, `worker_pool/`, `docs/`, and `local_experiments/` remain local/acquired research artifacts and are excluded from the release tree.
+The repository follows [PAPER-REPO-STANDARD](tooling/paper-repository/PAPER-REPO-STANDARD.md): clone-verifiable, one numeric source, one current state per claim, traceable history. The remote repository contains paper-relevant implementation, specifications, compact frozen results, generated artifacts and auditable archives. Large `runtime_trace.jsonl` files, live-model per-run logs, workspace-local `local_work/`, compatibility `docs/`, and `local_experiments/` remain local/acquired research artifacts and are excluded from the release tree.
 
 Local research zones may contain Astra reviews, killed candidates, one-off probes, HTML snapshots and early paper sandboxes. Promotion to the remote repository follows four gates: current normative dependency, stable owner, formal runner/result-registry use, and `make check` success. Assets that satisfy the gates join the formal tree; the rest stay as local provenance.
 

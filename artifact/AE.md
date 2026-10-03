@@ -29,10 +29,10 @@ The artifact supports three layers of reproduction:
 | Fresh result registry / allowed interpretation | [`results/README.md`](../results/README.md) |
 | Frozen verdict baselines | [`results/reference/`](../results/reference/README.md) |
 | Deployment/data provenance | [`spec/`](../spec/README.md) |
-| Current Agentic experiment design | [`research/EXPERIMENT-DESIGN-v1.md`](../research/EXPERIMENT-DESIGN-v1.md) |
-| Current mathematical system model | [`research/SYSTEM-MODEL-v1.md`](../research/SYSTEM-MODEL-v1.md) |
-| Canonical runtime/domain ownership | [`research/OWNERSHIP-v1.md`](../research/OWNERSHIP-v1.md) |
-| Current benchmark/runtime status | [`research/README.md`](../research/README.md), [`research/ROADMAP.md`](../research/ROADMAP.md) |
+| Current Agentic experiment design | [`research/README.md`](../research/README.md) |
+| Current mathematical system model | [`research/substrate/SYSTEM-MODEL-v1.md`](../research/substrate/SYSTEM-MODEL-v1.md) |
+| Canonical runtime/domain ownership | [`research/compiler/RUNTIME-DOMAIN-OWNERSHIP-v1.md`](../research/compiler/RUNTIME-DOMAIN-OWNERSHIP-v1.md) |
+| Current benchmark/runtime status | [`research/README.md`](../research/README.md), [`research/README.md`](../research/README.md) |
 | Generated paper facts/tables | `paper/generated/`, produced from result files; never hand-edited |
 
 The root README is an entry-page projection of these authorities, not a second claim ledger.
@@ -79,17 +79,17 @@ The table intentionally avoids duplicating paper numbers. The expected verdict i
 
 | Claim | Reproduction command | Expected verdict |
 |---|---|---|
-| C1 resource-wall characterisation | `python3 code/v3joint/r30c_walls.py` | fresh result matches `results/reference/r30c_walls.json`; interpretation remains `scoped-negative` |
-| C2 ordinary record-expiry equivalence | `python3 code/v3joint/r41_expiry_equiv.py` | fresh result matches `results/reference/r41_expiry_equiv.json`; ordinary expiry equivalence remains supported |
-| C3 cross-segment source-expiry placement | `python3 code/v3joint/r37e_full_seeds.py` | fresh result matches `results/reference/r37e_full_seeds.json`; placement result remains supported under the registered cache/deadline semantics |
-| C4 time-aware failure attribution | `python3 code/v3joint/r44_fullhorizon_attribution.py` | fresh result matches `results/reference/r44_fullhorizon_attribution.json`; partial attribution remains evidence-bounded |
-| C5 evaluated configuration-lease candidate | `python3 code/v3joint/c5_matrix.py 0 1 2` | fresh matrix matches `results/reference/c5_matrix.json`; claim remains `scoped-negative` rather than a lease-algorithm gain |
-| C6 local enforcement placement | `python3 code/v3joint/r39_envelope.py && python3 code/v3joint/merge_r39.py` | merged result matches `results/reference/r39_table.json`; result remains a placement/system property |
-| C7 partial online attribution | `python3 code/v3joint/r40_local_attribution.py` | fresh result matches `results/reference/r40_local_attribution.json`; unresolved evidence remains unknown |
-| C8 historical live-Agent interface fault | `python3 code/v3joint/r42_claim_relabel.py && python3 code/v3joint/r43_cert_v5_replay.py` | deterministic replay outputs match their frozen references; historical live traces remain formative and are not current Agentic model evidence |
-| C9 same-information non-prescient stopping | `python3 code/v3joint/c5_seqref.py && python3 code/experiments/measure_seqref_calibration.py` | both fresh files match their frozen references; the result remains scoped to the declared same-information single-node stopping family |
-| C10 expiry-boundary correction | `python3 code/analysis/retention_deadline_audit.py` | fresh audit matches `results/reference/retention_deadline_audit.json`; this is an implementation/semantic correction, not a new method |
-| C11 conditional reverse-acknowledgement delay bound | `python3 code/analysis/reverse_feedback_budget.py` | fresh audit matches `results/reference/reverse_feedback_budget.json`; aggregate opportunity capacity is not promoted into a no-contention theorem |
+| C1 resource-wall characterisation | `python3 code/legacy-communication/v3joint/r30c_walls.py` | fresh result matches `results/reference/communication-substrate/claims/r30c_walls.json`; interpretation remains `scoped-negative` |
+| C2 ordinary record-expiry equivalence | `python3 code/legacy-communication/v3joint/r41_expiry_equiv.py` | fresh result matches `results/reference/communication-substrate/claims/r41_expiry_equiv.json`; ordinary expiry equivalence remains supported |
+| C3 cross-segment source-expiry placement | `python3 code/legacy-communication/v3joint/r37e_full_seeds.py` | fresh result matches `results/reference/communication-substrate/claims/r37e_full_seeds.json`; placement result remains supported under the registered cache/deadline semantics |
+| C4 time-aware failure attribution | `python3 code/legacy-communication/v3joint/r44_fullhorizon_attribution.py` | fresh result matches `results/reference/communication-substrate/claims/r44_fullhorizon_attribution.json`; partial attribution remains evidence-bounded |
+| C5 evaluated configuration-lease candidate | `python3 code/legacy-communication/v3joint/c5_matrix.py 0 1 2` | fresh matrix matches `results/reference/communication-substrate/claims/c5_matrix.json`; claim remains `scoped-negative` rather than a lease-algorithm gain |
+| C6 local enforcement placement | `python3 code/legacy-communication/v3joint/r39_envelope.py && python3 code/legacy-communication/v3joint/merge_r39.py` | merged result matches `results/reference/communication-substrate/claims/r39_table.json`; result remains a placement/system property |
+| C7 partial online attribution | `python3 code/legacy-communication/v3joint/r40_local_attribution.py` | fresh result matches `results/reference/communication-substrate/claims/r40_local_attribution.json`; unresolved evidence remains unknown |
+| C8 historical live-Agent interface fault | `python3 code/substrate/joint/r42_claim_relabel.py && python3 code/substrate/joint/r43_cert_v5_replay.py` | deterministic replay outputs match their frozen references; historical live traces remain formative and are not current Agentic model evidence |
+| C9 same-information non-prescient stopping | `python3 code/legacy-communication/v3joint/c5_seqref.py && python3 code/legacy-communication/experiments/measure_seqref_calibration.py` | both fresh files match their frozen references; the result remains scoped to the declared same-information single-node stopping family |
+| C10 expiry-boundary correction | `python3 code/legacy-communication/analysis/retention_deadline_audit.py` | fresh audit matches `results/reference/communication-substrate/claims/retention_deadline_audit.json`; this is an implementation/semantic correction, not a new method |
+| C11 conditional reverse-acknowledgement delay bound | `python3 code/legacy-communication/analysis/reverse_feedback_budget.py` | fresh audit matches `results/reference/communication-substrate/claims/reverse_feedback_budget.json`; aggregate opportunity capacity is not promoted into a no-contention theorem |
 
 The old live model calls behind C8 are not required for the current deterministic replay verdict. Their committed traces are historical evidence; C8 remains `formative`.
 
@@ -99,12 +99,12 @@ Agentic claim references are compact aggregate + semantic-audit snapshots under 
 
 | Claim | Reproduction command | Expected verdict |
 |---|---|---|
-| A1 runtime / physics conformance | `python3 code/experiments/agentic/run_o2_risk_escalation.py --variant global --seeds 0,1,2,3,4` and the same runner with `--variant localized` | global/localized aggregates and semantic audits match A1 references; paired physical equivalence and replay remain valid |
-| A2 deterministic Agent/runtime baseline isolation | `python3 code/experiments/agentic/run_o2_baseline_matrix.py --seeds 0,1,2,3,4` | aggregate/audit match A2 references; runtime/context overhead is isolated without being re-labelled as LLM gain |
-| A3 source-period + five-axis robustness infrastructure | `python3 code/experiments/agentic/run_source_period_smoke.py --seed 0 && python3 code/experiments/agentic/run_robustness_matrix.py` | source-period and robustness verdicts match A3 references; this validates coordinates/infrastructure, not generic method robustness |
-| A4 source-derived Operational Task transfer | `python3 code/experiments/agentic/run_task_transfer_qili.py --seeds 0,1,2,3,4` | aggregate/audit match A4 references; task translation changes workload authority/schedule while keeping runtime/capability/scorer fixed |
-| A5 attribution-protocol self-check | `python3 code/experiments/agentic/run_attribution_matrix_infra.py --turns 20` | aggregate/audit match A5 references; cumulative gold replacement restores the declared layers without smuggling downstream gold state |
-| A6 communication baselines and evaluator-only oracles | `python3 code/experiments/agentic/run_communication_baseline_matrix.py --seeds 0,1,2,3,4` | aggregate/audit match A6 references; online controllers remain separated from evaluator-only oracle rows |
+| A1 runtime / physics conformance | `python3 code/evaluation/agentic/run_o2_risk_escalation.py --variant global --seeds 0,1,2,3,4` and the same runner with `--variant localized` | global/localized aggregates and semantic audits match A1 references; paired physical equivalence and replay remain valid |
+| A2 deterministic Agent/runtime baseline isolation | `python3 code/evaluation/agentic/run_o2_baseline_matrix.py --seeds 0,1,2,3,4` | aggregate/audit match A2 references; runtime/context overhead is isolated without being re-labelled as LLM gain |
+| A3 source-period + five-axis robustness infrastructure | `python3 code/evaluation/agentic/run_source_period_smoke.py --seed 0 && python3 code/evaluation/agentic/run_robustness_matrix.py` | source-period and robustness verdicts match A3 references; this validates coordinates/infrastructure, not generic method robustness |
+| A4 source-derived Operational Task transfer | `python3 code/evaluation/agentic/run_task_transfer_qili.py --seeds 0,1,2,3,4` | aggregate/audit match A4 references; task translation changes workload authority/schedule while keeping runtime/capability/scorer fixed |
+| A5 attribution-protocol self-check | `python3 code/evaluation/agentic/run_attribution_matrix_infra.py --turns 20` | aggregate/audit match A5 references; cumulative gold replacement restores the declared layers without smuggling downstream gold state |
+| A6 communication baselines and evaluator-only oracles | `python3 code/evaluation/agentic/run_communication_baseline_matrix.py --seeds 0,1,2,3,4` | aggregate/audit match A6 references; online controllers remain separated from evaluator-only oracle rows |
 
 No `A*` claim says that an LLM beats deterministic baselines or improves the physical communication outcome. The model-facing protocol, three frozen context variants, R1 diagnostics and R3 runner are infrastructure awaiting real backend runs.
 
@@ -136,11 +136,11 @@ For a shorter reviewer path, use `--check-only` against the committed frozen res
 | `paper/en/`, `paper/zh/` | corrected systems-paper compatibility copies |
 | `paper/_archive/` | immutable paper/plan provenance snapshots |
 | `code/agentic_communication/` | Task/Evidence/Context/Capability/Planner/Replay/Evaluation runtime |
-| `code/instance/`, `code/v3joint/` | physical simulator and joint communication mechanisms |
-| `code/experiments/agentic/` | formal Agentic benchmark/baseline/robustness/attribution runners |
+| `code/substrate/instance/`, `code/substrate/joint/` | physical simulator and joint communication mechanisms |
+| `code/evaluation/agentic/` | formal Agentic benchmark/baseline/robustness/attribution runners |
 | `results/` | current registered results and sole claim ledger |
 | `results/reference/` | frozen verdict baselines used by artifact reproduction |
-| `results/_withdrawn/` | superseded/defective historical result material with provenance |
+| `results/history/withdrawn/` | superseded/defective historical result material with provenance |
 | `spec/` | normative deployment/data/information-boundary contracts |
 | `research/` | current Agentic experiment design, registries, roadmap and generated research summary |
 | `scripts/` | result-to-paper and manifest generation |

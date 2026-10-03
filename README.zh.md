@@ -1,6 +1,6 @@
 中文 | [English](README.md)
 
-> **当前主线：Evidence-Grounded Closed-Loop Agentic Communication。** 方法分两层：①把现有通信 Data Plane 的 node/gateway/center/执行事件组织成带 provenance、owner、time、revision、freshness/reachability/status 的 **Evidence World**；②把 benchmark/业务层 **Operational Task** 编译成自包含的 **Runtime TaskContract / TaskRun**，由 `ContextManifest + Capability` 支撑多轮 reasoning，并把 evidence-use tool 与 communication-device tool 统一进同一 typed capability runtime。当前实验设计 authority 见 [Experiment Design v1](research/EXPERIMENT-DESIGN-v1.md)，实验状态见 [research/README](research/README.md) 与 [ROADMAP](research/ROADMAP.md)。[CLAIMS](results/CLAIMS.md) 始终是整个仓库唯一的 claim-state authority：`C*` 保存系统论文/通信底座主张，`A*` 保存当前 Agentic deterministic/infrastructure 主张。
+> **当前主线：Evidence-Grounded Closed-Loop Agentic Communication。** 方法分两层：①把现有通信 Data Plane 的 node/gateway/center/执行事件组织成带 provenance、owner、time、revision、freshness/reachability/status 的 **Evidence World**；②把 benchmark/业务层 **Operational Task** 编译成自包含的 **Runtime TaskContract / TaskRun**，由 `ContextManifest + Capability` 支撑多轮 reasoning，并把 evidence-use tool 与 communication-device tool 统一进同一 typed capability runtime。当前实验设计 authority 见 [Experiment Design v1](research/README.md)，实验状态见 [research/README](research/README.md) 与 [ROADMAP](research/README.md)。[CLAIMS](results/CLAIMS.md) 始终是整个仓库唯一的 claim-state authority：`C*` 保存系统论文/通信底座主张，`A*` 保存当前 Agentic deterministic/infrastructure 主张。
 
 # 间歇回传下灾前监测的本地通信控制
 
@@ -19,26 +19,26 @@
 | 当前 Agentic Communication 主稿 | [英文 PDF](paper/agentic/en/main.pdf) · [LaTeX](paper/agentic/en/main.tex) · [workspace README](paper/agentic/README.md) |
 | 系统论文兼容稿（持续接受 claim 纠错传播） | [英文](paper/en/main.tex) · [中文](paper/zh/main.tex) · [paper/README](paper/README.md) |
 | Agentic 转向前系统稿不可变快照 | [paper/_archive/system-paper-2026-09-20](paper/_archive/system-paper-2026-09-20/README.md) · source commit `dd4f31a` |
-| 当前 Agent 实验设计 | [Experiment Design v1](research/EXPERIMENT-DESIGN-v1.md) · [research/README](research/README.md) · [ROADMAP](research/ROADMAP.md) |
-| 当前数学系统模型 | [SYSTEM-MODEL-v1](research/SYSTEM-MODEL-v1.md) |
-| Runtime/domain ownership contract | [OWNERSHIP-v1](research/OWNERSHIP-v1.md) |
+| 当前 Agent 实验设计 | [Experiment Design v1](research/README.md) · [research/README](research/README.md) · [ROADMAP](research/README.md) |
+| 当前数学系统模型 | [SYSTEM-MODEL-v1](research/substrate/SYSTEM-MODEL-v1.md) |
+| Runtime/domain ownership contract | [OWNERSHIP-v1](research/compiler/RUNTIME-DOMAIN-OWNERSHIP-v1.md) |
 | 系统论文闭环计划（历史阶段） | [RESEARCH_PLAN](paper/RESEARCH_PLAN.md) |
 | 逐主张复现 | [artifact/AE.md](artifact/AE.md) |
 | 结果来源 / 主张状态 / 部署条件 | [结果登记](results/README.md) · [CLAIMS](results/CLAIMS.md) · [spec](spec/README.md) |
 
-当前稿与旧稿形成一条连续谱系。`paper/en|zh` 保存系统阶段的最新纠错版本，使旧 `C*` 主张持续与当前冻结结果一致；`paper/_archive/system-paper-2026-09-20/` 保存 Agentic 转向前的确切源文件；`paper/agentic/` 承担当前投稿叙事。README 聚焦当前状态与长期 authority，逐轮历史通过 Git、`results/_withdrawn/`、`paper/_archive/` 和作者本地 `docs/_archive/` 追溯。
+当前稿与旧稿形成一条连续谱系。`paper/en|zh` 保存系统阶段的最新纠错版本，使旧 `C*` 主张持续与当前冻结结果一致；`paper/_archive/system-paper-2026-09-20/` 保存 Agentic 转向前的确切源文件；`paper/agentic/` 承担当前投稿叙事。README 聚焦当前状态与长期 authority，逐轮历史通过 Git、`results/history/withdrawn/`、`paper/_archive/` 和作者本地 `docs/_archive/` 追溯。
 
 ## 2. 仓库 authority 与长期约束
 
-这个仓库既是论文实现，也是证据系统。下面这些 authority 来自长期 README 历史、当前实验设计和 [论文仓库规范](PAPER-REPO-STANDARD.zh.md)，后续重构沿用同一 ownership：
+这个仓库既是论文实现，也是证据系统。下面这些 authority 来自长期 README 历史、当前实验设计和 [论文仓库规范](tooling/paper-repository/PAPER-REPO-STANDARD.zh.md)，后续重构沿用同一 ownership：
 
 | Authority / 约束 | 当前规则 |
 |---|---|
 | 主张真值 | `results/CLAIMS.md` 是唯一 claim-state authority；README 展示其当前投影 |
 | 数字真值 | 实验数字由 `results/` 持有，经 `scripts/make_tables.py` / `scripts/make_agentic_artifacts.py` 生成论文事实与表格 |
-| 场景与参数 | `spec/instance-v1-manifest.md`、`spec/datasets.md` 与 source registry 冻结部署、数据与来源，所有方法共享同一场景 |
-| 数学模型 | `research/SYSTEM-MODEL-v1.md` 持有公开方程/系统模型；本地 `docs/` 保留推导过程，release 依赖全部位于 tracked tree |
-| Runtime/domain ownership | `research/OWNERSHIP-v1.md` 冻结 canonical Task/Evidence/Context/Capability/physical-substrate 边界；平行 schema、hidden-truth shortcut 都属于 contract violation |
+| 场景与参数 | `spec/substrate/instance-v1-manifest.md`、`spec/substrate/datasets.md` 与 source registry 冻结部署、数据与来源，所有方法共享同一场景 |
+| 数学模型 | `research/substrate/SYSTEM-MODEL-v1.md` 持有公开方程/系统模型；本地 `docs/` 保留推导过程，release 依赖全部位于 tracked tree |
+| Runtime/domain ownership | `research/compiler/RUNTIME-DOMAIN-OWNERSHIP-v1.md` 冻结 canonical Task/Evidence/Context/Capability/physical-substrate 边界；平行 schema、hidden-truth shortcut 都属于 contract violation |
 | Task authority | 风险等级、监测要求与 Operational Task 由外部 authority 给定；Agent 负责通信执行，业务义务分母由 scorer 独立持有 |
 | Evidence boundary | node/gateway/center 只看到其合法 owner evidence；缺失、过期、不可达、负观测分开；simulator hidden truth 仅供 evaluator/oracle |
 | Action / capability boundary | Capability registry 持有合法通信动作；新能力通过 source、authority、binding、cost 与 failure semantics 进入 action space |
@@ -46,7 +46,7 @@
 | 贡献判据 | task/evidence/tool/policy 语义增量或 physical/business outcome 增量承担论文贡献；统一对象、接口与 Context 结构承担系统工程价值 |
 | 评价层次 | Communication outcome 是主结果；Task grounding、EvidenceNeed、tool selection/order/arguments、Context、model calls、latency 等承担 failure attribution |
 | 模型结果 | scripted/deterministic consumer 负责基础设施与 reference；真实 backend run 负责模型效果 claim |
-| 历史 | Git、`paper/_archive/`、`results/_withdrawn/` 保存被取代的论文与结论，当前文档只维护当前语义 |
+| 历史 | Git、`paper/_archive/`、`results/history/withdrawn/` 保存被取代的论文与结论，当前文档只维护当前语义 |
 
 ## 3. 系统底座：已收敛的技术与证据
 
@@ -102,7 +102,7 @@ Evidence World 把 node/gateway/center 的真实可观测信息组织为 typed�
 
 ### 4.3 Capability surface
 
-通信 domain registry 位于 [`research/COMMUNICATION-DOMAIN-REGISTRY.v0.1.json`](research/COMMUNICATION-DOMAIN-REGISTRY.v0.1.json)。当前正常 planner surface 已接通 3 个 observation capabilities 与 5 个 device capabilities；FullDump 单独保留为 baseline：
+通信 domain registry 位于 [`research/compiler/COMMUNICATION-DOMAIN-REGISTRY.v0.1.json`](research/compiler/COMMUNICATION-DOMAIN-REGISTRY.v0.1.json)。当前正常 planner surface 已接通 3 个 observation capabilities 与 5 个 device capabilities；FullDump 单独保留为 baseline：
 
 - evidence-use：gateway receipt summary、gateway primary-health、center node report；
 - configuration device：set sampling interval、set report period；
@@ -124,9 +124,9 @@ Gold replacement 已覆盖 upstream `Task / EvidenceNeed / Percept / Context` �
 
 ## 5. 当前可复现结果与 claim 投影
 
-- **源端到期**：修正网关 deadline 边界后，标准逐记录 expiry 仍是所测缓存模型中受支持的跨段 placement 结果。具体 effect size 与 paired interval 只由冻结 result / 自动生成论文表持有，入口页不再复制数字。[C3 结果](results/r37e_full_seeds.json)
-- **配置终止**：固定 TTL 在两个受检相位覆盖候选的存活与黄级交付工作点。候选能量门没有独立收益；单节点声明模型中的普通组合也追平所扫风险权重下的同信息精确停止参照。[配置矩阵](results/c5_matrix.json) · [序列参照](results/c5_seqref.json)
-- **在线可知范围**：修正 deadline 边界后，网关合法证据支持“已判定部分正确、其余保持 unknown”的局部归因接口；精确数量/比例只由冻结 result / 自动生成论文表持有。[C7 结果](results/r40_local_attribution.json)
+- **源端到期**：修正网关 deadline 边界后，标准逐记录 expiry 仍是所测缓存模型中受支持的跨段 placement 结果。具体 effect size 与 paired interval 只由冻结 result / 自动生成论文表持有，入口页不再复制数字。[C3 结果](results/communication-substrate/claims/r37e_full_seeds.json)
+- **配置终止**：固定 TTL 在两个受检相位覆盖候选的存活与黄级交付工作点。候选能量门没有独立收益；单节点声明模型中的普通组合也追平所扫风险权重下的同信息精确停止参照。[配置矩阵](results/communication-substrate/claims/c5_matrix.json) · [序列参照](results/communication-substrate/claims/c5_seqref.json)
+- **在线可知范围**：修正 deadline 边界后，网关合法证据支持“已判定部分正确、其余保持 unknown”的局部归因接口；精确数量/比例只由冻结 result / 自动生成论文表持有。[C7 结果](results/communication-substrate/claims/r40_local_attribution.json)
 - **Agent 接口**：真实模型轨迹暴露了将 LoRa 接入收据当作回传状态的双向错误。v5 离线重放改善声明；独立的端到端机制增益尚未验证。[C8 入口](results/CLAIMS.md)
 
 资源放宽实验用于说明容量与能源压力，不作为所有调度器的上界。C10 到期边界修正归入实现语义，后续比较使用修正后的普通 expiry。
@@ -172,7 +172,7 @@ pre-API 基础设施继续承担 deterministic/fairness substrate，但当前论
 
 ## 7. 场景、物理模型与外推边界
 
-部署、数据与参数以 [实例清单](spec/instance-v1-manifest.md) 为准。当前主点为十四节点、有限 Class A 接收窗口和稀疏短报文回传。Action space 包含已登记的采样/上报配置与通信能力；风险判断由外部 authority 提供，卫星/备份资源按 registry 与实例预算进入。模型采用同步中心 ACK、合成日照/云遮与主配置下的吸收态掉电，这些假设共同定义实装外推边界。
+部署、数据与参数以 [实例清单](spec/substrate/instance-v1-manifest.md) 为准。当前主点为十四节点、有限 Class A 接收窗口和稀疏短报文回传。Action space 包含已登记的采样/上报配置与通信能力；风险判断由外部 authority 提供，卫星/备份资源按 registry 与实例预算进入。模型采用同步中心 ACK、合成日照/云遮与主配置下的吸收态掉电，这些假设共同定义实装外推边界。
 
 Episode I 研究升级任务、回传中断与恢复；Episode II 用两个授权升降级相位隔离配置回退。精确停止参照的适用域是公开任务表、声明能量过程和量化单节点状态；更大网络与新任务由后续 benchmark coordinate 单独验证。
 
@@ -204,7 +204,7 @@ make paper
 | `paper/_archive/` | 不可变论文/计划快照；包含 Agentic 转向前系统稿 |
 | `spec/` | 部署、信息边界与生效实验契约 |
 | `research/` | 当前 Experiment Design、registry、benchmark split、baseline/robustness/attribution protocol 与研究入口 |
-| `code/instance/`、`code/v3joint/` | 当前物理仿真、联合通信机制与 Agent 接口 |
+| `code/substrate/instance/`、`code/substrate/joint/` | 当前物理仿真、联合通信机制与 Agent 接口 |
 | `code/agentic_communication/` | self-contained Task/Evidence/Context/Capability/Planner/Replay/Evaluation runtime |
 | `code/analysis/`、`code/experiments/` | 诊断、复现和检查 |
 | `results/` | 登记结果、唯一主张状态、冻结参考与撤回档案 |
@@ -212,7 +212,7 @@ make paper
 
 ## 10. 远端仓库与本地研究区
 
-本仓库遵循 [论文仓库规范](PAPER-REPO-STANDARD.zh.md)：克隆可验证、数字单一来源、主张单一状态、历史可追溯。远端保留论文需要的实现、规范、compact frozen results、生成物和可审计 archive；大型 `runtime_trace.jsonl`、live-model per-run log、`worker_pool/`、`docs/` 与 `local_experiments/` 留在本地/外部研究区，由 `.gitignore` 与 release tree 隔离。
+本仓库遵循 [论文仓库规范](tooling/paper-repository/PAPER-REPO-STANDARD.zh.md)：克隆可验证、数字单一来源、主张单一状态、历史可追溯。远端保留论文需要的实现、规范、compact frozen results、生成物和可审计 archive；大型 `runtime_trace.jsonl`、live-model per-run log、workspace-local `local_work/`、兼容入口 `docs/` 与 `local_experiments/` 留在本地/外部研究区，由 `.gitignore` 与 release tree 隔离。
 
 本地研究区保存 Astra review、被杀候选、一次性 probe、网页快照和早期 paper sandbox。对象进入远端时经过四个 promotion gate：当前规范性依赖、稳定 owner、正式 runner/result registry 使用、`make check` 通过。满足 gate 的资产进入正式仓库，其余继续作为 provenance 留在本地研究区。
 

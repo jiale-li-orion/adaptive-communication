@@ -7,7 +7,7 @@ ROOT := $(CURDIR)
 PY   := python3
 
 # 与 code/run_checks.py 内部设置的 PYTHONPATH 一致，保证从根目录与从子目录运行等价。
-export PYTHONPATH := $(ROOT)/libs/pylibs:$(ROOT)/code/v3joint:$(ROOT)/code/instance:$(ROOT)/code/physics:$(ROOT)/code/runtime:$(ROOT)/code/experiments:$(ROOT)/code/analysis:$(ROOT)/code/monitoring
+export PYTHONPATH := $(ROOT)/libs/pylibs:$(ROOT)/code:$(ROOT)/code/substrate/joint:$(ROOT)/code/substrate/instance:$(ROOT)/code/substrate/physics:$(ROOT)/code/substrate/runtime:$(ROOT)/code/substrate/reference:$(ROOT)/code/substrate/monitoring:$(ROOT)/code/evaluation/agentic:$(ROOT)/code/legacy-communication/runtime:$(ROOT)/code/legacy-communication/experiments:$(ROOT)/code/legacy-communication/analysis:$(ROOT)/code/legacy-communication/v3joint
 
 .PHONY: all check paper agentic-paper tables agentic-o2 agentic-diagnosis agentic-baselines agentic-communication-baselines agentic-source-smoke agentic-robustness agentic-transfer agentic-action-context agentic-context-transition agentic-control-opportunity agentic-context-transition-r1 agentic-model-inputs agentic-model-matrix agentic-r1-model agentic-r3-model agentic-preapi deps data clean help
 
@@ -43,7 +43,7 @@ help:
 # 检查层。run_checks.py 以退出码判定，不解析被检查脚本的输出。
 check:
 	$(PY) code/run_checks.py
-	$(PY) code/v3joint/test_joint.py
+	$(PY) code/substrate/joint/test_joint.py
 
 # 论文产物。中文稿走 XeTeX，英文稿走 pdflatex，细节见 paper/build.sh。
 paper:
@@ -72,97 +72,97 @@ tables:
 
 # Agentic Communication 第一条正式实验流水线：结果 -> audit -> research/results/paper 生成物。
 agentic-o2:
-	$(PY) code/experiments/agentic/run_o2_risk_escalation.py --variant global --seeds $(AGENTIC_SEEDS)
-	$(PY) code/experiments/agentic/run_o2_risk_escalation.py --variant localized --seeds $(AGENTIC_SEEDS)
+	$(PY) code/evaluation/agentic/run_o2_risk_escalation.py --variant global --seeds $(AGENTIC_SEEDS)
+	$(PY) code/evaluation/agentic/run_o2_risk_escalation.py --variant localized --seeds $(AGENTIC_SEEDS)
 	$(PY) scripts/make_agentic_artifacts.py
 
 agentic-context-transition:
-	$(PY) code/experiments/agentic/run_o5_task_revision_consequence.py
-	$(PY) code/experiments/agentic/freeze_o5_context_transition_devset.py
-	$(PY) code/experiments/agentic/freeze_o5_context_update_ablation.py
-	$(PY) code/experiments/agentic/run_o5_transition_context_model_probe.py --stage validate
-	$(PY) code/experiments/agentic/run_o5_context_update_model_probe.py --stage validate
+	$(PY) code/evaluation/agentic/run_o5_task_revision_consequence.py
+	$(PY) code/evaluation/agentic/freeze_o5_context_transition_devset.py
+	$(PY) code/evaluation/agentic/freeze_o5_context_update_ablation.py
+	$(PY) code/evaluation/agentic/run_o5_transition_context_model_probe.py --stage validate
+	$(PY) code/evaluation/agentic/run_o5_context_update_model_probe.py --stage validate
 
 agentic-control-opportunity:
-	$(PY) code/experiments/agentic/run_o5_task_revision_consequence.py
-	$(PY) code/experiments/agentic/freeze_o5_context_transition_devset.py
-	$(PY) code/experiments/agentic/run_o5_execution_layer_audit.py
-	$(PY) code/experiments/agentic/run_o5_query_delay_multiseed.py --seeds 0:20 --backhaul-delays 0,180,240,300
+	$(PY) code/evaluation/agentic/run_o5_task_revision_consequence.py
+	$(PY) code/evaluation/agentic/freeze_o5_context_transition_devset.py
+	$(PY) code/evaluation/agentic/run_o5_execution_layer_audit.py
+	$(PY) code/evaluation/agentic/run_o5_query_delay_multiseed.py --seeds 0:20 --backhaul-delays 0,180,240,300
 	$(PY) scripts/make_agentic_artifacts.py
 
 agentic-context-transition-r1:
 	@test -n "$(MODEL)" || { echo "MODEL=<model-id> is required"; exit 2; }
-	$(PY) code/experiments/agentic/run_o5_transition_context_model_probe.py --stage r1 --model "$(MODEL)" $(ARGS)
-	$(PY) code/experiments/agentic/run_o5_context_update_model_probe.py --stage r1 --model "$(MODEL)" $(ARGS)
+	$(PY) code/evaluation/agentic/run_o5_transition_context_model_probe.py --stage r1 --model "$(MODEL)" $(ARGS)
+	$(PY) code/evaluation/agentic/run_o5_context_update_model_probe.py --stage r1 --model "$(MODEL)" $(ARGS)
 	$(PY) scripts/make_agentic_benchmark_manifest.py
 	$(PY) scripts/make_agentic_baseline_registry.py
 
 agentic-diagnosis:
-	$(PY) code/experiments/agentic/run_o2_diagnosis_baseline.py --seeds $(AGENTIC_SEEDS)
+	$(PY) code/evaluation/agentic/run_o2_diagnosis_baseline.py --seeds $(AGENTIC_SEEDS)
 	$(PY) scripts/make_agentic_artifacts.py
 	$(PY) scripts/make_agentic_baseline_registry.py
 
 agentic-baselines:
-	$(PY) code/experiments/agentic/run_o2_baseline_matrix.py --seeds $(AGENTIC_SEEDS)
+	$(PY) code/evaluation/agentic/run_o2_baseline_matrix.py --seeds $(AGENTIC_SEEDS)
 	$(PY) scripts/make_agentic_artifacts.py
 	$(PY) scripts/make_agentic_baseline_registry.py --check
 
 agentic-communication-baselines:
-	$(PY) code/experiments/agentic/run_communication_baseline_matrix.py --seeds $(AGENTIC_SEEDS)
+	$(PY) code/evaluation/agentic/run_communication_baseline_matrix.py --seeds $(AGENTIC_SEEDS)
 	$(PY) scripts/make_agentic_artifacts.py
 
 agentic-source-smoke:
-	$(PY) code/experiments/agentic/run_source_period_smoke.py --seed 0
+	$(PY) code/evaluation/agentic/run_source_period_smoke.py --seed 0
 	$(PY) scripts/make_agentic_benchmark_manifest.py --check
 	$(PY) scripts/make_agentic_artifacts.py
 
 agentic-robustness:
-	$(PY) code/experiments/agentic/run_robustness_matrix.py
+	$(PY) code/evaluation/agentic/run_robustness_matrix.py
 	$(PY) scripts/make_agentic_robustness_manifest.py --check
 	$(PY) scripts/make_agentic_artifacts.py
 
 agentic-transfer:
-	$(PY) code/experiments/agentic/run_task_transfer_qili.py --seeds $(AGENTIC_SEEDS)
+	$(PY) code/evaluation/agentic/run_task_transfer_qili.py --seeds $(AGENTIC_SEEDS)
 	$(PY) scripts/make_agentic_artifacts.py
 
 agentic-action-context:
-	$(PY) code/experiments/agentic/run_action_conditioned_context_probe.py --seeds $(AGENTIC_SEEDS)
-	$(PY) code/experiments/agentic/run_model_context_matrix.py --stage freeze --variant localized --freeze-seed 0 --contexts task_conditioned,full_dump,generic_react,action_conditioned,action_candidates_full_dump
-	$(PY) code/experiments/agentic/freeze_action_context_devset.py
-	$(PY) code/experiments/agentic/run_o5_task_revision_consequence.py
-	$(PY) code/experiments/agentic/freeze_o5_context_transition_devset.py
-	$(PY) code/experiments/agentic/freeze_o5_context_update_ablation.py
-	$(PY) code/experiments/agentic/run_o5_transition_context_model_probe.py --stage validate
-	$(PY) code/experiments/agentic/run_o5_context_update_model_probe.py --stage validate
+	$(PY) code/evaluation/agentic/run_action_conditioned_context_probe.py --seeds $(AGENTIC_SEEDS)
+	$(PY) code/evaluation/agentic/run_model_context_matrix.py --stage freeze --variant localized --freeze-seed 0 --contexts task_conditioned,full_dump,generic_react,action_conditioned,action_candidates_full_dump
+	$(PY) code/evaluation/agentic/freeze_action_context_devset.py
+	$(PY) code/evaluation/agentic/run_o5_task_revision_consequence.py
+	$(PY) code/evaluation/agentic/freeze_o5_context_transition_devset.py
+	$(PY) code/evaluation/agentic/freeze_o5_context_update_ablation.py
+	$(PY) code/evaluation/agentic/run_o5_transition_context_model_probe.py --stage validate
+	$(PY) code/evaluation/agentic/run_o5_context_update_model_probe.py --stage validate
 	$(PY) scripts/make_agentic_artifacts.py
 
 agentic-model-inputs:
-	$(PY) code/experiments/agentic/run_model_context_matrix.py --stage freeze --variant global --freeze-seed 0 $(ARGS)
+	$(PY) code/evaluation/agentic/run_model_context_matrix.py --stage freeze --variant global --freeze-seed 0 $(ARGS)
 	$(PY) scripts/make_agentic_artifacts.py
 
 agentic-model-matrix:
 	@test -n "$(MODEL)" || { echo "MODEL=<model-id> is required"; exit 2; }
-	$(PY) code/experiments/agentic/run_model_context_matrix.py --model "$(MODEL)" --stage both $(ARGS)
+	$(PY) code/evaluation/agentic/run_model_context_matrix.py --model "$(MODEL)" --stage both $(ARGS)
 
 agentic-preapi:
-	$(PY) code/experiments/agentic/run_catalog_smoke.py --seed 0
-	$(PY) code/experiments/agentic/run_o2_risk_escalation.py --variant global --seeds $(AGENTIC_SEEDS)
-	$(PY) code/experiments/agentic/run_o2_risk_escalation.py --variant localized --seeds $(AGENTIC_SEEDS)
-	$(PY) code/experiments/agentic/run_o2_diagnosis_baseline.py --seeds $(AGENTIC_SEEDS)
-	$(PY) code/experiments/agentic/run_o2_baseline_matrix.py --seeds $(AGENTIC_SEEDS)
-	$(PY) code/experiments/agentic/run_communication_baseline_matrix.py --seeds $(AGENTIC_SEEDS)
-	$(PY) code/experiments/agentic/run_source_period_smoke.py --seed 0
-	$(PY) code/experiments/agentic/run_robustness_matrix.py
-	$(PY) code/experiments/agentic/run_task_transfer_qili.py --seeds $(AGENTIC_SEEDS)
-	$(PY) code/experiments/agentic/run_attribution_matrix_infra.py --turns 20
-	$(PY) code/experiments/agentic/run_action_conditioned_context_probe.py --seeds $(AGENTIC_SEEDS)
-	$(PY) code/experiments/agentic/run_model_context_matrix.py --stage freeze --variant global --freeze-seed 0
-	$(PY) code/experiments/agentic/run_model_context_matrix.py --stage freeze --variant localized --freeze-seed 0 --contexts task_conditioned,full_dump,generic_react,action_conditioned,action_candidates_full_dump
-	$(PY) code/experiments/agentic/freeze_action_context_devset.py
-	$(PY) code/experiments/agentic/run_o5_task_revision_consequence.py
-	$(PY) code/experiments/agentic/freeze_o5_context_transition_devset.py
-	$(PY) code/experiments/agentic/run_o5_execution_layer_audit.py
-	$(PY) code/experiments/agentic/run_o5_query_delay_multiseed.py --seeds 0:20 --backhaul-delays 0,180,240,300
+	$(PY) code/evaluation/agentic/run_catalog_smoke.py --seed 0
+	$(PY) code/evaluation/agentic/run_o2_risk_escalation.py --variant global --seeds $(AGENTIC_SEEDS)
+	$(PY) code/evaluation/agentic/run_o2_risk_escalation.py --variant localized --seeds $(AGENTIC_SEEDS)
+	$(PY) code/evaluation/agentic/run_o2_diagnosis_baseline.py --seeds $(AGENTIC_SEEDS)
+	$(PY) code/evaluation/agentic/run_o2_baseline_matrix.py --seeds $(AGENTIC_SEEDS)
+	$(PY) code/evaluation/agentic/run_communication_baseline_matrix.py --seeds $(AGENTIC_SEEDS)
+	$(PY) code/evaluation/agentic/run_source_period_smoke.py --seed 0
+	$(PY) code/evaluation/agentic/run_robustness_matrix.py
+	$(PY) code/evaluation/agentic/run_task_transfer_qili.py --seeds $(AGENTIC_SEEDS)
+	$(PY) code/evaluation/agentic/run_attribution_matrix_infra.py --turns 20
+	$(PY) code/evaluation/agentic/run_action_conditioned_context_probe.py --seeds $(AGENTIC_SEEDS)
+	$(PY) code/evaluation/agentic/run_model_context_matrix.py --stage freeze --variant global --freeze-seed 0
+	$(PY) code/evaluation/agentic/run_model_context_matrix.py --stage freeze --variant localized --freeze-seed 0 --contexts task_conditioned,full_dump,generic_react,action_conditioned,action_candidates_full_dump
+	$(PY) code/evaluation/agentic/freeze_action_context_devset.py
+	$(PY) code/evaluation/agentic/run_o5_task_revision_consequence.py
+	$(PY) code/evaluation/agentic/freeze_o5_context_transition_devset.py
+	$(PY) code/evaluation/agentic/run_o5_execution_layer_audit.py
+	$(PY) code/evaluation/agentic/run_o5_query_delay_multiseed.py --seeds 0:20 --backhaul-delays 0,180,240,300
 	$(PY) scripts/make_agentic_artifacts.py
 	$(PY) scripts/make_agentic_benchmark_manifest.py --check
 	$(PY) scripts/make_agentic_baseline_registry.py --check
@@ -172,11 +172,11 @@ agentic-preapi:
 
 agentic-r1-model:
 	@test -n "$(MODEL)" || { echo "MODEL=<model-id> is required"; exit 2; }
-	$(PY) code/experiments/agentic/run_r1_model_eval.py --model "$(MODEL)" $(ARGS)
+	$(PY) code/evaluation/agentic/run_r1_model_eval.py --model "$(MODEL)" $(ARGS)
 
 agentic-r3-model:
 	@test -n "$(MODEL)" || { echo "MODEL=<model-id> is required"; exit 2; }
-	$(PY) code/experiments/agentic/run_r3_model_eval.py --model "$(MODEL)" $(ARGS)
+	$(PY) code/evaluation/agentic/run_r3_model_eval.py --model "$(MODEL)" $(ARGS)
 
 # 只清理构建中间产物，不触碰 PDF 与生成表。
 clean:

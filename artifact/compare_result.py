@@ -17,6 +17,36 @@ import json
 import sys
 
 
+# Repository-layout relocations are provenance-locator changes, not experimental
+# value changes. Frozen references keep the path strings that existed when they
+# were created; fresh results use the current ownership tree. Canonicalize only
+# this explicit migration table before comparing strings.
+PATH_ALIASES = (
+    ("code/v3joint/", "code/legacy-communication/v3joint/"),
+    ("code/experiments/measure_seqref_calibration.py",
+     "code/legacy-communication/experiments/measure_seqref_calibration.py"),
+    ("code/experiments/audit_seqref.py",
+     "code/legacy-communication/experiments/audit_seqref.py"),
+    ("code/analysis/retention_deadline_audit.py",
+     "code/legacy-communication/analysis/retention_deadline_audit.py"),
+    ("code/analysis/reverse_feedback_budget.py",
+     "code/legacy-communication/analysis/reverse_feedback_budget.py"),
+    ("results/_withdrawn/", "results/history/withdrawn/"),
+    ("results/c5_seqref_v1_semantics.json",
+     "results/legacy-communication/config-stopping/c5_seqref_v1_semantics.json"),
+    ("results/c5_seqref_v2_semantics.json",
+     "results/legacy-communication/config-stopping/c5_seqref_v2_semantics.json"),
+)
+
+
+def canonicalize_locator(value):
+    if not isinstance(value, str):
+        return value
+    out = value
+    for old, new in PATH_ALIASES:
+        out = out.replace(old, new)
+    return out
+
 def walk(a, b, path, rtol, out, limit, ignore_keys):
     if len(out) >= limit:
         return
@@ -47,7 +77,8 @@ def walk(a, b, path, rtol, out, limit, ignore_keys):
             return
         out.append(f"{path}: {a} -> {b}")
         return
-    if a != b:
+    aa, bb = canonicalize_locator(a), canonicalize_locator(b)
+    if aa != bb:
         out.append(f"{path}: {a!r} -> {b!r}")
 
 

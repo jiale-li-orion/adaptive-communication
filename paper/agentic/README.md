@@ -1,19 +1,19 @@
 # Agentic Communication paper workspace
 
-状态：**current working draft**。这里承载当前 Evidence-Grounded Closed-Loop Agentic Communication 论文，不替换 `paper/en/` 与 `paper/zh/` 的历史系统论文工作稿。
+状态：**latest buildable Agentic manuscript snapshot / not current research control plane**。这里保存 2026-10-02/03 收敛出的 Evidence-Grounded Closed-Loop Agentic Communication 稿件；2026-10-04 benchmark-validity 复盘后，当前研究顺序由 `research/README.md` 重新接管，Layer 1 source-grounded benchmark 尚在重建。
 
 ## Authority
 
 正文定义与实验协议从以下文件读取：
 
-- `research/EXPERIMENT-DESIGN-v1.md`
-- `research/SYSTEM-MODEL-v1.md`
-- `research/OWNERSHIP-v1.md`
-- `research/COMMUNICATION-DOMAIN-REGISTRY.v0.1.json`
-- `research/AGENTIC-BASELINE-REGISTRY.v1.json`
-- `research/AGENTIC-BENCHMARK-SPLIT.v1.json`
-- `research/AGENTIC-ROBUSTNESS-MATRIX.v1.json`
-- `research/AGENTIC-ATTRIBUTION-PROTOCOL.v1.json`
+- `research/README.md`
+- `research/substrate/SYSTEM-MODEL-v1.md`
+- `research/compiler/RUNTIME-DOMAIN-OWNERSHIP-v1.md`
+- `research/compiler/COMMUNICATION-DOMAIN-REGISTRY.v0.1.json`
+- `research/policy/BASELINE-REGISTRY.v1.json`
+- `research/benchmark/CONFORMANCE-SPLIT.v1.json`
+- `research/benchmark/CONFORMANCE-ROBUSTNESS-MATRIX.v1.json`
+- `research/evaluation/AGENTIC-ATTRIBUTION-PROTOCOL.v1.json`
 
 数字与表格只从 `results/agentic/` 的 frozen result 生成：
 
@@ -32,7 +32,7 @@
 
 论文不得把 A7 解释成复杂多候选推理：123/123 Method requests 均只有一个 ready supported plan 且 visible EvidenceNeed 为空。A8 只支持同可靠性下的模型成本差异，不支持“比 WirelessOpsAgent 更可靠”。A10/A11 只支持一个 frozen gateway-backup acquisition family 的双模型闭环，不支持全局最优 evidence acquisition。
 
-当前方法进入 paper freeze。novelty boundary 由 `research/NOVELTY-BOUNDARY-v1.md` 约束；basis-selection side study 已因 frozen workloads 不存在真实 alternative-proof choice 而按 kill criterion 终止。模型实验始终禁止回退 scripted consumer。
+A7–A11 对应的方法与结果在本稿内冻结；novelty boundary 由 `research/compiler/NOVELTY-BOUNDARY-v1.md` 约束，basis-selection side study 仍按既有 kill criterion 关闭。这个 freeze 不外推到整个项目：新的 Layer 1 Decision Benchmark 一旦建立，下一版稿件可以重新组织 benchmark、compiler 与 policy 的证据层级。模型实验始终禁止回退 scripted consumer。
 
 ## Build
 

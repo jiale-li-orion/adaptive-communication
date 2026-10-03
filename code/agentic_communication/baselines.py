@@ -41,7 +41,7 @@ def baseline_registry() -> dict[str, BaselineSpec]:
         BaselineSpec(
             baseline_id="comm.local_policy",
             baseline_class=BaselineClass.ONLINE_COMMUNICATION,
-            implementation_ref="code/instance/center.py::LocalPolicy",
+            implementation_ref="code/substrate/instance/center.py::LocalPolicy",
             task_families=ALL_TASKS,
             information_boundary="local autonomy / no center reconfiguration",
             capability_boundary="existing local sampling/report behavior only",
@@ -104,7 +104,7 @@ def baseline_registry() -> dict[str, BaselineSpec]:
         BaselineSpec(
             baseline_id="comm.mission_comply",
             baseline_class=BaselineClass.REFERENCE,
-            implementation_ref="code/v3joint/mission_policy.py::MissionChangePolicy(mode=comply)",
+            implementation_ref="code/substrate/joint/mission_policy.py::MissionChangePolicy(mode=comply)",
             task_families=ALL_TASKS,
             information_boundary="external Operational Task + CenterView",
             capability_boundary="sampling/report configuration",
@@ -114,7 +114,7 @@ def baseline_registry() -> dict[str, BaselineSpec]:
         BaselineSpec(
             baseline_id="comm.energy_aware",
             baseline_class=BaselineClass.ONLINE_COMMUNICATION,
-            implementation_ref="code/instance/center.py::EnergyAwarePolicy",
+            implementation_ref="code/substrate/instance/center.py::EnergyAwarePolicy",
             task_families=[
                 OperationalTaskFamily.ENERGY_CONSTRAINED_MONITORING,
                 OperationalTaskFamily.COMPOUND_LONG_HORIZON,
@@ -127,7 +127,7 @@ def baseline_registry() -> dict[str, BaselineSpec]:
         BaselineSpec(
             baseline_id="comm.aoi",
             baseline_class=BaselineClass.ONLINE_COMMUNICATION,
-            implementation_ref="code/instance/center.py::AoiPolicy",
+            implementation_ref="code/substrate/instance/center.py::AoiPolicy",
             task_families=[
                 OperationalTaskFamily.MONITORING_CONTINUITY,
                 OperationalTaskFamily.RISK_ESCALATION,
@@ -141,7 +141,7 @@ def baseline_registry() -> dict[str, BaselineSpec]:
         BaselineSpec(
             baseline_id="comm.backup_edf",
             baseline_class=BaselineClass.ONLINE_COMMUNICATION,
-            implementation_ref="code/v3joint/joint_plane.py::JointControlPlane(chooser=edf)",
+            implementation_ref="code/substrate/joint/joint_plane.py::JointControlPlane(chooser=edf)",
             task_families=[
                 OperationalTaskFamily.BACKHAUL_OUTAGE_SUSTAINMENT,
                 OperationalTaskFamily.RECOVERY_RECONCILIATION,
@@ -155,7 +155,7 @@ def baseline_registry() -> dict[str, BaselineSpec]:
         BaselineSpec(
             baseline_id="comm.backup_maxcov",
             baseline_class=BaselineClass.ONLINE_COMMUNICATION,
-            implementation_ref="code/v3joint/joint_plane.py::JointControlPlane(chooser=maxcov)",
+            implementation_ref="code/substrate/joint/joint_plane.py::JointControlPlane(chooser=maxcov)",
             task_families=[
                 OperationalTaskFamily.BACKHAUL_OUTAGE_SUSTAINMENT,
                 OperationalTaskFamily.RECOVERY_RECONCILIATION,
@@ -189,7 +189,7 @@ def baseline_registry() -> dict[str, BaselineSpec]:
         BaselineSpec(
             baseline_id="oracle.dynamic_energy",
             baseline_class=BaselineClass.EVALUATOR_ONLY_ORACLE,
-            implementation_ref="code/instance/oracle.py::dynamic_oracle",
+            implementation_ref="code/substrate/instance/oracle.py::dynamic_oracle",
             task_families=[
                 OperationalTaskFamily.ENERGY_CONSTRAINED_MONITORING,
                 OperationalTaskFamily.COMPOUND_LONG_HORIZON,
@@ -202,7 +202,7 @@ def baseline_registry() -> dict[str, BaselineSpec]:
         BaselineSpec(
             baseline_id="oracle.delivery",
             baseline_class=BaselineClass.EVALUATOR_ONLY_ORACLE,
-            implementation_ref="code/instance/oracle.py::delivery_oracle",
+            implementation_ref="code/substrate/instance/oracle.py::delivery_oracle",
             task_families=ALL_TASKS,
             information_boundary="evaluator-side realized samples/link opportunities",
             capability_boundary="offline delivery upper bound",

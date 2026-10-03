@@ -9,17 +9,14 @@ __pycache__/
 *.pptx
 *.ppt
 *.key
-# WirelessOpsBench 公开 artifact（第三方数据，按 SHA-256 获取）
-other_repo/
 
 # ---- 文档目录：本地保留，不上传远端 ----
 /docs/
+/docs
 
 # ---- 本地探索与审阅材料：不上传远端 ----
 /local_experiments/
-
-# ---- 本地长任务 / worker 编排：研究过程态，不作为论文依赖 ----
-/worker_pool/
+/local_experiments
 
 # ---- 大型运行流水：正式 claim 只发布 compact summary / aggregate / audit ----
 # live-model / simulator trace 可由正式 runner 重新生成，本地保留但不进远端。
@@ -45,3 +42,6 @@ results/.drjit-cache/
 
 # 依赖未随仓库发布的第三方 artifact，留在本地
 code/wirelessops_adapter.py
+
+# ---- ownership-organized local research (not remote) ----
+/local_research/

@@ -18,7 +18,7 @@ from agentic_communication.baselines import (  # noqa: E402
     validate_implementation_refs,
 )
 
-OUT = ROOT / "research" / "AGENTIC-BASELINE-REGISTRY.v1.json"
+OUT = ROOT / "research" / "policy" / "BASELINE-REGISTRY.v1.json"
 
 
 def build() -> dict:

@@ -112,7 +112,7 @@ def o4_energy_constrained_monitoring_task(*, task_hours: int = 12) -> Operationa
             "communication.config.set_report_period",
             "communication.fallback.gateway_backup",
         ],
-        source_refs=["S07", "S08", "S09", "spec/datasets.md"],
+        source_refs=["S07", "S08", "S09", "spec/substrate/datasets.md"],
         scoring_profile_ref="communication-physical-v1",
         metadata={
             "risk_authority": "external",
@@ -299,7 +299,7 @@ def o2_localized_risk_escalation_task(*, task_hours: int = 12) -> OperationalTas
             "communication.config.set_sampling_interval",
             "communication.config.set_report_period",
         ],
-        source_refs=["S04", "spec/instance-v1-manifest.md", "task-contract-v1.1"],
+        source_refs=["S04", "spec/substrate/instance-v1-manifest.md", "task-contract-v1.1"],
         scoring_profile_ref="communication-physical-v1",
         metadata={
             "risk_authority": "external",

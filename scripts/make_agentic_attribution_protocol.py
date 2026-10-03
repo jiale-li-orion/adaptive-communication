@@ -14,7 +14,7 @@ if str(CODE) not in sys.path:
 
 from agentic_communication.attribution import attribution_protocol  # noqa: E402
 
-OUT = ROOT / "research" / "AGENTIC-ATTRIBUTION-PROTOCOL.v1.json"
+OUT = ROOT / "research" / "evaluation" / "AGENTIC-ATTRIBUTION-PROTOCOL.v1.json"
 
 
 def main() -> int:

@@ -7,13 +7,13 @@ import sys
 _CODE = Path(__file__).resolve().parents[1]
 for _p in (
     _CODE,
-    _CODE / "v3joint",
-    _CODE / "instance",
-    _CODE / "monitoring",
-    _CODE / "physics",
-    _CODE / "runtime",
-    _CODE / "experiments",
-    _CODE / "analysis",
+    _CODE / "substrate" / "joint",
+    _CODE / "substrate" / "instance",
+    _CODE / "substrate" / "monitoring",
+    _CODE / "substrate" / "physics",
+    _CODE / "substrate" / "runtime",
+    _CODE / "evaluation" / "agentic",
+    _CODE / "legacy-communication" / "analysis",
 ):
     if str(_p) not in sys.path:
         sys.path.insert(0, str(_p))

@@ -17,11 +17,10 @@ Generated/controlled outputs:
     paper/generated/table_agentic_o2_{global,localized}.meta.json
     paper/generated/agentic_facts.tex
     paper/generated/agentic_facts.meta.json
-    research/generated/agentic_o2_summary.md
-    research/generated/agentic_v6_confirmatory.md
-    research/generated/agentic_v6_confirmatory.meta.json
-    research/README.md        (controlled block only)
-    results/README.md         (controlled registry block only)
+    research/evaluation/generated/agentic_o2_summary.md
+    research/evaluation/generated/agentic_v6_confirmatory.md
+    research/evaluation/generated/agentic_v6_confirmatory.meta.json
+    research/evaluation/generated/*  (generated research projections)
 
 Use ``--check`` in CI/audit mode.  A result change without regeneration must fail.
 """
@@ -38,7 +37,7 @@ import sys
 
 ROOT = Path(__file__).resolve().parents[1]
 PAPER_GEN = ROOT / "paper" / "generated"
-RESEARCH_GEN = ROOT / "research" / "generated"
+RESEARCH_GEN = ROOT / "research" / "evaluation" / "generated"
 
 GLOBAL = ROOT / "results" / "agentic" / "o2-risk-escalation-v1"
 LOCAL = ROOT / "results" / "agentic" / "o2-localized-risk-escalation-v1"
@@ -62,9 +61,6 @@ MODEL_CONTEXT_INPUTS = (
 )
 V6_CONFIRMATORY = ROOT / "results" / "agentic" / "main-table-v6-confirmatory" / "deepseek-flash"
 PAPER_V1_RESULTS = ROOT / "results" / "agentic" / "paper-v1" / "paper-results.json"
-
-RESEARCH_README = ROOT / "research" / "README.md"
-RESULTS_README = ROOT / "results" / "README.md"
 
 BEGIN = "<!-- BEGIN GENERATED: agentic-o2 -->"
 END = "<!-- END GENERATED: agentic-o2 -->"
@@ -1061,23 +1057,23 @@ def results_block(global_b: dict, local_b: dict, diagnosis_b: dict, baseline_b: 
 
 | 结果目录 | 复现命令 | seeds | 允许支持的结论 |
 |---|---|---|---|
-{row('global', global_b, 'python3 code/experiments/agentic/run_o2_risk_escalation.py --variant global --seeds 0,1,2,3,4', 'global O2 runtime conformance；两种新 runtime 与 legacy comply 逐 seed physical-equivalent')}
-{row('localized', local_b, 'python3 code/experiments/agentic/run_o2_risk_escalation.py --variant localized --seeds 0,1,2,3,4', 'localized O2 Context conformance；task-conditioned 减少无关 materialization，physical outcome 不变')}
-{row('diagnosis-first', diagnosis_b, 'python3 code/experiments/agentic/run_o2_diagnosis_baseline.py --seeds 0,1,2,3,4', 'diagnosis-first deterministic efficiency baseline；固定 gateway diagnosis 增加 runtime 开销而 5/5 seeds physical outcome 不变')}
-{row('baseline-matrix', baseline_b, 'python3 code/experiments/agentic/run_o2_baseline_matrix.py --seeds 0,1,2,3,4', 'O2 deterministic Agent baseline matrix；evidence-aware / diagnosis-first / fixed-order eager / generic ReAct context 在相同物理结果下比较 runtime/context 开销')}
-{row('action-conditioned-context', action_context_b, 'python3 code/experiments/agentic/run_action_conditioned_context_probe.py --seeds 0,1,2,3,4', 'localized O2 action-conditioned context method probe；同候选行动生成下相对 candidate+FullDump 收缩 evidence/model input，同时保持 paired physics + replay exact')}
+{row('global', global_b, 'python3 code/evaluation/agentic/run_o2_risk_escalation.py --variant global --seeds 0,1,2,3,4', 'global O2 runtime conformance；两种新 runtime 与 legacy comply 逐 seed physical-equivalent')}
+{row('localized', local_b, 'python3 code/evaluation/agentic/run_o2_risk_escalation.py --variant localized --seeds 0,1,2,3,4', 'localized O2 Context conformance；task-conditioned 减少无关 materialization，physical outcome 不变')}
+{row('diagnosis-first', diagnosis_b, 'python3 code/evaluation/agentic/run_o2_diagnosis_baseline.py --seeds 0,1,2,3,4', 'diagnosis-first deterministic efficiency baseline；固定 gateway diagnosis 增加 runtime 开销而 5/5 seeds physical outcome 不变')}
+{row('baseline-matrix', baseline_b, 'python3 code/evaluation/agentic/run_o2_baseline_matrix.py --seeds 0,1,2,3,4', 'O2 deterministic Agent baseline matrix；evidence-aware / diagnosis-first / fixed-order eager / generic ReAct context 在相同物理结果下比较 runtime/context 开销')}
+{row('action-conditioned-context', action_context_b, 'python3 code/evaluation/agentic/run_action_conditioned_context_probe.py --seeds 0,1,2,3,4', 'localized O2 action-conditioned context method probe；同候选行动生成下相对 candidate+FullDump 收缩 evidence/model input，同时保持 paired physics + replay exact')}
 | `{o5_query_delay_b['path'].relative_to(ROOT)}` | `make agentic-control-opportunity` | `0..19 / 4 delays` | deterministic mechanism robustness；只在真实 runtime-admitted config submission 点注入一轮 remote evidence query；主任务区间内 opportunity-crossing 与 physical divergence 分层登记，不包含模型错误率 |
-| `{comm_baseline_b['root'].relative_to(ROOT)}/` | `python3 code/experiments/agentic/run_communication_baseline_matrix.py --seeds 0,1,2,3,4` | `0,1,2,3,4` | audit=PASS；传统 communication baseline matrix；Local/AoI/EnergyAware/mission-comply、EDF/maxcov 与 evaluator-only dynamic/delivery oracle，online/oracle 严格分栏 |
-| `{source_period_b['path'].relative_to(ROOT)}` | `python3 code/experiments/agentic/run_source_period_smoke.py --seed 0` | `0` | status=PASS；NASA POWER 2022/2023/2024 source-period full-sim gate，三年 source hash/harvest outcome 分离且 paired physical-equivalent |
-| `{robustness_b['root'].relative_to(ROOT)}/` | `python3 code/experiments/agentic/run_robustness_matrix.py` | `{robustness_b['aggregate']['n_coordinates']} coords` | audit=PASS；五轴 robustness infrastructure gate；weather/outage/scope/owner/scale 全部激活，paired physical-equivalent + replay exact |
-{row('task-transfer-qili', transfer_b, 'python3 code/experiments/agentic/run_task_transfer_qili.py --seeds 0,1,2,3,4', 'S14 source-derived Operational Task transfer；只替换 task authority/schedule，同一 DEFAULT_FULLSIM/runtime/planner/scorer，paired physical-equivalent + replay exact')}
-| `{attribution_b['root'].relative_to(ROOT)}/` | `python3 code/experiments/agentic/run_attribution_matrix_infra.py --turns 20` | `20 frozen R1 turns` | audit=PASS；attribution protocol infrastructure；upstream assembly replacement 与 planner post-hoc replacement 分层累计恢复，不是模型结果 |
+| `{comm_baseline_b['root'].relative_to(ROOT)}/` | `python3 code/evaluation/agentic/run_communication_baseline_matrix.py --seeds 0,1,2,3,4` | `0,1,2,3,4` | audit=PASS；传统 communication baseline matrix；Local/AoI/EnergyAware/mission-comply、EDF/maxcov 与 evaluator-only dynamic/delivery oracle，online/oracle 严格分栏 |
+| `{source_period_b['path'].relative_to(ROOT)}` | `python3 code/evaluation/agentic/run_source_period_smoke.py --seed 0` | `0` | status=PASS；NASA POWER 2022/2023/2024 source-period full-sim gate，三年 source hash/harvest outcome 分离且 paired physical-equivalent |
+| `{robustness_b['root'].relative_to(ROOT)}/` | `python3 code/evaluation/agentic/run_robustness_matrix.py` | `{robustness_b['aggregate']['n_coordinates']} coords` | audit=PASS；五轴 robustness infrastructure gate；weather/outage/scope/owner/scale 全部激活，paired physical-equivalent + replay exact |
+{row('task-transfer-qili', transfer_b, 'python3 code/evaluation/agentic/run_task_transfer_qili.py --seeds 0,1,2,3,4', 'S14 source-derived Operational Task transfer；只替换 task authority/schedule，同一 DEFAULT_FULLSIM/runtime/planner/scorer，paired physical-equivalent + replay exact')}
+| `{attribution_b['root'].relative_to(ROOT)}/` | `python3 code/evaluation/agentic/run_attribution_matrix_infra.py --turns 20` | `20 frozen R1 turns` | audit=PASS；attribution protocol infrastructure；upstream assembly replacement 与 planner post-hoc replacement 分层累计恢复，不是模型结果 |
 | `{model_inputs_b['path'].parent.relative_to(ROOT)}/` | `make agentic-model-inputs` | `seed 0 / 3 contexts` | frozen-input conformance；task-conditioned / FullDump / generic-ReAct 共用 Task/tool/physics，三套 trace physical-equivalent + R0/R1/R2 exact；不包含模型分数 |
-| `results/agentic/main-table-v6-confirmatory/deepseek-flash/` | `python3 code/experiments/agentic/run_main_table_v6_confirmatory.py` | `0,1,2,3,4 / 3 tasks / 4 arms` | A7 formal live-model main table；Method 15/15 physical exact、123/123 effect-scope exact、0 extra observation；范围条件见 `results/CLAIMS.md` |
-| `results/agentic/woa-style-baseline-v1/` | `python3 code/experiments/agentic/run_woa_style_confirmatory.py` | `0,1,2,3,4 / 3 tasks` | A8 same-interface WirelessOpsAgent-style 强对照；可靠性打平，Method 模型 token 成本更低；不是原作者官方代码复现 |
-| `results/agentic/heldout-qili-2024-w1/model-transfer-v7/` | `python3 code/experiments/agentic/run_heldout_qili2024_v7_confirmatory.py` | `0,1,2,3,4 / 2 models` | A9 held-out Qili/NASA POWER 2024 task/source/model transfer；最终 physical fidelity 10/10，MiMo 保留 1/30 semantic wobble |
-| `results/agentic/query-positive-gateway-backup-v1/` | `python3 code/experiments/agentic/run_query_positive_gateway_backup_gate.py` + safe live-model runners | `0,1,2,3,4 / 2 models` | A10/A11 decision-conditioned acquisition；真实 owner query→guard closure→gateway backup→physical gain；不宣称全局最优 acquisition |
-| `results/agentic/paper-v1/` | `python3 code/experiments/agentic/freeze_paper_results_v1.py` | `A7–A11 frozen projection` | 论文四张正式表的 compact numeric authority；正文数字由生成器读取，不手抄 |
+| `results/agentic/main-table-v6-confirmatory/deepseek-flash/` | `python3 code/evaluation/agentic/run_main_table_v6_confirmatory.py` | `0,1,2,3,4 / 3 tasks / 4 arms` | A7 formal live-model main table；Method 15/15 physical exact、123/123 effect-scope exact、0 extra observation；范围条件见 `results/CLAIMS.md` |
+| `results/agentic/woa-style-baseline-v1/` | `python3 code/evaluation/agentic/run_woa_style_confirmatory.py` | `0,1,2,3,4 / 3 tasks` | A8 same-interface WirelessOpsAgent-style 强对照；可靠性打平，Method 模型 token 成本更低；不是原作者官方代码复现 |
+| `results/agentic/heldout-qili-2024-w1/model-transfer-v7/` | `python3 code/evaluation/agentic/run_heldout_qili2024_v7_confirmatory.py` | `0,1,2,3,4 / 2 models` | A9 held-out Qili/NASA POWER 2024 task/source/model transfer；最终 physical fidelity 10/10，MiMo 保留 1/30 semantic wobble |
+| `results/agentic/query-positive-gateway-backup-v1/` | `python3 code/evaluation/agentic/run_query_positive_gateway_backup_gate.py` + safe live-model runners | `0,1,2,3,4 / 2 models` | A10/A11 decision-conditioned acquisition；真实 owner query→guard closure→gateway backup→physical gain；不宣称全局最优 acquisition |
+| `results/agentic/paper-v1/` | `python3 code/evaluation/agentic/freeze_paper_results_v1.py` | `A7–A11 frozen projection` | 论文四张正式表的 compact numeric authority；正文数字由生成器读取，不手抄 |
 
 正式 O2 结果目录包含 `experiment_contract.json / source_manifest.json / run_manifest.json / per_episode_results.jsonl / runtime_traces/ / aggregate.json / audit.json`；source-period smoke 当前是单文件 infrastructure gate。
 {END}"""
@@ -1372,16 +1368,6 @@ def main() -> int:
             stale,
             written,
         )
-
-    research_expected = replace_block(
-        RESEARCH_README.read_text(encoding="utf-8"), research_block(global_b, local_b, diagnosis_b, baseline_b, source_period_b, robustness_b, transfer_b, attribution_b, model_inputs_b, comm_baseline_b, action_context_b, o5_query_delay_b, paper_v1)
-    )
-    _write_or_check(RESEARCH_README, research_expected, args.check, stale, written)
-
-    results_expected = replace_block(
-        RESULTS_README.read_text(encoding="utf-8"), results_block(global_b, local_b, diagnosis_b, baseline_b, source_period_b, robustness_b, transfer_b, attribution_b, model_inputs_b, comm_baseline_b, action_context_b, o5_query_delay_b, paper_v1)
-    )
-    _write_or_check(RESULTS_README, results_expected, args.check, stale, written)
 
     if args.check:
         if stale:

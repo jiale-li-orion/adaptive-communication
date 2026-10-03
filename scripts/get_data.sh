@@ -2,7 +2,7 @@
 # 获取需获取依赖（不入库的数据）。幂等：已存在且大小正确的文件跳过。
 #
 # 地形高程来自 AWS Terrain Tiles 的 SRTM1（1 弧秒）Skadi 分片。布置覆盖网关周边四个
-# 1°×1° 瓦片；改名或新增站点时同步修改 TILES 与 spec/instance-v1-manifest.md。
+# 1°×1° 瓦片；改名或新增站点时同步修改 TILES 与 spec/substrate/instance-v1-manifest.md。
 set -euo pipefail
 
 ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"

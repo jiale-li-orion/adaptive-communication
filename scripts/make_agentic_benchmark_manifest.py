@@ -20,7 +20,7 @@ from agentic_communication.benchmark_split import (  # noqa: E402
     split_summary,
 )
 
-OUT = ROOT / "research" / "AGENTIC-BENCHMARK-SPLIT.v1.json"
+OUT = ROOT / "research" / "benchmark" / "CONFORMANCE-SPLIT.v1.json"
 
 
 def sha256(path: Path) -> str:

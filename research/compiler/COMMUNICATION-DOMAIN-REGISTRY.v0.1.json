@@ -1,0 +1,339 @@
+{
+  "registry_id": "agentic-communication-domain",
+  "registry_revision": "0.1",
+  "updated_at": "2026-10-01",
+  "status": "research-conformance",
+  "task_layer_semantics": {
+    "benchmark_operational_task_authority": "research/README.md::Benchmark Operational Task taxonomy",
+    "task_templates_in_this_registry": "runtime_task_contract_templates",
+    "rule": "registry task_templates are Runtime TaskContract templates; they do not define the benchmark Operational Task taxonomy"
+  },
+  "source_traceability": {
+    "inventory": "research/literature/sources.json",
+    "scenario_source_refs": [
+      "S04",
+      "S05",
+      "S06",
+      "S07",
+      "S08",
+      "S09"
+    ],
+    "cost_axis_source_refs": [
+      "S01",
+      "S02"
+    ],
+    "future_real_binding_source_refs": [
+      "S03"
+    ],
+    "rule": "source refs constrain what an Operational Task, Runtime TaskContract or Capability may claim; unsupported SLA, quota or runtime semantics remain unknown"
+  },
+  "runtime_contract_owner": "code/agentic_communication/runtime_contracts.py",
+  "task_templates": [
+    {
+      "task_template_id": "restore_monitoring_service",
+      "task_kind": "communication_recovery",
+      "target_resource_types": [
+        "monitoring_obligation",
+        "monitoring_node"
+      ],
+      "desired_state": "maximize timely obligation delivery under the declared task constraints",
+      "evidence_contract": "open EvidenceNeed only for propositions that can change the acceptable action set",
+      "temporal_contract": "obligation window/deadline from existing task definition",
+      "effect_ceiling": "existing authorized communication actions",
+      "completion_predicate": "acceptable action intersection is non-empty"
+    },
+    {
+      "task_template_id": "identify_failure_cut",
+      "task_kind": "communication_diagnosis",
+      "target_resource_types": [
+        "access_path",
+        "backhaul_path"
+      ],
+      "desired_state": "resolve the requested failure-cut proposition",
+      "evidence_contract": "owner-valid fresh evidence required",
+      "temporal_contract": "caller-supplied diagnostic horizon",
+      "effect_ceiling": "read_only",
+      "completion_predicate": "requested failure-cut proposition resolved or irreducibly blocked"
+    }
+  ],
+  "capabilities": [
+    {
+      "capability_id": "communication.gateway.receipt_summary",
+      "contract_revision": 1,
+      "action": "observe",
+      "resource_type": "gateway_receipt_state",
+      "observation_semantics": "whether/when the gateway has recent target-node evidence",
+      "effect_semantics": "observation",
+      "owner_location": "gateway",
+      "freshness_semantics": "generated/observed/taken times remain distinct",
+      "failure_semantics": [
+        "unreachable",
+        "timeout",
+        "stale",
+        "none_recent"
+      ],
+      "binding": {
+        "implementation_kind": "simulator_state_adapter",
+        "path": "code/substrate/instance/network.py",
+        "required_tokens": [
+          "self.gateway_reports",
+          "self.gateway_report_at",
+          "self.gateway_newest_taken_at",
+          "def _gateway_view"
+        ]
+      },
+      "runtime_status": "live_planner_observation"
+    },
+    {
+      "capability_id": "communication.gateway.node_report",
+      "contract_revision": 1,
+      "action": "observe",
+      "resource_type": "gateway_node_report",
+      "observation_semantics": "latest target-node report legally held by the gateway, including source/read time, SoC and confirmed configuration fields",
+      "effect_semantics": "observation",
+      "owner_location": "gateway",
+      "freshness_semantics": "report value remains bound to gateway receipt time and node source/read time; missing report is none_recent rather than a negative state observation",
+      "failure_semantics": [
+        "unreachable",
+        "timeout",
+        "stale",
+        "none_recent"
+      ],
+      "binding": {
+        "implementation_kind": "simulator_view_adapter",
+        "path": "code/substrate/instance/network.py",
+        "required_tokens": [
+          "self.gateway_reports",
+          "self.gateway_report_at",
+          "def _gateway_view"
+        ]
+      },
+      "runtime_status": "live_planner_observation"
+    },
+    {
+      "capability_id": "communication.gateway.primary_health",
+      "contract_revision": 1,
+      "action": "observe",
+      "resource_type": "primary_backhaul_state",
+      "observation_semantics": "current/last-observed primary gateway-to-center availability",
+      "effect_semantics": "observation",
+      "owner_location": "gateway",
+      "freshness_semantics": "current availability and last-success time are different observations",
+      "failure_semantics": [
+        "unreachable",
+        "timeout",
+        "stale"
+      ],
+      "binding": {
+        "implementation_kind": "simulator_state_adapter",
+        "path": "code/substrate/joint/joint_plane.py",
+        "required_tokens": [
+          "last_primary_ok_at",
+          "def backhaul_forward"
+        ]
+      },
+      "dependency_binding": {
+        "path": "code/substrate/monitoring/opportunity.py",
+        "required_tokens": [
+          "def backhaul_available"
+        ]
+      },
+      "runtime_status": "live_planner_observation"
+    },
+    {
+      "capability_id": "communication.center.node_report",
+      "contract_revision": 1,
+      "action": "observe",
+      "resource_type": "center_node_report",
+      "observation_semantics": "latest node report legally visible at the center, including observation age",
+      "effect_semantics": "observation",
+      "owner_location": "center",
+      "freshness_semantics": "report value and report timestamp/SoC evidence age remain bound",
+      "failure_semantics": [
+        "none_recent",
+        "stale"
+      ],
+      "binding": {
+        "implementation_kind": "simulator_view_adapter",
+        "path": "code/substrate/instance/center.py",
+        "required_tokens": [
+          "class CenterView",
+          "reports",
+          "report_at",
+          "def soc_age_s"
+        ]
+      },
+      "runtime_status": "live_planner_observation"
+    },
+    {
+      "capability_id": "communication.center.full_dump",
+      "contract_revision": 1,
+      "action": "observe",
+      "resource_type": "center_visible_state",
+      "observation_semantics": "all fields exposed by the historical AgentMissionPolicy center observation",
+      "effect_semantics": "observation",
+      "owner_location": "center",
+      "freshness_semantics": "field-local timestamps/ages preserved",
+      "failure_semantics": [
+        "field_unknown",
+        "field_stale"
+      ],
+      "binding": {
+        "implementation_kind": "baseline_materializer",
+        "path": "code/substrate/joint/agent_mission.py",
+        "required_tokens": [
+          "def _observation",
+          "tool_suggestions",
+          "soc_evidence_age_s",
+          "pending_unconfirmed"
+        ]
+      },
+      "runtime_status": "baseline_materializer_only"
+    },
+    {
+      "capability_id": "communication.config.set_sampling_interval",
+      "contract_revision": 1,
+      "action": "set_sampling_interval",
+      "resource_type": "monitoring_node_config",
+      "observation_semantics": "submission result is not application confirmation",
+      "effect_semantics": "external_side_effect",
+      "owner_location": "center_to_node_control_path",
+      "freshness_semantics": "generation and later node-confirmed config are distinct",
+      "failure_semantics": [
+        "refused",
+        "unreachable",
+        "accepted_unconfirmed",
+        "applied_confirmed"
+      ],
+      "binding": {
+        "implementation_kind": "simulator_control_adapter",
+        "path": "code/substrate/instance/network.py",
+        "required_tokens": [
+          "def _send_command",
+          "note_command_sent",
+          "note_command_refused"
+        ]
+      },
+      "runtime_status": "live_planner_device"
+    },
+    {
+      "capability_id": "communication.config.set_report_period",
+      "contract_revision": 1,
+      "action": "set_report_period",
+      "resource_type": "monitoring_node_config",
+      "observation_semantics": "submission result is not application confirmation",
+      "effect_semantics": "external_side_effect",
+      "owner_location": "center_to_node_control_path",
+      "freshness_semantics": "generation and later node-confirmed config are distinct",
+      "failure_semantics": [
+        "refused",
+        "unreachable",
+        "accepted_unconfirmed",
+        "applied_confirmed"
+      ],
+      "binding": {
+        "implementation_kind": "simulator_control_adapter",
+        "path": "code/substrate/instance/network.py",
+        "required_tokens": [
+          "def _send_command",
+          "note_command_sent",
+          "note_command_refused"
+        ]
+      },
+      "runtime_status": "live_planner_device"
+    },
+    {
+      "capability_id": "communication.fallback.terminal_dts",
+      "contract_revision": 1,
+      "action": "terminal_dts",
+      "resource_type": "terminal_delivery_path",
+      "observation_semantics": "execution counters distinguish opportunity, attempt, success and energy",
+      "effect_semantics": "external_side_effect",
+      "owner_location": "terminal",
+      "freshness_semantics": "opportunity is decision-window specific",
+      "failure_semantics": [
+        "no_opportunity",
+        "insufficient_energy",
+        "attempt_failed",
+        "succeeded"
+      ],
+      "binding": {
+        "implementation_kind": "simulator_runtime_capability",
+        "path": "code/substrate/instance/network.py",
+        "required_tokens": [
+          "self.terminal_dts",
+          "terminal_dts_attempts",
+          "terminal_dts_success",
+          "terminal_dts_energy_wh"
+        ]
+      },
+      "runtime_status": "live_planner_device"
+    },
+    {
+      "capability_id": "communication.fallback.gateway_backup",
+      "contract_revision": 1,
+      "action": "gateway_backup",
+      "resource_type": "gateway_backhaul_path",
+      "observation_semantics": "backup packet/byte counters are physical execution outcomes",
+      "effect_semantics": "external_side_effect",
+      "owner_location": "gateway",
+      "freshness_semantics": "backup opportunity is time-local",
+      "failure_semantics": [
+        "disabled",
+        "no_pending_record",
+        "capacity_exhausted",
+        "attempt_failed",
+        "succeeded"
+      ],
+      "binding": {
+        "implementation_kind": "simulator_runtime_capability",
+        "path": "code/substrate/joint/joint_plane.py",
+        "required_tokens": [
+          "enable_backup",
+          "backup_packets",
+          "backup_bytes_sent",
+          "def backhaul_forward"
+        ]
+      },
+      "runtime_status": "live_planner_device"
+    },
+    {
+      "capability_id": "communication.fallback.access_assist",
+      "contract_revision": 1,
+      "action": "access_assist",
+      "resource_type": "access_path",
+      "observation_semantics": "activation duration/bypass counters are physical execution outcomes",
+      "effect_semantics": "external_side_effect",
+      "owner_location": "access_runtime",
+      "freshness_semantics": "activation is window/tick specific",
+      "failure_semantics": [
+        "inactive",
+        "active"
+      ],
+      "binding": {
+        "implementation_kind": "simulator_runtime_capability",
+        "path": "code/substrate/instance/network.py",
+        "required_tokens": [
+          "def access_assist_active",
+          "access_assist_dynamic_ticks",
+          "access_assist_bypassed"
+        ]
+      },
+      "runtime_status": "live_planner_device"
+    }
+  ],
+  "invariants": [
+    "action closure precedes opening an EvidenceNeed",
+    "simulator hidden state is never a normal Agent observation",
+    "unreachable is distinct from none_recent and negative observation",
+    "CapabilityResult is not automatically durable InvestigationState",
+    "FullDump remains a baseline materializer rather than the default ContextManifest",
+    "communication domain bindings use the canonical runtime contracts from code/agentic_communication/runtime_contracts.py"
+  ],
+  "runtime_status_legend": {
+    "live_planner_observation": "PlannerDecision can invoke this observation capability and receives typed CapabilityResult/Percept",
+    "live_planner_device": "PlannerDecision can invoke this device capability and the effect is executed by the existing physical simulator",
+    "baseline_materializer_only": "Implemented only as a baseline context/materializer surface, not as a normal planner tool",
+    "simulator_existing_agent_binding_pending": "Physical mechanism exists in the simulator but Agent invocation semantics are not yet enabled; do not count as a live Agent tool"
+  }
+}

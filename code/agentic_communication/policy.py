@@ -14,7 +14,7 @@ from pathlib import Path
 import sys
 
 _CODE = Path(__file__).resolve().parents[1]
-for _p in (_CODE / "instance", _CODE / "v3joint"):
+for _p in (_CODE / "substrate" / "instance", _CODE / "substrate" / "joint"):
     if str(_p) not in sys.path:
         sys.path.insert(0, str(_p))
 

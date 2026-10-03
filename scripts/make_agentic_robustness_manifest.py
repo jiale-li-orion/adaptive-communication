@@ -14,7 +14,7 @@ if str(CODE) not in sys.path:
 
 from agentic_communication.robustness import robustness_coordinates, robustness_summary  # noqa: E402
 
-OUT = ROOT / "research" / "AGENTIC-ROBUSTNESS-MATRIX.v1.json"
+OUT = ROOT / "research" / "benchmark" / "CONFORMANCE-ROBUSTNESS-MATRIX.v1.json"
 
 
 def build() -> dict:

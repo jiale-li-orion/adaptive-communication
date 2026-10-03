@@ -1,9 +1,9 @@
 #!/usr/bin/env bash
-# new_paper_repo.sh — 由 template/ 生成一个新的论文仓库。
+# new_paper_repo.sh — 由 tooling/paper-repository/template/ 生成一个新的论文仓库。
 #
-# 机制文件（比较器与两个审计）从本仓库复制，而不是在 template/ 里再放一份：同一份实现只有一处，
+# 机制文件（比较器与两个审计）从本仓库复制，而不是在 tooling/paper-repository/template/ 里再放一份：同一份实现只有一处，
 # 否则两个副本会各自演化。文档类文件（README、主张表、登记册、AE、spec）属于每个仓库自己的内容，
-# 由 template/ 提供。
+# 由 tooling/paper-repository/template/ 提供。
 #
 # 用法：
 #   ./scripts/new_paper_repo.sh ../my-next-paper
@@ -13,13 +13,13 @@
 set -euo pipefail
 
 HERE="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
-TPL="$HERE/template"
+TPL="$HERE/tooling/paper-repository/template"
 
 #: 从本仓库取走的机制文件：路径相对于仓库根，两边布局相同。
 BORROW=(
   "artifact/compare_result.py"
-  "code/experiments/audit_claims.py"
-  "code/experiments/audit_tables.py"
+  "code/evaluation/audits/audit_claims.py"
+  "code/evaluation/audits/audit_tables.py"
 )
 
 TARGET="${1:-}"
@@ -65,9 +65,9 @@ if [ "$DO_GIT" -eq 1 ]; then
       -c user.email="$(git -C "$HERE" config user.email || echo template@localhost)" \
       commit -q -m "初始化：论文仓库骨架
 
-由 adaptive-communication 的 template/ 生成。四条不可违例（克隆可验证、数字单一来源、
+由 adaptive-communication 的 tooling/paper-repository/template/ 生成。四条不可违例（克隆可验证、数字单一来源、
 主张单一状态、历史不可变）已接好线：主张表、结果登记册、冻结基准、表格生成器与两个审计。
-下一步见 template/README.md 的「需要你改的地方」。"
+下一步见 tooling/paper-repository/template/README.md 的「需要你改的地方」。"
   echo "   已提交初始状态"
 else
   echo "== 5/6 跳过 git 初始化"
@@ -81,7 +81,7 @@ cat <<EOF
 
 新仓库就绪：$(cd "$TARGET" && pwd)
 
-接下来按 template/README.md 的「需要你改的地方」逐项替换：
+接下来按 tooling/paper-repository/template/README.md 的「需要你改的地方」逐项替换：
   1. results/CLAIMS.md      换成真实主张，删掉示例行
   2. results/README.md      登记真实结果文件
   3. scripts/make_tables.py 换成真实表格定义
@@ -89,5 +89,5 @@ cat <<EOF
   5. artifact/AE.md         填尖括号处的环境与逐主张判定
   6. spec/                  放规范性声明
 
-规范全文：$HERE/PAPER-REPO-STANDARD.md（中文版 PAPER-REPO-STANDARD.zh.md）
+规范全文：$HERE/tooling/paper-repository/PAPER-REPO-STANDARD.md（中文版 tooling/paper-repository/PAPER-REPO-STANDARD.zh.md）
 EOF
