@@ -3,6 +3,7 @@
 
 Groups:
   substrate      shared communication physics/runtime/full-sim invariants
+  benchmark      Layer-1 source-grounded benchmark construction guards
   compiler-eval  Decision-Semantic Compiler and Agent evaluation conformance
   claims         claim-ledger / repository-authority checks
   paper          generated-table consistency
@@ -20,7 +21,9 @@ import sys
 HERE = os.path.dirname(os.path.abspath(__file__))
 ROOT = os.path.dirname(HERE)
 
-CHECKS = {'substrate': [('substrate/runtime/operations.py', '执行语义自检：三维正交、五条不变量、三条性质'),
+CHECKS = {'benchmark': [('evaluation/benchmark/test_case_contract.py',
+                         'Layer-1 benchmark case contract：provenance/oracle/validity/split semantic guards')],
+ 'substrate': [('substrate/runtime/operations.py', '执行语义自检：三维正交、五条不变量、三条性质'),
                ('substrate/tests/test_vendored_deps.py', 'vendored itmlogic 在无 PYTHONPATH 的干净 shell 可解析'),
                ('substrate/tests/test_repair_runtime.py', 'repair runtime：同信息 ordinary baselines 与预算语义'),
                ('substrate/tests/test_draw_keys.py', '报文级随机契约'),
@@ -183,6 +186,7 @@ def main() -> int:
         os.path.join(HERE, "substrate", "runtime"),
         os.path.join(HERE, "substrate", "reference"),
         os.path.join(HERE, "substrate", "monitoring"),
+        os.path.join(HERE, "evaluation", "benchmark"),
         os.path.join(HERE, "evaluation", "agentic"),
         os.path.join(HERE, "legacy-communication", "runtime"),
         os.path.join(HERE, "legacy-communication", "experiments"),

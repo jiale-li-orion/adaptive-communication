@@ -254,9 +254,35 @@ LLM-as-a-judge 只能评价无法结构化的辅助输出，不能拥有核心 s
 
 正式 taxonomy 先由 Operational Corpus Ledger 聚类，再使用正交坐标描述。Family 的数量不靠预设，也不靠 simulator action 数量决定。一个小数量、高语义覆盖的 Family 集合，可以通过大量跨 source/site/device/regime 的 Case 构成非 toy benchmark。
 
+### 5.1 Family Identity Test
+
+一级 Family 的 identity 由四个对象共同定义：
+
+1. protected operational subject：最终保护/交付的对象是什么；
+2. completion predicate：什么状态才算义务完成；
+3. authority owner/chain：谁有权做决定、确认完成；
+4. lifecycle scope：义务从何时产生，到何时解除/完成。
+
+两个 candidate 若上述 identity 相同，只因为 warning level、deadline/cadence、link type、energy state、failure/recovery phase、observation quality 或 available capability 不同，默认合并到同一 Family，差异进入 Case / Operating Regime / Hardness / Capability axis。
+
+只有当 protected subject、completion predicate 或 authority chain 发生实质改变时，才有理由拆成新的一级 Family。
+
+因此下列对象默认不能单独生成 Family：
+
+- probe / EvidenceNeed；
+- fallback / path switching；
+- cache / retransmission；
+- sampling/upload-frequency adjustment；
+- warning level 本身；
+- outage / reconnect 本身；
+- remote query / configuration；
+- 某一种 radio / satellite capability。
+
+每次 taxonomy freeze 前必须执行一次 merge audit：若两个 Family 可以共享同一 completion predicate 与 authority owner，只是运行阶段不同，应优先合并。
+
 ### Axis O — Operational Obligation
 
-一级分类只从 Operational Corpus Ledger 聚类产生；当前 draft 见 local research，不在 tracked protocol 里冻结具体 Family 名。任何 Family 必须能回指一组 canonical operational objects 和 source bundle。
+一级分类只从 Operational Corpus Ledger 聚类产生；当前 draft 见 local research，不在 tracked protocol 里冻结具体 Family 名。任何 Family 必须能回指一组 canonical operational objects 和 source bundle，并通过 Family Identity Test。
 
 ### Axis H — Decision Hardness
 
@@ -266,20 +292,23 @@ LLM-as-a-judge 只能评价无法结构化的辅助输出，不能拥有核心 s
 - H1 partial-observation choice；
 - H2 active evidence acquisition；
 - H3 resource-conflict multi-obligation choice；
-- H4 long-horizon opportunity / recovery choice。
+- H4 long-horizon opportunity / recovery choice；
+- H5 recovery with incomplete / divergent state。
 
 H0 可以进入 release 作为 sanity / conformance split，但不能用于证明 Agent policy 能力。
 
 ## 6. Candidate Status
 
-候选只允许四种状态：
+候选状态与 CANDIDATE-SCHEMA.v0.1.json 保持一致：
 
-- SOURCE_ONLY：有现实来源，尚未形成 decision problem；
-- PILOT_ADMIT：可进入最小 decision-closure pilot；
-- HOLD：有潜力，但缺 workflow / authority / parameter / failure-dependence 证据；
-- REJECT_AS_FAMILY：更适合作为 capability、stress axis、metric 或 conformance case。
+- SOURCE_GAP：candidate 有合理 operational hypothesis，但关键现实来源不足；
+- SOURCE_SUPPORTED：Family identity / obligation 已有足够外部来源，尚未完成后续 mapping/validity；
+- SIMULATOR_GAP：source-backed contract 需要当前 substrate 尚不存在的 state/action/actor/transition；
+- HISTORICALLY_CLOSED：与旧问题在 obligation + authority + information structure + action set + binding constraint 上语义等价，直接继承旧 verdict；
+- ADMISSION_READY：source、history dedupe、contract、simulator mapping 与 oracle 已闭合，可生成正式 case 做 validity/hardness audit；
+- BENCHMARK_ADMIT：case family 已通过 task/outcome validity、shortcut、hardness 与 non-toy coverage audit。
 
-在完成 Gate C simulator replay 前，不允许出现 BENCHMARK_ADMIT。
+BENCHMARK_ADMIT 只能由完整 construction pipeline 产生，不能由单次 simulator positive result 产生。
 
 ## 7. Required Candidate Record
 
@@ -287,6 +316,7 @@ H0 可以进入 release 作为 sanity / conformance split，但不能用于证�
 
     candidate_id
     provisional_family
+    canonical_operational_objects
     operational_obligation
 
     source_bundle:
@@ -306,12 +336,11 @@ H0 可以进入 release 作为 sanity / conformance split，但不能用于证�
     time_semantics
     oracle_definition
     success_predicate
-    decision_hypothesis
-    common_safe_action_audit
-    counterfactual_outcome_hypothesis
+    historical_semantic_match
     simulator_mapping
+    simulator_gaps
     hardness_axes
-    heldout_axis
+    heldout_axes
     status
     blocking_evidence
 

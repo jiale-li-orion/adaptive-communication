@@ -1,0 +1,664 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "adaptive-communication/research/benchmark/CASE-SCHEMA.v0.1.json",
+  "title": "Source-grounded Emergency Communication Benchmark Case",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_version",
+    "case_id",
+    "family",
+    "source_profiles",
+    "source_refs",
+    "generator",
+    "regime",
+    "hardness",
+    "world",
+    "variable_provenance",
+    "obligations",
+    "authority",
+    "capabilities",
+    "observation",
+    "oracle",
+    "validity",
+    "split",
+    "release_status"
+  ],
+  "properties": {
+    "schema_version": {
+      "const": "0.1"
+    },
+    "case_id": {
+      "type": "string",
+      "minLength": 1
+    },
+    "family": {
+      "enum": [
+        "T1_MONITORING_INFORMATION_CONTINUITY",
+        "T2_WARNING_DELIVERY_RESPONSE_HANDOFF"
+      ]
+    },
+    "source_profiles": {
+      "type": "array",
+      "minItems": 1,
+      "uniqueItems": true,
+      "items": {
+        "type": "string"
+      }
+    },
+    "source_refs": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "$ref": "#/$defs/sourceRef"
+      }
+    },
+    "generator": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "version",
+        "seed",
+        "world_template_id"
+      ],
+      "properties": {
+        "version": {
+          "type": "string"
+        },
+        "seed": {
+          "type": [
+            "integer",
+            "string"
+          ]
+        },
+        "world_template_id": {
+          "type": "string"
+        },
+        "trace_refs": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "parent_case_id": {
+          "type": [
+            "string",
+            "null"
+          ]
+        }
+      }
+    },
+    "regime": {
+      "type": "array",
+      "minItems": 1,
+      "uniqueItems": true,
+      "items": {
+        "enum": [
+          "R0_NORMAL",
+          "R1_WARNING_ESCALATION",
+          "R2_DEGRADED_CONNECTIVITY",
+          "R3_DISCONNECTED",
+          "R4_RECONNECT_RECOVERY",
+          "R5_HETEROGENEOUS_PATH",
+          "R6_ENERGY_SCARCITY",
+          "R7_WARNING_DISSEMINATION"
+        ]
+      }
+    },
+    "hardness": {
+      "type": "array",
+      "minItems": 1,
+      "uniqueItems": true,
+      "items": {
+        "enum": [
+          "H0_CONFORMANCE",
+          "H1_PARTIAL_OBSERVATION",
+          "H2_ACTIVE_EVIDENCE",
+          "H3_RESOURCE_CONFLICT",
+          "H4_LONG_HORIZON",
+          "H5_RECOVERY_DIVERGENCE",
+          "H6_AUTHORITY_GATED_DELIVERY"
+        ]
+      }
+    },
+    "world": {
+      "type": "object",
+      "description": "Oracle-private frozen world state. Family-specific schema may further restrict this object."
+    },
+    "variable_provenance": {
+      "type": "object",
+      "additionalProperties": {
+        "$ref": "#/$defs/provenanceEntry"
+      }
+    },
+    "obligations": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "$ref": "#/$defs/obligation"
+      }
+    },
+    "authority": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "actors",
+        "legal_action_owners",
+        "invariants"
+      ],
+      "properties": {
+        "actors": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "legal_action_owners": {
+          "type": "object",
+          "additionalProperties": {
+            "type": "string"
+          }
+        },
+        "invariants": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        }
+      }
+    },
+    "capabilities": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/capability"
+      }
+    },
+    "observation": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "visible_state",
+        "hidden_fields",
+        "alias_world_ids",
+        "projection_provenance"
+      ],
+      "properties": {
+        "visible_state": {
+          "type": "object"
+        },
+        "hidden_fields": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "alias_world_ids": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "separating_evidence_ids": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "projection_provenance": {
+          "enum": [
+            "SOURCE_VISIBILITY",
+            "SOURCE_DELAY_OR_STALENESS",
+            "CAPABILITY_DEPENDENT",
+            "CONTROLLED_STRESS",
+            "FULL_OBSERVATION"
+          ]
+        }
+      }
+    },
+    "oracle": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "solver_version",
+        "mode",
+        "solvable",
+        "feasible_success_plan_count",
+        "valid_terminal_state_count",
+        "scalarization_used"
+      ],
+      "properties": {
+        "solver_version": {
+          "type": "string"
+        },
+        "mode": {
+          "enum": [
+            "FULL_STATE_FEASIBILITY",
+            "CLAIRVOYANT_UPPER_BOUND",
+            "OBSERVATION_MATCHED_SEARCH"
+          ]
+        },
+        "solvable": {
+          "type": "boolean"
+        },
+        "feasible_success_plan_count": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "valid_terminal_state_count": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "plan_set_ref": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "terminal_state_set_ref": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "pareto_frontier_ref": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "binding_constraints": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "scalarization_used": {
+          "type": "boolean"
+        },
+        "scalarization_source_ref": {
+          "type": [
+            "string",
+            "null"
+          ]
+        }
+      }
+    },
+    "validity": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "filters",
+        "decision_benchmark_eligible",
+        "disposition"
+      ],
+      "properties": {
+        "filters": {
+          "type": "array",
+          "minItems": 1,
+          "items": {
+            "$ref": "#/$defs/filterResult"
+          }
+        },
+        "decision_benchmark_eligible": {
+          "type": "boolean"
+        },
+        "disposition": {
+          "enum": [
+            "DECISION_CANDIDATE",
+            "CONFORMANCE",
+            "SOURCE_RESEARCH_QUEUE",
+            "SIMULATOR_GAP",
+            "IMPOSSIBLE_SPLIT",
+            "REJECT_GENERATOR_INVALID",
+            "REJECT_EVALUATOR_INVALID"
+          ]
+        },
+        "notes": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        }
+      }
+    },
+    "baseline_audit": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/baselineResult"
+      }
+    },
+    "split": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "name",
+        "heldout_axes",
+        "group_ids"
+      ],
+      "properties": {
+        "name": {
+          "enum": [
+            "train",
+            "dev",
+            "test",
+            "conformance",
+            "impossible",
+            "research_hold"
+          ]
+        },
+        "heldout_axes": {
+          "type": "array",
+          "items": {
+            "enum": [
+              "SOURCE_FAMILY",
+              "JURISDICTION",
+              "SITE",
+              "DEPLOYMENT",
+              "DEVICE_PROFILE",
+              "COMM_PROFILE",
+              "OPERATING_REGIME",
+              "EVENT_TRACE",
+              "WEATHER_CONTACT_TRACE"
+            ]
+          }
+        },
+        "group_ids": {
+          "type": "object",
+          "additionalProperties": {
+            "type": "string"
+          }
+        }
+      }
+    },
+    "release_status": {
+      "enum": [
+        "DRAFT",
+        "SOURCE_GAP",
+        "SIMULATOR_GAP",
+        "VALIDITY_PENDING",
+        "ADMISSION_READY",
+        "BENCHMARK_ADMIT",
+        "CONFORMANCE_ONLY",
+        "REJECTED"
+      ]
+    },
+    "known_limitations": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    }
+  },
+  "$defs": {
+    "sourceRef": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "source_id",
+        "source_class",
+        "directness"
+      ],
+      "properties": {
+        "source_id": {
+          "type": "string"
+        },
+        "source_class": {
+          "enum": [
+            "STANDARD",
+            "GOVERNMENT_WORKFLOW",
+            "GOVERNMENT_PROCUREMENT",
+            "FIELD_DEPLOYMENT",
+            "DEVICE_DOCUMENT",
+            "PEER_REVIEWED_ADJACENT",
+            "DRAFT_STANDARD",
+            "DATASET_TRACE"
+          ]
+        },
+        "directness": {
+          "enum": [
+            "DIRECT_TASK_AUTHORITY",
+            "DIRECT_CAPABILITY",
+            "DIRECT_PARAMETER",
+            "ADJACENT_MECHANISM",
+            "TRACE_ONLY"
+          ]
+        },
+        "snapshot_ref": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "locator": {
+          "type": [
+            "string",
+            "null"
+          ]
+        }
+      }
+    },
+    "provenanceEntry": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "class",
+        "source_ref_ids"
+      ],
+      "properties": {
+        "class": {
+          "enum": [
+            "FIXED_BY_SOURCE",
+            "SOURCE_RANGE",
+            "EMPIRICAL_TRACE",
+            "CONTROLLED_STRESS",
+            "UNRESOLVED"
+          ]
+        },
+        "source_ref_ids": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "sampling_rule": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "declared_range": {},
+        "stress_rationale": {
+          "type": [
+            "string",
+            "null"
+          ]
+        }
+      }
+    },
+    "obligation": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "obligation_id",
+        "protected_subject",
+        "released_at",
+        "completion_predicate",
+        "timing_semantics",
+        "authority_owner",
+        "status",
+        "source_ref_ids"
+      ],
+      "properties": {
+        "obligation_id": {
+          "type": "string"
+        },
+        "protected_subject": {
+          "type": "string"
+        },
+        "released_at": {
+          "type": [
+            "string",
+            "number"
+          ]
+        },
+        "completion_predicate": {
+          "type": "object"
+        },
+        "timing_semantics": {
+          "type": "object"
+        },
+        "authority_owner": {
+          "type": "string"
+        },
+        "source_priority": {
+          "type": [
+            "integer",
+            "string",
+            "null"
+          ]
+        },
+        "expiration_rule": {
+          "type": [
+            "object",
+            "null"
+          ]
+        },
+        "status": {
+          "enum": [
+            "PENDING",
+            "SATISFIED",
+            "MISSED",
+            "CANCELLED",
+            "INFEASIBLE"
+          ]
+        },
+        "source_ref_ids": {
+          "type": "array",
+          "minItems": 1,
+          "items": {
+            "type": "string"
+          }
+        }
+      }
+    },
+    "capability": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "capability_id",
+        "owner",
+        "legal",
+        "source_ref_ids"
+      ],
+      "properties": {
+        "capability_id": {
+          "type": "string"
+        },
+        "owner": {
+          "type": "string"
+        },
+        "legal": {
+          "type": "boolean"
+        },
+        "cost_model_ref": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "source_ref_ids": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        }
+      }
+    },
+    "filterResult": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "filter_id",
+        "passed"
+      ],
+      "properties": {
+        "filter_id": {
+          "enum": [
+            "V0_SOURCE_COMPLETE",
+            "V1_SOLVABLE",
+            "V2_MULTIPLE_LEGAL_OPTIONS",
+            "V3_COMMON_SAFE_ACTION",
+            "V4_OBSERVATION_RELEVANCE",
+            "V5_BINDING_CONSTRAINT",
+            "V6_OUTCOME_SEPARATION",
+            "V7_OBJECTIVE_DEFINED",
+            "V8_SHORTCUT_AUDIT",
+            "V9_EVALUATOR_SOUNDNESS"
+          ]
+        },
+        "passed": {
+          "type": "boolean"
+        },
+        "reason_code": {
+          "enum": [
+            "PASS",
+            "SOURCE_GAP",
+            "GENERATOR_INVALID",
+            "SOURCE_INFEASIBLE",
+            "UNIQUE_READY",
+            "COMMON_SAFE_ACTION",
+            "EVIDENCE_IRRELEVANT",
+            "NO_BINDING_CONSTRAINT",
+            "OUTCOME_EQUIVALENT",
+            "OBJECTIVE_AMBIGUOUS",
+            "SHORTCUT_SOLVED",
+            "EVALUATOR_INVALID",
+            "SIMULATOR_GAP"
+          ]
+        },
+        "evidence_ref": {
+          "type": [
+            "string",
+            "null"
+          ]
+        }
+      }
+    },
+    "baselineResult": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "baseline_id",
+        "class",
+        "success"
+      ],
+      "properties": {
+        "baseline_id": {
+          "type": "string"
+        },
+        "class": {
+          "enum": [
+            "NO_OP",
+            "SOURCE_STATIC_RULE",
+            "ORDINARY_AUTOMATIC",
+            "GREEDY",
+            "EDF",
+            "FIXED_PRIORITY",
+            "DETERMINISTIC_SEARCH",
+            "OBSERVATION_MATCHED_SEARCH",
+            "FULL_STATE_ORACLE",
+            "CLAIRVOYANT_ORACLE",
+            "LLM_AGENT",
+            "LEARNED_POLICY"
+          ]
+        },
+        "success": {
+          "type": "boolean"
+        },
+        "raw_metrics": {
+          "type": "object"
+        }
+      }
+    }
+  }
+}
