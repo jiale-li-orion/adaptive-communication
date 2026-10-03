@@ -1,0 +1,551 @@
+{
+  "experiment": "task-018-query-positive-result-recovery",
+  "status": "RECOVERED_PASS",
+  "original_worker_exit_code": 137,
+  "original_summary_persisted": false,
+  "direct_physical_signature_boolean_persisted": false,
+  "source_manifest_current_match": true,
+  "source_mismatches": [],
+  "streaming_audit": {
+    "status": "PASS",
+    "r0": {
+      "passed": true,
+      "events": 4880,
+      "event_counts": {
+        "capability_request": 34,
+        "capability_result": 34,
+        "context_manifest": 785,
+        "evidence_need": 5,
+        "evidence_world_revision": 785,
+        "investigation_state": 785,
+        "model_attempt": 15,
+        "model_request": 15,
+        "model_usage": 15,
+        "operational_task": 1,
+        "percept": 5,
+        "physical_effect": 29,
+        "planner_decision": 15,
+        "planner_decision_state": 785,
+        "planner_semantic_reference": 785,
+        "prompt_assembly": 785,
+        "runtime_task_contract": 1,
+        "task_completion": 1
+      },
+      "evidence_revisions": 785,
+      "contexts": 785,
+      "prompt_assemblies": 785,
+      "capability_requests": 34,
+      "capability_results": 34
+    },
+    "r2": {
+      "passed": true,
+      "contexts": 785,
+      "exact_assembly_matches": 785,
+      "backup_effect_count": 1
+    }
+  },
+  "model_behavior": {
+    "successful_attempts": 15,
+    "failed_attempts": 0,
+    "planner_turns": 15,
+    "effect_scope_exact_turns": 15,
+    "effect_scope_inexact_turns": 0,
+    "expected_open_query_capabilities": [
+      "communication.gateway.receipt_summary"
+    ],
+    "queried_capabilities": [
+      "communication.gateway.receipt_summary"
+    ],
+    "query_requests": [
+      {
+        "t_s": 10860,
+        "capability_id": "communication.gateway.receipt_summary",
+        "request_id": "evidence:0:10860:29:gw0:communication.gateway.receipt_summary"
+      },
+      {
+        "t_s": 14520,
+        "capability_id": "communication.gateway.receipt_summary",
+        "request_id": "evidence:0:14520:30:gw0:communication.gateway.receipt_summary"
+      },
+      {
+        "t_s": 18180,
+        "capability_id": "communication.gateway.receipt_summary",
+        "request_id": "evidence:0:18180:31:gw0:communication.gateway.receipt_summary"
+      },
+      {
+        "t_s": 21840,
+        "capability_id": "communication.gateway.receipt_summary",
+        "request_id": "evidence:0:21840:32:gw0:communication.gateway.receipt_summary"
+      },
+      {
+        "t_s": 25500,
+        "capability_id": "communication.gateway.receipt_summary",
+        "request_id": "evidence:0:25500:33:gw0:communication.gateway.receipt_summary"
+      }
+    ],
+    "query_results": [
+      {
+        "t_s": 10860,
+        "request_id": "evidence:0:10860:29:gw0:communication.gateway.receipt_summary",
+        "status": "succeeded"
+      },
+      {
+        "t_s": 14520,
+        "request_id": "evidence:0:14520:30:gw0:communication.gateway.receipt_summary",
+        "status": "succeeded"
+      },
+      {
+        "t_s": 18180,
+        "request_id": "evidence:0:18180:31:gw0:communication.gateway.receipt_summary",
+        "status": "succeeded"
+      },
+      {
+        "t_s": 21840,
+        "request_id": "evidence:0:21840:32:gw0:communication.gateway.receipt_summary",
+        "status": "succeeded"
+      },
+      {
+        "t_s": 25500,
+        "request_id": "evidence:0:25500:33:gw0:communication.gateway.receipt_summary",
+        "status": "succeeded"
+      }
+    ],
+    "backup_effects": [
+      {
+        "t_s": 28800,
+        "request_id": "action:0:28800:34:gw0:communication.fallback.gateway_backup",
+        "capability_id": "communication.fallback.gateway_backup",
+        "resource": "gw0",
+        "lifecycle_stage": "applied",
+        "enabled": true,
+        "changed": true,
+        "applied_at_s": 28800
+      }
+    ],
+    "nonempty_state_patch_turns": 1,
+    "turns": [
+      {
+        "t_s": 0,
+        "guard_result": "inactive",
+        "primary_plan_id": "install_required_profile",
+        "selected_plan_id": "install_required_profile",
+        "effect_scope_exact": true,
+        "expected_effect_count": 28,
+        "actual_effect_count": 28,
+        "expected_open_query_capabilities": [],
+        "actual_observation_capabilities": [],
+        "stop": false
+      },
+      {
+        "t_s": 60,
+        "guard_result": "inactive",
+        "primary_plan_id": "install_required_profile",
+        "selected_plan_id": "install_required_profile",
+        "effect_scope_exact": true,
+        "expected_effect_count": 4,
+        "actual_effect_count": 4,
+        "expected_open_query_capabilities": [],
+        "actual_observation_capabilities": [],
+        "stop": false
+      },
+      {
+        "t_s": 7260,
+        "guard_result": "inactive",
+        "primary_plan_id": "install_required_profile",
+        "selected_plan_id": "install_required_profile",
+        "effect_scope_exact": true,
+        "expected_effect_count": 2,
+        "actual_effect_count": 2,
+        "expected_open_query_capabilities": [],
+        "actual_observation_capabilities": [],
+        "stop": false
+      },
+      {
+        "t_s": 10860,
+        "guard_result": "needs_evidence",
+        "primary_plan_id": null,
+        "selected_plan_id": null,
+        "effect_scope_exact": true,
+        "expected_effect_count": 0,
+        "actual_effect_count": 0,
+        "expected_open_query_capabilities": [
+          "communication.gateway.receipt_summary"
+        ],
+        "actual_observation_capabilities": [
+          "communication.gateway.receipt_summary"
+        ],
+        "stop": false
+      },
+      {
+        "t_s": 10860,
+        "guard_result": "rejected",
+        "primary_plan_id": "hold_current_profile",
+        "selected_plan_id": "hold_current_profile",
+        "effect_scope_exact": true,
+        "expected_effect_count": 0,
+        "actual_effect_count": 0,
+        "expected_open_query_capabilities": [],
+        "actual_observation_capabilities": [],
+        "stop": true
+      },
+      {
+        "t_s": 14520,
+        "guard_result": "needs_evidence",
+        "primary_plan_id": null,
+        "selected_plan_id": null,
+        "effect_scope_exact": true,
+        "expected_effect_count": 0,
+        "actual_effect_count": 0,
+        "expected_open_query_capabilities": [
+          "communication.gateway.receipt_summary"
+        ],
+        "actual_observation_capabilities": [
+          "communication.gateway.receipt_summary"
+        ],
+        "stop": false
+      },
+      {
+        "t_s": 14520,
+        "guard_result": "rejected",
+        "primary_plan_id": "hold_current_profile",
+        "selected_plan_id": "hold_current_profile",
+        "effect_scope_exact": true,
+        "expected_effect_count": 0,
+        "actual_effect_count": 0,
+        "expected_open_query_capabilities": [],
+        "actual_observation_capabilities": [],
+        "stop": true
+      },
+      {
+        "t_s": 18180,
+        "guard_result": "needs_evidence",
+        "primary_plan_id": null,
+        "selected_plan_id": "hold_current_profile",
+        "effect_scope_exact": true,
+        "expected_effect_count": 0,
+        "actual_effect_count": 0,
+        "expected_open_query_capabilities": [
+          "communication.gateway.receipt_summary"
+        ],
+        "actual_observation_capabilities": [
+          "communication.gateway.receipt_summary"
+        ],
+        "stop": false
+      },
+      {
+        "t_s": 18180,
+        "guard_result": "rejected",
+        "primary_plan_id": "hold_current_profile",
+        "selected_plan_id": "hold_current_profile",
+        "effect_scope_exact": true,
+        "expected_effect_count": 0,
+        "actual_effect_count": 0,
+        "expected_open_query_capabilities": [],
+        "actual_observation_capabilities": [],
+        "stop": true
+      },
+      {
+        "t_s": 21840,
+        "guard_result": "needs_evidence",
+        "primary_plan_id": null,
+        "selected_plan_id": null,
+        "effect_scope_exact": true,
+        "expected_effect_count": 0,
+        "actual_effect_count": 0,
+        "expected_open_query_capabilities": [
+          "communication.gateway.receipt_summary"
+        ],
+        "actual_observation_capabilities": [
+          "communication.gateway.receipt_summary"
+        ],
+        "stop": false
+      },
+      {
+        "t_s": 21840,
+        "guard_result": "rejected",
+        "primary_plan_id": "hold_current_profile",
+        "selected_plan_id": "hold_current_profile",
+        "effect_scope_exact": true,
+        "expected_effect_count": 0,
+        "actual_effect_count": 0,
+        "expected_open_query_capabilities": [],
+        "actual_observation_capabilities": [],
+        "stop": true
+      },
+      {
+        "t_s": 25500,
+        "guard_result": "needs_evidence",
+        "primary_plan_id": null,
+        "selected_plan_id": null,
+        "effect_scope_exact": true,
+        "expected_effect_count": 0,
+        "actual_effect_count": 0,
+        "expected_open_query_capabilities": [
+          "communication.gateway.receipt_summary"
+        ],
+        "actual_observation_capabilities": [
+          "communication.gateway.receipt_summary"
+        ],
+        "stop": false
+      },
+      {
+        "t_s": 25500,
+        "guard_result": "rejected",
+        "primary_plan_id": "hold_current_profile",
+        "selected_plan_id": "hold_current_profile",
+        "effect_scope_exact": true,
+        "expected_effect_count": 0,
+        "actual_effect_count": 0,
+        "expected_open_query_capabilities": [],
+        "actual_observation_capabilities": [],
+        "stop": true
+      },
+      {
+        "t_s": 28800,
+        "guard_result": "supported",
+        "primary_plan_id": "consider_gateway_backup",
+        "selected_plan_id": "consider_gateway_backup",
+        "effect_scope_exact": true,
+        "expected_effect_count": 1,
+        "actual_effect_count": 1,
+        "expected_open_query_capabilities": [],
+        "actual_observation_capabilities": [],
+        "stop": false
+      },
+      {
+        "t_s": 28860,
+        "guard_result": "already_enabled",
+        "primary_plan_id": "hold_current_profile",
+        "selected_plan_id": "hold_current_profile",
+        "effect_scope_exact": true,
+        "expected_effect_count": 0,
+        "actual_effect_count": 0,
+        "expected_open_query_capabilities": [],
+        "actual_observation_capabilities": [],
+        "stop": true
+      }
+    ],
+    "usage": {
+      "input_tokens": 128297,
+      "output_tokens": 9569,
+      "total_tokens": 137866,
+      "latency_ms": 50753.14962799894
+    }
+  },
+  "deterministic_execution_equivalence": {
+    "query_request_trace_exact": true,
+    "backup_effect_trace_exact": true,
+    "task_completion_shared_metrics_exact": true,
+    "task_completion_checks": {
+      "routine_obligations": true,
+      "routine_delivered": true,
+      "missing_collection": true,
+      "missing_delivery": true,
+      "censored": true,
+      "aoi_mean_s": true,
+      "aoi_p50_s": true,
+      "aoi_p90_s": true,
+      "aoi_p95_s": true,
+      "latency_mean_s": true,
+      "commands_sent": true,
+      "commands_delivered": true,
+      "commands_refused": true,
+      "alive_nodes": true,
+      "mean_final_soc": true
+    },
+    "basis_pass": true,
+    "interpretation": "The original run did not persist the direct physical_signature equality boolean. Recovery instead proves identical decision effect scopes, identical owner-query schedule, identical gateway-backup applied effect, exact R2 reconstruction, and exact shared task-completion metrics under the same frozen seed/simulator/source. Planner state patches are allowed because the original task-018 gate did not forbid them and they do not execute physical capabilities."
+  },
+  "communication_metrics": {
+    "routine_obligations": 168,
+    "routine_collected": 168,
+    "routine_delivered": 163,
+    "timely_delivery_rate": 0.9702380952380952,
+    "collection_rate": 1.0,
+    "delivery_oracle_fixed_send": null,
+    "delivery_oracle_free_send_require_sample": null,
+    "delivery_oracle_link_opportunity_ceiling": null,
+    "delivery_oracle_fixed_rate": null,
+    "delivery_oracle_free_sample_rate": null,
+    "delivery_oracle_link_opportunity_rate": null,
+    "delivery_gap_to_fixed_oracle": null,
+    "delivery_gap_to_free_sample_oracle": null,
+    "delivery_gap_to_link_opportunity_ceiling": null,
+    "delivery_oracle_applicable": false,
+    "delivery_oracle_na_reason": "existing delivery_oracle is primary-path-only and is not a valid full-system upper bound when additional communication paths are enabled",
+    "missing_collection": 0,
+    "missing_delivery": 5,
+    "censored": 0,
+    "delivery_latency_mean_s": 1501.840490797546,
+    "delivery_latency_p50_s": 0,
+    "delivery_latency_p90_s": 3600,
+    "delivery_latency_p95_s": 7200,
+    "aoi_mean_s": 3211.3818181818183,
+    "aoi_p50_s": 2520,
+    "aoi_p90_s": 6660,
+    "aoi_p95_s": 8580,
+    "no_observation_s": 61200,
+    "event_delivery_rate": 0.8095238095238095,
+    "event_match_rate": 1.0,
+    "samples_collected": 203,
+    "uplinks": 169,
+    "uplinks_heard": 124,
+    "gateway_forwarded": 147,
+    "uplink_airtime_h": 0.012620515555555541,
+    "downlink_attempts": 33,
+    "downlink_airtime_h": 0.0015112533333333325,
+    "backup_packets": 1,
+    "backup_records": 14,
+    "backup_bytes": 102,
+    "terminal_dts_attempts": 0,
+    "terminal_dts_success": 0,
+    "terminal_dts_energy_wh": 0.0,
+    "access_assist_duration_s": 0,
+    "access_assist_dynamic_s": 0,
+    "access_assist_bypassed": 0,
+    "backup_boost_duration_s": 0,
+    "backup_boost_packets": 0,
+    "backup_boost_bytes": 0,
+    "backup_boost_records": 0,
+    "commands_sent": 28,
+    "commands_delivered": 25,
+    "commands_refused": 0,
+    "command_delivery_rate": 0.8928571428571429,
+    "config_mismatch_node_s": 0,
+    "config_mismatch_rate": 0.0,
+    "sampling_mismatch_node_s": 0,
+    "sampling_mismatch_rate": 0.0,
+    "report_mismatch_node_s": 0,
+    "report_mismatch_rate": 0.0,
+    "config_install_completion_rate": 1.0,
+    "config_install_latency_mean_s": 0.0,
+    "config_install_latency_p50_s": 0.0,
+    "config_install_latency_p90_s": 0.0,
+    "config_install_latency_p95_s": 0.0,
+    "config_revision_install_completion_rate": null,
+    "config_revision_install_latency_mean_s": null,
+    "config_revision_install_latency_p50_s": null,
+    "config_revision_install_latency_p90_s": null,
+    "config_revision_install_latency_p95_s": null,
+    "writes_changed": 0,
+    "writes_same_value": 25,
+    "alive_nodes": 14,
+    "total_nodes": 14,
+    "mean_final_soc": 1.0,
+    "node_survival_rate": 1.0,
+    "total_consumed_wh": 0.101366472192,
+    "total_harvested_wh": 0.10136647219199987,
+    "recovery_outage_hours": null,
+    "recovery_observation_s": null,
+    "recovery_obligations": null,
+    "recovery_delivered": null,
+    "recovery_delivery_rate": null,
+    "recovery_missing_collection": null,
+    "recovery_missing_delivery": null,
+    "recovery_censored": null,
+    "recovery_backlog_recovered": null,
+    "recovery": {}
+  },
+  "no_acquisition_control_metrics": {
+    "routine_obligations": 168,
+    "routine_collected": 168,
+    "routine_delivered": 160,
+    "timely_delivery_rate": 0.9523809523809523,
+    "collection_rate": 1.0,
+    "delivery_oracle_fixed_send": 163,
+    "delivery_oracle_free_send_require_sample": 168,
+    "delivery_oracle_link_opportunity_ceiling": 168,
+    "delivery_oracle_fixed_rate": 0.9702380952380952,
+    "delivery_oracle_free_sample_rate": 1.0,
+    "delivery_oracle_link_opportunity_rate": 1.0,
+    "delivery_gap_to_fixed_oracle": 3,
+    "delivery_gap_to_free_sample_oracle": 8,
+    "delivery_gap_to_link_opportunity_ceiling": 8,
+    "delivery_oracle_applicable": true,
+    "delivery_oracle_na_reason": null,
+    "missing_collection": 0,
+    "missing_delivery": 8,
+    "censored": 0,
+    "delivery_latency_mean_s": 1462.5,
+    "delivery_latency_p50_s": 0,
+    "delivery_latency_p90_s": 3600,
+    "delivery_latency_p95_s": 7200,
+    "aoi_mean_s": 3516.836363636364,
+    "aoi_p50_s": 2820,
+    "aoi_p90_s": 6960,
+    "aoi_p95_s": 9240,
+    "no_observation_s": 61200,
+    "event_delivery_rate": 0.8095238095238095,
+    "event_match_rate": 1.0,
+    "samples_collected": 203,
+    "uplinks": 169,
+    "uplinks_heard": 124,
+    "gateway_forwarded": 147,
+    "uplink_airtime_h": 0.012620515555555541,
+    "downlink_attempts": 33,
+    "downlink_airtime_h": 0.0015112533333333325,
+    "backup_packets": 0,
+    "backup_records": 0,
+    "backup_bytes": 0,
+    "terminal_dts_attempts": 0,
+    "terminal_dts_success": 0,
+    "terminal_dts_energy_wh": 0.0,
+    "access_assist_duration_s": 0,
+    "access_assist_dynamic_s": 0,
+    "access_assist_bypassed": 0,
+    "backup_boost_duration_s": 0,
+    "backup_boost_packets": 0,
+    "backup_boost_bytes": 0,
+    "backup_boost_records": 0,
+    "commands_sent": 28,
+    "commands_delivered": 25,
+    "commands_refused": 0,
+    "command_delivery_rate": 0.8928571428571429,
+    "config_mismatch_node_s": 0,
+    "config_mismatch_rate": 0.0,
+    "sampling_mismatch_node_s": 0,
+    "sampling_mismatch_rate": 0.0,
+    "report_mismatch_node_s": 0,
+    "report_mismatch_rate": 0.0,
+    "config_install_completion_rate": 1.0,
+    "config_install_latency_mean_s": 0.0,
+    "config_install_latency_p50_s": 0.0,
+    "config_install_latency_p90_s": 0.0,
+    "config_install_latency_p95_s": 0.0,
+    "config_revision_install_completion_rate": null,
+    "config_revision_install_latency_mean_s": null,
+    "config_revision_install_latency_p50_s": null,
+    "config_revision_install_latency_p90_s": null,
+    "config_revision_install_latency_p95_s": null,
+    "writes_changed": 0,
+    "writes_same_value": 25,
+    "alive_nodes": 14,
+    "total_nodes": 14,
+    "mean_final_soc": 1.0,
+    "node_survival_rate": 1.0,
+    "total_consumed_wh": 0.101366472192,
+    "total_harvested_wh": 0.10136647219199987,
+    "recovery_outage_hours": null,
+    "recovery_observation_s": null,
+    "recovery_obligations": null,
+    "recovery_delivered": null,
+    "recovery_delivery_rate": null,
+    "recovery_missing_collection": null,
+    "recovery_missing_delivery": null,
+    "recovery_censored": null,
+    "recovery_backlog_recovered": null,
+    "recovery": {}
+  },
+  "delta_vs_no_acquisition": {
+    "timely_delivery_rate": 0.017857142857142905,
+    "aoi_mean_s": -305.4545454545455
+  },
+  "failure_diagnosis": {
+    "episode_completed": true,
+    "trace_bytes": 193875630,
+    "trace_records": 4880,
+    "post_episode_runner_pattern": "original runner retained the in-memory policy trace, then load_trace() parsed the entire 194 MB trace, and _audit_query_positive_r2() called load_trace() again before summary write; this is consistent with severe WSL memory pressure after episode completion",
+    "causal_certainty": "high-confidence infrastructure diagnosis, not kernel-level proof of the SIGKILL source"
+  },
+  "recovery_boundary": "RECOVERED_PASS means the completed seed0 model episode satisfies the scientific behavior, query, execution-equivalence, and communication-gain gates from persisted artifacts. It does not pretend that the original runner persisted its direct physical_signature boolean."
+}

@@ -1,97 +1,148 @@
 # Artifact Evaluation Guide
 
-This is the reviewer's entry point. It states the environment, how to obtain the artifact, a short path that reaches one verdict, the full reproduction of each paper claim, and what this artifact does not do. The paper's claims and their current statuses are in [`results/CLAIMS.md`](../results/CLAIMS.md); the frozen values that verdicts compare against are in [`results/reference/`](../results/reference/README.md).
+This is the reviewer-facing entry point for the paper repository. It explains the current manuscript lineage, the authority hierarchy, the credential-free reproduction path, and the claim-by-claim verdict commands. Current claim state is defined only by [`results/CLAIMS.md`](../results/CLAIMS.md); frozen verdict baselines live under [`results/reference/`](../results/reference/README.md).
 
-The document is in English because it is written for the artifact committee; the repository's own entry pages are bilingual.
+The repository contains two claim namespaces:
 
-## 1. Scope
+- `C*`: systems-paper / communication-substrate claims retained from the earlier manuscript line;
+- `A*`: current Agentic Communication deterministic / infrastructure claims.
 
-The artifact is a Python simulation of a pre-disaster mountain geohazard monitoring deployment: sensor nodes over LoRaWAN Class A to a gateway, and a gateway to a centre over an intermittent cellular backhaul with a rate-limited BeiDou short-message backup. It contains the simulator, the experiment scripts, the result files, the normative specifications, and the two manuscripts.
+There is currently **no real-model performance claim**. The current Agentic manuscript freezes the model protocol and the R1/R3 runners, but no scripted consumer is accepted as an LLM result.
 
-Claims C1 to C7 are fully reproducible here without credentials and without network access beyond the one-time data acquisition. Claim C8 is a formative study whose live runs called an external model; only its zero-LLM offline replays are re-runnable, and its saved traces are provided.
+## 1. Scope and manuscript lineage
 
-## 2. Environment
+The physical scenario is pre-disaster mountain geohazard monitoring: battery/solar sensor nodes use LoRaWAN Class A to reach a gateway; the gateway uses cellular primary backhaul plus an uplink-only BeiDou short-message backup. Monitoring requirements and warning levels are externally authorised.
 
-Measured on the machine that produced the frozen reference results:
+The active manuscript is [`paper/agentic/en/main.tex`](../paper/agentic/en/main.tex). The corrected systems-paper compatibility copies remain in `paper/en/` and `paper/zh/`; the exact pre-Agentic source snapshot is immutable under [`paper/_archive/system-paper-2026-09-20/`](../paper/_archive/system-paper-2026-09-20/README.md), sourced from commit `dd4f31a`.
 
-| Item | Value |
+The artifact supports three layers of reproduction:
+
+1. **communication substrate (`C*`)**: physical mechanisms, ordinary baselines, claim corrections and scoped negative results;
+2. **Agentic deterministic/infrastructure (`A*`)**: Runtime Task / Evidence World / Context / Capability wiring, replay, baseline isolation, robustness coordinates, task transfer, attribution and communication-baseline/oracle substrate;
+3. **future live-model runs**: model-facing inputs and transport are present, but model performance is intentionally outside the current claim ledger until a real backend result is frozen.
+
+## 2. Authority hierarchy
+
+| Object | Authority |
 |---|---|
-| OS | Ubuntu 24.04.3 LTS under WSL2 (Linux 6.6.87.2-microsoft-standard-WSL2) |
-| CPU | 12 cores; single-threaded experiments |
-| Memory | 7 GB |
-| Python | 3.12.3 |
-| Third-party packages | `numpy` 2.4.6 (system), `itmlogic` 1.2 (fetched into `libs/pylibs`) |
-| GPU | not used |
-| Disk | about 400 MB for the acquired data and packages, plus about 60 MB per clone of results |
-| Network | required once for `make deps` and `make data`; not required afterwards |
-| Credentials | none for C1–C7; `DEEPSEEK_API_KEY` only for re-running C8's live runs |
-| Paper build | `pdflatex` (pdfTeX 3.14, TeX Live 2023) and `xetex`; see `paper/README.md` |
+| Current claim status | [`results/CLAIMS.md`](../results/CLAIMS.md) |
+| Fresh result registry / allowed interpretation | [`results/README.md`](../results/README.md) |
+| Frozen verdict baselines | [`results/reference/`](../results/reference/README.md) |
+| Deployment/data provenance | [`spec/`](../spec/README.md) |
+| Current Agentic experiment design | [`research/EXPERIMENT-DESIGN-v1.md`](../research/EXPERIMENT-DESIGN-v1.md) |
+| Current mathematical system model | [`research/SYSTEM-MODEL-v1.md`](../research/SYSTEM-MODEL-v1.md) |
+| Canonical runtime/domain ownership | [`research/OWNERSHIP-v1.md`](../research/OWNERSHIP-v1.md) |
+| Current benchmark/runtime status | [`research/README.md`](../research/README.md), [`research/ROADMAP.md`](../research/ROADMAP.md) |
+| Generated paper facts/tables | `paper/generated/`, produced from result files; never hand-edited |
 
-## 3. Obtaining the artifact
+The root README is an entry-page projection of these authorities, not a second claim ledger.
+
+## 3. Environment and acquisition
+
+The frozen artifact was developed on Ubuntu 24.04 under WSL2 with Python 3.12. GPU execution is not required for the credential-free experiments.
 
 ```bash
 git clone https://github.com/jiale-li-orion/adaptive-communication.git
 cd adaptive-communication
-make deps     # itmlogic into libs/pylibs (idempotent)
-make data     # SRTM terrain tiles and NASA POWER irradiance (idempotent, ~100 MB)
+make deps
+make data
 ```
 
-`docs/` is not part of the artifact; the normative material a reviewer needs lives in `spec/`. If a check finds an acquired dependency missing, it prints the command that fetches it rather than raising an unexplained error.
+`make deps` and `make data` acquire the dependencies/data declared by the repository. After acquisition, the credential-free claim checks require no model API. Local `docs/` and `local_experiments/` are author process areas and are deliberately excluded from the released artifact; normative/reproducible material needed by the reviewer is in `spec/`, `research/`, `code/`, `results/`, `paper/`, and `artifact/`.
 
-## 4. Getting Started
+## 4. Getting started
 
 ```bash
-make check                     # 20 checks plus 5 joint-layer anchors
-make tables                    # regenerate the paper tables from the result files
-./artifact/reproduce_all.sh --only C1    # one full claim verdict, about 3 minutes
+make check
+make tables ARGS=--check
+./artifact/reproduce_all.sh --check-only
 ```
 
-`make check` prints one PASS or FAIL line per check and exits non-zero on any failure. `make tables`
-regenerates `paper/generated/`; `make tables ARGS=--check` only reports whether the committed tables
-still match the result files. `reproduce_all.sh` re-runs the claim's script, then compares the result file against the frozen value with a relative tolerance and prints PASS or FAIL.
+`make check` runs repository-level semantic, monitoring, claim, paper, sequence-reference, Agentic-runtime and joint-layer gates. `make tables ARGS=--check` verifies that committed generated facts/tables match their result sources. `reproduce_all.sh --check-only` compares the current result files against the frozen claim references without rerunning long experiments.
 
-## 5. Repeating each claim
+To rerun one claim instead of only comparing the committed result:
 
-`./artifact/reproduce_all.sh` runs every claim; `--only C2 C5` restricts it; `--check-only` compares the existing result files without re-running anything.
+```bash
+./artifact/reproduce_all.sh --only C3
+./artifact/reproduce_all.sh --only A2
+```
 
-| Claim | Command | Expected verdict | Time |
-|---|---|---|---|
-| C1 resource walls | `python3 code/v3joint/r30c_walls.py` | base 3025/7560 (0.4001); backhaul relaxed 4740; energy relaxed 4089; both 6023; decomposition 1715 backhaul-only, 1128 energy-only, 155 coupled, 4535 base failures | ≈3 min (measured) |
-| C2 expiry equivalence | `python3 code/v3joint/r41_expiry_equiv.py` | `bit_identical_purge_generic_expiry` is `true`; ten-seed paired service gain +4.21 points, 95% CI +3.64 to +4.79; outage on-time 1691 → 4265; expired backup records 2538 → 1; gateway-only suppression gives 194 on-time at seed 0 | ≈3 min (estimated) |
-| C3 cross-segment placement | `python3 code/v3joint/r37e_full_seeds.py` | ten-seed sweep; paired `deadline_purge` minus `fifo` mean +4.21 points with all ten positive; outage on-time total 1691 → 4265 (2.52×); expired 2538 → 1; purge dominates `latest_only` by +5.73 points, CI +5.06 to +6.39 | ≈15 min (measured) |
-| C4 attribution correction | `python3 code/v3joint/r44_fullhorizon_attribution.py` | time-aware `S_energy` 2002, `S_cap` 1115, `S_access` 830, `S_time` 588; the 830 move from capacity to access relative to the earlier accounting | ≈1 min (estimated) |
-| C5 configuration termination | `python3 code/v3joint/c5_matrix.py 0 1 2` | Corrected evidence. At η = 0.012 phase A: fixed 8 h TTL and Task-1 `valid_until` both give zero deaths and **849/2016** yellow deliveries, while the candidate energy gates (open-loop bound, receding-horizon gate and safety net, cell-identical) also give zero deaths but only **559/2016**. Phase B repeats the pattern (**2020/3528** vs **1194/3528**). The earlier reading in which both sides reached 849/2020 came from a prediction ledger missing the battery-capacity term and a publication gate that exposed the next segment's `end`; it is withdrawn, see `results/_withdrawn/2026-09-20-c5-precorrection.md`. Historical lease evidence: `r46_lease_sweep.py`, `r47_lease_energy.py`, `r48_ttl_vs_lease.py`. See C5 in `results/CLAIMS.md`. | ≈4 min (estimated) |
-| C9 non-prescient stopping reference | `python3 code/v3joint/c5_seqref.py`, `python3 code/experiments/measure_seqref_calibration.py` | Contract: `spec/prereg-nonprescient-sequence-v3.md`. After the C10 deadline-tick fix, the payload-dependent radio-energy anchor is recalibrated and the complete 40-cell × 5-λ sweep is rerun. **Scoped negative result:** the strongest ordinary family matches the exact same-information non-prescient reference on all 200 priced cells: service gap is zero everywhere and the maximum absolute objective gap is `2.27e-13`. At peak 0.012, σ=0.047, the strict endpoint remains infeasible (sparse low-branch minimum −0.211 mWh, critical σ*=0.041232); at λ=48 the non-prescient A/B solutions deliver 48/48 and 84/84 with death probability `1.567e-4`, matched by `ttl7+8 mWh` and `ttl8+8 mWh`. The omniscient row can still improve risk, so this closes only the declared same-information single-node optimal-stopping family, not the full network or a scheduling problem. Pre-C10 v3 values are archived under `results/_withdrawn/2026-09-20-c9-pre-c10-expiry*.json`. | ≈3 min (measured) |
-| C6 enforcement placement | `python3 code/v3joint/r39_envelope.py && python3 code/v3joint/merge_r39.py` | naive centre compliance 39 deaths at service 0.162; with the node-local guard 0 deaths; envelope plus guard reduces refused admission attempts to 222; pure-local pre-provisioned rhythm reaches 0.360 | a few minutes (estimated) |
-| C7 online attribution coverage | `python3 code/v3joint/r40_local_attribution.py` | of 2136 missed obligations, online coverage 0.5328 (1138 labelled) at labelled accuracy 1.000, with 998 unknown; offline truth `S_time` 588, `S_cap` 327, `S_access` 650, `S_energy` 571 | ≈1 min (estimated) |
-| C8 agent interface fault | `python3 code/v3joint/r42_claim_relabel.py && python3 code/v3joint/r43_cert_v5_replay.py` | symmetric relabelling of 1089 decisions across 11 traces; 52 parse-failure holds; per-arm format-failure rates 7.1% / 6.4% / 1.3%; A0 and A0s assert "link up" on 36 and 32 in-outage decisions against 1 for A1 | ≈1 min (estimated) |
+To see every registered claim command:
 
-Timings were measured on the machine in section 2; entries marked estimated follow from the number of simulated seeds and have not been timed individually. Nothing in C1 to C9 requires a GPU.
+```bash
+./artifact/reproduce_all.sh --list
+```
 
-The live A0/A0s/A1 runs behind C8 are **not** re-runnable without an API key. Their traces are committed under `results/agent_traces/`, and the relabelling and projector replays in the last row run over those traces deterministically.
+## 5. Systems-paper / communication-substrate claims (`C*`)
 
-## 6. What this artifact does not do
+The table intentionally avoids duplicating paper numbers. The expected verdict is the semantic claim boundary in `results/CLAIMS.md` plus equality to the frozen reference. This prevents the artifact guide from becoming a third numeric source.
 
-It does not reproduce the cited third-party systems; no author code was executed. It does not provide the end-to-end unknown-aware v5 agent runs, the matched-capability arm, or cross-model replication — those are stated as future work in the manuscripts and are not claimed. It does not include `docs/`, which is the authors' local process archive; the normative subset a reviewer needs is in `spec/`.
+| Claim | Reproduction command | Expected verdict |
+|---|---|---|
+| C1 resource-wall characterisation | `python3 code/v3joint/r30c_walls.py` | fresh result matches `results/reference/r30c_walls.json`; interpretation remains `scoped-negative` |
+| C2 ordinary record-expiry equivalence | `python3 code/v3joint/r41_expiry_equiv.py` | fresh result matches `results/reference/r41_expiry_equiv.json`; ordinary expiry equivalence remains supported |
+| C3 cross-segment source-expiry placement | `python3 code/v3joint/r37e_full_seeds.py` | fresh result matches `results/reference/r37e_full_seeds.json`; placement result remains supported under the registered cache/deadline semantics |
+| C4 time-aware failure attribution | `python3 code/v3joint/r44_fullhorizon_attribution.py` | fresh result matches `results/reference/r44_fullhorizon_attribution.json`; partial attribution remains evidence-bounded |
+| C5 evaluated configuration-lease candidate | `python3 code/v3joint/c5_matrix.py 0 1 2` | fresh matrix matches `results/reference/c5_matrix.json`; claim remains `scoped-negative` rather than a lease-algorithm gain |
+| C6 local enforcement placement | `python3 code/v3joint/r39_envelope.py && python3 code/v3joint/merge_r39.py` | merged result matches `results/reference/r39_table.json`; result remains a placement/system property |
+| C7 partial online attribution | `python3 code/v3joint/r40_local_attribution.py` | fresh result matches `results/reference/r40_local_attribution.json`; unresolved evidence remains unknown |
+| C8 historical live-Agent interface fault | `python3 code/v3joint/r42_claim_relabel.py && python3 code/v3joint/r43_cert_v5_replay.py` | deterministic replay outputs match their frozen references; historical live traces remain formative and are not current Agentic model evidence |
+| C9 same-information non-prescient stopping | `python3 code/v3joint/c5_seqref.py && python3 code/experiments/measure_seqref_calibration.py` | both fresh files match their frozen references; the result remains scoped to the declared same-information single-node stopping family |
+| C10 expiry-boundary correction | `python3 code/analysis/retention_deadline_audit.py` | fresh audit matches `results/reference/retention_deadline_audit.json`; this is an implementation/semantic correction, not a new method |
+| C11 conditional reverse-acknowledgement delay bound | `python3 code/analysis/reverse_feedback_budget.py` | fresh audit matches `results/reference/reverse_feedback_budget.json`; aggregate opportunity capacity is not promoted into a no-contention theorem |
 
-## 7. Normative material
+The old live model calls behind C8 are not required for the current deterministic replay verdict. Their committed traces are historical evidence; C8 remains `formative`.
 
-| Content | Where |
-|---|---|
-| Deployment conditions (site, topology, time, energy, harvest, link, storage) | [`spec/instance-v1-manifest.md`](../spec/instance-v1-manifest.md) |
-| Datasets: source, parameters, licence, acquisition, freeze rule | [`spec/datasets.md`](../spec/datasets.md) |
-| Result registry: the script, command, seeds and denominator behind every number | [`results/README.md`](../results/README.md) |
-| Claims and their current statuses | [`results/CLAIMS.md`](../results/CLAIMS.md) |
-| Frozen verdict baselines | [`results/reference/`](../results/reference/README.md) |
+## 6. Agentic Communication deterministic/infrastructure claims (`A*`)
 
-## 8. Layout
+Agentic claim references are compact aggregate + semantic-audit snapshots under [`results/reference/agentic/`](../results/reference/agentic/README.md). Several audit files contain `result_hashes` over timestamped run manifests/traces; `reproduce_all.sh` ignores only that non-semantic field while deep-comparing all aggregate values and all semantic audit verdict fields.
+
+| Claim | Reproduction command | Expected verdict |
+|---|---|---|
+| A1 runtime / physics conformance | `python3 code/experiments/agentic/run_o2_risk_escalation.py --variant global --seeds 0,1,2,3,4` and the same runner with `--variant localized` | global/localized aggregates and semantic audits match A1 references; paired physical equivalence and replay remain valid |
+| A2 deterministic Agent/runtime baseline isolation | `python3 code/experiments/agentic/run_o2_baseline_matrix.py --seeds 0,1,2,3,4` | aggregate/audit match A2 references; runtime/context overhead is isolated without being re-labelled as LLM gain |
+| A3 source-period + five-axis robustness infrastructure | `python3 code/experiments/agentic/run_source_period_smoke.py --seed 0 && python3 code/experiments/agentic/run_robustness_matrix.py` | source-period and robustness verdicts match A3 references; this validates coordinates/infrastructure, not generic method robustness |
+| A4 source-derived Operational Task transfer | `python3 code/experiments/agentic/run_task_transfer_qili.py --seeds 0,1,2,3,4` | aggregate/audit match A4 references; task translation changes workload authority/schedule while keeping runtime/capability/scorer fixed |
+| A5 attribution-protocol self-check | `python3 code/experiments/agentic/run_attribution_matrix_infra.py --turns 20` | aggregate/audit match A5 references; cumulative gold replacement restores the declared layers without smuggling downstream gold state |
+| A6 communication baselines and evaluator-only oracles | `python3 code/experiments/agentic/run_communication_baseline_matrix.py --seeds 0,1,2,3,4` | aggregate/audit match A6 references; online controllers remain separated from evaluator-only oracle rows |
+
+No `A*` claim says that an LLM beats deterministic baselines or improves the physical communication outcome. The model-facing protocol, three frozen context variants, R1 diagnostics and R3 runner are infrastructure awaiting real backend runs.
+
+## 7. Pre-API benchmark suite
+
+The complete credential-free current stack can be regenerated with:
+
+```bash
+make agentic-preapi
+```
+
+This covers O1–O6 catalog conformance, O2 global/localized, deterministic Agent baselines, ordinary communication baselines/oracles, NASA POWER source-period separation, five-axis robustness coordinates, source-derived Task transfer, attribution infrastructure and the frozen model-input matrix. It then checks generated artifacts and manifests.
+
+For a shorter reviewer path, use `--check-only` against the committed frozen results. The long suite is intended for full artifact reproduction, not as a prerequisite for reading the paper.
+
+## 8. What this artifact does not claim
+
+- No current LLM performance result is claimed. Real-model runners require an external endpoint/key and fail explicitly if credentials are absent; there is no scripted fallback accepted as a model score.
+- The generic VoI/active-acquisition baseline is not instantiated with arbitrary weights. It remains gated on a defensible evidence-acquisition latency/bytes/airtime/energy/opportunity-cost model.
+- The current debris-flow/landslide physics is not an established hazard predictor. Hazard/flow models may generate upstream Operational Tasks only under their own validation boundary.
+- Source-period and robustness gates validate benchmark/simulator coordinates; they are not evidence that a method is universally robust.
+- Evaluator-only oracles may inspect information unavailable online and are never ranked as deployable policies.
+
+## 9. Layout
 
 | Path | Contents |
 |---|---|
-| `paper/` | English and Chinese manuscripts, shared bibliography, build script |
-| `code/instance/` | Nodes, gateway, energy, exogenous obligations, scoring |
-| `code/v3joint/` | Joint communication experiments, mission-view gate, agent harness |
-| `code/physics/`, `code/analysis/`, `code/monitoring/`, `code/runtime/`, `code/experiments/` | Terrain and propagation, analysis, monitoring, earlier execution semantics, regression checks |
-| `results/` | Result files and agent traces; `results/reference/` holds the frozen baselines |
-| `spec/` | Normative specifications |
-| `scripts/` | Acquisition scripts for the dependencies that are not in the repository |
+| `paper/agentic/` | current Agentic Communication manuscript |
+| `paper/en/`, `paper/zh/` | corrected systems-paper compatibility copies |
+| `paper/_archive/` | immutable paper/plan provenance snapshots |
+| `code/agentic_communication/` | Task/Evidence/Context/Capability/Planner/Replay/Evaluation runtime |
+| `code/instance/`, `code/v3joint/` | physical simulator and joint communication mechanisms |
+| `code/experiments/agentic/` | formal Agentic benchmark/baseline/robustness/attribution runners |
+| `results/` | current registered results and sole claim ledger |
+| `results/reference/` | frozen verdict baselines used by artifact reproduction |
+| `results/_withdrawn/` | superseded/defective historical result material with provenance |
+| `spec/` | normative deployment/data/information-boundary contracts |
+| `research/` | current Agentic experiment design, registries, roadmap and generated research summary |
+| `scripts/` | result-to-paper and manifest generation |
+
+Local `docs/` and `local_experiments/` are intentionally excluded from the release dependency graph. They contain research-process material, killed candidates, audit notes and one-off probes; current paper claims must not depend on them.

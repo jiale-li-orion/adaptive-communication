@@ -1,0 +1,38 @@
+{
+  "experiment": "agentic-main-table-v6-confirmatory",
+  "protocol_revision": "communication-planner-json-v6-no-action-sufficiency",
+  "model": "deepseek-flash",
+  "seeds": [
+    0,
+    1,
+    2,
+    3,
+    4
+  ],
+  "tasks": [
+    "localized-o2",
+    "o5",
+    "o6"
+  ],
+  "arms": [
+    "action_conditioned_compact",
+    "task_conditioned",
+    "full_dump",
+    "generic_react"
+  ],
+  "planner_replan_mode": "decision_state",
+  "model_parameters": {
+    "temperature": 0,
+    "reasoning_effort": "low",
+    "max_tokens": 8192,
+    "json_object": true,
+    "credential_profile": "deepseek_official"
+  },
+  "method_first_gate": {
+    "effect_scope_inexact_turns": 0,
+    "observations": 0,
+    "physical_equal_candidate_reference": true,
+    "physical_equal_legacy": true
+  },
+  "claim_boundary": "Confirmatory evidence is limited to DeepSeek Flash, three development tasks and five simulator seeds. Candidate/legacy physical equality is fidelity to the declared comply reference, not proof of global communication-policy optimality."
+}

@@ -1,0 +1,135 @@
+{
+  "rows": [
+    {
+      "layer_index": 0,
+      "cumulative_layers": [],
+      "assembly_match_rate": 0.0,
+      "stopping_correctness": 0.85,
+      "tool_exact_match_rate": 0.0,
+      "tool_any_order_precision": 0.425,
+      "tool_any_order_recall": 0.18214285714285713,
+      "tool_in_order_normalized": 0.18214285714285713,
+      "argument_grounding_accuracy": null,
+      "mean_unresolved_argument_slots": 0.0
+    },
+    {
+      "layer_index": 1,
+      "cumulative_layers": [
+        "gold_task"
+      ],
+      "assembly_match_rate": 0.0,
+      "stopping_correctness": 0.85,
+      "tool_exact_match_rate": 0.0,
+      "tool_any_order_precision": 0.425,
+      "tool_any_order_recall": 0.18214285714285713,
+      "tool_in_order_normalized": 0.18214285714285713,
+      "argument_grounding_accuracy": null,
+      "mean_unresolved_argument_slots": 0.0
+    },
+    {
+      "layer_index": 2,
+      "cumulative_layers": [
+        "gold_task",
+        "gold_evidence_need"
+      ],
+      "assembly_match_rate": 0.0,
+      "stopping_correctness": 0.85,
+      "tool_exact_match_rate": 0.0,
+      "tool_any_order_precision": 0.425,
+      "tool_any_order_recall": 0.18214285714285713,
+      "tool_in_order_normalized": 0.18214285714285713,
+      "argument_grounding_accuracy": null,
+      "mean_unresolved_argument_slots": 0.0
+    },
+    {
+      "layer_index": 3,
+      "cumulative_layers": [
+        "gold_task",
+        "gold_evidence_need",
+        "gold_percept"
+      ],
+      "assembly_match_rate": 0.0,
+      "stopping_correctness": 0.85,
+      "tool_exact_match_rate": 0.0,
+      "tool_any_order_precision": 0.425,
+      "tool_any_order_recall": 0.18214285714285713,
+      "tool_in_order_normalized": 0.18214285714285713,
+      "argument_grounding_accuracy": null,
+      "mean_unresolved_argument_slots": 0.0
+    },
+    {
+      "layer_index": 4,
+      "cumulative_layers": [
+        "gold_task",
+        "gold_evidence_need",
+        "gold_percept",
+        "gold_context"
+      ],
+      "assembly_match_rate": 1.0,
+      "stopping_correctness": 0.85,
+      "tool_exact_match_rate": 0.0,
+      "tool_any_order_precision": 0.6678571428571429,
+      "tool_any_order_recall": 0.6678571428571429,
+      "tool_in_order_normalized": 0.6678571428571429,
+      "argument_grounding_accuracy": null,
+      "mean_unresolved_argument_slots": 0.0
+    },
+    {
+      "layer_index": 5,
+      "cumulative_layers": [
+        "gold_task",
+        "gold_evidence_need",
+        "gold_percept",
+        "gold_context",
+        "gold_capability_selection"
+      ],
+      "assembly_match_rate": 1.0,
+      "stopping_correctness": 1.0,
+      "tool_exact_match_rate": 1.0,
+      "tool_any_order_precision": 1.0,
+      "tool_any_order_recall": 1.0,
+      "tool_in_order_normalized": 1.0,
+      "argument_grounding_accuracy": 0.0,
+      "mean_unresolved_argument_slots": 0.85
+    },
+    {
+      "layer_index": 6,
+      "cumulative_layers": [
+        "gold_task",
+        "gold_evidence_need",
+        "gold_percept",
+        "gold_context",
+        "gold_capability_selection",
+        "gold_capability_order"
+      ],
+      "assembly_match_rate": 1.0,
+      "stopping_correctness": 1.0,
+      "tool_exact_match_rate": 1.0,
+      "tool_any_order_precision": 1.0,
+      "tool_any_order_recall": 1.0,
+      "tool_in_order_normalized": 1.0,
+      "argument_grounding_accuracy": 0.0,
+      "mean_unresolved_argument_slots": 0.85
+    },
+    {
+      "layer_index": 7,
+      "cumulative_layers": [
+        "gold_task",
+        "gold_evidence_need",
+        "gold_percept",
+        "gold_context",
+        "gold_capability_selection",
+        "gold_capability_order",
+        "gold_capability_arguments"
+      ],
+      "assembly_match_rate": 1.0,
+      "stopping_correctness": 1.0,
+      "tool_exact_match_rate": 1.0,
+      "tool_any_order_precision": 1.0,
+      "tool_any_order_recall": 1.0,
+      "tool_in_order_normalized": 1.0,
+      "argument_grounding_accuracy": 1.0,
+      "mean_unresolved_argument_slots": 0.0
+    }
+  ]
+}

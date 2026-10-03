@@ -9,6 +9,10 @@
 
 **Localized O2 / 5 seeds / Context conformance.** task-conditioned 与 FullDump 同样保持逐 seed physical-equivalent，Context sufficiency recall 均为 `1.000`。task-conditioned 平均选择 `10.32` 条 evidence、materialize `19763.6` B；FullDump 分别为 `27.32` 条和 `29575.6` B。两臂共同 physical mean：TDR `0.45020`，collection rate `0.61124`，p90 delivery latency `3000.0 s`。
 
+**Action-conditioned Context / localized O2 / 5 seeds.** `action_conditioned` 与 `action_candidates_full_dump` 共享同一候选行动生成和 deterministic reference consumer，四个 arm 均保持 paired physical-equivalent + replay exact。只改变 evidence selector 时，平均 selected evidence 从 `27.32` 降到 `4.66`，protocol bytes 从 `33867.5` 降到 `21048.3`，对应 evidence reduction `82.95%`、protocol reduction `37.85%`。该结果现在作为 A7–A11 live-model 方法的 pre-API interface witness，不再承担“模型收益待验证”的当前状态描述。
+
+**O5 remote-evidence / control-opportunity mechanism / 20 seeds.** 主口径固定为 `0 < t_s < task_horizon_s`，只在 deterministic baseline 中真实产生 config submission 且存在当前 PromptAssembly 的 tick 注入一轮 gateway-owner evidence query。`backhaul_delay_s=0/180` 时各有 `41` 个 candidate points，跨过 Class-A opportunity 的点数均为 `0`，physical divergence 也均为 `0`；`backhaul_delay_s=240/300` 时各有 `26` 个点跨过真实 control opportunity，physical divergence 同为 `26`，未跨机会但发生 divergence 的点数为 `0`。该结果支持“remote investigation 的物理后果由 decision-visible wait 是否跨过当前 runtime-admitted action 的下一 control opportunity 解释”；它是 simulator mechanism robustness，不是模型错误率，也不等价于最终 TDR 收益。
+
 **Diagnosis-first / 5 seeds / deterministic efficiency baseline.** fixed gateway diagnosis 与直接 deterministic comply 在 5/5 seeds 上 physical signature 完全一致；每个 episode 平均额外产生 `2.00` 次 model request、`4.00` 次 capability request、`4.00` 个 Percept、`2.00` 次 Context revision，并额外 materialize `65046.8` B。该结果只度量“先做与任务无关的固定诊断”的 runtime 开销。
 
 
@@ -24,7 +28,9 @@
 
 **Attribution protocol infrastructure / 20 frozen R1 turns.** `attribution-matrix-infra-v1` 对同一 O2 frozen trace 注入受控 upstream + planner corruption，并按 Task→EvidenceNeed→Percept→Context→Selection→Order→Arguments 累计修复。完成 Gold Context 后 assembly match rate=`100.00%`；完成 capability selection 后 tool exact=`100.00%`，但平均 unresolved argument slots=`0.85`；直到 Gold Arguments 后 argument grounding 才到 `100.00%`。该结果只验证 attribution evaluator 的层级隔离/累计恢复，不是 LLM failure rate。
 
-**Frozen model-context inputs / O2 seed 0.** task-conditioned、FullDump、generic-ReAct 三套输入各冻结 `74` 个 R1 turn，三者均与 paired legacy physical-equivalent 且 R0/R1/R2 replay exact。model-facing protocol mean bytes 分别为 `31293.4 / 31293.4 / 26943.2`。generic-ReAct 输入完全移除 EvidenceNeed / InvestigationState harness artifacts；该 manifest 只冻结公平模型输入，不包含任何真实模型结果。
+**Frozen model-context inputs / O2 seed 0.** task-conditioned、FullDump、generic-ReAct 三套输入各冻结 `74` 个 R1 turn，三者均与 paired legacy physical-equivalent 且 R0/R1/R2 replay exact。model-facing protocol mean bytes 分别为 `31293.4 / 31293.4 / 26943.2`。generic-ReAct 输入完全移除 EvidenceNeed / InvestigationState harness artifacts；该 manifest 是 A7/A8 fairness 的 pre-API 基础，不再代表当前最终模型状态。
 
-这组结果的 claim ceiling 仅为：**同一正确 deterministic policy 下，Operational Task scope 可以减少无关 evidence/context materialization，而不改变物理业务结果。** 它不证明 LLM policy quality 提升。
+**Formal live-model freeze / A7–A11.** `paper-v1` 已冻结四组正文结果：A7 query-negative main table、A8 same-interface WirelessOpsAgent-style 强对照、A9 held-out task/source/model transfer、A10/A11 query-positive acquisition。query-positive DeepSeek 与 MiMo 五种子均保持 `5/5 execution-equivalent (4 direct + 1 recovered)` / `5/5 direct` deterministic physical reference；两者都真实执行 blocking owner query 与 gateway-backup commit，并相对 no-acquisition 获得 `TDR +5.238 pp; AoI -1150.7 s`。这些结果支持一个 frozen gateway-backup acquisition family 的双模型见证，不支持全局最优或普适 evidence acquisition。
+
+当前 claim ceiling 以 `results/CLAIMS.md` A7–A11 为准；pre-API 结果继续承担 fairness、mechanism 与 infrastructure 证据，不再作为“未来模型实验”的占位符。
 <!-- END GENERATED: agentic-o2 -->

@@ -12,10 +12,14 @@ Generated/controlled outputs:
     paper/generated/table_agentic_source_period.{zh,en}.tex
     paper/generated/table_agentic_task_transfer.{zh,en}.tex
     paper/generated/table_agentic_attribution_infra.{zh,en}.tex
+    paper/generated/table_agentic_v6_confirmatory.{zh,en}.tex
+    paper/generated/table_agentic_v6_confirmatory.meta.json
     paper/generated/table_agentic_o2_{global,localized}.meta.json
     paper/generated/agentic_facts.tex
     paper/generated/agentic_facts.meta.json
     research/generated/agentic_o2_summary.md
+    research/generated/agentic_v6_confirmatory.md
+    research/generated/agentic_v6_confirmatory.meta.json
     research/README.md        (controlled block only)
     results/README.md         (controlled registry block only)
 
@@ -45,6 +49,8 @@ ROBUSTNESS_MATRIX = ROOT / "results" / "agentic" / "robustness-matrix-v1"
 TASK_TRANSFER = ROOT / "results" / "agentic" / "task-transfer-qili-v1"
 ATTRIBUTION_INFRA = ROOT / "results" / "agentic" / "attribution-matrix-infra-v1"
 COMM_BASELINE_MATRIX = ROOT / "results" / "agentic" / "communication-baseline-matrix-v1"
+ACTION_CONTEXT = ROOT / "results" / "agentic" / "action-conditioned-context-localized-o2-v1"
+O5_QUERY_DELAY = ROOT / "results" / "agentic" / "o5-query-delay-multiseed-v1" / "result.json"
 MODEL_CONTEXT_INPUTS = (
     ROOT
     / "results"
@@ -54,6 +60,8 @@ MODEL_CONTEXT_INPUTS = (
     / "seed-000"
     / "frozen_input_manifest.json"
 )
+V6_CONFIRMATORY = ROOT / "results" / "agentic" / "main-table-v6-confirmatory" / "deepseek-flash"
+PAPER_V1_RESULTS = ROOT / "results" / "agentic" / "paper-v1" / "paper-results.json"
 
 RESEARCH_README = ROOT / "research" / "README.md"
 RESULTS_README = ROOT / "results" / "README.md"
@@ -120,6 +128,190 @@ def _bundle(root: Path) -> dict:
             "audit.json": sha256(audit_p),
             "source_manifest.json": sha256(source_p),
             "experiment_contract.json": sha256(contract_p),
+        },
+    }
+
+
+def _optional_v6_confirmatory_bundle(root: Path) -> dict | None:
+    """Load the formal v6 result only after its post-hoc audit has passed.
+
+    Absence of ``audit.json`` means the confirmatory experiment is still pending
+    or has not yet been frozen; the normal artifact pipeline remains unchanged.
+    Once an audit exists, any incomplete/failed state is a hard error rather than
+    something the generator silently skips.
+    """
+    audit_p = root / "audit.json"
+    if not audit_p.is_file():
+        return None
+    aggregate_p = root / "aggregate.json"
+    source_p = root / "source-manifest.json"
+    contract_p = root / "experiment_contract.json"
+    run_manifest_p = root / "run_manifest.json"
+    rows_p = root / "per_episode_results.jsonl"
+    for path in (aggregate_p, source_p, contract_p, run_manifest_p, rows_p):
+        if not path.is_file():
+            raise FileNotFoundError(path)
+    audit = load(audit_p)
+    aggregate = load(aggregate_p)
+    if audit.get("status") != "PASS":
+        raise RuntimeError(f"refusing to publish failed v6 confirmatory result: {root}")
+    if int(aggregate.get("completed_rows") or 0) != 60 or int(aggregate.get("expected_rows") or 0) != 60:
+        raise RuntimeError(f"refusing to publish incomplete v6 confirmatory result: {root}")
+    method_gate = audit.get("method_gate") or {}
+    required_gate = (
+        method_gate.get("rows") == 15,
+        method_gate.get("all_effect_scope_exact") is True,
+        method_gate.get("all_zero_observation") is True,
+        method_gate.get("all_candidate_physical_exact") is True,
+        method_gate.get("all_legacy_physical_exact") is True,
+        int(method_gate.get("failed_model_attempts") or 0) == 0,
+    )
+    if not all(required_gate):
+        raise RuntimeError(f"v6 confirmatory Method gate is not frozen PASS: {method_gate}")
+    return {
+        "root": root,
+        "aggregate": aggregate,
+        "audit": audit,
+        "source": load(source_p),
+        "contract": load(contract_p),
+        "run_manifest": load(run_manifest_p),
+        "sha256": {
+            "aggregate.json": sha256(aggregate_p),
+            "audit.json": sha256(audit_p),
+            "source-manifest.json": sha256(source_p),
+            "experiment_contract.json": sha256(contract_p),
+            "run_manifest.json": sha256(run_manifest_p),
+            "per_episode_results.jsonl": sha256(rows_p),
+        },
+    }
+
+
+def render_v6_confirmatory_summary(bundle: dict) -> str:
+    rows = list(bundle["aggregate"].get("rows") or [])
+    tasks = ("localized-o2", "o5", "o6")
+    arms = ("action_conditioned_compact", "task_conditioned", "full_dump", "generic_react")
+
+    def obs(row: dict) -> int:
+        return int(row.get("local_observation_invocations") or 0) + int(
+            row.get("remote_observation_invocations") or 0
+        )
+
+    lines = [
+        "# Protocol-v6 confirmatory generated summary",
+        "",
+        "> Generated only after `audit.json=PASS`; do not hand-edit numeric results.",
+        "",
+        "| Task | Context | Seeds | Effect exact | Episodes w/ error | Physical=legacy | Obs mean | Calls mean | Tokens mean |",
+        "|---|---|---:|---:|---:|---:|---:|---:|---:|",
+    ]
+    for task in tasks:
+        for arm in arms:
+            group = [row for row in rows if row.get("task") == task and row.get("context_mode") == arm]
+            if len(group) != 5:
+                raise RuntimeError(f"v6 confirmatory group incomplete: {task}/{arm} n={len(group)}")
+            exact = sum(int(row.get("effect_scope_exact_turns") or 0) for row in group)
+            inexact = sum(int(row.get("effect_scope_inexact_turns") or 0) for row in group)
+            rate = exact / (exact + inexact) if exact + inexact else 1.0
+            error_eps = sum(int(row.get("effect_scope_inexact_turns") or 0) > 0 for row in group)
+            physical = sum(row.get("physical_equal_legacy") is True for row in group)
+            obs_mean = sum(obs(row) for row in group) / len(group)
+            calls_mean = sum(int(row.get("model_calls") or 0) for row in group) / len(group)
+            tokens_mean = sum(int((row.get("usage") or {}).get("total_tokens") or 0) for row in group) / len(group)
+            lines.append(
+                f"| {task} | {arm} | 5 | {100.0 * rate:.1f}% | {error_eps}/5 | "
+                f"{physical}/5 | {obs_mean:.2f} | {calls_mean:.2f} | {tokens_mean:.0f} |"
+            )
+    lines.extend(
+        [
+            "",
+            "Claim boundary: DeepSeek Flash, three development tasks, five simulator seeds. "
+            "Physical equality is fidelity to the declared deterministic comply reference; "
+            "it is not a claim of globally optimal communication control or cross-model generalization.",
+            "",
+        ]
+    )
+    return "\n".join(lines)
+
+
+def render_v6_confirmatory_table(bundle: dict, lang: str) -> str:
+    rows = list(bundle["aggregate"].get("rows") or [])
+    tasks = ("localized-o2", "o5", "o6")
+    arms = ("action_conditioned_compact", "task_conditioned", "full_dump", "generic_react")
+    arm_label = {
+        "action_conditioned_compact": "Action-conditioned",
+        "task_conditioned": "Task-conditioned",
+        "full_dump": "FullDump",
+        "generic_react": "Generic ReAct",
+    }
+    head = {
+        "en": "Task & Context & Effect exact (\\%) & Error episodes & Physical=legacy & Obs/ep & Calls/ep & Tokens/ep",
+        "zh": "任务 & Context & Effect exact (\\%) & 错误 episode & 与 legacy 物理等价 & Obs/episode & Calls/episode & Tokens/episode",
+    }[lang]
+
+    def obs(row: dict) -> int:
+        return int(row.get("local_observation_invocations") or 0) + int(
+            row.get("remote_observation_invocations") or 0
+        )
+
+    lines = []
+    for task in tasks:
+        for arm in arms:
+            group = [row for row in rows if row.get("task") == task and row.get("context_mode") == arm]
+            if len(group) != 5:
+                raise RuntimeError(f"v6 confirmatory group incomplete: {task}/{arm} n={len(group)}")
+            exact = sum(int(row.get("effect_scope_exact_turns") or 0) for row in group)
+            inexact = sum(int(row.get("effect_scope_inexact_turns") or 0) for row in group)
+            rate = exact / (exact + inexact) if exact + inexact else 1.0
+            error_eps = sum(int(row.get("effect_scope_inexact_turns") or 0) > 0 for row in group)
+            physical = sum(row.get("physical_equal_legacy") is True for row in group)
+            obs_mean = sum(obs(row) for row in group) / 5.0
+            calls_mean = sum(int(row.get("model_calls") or 0) for row in group) / 5.0
+            tokens_mean = sum(int((row.get("usage") or {}).get("total_tokens") or 0) for row in group) / 5.0
+            lines.append(
+                f"{tex_cell(task)} & {tex_cell(arm_label[arm])} & {f(100.0 * rate, 1)} & "
+                f"{error_eps}/5 & {physical}/5 & {f(obs_mean, 2)} & {f(calls_mean, 2)} & {f(tokens_mean, 0)}"
+            )
+    return (
+        "%% Generated by scripts/make_agentic_artifacts.py; do not edit.\n"
+        "\\begin{tabular}{llrrrrrr}\n"
+        "\\toprule\n"
+        f"{head}\\\\\n"
+        "\\midrule\n"
+        + "\\\\\n".join(lines)
+        + "\\\\\n\\bottomrule\n\\end{tabular}\n"
+    )
+
+
+def _action_context_bundle(root: Path) -> dict:
+    agg_p = root / "aggregate.json"
+    audit_p = root / "audit.json"
+    source_p = root / "source_manifest.json"
+    contract_p = root / "experiment_contract.json"
+    rows_p = root / "per_seed_results.jsonl"
+    for p in (agg_p, audit_p, source_p, contract_p, rows_p):
+        if not p.is_file():
+            raise FileNotFoundError(p)
+    audit = load(audit_p)
+    if (
+        audit.get("status") != "PASS"
+        or not audit.get("all_physical_equal")
+        or not audit.get("all_replay_passed")
+        or not audit.get("candidate_controlled_evidence_contraction")
+        or not audit.get("candidate_controlled_protocol_contraction")
+    ):
+        raise RuntimeError(f"refusing to publish failed action-context probe: {root}")
+    return {
+        "root": root,
+        "aggregate": load(agg_p),
+        "audit": audit,
+        "source": load(source_p),
+        "contract": load(contract_p),
+        "sha256": {
+            "aggregate.json": sha256(agg_p),
+            "audit.json": sha256(audit_p),
+            "source_manifest.json": sha256(source_p),
+            "experiment_contract.json": sha256(contract_p),
+            "per_seed_results.jsonl": sha256(rows_p),
         },
     }
 
@@ -222,6 +414,32 @@ def _source_period_bundle(path: Path) -> dict:
     payload = load(path)
     if payload.get("status") != "PASS" or not payload.get("all_physical_equivalent"):
         raise RuntimeError(f"refusing to publish failed source-period smoke: {path}")
+    return {"path": path, "payload": payload, "sha256": sha256(path)}
+
+
+def _o5_query_delay_bundle(path: Path) -> dict:
+    if not path.is_file():
+        raise FileNotFoundError(path)
+    payload = load(path)
+    if payload.get("experiment") != "o5-query-delay-multiseed-v1":
+        raise RuntimeError(f"unexpected O5 query-delay result: {path}")
+    aggregate = payload.get("aggregate") or {}
+    if aggregate.get("primary_scope") != "0 < t_s < task_horizon_s":
+        raise RuntimeError(f"O5 query-delay primary scope is not frozen: {path}")
+    interior = aggregate.get("interior_by_delay") or {}
+    for delay in ("0", "180", "240", "300"):
+        row = interior.get(delay)
+        if not isinstance(row, dict):
+            raise RuntimeError(f"O5 query-delay result missing delay={delay}: {path}")
+        for key in (
+            "candidate_points",
+            "points_crossing_class_a_opportunity",
+            "physical_divergent_points",
+            "crossed_but_equal",
+            "not_crossed_but_divergent",
+        ):
+            if key not in row:
+                raise RuntimeError(f"O5 query-delay result missing {delay}.{key}: {path}")
     return {"path": path, "payload": payload, "sha256": sha256(path)}
 
 
@@ -766,7 +984,7 @@ def table_meta(bundle: dict, table: str) -> dict:
     }
 
 
-def research_block(global_b: dict, local_b: dict, diagnosis_b: dict, baseline_b: dict, source_period_b: dict, robustness_b: dict, transfer_b: dict, attribution_b: dict, model_inputs_b: dict, comm_baseline_b: dict) -> str:
+def research_block(global_b: dict, local_b: dict, diagnosis_b: dict, baseline_b: dict, source_period_b: dict, robustness_b: dict, transfer_b: dict, attribution_b: dict, model_inputs_b: dict, comm_baseline_b: dict, action_context_b: dict, o5_query_delay_b: dict, paper_v1: dict) -> str:
     gm = global_b["aggregate"]["task_conditioned"]["mean"]
     lm = local_b["aggregate"]["task_conditioned"]["mean"]
     lf = local_b["aggregate"]["full_dump"]["mean"]
@@ -775,6 +993,21 @@ def research_block(global_b: dict, local_b: dict, diagnosis_b: dict, baseline_b:
     sp = source_period_b["payload"]["rows"]
     mi = {row["context_mode"]: row for row in model_inputs_b["payload"]["rows"]}
     cb = comm_baseline_b["aggregate"]
+    ac = action_context_b["aggregate"]["arms"]["action_conditioned"]
+    af = action_context_b["aggregate"]["arms"]["action_candidates_full_dump"]
+    acd = action_context_b["aggregate"]["method_vs_candidate_full_dump"]
+    qd = o5_query_delay_b["payload"]["aggregate"]
+    qdi = qd["interior_by_delay"]
+    paper_tables = paper_v1["tables"]
+    qp_rows = paper_tables["T4_transfer_and_query_positive"]
+    qp_deepseek = next(
+        row for row in qp_rows
+        if row["setting"] == "Query-positive gateway backup" and row["model"] == "DeepSeek Flash"
+    )
+    qp_mimo = next(
+        row for row in qp_rows
+        if row["setting"] == "Query-positive gateway backup" and row["model"] == "MiMo v2.6 Flash"
+    )
     return f"""{BEGIN}
 ### 自动生成结果摘要
 
@@ -783,6 +1016,10 @@ def research_block(global_b: dict, local_b: dict, diagnosis_b: dict, baseline_b:
 **Global O2 / 5 seeds / R3 conformance.** `legacy_comply`、`task_conditioned`、`full_dump` 三臂逐 seed physical signature 完全一致，audit=`PASS`。共同 physical mean：TDR `{f(gm['communication.timely_delivery_rate'], 5)}`，collection rate `{f(gm['communication.collection_rate'], 5)}`，p90 delivery latency `{f(gm['communication.delivery_latency_p90_s'], 1)} s`，backup `{f(gm['communication.backup_bytes'], 1)} B`，total consumed energy `{f(gm['communication.total_consumed_wh'], 5)} Wh`。
 
 **Localized O2 / 5 seeds / Context conformance.** task-conditioned 与 FullDump 同样保持逐 seed physical-equivalent，Context sufficiency recall 均为 `1.000`。task-conditioned 平均选择 `{f(lm['agent.mean_selected_evidence'], 2)}` 条 evidence、materialize `{f(lm['agent.mean_materialized_bytes'], 1)}` B；FullDump 分别为 `{f(lf['agent.mean_selected_evidence'], 2)}` 条和 `{f(lf['agent.mean_materialized_bytes'], 1)}` B。两臂共同 physical mean：TDR `{f(lm['communication.timely_delivery_rate'], 5)}`，collection rate `{f(lm['communication.collection_rate'], 5)}`，p90 delivery latency `{f(lm['communication.delivery_latency_p90_s'], 1)} s`。
+
+**Action-conditioned Context / localized O2 / 5 seeds.** `action_conditioned` 与 `action_candidates_full_dump` 共享同一候选行动生成和 deterministic reference consumer，四个 arm 均保持 paired physical-equivalent + replay exact。只改变 evidence selector 时，平均 selected evidence 从 `{f(af['mean_selected_evidence'], 2)}` 降到 `{f(ac['mean_selected_evidence'], 2)}`，protocol bytes 从 `{f(af['mean_protocol_bytes'], 1)}` 降到 `{f(ac['mean_protocol_bytes'], 1)}`，对应 evidence reduction `{pct(acd['selected_evidence_reduction_fraction'])}%`、protocol reduction `{pct(acd['protocol_bytes_reduction_fraction'])}%`。该结果现在作为 A7–A11 live-model 方法的 pre-API interface witness，不再承担“模型收益待验证”的当前状态描述。
+
+**O5 remote-evidence / control-opportunity mechanism / {qd['n_seeds']} seeds.** 主口径固定为 `{qd['primary_scope']}`，只在 deterministic baseline 中真实产生 config submission 且存在当前 PromptAssembly 的 tick 注入一轮 gateway-owner evidence query。`backhaul_delay_s=0/180` 时各有 `{qdi['0']['candidate_points']}` 个 candidate points，跨过 Class-A opportunity 的点数均为 `0`，physical divergence 也均为 `0`；`backhaul_delay_s=240/300` 时各有 `{qdi['240']['points_crossing_class_a_opportunity']}` 个点跨过真实 control opportunity，physical divergence 同为 `{qdi['240']['physical_divergent_points']}`，未跨机会但发生 divergence 的点数为 `{qdi['240']['not_crossed_but_divergent']}`。该结果支持“remote investigation 的物理后果由 decision-visible wait 是否跨过当前 runtime-admitted action 的下一 control opportunity 解释”；它是 simulator mechanism robustness，不是模型错误率，也不等价于最终 TDR 收益。
 
 **Diagnosis-first / 5 seeds / deterministic efficiency baseline.** fixed gateway diagnosis 与直接 deterministic comply 在 5/5 seeds 上 physical signature 完全一致；每个 episode 平均额外产生 `{f(dd['model_requests'], 2)}` 次 model request、`{f(dd['capability_requests'], 2)}` 次 capability request、`{f(dd['percepts'], 2)}` 个 Percept、`{f(dd['context_manifests'], 2)}` 次 Context revision，并额外 materialize `{f(dd['total_materialized_bytes'], 1)}` B。该结果只度量“先做与任务无关的固定诊断”的 runtime 开销。
 
@@ -799,13 +1036,15 @@ def research_block(global_b: dict, local_b: dict, diagnosis_b: dict, baseline_b:
 
 **Attribution protocol infrastructure / 20 frozen R1 turns.** `attribution-matrix-infra-v1` 对同一 O2 frozen trace 注入受控 upstream + planner corruption，并按 Task→EvidenceNeed→Percept→Context→Selection→Order→Arguments 累计修复。完成 Gold Context 后 assembly match rate=`{pct(attribution_b['aggregate']['rows'][4]['assembly_match_rate'])}%`；完成 capability selection 后 tool exact=`{pct(attribution_b['aggregate']['rows'][5]['tool_exact_match_rate'])}%`，但平均 unresolved argument slots=`{f(attribution_b['aggregate']['rows'][5]['mean_unresolved_argument_slots'], 2)}`；直到 Gold Arguments 后 argument grounding 才到 `{pct(attribution_b['aggregate']['rows'][-1]['argument_grounding_accuracy'])}%`。该结果只验证 attribution evaluator 的层级隔离/累计恢复，不是 LLM failure rate。
 
-**Frozen model-context inputs / O2 seed 0.** task-conditioned、FullDump、generic-ReAct 三套输入各冻结 `{mi['task_conditioned']['turns']}` 个 R1 turn，三者均与 paired legacy physical-equivalent 且 R0/R1/R2 replay exact。model-facing protocol mean bytes 分别为 `{f(mi['task_conditioned']['protocol_bytes_mean'], 1)} / {f(mi['full_dump']['protocol_bytes_mean'], 1)} / {f(mi['generic_react']['protocol_bytes_mean'], 1)}`。generic-ReAct 输入完全移除 EvidenceNeed / InvestigationState harness artifacts；该 manifest 只冻结公平模型输入，不包含任何真实模型结果。
+**Frozen model-context inputs / O2 seed 0.** task-conditioned、FullDump、generic-ReAct 三套输入各冻结 `{mi['task_conditioned']['turns']}` 个 R1 turn，三者均与 paired legacy physical-equivalent 且 R0/R1/R2 replay exact。model-facing protocol mean bytes 分别为 `{f(mi['task_conditioned']['protocol_bytes_mean'], 1)} / {f(mi['full_dump']['protocol_bytes_mean'], 1)} / {f(mi['generic_react']['protocol_bytes_mean'], 1)}`。generic-ReAct 输入完全移除 EvidenceNeed / InvestigationState harness artifacts；该 manifest 是 A7/A8 fairness 的 pre-API 基础，不再代表当前最终模型状态。
 
-这组结果的 claim ceiling 仅为：**同一正确 deterministic policy 下，Operational Task scope 可以减少无关 evidence/context materialization，而不改变物理业务结果。** 它不证明 LLM policy quality 提升。
+**Formal live-model freeze / A7–A11.** `paper-v1` 已冻结四组正文结果：A7 query-negative main table、A8 same-interface WirelessOpsAgent-style 强对照、A9 held-out task/source/model transfer、A10/A11 query-positive acquisition。query-positive DeepSeek 与 MiMo 五种子均保持 `{qp_deepseek['physical_exact']}` / `{qp_mimo['physical_exact']}` deterministic physical reference；两者都真实执行 blocking owner query 与 gateway-backup commit，并相对 no-acquisition 获得 `{qp_deepseek['communication_gain']}`。这些结果支持一个 frozen gateway-backup acquisition family 的双模型见证，不支持全局最优或普适 evidence acquisition。
+
+当前 claim ceiling 以 `results/CLAIMS.md` A7–A11 为准；pre-API 结果继续承担 fairness、mechanism 与 infrastructure 证据，不再作为“未来模型实验”的占位符。
 {END}"""
 
 
-def results_block(global_b: dict, local_b: dict, diagnosis_b: dict, baseline_b: dict, source_period_b: dict, robustness_b: dict, transfer_b: dict, attribution_b: dict, model_inputs_b: dict, comm_baseline_b: dict) -> str:
+def results_block(global_b: dict, local_b: dict, diagnosis_b: dict, baseline_b: dict, source_period_b: dict, robustness_b: dict, transfer_b: dict, attribution_b: dict, model_inputs_b: dict, comm_baseline_b: dict, action_context_b: dict, o5_query_delay_b: dict, paper_v1: dict) -> str:
     def row(name: str, bundle: dict, cmd: str, note: str) -> str:
         seeds = bundle["contract"]["seeds"]
         seed_text = ",".join(str(x) for x in seeds)
@@ -826,12 +1065,19 @@ def results_block(global_b: dict, local_b: dict, diagnosis_b: dict, baseline_b: 
 {row('localized', local_b, 'python3 code/experiments/agentic/run_o2_risk_escalation.py --variant localized --seeds 0,1,2,3,4', 'localized O2 Context conformance；task-conditioned 减少无关 materialization，physical outcome 不变')}
 {row('diagnosis-first', diagnosis_b, 'python3 code/experiments/agentic/run_o2_diagnosis_baseline.py --seeds 0,1,2,3,4', 'diagnosis-first deterministic efficiency baseline；固定 gateway diagnosis 增加 runtime 开销而 5/5 seeds physical outcome 不变')}
 {row('baseline-matrix', baseline_b, 'python3 code/experiments/agentic/run_o2_baseline_matrix.py --seeds 0,1,2,3,4', 'O2 deterministic Agent baseline matrix；evidence-aware / diagnosis-first / fixed-order eager / generic ReAct context 在相同物理结果下比较 runtime/context 开销')}
+{row('action-conditioned-context', action_context_b, 'python3 code/experiments/agentic/run_action_conditioned_context_probe.py --seeds 0,1,2,3,4', 'localized O2 action-conditioned context method probe；同候选行动生成下相对 candidate+FullDump 收缩 evidence/model input，同时保持 paired physics + replay exact')}
+| `{o5_query_delay_b['path'].relative_to(ROOT)}` | `make agentic-control-opportunity` | `0..19 / 4 delays` | deterministic mechanism robustness；只在真实 runtime-admitted config submission 点注入一轮 remote evidence query；主任务区间内 opportunity-crossing 与 physical divergence 分层登记，不包含模型错误率 |
 | `{comm_baseline_b['root'].relative_to(ROOT)}/` | `python3 code/experiments/agentic/run_communication_baseline_matrix.py --seeds 0,1,2,3,4` | `0,1,2,3,4` | audit=PASS；传统 communication baseline matrix；Local/AoI/EnergyAware/mission-comply、EDF/maxcov 与 evaluator-only dynamic/delivery oracle，online/oracle 严格分栏 |
 | `{source_period_b['path'].relative_to(ROOT)}` | `python3 code/experiments/agentic/run_source_period_smoke.py --seed 0` | `0` | status=PASS；NASA POWER 2022/2023/2024 source-period full-sim gate，三年 source hash/harvest outcome 分离且 paired physical-equivalent |
 | `{robustness_b['root'].relative_to(ROOT)}/` | `python3 code/experiments/agentic/run_robustness_matrix.py` | `{robustness_b['aggregate']['n_coordinates']} coords` | audit=PASS；五轴 robustness infrastructure gate；weather/outage/scope/owner/scale 全部激活，paired physical-equivalent + replay exact |
 {row('task-transfer-qili', transfer_b, 'python3 code/experiments/agentic/run_task_transfer_qili.py --seeds 0,1,2,3,4', 'S14 source-derived Operational Task transfer；只替换 task authority/schedule，同一 DEFAULT_FULLSIM/runtime/planner/scorer，paired physical-equivalent + replay exact')}
 | `{attribution_b['root'].relative_to(ROOT)}/` | `python3 code/experiments/agentic/run_attribution_matrix_infra.py --turns 20` | `20 frozen R1 turns` | audit=PASS；attribution protocol infrastructure；upstream assembly replacement 与 planner post-hoc replacement 分层累计恢复，不是模型结果 |
 | `{model_inputs_b['path'].parent.relative_to(ROOT)}/` | `make agentic-model-inputs` | `seed 0 / 3 contexts` | frozen-input conformance；task-conditioned / FullDump / generic-ReAct 共用 Task/tool/physics，三套 trace physical-equivalent + R0/R1/R2 exact；不包含模型分数 |
+| `results/agentic/main-table-v6-confirmatory/deepseek-flash/` | `python3 code/experiments/agentic/run_main_table_v6_confirmatory.py` | `0,1,2,3,4 / 3 tasks / 4 arms` | A7 formal live-model main table；Method 15/15 physical exact、123/123 effect-scope exact、0 extra observation；范围条件见 `results/CLAIMS.md` |
+| `results/agentic/woa-style-baseline-v1/` | `python3 code/experiments/agentic/run_woa_style_confirmatory.py` | `0,1,2,3,4 / 3 tasks` | A8 same-interface WirelessOpsAgent-style 强对照；可靠性打平，Method 模型 token 成本更低；不是原作者官方代码复现 |
+| `results/agentic/heldout-qili-2024-w1/model-transfer-v7/` | `python3 code/experiments/agentic/run_heldout_qili2024_v7_confirmatory.py` | `0,1,2,3,4 / 2 models` | A9 held-out Qili/NASA POWER 2024 task/source/model transfer；最终 physical fidelity 10/10，MiMo 保留 1/30 semantic wobble |
+| `results/agentic/query-positive-gateway-backup-v1/` | `python3 code/experiments/agentic/run_query_positive_gateway_backup_gate.py` + safe live-model runners | `0,1,2,3,4 / 2 models` | A10/A11 decision-conditioned acquisition；真实 owner query→guard closure→gateway backup→physical gain；不宣称全局最优 acquisition |
+| `results/agentic/paper-v1/` | `python3 code/experiments/agentic/freeze_paper_results_v1.py` | `A7–A11 frozen projection` | 论文四张正式表的 compact numeric authority；正文数字由生成器读取，不手抄 |
 
 正式 O2 结果目录包含 `experiment_contract.json / source_manifest.json / run_manifest.json / per_episode_results.jsonl / runtime_traces/ / aggregate.json / audit.json`；source-period smoke 当前是单文件 infrastructure gate。
 {END}"""
@@ -872,6 +1118,12 @@ def main() -> int:
     attribution_b = _attribution_bundle(ATTRIBUTION_INFRA)
     model_inputs_b = _model_context_input_bundle(MODEL_CONTEXT_INPUTS)
     comm_baseline_b = _communication_baseline_bundle(COMM_BASELINE_MATRIX)
+    action_context_b = _action_context_bundle(ACTION_CONTEXT)
+    o5_query_delay_b = _o5_query_delay_bundle(O5_QUERY_DELAY)
+    v6_confirmatory_b = _optional_v6_confirmatory_bundle(V6_CONFIRMATORY)
+    paper_v1 = load(PAPER_V1_RESULTS)
+    if paper_v1.get("status") != "FROZEN":
+        raise RuntimeError(f"paper-v1 result authority is not FROZEN: {PAPER_V1_RESULTS}")
     stale: list[str] = []
     written: list[str] = []
 
@@ -1049,20 +1301,85 @@ def main() -> int:
 
     summary = (
         "# Agentic O2 generated summary\n\n"
-        + research_block(global_b, local_b, diagnosis_b, baseline_b, source_period_b, robustness_b, transfer_b, attribution_b, model_inputs_b, comm_baseline_b)
+        + research_block(global_b, local_b, diagnosis_b, baseline_b, source_period_b, robustness_b, transfer_b, attribution_b, model_inputs_b, comm_baseline_b, action_context_b, o5_query_delay_b, paper_v1)
         + "\n"
     )
     _write_or_check(
         RESEARCH_GEN / "agentic_o2_summary.md", summary, args.check, stale, written
     )
 
+    if v6_confirmatory_b is not None:
+        for lang in ("en", "zh"):
+            _write_or_check(
+                PAPER_GEN / f"table_agentic_v6_confirmatory.{lang}.tex",
+                render_v6_confirmatory_table(v6_confirmatory_b, lang),
+                args.check,
+                stale,
+                written,
+            )
+        _write_or_check(
+            PAPER_GEN / "table_agentic_v6_confirmatory.meta.json",
+            json.dumps(
+                {
+                    "generator": "scripts/make_agentic_artifacts.py",
+                    "result_root": str(v6_confirmatory_b["root"].relative_to(ROOT)),
+                    "protocol_revision": v6_confirmatory_b["aggregate"].get("protocol_revision"),
+                    "model": v6_confirmatory_b["aggregate"].get("model"),
+                    "seeds": v6_confirmatory_b["aggregate"].get("seeds"),
+                    "tasks": v6_confirmatory_b["aggregate"].get("tasks"),
+                    "arms": v6_confirmatory_b["aggregate"].get("arms"),
+                    "audit_status": v6_confirmatory_b["audit"]["status"],
+                    "source_sha256": v6_confirmatory_b["sha256"],
+                    "claim_boundary": v6_confirmatory_b["contract"]["claim_boundary"],
+                },
+                ensure_ascii=False,
+                indent=2,
+                sort_keys=True,
+            )
+            + "\n",
+            args.check,
+            stale,
+            written,
+        )
+        _write_or_check(
+            RESEARCH_GEN / "agentic_v6_confirmatory.md",
+            render_v6_confirmatory_summary(v6_confirmatory_b),
+            args.check,
+            stale,
+            written,
+        )
+        _write_or_check(
+            RESEARCH_GEN / "agentic_v6_confirmatory.meta.json",
+            json.dumps(
+                {
+                    "generator": "scripts/make_agentic_artifacts.py",
+                    "result_root": str(v6_confirmatory_b["root"].relative_to(ROOT)),
+                    "protocol_revision": v6_confirmatory_b["aggregate"].get("protocol_revision"),
+                    "model": v6_confirmatory_b["aggregate"].get("model"),
+                    "seeds": v6_confirmatory_b["aggregate"].get("seeds"),
+                    "tasks": v6_confirmatory_b["aggregate"].get("tasks"),
+                    "arms": v6_confirmatory_b["aggregate"].get("arms"),
+                    "audit_status": v6_confirmatory_b["audit"]["status"],
+                    "source_sha256": v6_confirmatory_b["sha256"],
+                    "claim_boundary": v6_confirmatory_b["contract"]["claim_boundary"],
+                },
+                ensure_ascii=False,
+                indent=2,
+                sort_keys=True,
+            )
+            + "\n",
+            args.check,
+            stale,
+            written,
+        )
+
     research_expected = replace_block(
-        RESEARCH_README.read_text(encoding="utf-8"), research_block(global_b, local_b, diagnosis_b, baseline_b, source_period_b, robustness_b, transfer_b, attribution_b, model_inputs_b, comm_baseline_b)
+        RESEARCH_README.read_text(encoding="utf-8"), research_block(global_b, local_b, diagnosis_b, baseline_b, source_period_b, robustness_b, transfer_b, attribution_b, model_inputs_b, comm_baseline_b, action_context_b, o5_query_delay_b, paper_v1)
     )
     _write_or_check(RESEARCH_README, research_expected, args.check, stale, written)
 
     results_expected = replace_block(
-        RESULTS_README.read_text(encoding="utf-8"), results_block(global_b, local_b, diagnosis_b, baseline_b, source_period_b, robustness_b, transfer_b, attribution_b, model_inputs_b, comm_baseline_b)
+        RESULTS_README.read_text(encoding="utf-8"), results_block(global_b, local_b, diagnosis_b, baseline_b, source_period_b, robustness_b, transfer_b, attribution_b, model_inputs_b, comm_baseline_b, action_context_b, o5_query_delay_b, paper_v1)
     )
     _write_or_check(RESULTS_README, results_expected, args.check, stale, written)
 

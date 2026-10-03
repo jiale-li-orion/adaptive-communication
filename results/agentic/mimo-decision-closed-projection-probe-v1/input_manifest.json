@@ -1,0 +1,95 @@
+{
+  "experiment": "mimo-decision-closed-projection-probe-v1",
+  "generated_at": "2026-10-03T07:02:19.245167+00:00",
+  "model": "mimo-v2.6-flash",
+  "generation": {
+    "temperature": 0.0,
+    "thinking": "disabled",
+    "response_format": "json_object",
+    "max_tokens": 8192
+  },
+  "repeats_per_arm": 3,
+  "arm_order_per_repeat": [
+    "M",
+    "P",
+    "D"
+  ],
+  "arms": {
+    "M": "frozen protocol-v6 input unchanged",
+    "P": "clear unresolved_conditions only on rejected/dominated plans",
+    "D": "P plus remove residual unresolved_dependencies/open_dependency_count from the model-facing candidate context when sufficiency is already closed and blocking_need_ids is empty"
+  },
+  "input_audit": {
+    "target_trace": "results/agentic/heldout-qili-2024-w1/model-transfer-v1/mimo-v2.6-flash/seed-000/runtime_trace.jsonl",
+    "target_t_s": 60,
+    "target_assembly_hash": "d9991fb2702cd3d507ebdd12960d55e2cbda2c30d73ff2edef931e646830bc0d",
+    "semantic_core_equal": true,
+    "plan_id_feasibility_invocations_equal": true,
+    "decision_sufficiency_equal": true,
+    "evidence_needs_equal": true,
+    "protocol_outside_candidate_equal": true,
+    "arms": {
+      "M": {
+        "assembly_hash": "d9991fb2702cd3d507ebdd12960d55e2cbda2c30d73ff2edef931e646830bc0d",
+        "protocol_sha256": "0a0cb9600ad6598dfb87fccd9f41a84fa28fb0c4c13f2f998307c963660a7558",
+        "protocol_bytes": 21029,
+        "retired_unresolved_conditions": {
+          "hold_current_profile": [
+            "fresh confirmed configuration for n01",
+            "fresh confirmed configuration for n16"
+          ]
+        },
+        "unresolved_dependency_count": 2,
+        "open_dependency_count": 2
+      },
+      "P": {
+        "assembly_hash": "54c33610040bf7bb7eb9bff21604f1163a5ffb72f35c8d2434f288d5c024216f",
+        "protocol_sha256": "4bcf5bd9ee942765005163b4fb14444e85b9c7fd063f48a29fc724cadd51fc56",
+        "protocol_bytes": 20950,
+        "retired_unresolved_conditions": {
+          "hold_current_profile": []
+        },
+        "unresolved_dependency_count": 2,
+        "open_dependency_count": 2
+      },
+      "D": {
+        "assembly_hash": "aa660045990de8de7b8fae22876570abaaec1fd36131550d581cc7fa46c10dec",
+        "protocol_sha256": "9a36dda4315f67cdbece629c92f339f4ea7a01b00d0fa8f3ae2a07175327898f",
+        "protocol_bytes": 20357,
+        "retired_unresolved_conditions": {
+          "hold_current_profile": []
+        },
+        "unresolved_dependency_count": 0,
+        "open_dependency_count": 0
+      }
+    }
+  },
+  "historical_failure": {
+    "decision_id": "decision:model:0:60:2",
+    "request_id": "model:0:60:2",
+    "stop": false,
+    "selected_plan_id": null,
+    "invocations": [
+      {
+        "capability_id": "communication.center.node_report",
+        "resource": "n01",
+        "canonical_arguments": {
+          "node_id": "n01"
+        }
+      },
+      {
+        "capability_id": "communication.center.node_report",
+        "resource": "n16",
+        "canonical_arguments": {
+          "node_id": "n16"
+        }
+      }
+    ],
+    "state_patch": {},
+    "reason_codes": [
+      "sufficient_for_primary_action",
+      "resolve_open_configuration_evidence_before_device_effect"
+    ]
+  },
+  "claim_boundary": "Exact-state R1 projection diagnosis only. No simulator continuation and no v6 Method mutation."
+}

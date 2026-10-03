@@ -1,0 +1,36 @@
+{
+  "experiment": "query-positive-gateway-backup-v1-deepseek-seed0",
+  "frozen_at": "2026-10-03T08:36:54.508934+00:00",
+  "seed": 0,
+  "model": "deepseek-flash",
+  "provider": "deepseek_official",
+  "model_protocol_revision": "communication-planner-json-v6-no-action-sufficiency",
+  "context_mode": "action_conditioned_compact_v7",
+  "context_variant": "gateway-backup-query-positive-v1",
+  "selector_revision": "action-conditioned-context-v8-gateway-backup-query-positive",
+  "context_runtime_revision": "communication-context-runtime-v8-gateway-backup-query-positive",
+  "simulator": {
+    "outage_start_h": 0.0,
+    "outage_hours": 0.0,
+    "enable_backup": false,
+    "backhaul_delay_s": 3600,
+    "mission_policy_placement": "gateway"
+  },
+  "files": {
+    "code/agentic_communication/action_context.py": "8c8eeec531147c0cf1b0c65382f928420a1f388ed691843a63e9d2d96c0e9125",
+    "code/agentic_communication/capabilities.py": "5e545893b4515157c23b10f5b849dd782aa73962a65e75c15577c537f4b3c359",
+    "code/agentic_communication/context_runtime.py": "16f698a1f50ad1299f5224e58f76cc5dbc19afd56b634857edd09a27e0f2b0cb",
+    "code/agentic_communication/evidence_world.py": "04f864587df205ed04c5a24651ea6030022e775bd27d68075ace3f70e448d7fb",
+    "code/agentic_communication/model_protocol.py": "e9c5f1140aa2813f5a0ff005067c490a10700d2b9195d388478d53d7367c733b",
+    "code/agentic_communication/planner.py": "18fa7295af8c8223338f66caa028ecf0d930008ff07218665c756640f5cf9f5c",
+    "code/agentic_communication/policy.py": "957ef93c3f429c1df02d4a50cda0aa6e3ca905e1c56680f185b23e59045fa846",
+    "code/agentic_communication/query_positive.py": "6f780091b584603b1dd1b43a7de2bfd0da5d2fff4f27c4638b97ed501c64f27d",
+    "code/agentic_communication/replay.py": "3e6dc07c769a9814fbd13e530205ab0ab85556f1187561ebfb1dfae97b62db41",
+    "code/agentic_communication/runtime_contracts.py": "0fdb151f3e0df3e81b8c65c208d4e336ae50eb44e21bed58751bd9b1936b0d73",
+    "code/agentic_communication/task_compiler.py": "394cac33750f233b464ce9f19e683b136df34adb6219dcbd83a3b84b681c3a54",
+    "code/experiments/agentic/run_query_positive_gateway_backup_gate.py": "cdfd153227347be7155f79242cf6c3527d059bd3dd5e04314109852ab48fd8f3",
+    "code/experiments/agentic/run_query_positive_gateway_backup_model_probe.py": "3b7faf1947a560d5b472e34cac6f73499c2bc4094887322b419ebb56d80c7f95",
+    "code/experiments/agentic/run_r3_model_eval.py": "cebc877b9e88b523f8443220b9168ed86d81917606e90aa4a53e971c8b91d203",
+    "code/experiments/agentic/run_heldout_qili2024_seed0.py": "0a907129a1b6b51d01755aa48d1abd019db1ddc66976e63af18832f028d2ece7"
+  }
+}

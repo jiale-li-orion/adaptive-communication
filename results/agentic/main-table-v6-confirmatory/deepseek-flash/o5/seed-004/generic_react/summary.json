@@ -1,0 +1,947 @@
+{
+  "generated_at": "2026-10-02T23:10:33.355995+00:00",
+  "config": {
+    "mode": "R3_full_simulator",
+    "protocol_revision": "communication-planner-json-v6-no-action-sufficiency",
+    "model": "deepseek-flash",
+    "variant": "global",
+    "episode": "O5",
+    "seed": 4,
+    "context_mode": "generic_react",
+    "planner_replan_mode": "decision_state",
+    "max_model_calls": 32,
+    "temperature": 0.0,
+    "max_tokens": 8192,
+    "reasoning_effort": "low",
+    "json_object": true,
+    "credential_profile": "deepseek_official",
+    "base_url": "https://api.deepseek.com",
+    "api_key_env": "DEEPSEEK_API_KEY",
+    "api_key_present": true,
+    "operational_task": {
+      "task_id": "o5-recovery-reconciliation-v1",
+      "task_revision": 1,
+      "family": "recovery_reconciliation",
+      "principal": "external-emergency-monitoring-authority",
+      "target_node_ids": [],
+      "measurands": [
+        "displacement"
+      ],
+      "phases": [
+        {
+          "start_s": 0,
+          "required_period_s": 3600,
+          "level": "blue"
+        },
+        {
+          "start_s": 14400,
+          "required_period_s": 300,
+          "level": "yellow"
+        },
+        {
+          "start_s": 32400,
+          "required_period_s": 3600,
+          "level": "blue"
+        }
+      ],
+      "task_horizon_s": 43200,
+      "authorized_effects": [
+        "communication.config.set_sampling_interval",
+        "communication.config.set_report_period",
+        "communication.fallback.gateway_backup"
+      ],
+      "source_refs": [
+        "S04",
+        "S06",
+        "task-contract-v1.1"
+      ],
+      "scoring_profile_ref": "communication-physical-v1",
+      "metadata": {
+        "risk_authority": "external",
+        "task_semantics": "reconcile configuration and historical delivery after path recovery",
+        "phase_schedule_layer": "A",
+        "benchmark_pre_enabled_effects": [
+          "communication.fallback.gateway_backup"
+        ]
+      }
+    },
+    "dry_run": false
+  },
+  "communication_metrics": {
+    "routine_obligations": 938,
+    "routine_collected": 240,
+    "routine_delivered": 160,
+    "timely_delivery_rate": 0.17057569296375266,
+    "collection_rate": 0.255863539445629,
+    "delivery_oracle_fixed_send": null,
+    "delivery_oracle_free_send_require_sample": null,
+    "delivery_oracle_link_opportunity_ceiling": null,
+    "delivery_oracle_fixed_rate": null,
+    "delivery_oracle_free_sample_rate": null,
+    "delivery_oracle_link_opportunity_rate": null,
+    "delivery_gap_to_fixed_oracle": null,
+    "delivery_gap_to_free_sample_oracle": null,
+    "delivery_gap_to_link_opportunity_ceiling": null,
+    "delivery_oracle_applicable": false,
+    "delivery_oracle_na_reason": "existing delivery_oracle is primary-path-only and is not a valid full-system upper bound when additional communication paths are enabled",
+    "missing_collection": 698,
+    "missing_delivery": 80,
+    "censored": 0,
+    "delivery_latency_mean_s": 673.5,
+    "delivery_latency_p50_s": 0,
+    "delivery_latency_p90_s": 3600,
+    "delivery_latency_p95_s": 3600,
+    "aoi_mean_s": 2857.1040462427745,
+    "aoi_p50_s": 2160,
+    "aoi_p90_s": 6120,
+    "aoi_p95_s": 7080,
+    "no_observation_s": 32400,
+    "event_delivery_rate": 0.9523809523809523,
+    "event_match_rate": 1.0,
+    "samples_collected": 676,
+    "uplinks": 291,
+    "uplinks_heard": 201,
+    "gateway_forwarded": 134,
+    "uplink_airtime_h": 0.026297173333333326,
+    "downlink_attempts": 43,
+    "downlink_airtime_h": 0.001969208888888887,
+    "backup_packets": 24,
+    "backup_records": 247,
+    "backup_bytes": 1932,
+    "terminal_dts_attempts": 0,
+    "terminal_dts_success": 0,
+    "terminal_dts_energy_wh": 0.0,
+    "access_assist_duration_s": 0,
+    "access_assist_dynamic_s": 0,
+    "access_assist_bypassed": 0,
+    "backup_boost_duration_s": 0,
+    "backup_boost_packets": 0,
+    "backup_boost_bytes": 0,
+    "backup_boost_records": 0,
+    "commands_sent": 37,
+    "commands_delivered": 28,
+    "commands_refused": 224,
+    "command_delivery_rate": 0.7567567567567568,
+    "config_mismatch_node_s": 349020,
+    "config_mismatch_rate": 0.5770833333333333,
+    "sampling_mismatch_node_s": 327780,
+    "sampling_mismatch_rate": 0.5419642857142857,
+    "report_mismatch_node_s": 289140,
+    "report_mismatch_rate": 0.47807539682539685,
+    "config_install_completion_rate": 0.5238095238095238,
+    "config_install_latency_mean_s": 0.0,
+    "config_install_latency_p50_s": 0.0,
+    "config_install_latency_p90_s": 0.0,
+    "config_install_latency_p95_s": 0.0,
+    "config_revision_install_completion_rate": 0.2857142857142857,
+    "config_revision_install_latency_mean_s": 0.0,
+    "config_revision_install_latency_p50_s": 0.0,
+    "config_revision_install_latency_p90_s": 0.0,
+    "config_revision_install_latency_p95_s": 0.0,
+    "writes_changed": 28,
+    "writes_same_value": 0,
+    "alive_nodes": 14,
+    "total_nodes": 14,
+    "mean_final_soc": 1.0,
+    "node_survival_rate": 1.0,
+    "total_consumed_wh": 0.3285993949440004,
+    "total_harvested_wh": 0.3285993949439992,
+    "recovery_outage_hours": 5.0,
+    "recovery_observation_s": 3600,
+    "recovery_obligations": 860,
+    "recovery_delivered": 84,
+    "recovery_delivery_rate": 0.09767441860465116,
+    "recovery_missing_collection": 698,
+    "recovery_missing_delivery": 78,
+    "recovery_censored": 0,
+    "recovery_backlog_recovered": 6,
+    "recovery": {
+      "outage_s": [
+        10800,
+        28800
+      ],
+      "outage_hours": 5.0,
+      "recovery_observation_s": 3600,
+      "n_obligations_in_window": 860,
+      "delivered": 84,
+      "missing_collection": 698,
+      "missing_delivery": 78,
+      "censored": 0,
+      "backlog_recovered": 6,
+      "note": "采集缺失在恢复后补不回来（不补造当时未采到的读数）；交付缺失单列，因为它可由自动补发追回。"
+    }
+  },
+  "agent_metrics": {
+    "events": 1212,
+    "runtime_task_contracts": 3,
+    "evidence_world_revisions": 64,
+    "evidence_needs": 174,
+    "capability_requests": 275,
+    "capability_results": 275,
+    "percepts": 13,
+    "context_manifests": 65,
+    "planner_decisions": 9,
+    "model_requests": 11,
+    "model_attempts": 11,
+    "model_usage_records": 11,
+    "physical_effects_confirmed": 29,
+    "remote_observation_requests": 10,
+    "remote_observation_pending_events": 10,
+    "remote_observation_results": 10,
+    "remote_observation_simulated_wait_s_total": 600.0,
+    "remote_observation_simulated_wait_s_mean": 60.0,
+    "remote_observation_unknown_transport_cost_results": 10,
+    "max_model_requests_per_tick": 1,
+    "accepted_requests": 37,
+    "confirmed_requests": 28,
+    "unconfirmed_requests": 9,
+    "contexts": 65,
+    "mean_selected_evidence": 29.83076923076923,
+    "mean_materialized_bytes": 30064.23076923077,
+    "context_sufficiency_recall": 1.0,
+    "physical_action_confirmation_rate": 0.7567567567567568
+  },
+  "delta_vs_legacy": {
+    "access_assist_bypassed": 0.0,
+    "access_assist_duration_s": 0.0,
+    "access_assist_dynamic_s": 0.0,
+    "alive_nodes": 0.0,
+    "aoi_mean_s": -85.28901734104056,
+    "aoi_p50_s": -60.0,
+    "aoi_p90_s": -60.0,
+    "aoi_p95_s": 0.0,
+    "backup_boost_bytes": 0.0,
+    "backup_boost_duration_s": 0.0,
+    "backup_boost_packets": 0.0,
+    "backup_boost_records": 0.0,
+    "backup_bytes": 664.0,
+    "backup_packets": 5.0,
+    "backup_records": 94.0,
+    "censored": 0.0,
+    "collection_rate": 0.023454157782516,
+    "command_delivery_rate": -0.04054054054054046,
+    "commands_delivered": -31.0,
+    "commands_refused": 2.0,
+    "commands_sent": -37.0,
+    "config_install_completion_rate": -0.11904761904761907,
+    "config_install_latency_mean_s": -406.6666666666667,
+    "config_install_latency_p50_s": 0.0,
+    "config_install_latency_p90_s": -1463.9999999999948,
+    "config_install_latency_p95_s": -3660.0,
+    "config_mismatch_node_s": 28740.0,
+    "config_mismatch_rate": 0.04751984126984121,
+    "config_revision_install_completion_rate": -0.1785714285714286,
+    "config_revision_install_latency_mean_s": -844.6153846153846,
+    "config_revision_install_latency_p50_s": 0.0,
+    "config_revision_install_latency_p90_s": -3660.0,
+    "config_revision_install_latency_p95_s": -3660.0,
+    "delivery_latency_mean_s": -10.875,
+    "delivery_latency_p50_s": 0.0,
+    "delivery_latency_p90_s": 0.0,
+    "delivery_latency_p95_s": 0.0,
+    "delivery_oracle_applicable": 0.0,
+    "downlink_airtime_h": -0.0019692088888888836,
+    "downlink_attempts": -43.0,
+    "event_delivery_rate": 0.0,
+    "event_match_rate": 0.0,
+    "gateway_forwarded": 48.0,
+    "mean_final_soc": 0.0,
+    "missing_collection": -22.0,
+    "missing_delivery": 22.0,
+    "no_observation_s": 0.0,
+    "node_survival_rate": 0.0,
+    "recovery_backlog_recovered": 0.0,
+    "recovery_censored": 0.0,
+    "recovery_delivered": 0.0,
+    "recovery_delivery_rate": 0.0,
+    "recovery_missing_collection": -22.0,
+    "recovery_missing_delivery": 22.0,
+    "recovery_obligations": 0.0,
+    "recovery_observation_s": 0.0,
+    "recovery_outage_hours": 0.0,
+    "report_mismatch_node_s": 1440.0,
+    "report_mismatch_rate": 0.002380952380952428,
+    "routine_collected": 22.0,
+    "routine_delivered": 0.0,
+    "routine_obligations": 0.0,
+    "samples_collected": 284.0,
+    "sampling_mismatch_node_s": 46560.0,
+    "sampling_mismatch_rate": 0.07698412698412693,
+    "terminal_dts_attempts": 0.0,
+    "terminal_dts_energy_wh": 0.0,
+    "terminal_dts_success": 0.0,
+    "timely_delivery_rate": 0.0,
+    "total_consumed_wh": 0.1364088413440004,
+    "total_harvested_wh": 0.1364088413439997,
+    "total_nodes": 0.0,
+    "uplink_airtime_h": 0.008376035555555574,
+    "uplinks": 87.0,
+    "uplinks_heard": 64.0,
+    "writes_changed": -6.0,
+    "writes_same_value": -25.0
+  },
+  "physical_equal_legacy": false,
+  "physical_equal_candidate_reference": false,
+  "model_calls_consumed": 11,
+  "planner_behavior_audit": {
+    "planner_decision_turns": 9,
+    "successful_model_attempts": 9,
+    "failed_model_attempts": 2,
+    "effect_scope_exact_turns": 2,
+    "effect_scope_inexact_turns": 7,
+    "local_observation_invocations": 3,
+    "remote_observation_invocations": 10,
+    "turns": [
+      {
+        "t_s": 0,
+        "primary_plan_id": "install_required_profile",
+        "semantic_reference_source": "hidden_shared_candidate_surface",
+        "effect_scope_exact": false,
+        "expected_effect_invocations": 28,
+        "actual_effect_invocations": 0,
+        "missing_effect_invocations": [
+          [
+            "communication.config.set_report_period",
+            "gw0",
+            "{\"target_s\":3600}"
+          ],
+          [
+            "communication.config.set_report_period",
+            "n00",
+            "{\"target_s\":3600}"
+          ],
+          [
+            "communication.config.set_report_period",
+            "n01",
+            "{\"target_s\":3600}"
+          ],
+          [
+            "communication.config.set_report_period",
+            "n02",
+            "{\"target_s\":3600}"
+          ],
+          [
+            "communication.config.set_report_period",
+            "n03",
+            "{\"target_s\":3600}"
+          ],
+          [
+            "communication.config.set_report_period",
+            "n04",
+            "{\"target_s\":3600}"
+          ],
+          [
+            "communication.config.set_report_period",
+            "n05",
+            "{\"target_s\":3600}"
+          ],
+          [
+            "communication.config.set_report_period",
+            "n06",
+            "{\"target_s\":3600}"
+          ],
+          [
+            "communication.config.set_report_period",
+            "n07",
+            "{\"target_s\":3600}"
+          ],
+          [
+            "communication.config.set_report_period",
+            "n10",
+            "{\"target_s\":3600}"
+          ],
+          [
+            "communication.config.set_report_period",
+            "n11",
+            "{\"target_s\":3600}"
+          ],
+          [
+            "communication.config.set_report_period",
+            "n13",
+            "{\"target_s\":3600}"
+          ],
+          [
+            "communication.config.set_report_period",
+            "n15",
+            "{\"target_s\":3600}"
+          ],
+          [
+            "communication.config.set_report_period",
+            "n16",
+            "{\"target_s\":3600}"
+          ],
+          [
+            "communication.config.set_sampling_interval",
+            "gw0",
+            "{\"target_s\":3600}"
+          ],
+          [
+            "communication.config.set_sampling_interval",
+            "n00",
+            "{\"target_s\":3600}"
+          ],
+          [
+            "communication.config.set_sampling_interval",
+            "n01",
+            "{\"target_s\":3600}"
+          ],
+          [
+            "communication.config.set_sampling_interval",
+            "n02",
+            "{\"target_s\":3600}"
+          ],
+          [
+            "communication.config.set_sampling_interval",
+            "n03",
+            "{\"target_s\":3600}"
+          ],
+          [
+            "communication.config.set_sampling_interval",
+            "n04",
+            "{\"target_s\":3600}"
+          ],
+          [
+            "communication.config.set_sampling_interval",
+            "n05",
+            "{\"target_s\":3600}"
+          ],
+          [
+            "communication.config.set_sampling_interval",
+            "n06",
+            "{\"target_s\":3600}"
+          ],
+          [
+            "communication.config.set_sampling_interval",
+            "n07",
+            "{\"target_s\":3600}"
+          ],
+          [
+            "communication.config.set_sampling_interval",
+            "n10",
+            "{\"target_s\":3600}"
+          ],
+          [
+            "communication.config.set_sampling_interval",
+            "n11",
+            "{\"target_s\":3600}"
+          ],
+          [
+            "communication.config.set_sampling_interval",
+            "n13",
+            "{\"target_s\":3600}"
+          ],
+          [
+            "communication.config.set_sampling_interval",
+            "n15",
+            "{\"target_s\":3600}"
+          ],
+          [
+            "communication.config.set_sampling_interval",
+            "n16",
+            "{\"target_s\":3600}"
+          ]
+        ],
+        "unexpected_effect_invocations": [],
+        "local_observation_invocations": 1,
+        "remote_observation_invocations": 2,
+        "stop": false
+      },
+      {
+        "t_s": 1140,
+        "primary_plan_id": "install_required_profile",
+        "semantic_reference_source": "hidden_shared_candidate_surface",
+        "effect_scope_exact": false,
+        "expected_effect_invocations": 10,
+        "actual_effect_invocations": 0,
+        "missing_effect_invocations": [
+          [
+            "communication.config.set_report_period",
+            "n03",
+            "{\"target_s\":3600}"
+          ],
+          [
+            "communication.config.set_report_period",
+            "n06",
+            "{\"target_s\":3600}"
+          ],
+          [
+            "communication.config.set_report_period",
+            "n07",
+            "{\"target_s\":3600}"
+          ],
+          [
+            "communication.config.set_report_period",
+            "n10",
+            "{\"target_s\":3600}"
+          ],
+          [
+            "communication.config.set_report_period",
+            "n15",
+            "{\"target_s\":3600}"
+          ],
+          [
+            "communication.config.set_sampling_interval",
+            "n03",
+            "{\"target_s\":3600}"
+          ],
+          [
+            "communication.config.set_sampling_interval",
+            "n06",
+            "{\"target_s\":3600}"
+          ],
+          [
+            "communication.config.set_sampling_interval",
+            "n07",
+            "{\"target_s\":3600}"
+          ],
+          [
+            "communication.config.set_sampling_interval",
+            "n10",
+            "{\"target_s\":3600}"
+          ],
+          [
+            "communication.config.set_sampling_interval",
+            "n15",
+            "{\"target_s\":3600}"
+          ]
+        ],
+        "unexpected_effect_invocations": [],
+        "local_observation_invocations": 0,
+        "remote_observation_invocations": 5,
+        "stop": false
+      },
+      {
+        "t_s": 3660,
+        "primary_plan_id": "install_required_profile",
+        "semantic_reference_source": "hidden_shared_candidate_surface",
+        "effect_scope_exact": false,
+        "expected_effect_invocations": 4,
+        "actual_effect_invocations": 0,
+        "missing_effect_invocations": [
+          [
+            "communication.config.set_report_period",
+            "n03",
+            "{\"target_s\":3600}"
+          ],
+          [
+            "communication.config.set_report_period",
+            "n07",
+            "{\"target_s\":3600}"
+          ],
+          [
+            "communication.config.set_sampling_interval",
+            "n03",
+            "{\"target_s\":3600}"
+          ],
+          [
+            "communication.config.set_sampling_interval",
+            "n07",
+            "{\"target_s\":3600}"
+          ]
+        ],
+        "unexpected_effect_invocations": [],
+        "local_observation_invocations": 2,
+        "remote_observation_invocations": 3,
+        "stop": false
+      },
+      {
+        "t_s": 3720,
+        "primary_plan_id": "install_required_profile",
+        "semantic_reference_source": "hidden_shared_candidate_surface",
+        "effect_scope_exact": false,
+        "expected_effect_invocations": 4,
+        "actual_effect_invocations": 1,
+        "missing_effect_invocations": [
+          [
+            "communication.config.set_report_period",
+            "n03",
+            "{\"target_s\":3600}"
+          ],
+          [
+            "communication.config.set_report_period",
+            "n07",
+            "{\"target_s\":3600}"
+          ],
+          [
+            "communication.config.set_sampling_interval",
+            "n03",
+            "{\"target_s\":3600}"
+          ],
+          [
+            "communication.config.set_sampling_interval",
+            "n07",
+            "{\"target_s\":3600}"
+          ]
+        ],
+        "unexpected_effect_invocations": [
+          [
+            "communication.fallback.gateway_backup",
+            "gw0",
+            "{\"enabled\":true}"
+          ]
+        ],
+        "local_observation_invocations": 0,
+        "remote_observation_invocations": 0,
+        "stop": false
+      },
+      {
+        "t_s": 10860,
+        "primary_plan_id": null,
+        "semantic_reference_source": "hidden_shared_candidate_surface",
+        "effect_scope_exact": true,
+        "expected_effect_invocations": 0,
+        "actual_effect_invocations": 0,
+        "missing_effect_invocations": [],
+        "unexpected_effect_invocations": [],
+        "local_observation_invocations": 0,
+        "remote_observation_invocations": 0,
+        "stop": true
+      },
+      {
+        "t_s": 14400,
+        "primary_plan_id": "install_required_profile",
+        "semantic_reference_source": "hidden_shared_candidate_surface",
+        "effect_scope_exact": true,
+        "expected_effect_invocations": 28,
+        "actual_effect_invocations": 28,
+        "missing_effect_invocations": [],
+        "unexpected_effect_invocations": [],
+        "local_observation_invocations": 0,
+        "remote_observation_invocations": 0,
+        "stop": false
+      },
+      {
+        "t_s": 32400,
+        "primary_plan_id": "install_required_profile",
+        "semantic_reference_source": "hidden_shared_candidate_surface",
+        "effect_scope_exact": false,
+        "expected_effect_invocations": 12,
+        "actual_effect_invocations": 6,
+        "missing_effect_invocations": [
+          [
+            "communication.config.set_report_period",
+            "n00",
+            "{\"target_s\":3600}"
+          ],
+          [
+            "communication.config.set_report_period",
+            "n02",
+            "{\"target_s\":3600}"
+          ],
+          [
+            "communication.config.set_report_period",
+            "n06",
+            "{\"target_s\":3600}"
+          ],
+          [
+            "communication.config.set_report_period",
+            "n07",
+            "{\"target_s\":3600}"
+          ],
+          [
+            "communication.config.set_report_period",
+            "n15",
+            "{\"target_s\":3600}"
+          ],
+          [
+            "communication.config.set_report_period",
+            "n16",
+            "{\"target_s\":3600}"
+          ]
+        ],
+        "unexpected_effect_invocations": [],
+        "local_observation_invocations": 0,
+        "remote_observation_invocations": 0,
+        "stop": false
+      },
+      {
+        "t_s": 32460,
+        "primary_plan_id": "install_required_profile",
+        "semantic_reference_source": "hidden_shared_candidate_surface",
+        "effect_scope_exact": false,
+        "expected_effect_invocations": 18,
+        "actual_effect_invocations": 3,
+        "missing_effect_invocations": [
+          [
+            "communication.config.set_report_period",
+            "n04",
+            "{\"target_s\":3600}"
+          ],
+          [
+            "communication.config.set_report_period",
+            "n05",
+            "{\"target_s\":3600}"
+          ],
+          [
+            "communication.config.set_report_period",
+            "n06",
+            "{\"target_s\":3600}"
+          ],
+          [
+            "communication.config.set_report_period",
+            "n07",
+            "{\"target_s\":3600}"
+          ],
+          [
+            "communication.config.set_report_period",
+            "n10",
+            "{\"target_s\":3600}"
+          ],
+          [
+            "communication.config.set_report_period",
+            "n16",
+            "{\"target_s\":3600}"
+          ],
+          [
+            "communication.config.set_sampling_interval",
+            "n00",
+            "{\"target_s\":3600}"
+          ],
+          [
+            "communication.config.set_sampling_interval",
+            "n02",
+            "{\"target_s\":3600}"
+          ],
+          [
+            "communication.config.set_sampling_interval",
+            "n04",
+            "{\"target_s\":3600}"
+          ],
+          [
+            "communication.config.set_sampling_interval",
+            "n05",
+            "{\"target_s\":3600}"
+          ],
+          [
+            "communication.config.set_sampling_interval",
+            "n06",
+            "{\"target_s\":3600}"
+          ],
+          [
+            "communication.config.set_sampling_interval",
+            "n07",
+            "{\"target_s\":3600}"
+          ],
+          [
+            "communication.config.set_sampling_interval",
+            "n10",
+            "{\"target_s\":3600}"
+          ],
+          [
+            "communication.config.set_sampling_interval",
+            "n15",
+            "{\"target_s\":3600}"
+          ],
+          [
+            "communication.config.set_sampling_interval",
+            "n16",
+            "{\"target_s\":3600}"
+          ]
+        ],
+        "unexpected_effect_invocations": [],
+        "local_observation_invocations": 0,
+        "remote_observation_invocations": 0,
+        "stop": false
+      },
+      {
+        "t_s": 43260,
+        "primary_plan_id": "install_required_profile",
+        "semantic_reference_source": "hidden_shared_candidate_surface",
+        "effect_scope_exact": false,
+        "expected_effect_invocations": 20,
+        "actual_effect_invocations": 6,
+        "missing_effect_invocations": [
+          [
+            "communication.config.set_report_period",
+            "n00",
+            "{\"target_s\":3600}"
+          ],
+          [
+            "communication.config.set_report_period",
+            "n02",
+            "{\"target_s\":3600}"
+          ],
+          [
+            "communication.config.set_report_period",
+            "n11",
+            "{\"target_s\":3600}"
+          ],
+          [
+            "communication.config.set_report_period",
+            "n15",
+            "{\"target_s\":3600}"
+          ],
+          [
+            "communication.config.set_sampling_interval",
+            "n00",
+            "{\"target_s\":3600}"
+          ],
+          [
+            "communication.config.set_sampling_interval",
+            "n02",
+            "{\"target_s\":3600}"
+          ],
+          [
+            "communication.config.set_sampling_interval",
+            "n04",
+            "{\"target_s\":3600}"
+          ],
+          [
+            "communication.config.set_sampling_interval",
+            "n05",
+            "{\"target_s\":3600}"
+          ],
+          [
+            "communication.config.set_sampling_interval",
+            "n06",
+            "{\"target_s\":3600}"
+          ],
+          [
+            "communication.config.set_sampling_interval",
+            "n07",
+            "{\"target_s\":3600}"
+          ],
+          [
+            "communication.config.set_sampling_interval",
+            "n10",
+            "{\"target_s\":3600}"
+          ],
+          [
+            "communication.config.set_sampling_interval",
+            "n11",
+            "{\"target_s\":3600}"
+          ],
+          [
+            "communication.config.set_sampling_interval",
+            "n15",
+            "{\"target_s\":3600}"
+          ],
+          [
+            "communication.config.set_sampling_interval",
+            "n16",
+            "{\"target_s\":3600}"
+          ]
+        ],
+        "unexpected_effect_invocations": [],
+        "local_observation_invocations": 0,
+        "remote_observation_invocations": 0,
+        "stop": false
+      }
+    ]
+  },
+  "replay_audit": {
+    "trace": "/home/orion/Communications/应急通信/project1/adaptive-communication/results/agentic/main-table-v6-confirmatory/deepseek-flash/o5/seed-004/generic_react/runtime_trace.jsonl",
+    "passed": true,
+    "R0": {
+      "level": "R0",
+      "passed": true,
+      "events": 1212,
+      "task_contracts": 3,
+      "evidence_revisions": 62,
+      "contexts": 65,
+      "prompt_assemblies": 65,
+      "capability_requests": 275,
+      "capability_results": 275,
+      "failures": []
+    },
+    "R1": {
+      "level": "R1",
+      "passed": true,
+      "frozen_prompt_assemblies": 65,
+      "note": "consumer/model substitution API ready; no model result is asserted by this audit"
+    },
+    "R2": {
+      "level": "R2",
+      "passed": true,
+      "context_mode": "generic_react",
+      "contexts": 65,
+      "exact_assembly_matches": 65,
+      "failures": []
+    }
+  },
+  "trace": "/home/orion/Communications/应急通信/project1/adaptive-communication/results/agentic/main-table-v6-confirmatory/deepseek-flash/o5/seed-004/generic_react/runtime_trace.jsonl",
+  "delta_vs_candidate_reference": {
+    "access_assist_bypassed": 0.0,
+    "access_assist_duration_s": 0.0,
+    "access_assist_dynamic_s": 0.0,
+    "alive_nodes": 0.0,
+    "aoi_mean_s": -85.28901734104056,
+    "aoi_p50_s": -60.0,
+    "aoi_p90_s": -60.0,
+    "aoi_p95_s": 0.0,
+    "backup_boost_bytes": 0.0,
+    "backup_boost_duration_s": 0.0,
+    "backup_boost_packets": 0.0,
+    "backup_boost_records": 0.0,
+    "backup_bytes": 664.0,
+    "backup_packets": 5.0,
+    "backup_records": 94.0,
+    "censored": 0.0,
+    "collection_rate": 0.023454157782516,
+    "command_delivery_rate": -0.04054054054054046,
+    "commands_delivered": -31.0,
+    "commands_refused": 2.0,
+    "commands_sent": -37.0,
+    "config_install_completion_rate": -0.11904761904761907,
+    "config_install_latency_mean_s": -406.6666666666667,
+    "config_install_latency_p50_s": 0.0,
+    "config_install_latency_p90_s": -1463.9999999999948,
+    "config_install_latency_p95_s": -3660.0,
+    "config_mismatch_node_s": 28740.0,
+    "config_mismatch_rate": 0.04751984126984121,
+    "config_revision_install_completion_rate": -0.1785714285714286,
+    "config_revision_install_latency_mean_s": -844.6153846153846,
+    "config_revision_install_latency_p50_s": 0.0,
+    "config_revision_install_latency_p90_s": -3660.0,
+    "config_revision_install_latency_p95_s": -3660.0,
+    "delivery_latency_mean_s": -10.875,
+    "delivery_latency_p50_s": 0.0,
+    "delivery_latency_p90_s": 0.0,
+    "delivery_latency_p95_s": 0.0,
+    "delivery_oracle_applicable": 0.0,
+    "downlink_airtime_h": -0.0019692088888888836,
+    "downlink_attempts": -43.0,
+    "event_delivery_rate": 0.0,
+    "event_match_rate": 0.0,
+    "gateway_forwarded": 48.0,
+    "mean_final_soc": 0.0,
+    "missing_collection": -22.0,
+    "missing_delivery": 22.0,
+    "no_observation_s": 0.0,
+    "node_survival_rate": 0.0,
+    "recovery_backlog_recovered": 0.0,
+    "recovery_censored": 0.0,
+    "recovery_delivered": 0.0,
+    "recovery_delivery_rate": 0.0,
+    "recovery_missing_collection": -22.0,
+    "recovery_missing_delivery": 22.0,
+    "recovery_obligations": 0.0,
+    "recovery_observation_s": 0.0,
+    "recovery_outage_hours": 0.0,
+    "report_mismatch_node_s": 1440.0,
+    "report_mismatch_rate": 0.002380952380952428,
+    "routine_collected": 22.0,
+    "routine_delivered": 0.0,
+    "routine_obligations": 0.0,
+    "samples_collected": 284.0,
+    "sampling_mismatch_node_s": 46560.0,
+    "sampling_mismatch_rate": 0.07698412698412693,
+    "terminal_dts_attempts": 0.0,
+    "terminal_dts_energy_wh": 0.0,
+    "terminal_dts_success": 0.0,
+    "timely_delivery_rate": 0.0,
+    "total_consumed_wh": 0.1364088413440004,
+    "total_harvested_wh": 0.1364088413439997,
+    "total_nodes": 0.0,
+    "uplink_airtime_h": 0.008376035555555574,
+    "uplinks": 87.0,
+    "uplinks_heard": 64.0,
+    "writes_changed": -6.0,
+    "writes_same_value": -25.0
+  },
+  "candidate_reference": {
+    "context_mode": "action_conditioned_compact",
+    "planner": "ActionConditionedReferencePlannerConsumer",
+    "model_visible_to_test_arm": false
+  }
+}

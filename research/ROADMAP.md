@@ -1,6 +1,6 @@
 # Roadmap：Evidence World + Closed-Loop Agent Runtime
 
-日期：2026-10-01。实验语义与指标由 [`EXPERIMENT-DESIGN-v1.md`](EXPERIMENT-DESIGN-v1.md) 持有，本文只拥有建设顺序。
+更新：2026-10-03。实验语义与指标由 [`EXPERIMENT-DESIGN-v1.md`](EXPERIMENT-DESIGN-v1.md) 持有，本文只拥有建设顺序。
 
 ## P0 — Design freeze
 
@@ -50,7 +50,7 @@ code/agentic_communication/run.py
 - config device capabilities 与 `gateway_backup` 已经从 PlannerDecision 真实作用到现有 full simulator；
 - cumulative live gold replacement 可在 R3 上替换 capability selection / order / arguments / policy；
 - R1 frozen-input evaluator 已能计算 stopping、tool selection、order、argument grounding。
-- model-facing protocol 已冻结为 `communication-planner-json-v1`，带稳定 hash、typed proposal schema 与 evaluator-truth leakage guard；
+- model-facing protocol 当前冻结为 `communication-planner-json-v6-no-action-sufficiency`，带稳定 hash、typed proposal schema、candidate-plan selection、zero-effect no-action sufficiency 与 evaluator-truth leakage guard；
 - `BackendPlannerConsumer` 可复用仓库现有 `complete(messages)` backend；R1/R3 model CLI 已落，缺 endpoint/key 时硬失败，不回退 scripted backend。
 
 当前 capability registry 明确区分“已声明”与“已接入 Agent runtime”：3 个 live observation、5 个 live device、1 个 baseline-only。5 个 device capability 均已走 typed PlannerDecision -> existing full-sim effect：sampling interval、report period、gateway backup、terminal-DtS、access assist。`center.full_dump` 只保留为 baseline materializer，不作为正常 planner tool。
@@ -106,13 +106,17 @@ P3 当前只保留 generic VoI/active acquisition 为条件项。VoI 必须等 e
 
 ### Method ablation
 
-- raw/flat telemetry vs Evidence World；
-- EvidenceNeed tracing on/off；
-- communication-aware capability planning on/off；
-- context dependency refresh on/off；
-- typed evidence-use/device-use capability runtime on/off。
+当前优先级已经从“继续扩方法组件”切换为“先完成 confirmatory，再做因果拆分”。已冻结的解释轴包括：
 
-## P4 — LLM Agent benchmark
+- task-conditioned / FullDump / generic-ReAct vs action-conditioned compact control surface；
+- every-context replanning vs semantic decision-state replanning；
+- global blocking vs plan-local blocking / decision sufficiency；
+- persistent semantic execution intent vs ordinary admission progress；
+- candidate-plan semantic selection vs mechanical invocation serialization。
+
+其中 persistent intent、plan-id expansion、scoped execution 等属于 ordinary Runtime substrate，不单列为算法 novelty。automatic safe-action-prefix / dependency solver 只有在现有 ordinary dependency compiler 出现真实缺口后才重新开放；当前正确 global scope 下 `backward slice + current-state partial evaluation` 对 `453/453` runtime-unresolved dependency rows exact。
+
+## P4 — LLM Agent benchmark / 当前主线
 
 Planner-level gold replacement 已经可执行：capability selection / order / arguments / policy 可以在同一 R3 episode 中累计替换并重跑物理系统。模型横向比较之外，完整目标仍是：
 
@@ -130,7 +134,29 @@ Full Agent
 
 目标不是只报“哪个模型最高分”，而是沿 Runtime Trace 定位 task grounding、evidence、tool/capability、context、policy 和 physical execution 各层的 failure contribution。
 
-P4 当前 transport、三-context model matrix 与 attribution matrix infrastructure 均已就绪，但尚无真实模型结果：环境未配置可用 endpoint/key，因此没有发外部 API，也没有 scripted 结果冒充模型结果。`results/agentic/model-context-inputs-v1/global/seed-000/` 已冻结 task-conditioned / FullDump / generic-ReAct 三套 O2 输入，三者共享 Operational Task、capability surface 与 paired physical reference，且 R0/R1/R2 replay exact。`run_model_context_matrix.py` 支持先 R1 frozen-input diagnosis，再对选中的 model/context 进入 R3；缺凭证会在任何模型实验前显式失败。upstream gold replacement 已覆盖 Task / EvidenceNeed / Percept / Context；planner-level live replacement 已覆盖 capability selection / order / arguments / policy；`results/agentic/attribution-matrix-infra-v1/` 已验证两类 replacement 按协议累计组合且层间不偷渡。真实模型接入后直接复用该协议跑实际 failure attribution。
+P4 已进入真实 DeepSeek Flash full-episode confirmatory 阶段。开发过程先后暴露并修复了三类接口/语义错误：
+
+```text
+global Task scope 被 report availability 错误缩窄
+candidate semantic plan 被要求由模型机械重写大量 invocations
+closed zero-effect hold state 在 compact control surface 上被误标为 undetermined
+```
+
+当前 protocol v6 下，localized O2 / O5 / O6 × seeds0..4 的 Method-first confirmatory gate 已完成 `15/15`：所有成功 planner turns effect-scope exact、0 observation、candidate/legacy physical exact；剩余 45 个 baseline rows 正在冻结 source manifest 下顺序运行。正式模型方法 claim 仍等待完整 60-row aggregate，不提前写入 `results/CLAIMS.md`。
+
+当前 Method v1 的方法对象是 [`PLAN-EVIDENCE-EXECUTION-v1.md`](PLAN-EVIDENCE-EXECUTION-v1.md) 所定义的 control-relevant Plan–Evidence–Execution relation：完整 audit graph、control-eligible surface、model-facing projection 与 persistent execution surface 分层；Decision Sufficiency 只描述当前 plan/no-action 是否仍被 decision-changing evidence 阻塞，不宣称新提出一般 decision-region 或 action-sufficient representation。
+
+当前建设顺序冻结为：
+
+```text
+1. 完成 protocol-v6 5-seed main-table confirmatory
+2. 冻结 formal result / candidate A7 claim
+3. 做 full-episode component ablation，解释现有收益来自哪里
+4. 再决定第二模型 confirmatory
+5. query-positive safety case / composed fallback closure 作为 coverage extension
+```
+
+在第 1 项完成前，不开发 safe-action-prefix solver、Context compression、新 invalidation algorithm 或新的 runtime entity。
 
 [`AGENTIC-ATTRIBUTION-PROTOCOL.v1.json`](AGENTIC-ATTRIBUTION-PROTOCOL.v1.json) 已冻结 layer ownership：当前架构下 Task/EvidenceNeed/Percept/Context 属于 runtime/method ablation，替换后必须重新跑模型；capability selection/order/arguments 属于 planner/model post-hoc diagnostic；Gold Policy 与 Physical Oracle 必须回到 R3 才能评价通信后果。
 

@@ -1,0 +1,81 @@
+{
+  "status": "candidate_only_not_yet_claim_authority",
+  "source": "results/agentic/main-table-v6-confirmatory/deepseek-flash/aggregate.json",
+  "formal_audit": "results/agentic/main-table-v6-confirmatory/deepseek-flash/audit.json",
+  "formal_audit_sha256": "a845cace0e6f5cd7cb68276625a04b67dd82fac523710daaecc155afc488d8bc",
+  "protocol_revision": "communication-planner-json-v6-no-action-sufficiency",
+  "model": "deepseek-flash",
+  "seeds": [
+    0,
+    1,
+    2,
+    3,
+    4
+  ],
+  "tasks": [
+    "localized-o2",
+    "o5",
+    "o6"
+  ],
+  "method": "action_conditioned_compact",
+  "baseline_arms": [
+    "task_conditioned",
+    "full_dump",
+    "generic_react"
+  ],
+  "pre_registered_method_gate": {
+    "rows": 15,
+    "all_effect_scope_exact": true,
+    "all_zero_observation": true,
+    "all_candidate_physical_exact": true,
+    "all_legacy_physical_exact": true
+  },
+  "by_task": {
+    "localized-o2": {
+      "method_effect_exact_turns": 34,
+      "method_effect_inexact_turns": 0,
+      "method_zero_observation_rows": 5,
+      "method_candidate_physical_exact_rows": 5,
+      "method_legacy_physical_exact_rows": 5,
+      "baseline_rows_with_semantic_error": 15,
+      "baseline_rows_with_candidate_physical_divergence": 14,
+      "baseline_rows_with_legacy_physical_divergence": 14,
+      "baseline_rows_with_observation": 15,
+      "method_effect_exact_rate_mean": 1.0,
+      "baseline_effect_exact_rate_mean": 0.46834776334776335,
+      "method_tokens_mean": 36261.2,
+      "baseline_tokens_mean": 89083.33333333333
+    },
+    "o5": {
+      "method_effect_exact_turns": 45,
+      "method_effect_inexact_turns": 0,
+      "method_zero_observation_rows": 5,
+      "method_candidate_physical_exact_rows": 5,
+      "method_legacy_physical_exact_rows": 5,
+      "baseline_rows_with_semantic_error": 15,
+      "baseline_rows_with_candidate_physical_divergence": 15,
+      "baseline_rows_with_legacy_physical_divergence": 15,
+      "baseline_rows_with_observation": 15,
+      "method_effect_exact_rate_mean": 1.0,
+      "baseline_effect_exact_rate_mean": 0.3832064232064232,
+      "method_tokens_mean": 61200.0,
+      "baseline_tokens_mean": 144019.2
+    },
+    "o6": {
+      "method_effect_exact_turns": 44,
+      "method_effect_inexact_turns": 0,
+      "method_zero_observation_rows": 5,
+      "method_candidate_physical_exact_rows": 5,
+      "method_legacy_physical_exact_rows": 5,
+      "baseline_rows_with_semantic_error": 15,
+      "baseline_rows_with_candidate_physical_divergence": 15,
+      "baseline_rows_with_legacy_physical_divergence": 15,
+      "baseline_rows_with_observation": 15,
+      "method_effect_exact_rate_mean": 1.0,
+      "baseline_effect_exact_rate_mean": 0.31561808561808563,
+      "method_tokens_mean": 100761.0,
+      "baseline_tokens_mean": 168038.73333333334
+    }
+  },
+  "claim_ceiling": "DeepSeek Flash, three development tasks, five simulator seeds: the frozen action-conditioned control surface reproduced the deterministic candidate/legacy comply effect scope and physical trajectory without extra observation calls. Baseline comparisons are descriptive for these tasks/seeds only; this artifact does not establish cross-model or workload-wide generalization."
+}

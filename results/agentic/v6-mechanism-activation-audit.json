@@ -1,0 +1,214 @@
+{
+  "experiment": "v6-mechanism-activation-audit",
+  "status": "PASS",
+  "source_result_root": "results/agentic/main-table-v6-confirmatory/deepseek-flash",
+  "trace_sha256": {
+    "results/agentic/main-table-v6-confirmatory/deepseek-flash/localized-o2/seed-000/action_conditioned_compact/runtime_trace.jsonl": "f30f8047a7fb95ecdfff3980805d130b8997e4b94b043cc3260dbc3dac203ae9",
+    "results/agentic/main-table-v6-confirmatory/deepseek-flash/localized-o2/seed-001/action_conditioned_compact/runtime_trace.jsonl": "1d0cbe3be33cbf366248dc1c1da44e0edbd2f80852b45c417d463bf6336f2816",
+    "results/agentic/main-table-v6-confirmatory/deepseek-flash/localized-o2/seed-002/action_conditioned_compact/runtime_trace.jsonl": "ef0c512ed5761c737f46e6f393cc84933dc397aaeed6bf97d0f36c60d3f3163d",
+    "results/agentic/main-table-v6-confirmatory/deepseek-flash/localized-o2/seed-003/action_conditioned_compact/runtime_trace.jsonl": "e2b3e99bf0a32ee1bde864a435476e952ad03e04855ce4801f82940b224e4e7f",
+    "results/agentic/main-table-v6-confirmatory/deepseek-flash/localized-o2/seed-004/action_conditioned_compact/runtime_trace.jsonl": "d8a65926e02627d76b0027321981fbfb3c9f9c5b3c243712ebd260cf01e3ce44",
+    "results/agentic/main-table-v6-confirmatory/deepseek-flash/o5/seed-000/action_conditioned_compact/runtime_trace.jsonl": "b24b3495343cbbc124b217b1d35c8526d439dbaf64358b6a7335236d631d3e9d",
+    "results/agentic/main-table-v6-confirmatory/deepseek-flash/o5/seed-001/action_conditioned_compact/runtime_trace.jsonl": "4f7d11a6752d60f041d389f47540045d065801feece9f7dd103eaa963b4959bd",
+    "results/agentic/main-table-v6-confirmatory/deepseek-flash/o5/seed-002/action_conditioned_compact/runtime_trace.jsonl": "40f2876f7bdabe3b389e4eac75d920c91f3611a991238d5d9364eaebc6ab8f1b",
+    "results/agentic/main-table-v6-confirmatory/deepseek-flash/o5/seed-003/action_conditioned_compact/runtime_trace.jsonl": "012366e5144e80e4d1055db4a3a697b06a2ece00934c2010b83a3e7bd7195926",
+    "results/agentic/main-table-v6-confirmatory/deepseek-flash/o5/seed-004/action_conditioned_compact/runtime_trace.jsonl": "1eb9d2f59d22d7c847f9ae3c1c61bef52c839bdc6682c604bbf785293318c463",
+    "results/agentic/main-table-v6-confirmatory/deepseek-flash/o6/seed-000/action_conditioned_compact/runtime_trace.jsonl": "c90f42b2af8a277ff97b5b0530f9ae314016964856def7280cfe234457155564",
+    "results/agentic/main-table-v6-confirmatory/deepseek-flash/o6/seed-001/action_conditioned_compact/runtime_trace.jsonl": "94d06859acb8fa8bcce8457e87bee75ae722b2ea2998182533434fd80f0b150c",
+    "results/agentic/main-table-v6-confirmatory/deepseek-flash/o6/seed-002/action_conditioned_compact/runtime_trace.jsonl": "5a1074872212778fea887d0077c46b1245e34c37482a1103d892e0e4c4e7307e",
+    "results/agentic/main-table-v6-confirmatory/deepseek-flash/o6/seed-003/action_conditioned_compact/runtime_trace.jsonl": "188141251e40daae4b71a079b0aea6a3c706b0acf52a8990a70f542ff5998d8b",
+    "results/agentic/main-table-v6-confirmatory/deepseek-flash/o6/seed-004/action_conditioned_compact/runtime_trace.jsonl": "a678670fe689d1f573ca830bfe26b46ff8539871a83eeb668c6afeec85585e18"
+  },
+  "aggregate": {
+    "episodes": 15,
+    "planner_requests": 123,
+    "unique_ready_plan_turns": 123,
+    "ambiguous_ready_plan_turns": 0,
+    "no_ready_plan_turns": 0,
+    "visible_evidence_need_turns": 0,
+    "blocking_plan_local_need_turns": 0,
+    "shadow_candidate_visible_turns": 44,
+    "decision_sufficiency_status_counts": {
+      "sufficient_for_no_action": 18,
+      "sufficient_for_primary_action": 105
+    },
+    "primary_plan_counts": {
+      "hold_current_profile": 18,
+      "install_required_profile": 105
+    },
+    "by_task": {
+      "localized-o2": {
+        "planner_requests": 34,
+        "unique_ready_plan_turns": 34,
+        "visible_evidence_need_turns": 0,
+        "blocking_plan_local_need_turns": 0
+      },
+      "o5": {
+        "planner_requests": 45,
+        "unique_ready_plan_turns": 45,
+        "visible_evidence_need_turns": 0,
+        "blocking_plan_local_need_turns": 0
+      },
+      "o6": {
+        "planner_requests": 44,
+        "unique_ready_plan_turns": 44,
+        "visible_evidence_need_turns": 0,
+        "blocking_plan_local_need_turns": 0
+      }
+    }
+  },
+  "per_episode": [
+    {
+      "task": "localized-o2",
+      "seed": 0,
+      "planner_requests": 6,
+      "unique_ready_plan_turns": 6,
+      "ambiguous_ready_plan_turns": 0,
+      "no_ready_plan_turns": 0,
+      "visible_need_turns": 0,
+      "blocking_need_turns": 0
+    },
+    {
+      "task": "localized-o2",
+      "seed": 1,
+      "planner_requests": 7,
+      "unique_ready_plan_turns": 7,
+      "ambiguous_ready_plan_turns": 0,
+      "no_ready_plan_turns": 0,
+      "visible_need_turns": 0,
+      "blocking_need_turns": 0
+    },
+    {
+      "task": "localized-o2",
+      "seed": 2,
+      "planner_requests": 6,
+      "unique_ready_plan_turns": 6,
+      "ambiguous_ready_plan_turns": 0,
+      "no_ready_plan_turns": 0,
+      "visible_need_turns": 0,
+      "blocking_need_turns": 0
+    },
+    {
+      "task": "localized-o2",
+      "seed": 3,
+      "planner_requests": 8,
+      "unique_ready_plan_turns": 8,
+      "ambiguous_ready_plan_turns": 0,
+      "no_ready_plan_turns": 0,
+      "visible_need_turns": 0,
+      "blocking_need_turns": 0
+    },
+    {
+      "task": "localized-o2",
+      "seed": 4,
+      "planner_requests": 7,
+      "unique_ready_plan_turns": 7,
+      "ambiguous_ready_plan_turns": 0,
+      "no_ready_plan_turns": 0,
+      "visible_need_turns": 0,
+      "blocking_need_turns": 0
+    },
+    {
+      "task": "o5",
+      "seed": 0,
+      "planner_requests": 11,
+      "unique_ready_plan_turns": 11,
+      "ambiguous_ready_plan_turns": 0,
+      "no_ready_plan_turns": 0,
+      "visible_need_turns": 0,
+      "blocking_need_turns": 0
+    },
+    {
+      "task": "o5",
+      "seed": 1,
+      "planner_requests": 10,
+      "unique_ready_plan_turns": 10,
+      "ambiguous_ready_plan_turns": 0,
+      "no_ready_plan_turns": 0,
+      "visible_need_turns": 0,
+      "blocking_need_turns": 0
+    },
+    {
+      "task": "o5",
+      "seed": 2,
+      "planner_requests": 6,
+      "unique_ready_plan_turns": 6,
+      "ambiguous_ready_plan_turns": 0,
+      "no_ready_plan_turns": 0,
+      "visible_need_turns": 0,
+      "blocking_need_turns": 0
+    },
+    {
+      "task": "o5",
+      "seed": 3,
+      "planner_requests": 9,
+      "unique_ready_plan_turns": 9,
+      "ambiguous_ready_plan_turns": 0,
+      "no_ready_plan_turns": 0,
+      "visible_need_turns": 0,
+      "blocking_need_turns": 0
+    },
+    {
+      "task": "o5",
+      "seed": 4,
+      "planner_requests": 9,
+      "unique_ready_plan_turns": 9,
+      "ambiguous_ready_plan_turns": 0,
+      "no_ready_plan_turns": 0,
+      "visible_need_turns": 0,
+      "blocking_need_turns": 0
+    },
+    {
+      "task": "o6",
+      "seed": 0,
+      "planner_requests": 11,
+      "unique_ready_plan_turns": 11,
+      "ambiguous_ready_plan_turns": 0,
+      "no_ready_plan_turns": 0,
+      "visible_need_turns": 0,
+      "blocking_need_turns": 0
+    },
+    {
+      "task": "o6",
+      "seed": 1,
+      "planner_requests": 8,
+      "unique_ready_plan_turns": 8,
+      "ambiguous_ready_plan_turns": 0,
+      "no_ready_plan_turns": 0,
+      "visible_need_turns": 0,
+      "blocking_need_turns": 0
+    },
+    {
+      "task": "o6",
+      "seed": 2,
+      "planner_requests": 6,
+      "unique_ready_plan_turns": 6,
+      "ambiguous_ready_plan_turns": 0,
+      "no_ready_plan_turns": 0,
+      "visible_need_turns": 0,
+      "blocking_need_turns": 0
+    },
+    {
+      "task": "o6",
+      "seed": 3,
+      "planner_requests": 9,
+      "unique_ready_plan_turns": 9,
+      "ambiguous_ready_plan_turns": 0,
+      "no_ready_plan_turns": 0,
+      "visible_need_turns": 0,
+      "blocking_need_turns": 0
+    },
+    {
+      "task": "o6",
+      "seed": 4,
+      "planner_requests": 10,
+      "unique_ready_plan_turns": 10,
+      "ambiguous_ready_plan_turns": 0,
+      "no_ready_plan_turns": 0,
+      "visible_need_turns": 0,
+      "blocking_need_turns": 0
+    }
+  ],
+  "failures": [],
+  "interpretation_boundary": "This audit only measures whether the frozen v6 Method requests activate multiple ready plans or visible EvidenceNeeds. It does not prove such mechanisms are unnecessary outside the measured tasks/seeds."
+}

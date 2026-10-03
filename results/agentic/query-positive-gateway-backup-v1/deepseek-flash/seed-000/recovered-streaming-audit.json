@@ -1,0 +1,80 @@
+{
+  "experiment": "task-018-query-positive-streaming-recovery",
+  "trace": "results/agentic/query-positive-gateway-backup-v1/deepseek-flash/seed-000/runtime_trace.jsonl",
+  "status": "PASS",
+  "streaming_r0": {
+    "passed": true,
+    "events": 4880,
+    "event_counts": {
+      "capability_request": 34,
+      "capability_result": 34,
+      "context_manifest": 785,
+      "evidence_need": 5,
+      "evidence_world_revision": 785,
+      "investigation_state": 785,
+      "model_attempt": 15,
+      "model_request": 15,
+      "model_usage": 15,
+      "operational_task": 1,
+      "percept": 5,
+      "physical_effect": 29,
+      "planner_decision": 15,
+      "planner_decision_state": 785,
+      "planner_semantic_reference": 785,
+      "prompt_assembly": 785,
+      "runtime_task_contract": 1,
+      "task_completion": 1
+    },
+    "evidence_revisions": 785,
+    "contexts": 785,
+    "prompt_assemblies": 785,
+    "capability_requests": 34,
+    "capability_results": 34
+  },
+  "streaming_r2": {
+    "passed": true,
+    "contexts": 785,
+    "exact_assembly_matches": 785,
+    "backup_effect_count": 1
+  },
+  "task_completion": {
+    "status": "completed",
+    "routine": {
+      "n": 168,
+      "delivered": 163,
+      "missing_collection": 0,
+      "missing_delivery": 5,
+      "censored": 0,
+      "aoi_mean_s": 3211.3818181818183,
+      "aoi_p50_s": 2520,
+      "aoi_p90_s": 6660,
+      "aoi_p95_s": 8580,
+      "no_observation_s": 61200,
+      "latency_mean_s": 1501.840490797546,
+      "latency_p50_s": 0,
+      "latency_p90_s": 3600,
+      "latency_p95_s": 7200
+    },
+    "survival": {
+      "alive": 14,
+      "n": 14,
+      "mean_final_soc": 1.0,
+      "dead": []
+    },
+    "command_counters": {
+      "commands_sent": 28,
+      "commands_delivered": 25,
+      "commands_refused": 0,
+      "deduplicated": 0,
+      "fenced": 0,
+      "writes_changed": 0,
+      "writes_same_value": 25,
+      "writes_speculative": 0,
+      "stale_generation_dropped": 0,
+      "commands_sent_by_gateway": 28
+    },
+    "unconfirmed_requests": []
+  },
+  "failures": [],
+  "recovery_boundary": "This recovers R0/R2 trace integrity from the completed task-018 artifact without rerunning the model. Exact physical_signature equality is not inferred here unless separately reconstructed from deterministic execution."
+}

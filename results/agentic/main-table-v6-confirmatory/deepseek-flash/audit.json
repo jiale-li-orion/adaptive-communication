@@ -1,0 +1,110 @@
+{
+  "status": "PASS",
+  "audited_at": "2026-10-03T04:20:29.249454+00:00",
+  "experiment": "agentic-main-table-v6-confirmatory",
+  "protocol_revision": "communication-planner-json-v6-no-action-sufficiency",
+  "complete_expected_coordinate_set": true,
+  "no_posthoc_exclusion": true,
+  "source_manifest_current_hashes_match_frozen": true,
+  "all_per_run_configs_match_contract": true,
+  "all_r0_r1_r2_replay_audits_pass": true,
+  "method_gate": {
+    "rows": 15,
+    "all_effect_scope_exact": true,
+    "all_zero_observation": true,
+    "all_candidate_physical_exact": true,
+    "all_legacy_physical_exact": true,
+    "failed_model_attempts": 0
+  },
+  "candidate_reference_equals_legacy_comply": {
+    "rows": [
+      {
+        "task": "localized-o2",
+        "seed": 0,
+        "physical_equal": true
+      },
+      {
+        "task": "localized-o2",
+        "seed": 1,
+        "physical_equal": true
+      },
+      {
+        "task": "localized-o2",
+        "seed": 2,
+        "physical_equal": true
+      },
+      {
+        "task": "localized-o2",
+        "seed": 3,
+        "physical_equal": true
+      },
+      {
+        "task": "localized-o2",
+        "seed": 4,
+        "physical_equal": true
+      },
+      {
+        "task": "o5",
+        "seed": 0,
+        "physical_equal": true
+      },
+      {
+        "task": "o5",
+        "seed": 1,
+        "physical_equal": true
+      },
+      {
+        "task": "o5",
+        "seed": 2,
+        "physical_equal": true
+      },
+      {
+        "task": "o5",
+        "seed": 3,
+        "physical_equal": true
+      },
+      {
+        "task": "o5",
+        "seed": 4,
+        "physical_equal": true
+      },
+      {
+        "task": "o6",
+        "seed": 0,
+        "physical_equal": true
+      },
+      {
+        "task": "o6",
+        "seed": 1,
+        "physical_equal": true
+      },
+      {
+        "task": "o6",
+        "seed": 2,
+        "physical_equal": true
+      },
+      {
+        "task": "o6",
+        "seed": 3,
+        "physical_equal": true
+      },
+      {
+        "task": "o6",
+        "seed": 4,
+        "physical_equal": true
+      }
+    ],
+    "all_equal": true,
+    "equal_count": 15,
+    "expected_count": 15
+  },
+  "baseline_rows": 45,
+  "baseline_rows_with_failed_model_attempt": 13,
+  "artifact_sha256": {
+    "aggregate.json": "ba6f242f048dfd0d7d4bcd14674e1391ea2fa29156a04200ad7570b1bc1a3cfb",
+    "source-manifest.json": "10ad6cd61cc09fbb80a8429b0f09ff037b85c67bb2f6c3ba7e62da03c6e0d0ec",
+    "experiment_contract.json": "d91184309bca03037fb4f10d32554c7cfcedc242504e67dd4f073c7d5d3cb4d4",
+    "run_manifest.json": "19180d4a358a3c7fb70e7817fc4e86e2bea4f52268a647013894cc467f9f5008",
+    "per_episode_results.jsonl": "155bca070fd988b5f62772679b4f17ddd3b8764468d706dcca227f1b425865f0"
+  }
+}

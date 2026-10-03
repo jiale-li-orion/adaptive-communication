@@ -1,0 +1,38 @@
+{
+  "experiment": "agentic-main-table-v6-confirmatory",
+  "frozen_at": "2026-10-02T21:42:27.387367+00:00",
+  "model": "deepseek-flash",
+  "protocol_revision": "communication-planner-json-v6-no-action-sufficiency",
+  "seeds": [
+    0,
+    1,
+    2,
+    3,
+    4
+  ],
+  "tasks": [
+    "localized-o2",
+    "o5",
+    "o6"
+  ],
+  "arms": [
+    "action_conditioned_compact",
+    "task_conditioned",
+    "full_dump",
+    "generic_react"
+  ],
+  "planner_replan_mode": "decision_state",
+  "files": {
+    "code/agentic_communication/action_context.py": "8c8eeec531147c0cf1b0c65382f928420a1f388ed691843a63e9d2d96c0e9125",
+    "code/agentic_communication/capabilities.py": "5e545893b4515157c23b10f5b849dd782aa73962a65e75c15577c537f4b3c359",
+    "code/agentic_communication/context_runtime.py": "a3f6649404213d2f3f034bda026fc2e2c74fefc1f92492a444021b6dbf4cea7f",
+    "code/agentic_communication/model_protocol.py": "7d3942cfe62b702065dc7cdc16724453d216739946834b67c3cf8416354ca4f4",
+    "code/agentic_communication/planner.py": "f2fa86a474017d3d356820f41222cc0fcb819591fb260d6544b2a84974c36015",
+    "code/agentic_communication/policy.py": "957ef93c3f429c1df02d4a50cda0aa6e3ca905e1c56680f185b23e59045fa846",
+    "code/agentic_communication/run.py": "5728d6fe89450a89f876873c87b2ed82098be40d00ee8d46a96148c6ed359b47",
+    "code/agentic_communication/runtime_contracts.py": "0fdb151f3e0df3e81b8c65c208d4e336ae50eb44e21bed58751bd9b1936b0d73",
+    "code/agentic_communication/episodes.py": "428cd1d73ff8e954645940417614a7eb5b6a0f2c55571f878e655081c8a9fd63",
+    "code/experiments/agentic/run_r3_model_eval.py": "cebc877b9e88b523f8443220b9168ed86d81917606e90aa4a53e971c8b91d203",
+    "code/experiments/agentic/run_main_table_v6_confirmatory.py": "fdae120fcf9f155ad55cdf7a4e2ce954ba34f00e74368a9ed1166cdf8d47f95c"
+  }
+}

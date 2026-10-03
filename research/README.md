@@ -1,6 +1,6 @@
 # 当前研究：Evidence-Grounded Closed-Loop Agentic Communication
 
-更新：2026-10-01。本文是当前公开研究入口。部署参数以 `spec/instance-v1-manifest.md` 和代码为准，实验设计以 [`EXPERIMENT-DESIGN-v1.md`](EXPERIMENT-DESIGN-v1.md) 为准，数学系统模型以 [`docs/s6-model/system-model.md`](../docs/s6-model/system-model.md) 为准，历史冻结主张仍只认 [`results/CLAIMS.md`](../results/CLAIMS.md)。
+更新：2026-10-03。本文是当前公开研究入口。部署参数以 `spec/instance-v1-manifest.md` 和代码为准，实验设计以 [`EXPERIMENT-DESIGN-v1.md`](EXPERIMENT-DESIGN-v1.md) 为准，数学系统模型以 [`SYSTEM-MODEL-v1.md`](SYSTEM-MODEL-v1.md) 为准，当前 claim 状态只认 [`results/CLAIMS.md`](../results/CLAIMS.md)（`C*` 系统底座，`A*` Agentic deterministic/infrastructure）。
 
 场景固定为**灾前山区地灾监测**：电池/光伏供电的监测节点经 LoRaWAN Class A 类接入现场网关，蜂窝主回传可能间歇中断，系统已有 gateway backup、terminal-DtS、access assist、采样/上报配置和本地自治等能力。风险等级与监测要求由外部授权；本文研究这些任务如何在受损通信条件下被正确执行。
 
@@ -44,6 +44,12 @@ Operational Task
   -> new Evidence / next runtime revision
 ```
 
+Method II 当前已有一个可执行的 **action-conditioned Context selector**：Runtime 先生成少量合法通信候选计划，再用已持有 task-outcome evidence 筛掉 dominated candidate；仍有行动分歧时，依据 candidate `decision_guards` 追溯 evidence dependency，并沿 shared gateway/access/peer relation 扩展 Context。任务或相关 evidence revision 后重新计算受影响候选与依赖。实现位于 `code/agentic_communication/action_context.py`，正式 pre-model probe 位于 `results/agentic/action-conditioned-context-localized-o2-v1/`。
+
+当前方法语义边界另见 [`PLAN-EVIDENCE-EXECUTION-v1.md`](PLAN-EVIDENCE-EXECUTION-v1.md)：完整 audit candidate graph、当前 control-eligible surface、model-facing Context projection 与 persistent execution intent 分层管理；`shadow_only` candidate 可保留作审计/未来闭合，但不能自动转成当前模型的 active EvidenceNeed。当前 compact control surface 还显式区分 `sufficient_for_primary_action / sufficient_for_no_action / blocked / undetermined`，避免把已经闭合的 zero-effect hold 状态误解释成“还需要调查”。
+
+论文 novelty / prior-art 边界见 [`NOVELTY-BOUNDARY-v1.md`](NOVELTY-BOUNDARY-v1.md)。该文件已明确把静态退化情形映射到 DRD/HEC、Action-Sufficient Representation、SBFE/SSSC、provenance minimum witness、WirelessOpsAgent 与 semantic communication/AoI/VoI；当前允许的增量只落在 dynamic plan/dependency lifecycle、audit/control/model surface separation、persistent semantic commitment、communication-constrained owner acquisition 与真实异步 execution/replay 的组合语义上。可选的 minimum-basis side study 已对 A7/A10/A11 共 `235` 个正式 model requests 做 frozen-input headroom audit：没有真实 alternative-proof / multi-source / shared-blocking / duplicate-evidence choice，故按预注册条件终止，不再实现 basis optimizer。
+
 Agent 不直接读取 simulator hidden truth。`UNREACHABLE / TIMEOUT / STALE / NONE_RECENT / NEGATIVE_OBSERVATION` 是不同 observation semantics；控制 action 也必须区分 `requested / accepted / delivered / applied / confirmed`。
 
 此前研究过的 EvidenceNeed tracing、communication-constrained capability planning、context refresh 继续作为 Runtime 内部机制和 ablation，不再单独承担整篇论文 framing。
@@ -69,6 +75,7 @@ code/agentic_communication/task_compiler.py
 code/agentic_communication/evidence_world.py
 code/agentic_communication/capabilities.py
 code/agentic_communication/context_runtime.py
+code/agentic_communication/action_context.py
 code/agentic_communication/planner.py
 code/agentic_communication/replay.py
 code/agentic_communication/trajectory_eval.py
@@ -111,7 +118,7 @@ code/agentic_communication/run.py
 
 **Agent/runtime metric 用于 failure attribution。** 当前 R1 frozen-input evaluator 已直接计算 stopping correctness、capability selection precision/recall、order LCS、argument grounding；R3 cumulative gold replacement 可把 selection/order/arguments/policy 的修复继续传到真实 communication outcome。Task、EvidenceNeed、Percept、Context 的 upstream frozen-artifact replacement 已实现，并已与 planner-level selection/order/arguments 组合成正式 cumulative attribution matrix infrastructure：20 个 O2 frozen R1 turns 的受控 corruption/recovery audit 已 PASS。下一步是把同一 matrix 用在真实模型输出上。Context sufficiency/redundancy、accepted/confirmed split、model/tool calls、latency 与 materialized bytes 已进入现有 trace/aggregate。
 
-真实模型边界已冻结为 `communication-planner-json-v1`。`BackendPlannerConsumer` 只依赖现有 backend 的 `complete(messages)` 接口，可直接复用仓库 OpenAI-compatible / local-vLLM transport；`run_r1_model_eval.py` 先在 frozen PromptAssembly 上诊断模型，`run_r3_model_eval.py` 再进入 full simulator，并带硬 model-call budget。当前环境没有配置可用 API endpoint/key，所以这里只冻结了协议、transport、dry-run 与失败纪律，没有产生真实模型数字，也不会回退 scripted backend。
+真实模型边界当前冻结为 `communication-planner-json-v6-no-action-sufficiency`。`BackendPlannerConsumer` 只依赖现有 backend 的 `complete(messages)` 接口，可直接复用仓库 OpenAI-compatible / local-vLLM transport；`run_r1_model_eval.py` 在 frozen PromptAssembly 上诊断模型，`run_r3_model_eval.py` 进入 full simulator，并带硬 model-call budget。DeepSeek Flash 已实际进入 O2/O5/O6 full-episode R3；正式 5-seed confirmatory 当前先完成了 Method `15/15` gate：effect-scope inexact=`0`、额外 observation=`0`、candidate/legacy physical exact=`15/15`。45 个 baseline rows 尚在运行，因此本段不提前冻结模型方法 claim。
 
 不设置拍脑袋 overall score；physical outcome 与资源成本做 paired comparison / Pareto。
 
@@ -144,6 +151,10 @@ full_dump runtime + deterministic comply planner
 
 **Localized O2 / 5 seeds / Context conformance.** task-conditioned 与 FullDump 同样保持逐 seed physical-equivalent，Context sufficiency recall 均为 `1.000`。task-conditioned 平均选择 `10.32` 条 evidence、materialize `19763.6` B；FullDump 分别为 `27.32` 条和 `29575.6` B。两臂共同 physical mean：TDR `0.45020`，collection rate `0.61124`，p90 delivery latency `3000.0 s`。
 
+**Action-conditioned Context / localized O2 / 5 seeds.** `action_conditioned` 与 `action_candidates_full_dump` 共享同一候选行动生成和 deterministic reference consumer，四个 arm 均保持 paired physical-equivalent + replay exact。只改变 evidence selector 时，平均 selected evidence 从 `27.32` 降到 `4.66`，protocol bytes 从 `33867.5` 降到 `21048.3`，对应 evidence reduction `82.95%`、protocol reduction `37.85%`。该结果现在作为 A7–A11 live-model 方法的 pre-API interface witness，不再承担“模型收益待验证”的当前状态描述。
+
+**O5 remote-evidence / control-opportunity mechanism / 20 seeds.** 主口径固定为 `0 < t_s < task_horizon_s`，只在 deterministic baseline 中真实产生 config submission 且存在当前 PromptAssembly 的 tick 注入一轮 gateway-owner evidence query。`backhaul_delay_s=0/180` 时各有 `41` 个 candidate points，跨过 Class-A opportunity 的点数均为 `0`，physical divergence 也均为 `0`；`backhaul_delay_s=240/300` 时各有 `26` 个点跨过真实 control opportunity，physical divergence 同为 `26`，未跨机会但发生 divergence 的点数为 `0`。该结果支持“remote investigation 的物理后果由 decision-visible wait 是否跨过当前 runtime-admitted action 的下一 control opportunity 解释”；它是 simulator mechanism robustness，不是模型错误率，也不等价于最终 TDR 收益。
+
 **Diagnosis-first / 5 seeds / deterministic efficiency baseline.** fixed gateway diagnosis 与直接 deterministic comply 在 5/5 seeds 上 physical signature 完全一致；每个 episode 平均额外产生 `2.00` 次 model request、`4.00` 次 capability request、`4.00` 个 Percept、`2.00` 次 Context revision，并额外 materialize `65046.8` B。该结果只度量“先做与任务无关的固定诊断”的 runtime 开销。
 
 
@@ -159,20 +170,22 @@ full_dump runtime + deterministic comply planner
 
 **Attribution protocol infrastructure / 20 frozen R1 turns.** `attribution-matrix-infra-v1` 对同一 O2 frozen trace 注入受控 upstream + planner corruption，并按 Task→EvidenceNeed→Percept→Context→Selection→Order→Arguments 累计修复。完成 Gold Context 后 assembly match rate=`100.00%`；完成 capability selection 后 tool exact=`100.00%`，但平均 unresolved argument slots=`0.85`；直到 Gold Arguments 后 argument grounding 才到 `100.00%`。该结果只验证 attribution evaluator 的层级隔离/累计恢复，不是 LLM failure rate。
 
-**Frozen model-context inputs / O2 seed 0.** task-conditioned、FullDump、generic-ReAct 三套输入各冻结 `74` 个 R1 turn，三者均与 paired legacy physical-equivalent 且 R0/R1/R2 replay exact。model-facing protocol mean bytes 分别为 `31293.4 / 31293.4 / 26943.2`。generic-ReAct 输入完全移除 EvidenceNeed / InvestigationState harness artifacts；该 manifest 只冻结公平模型输入，不包含任何真实模型结果。
+**Frozen model-context inputs / O2 seed 0.** task-conditioned、FullDump、generic-ReAct 三套输入各冻结 `74` 个 R1 turn，三者均与 paired legacy physical-equivalent 且 R0/R1/R2 replay exact。model-facing protocol mean bytes 分别为 `31293.4 / 31293.4 / 26943.2`。generic-ReAct 输入完全移除 EvidenceNeed / InvestigationState harness artifacts；该 manifest 是 A7/A8 fairness 的 pre-API 基础，不再代表当前最终模型状态。
 
-这组结果的 claim ceiling 仅为：**同一正确 deterministic policy 下，Operational Task scope 可以减少无关 evidence/context materialization，而不改变物理业务结果。** 它不证明 LLM policy quality 提升。
+**Formal live-model freeze / A7–A11.** `paper-v1` 已冻结四组正文结果：A7 query-negative main table、A8 same-interface WirelessOpsAgent-style 强对照、A9 held-out task/source/model transfer、A10/A11 query-positive acquisition。query-positive DeepSeek 与 MiMo 五种子均保持 `5/5 execution-equivalent (4 direct + 1 recovered)` / `5/5 direct` deterministic physical reference；两者都真实执行 blocking owner query 与 gateway-backup commit，并相对 no-acquisition 获得 `TDR +5.238 pp; AoI -1150.7 s`。这些结果支持一个 frozen gateway-backup acquisition family 的双模型见证，不支持全局最优或普适 evidence acquisition。
+
+当前 claim ceiling 以 `results/CLAIMS.md` A7–A11 为准；pre-API 结果继续承担 fairness、mechanism 与 infrastructure 证据，不再作为“未来模型实验”的占位符。
 <!-- END GENERATED: agentic-o2 -->
 
 ## 7. 下一步
 
-1. 有真实 endpoint/key 后先跑三-context model matrix 的 R1 frozen-input diagnosis，再决定哪些模型/context 值得进入 R3 physical consequence；共享 frozen input 已落在 `results/agentic/model-context-inputs-v1/`，协议/transport 已就绪，但不会用 scripted backend 冒充真实模型结果；
-2. generic ReAct context baseline 已完成并进入正式 O2 baseline matrix；deterministic compiler/reference、task-conditioned evidence-aware、diagnosis-first、fixed-order eager 也已有同 capability surface 的正式对照。VoI 仅在 evidence acquisition cost/value 模型有 source-backed / simulator-authoritative 依据后启用，当前不造任意权重 baseline；
-3. attribution matrix infrastructure 已完成；真实模型接入后按现有 Task→EvidenceNeed→Percept→Context→Selection→Order→Arguments→Policy/Physical Oracle 协议跑实际 failure attribution；
-4. 在已完成的 source-period + weather/outage/scope/owner/scale 五轴 gate 上继续扩 access-outage phase、reachable subset、context length、owner count 与更大 deployment scale；
-5. secondary transfer 已完成第一条 S14/Qili source-derived schedule；下一步再做 raw monitoring-data 或 rainfall/hydrology/slope-stability generator 驱动的 Operational Task transfer，并继续把 hazard prediction 留在 external authority 一侧。
+1. 冻结 A7–A11 的 method/result boundary，不再新增模型 API 实验或新的 capability / solver / acquisition family；
+2. 以 `results/agentic/paper-v1/paper-results.json` 为正文数值 authority，继续收敛 `paper/agentic/` 的 Methods、Related Work、Experiments 与 Limitations；
+3. 复用历史系统稿中的场景、通信链路、标准依据与成熟系统模型表达，同时只保留与当前 A7–A11 一致的 claim；
+4. 扩充通信/网络 related work，并用 `NOVELTY-BOUNDARY-v1.md` 约束 DRD/ASR/SBFE/provenance/WirelessOpsAgent/VoI 等已有原理的 claim ceiling；
+5. basis-selection side study 已按 frozen-input headroom audit 的 kill criterion 终止；没有真实 alternative-proof choice，不再为了“算法味”制造新结构。
 
-建设顺序见 [`ROADMAP.md`](ROADMAP.md)。
+当前优先级是论文收口与仓库发布，建设顺序见 [`ROADMAP.md`](ROADMAP.md)。
 
 ## 8. 公开入口
 
@@ -187,6 +200,6 @@ full_dump runtime + deterministic comply planner
 | [`AGENTIC-ATTRIBUTION-PROTOCOL.v1.json`](AGENTIC-ATTRIBUTION-PROTOCOL.v1.json) | runtime/model/evaluator 的 gold-replacement ownership 与 rerun/post-hoc 边界 |
 | [`sources.json`](sources.json) | 来源 URL、scope、boundary |
 | [`RELATED_WORK.md`](RELATED_WORK.md) | benchmark / Agent / communication related work |
-| [`../docs/s6-model/system-model.md`](../docs/s6-model/system-model.md) | 数学系统模型 |
-| [`../docs/Agentic-Communication-后续研究Ownership.md`](../docs/Agentic-Communication-后续研究Ownership.md) | runtime/domain ownership 与 invariant |
-| [`../results/CLAIMS.md`](../results/CLAIMS.md) | 历史冻结主张 |
+| [`SYSTEM-MODEL-v1.md`](SYSTEM-MODEL-v1.md) | 当前公开数学系统模型 authority：hazard→Task 边界、obligation、energy、Class A、backhaul/DtS、Evidence World、Capability、Runtime、metrics |
+| [`OWNERSHIP-v1.md`](OWNERSHIP-v1.md) | canonical runtime/domain ownership、hidden-truth / Context / Capability / physical-substrate invariants |
+| [`../results/CLAIMS.md`](../results/CLAIMS.md) | 当前唯一 claim-state authority（C* 系统底座 / A* Agentic deterministic-infrastructure） |

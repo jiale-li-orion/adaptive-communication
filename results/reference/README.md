@@ -19,9 +19,10 @@
 | `control_deadline_witness.json` | 阶段 1 见证（无主张，供 §3 判决） | `code/analysis/control_deadline_witness.py` |
 | `control_deadline_witness_seeds100_104.json` | 阶段 1 见证的第二组种子 | 同脚本，`--seeds 100 101 102 103 104` |
 | `retention_deadline_audit.json` | C10（修正后，对照臂 `prefix`） | `code/analysis/retention_deadline_audit.py` |
-| `reverse_feedback_budget.json` | R1 关闭判定（反向确认延迟界） | `code/analysis/reverse_feedback_budget.py` |
+| `reverse_feedback_budget.json` | C11 条件性反向确认延迟界；早期“由聚合容量关闭 R1”的理由已撤回 | `code/analysis/reverse_feedback_budget.py` |
 | `r49_retention_horizon.json` | C10（原陈述，已由本条取代） | `code/v3joint/r49_retention_horizon.py` |
 | `c5_seqref_v2_semantics.json` | —（v2 口径，已取代） | `code/v3joint/c5_seqref.py` 于 `1a36d52` |
 | `c5_seqref_calibration.json` | C9 | `code/experiments/measure_seqref_calibration.py` |
+| [`agentic/`](agentic/README.md) | A1--A6 | compact aggregate + semantic-audit references for the current Agentic deterministic/infrastructure claims |
 
 更新规则：结果文件变动必须在**同一次提交**里更新本目录的对应快照，并说明变动原因。冻结值不与 `results/` 下的活文件自动同步，两者出现差异是**信号**，不是噪声：它说明某处改动了实验或其口径。

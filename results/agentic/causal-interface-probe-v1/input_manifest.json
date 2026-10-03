@@ -1,0 +1,77 @@
+{
+  "experiment": "causal-interface-probe-v1",
+  "generated_at": "2026-10-03T05:08:41.969728+00:00",
+  "model": "deepseek-flash",
+  "settings": {
+    "temperature": 0.0,
+    "max_tokens": 8192,
+    "reasoning_effort": "low",
+    "json_object": true
+  },
+  "arms": {
+    "M": "formal protocol-v6 compact Method output reused from audited trace",
+    "CF": "same candidate/needs/sufficiency; only evidence slice replaced by FullDump from the same deterministic physical trajectory",
+    "CS": "same compact input; only decision_sufficiency certificate and its two dedicated protocol rules removed",
+    "CR": "ordinary unique-supported-plan checklist; no LLM and no decision_sufficiency read"
+  },
+  "cases": [
+    {
+      "target": {
+        "task": "o5",
+        "episode": "O5",
+        "seed": 0,
+        "t_s": 14400,
+        "label": "o5-task-revision-action"
+      },
+      "gold_plan_id": "install_required_profile",
+      "gold_effect_count": 28,
+      "gold_stop": false,
+      "input_audit": {
+        "frozen_method_assembly_hash": "03c8b3b95de808b942e5cc6d606f69d9aa774febd8acf7c9bdcb988fa2f6c84e",
+        "current_method_assembly_hash": "03c8b3b95de808b942e5cc6d606f69d9aa774febd8acf7c9bdcb988fa2f6c84e",
+        "cf_assembly_hash": "2315480d3eb3edd8e0bdb46b6223c245286cfdd2dd5f7fb83cec62ba79b385cb",
+        "cs_assembly_hash": "c9f7707d571e74f5c34e10556d5bbd03d1ae5b849b939f69fc022ab0545af272",
+        "method_evidence_count": 0,
+        "cf_evidence_count": 29,
+        "cs_evidence_count": 0,
+        "cf_only_changes_evidence_slice": true,
+        "cs_only_removes_sufficiency_and_rules": true,
+        "method_protocol_sha256": "b9fe2cae62a55e4300c9a7aeb57b97dad12055199b0fb83e726fdc2573afa407",
+        "cf_protocol_sha256": "607934f2f322343a7a63158095e4eac7bcdd39d2cb72b014ce49f1bc04ba39c5",
+        "cs_protocol_sha256": "9aef61fc1a76f6af93f611cad075a0441da76dd9b00625d5d37c16e27597ef1a",
+        "method_protocol_bytes": 24294,
+        "cf_protocol_bytes": 41128,
+        "cs_protocol_bytes": 23523
+      }
+    },
+    {
+      "target": {
+        "task": "o6",
+        "episode": "O6",
+        "seed": 0,
+        "t_s": 10860,
+        "label": "o6-closed-hold"
+      },
+      "gold_plan_id": "hold_current_profile",
+      "gold_effect_count": 0,
+      "gold_stop": true,
+      "input_audit": {
+        "frozen_method_assembly_hash": "0b4308fe384f8b45b0a14931aec5d955359751c8d8036ccc3853bda5d4f9a718",
+        "current_method_assembly_hash": "0b4308fe384f8b45b0a14931aec5d955359751c8d8036ccc3853bda5d4f9a718",
+        "cf_assembly_hash": "d880177a7332d55566966917a477ad2b4621824c557e1c0fdc44b1b1afc65101",
+        "cs_assembly_hash": "a094a6e95ef25ea6dd1ed602771b7828762242e02cb8c9c2d7af917674d4eb11",
+        "method_evidence_count": 15,
+        "cf_evidence_count": 29,
+        "cs_evidence_count": 15,
+        "cf_only_changes_evidence_slice": true,
+        "cs_only_removes_sufficiency_and_rules": true,
+        "method_protocol_sha256": "1785bd3884f975c9750199c2d7abac9d4555b50cf35e9ad4a6288ce6dfcb6eec",
+        "cf_protocol_sha256": "00243d5f862e1d9a5a61c2e16c23a10a5cca644be9f4ef8294ffc28d6b6f34ef",
+        "cs_protocol_sha256": "623a7b41e69ca7d3a7a4ff7a51c2ee724dbcc35a365b58418aa86d36a2956504",
+        "method_protocol_bytes": 35924,
+        "cf_protocol_bytes": 44879,
+        "cs_protocol_bytes": 35162
+      }
+    }
+  ]
+}

@@ -85,6 +85,32 @@
       "runtime_status": "live_planner_observation"
     },
     {
+      "capability_id": "communication.gateway.node_report",
+      "contract_revision": 1,
+      "action": "observe",
+      "resource_type": "gateway_node_report",
+      "observation_semantics": "latest target-node report legally held by the gateway, including source/read time, SoC and confirmed configuration fields",
+      "effect_semantics": "observation",
+      "owner_location": "gateway",
+      "freshness_semantics": "report value remains bound to gateway receipt time and node source/read time; missing report is none_recent rather than a negative state observation",
+      "failure_semantics": [
+        "unreachable",
+        "timeout",
+        "stale",
+        "none_recent"
+      ],
+      "binding": {
+        "implementation_kind": "simulator_view_adapter",
+        "path": "code/instance/network.py",
+        "required_tokens": [
+          "self.gateway_reports",
+          "self.gateway_report_at",
+          "def _gateway_view"
+        ]
+      },
+      "runtime_status": "live_planner_observation"
+    },
+    {
       "capability_id": "communication.gateway.primary_health",
       "contract_revision": 1,
       "action": "observe",

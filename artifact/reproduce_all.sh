@@ -30,7 +30,10 @@ while [ $# -gt 0 ]; do
   esac
 done
 
-# ID | 是否需要真实模型调用 | 复现命令 | 结果文件（逗号分隔）
+# ID | 是否需要真实模型调用 | 复现命令 | 结果文件（逗号分隔） | 冻结参考（可选；逗号分隔）
+#
+# 第 5 列为空时沿用旧规则：results/reference/<结果 basename>。
+# Agentic 结果大量使用 aggregate.json/audit.json，basename 会冲突，因此 A* 显式给出 reference path。
 CLAIMS=(
 "C1|no|python3 code/v3joint/r30c_walls.py|results/r30c_walls.json"
 "C2|no|python3 code/v3joint/r41_expiry_equiv.py|results/r41_expiry_equiv.json"
@@ -43,12 +46,18 @@ CLAIMS=(
 "C9|no|python3 code/v3joint/c5_seqref.py && python3 code/experiments/measure_seqref_calibration.py|results/c5_seqref.json,results/c5_seqref_calibration.json"
 "C10|no|python3 code/analysis/retention_deadline_audit.py|results/retention_deadline_audit.json"
 "C11|no|python3 code/analysis/reverse_feedback_budget.py|results/reverse_feedback_budget.json"
+"A1|no|python3 code/experiments/agentic/run_o2_risk_escalation.py --variant global --seeds 0,1,2,3,4 && python3 code/experiments/agentic/run_o2_risk_escalation.py --variant localized --seeds 0,1,2,3,4|results/agentic/o2-risk-escalation-v1/aggregate.json,results/agentic/o2-risk-escalation-v1/audit.json,results/agentic/o2-localized-risk-escalation-v1/aggregate.json,results/agentic/o2-localized-risk-escalation-v1/audit.json|results/reference/agentic/A1-o2-global-aggregate.json,results/reference/agentic/A1-o2-global-audit.json,results/reference/agentic/A1-o2-localized-aggregate.json,results/reference/agentic/A1-o2-localized-audit.json"
+"A2|no|python3 code/experiments/agentic/run_o2_baseline_matrix.py --seeds 0,1,2,3,4|results/agentic/o2-baseline-matrix-v1/aggregate.json,results/agentic/o2-baseline-matrix-v1/audit.json|results/reference/agentic/A2-baseline-aggregate.json,results/reference/agentic/A2-baseline-audit.json"
+"A3|no|python3 code/experiments/agentic/run_source_period_smoke.py --seed 0 && python3 code/experiments/agentic/run_robustness_matrix.py|results/agentic/source-period-smoke-v1.json,results/agentic/robustness-matrix-v1/aggregate.json,results/agentic/robustness-matrix-v1/audit.json|results/reference/agentic/A3-source-period.json,results/reference/agentic/A3-robustness-aggregate.json,results/reference/agentic/A3-robustness-audit.json"
+"A4|no|python3 code/experiments/agentic/run_task_transfer_qili.py --seeds 0,1,2,3,4|results/agentic/task-transfer-qili-v1/aggregate.json,results/agentic/task-transfer-qili-v1/audit.json|results/reference/agentic/A4-transfer-aggregate.json,results/reference/agentic/A4-transfer-audit.json"
+"A5|no|python3 code/experiments/agentic/run_attribution_matrix_infra.py --turns 20|results/agentic/attribution-matrix-infra-v1/aggregate.json,results/agentic/attribution-matrix-infra-v1/audit.json|results/reference/agentic/A5-attribution-aggregate.json,results/reference/agentic/A5-attribution-audit.json"
+"A6|no|python3 code/experiments/agentic/run_communication_baseline_matrix.py --seeds 0,1,2,3,4|results/agentic/communication-baseline-matrix-v1/aggregate.json,results/agentic/communication-baseline-matrix-v1/audit.json|results/reference/agentic/A6-communication-aggregate.json,results/reference/agentic/A6-communication-audit.json"
 )
 
 if [ "$ONLY" = "__LIST__" ]; then
   printf '%-4s %-6s %-58s %s\n' ID 凭据 命令 结果文件
   for row in "${CLAIMS[@]}"; do
-    IFS='|' read -r id creds cmd res <<< "$row"
+    IFS='|' read -r id creds cmd res refs <<< "$row"
     printf '%-4s %-6s %-58s %s\n' "$id" "$creds" "${cmd:0:56}" "$res"
   done
   exit 0
@@ -62,7 +71,7 @@ selected() {
 
 pass=0; fail=0; skipped=0
 for row in "${CLAIMS[@]}"; do
-  IFS='|' read -r id creds cmd res <<< "$row"
+  IFS='|' read -r id creds cmd res refs <<< "$row"
   selected "$id" || continue
 
   echo
@@ -83,14 +92,30 @@ for row in "${CLAIMS[@]}"; do
 
   ok=1
   IFS=',' read -ra files <<< "$res"
-  for f in "${files[@]}"; do
-    base="$(basename "$f")"
-    frozen="results/reference/$base"
+  ref_files=()
+  if [ -n "${refs:-}" ]; then
+    IFS=',' read -ra ref_files <<< "$refs"
+    if [ "${#ref_files[@]}" -ne "${#files[@]}" ]; then
+      echo "  FAIL  结果文件与冻结参考数量不一致"
+      ok=0
+    fi
+  fi
+  for i in "${!files[@]}"; do
+    f="${files[$i]}"
+    if [ -n "${refs:-}" ]; then
+      frozen="${ref_files[$i]}"
+    else
+      base="$(basename "$f")"
+      frozen="results/reference/$base"
+    fi
     if [ ! -f "$frozen" ]; then
       echo "  FAIL  无冻结值 $frozen"
       ok=0; continue
     fi
-    if python3 artifact/compare_result.py "$frozen" "$f"; then
+    # Agentic audits hash run_manifest/runtime traces; those hashes are useful for
+    # a single run but include non-semantic timestamps. Freeze the verdict fields,
+    # not the wall-clock identity of a rerun.
+    if python3 artifact/compare_result.py "$frozen" "$f" --ignore-key result_hashes; then
       :
     else
       ok=0

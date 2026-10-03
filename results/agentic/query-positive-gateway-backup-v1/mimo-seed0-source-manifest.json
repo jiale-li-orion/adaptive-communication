@@ -1,0 +1,46 @@
+{
+  "experiment": "query-positive-gateway-backup-v1-mimo-seed0",
+  "frozen_at": "2026-10-03T10:51:42.323304+00:00",
+  "base_task018_manifest_sha256": "e9674d3d0f7819b297a838737873e3859cb3d37b726c742f4166720069938268",
+  "deterministic_gate_sha256": "6fbeeba3ce66f18c6d18936ef403b989eb7fb63a57a3370329d5ad886199bae5",
+  "a10_confirmatory_audit_sha256": "8a80304c4870aca43bdb680c7a57770eb934b368b35538ef920528ddaeb4653b",
+  "base_files": {
+    "code/agentic_communication/action_context.py": "8c8eeec531147c0cf1b0c65382f928420a1f388ed691843a63e9d2d96c0e9125",
+    "code/agentic_communication/capabilities.py": "5e545893b4515157c23b10f5b849dd782aa73962a65e75c15577c537f4b3c359",
+    "code/agentic_communication/context_runtime.py": "16f698a1f50ad1299f5224e58f76cc5dbc19afd56b634857edd09a27e0f2b0cb",
+    "code/agentic_communication/evidence_world.py": "04f864587df205ed04c5a24651ea6030022e775bd27d68075ace3f70e448d7fb",
+    "code/agentic_communication/model_protocol.py": "e9c5f1140aa2813f5a0ff005067c490a10700d2b9195d388478d53d7367c733b",
+    "code/agentic_communication/planner.py": "18fa7295af8c8223338f66caa028ecf0d930008ff07218665c756640f5cf9f5c",
+    "code/agentic_communication/policy.py": "957ef93c3f429c1df02d4a50cda0aa6e3ca905e1c56680f185b23e59045fa846",
+    "code/agentic_communication/query_positive.py": "6f780091b584603b1dd1b43a7de2bfd0da5d2fff4f27c4638b97ed501c64f27d",
+    "code/agentic_communication/replay.py": "3e6dc07c769a9814fbd13e530205ab0ab85556f1187561ebfb1dfae97b62db41",
+    "code/agentic_communication/runtime_contracts.py": "0fdb151f3e0df3e81b8c65c208d4e336ae50eb44e21bed58751bd9b1936b0d73",
+    "code/agentic_communication/task_compiler.py": "394cac33750f233b464ce9f19e683b136df34adb6219dcbd83a3b84b681c3a54",
+    "code/experiments/agentic/run_query_positive_gateway_backup_gate.py": "cdfd153227347be7155f79242cf6c3527d059bd3dd5e04314109852ab48fd8f3",
+    "code/experiments/agentic/run_query_positive_gateway_backup_model_probe.py": "3b7faf1947a560d5b472e34cac6f73499c2bc4094887322b419ebb56d80c7f95",
+    "code/experiments/agentic/run_r3_model_eval.py": "cebc877b9e88b523f8443220b9168ed86d81917606e90aa4a53e971c8b91d203",
+    "code/experiments/agentic/run_heldout_qili2024_seed0.py": "0a907129a1b6b51d01755aa48d1abd019db1ddc66976e63af18832f028d2ece7"
+  },
+  "runner": "code/experiments/agentic/run_query_positive_gateway_backup_mimo_seed0.py",
+  "runner_sha256": "ead05f16377af5e72a2482dd1640fcc8912160f5927884ef8a665b6d25af478c",
+  "streaming_audit": "code/experiments/agentic/query_positive_streaming_audit.py",
+  "streaming_audit_sha256": "a6d4d6fd67fe12f26ab2a7d5a94357e111ed239ae81a9fded29293190e88a260",
+  "model": {
+    "id": "mimo-v2.6-flash",
+    "provider": "xiaomi_mimo_official",
+    "api_key_env": "MIMO_API_KEY",
+    "base_url_env": "MIMO_BASE_URL",
+    "generation": {
+      "temperature": 0.0,
+      "reasoning_effort": null,
+      "thinking": "disabled",
+      "json_object": true,
+      "max_tokens": 8192
+    }
+  },
+  "protocol_revision": "communication-planner-json-v6-no-action-sufficiency",
+  "context_mode": "action_conditioned_compact_v7",
+  "context_variant": "gateway-backup-query-positive-v1",
+  "selector_revision": "action-conditioned-context-v8-gateway-backup-query-positive",
+  "runtime_revision": "communication-context-runtime-v8-gateway-backup-query-positive"
+}

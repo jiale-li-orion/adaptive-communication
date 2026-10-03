@@ -1,0 +1,30 @@
+{
+  "experiment": "heldout-qili-2024-w1-model-transfer-v7-confirmatory-audit",
+  "status": "PASS",
+  "source": "results/agentic/heldout-qili-2024-w1/model-transfer-v7/confirmatory-aggregate.json",
+  "source_manifest": "results/agentic/heldout-qili-2024-w1/model-transfer-v7/confirmatory-source-manifest.json",
+  "complete_coordinate_set": true,
+  "no_posthoc_exclusion": true,
+  "by_model": {
+    "deepseek-flash": {
+      "episodes": 5,
+      "planner_turns": 29,
+      "effect_exact_turns": 29,
+      "effect_inexact_turns": 0,
+      "observations": 0,
+      "failed_model_attempts": 0,
+      "physical_legacy_exact_episodes": 5
+    },
+    "mimo-v2.6-flash": {
+      "episodes": 5,
+      "planner_turns": 30,
+      "effect_exact_turns": 29,
+      "effect_inexact_turns": 1,
+      "observations": 1,
+      "failed_model_attempts": 1,
+      "physical_legacy_exact_episodes": 5
+    }
+  },
+  "failures": [],
+  "claim_boundary": "Held-out Qili source-derived Operational Task + NASA POWER 2024 test/w1, five seeds, DeepSeek Flash and MiMo v2.6 Flash. This supports task/source/model transfer of action and physical fidelity only. Do not compare token counts across providers and do not infer autonomous evidence acquisition; all measured coordinates remain query-negative."
+}

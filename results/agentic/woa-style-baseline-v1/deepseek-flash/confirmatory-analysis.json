@@ -1,0 +1,732 @@
+{
+  "experiment": "woa-style-baseline-v1-confirmatory-analysis",
+  "source": "results/agentic/woa-style-baseline-v1/deepseek-flash/confirmatory-aggregate.json",
+  "summary": {
+    "localized-o2": {
+      "episodes": 5,
+      "post_assurance_effect_inexact_turns": 0,
+      "post_assurance_physical_legacy_exact_episodes": 5,
+      "post_assurance_observation_turns": 0,
+      "raw_total_turns": 34,
+      "raw_plan_exact_turns": 34,
+      "raw_effect_exact_turns": 34,
+      "raw_stop_exact_turns": 34,
+      "raw_query_turns": 0,
+      "repaired_turns": 0,
+      "woa_tokens_mean": 70954.2,
+      "method_tokens_mean": 36261.2,
+      "paired_token_delta_mean": 34693.0,
+      "paired_latency_delta_ms_mean": 16702.55749540811
+    },
+    "o5": {
+      "episodes": 5,
+      "post_assurance_effect_inexact_turns": 0,
+      "post_assurance_physical_legacy_exact_episodes": 5,
+      "post_assurance_observation_turns": 0,
+      "raw_total_turns": 45,
+      "raw_plan_exact_turns": 45,
+      "raw_effect_exact_turns": 45,
+      "raw_stop_exact_turns": 45,
+      "raw_query_turns": 0,
+      "repaired_turns": 0,
+      "woa_tokens_mean": 110444.8,
+      "method_tokens_mean": 61200.0,
+      "paired_token_delta_mean": 49244.8,
+      "paired_latency_delta_ms_mean": 24759.63299201685
+    },
+    "o6": {
+      "episodes": 5,
+      "post_assurance_effect_inexact_turns": 0,
+      "post_assurance_physical_legacy_exact_episodes": 5,
+      "post_assurance_observation_turns": 0,
+      "raw_total_turns": 44,
+      "raw_plan_exact_turns": 44,
+      "raw_effect_exact_turns": 44,
+      "raw_stop_exact_turns": 44,
+      "raw_query_turns": 0,
+      "repaired_turns": 0,
+      "woa_tokens_mean": 127378.6,
+      "method_tokens_mean": 100761.0,
+      "paired_token_delta_mean": 26617.6,
+      "paired_latency_delta_ms_mean": 22005.22652339132
+    }
+  },
+  "paired_rows": [
+    {
+      "task": "localized-o2",
+      "seed": 0,
+      "woa": {
+        "turns": 6,
+        "effect_exact": 6,
+        "effect_inexact": 0,
+        "observations": 0,
+        "physical_candidate": true,
+        "physical_legacy": true,
+        "raw_plan_exact": 6,
+        "raw_effect_exact": 6,
+        "raw_stop_exact": 6,
+        "raw_query_turns": 0,
+        "repaired_turns": 0,
+        "governor_counts": {
+          "APPLY": 5,
+          "HOLD": 1
+        },
+        "repair_type_counts": {},
+        "usage": {
+          "input_tokens": 58523,
+          "output_tokens": 4627,
+          "total_tokens": 63150,
+          "latency_ms": 26036.877705017105
+        }
+      },
+      "method": {
+        "effect_exact": 6,
+        "effect_inexact": 0,
+        "observations": 0,
+        "physical_candidate": true,
+        "physical_legacy": true,
+        "usage": {
+          "input_tokens": 30664,
+          "output_tokens": 1059,
+          "total_tokens": 31723,
+          "latency_ms": 8069.910876009089
+        }
+      },
+      "woa_minus_method": {
+        "total_tokens": 31427,
+        "latency_ms": 17966.966829008015
+      }
+    },
+    {
+      "task": "localized-o2",
+      "seed": 1,
+      "woa": {
+        "turns": 7,
+        "effect_exact": 7,
+        "effect_inexact": 0,
+        "observations": 0,
+        "physical_candidate": true,
+        "physical_legacy": true,
+        "raw_plan_exact": 7,
+        "raw_effect_exact": 7,
+        "raw_stop_exact": 7,
+        "raw_query_turns": 0,
+        "repaired_turns": 0,
+        "governor_counts": {
+          "APPLY": 6,
+          "HOLD": 1
+        },
+        "repair_type_counts": {},
+        "usage": {
+          "input_tokens": 68820,
+          "output_tokens": 4895,
+          "total_tokens": 73715,
+          "latency_ms": 26511.682299998938
+        }
+      },
+      "method": {
+        "effect_exact": 7,
+        "effect_inexact": 0,
+        "observations": 0,
+        "physical_candidate": true,
+        "physical_legacy": true,
+        "usage": {
+          "input_tokens": 35645,
+          "output_tokens": 1045,
+          "total_tokens": 36690,
+          "latency_ms": 9669.458689997555
+        }
+      },
+      "woa_minus_method": {
+        "total_tokens": 37025,
+        "latency_ms": 16842.223610001383
+      }
+    },
+    {
+      "task": "localized-o2",
+      "seed": 2,
+      "woa": {
+        "turns": 6,
+        "effect_exact": 6,
+        "effect_inexact": 0,
+        "observations": 0,
+        "physical_candidate": true,
+        "physical_legacy": true,
+        "raw_plan_exact": 6,
+        "raw_effect_exact": 6,
+        "raw_stop_exact": 6,
+        "raw_query_turns": 0,
+        "repaired_turns": 0,
+        "governor_counts": {
+          "APPLY": 5,
+          "HOLD": 1
+        },
+        "repair_type_counts": {},
+        "usage": {
+          "input_tokens": 56296,
+          "output_tokens": 6057,
+          "total_tokens": 62353,
+          "latency_ms": 32179.022366020945
+        }
+      },
+      "method": {
+        "effect_exact": 6,
+        "effect_inexact": 0,
+        "observations": 0,
+        "physical_candidate": true,
+        "physical_legacy": true,
+        "usage": {
+          "input_tokens": 30885,
+          "output_tokens": 1736,
+          "total_tokens": 32621,
+          "latency_ms": 10462.412837005104
+        }
+      },
+      "woa_minus_method": {
+        "total_tokens": 29732,
+        "latency_ms": 21716.60952901584
+      }
+    },
+    {
+      "task": "localized-o2",
+      "seed": 3,
+      "woa": {
+        "turns": 8,
+        "effect_exact": 8,
+        "effect_inexact": 0,
+        "observations": 0,
+        "physical_candidate": true,
+        "physical_legacy": true,
+        "raw_plan_exact": 8,
+        "raw_effect_exact": 8,
+        "raw_stop_exact": 8,
+        "raw_query_turns": 0,
+        "repaired_turns": 0,
+        "governor_counts": {
+          "APPLY": 6,
+          "HOLD": 2
+        },
+        "repair_type_counts": {},
+        "usage": {
+          "input_tokens": 78822,
+          "output_tokens": 4362,
+          "total_tokens": 83184,
+          "latency_ms": 23990.89551900397
+        }
+      },
+      "method": {
+        "effect_exact": 8,
+        "effect_inexact": 0,
+        "observations": 0,
+        "physical_candidate": true,
+        "physical_legacy": true,
+        "usage": {
+          "input_tokens": 40644,
+          "output_tokens": 1894,
+          "total_tokens": 42538,
+          "latency_ms": 12577.219908002007
+        }
+      },
+      "woa_minus_method": {
+        "total_tokens": 40646,
+        "latency_ms": 11413.675611001963
+      }
+    },
+    {
+      "task": "localized-o2",
+      "seed": 4,
+      "woa": {
+        "turns": 7,
+        "effect_exact": 7,
+        "effect_inexact": 0,
+        "observations": 0,
+        "physical_candidate": true,
+        "physical_legacy": true,
+        "raw_plan_exact": 7,
+        "raw_effect_exact": 7,
+        "raw_stop_exact": 7,
+        "raw_query_turns": 0,
+        "repaired_turns": 0,
+        "governor_counts": {
+          "APPLY": 6,
+          "HOLD": 1
+        },
+        "repair_type_counts": {},
+        "usage": {
+          "input_tokens": 67666,
+          "output_tokens": 4703,
+          "total_tokens": 72369,
+          "latency_ms": 26697.814568004105
+        }
+      },
+      "method": {
+        "effect_exact": 7,
+        "effect_inexact": 0,
+        "observations": 0,
+        "physical_candidate": true,
+        "physical_legacy": true,
+        "usage": {
+          "input_tokens": 36028,
+          "output_tokens": 1706,
+          "total_tokens": 37734,
+          "latency_ms": 11124.502669990761
+        }
+      },
+      "woa_minus_method": {
+        "total_tokens": 34635,
+        "latency_ms": 15573.311898013344
+      }
+    },
+    {
+      "task": "o5",
+      "seed": 0,
+      "woa": {
+        "turns": 11,
+        "effect_exact": 11,
+        "effect_inexact": 0,
+        "observations": 0,
+        "physical_candidate": true,
+        "physical_legacy": true,
+        "raw_plan_exact": 11,
+        "raw_effect_exact": 11,
+        "raw_stop_exact": 11,
+        "raw_query_turns": 0,
+        "repaired_turns": 0,
+        "governor_counts": {
+          "APPLY": 10,
+          "HOLD": 1
+        },
+        "repair_type_counts": {},
+        "usage": {
+          "input_tokens": 127833,
+          "output_tokens": 9149,
+          "total_tokens": 136982,
+          "latency_ms": 46502.42416499532
+        }
+      },
+      "method": {
+        "effect_exact": 11,
+        "effect_inexact": 0,
+        "observations": 0,
+        "physical_candidate": true,
+        "physical_legacy": true,
+        "usage": {
+          "input_tokens": 71656,
+          "output_tokens": 2121,
+          "total_tokens": 73777,
+          "latency_ms": 16146.942722989479
+        }
+      },
+      "woa_minus_method": {
+        "total_tokens": 63205,
+        "latency_ms": 30355.48144200584
+      }
+    },
+    {
+      "task": "o5",
+      "seed": 1,
+      "woa": {
+        "turns": 10,
+        "effect_exact": 10,
+        "effect_inexact": 0,
+        "observations": 0,
+        "physical_candidate": true,
+        "physical_legacy": true,
+        "raw_plan_exact": 10,
+        "raw_effect_exact": 10,
+        "raw_stop_exact": 10,
+        "raw_query_turns": 0,
+        "repaired_turns": 0,
+        "governor_counts": {
+          "APPLY": 9,
+          "HOLD": 1
+        },
+        "repair_type_counts": {},
+        "usage": {
+          "input_tokens": 116794,
+          "output_tokens": 6996,
+          "total_tokens": 123790,
+          "latency_ms": 35468.450901986216
+        }
+      },
+      "method": {
+        "effect_exact": 10,
+        "effect_inexact": 0,
+        "observations": 0,
+        "physical_candidate": true,
+        "physical_legacy": true,
+        "usage": {
+          "input_tokens": 66387,
+          "output_tokens": 1914,
+          "total_tokens": 68301,
+          "latency_ms": 14057.315514990478
+        }
+      },
+      "woa_minus_method": {
+        "total_tokens": 55489,
+        "latency_ms": 21411.13538699574
+      }
+    },
+    {
+      "task": "o5",
+      "seed": 2,
+      "woa": {
+        "turns": 6,
+        "effect_exact": 6,
+        "effect_inexact": 0,
+        "observations": 0,
+        "physical_candidate": true,
+        "physical_legacy": true,
+        "raw_plan_exact": 6,
+        "raw_effect_exact": 6,
+        "raw_stop_exact": 6,
+        "raw_query_turns": 0,
+        "repaired_turns": 0,
+        "governor_counts": {
+          "APPLY": 4,
+          "HOLD": 2
+        },
+        "repair_type_counts": {},
+        "usage": {
+          "input_tokens": 64875,
+          "output_tokens": 4255,
+          "total_tokens": 69130,
+          "latency_ms": 24719.74546200363
+        }
+      },
+      "method": {
+        "effect_exact": 6,
+        "effect_inexact": 0,
+        "observations": 0,
+        "physical_candidate": true,
+        "physical_legacy": true,
+        "usage": {
+          "input_tokens": 39426,
+          "output_tokens": 1044,
+          "total_tokens": 40470,
+          "latency_ms": 8445.681252982467
+        }
+      },
+      "woa_minus_method": {
+        "total_tokens": 28660,
+        "latency_ms": 16274.064209021162
+      }
+    },
+    {
+      "task": "o5",
+      "seed": 3,
+      "woa": {
+        "turns": 9,
+        "effect_exact": 9,
+        "effect_inexact": 0,
+        "observations": 0,
+        "physical_candidate": true,
+        "physical_legacy": true,
+        "raw_plan_exact": 9,
+        "raw_effect_exact": 9,
+        "raw_stop_exact": 9,
+        "raw_query_turns": 0,
+        "repaired_turns": 0,
+        "governor_counts": {
+          "APPLY": 8,
+          "HOLD": 1
+        },
+        "repair_type_counts": {},
+        "usage": {
+          "input_tokens": 104459,
+          "output_tokens": 8988,
+          "total_tokens": 113447,
+          "latency_ms": 46736.24138403102
+        }
+      },
+      "method": {
+        "effect_exact": 9,
+        "effect_inexact": 0,
+        "observations": 0,
+        "physical_candidate": true,
+        "physical_legacy": true,
+        "usage": {
+          "input_tokens": 60572,
+          "output_tokens": 1773,
+          "total_tokens": 62345,
+          "latency_ms": 12485.71161799191
+        }
+      },
+      "woa_minus_method": {
+        "total_tokens": 51102,
+        "latency_ms": 34250.52976603911
+      }
+    },
+    {
+      "task": "o5",
+      "seed": 4,
+      "woa": {
+        "turns": 9,
+        "effect_exact": 9,
+        "effect_inexact": 0,
+        "observations": 0,
+        "physical_candidate": true,
+        "physical_legacy": true,
+        "raw_plan_exact": 9,
+        "raw_effect_exact": 9,
+        "raw_stop_exact": 9,
+        "raw_query_turns": 0,
+        "repaired_turns": 0,
+        "governor_counts": {
+          "APPLY": 8,
+          "HOLD": 1
+        },
+        "repair_type_counts": {},
+        "usage": {
+          "input_tokens": 101953,
+          "output_tokens": 6922,
+          "total_tokens": 108875,
+          "latency_ms": 37826.67250301165
+        }
+      },
+      "method": {
+        "effect_exact": 9,
+        "effect_inexact": 0,
+        "observations": 0,
+        "physical_candidate": true,
+        "physical_legacy": true,
+        "usage": {
+          "input_tokens": 58787,
+          "output_tokens": 2320,
+          "total_tokens": 61107,
+          "latency_ms": 16319.718346989248
+        }
+      },
+      "woa_minus_method": {
+        "total_tokens": 47768,
+        "latency_ms": 21506.954156022402
+      }
+    },
+    {
+      "task": "o6",
+      "seed": 0,
+      "woa": {
+        "turns": 11,
+        "effect_exact": 11,
+        "effect_inexact": 0,
+        "observations": 0,
+        "physical_candidate": true,
+        "physical_legacy": true,
+        "raw_plan_exact": 11,
+        "raw_effect_exact": 11,
+        "raw_stop_exact": 11,
+        "raw_query_turns": 0,
+        "repaired_turns": 0,
+        "governor_counts": {
+          "APPLY": 10,
+          "HOLD": 1
+        },
+        "repair_type_counts": {},
+        "usage": {
+          "input_tokens": 153545,
+          "output_tokens": 8127,
+          "total_tokens": 161672,
+          "latency_ms": 43708.68799497839
+        }
+      },
+      "method": {
+        "effect_exact": 11,
+        "effect_inexact": 0,
+        "observations": 0,
+        "physical_candidate": true,
+        "physical_legacy": true,
+        "usage": {
+          "input_tokens": 124685,
+          "output_tokens": 2241,
+          "total_tokens": 126926,
+          "latency_ms": 17307.582823013945
+        }
+      },
+      "woa_minus_method": {
+        "total_tokens": 34746,
+        "latency_ms": 26401.105171964446
+      }
+    },
+    {
+      "task": "o6",
+      "seed": 1,
+      "woa": {
+        "turns": 8,
+        "effect_exact": 8,
+        "effect_inexact": 0,
+        "observations": 0,
+        "physical_candidate": true,
+        "physical_legacy": true,
+        "raw_plan_exact": 8,
+        "raw_effect_exact": 8,
+        "raw_stop_exact": 8,
+        "raw_query_turns": 0,
+        "repaired_turns": 0,
+        "governor_counts": {
+          "APPLY": 7,
+          "HOLD": 1
+        },
+        "repair_type_counts": {},
+        "usage": {
+          "input_tokens": 110503,
+          "output_tokens": 7195,
+          "total_tokens": 117698,
+          "latency_ms": 38131.383454965544
+        }
+      },
+      "method": {
+        "effect_exact": 8,
+        "effect_inexact": 0,
+        "observations": 0,
+        "physical_candidate": true,
+        "physical_legacy": true,
+        "usage": {
+          "input_tokens": 90624,
+          "output_tokens": 1531,
+          "total_tokens": 92155,
+          "latency_ms": 12370.909361990925
+        }
+      },
+      "woa_minus_method": {
+        "total_tokens": 25543,
+        "latency_ms": 25760.47409297462
+      }
+    },
+    {
+      "task": "o6",
+      "seed": 2,
+      "woa": {
+        "turns": 6,
+        "effect_exact": 6,
+        "effect_inexact": 0,
+        "observations": 0,
+        "physical_candidate": true,
+        "physical_legacy": true,
+        "raw_plan_exact": 6,
+        "raw_effect_exact": 6,
+        "raw_stop_exact": 6,
+        "raw_query_turns": 0,
+        "repaired_turns": 0,
+        "governor_counts": {
+          "APPLY": 4,
+          "HOLD": 2
+        },
+        "repair_type_counts": {},
+        "usage": {
+          "input_tokens": 77900,
+          "output_tokens": 4333,
+          "total_tokens": 82233,
+          "latency_ms": 23538.954698000452
+        }
+      },
+      "method": {
+        "effect_exact": 6,
+        "effect_inexact": 0,
+        "observations": 0,
+        "physical_candidate": true,
+        "physical_legacy": true,
+        "usage": {
+          "input_tokens": 65009,
+          "output_tokens": 935,
+          "total_tokens": 65944,
+          "latency_ms": 8674.847289003083
+        }
+      },
+      "woa_minus_method": {
+        "total_tokens": 16289,
+        "latency_ms": 14864.10740899737
+      }
+    },
+    {
+      "task": "o6",
+      "seed": 3,
+      "woa": {
+        "turns": 9,
+        "effect_exact": 9,
+        "effect_inexact": 0,
+        "observations": 0,
+        "physical_candidate": true,
+        "physical_legacy": true,
+        "raw_plan_exact": 9,
+        "raw_effect_exact": 9,
+        "raw_stop_exact": 9,
+        "raw_query_turns": 0,
+        "repaired_turns": 0,
+        "governor_counts": {
+          "APPLY": 8,
+          "HOLD": 1
+        },
+        "repair_type_counts": {},
+        "usage": {
+          "input_tokens": 124649,
+          "output_tokens": 6629,
+          "total_tokens": 131278,
+          "latency_ms": 37230.549466985394
+        }
+      },
+      "method": {
+        "effect_exact": 9,
+        "effect_inexact": 0,
+        "observations": 0,
+        "physical_candidate": true,
+        "physical_legacy": true,
+        "usage": {
+          "input_tokens": 102221,
+          "output_tokens": 1532,
+          "total_tokens": 103753,
+          "latency_ms": 13265.146131998335
+        }
+      },
+      "woa_minus_method": {
+        "total_tokens": 27525,
+        "latency_ms": 23965.40333498706
+      }
+    },
+    {
+      "task": "o6",
+      "seed": 4,
+      "woa": {
+        "turns": 10,
+        "effect_exact": 10,
+        "effect_inexact": 0,
+        "observations": 0,
+        "physical_candidate": true,
+        "physical_legacy": true,
+        "raw_plan_exact": 10,
+        "raw_effect_exact": 10,
+        "raw_stop_exact": 10,
+        "raw_query_turns": 0,
+        "repaired_turns": 0,
+        "governor_counts": {
+          "APPLY": 9,
+          "HOLD": 1
+        },
+        "repair_type_counts": {},
+        "usage": {
+          "input_tokens": 138045,
+          "output_tokens": 5967,
+          "total_tokens": 144012,
+          "latency_ms": 34468.04406301817
+        }
+      },
+      "method": {
+        "effect_exact": 10,
+        "effect_inexact": 0,
+        "observations": 0,
+        "physical_candidate": true,
+        "physical_legacy": true,
+        "usage": {
+          "input_tokens": 113078,
+          "output_tokens": 1949,
+          "total_tokens": 115027,
+          "latency_ms": 15433.00145498506
+        }
+      },
+      "woa_minus_method": {
+        "total_tokens": 28985,
+        "latency_ms": 19035.04260803311
+      }
+    }
+  ],
+  "interpretation_boundary": "WirelessOpsAgent-style is a strong same-interface method adaptation, not an official source-code reproduction. Post-assurance reliability, raw proposal quality and repair activity are reported separately."
+}

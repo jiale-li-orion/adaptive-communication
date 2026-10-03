@@ -1,5 +1,5 @@
 {
-  "retrieved_at": "2026-10-01",
+  "retrieved_at": "2026-10-02",
   "scope": "bounded research-direction lookup, not exhaustive or systematic review",
   "venues_not_inferred_from_search_snippets": true,
   "queries": [
@@ -15,6 +15,9 @@
     "LENS 2608.16185",
     "2026 北斗短报文 按条计费 通信管理局",
     "北斗三号区域短报文通信应用服务平台 用户平台 接口技术要求 20264580-T-801"
+    ,"地质灾害监测 加密监测 降雨 监测频率 DB11/T 1677-2019"
+    ,"暴雨预警 预计未来 条件 地质灾害气象风险 递进式预报 渐进式预警"
+    ,"泥石流监测 远程配置 采集周期 加密检测周期 上报阈值"
   ],
   "metadata_endpoints": [
     "https://export.arxiv.org/api/query?id_list=2507.14201,2608.16178,2506.03231,2105.06845,2608.08277,2605.13037,2605.11633,2411.00319&max_results=20",
@@ -158,6 +161,36 @@
       "verified_scope": "field monitoring on Qili connection-line high-steep slopes reports that deformation rates increased during the 21 April–7 June 2016 heavy-rainfall period (637 mm), followed by stabilization; monitoring included GPS and other in-situ sensors",
       "reuse_in": "secondary source-derived Operational Task phase schedule; validates that external hazard/monitoring authority can replace a hand-authored task schedule without changing the communication Agent method",
       "boundary": "the benchmark preserves only the reported phase ordering. Equal-duration benchmark phases and the 3600 s/300 s communication profiles are A-layer workload transforms, not field warning thresholds, calibrated landslide probabilities, or a claim that one benchmark hour equals one real day"
+    },
+    {
+      "id": "S15",
+      "title": "地质灾害监测技术规范（DB11/T 1677-2019）",
+      "publisher": "北京市规划和自然资源委员会 / 北京市地方标准",
+      "published_at": "2019",
+      "url": "https://ghzrzyw.beijing.gov.cn/biaozhunguanli/bz/gtzy/202011/P020201105397976267685.pdf",
+      "verified_scope": "official geohazard-monitoring standard states that monitoring frequency depends on stability/development stage and environmental conditions; flood/freeze-thaw or unstable conditions require denser monitoring, and automated monitoring frequency can be increased when abnormal changes occur",
+      "reuse_in": "source-backed external-authority pre-alert/intensified-monitoring Operational Task; causal anticipatory-control benchmark design",
+      "boundary": "supports stage/condition-dependent monitoring intensification, but does not provide this repository's 300 s/3600 s profiles, communication outage timing, or a numeric pre-alert lead time"
+    },
+    {
+      "id": "S16",
+      "title": "北京市防汛应急预案（2019年修订）",
+      "publisher": "北京市应急管理局",
+      "published_at": "2019-07-26",
+      "url": "https://yjglj.beijing.gov.cn/art/2019/7/26/art_2522_444602.html",
+      "verified_scope": "official emergency plan allows rainfall warnings to be issued from forecast future conditions and calls for region/time-specific progressive forecasting, warning and intensified geohazard monitoring during flood season",
+      "reuse_in": "external authority may lawfully issue a pre-alert before the hazard-driving rainfall period; motivates notice-time vs effective-time experiments",
+      "boundary": "does not define a field-specific monitoring-device command, exact warning-to-task lead time, or guarantee that a communication outage is predictable"
+    },
+    {
+      "id": "S17",
+      "title": "大邑县江河西岭雪山景区段山洪泥石流监测预警系统建设项目中标公告",
+      "publisher": "中国政府采购网",
+      "published_at": "2023-09-22",
+      "url": "https://www.ccgp.gov.cn/cggg/dfgg/zbgg/202309/t20230922_20757634.htm",
+      "verified_scope": "official procurement specification for debris-flow monitoring terminals includes solar/battery supply, remote configuration of acquisition cycle and thresholds, configurable intensified detection cycle/reporting threshold, local historical storage and automatic/commanded data retransmission",
+      "reuse_in": "device/action realism for causal pre-alert preparation and remote monitoring-profile changes",
+      "boundary": "procurement specification does not establish scheduled future activation, this repository's LoRa/Class-A control path, exact energy cost, or a numeric pre-alert lead time"
     }
   ],
   "records": [

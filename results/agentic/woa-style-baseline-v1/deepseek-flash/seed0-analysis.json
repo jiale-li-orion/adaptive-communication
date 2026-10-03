@@ -1,0 +1,142 @@
+{
+  "experiment": "woa-style-baseline-v1-seed0-analysis",
+  "source": "results/agentic/woa-style-baseline-v1/deepseek-flash/seed0-aggregate.json",
+  "rows": [
+    {
+      "task": "localized-o2",
+      "method": {
+        "model_calls": 6,
+        "effect_exact": 6,
+        "effect_inexact": 0,
+        "observations": 0,
+        "physical_candidate": true,
+        "physical_legacy": true,
+        "usage": {
+          "input_tokens": 30664,
+          "output_tokens": 1059,
+          "total_tokens": 31723,
+          "latency_ms": 8069.910876009089
+        }
+      },
+      "woa_style": {
+        "model_calls": 6,
+        "effect_exact": 6,
+        "effect_inexact": 0,
+        "observations": 0,
+        "physical_candidate": true,
+        "physical_legacy": true,
+        "usage": {
+          "input_tokens": 58523,
+          "output_tokens": 4627,
+          "total_tokens": 63150,
+          "latency_ms": 26036.877705017105
+        },
+        "raw_selected_plan_exact_turns": 6,
+        "raw_query_turns": 0,
+        "repaired_turns": 0,
+        "governor_counts": {
+          "APPLY": 5,
+          "HOLD": 1
+        },
+        "repair_type_counts": {}
+      },
+      "paired_delta_woa_minus_method": {
+        "model_calls": 0,
+        "observations": 0,
+        "total_tokens": 31427,
+        "latency_ms": 17966.966829008015
+      }
+    },
+    {
+      "task": "o5",
+      "method": {
+        "model_calls": 11,
+        "effect_exact": 11,
+        "effect_inexact": 0,
+        "observations": 0,
+        "physical_candidate": true,
+        "physical_legacy": true,
+        "usage": {
+          "input_tokens": 71656,
+          "output_tokens": 2121,
+          "total_tokens": 73777,
+          "latency_ms": 16146.942722989479
+        }
+      },
+      "woa_style": {
+        "model_calls": 11,
+        "effect_exact": 11,
+        "effect_inexact": 0,
+        "observations": 0,
+        "physical_candidate": true,
+        "physical_legacy": true,
+        "usage": {
+          "input_tokens": 127833,
+          "output_tokens": 9149,
+          "total_tokens": 136982,
+          "latency_ms": 46502.42416499532
+        },
+        "raw_selected_plan_exact_turns": 11,
+        "raw_query_turns": 0,
+        "repaired_turns": 0,
+        "governor_counts": {
+          "APPLY": 10,
+          "HOLD": 1
+        },
+        "repair_type_counts": {}
+      },
+      "paired_delta_woa_minus_method": {
+        "model_calls": 0,
+        "observations": 0,
+        "total_tokens": 63205,
+        "latency_ms": 30355.48144200584
+      }
+    },
+    {
+      "task": "o6",
+      "method": {
+        "model_calls": 11,
+        "effect_exact": 11,
+        "effect_inexact": 0,
+        "observations": 0,
+        "physical_candidate": true,
+        "physical_legacy": true,
+        "usage": {
+          "input_tokens": 124685,
+          "output_tokens": 2241,
+          "total_tokens": 126926,
+          "latency_ms": 17307.582823013945
+        }
+      },
+      "woa_style": {
+        "model_calls": 11,
+        "effect_exact": 11,
+        "effect_inexact": 0,
+        "observations": 0,
+        "physical_candidate": true,
+        "physical_legacy": true,
+        "usage": {
+          "input_tokens": 153545,
+          "output_tokens": 8127,
+          "total_tokens": 161672,
+          "latency_ms": 43708.68799497839
+        },
+        "raw_selected_plan_exact_turns": 11,
+        "raw_query_turns": 0,
+        "repaired_turns": 0,
+        "governor_counts": {
+          "APPLY": 10,
+          "HOLD": 1
+        },
+        "repair_type_counts": {}
+      },
+      "paired_delta_woa_minus_method": {
+        "model_calls": 0,
+        "observations": 0,
+        "total_tokens": 34746,
+        "latency_ms": 26401.105171964446
+      }
+    }
+  ],
+  "interpretation_boundary": "WOA-style is a strong method adaptation over the same repository interface, not an official source-code reproduction. Raw-proposal and post-assurance metrics must be reported separately so repair work is not hidden by final physical equality."
+}

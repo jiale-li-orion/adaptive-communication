@@ -1,0 +1,28 @@
+{
+  "experiment": "heldout-qili-2024-w1-model-transfer-v7-seed0",
+  "frozen_at": "2026-10-03T07:07:39.117717+00:00",
+  "seed": 0,
+  "models": [
+    "deepseek-flash",
+    "mimo-v2.6-flash"
+  ],
+  "protocol_revision": "communication-planner-json-v7-retired-plan-projection",
+  "context_mode": "action_conditioned_compact_v7",
+  "projection_change": "omit unresolved_conditions from rejected/dominated model-facing candidate plans; full candidate audit, supported/conditional plan semantics, EvidenceNeed and top-level unresolved dependency audit remain unchanged",
+  "files": {
+    "code/agentic_communication/action_context.py": "8c8eeec531147c0cf1b0c65382f928420a1f388ed691843a63e9d2d96c0e9125",
+    "code/agentic_communication/context_runtime.py": "16f698a1f50ad1299f5224e58f76cc5dbc19afd56b634857edd09a27e0f2b0cb",
+    "code/agentic_communication/model_protocol.py": "e9c5f1140aa2813f5a0ff005067c490a10700d2b9195d388478d53d7367c733b",
+    "code/agentic_communication/planner.py": "18fa7295af8c8223338f66caa028ecf0d930008ff07218665c756640f5cf9f5c",
+    "code/agentic_communication/policy.py": "957ef93c3f429c1df02d4a50cda0aa6e3ca905e1c56680f185b23e59045fa846",
+    "code/agentic_communication/replay.py": "3e6dc07c769a9814fbd13e530205ab0ab85556f1187561ebfb1dfae97b62db41",
+    "code/agentic_communication/run.py": "5728d6fe89450a89f876873c87b2ed82098be40d00ee8d46a96148c6ed359b47",
+    "code/agentic_communication/runtime_contracts.py": "0fdb151f3e0df3e81b8c65c208d4e336ae50eb44e21bed58751bd9b1936b0d73",
+    "code/agentic_communication/task_compiler.py": "394cac33750f233b464ce9f19e683b136df34adb6219dcbd83a3b84b681c3a54",
+    "code/agentic_communication/task_transfer.py": "0d2687839c44632180b2cab45b2dbee391f790b842a78d2782da008c3ecf320a",
+    "code/agentic_communication/benchmark_split.py": "7ba3e9e4174959aa36a719fe378beb19f52a818c8822648f6cf21fac639f52a4",
+    "code/experiments/agentic/run_r3_model_eval.py": "cebc877b9e88b523f8443220b9168ed86d81917606e90aa4a53e971c8b91d203",
+    "code/experiments/agentic/run_heldout_qili2024_seed0.py": "0a907129a1b6b51d01755aa48d1abd019db1ddc66976e63af18832f028d2ece7",
+    "code/experiments/agentic/run_heldout_qili2024_v7_seed0.py": "ca37c1021e7ccef4be9eb790455b6c940569a5bb60f757e74452f35f51983fa7"
+  }
+}

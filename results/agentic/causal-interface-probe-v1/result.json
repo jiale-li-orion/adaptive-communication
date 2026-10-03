@@ -1,0 +1,548 @@
+{
+  "experiment": "causal-interface-probe-v1",
+  "generated_at": "2026-10-03T05:08:59.723942+00:00",
+  "model": "deepseek-flash",
+  "input_manifest": "/home/orion/Communications/应急通信/project1/adaptive-communication/results/agentic/causal-interface-probe-v1/input_manifest.json",
+  "rows": [
+    {
+      "target": {
+        "task": "o5",
+        "episode": "O5",
+        "seed": 0,
+        "t_s": 14400,
+        "label": "o5-task-revision-action"
+      },
+      "arm": "M",
+      "source": "formal_v6_saved_trace",
+      "decision": {
+        "decision_id": "decision:model:0:14400:5",
+        "request_id": "model:0:14400:5",
+        "stop": false,
+        "selected_plan_id": "install_required_profile",
+        "invocations": [
+          {
+            "capability_id": "communication.config.set_sampling_interval",
+            "resource": "gw0",
+            "canonical_arguments": {
+              "target_s": 300
+            }
+          },
+          {
+            "capability_id": "communication.config.set_report_period",
+            "resource": "gw0",
+            "canonical_arguments": {
+              "target_s": 300
+            }
+          },
+          {
+            "capability_id": "communication.config.set_sampling_interval",
+            "resource": "n00",
+            "canonical_arguments": {
+              "target_s": 300
+            }
+          },
+          {
+            "capability_id": "communication.config.set_report_period",
+            "resource": "n00",
+            "canonical_arguments": {
+              "target_s": 300
+            }
+          },
+          {
+            "capability_id": "communication.config.set_sampling_interval",
+            "resource": "n01",
+            "canonical_arguments": {
+              "target_s": 300
+            }
+          },
+          {
+            "capability_id": "communication.config.set_report_period",
+            "resource": "n01",
+            "canonical_arguments": {
+              "target_s": 300
+            }
+          },
+          {
+            "capability_id": "communication.config.set_sampling_interval",
+            "resource": "n02",
+            "canonical_arguments": {
+              "target_s": 300
+            }
+          },
+          {
+            "capability_id": "communication.config.set_report_period",
+            "resource": "n02",
+            "canonical_arguments": {
+              "target_s": 300
+            }
+          },
+          {
+            "capability_id": "communication.config.set_sampling_interval",
+            "resource": "n03",
+            "canonical_arguments": {
+              "target_s": 300
+            }
+          },
+          {
+            "capability_id": "communication.config.set_report_period",
+            "resource": "n03",
+            "canonical_arguments": {
+              "target_s": 300
+            }
+          },
+          {
+            "capability_id": "communication.config.set_sampling_interval",
+            "resource": "n04",
+            "canonical_arguments": {
+              "target_s": 300
+            }
+          },
+          {
+            "capability_id": "communication.config.set_report_period",
+            "resource": "n04",
+            "canonical_arguments": {
+              "target_s": 300
+            }
+          },
+          {
+            "capability_id": "communication.config.set_sampling_interval",
+            "resource": "n05",
+            "canonical_arguments": {
+              "target_s": 300
+            }
+          },
+          {
+            "capability_id": "communication.config.set_report_period",
+            "resource": "n05",
+            "canonical_arguments": {
+              "target_s": 300
+            }
+          },
+          {
+            "capability_id": "communication.config.set_sampling_interval",
+            "resource": "n06",
+            "canonical_arguments": {
+              "target_s": 300
+            }
+          },
+          {
+            "capability_id": "communication.config.set_report_period",
+            "resource": "n06",
+            "canonical_arguments": {
+              "target_s": 300
+            }
+          },
+          {
+            "capability_id": "communication.config.set_sampling_interval",
+            "resource": "n07",
+            "canonical_arguments": {
+              "target_s": 300
+            }
+          },
+          {
+            "capability_id": "communication.config.set_report_period",
+            "resource": "n07",
+            "canonical_arguments": {
+              "target_s": 300
+            }
+          },
+          {
+            "capability_id": "communication.config.set_sampling_interval",
+            "resource": "n10",
+            "canonical_arguments": {
+              "target_s": 300
+            }
+          },
+          {
+            "capability_id": "communication.config.set_report_period",
+            "resource": "n10",
+            "canonical_arguments": {
+              "target_s": 300
+            }
+          },
+          {
+            "capability_id": "communication.config.set_sampling_interval",
+            "resource": "n11",
+            "canonical_arguments": {
+              "target_s": 300
+            }
+          },
+          {
+            "capability_id": "communication.config.set_report_period",
+            "resource": "n11",
+            "canonical_arguments": {
+              "target_s": 300
+            }
+          },
+          {
+            "capability_id": "communication.config.set_sampling_interval",
+            "resource": "n13",
+            "canonical_arguments": {
+              "target_s": 300
+            }
+          },
+          {
+            "capability_id": "communication.config.set_report_period",
+            "resource": "n13",
+            "canonical_arguments": {
+              "target_s": 300
+            }
+          },
+          {
+            "capability_id": "communication.config.set_sampling_interval",
+            "resource": "n15",
+            "canonical_arguments": {
+              "target_s": 300
+            }
+          },
+          {
+            "capability_id": "communication.config.set_report_period",
+            "resource": "n15",
+            "canonical_arguments": {
+              "target_s": 300
+            }
+          },
+          {
+            "capability_id": "communication.config.set_sampling_interval",
+            "resource": "n16",
+            "canonical_arguments": {
+              "target_s": 300
+            }
+          },
+          {
+            "capability_id": "communication.config.set_report_period",
+            "resource": "n16",
+            "canonical_arguments": {
+              "target_s": 300
+            }
+          }
+        ],
+        "state_patch": {},
+        "reason_codes": [
+          "primary_plan_supported",
+          "decision_sufficient_for_primary_action",
+          "no_blocking_evidence_needs",
+          "install_required_profile_where_mismatch"
+        ]
+      },
+      "score": {
+        "selected_plan_id": "install_required_profile",
+        "selected_plan_exact": true,
+        "stop": false,
+        "stop_exact": true,
+        "effect_scope_exact": true,
+        "missing_effects": [],
+        "unexpected_effects": [],
+        "observation_invocations": 0
+      }
+    },
+    {
+      "target": {
+        "task": "o5",
+        "episode": "O5",
+        "seed": 0,
+        "t_s": 14400,
+        "label": "o5-task-revision-action"
+      },
+      "arm": "CR",
+      "source": "deterministic_compiled_checklist",
+      "decision": {
+        "decision_id": "decision:causal:o5-task-revision-action:CR",
+        "request_id": "causal:o5-task-revision-action:CR",
+        "stop": false,
+        "selected_plan_id": "install_required_profile",
+        "invocations": [],
+        "state_patch": {},
+        "reason_codes": [
+          "compiled-checklist-unique-supported-plan"
+        ]
+      },
+      "score": {
+        "selected_plan_id": "install_required_profile",
+        "selected_plan_exact": true,
+        "stop": false,
+        "stop_exact": true,
+        "effect_scope_exact": true,
+        "missing_effects": [],
+        "unexpected_effects": [],
+        "observation_invocations": 0
+      }
+    },
+    {
+      "target": {
+        "task": "o5",
+        "episode": "O5",
+        "seed": 0,
+        "t_s": 14400,
+        "label": "o5-task-revision-action"
+      },
+      "arm": "CF",
+      "source": "live_deepseek_flash",
+      "decision": {
+        "decision_id": "decision:causal:o5-task-revision-action:CF",
+        "request_id": "causal:o5-task-revision-action:CF",
+        "stop": false,
+        "selected_plan_id": "install_required_profile",
+        "invocations": [],
+        "state_patch": {
+          "phase_index": 1,
+          "required_period_s": 300,
+          "selected_plan_id": "install_required_profile",
+          "targets_requiring_profile": [
+            "gw0",
+            "n00",
+            "n01",
+            "n02",
+            "n03",
+            "n04",
+            "n05",
+            "n06",
+            "n07",
+            "n10",
+            "n11",
+            "n13",
+            "n15",
+            "n16"
+          ]
+        },
+        "reason_codes": [
+          "decision_sufficiency_sufficient_for_primary_action",
+          "all_targets_report_period_and_sample_interval_3600_mismatch_required_300",
+          "primary_plan_install_required_profile_supported_unresolved_conditions_empty",
+          "hold_current_profile_rejected_and_gateway_backup_dominated"
+        ]
+      },
+      "usage": {
+        "input_tokens": 13088,
+        "output_tokens": 563,
+        "total_tokens": 13651,
+        "input_bytes": 0,
+        "output_bytes": 0,
+        "latency_ms": 3083.572458010167
+      },
+      "score": {
+        "selected_plan_id": "install_required_profile",
+        "selected_plan_exact": true,
+        "stop": false,
+        "stop_exact": true,
+        "effect_scope_exact": true,
+        "missing_effects": [],
+        "unexpected_effects": [],
+        "observation_invocations": 0
+      }
+    },
+    {
+      "target": {
+        "task": "o5",
+        "episode": "O5",
+        "seed": 0,
+        "t_s": 14400,
+        "label": "o5-task-revision-action"
+      },
+      "arm": "CS",
+      "source": "live_deepseek_flash",
+      "decision": {
+        "decision_id": "decision:causal:o5-task-revision-action:CS",
+        "request_id": "causal:o5-task-revision-action:CS",
+        "stop": false,
+        "selected_plan_id": "install_required_profile",
+        "invocations": [],
+        "state_patch": {},
+        "reason_codes": [
+          "supported_plan_selected",
+          "target_profile_mismatch_requires_configuration_update",
+          "hold_current_profile_rejected_by_evidence",
+          "gateway_backup_dominated_pre_enabled"
+        ]
+      },
+      "usage": {
+        "input_tokens": 6976,
+        "output_tokens": 414,
+        "total_tokens": 7390,
+        "input_bytes": 0,
+        "output_bytes": 0,
+        "latency_ms": 2331.639923999319
+      },
+      "score": {
+        "selected_plan_id": "install_required_profile",
+        "selected_plan_exact": true,
+        "stop": false,
+        "stop_exact": true,
+        "effect_scope_exact": true,
+        "missing_effects": [],
+        "unexpected_effects": [],
+        "observation_invocations": 0
+      }
+    },
+    {
+      "target": {
+        "task": "o6",
+        "episode": "O6",
+        "seed": 0,
+        "t_s": 10860,
+        "label": "o6-closed-hold"
+      },
+      "arm": "M",
+      "source": "formal_v6_saved_trace",
+      "decision": {
+        "decision_id": "decision:model:0:10860:4",
+        "request_id": "model:0:10860:4",
+        "stop": true,
+        "selected_plan_id": "hold_current_profile",
+        "invocations": [],
+        "state_patch": {},
+        "reason_codes": [
+          "sufficient_for_no_action",
+          "primary_plan_supported",
+          "no_blocking_evidence_needs"
+        ]
+      },
+      "score": {
+        "selected_plan_id": "hold_current_profile",
+        "selected_plan_exact": true,
+        "stop": true,
+        "stop_exact": true,
+        "effect_scope_exact": true,
+        "missing_effects": [],
+        "unexpected_effects": [],
+        "observation_invocations": 0
+      }
+    },
+    {
+      "target": {
+        "task": "o6",
+        "episode": "O6",
+        "seed": 0,
+        "t_s": 10860,
+        "label": "o6-closed-hold"
+      },
+      "arm": "CR",
+      "source": "deterministic_compiled_checklist",
+      "decision": {
+        "decision_id": "decision:causal:o6-closed-hold:CR",
+        "request_id": "causal:o6-closed-hold:CR",
+        "stop": true,
+        "selected_plan_id": "hold_current_profile",
+        "invocations": [],
+        "state_patch": {},
+        "reason_codes": [
+          "compiled-checklist-unique-supported-plan"
+        ]
+      },
+      "score": {
+        "selected_plan_id": "hold_current_profile",
+        "selected_plan_exact": true,
+        "stop": true,
+        "stop_exact": true,
+        "effect_scope_exact": true,
+        "missing_effects": [],
+        "unexpected_effects": [],
+        "observation_invocations": 0
+      }
+    },
+    {
+      "target": {
+        "task": "o6",
+        "episode": "O6",
+        "seed": 0,
+        "t_s": 10860,
+        "label": "o6-closed-hold"
+      },
+      "arm": "CF",
+      "source": "live_deepseek_flash",
+      "decision": {
+        "decision_id": "decision:causal:o6-closed-hold:CF",
+        "request_id": "causal:o6-closed-hold:CF",
+        "stop": true,
+        "selected_plan_id": "hold_current_profile",
+        "invocations": [],
+        "state_patch": {},
+        "reason_codes": [
+          "sufficient_for_no_action",
+          "primary_plan_supported",
+          "no_blocking_evidence_needs"
+        ]
+      },
+      "usage": {
+        "input_tokens": 14048,
+        "output_tokens": 102,
+        "total_tokens": 14150,
+        "input_bytes": 0,
+        "output_bytes": 0,
+        "latency_ms": 1137.211412002216
+      },
+      "score": {
+        "selected_plan_id": "hold_current_profile",
+        "selected_plan_exact": true,
+        "stop": true,
+        "stop_exact": true,
+        "effect_scope_exact": true,
+        "missing_effects": [],
+        "unexpected_effects": [],
+        "observation_invocations": 0
+      }
+    },
+    {
+      "target": {
+        "task": "o6",
+        "episode": "O6",
+        "seed": 0,
+        "t_s": 10860,
+        "label": "o6-closed-hold"
+      },
+      "arm": "CS",
+      "source": "live_deepseek_flash",
+      "decision": {
+        "decision_id": "decision:causal:o6-closed-hold:CS",
+        "request_id": "causal:o6-closed-hold:CS",
+        "stop": false,
+        "selected_plan_id": "hold_current_profile",
+        "invocations": [
+          {
+            "capability_id": "communication.gateway.node_report",
+            "resource": "n00",
+            "canonical_arguments": {
+              "node_id": "n00"
+            }
+          },
+          {
+            "capability_id": "communication.gateway.node_report",
+            "resource": "n15",
+            "canonical_arguments": {
+              "node_id": "n15"
+            }
+          }
+        ],
+        "state_patch": {
+          "last_perception_at": "2026-01-01T03:01:00Z",
+          "last_world_revision": 15
+        },
+        "reason_codes": [
+          "supported_plan_selected",
+          "dominated_plan_rejected:install_required_profile",
+          "hold_zero_effect_plan",
+          "resolve_stale_candidate_dependency_evidence:n00",
+          "resolve_stale_candidate_dependency_evidence:n15"
+        ]
+      },
+      "usage": {
+        "input_tokens": 10751,
+        "output_tokens": 1873,
+        "total_tokens": 12624,
+        "input_bytes": 0,
+        "output_bytes": 0,
+        "latency_ms": 9643.603753997013
+      },
+      "score": {
+        "selected_plan_id": "hold_current_profile",
+        "selected_plan_exact": true,
+        "stop": false,
+        "stop_exact": false,
+        "effect_scope_exact": true,
+        "missing_effects": [],
+        "unexpected_effects": [],
+        "observation_invocations": 2
+      }
+    }
+  ]
+}

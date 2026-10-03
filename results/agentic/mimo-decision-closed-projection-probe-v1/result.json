@@ -1,0 +1,457 @@
+{
+  "experiment": "mimo-decision-closed-projection-probe-v1",
+  "generated_at": "2026-10-03T07:02:41.994568+00:00",
+  "input_manifest": "results/agentic/mimo-decision-closed-projection-probe-v1/input_manifest.json",
+  "summary": {
+    "M": {
+      "n": 3,
+      "selected_plan_exact": 1,
+      "effect_scope_exact": 1,
+      "stop_exact": 3,
+      "turns_with_observation": 2,
+      "observation_invocations": 4
+    },
+    "P": {
+      "n": 3,
+      "selected_plan_exact": 3,
+      "effect_scope_exact": 3,
+      "stop_exact": 3,
+      "turns_with_observation": 0,
+      "observation_invocations": 0
+    },
+    "D": {
+      "n": 3,
+      "selected_plan_exact": 3,
+      "effect_scope_exact": 3,
+      "stop_exact": 3,
+      "turns_with_observation": 0,
+      "observation_invocations": 0
+    }
+  },
+  "rows": [
+    {
+      "repeat": 0,
+      "arm": "M",
+      "decision": {
+        "decision_id": "decision:mimo-projection:0:M",
+        "request_id": "mimo-projection:0:M",
+        "stop": false,
+        "selected_plan_id": null,
+        "invocations": [
+          {
+            "capability_id": "communication.center.node_report",
+            "resource": "n01",
+            "canonical_arguments": {
+              "node_id": "n01"
+            }
+          },
+          {
+            "capability_id": "communication.center.node_report",
+            "resource": "n16",
+            "canonical_arguments": {
+              "node_id": "n16"
+            }
+          }
+        ],
+        "state_patch": {},
+        "reason_codes": [
+          "sufficient_for_primary_action",
+          "resolve_open_configuration_evidence_before_device_effect"
+        ]
+      },
+      "score": {
+        "selected_plan_id": null,
+        "selected_plan_exact": false,
+        "effect_scope_exact": false,
+        "missing_effects": [
+          [
+            "communication.config.set_report_period",
+            "n01",
+            "{\"target_s\":3600}"
+          ],
+          [
+            "communication.config.set_report_period",
+            "n16",
+            "{\"target_s\":3600}"
+          ],
+          [
+            "communication.config.set_sampling_interval",
+            "n01",
+            "{\"target_s\":3600}"
+          ],
+          [
+            "communication.config.set_sampling_interval",
+            "n16",
+            "{\"target_s\":3600}"
+          ]
+        ],
+        "unexpected_effects": [],
+        "stop": false,
+        "stop_exact": true,
+        "observation_invocations": [
+          {
+            "capability_id": "communication.center.node_report",
+            "resource": "n01",
+            "canonical_arguments": {
+              "node_id": "n01"
+            }
+          },
+          {
+            "capability_id": "communication.center.node_report",
+            "resource": "n16",
+            "canonical_arguments": {
+              "node_id": "n16"
+            }
+          }
+        ]
+      },
+      "usage": {
+        "input_tokens": 5685,
+        "output_tokens": 107,
+        "total_tokens": 5792,
+        "input_bytes": 0,
+        "output_bytes": 0,
+        "latency_ms": 2674.2565390013624
+      },
+      "wall_ms": 2675.263563010958
+    },
+    {
+      "repeat": 0,
+      "arm": "P",
+      "decision": {
+        "decision_id": "decision:mimo-projection:0:P",
+        "request_id": "mimo-projection:0:P",
+        "stop": false,
+        "selected_plan_id": "install_required_profile",
+        "invocations": [],
+        "state_patch": {},
+        "reason_codes": [
+          "sufficient_for_primary_action",
+          "primary_plan_supported",
+          "install_required_profile_selected"
+        ]
+      },
+      "score": {
+        "selected_plan_id": "install_required_profile",
+        "selected_plan_exact": true,
+        "effect_scope_exact": true,
+        "missing_effects": [],
+        "unexpected_effects": [],
+        "stop": false,
+        "stop_exact": true,
+        "observation_invocations": []
+      },
+      "usage": {
+        "input_tokens": 5676,
+        "output_tokens": 49,
+        "total_tokens": 5725,
+        "input_bytes": 0,
+        "output_bytes": 0,
+        "latency_ms": 6599.52442899521
+      },
+      "wall_ms": 6600.514842997654
+    },
+    {
+      "repeat": 0,
+      "arm": "D",
+      "decision": {
+        "decision_id": "decision:mimo-projection:0:D",
+        "request_id": "mimo-projection:0:D",
+        "stop": false,
+        "selected_plan_id": "install_required_profile",
+        "invocations": [],
+        "state_patch": {},
+        "reason_codes": [
+          "sufficient_for_primary_action",
+          "primary_plan_supported",
+          "install_required_profile_selected"
+        ]
+      },
+      "score": {
+        "selected_plan_id": "install_required_profile",
+        "selected_plan_exact": true,
+        "effect_scope_exact": true,
+        "missing_effects": [],
+        "unexpected_effects": [],
+        "stop": false,
+        "stop_exact": true,
+        "observation_invocations": []
+      },
+      "usage": {
+        "input_tokens": 5524,
+        "output_tokens": 49,
+        "total_tokens": 5573,
+        "input_bytes": 0,
+        "output_bytes": 0,
+        "latency_ms": 1930.7878370018443
+      },
+      "wall_ms": 1932.2653709969018
+    },
+    {
+      "repeat": 1,
+      "arm": "M",
+      "decision": {
+        "decision_id": "decision:mimo-projection:1:M",
+        "request_id": "mimo-projection:1:M",
+        "stop": false,
+        "selected_plan_id": null,
+        "invocations": [
+          {
+            "capability_id": "communication.center.node_report",
+            "resource": "n01",
+            "canonical_arguments": {
+              "node_id": "n01"
+            }
+          },
+          {
+            "capability_id": "communication.center.node_report",
+            "resource": "n16",
+            "canonical_arguments": {
+              "node_id": "n16"
+            }
+          }
+        ],
+        "state_patch": {},
+        "reason_codes": [
+          "sufficient_for_primary_action",
+          "resolve_open_configuration_evidence_before_device_effect"
+        ]
+      },
+      "score": {
+        "selected_plan_id": null,
+        "selected_plan_exact": false,
+        "effect_scope_exact": false,
+        "missing_effects": [
+          [
+            "communication.config.set_report_period",
+            "n01",
+            "{\"target_s\":3600}"
+          ],
+          [
+            "communication.config.set_report_period",
+            "n16",
+            "{\"target_s\":3600}"
+          ],
+          [
+            "communication.config.set_sampling_interval",
+            "n01",
+            "{\"target_s\":3600}"
+          ],
+          [
+            "communication.config.set_sampling_interval",
+            "n16",
+            "{\"target_s\":3600}"
+          ]
+        ],
+        "unexpected_effects": [],
+        "stop": false,
+        "stop_exact": true,
+        "observation_invocations": [
+          {
+            "capability_id": "communication.center.node_report",
+            "resource": "n01",
+            "canonical_arguments": {
+              "node_id": "n01"
+            }
+          },
+          {
+            "capability_id": "communication.center.node_report",
+            "resource": "n16",
+            "canonical_arguments": {
+              "node_id": "n16"
+            }
+          }
+        ]
+      },
+      "usage": {
+        "input_tokens": 5685,
+        "output_tokens": 107,
+        "total_tokens": 5792,
+        "input_bytes": 0,
+        "output_bytes": 0,
+        "latency_ms": 1596.7083659925265
+      },
+      "wall_ms": 1597.8680410044035
+    },
+    {
+      "repeat": 1,
+      "arm": "P",
+      "decision": {
+        "decision_id": "decision:mimo-projection:1:P",
+        "request_id": "mimo-projection:1:P",
+        "stop": false,
+        "selected_plan_id": "install_required_profile",
+        "invocations": [],
+        "state_patch": {},
+        "reason_codes": [
+          "sufficient_for_primary_action",
+          "primary_plan_supported",
+          "install_required_profile_selected"
+        ]
+      },
+      "score": {
+        "selected_plan_id": "install_required_profile",
+        "selected_plan_exact": true,
+        "effect_scope_exact": true,
+        "missing_effects": [],
+        "unexpected_effects": [],
+        "stop": false,
+        "stop_exact": true,
+        "observation_invocations": []
+      },
+      "usage": {
+        "input_tokens": 5676,
+        "output_tokens": 49,
+        "total_tokens": 5725,
+        "input_bytes": 0,
+        "output_bytes": 0,
+        "latency_ms": 1275.0546159950318
+      },
+      "wall_ms": 1276.244017004501
+    },
+    {
+      "repeat": 1,
+      "arm": "D",
+      "decision": {
+        "decision_id": "decision:mimo-projection:1:D",
+        "request_id": "mimo-projection:1:D",
+        "stop": false,
+        "selected_plan_id": "install_required_profile",
+        "invocations": [],
+        "state_patch": {},
+        "reason_codes": [
+          "sufficient_for_primary_action",
+          "primary_plan_supported",
+          "install_required_profile_selected"
+        ]
+      },
+      "score": {
+        "selected_plan_id": "install_required_profile",
+        "selected_plan_exact": true,
+        "effect_scope_exact": true,
+        "missing_effects": [],
+        "unexpected_effects": [],
+        "stop": false,
+        "stop_exact": true,
+        "observation_invocations": []
+      },
+      "usage": {
+        "input_tokens": 5524,
+        "output_tokens": 49,
+        "total_tokens": 5573,
+        "input_bytes": 0,
+        "output_bytes": 0,
+        "latency_ms": 1677.1098259923747
+      },
+      "wall_ms": 1678.586535010254
+    },
+    {
+      "repeat": 2,
+      "arm": "M",
+      "decision": {
+        "decision_id": "decision:mimo-projection:2:M",
+        "request_id": "mimo-projection:2:M",
+        "stop": false,
+        "selected_plan_id": "install_required_profile",
+        "invocations": [],
+        "state_patch": {},
+        "reason_codes": [
+          "sufficient_for_primary_action",
+          "primary_plan_supported",
+          "install_required_profile_selected"
+        ]
+      },
+      "score": {
+        "selected_plan_id": "install_required_profile",
+        "selected_plan_exact": true,
+        "effect_scope_exact": true,
+        "missing_effects": [],
+        "unexpected_effects": [],
+        "stop": false,
+        "stop_exact": true,
+        "observation_invocations": []
+      },
+      "usage": {
+        "input_tokens": 5685,
+        "output_tokens": 49,
+        "total_tokens": 5734,
+        "input_bytes": 0,
+        "output_bytes": 0,
+        "latency_ms": 2145.344237011159
+      },
+      "wall_ms": 2147.0384700078284
+    },
+    {
+      "repeat": 2,
+      "arm": "P",
+      "decision": {
+        "decision_id": "decision:mimo-projection:2:P",
+        "request_id": "mimo-projection:2:P",
+        "stop": false,
+        "selected_plan_id": "install_required_profile",
+        "invocations": [],
+        "state_patch": {},
+        "reason_codes": [
+          "sufficient_for_primary_action",
+          "primary_plan_supported",
+          "install_required_profile_selected"
+        ]
+      },
+      "score": {
+        "selected_plan_id": "install_required_profile",
+        "selected_plan_exact": true,
+        "effect_scope_exact": true,
+        "missing_effects": [],
+        "unexpected_effects": [],
+        "stop": false,
+        "stop_exact": true,
+        "observation_invocations": []
+      },
+      "usage": {
+        "input_tokens": 5676,
+        "output_tokens": 49,
+        "total_tokens": 5725,
+        "input_bytes": 0,
+        "output_bytes": 0,
+        "latency_ms": 1533.926142990822
+      },
+      "wall_ms": 1535.1792569999816
+    },
+    {
+      "repeat": 2,
+      "arm": "D",
+      "decision": {
+        "decision_id": "decision:mimo-projection:2:D",
+        "request_id": "mimo-projection:2:D",
+        "stop": false,
+        "selected_plan_id": "install_required_profile",
+        "invocations": [],
+        "state_patch": {},
+        "reason_codes": [
+          "sufficient_for_primary_action",
+          "primary_plan_supported",
+          "install_required_profile_selected"
+        ]
+      },
+      "score": {
+        "selected_plan_id": "install_required_profile",
+        "selected_plan_exact": true,
+        "effect_scope_exact": true,
+        "missing_effects": [],
+        "unexpected_effects": [],
+        "stop": false,
+        "stop_exact": true,
+        "observation_invocations": []
+      },
+      "usage": {
+        "input_tokens": 5524,
+        "output_tokens": 49,
+        "total_tokens": 5573,
+        "input_bytes": 0,
+        "output_bytes": 0,
+        "latency_ms": 1538.0679660011083
+      },
+      "wall_ms": 1539.0637740056263
+    }
+  ]
+}

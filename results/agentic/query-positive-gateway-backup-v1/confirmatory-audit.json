@@ -1,0 +1,30 @@
+{
+  "experiment": "query-positive-gateway-backup-v1-deepseek-confirmatory-audit",
+  "status": "PASS",
+  "source": "results/agentic/query-positive-gateway-backup-v1/confirmatory-aggregate.json",
+  "complete_coordinate_set": true,
+  "no_posthoc_exclusion": true,
+  "base_source_manifest": "results/agentic/query-positive-gateway-backup-v1/model-probe-source-manifest.json",
+  "safe_source_manifest": "results/agentic/query-positive-gateway-backup-v1/confirmatory-safe-source-manifest.json",
+  "source_mismatches": [],
+  "aggregate": {
+    "planner_turns": 56,
+    "successful_attempts": 56,
+    "failed_attempts": 0,
+    "effect_exact_turns": 56,
+    "effect_inexact_turns": 0,
+    "query_requests": 16,
+    "backup_effects": 5,
+    "execution_equivalent_episodes": 5,
+    "direct_physical_exact_episodes": 4,
+    "recovered_execution_equivalent_episodes": 1,
+    "all_replay_pass": true,
+    "all_tdr_improved": true,
+    "all_aoi_improved": true,
+    "mean_tdr_delta": 0.05238095238095244,
+    "mean_aoi_delta_s": -1150.7341897194715,
+    "total_tokens": 508719
+  },
+  "failures": [],
+  "claim_boundary": "DeepSeek Flash only; O3 gateway-placed query-positive coordinate with backup initially disabled and 3600s primary store-and-forward delay. Supports decision-conditioned acquisition -> plan-feasibility closure -> gateway-backup execution -> communication improvement across five simulator seeds. Seed0 is recovered from a completed episode after post-processing SIGKILL; seeds1..4 have direct persisted physical_signature equality. Does not establish cross-model query-positive generalization or optimal evidence-acquisition policy."
+}

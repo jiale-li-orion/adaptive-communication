@@ -1,0 +1,32 @@
+{
+  "n_seeds": 5,
+  "schedules": {
+    "hand_authored_o2": {
+      "n": 5,
+      "physical_equal_reference": true,
+      "replay_exact": true,
+      "mean": {
+        "timely_delivery_rate": 0.3243589743589744,
+        "collection_rate": 0.5106227106227106,
+        "delivery_latency_p90_s": 468.0,
+        "backup_bytes": 2141.6,
+        "total_consumed_wh": 0.35076595036160035
+      }
+    },
+    "qili_source_derived": {
+      "n": 5,
+      "physical_equal_reference": true,
+      "replay_exact": true,
+      "mean": {
+        "timely_delivery_rate": 0.19107142857142856,
+        "collection_rate": 0.21428571428571427,
+        "delivery_latency_p90_s": 3600.0,
+        "backup_bytes": 768.4,
+        "total_consumed_wh": 0.1012668623872
+      }
+    }
+  },
+  "all_physical_equal_reference": true,
+  "all_replay_exact": true,
+  "source_schedule_differs_from_hand_authored": true
+}

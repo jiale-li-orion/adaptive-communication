@@ -1,0 +1,178 @@
+{
+  "experiment": "basis-selection-headroom-v1",
+  "status": "PASS",
+  "decision": "KILL_BASIS_SELECTION_NO_REAL_CHOICE_SPACE",
+  "scope": {
+    "trace_groups": {
+      "A7-main": "/home/orion/Communications/应急通信/project1/adaptive-communication/results/agentic/main-table-v6-confirmatory/deepseek-flash/*/seed-*/action_conditioned_compact/runtime_trace.jsonl",
+      "A10-query-positive-deepseek": "/home/orion/Communications/应急通信/project1/adaptive-communication/results/agentic/query-positive-gateway-backup-v1/deepseek-flash/seed-*/runtime_trace.jsonl",
+      "A11-query-positive-mimo": "/home/orion/Communications/应急通信/project1/adaptive-communication/results/agentic/query-positive-gateway-backup-v1/mimo-v2.6-flash/seed-*/runtime_trace.jsonl"
+    },
+    "model_facing_requested_assemblies": 235
+  },
+  "totals": {
+    "duplicate_evidence_keys": 0,
+    "evidence_needs": 32,
+    "evidence_rows": 750,
+    "live_plans": 267,
+    "model_requests": 235,
+    "multi_plan_blocking_needs": 0,
+    "multi_source_needs": 0,
+    "requests_with_multiple_live_plans": 32,
+    "visible_plans": 589
+  },
+  "active_choice_signals": {
+    "first_class_alternative_proof_fields": [],
+    "multi_plan_blocking_needs": 0,
+    "multi_source_needs": 0,
+    "duplicate_evidence_keys": 0
+  },
+  "examples": {
+    "multi_plan_blocking_need": [],
+    "multi_source_need": [],
+    "duplicate_evidence_key": [],
+    "multiple_live_plans": [
+      {
+        "group": "A10-query-positive-deepseek",
+        "trace": "results/agentic/query-positive-gateway-backup-v1/deepseek-flash/seed-000/runtime_trace.jsonl",
+        "t_s": 10860,
+        "value": [
+          {
+            "plan_id": "hold_current_profile",
+            "feasibility": "supported",
+            "guards": {
+              "action_target_configuration": "all_targets_match_required_profile"
+            }
+          },
+          {
+            "plan_id": "consider_gateway_backup",
+            "feasibility": "conditional",
+            "guards": {
+              "fallback_relevance_screen": "target_delivery_deficit_or_uncertainty",
+              "shared_gateway_path": "gateway_path_state_supports_backup_value"
+            }
+          }
+        ]
+      },
+      {
+        "group": "A10-query-positive-deepseek",
+        "trace": "results/agentic/query-positive-gateway-backup-v1/deepseek-flash/seed-000/runtime_trace.jsonl",
+        "t_s": 14520,
+        "value": [
+          {
+            "plan_id": "hold_current_profile",
+            "feasibility": "supported",
+            "guards": {
+              "action_target_configuration": "all_targets_match_required_profile"
+            }
+          },
+          {
+            "plan_id": "consider_gateway_backup",
+            "feasibility": "conditional",
+            "guards": {
+              "fallback_relevance_screen": "target_delivery_deficit_or_uncertainty",
+              "shared_gateway_path": "gateway_path_state_supports_backup_value"
+            }
+          }
+        ]
+      },
+      {
+        "group": "A10-query-positive-deepseek",
+        "trace": "results/agentic/query-positive-gateway-backup-v1/deepseek-flash/seed-000/runtime_trace.jsonl",
+        "t_s": 18180,
+        "value": [
+          {
+            "plan_id": "hold_current_profile",
+            "feasibility": "supported",
+            "guards": {
+              "action_target_configuration": "all_targets_match_required_profile"
+            }
+          },
+          {
+            "plan_id": "consider_gateway_backup",
+            "feasibility": "conditional",
+            "guards": {
+              "fallback_relevance_screen": "target_delivery_deficit_or_uncertainty",
+              "shared_gateway_path": "gateway_path_state_supports_backup_value"
+            }
+          }
+        ]
+      },
+      {
+        "group": "A10-query-positive-deepseek",
+        "trace": "results/agentic/query-positive-gateway-backup-v1/deepseek-flash/seed-000/runtime_trace.jsonl",
+        "t_s": 21840,
+        "value": [
+          {
+            "plan_id": "hold_current_profile",
+            "feasibility": "supported",
+            "guards": {
+              "action_target_configuration": "all_targets_match_required_profile"
+            }
+          },
+          {
+            "plan_id": "consider_gateway_backup",
+            "feasibility": "conditional",
+            "guards": {
+              "fallback_relevance_screen": "target_delivery_deficit_or_uncertainty",
+              "shared_gateway_path": "gateway_path_state_supports_backup_value"
+            }
+          }
+        ]
+      },
+      {
+        "group": "A10-query-positive-deepseek",
+        "trace": "results/agentic/query-positive-gateway-backup-v1/deepseek-flash/seed-000/runtime_trace.jsonl",
+        "t_s": 25500,
+        "value": [
+          {
+            "plan_id": "hold_current_profile",
+            "feasibility": "supported",
+            "guards": {
+              "action_target_configuration": "all_targets_match_required_profile"
+            }
+          },
+          {
+            "plan_id": "consider_gateway_backup",
+            "feasibility": "conditional",
+            "guards": {
+              "fallback_relevance_screen": "target_delivery_deficit_or_uncertainty",
+              "shared_gateway_path": "gateway_path_state_supports_backup_value"
+            }
+          }
+        ]
+      }
+    ]
+  },
+  "observed_key_shapes": {
+    "need:blocking_plan_ids": 32,
+    "need:completion_predicate": 32,
+    "need:evidence_contract": 32,
+    "need:freshness_requirement": 32,
+    "need:need_id": 32,
+    "need:opened_at": 32,
+    "need:opened_revision": 32,
+    "need:preferred_source_roles": 32,
+    "need:priority": 32,
+    "need:proposition_or_question": 32,
+    "need:purpose": 32,
+    "need:resolution_evidence_refs": 32,
+    "need:status": 32,
+    "need:target_objects": 32,
+    "need:task_run_id": 32,
+    "need:updated_at": 32,
+    "need:updated_revision": 32,
+    "plan:affected_resources": 589,
+    "plan:contradicted_by": 267,
+    "plan:decision_guards": 589,
+    "plan:feasibility": 589,
+    "plan:invocations": 589,
+    "plan:kind": 589,
+    "plan:plan_id": 589,
+    "plan:reason": 589,
+    "plan:support_ref_count": 16,
+    "plan:unresolved_conditions": 435
+  },
+  "interpretation": "The formal paper inputs contain no first-class alternative proof sets, no EvidenceNeed blocking multiple live plans, no multi-source requirement, and no duplicate proposition/subject evidence rows in the model-facing slice. Multiple live plans occur in the query-positive family, but the gateway-backup guard has a fixed conjunctive owner-evidence requirement. Therefore the current frozen workloads do not activate a nontrivial minimum-basis choice problem. Building an optimizer would require manufacturing proof alternatives not present in A7/A10/A11.",
+  "claim_boundary": "This is a go/no-go audit for an optional future basis-selection algorithm. It does not change A7-A11 and does not claim that all future Agentic Communication workloads lack proof-choice structure."
+}

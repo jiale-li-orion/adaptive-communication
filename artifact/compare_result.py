@@ -3,6 +3,7 @@
 
 用法：
     python3 artifact/compare_result.py <冻结值> <本次值> [--rtol 1e-9] [--max-diff 8]
+        [--ignore-key result_hashes]
 
 退出码 0 表示在容差内相等，1 表示存在差异。数值按相对容差比较，其余类型要求严格相等；
 浮点直接按 `==` 比较会把 `0.4` 与 `0.4000000000000001` 判成不一致，产生噪声。
@@ -16,24 +17,26 @@ import json
 import sys
 
 
-def walk(a, b, path, rtol, out, limit):
+def walk(a, b, path, rtol, out, limit, ignore_keys):
     if len(out) >= limit:
         return
     if isinstance(a, dict) and isinstance(b, dict):
         for k in sorted(set(a) | set(b)):
+            if k in ignore_keys:
+                continue
             if k not in a:
                 out.append(f"{path}.{k}: 本次新增")
             elif k not in b:
                 out.append(f"{path}.{k}: 本次缺失")
             else:
-                walk(a[k], b[k], f"{path}.{k}", rtol, out, limit)
+                walk(a[k], b[k], f"{path}.{k}", rtol, out, limit, ignore_keys)
         return
     if isinstance(a, list) and isinstance(b, list):
         if len(a) != len(b):
             out.append(f"{path}: 长度 {len(a)} -> {len(b)}")
             return
         for i, (x, y) in enumerate(zip(a, b)):
-            walk(x, y, f"{path}[{i}]", rtol, out, limit)
+            walk(x, y, f"{path}[{i}]", rtol, out, limit, ignore_keys)
         return
     if isinstance(a, bool) or isinstance(b, bool):
         if a is not b:
@@ -54,6 +57,12 @@ def main() -> int:
     ap.add_argument("fresh")
     ap.add_argument("--rtol", type=float, default=1e-9)
     ap.add_argument("--max-diff", type=int, default=8)
+    ap.add_argument(
+        "--ignore-key",
+        action="append",
+        default=[],
+        help="ignore a non-semantic mapping key wherever it occurs (repeatable)",
+    )
     args = ap.parse_args()
 
     try:
@@ -68,7 +77,7 @@ def main() -> int:
         return 1
 
     diffs: list[str] = []
-    walk(a, b, "$", args.rtol, diffs, args.max_diff)
+    walk(a, b, "$", args.rtol, diffs, args.max_diff, set(args.ignore_key))
     if diffs:
         print(f"FAIL  与冻结值不符（前 {len(diffs)} 处）")
         for d in diffs:

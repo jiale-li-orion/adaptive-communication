@@ -135,7 +135,41 @@ Task completion / failure / continuation
 
 LLM 只是这个 runtime 的一个 planner/consumer。Task、evidence、state、context、capability、effect 和 trace 都由 harness 持有确定性 authority。
 
-### 1.3 A/B/C 的新地位
+### 1.3 Action-conditioned Context construction
+
+当前 Method II 的方法主体进一步从“按 Task family 固定 EvidenceNeed / scope filter”推进为**围绕候选通信行动构造 Context**：
+
+```text
+Runtime TaskContract + legal Capability surface
+        ↓
+candidate communication plans
+        ↓
+passive task-outcome screening
+        ↓
+decision guards / candidate disagreement graph
+        ↓
+evidence dependency tracing
+        ↓
+contract Context when one ordinary action region is sufficient
+OR
+expand Context along shared gateway/access/peer dependencies
+        ↓
+optional owner-scoped evidence acquisition
+        ↓
+model / deterministic consumer chooses plan + arguments
+```
+
+算法遵循三条规则：
+
+1. **action scope 与 evidence scope 分离**：允许修改单个节点时，Context 可以沿共享 gateway/access path 扩展到关联节点；action authority 保持原 TaskContract 范围。
+2. **先用已持有证据筛候选**：center-local config/delivery evidence 先决定 fallback 是否仍有决策价值；共享/远端 evidence 只在候选仍存活时展开。
+3. **任务与证据 revision 驱动局部更新**：候选 action、decision guard 或依赖发生变化时刷新相关 Context；近期 blocked/timeout acquisition 作为有时效 runtime information 保留，避免 telemetry churn 触发重复调查。
+
+每个候选计划声明 `decision_guards`。当前 selector 对仍存活 candidate pair 计算 guard-family pair coverage，得到 symbolic candidate-disagreement signal；它用于排序后续 Context expansion / evidence acquisition，当前不冒充校准后的 VoI。真正 cost-weighted acquisition 等 latency/bytes/airtime/energy/opportunity cost 有 source-backed 或 simulator-authoritative 模型后再启用。
+
+正式第一条 method probe 使用 localized O2，`action_conditioned` 与 `action_candidates_full_dump` 共享完全相同的 candidate-plan generation / deterministic reference consumer，仅隔离 evidence selector。结果由 `results/agentic/action-conditioned-context-localized-o2-v1/` 持有并经生成链进入 research/results 摘要。
+
+### 1.4 A/B/C 的新地位
 
 此前 A/B/C 不再承担整篇论文的主 framing，降为 Method II 内部机制和 ablation：
 
@@ -501,6 +535,8 @@ Efficiency 与 task outcome 画 Pareto/frontier，不压成单一 overall score�
 ### Agent/context baselines
 
 - FullDump：所有合法 center-visible telemetry/materialized state；
+- candidate + FullDump：与 action-conditioned method 共享候选行动生成，只关闭 evidence selector，用于隔离 Context selection 本身；
+- task-conditioned scope filter：按 Operational Task scope/family 的上一版 Context selector；
 - fixed tool/capability order；
 - diagnosis-first/full diagnosis；
 - ordinary keyed join/compiler；
@@ -584,24 +620,22 @@ audit.json
 
 `audit.json` 至少检查：episode completeness、seed/task coverage、exception/retry、baseline success、oracle success、metric denominator、hidden-truth leakage、post-hoc exclusion、source/version、result hash。
 
-## 13. 当前 Design Freeze 后的工程顺序
+## 13. 当前方法冻结后的实验顺序
 
-本文冻结后，实验不再继续“找方法”。按以下顺序实现：
+通用 runtime / replay / metric / baseline 基础设施已经完成，真实模型开发阶段也已越过事件级 probe。当前工程顺序冻结为：
 
-1. 统一 Operational Task schema + Runtime Task compiler；
-2. Data Plane → Evidence World adapters；
-3. self-contained Task/State/Context/Capability trace harness；
-4. R0/R1/R2/R3 runner；
-5. existing scorer + Agent metric collector；
-6. baseline registry + oracle replacement arms；
-7. source-grounded Operational Task episode generator；
-8. deterministic smoke / multi-seed benchmark；
-9. LLM Agent runs；
-10. result audit → paper tables/figures。
+1. protocol-v6 formal main table：`localized O2 / O5 / O6 × seeds0..4 × {action-conditioned compact, task-conditioned, FullDump, generic-ReAct}`；
+2. Method 15 rows 先通过预注册 gate：`effect_scope_inexact=0`、`extra observation=0`、`physical==candidate==legacy`；该 gate 当前已 `15/15 PASS`，剩余 45 baseline rows 正在同一 frozen source manifest 下运行；
+3. 完整 60-row aggregate 通过后，先冻结 machine-checkable claim candidate，再决定是否进入 `results/CLAIMS.md`；
+4. formal result 成立后做 full-episode component ablation，只解释 action-conditioned projection / plan-local dependency / decision sufficiency / semantic-state replanning 的因果贡献，不新增方法实体；
+5. component ablation 之后再决定第二模型 confirmatory；
+6. query-positive safety case、composed fallback closure、decision-equivalent Context compression 属于 coverage/cost extension，等待主结果与因果解释冻结后再开放。
+
+当前不重新开放 automatic safe-action-prefix solver：在修正 global Task scope 后，ordinary backward slicing + current-state partial evaluation 已对 `453/453` runtime-unresolved dependency rows exact。只有未来 benchmark 出现该 ordinary compiler 不能重建的真实依赖缺口，才重新把 automatic dependency construction 升格为方法问题。
 
 任何新增 capability、Task family、metric 或数据源都必须先补 source/contract，再进入 benchmark；不得因当前模型表现调整 task denominator、action space 或 metric definition。
 
-## 14. Implementation status（2026-10-01）
+## 14. Implementation status（2026-10-03）
 
 本文已经不只是 design proposal。当前已落：
 
@@ -617,6 +651,18 @@ R1 frozen PromptAssembly replay API            DONE
 R2 exact context/materialization replay         DONE
 result contract / source manifest / audit       DONE
 paper/research artifact generation              DONE
+Action-conditioned Context selector             DONE (pre-model method probe)
+Candidate disagreement graph                    DONE (symbolic pair coverage)
+Localized event-based real-model devset         DONE (4 pre-registered events)
+DeepSeek Flash R3 full-episode model path        DONE
+Global Task scope authority regression           DONE (O5/O6 seeds0..4 candidate == legacy)
+Runtime candidate-plan selection/expansion       DONE (ordinary substrate)
+Persistent semantic execution intent             DONE (ordinary substrate)
+Semantic decision-state replanning               DONE
+Compact shadow-only control projection           DONE
+No-action decision sufficiency                    DONE (protocol v6)
+Protocol-v6 Method 5-seed confirmatory gate      DONE (15/15 rows)
+Protocol-v6 45 baseline confirmatory rows         RUNNING
 ```
 
 当前 R3 实验入口：
@@ -641,7 +687,7 @@ AND R0 protocol audit PASS
 AND R2 PromptAssembly exact replay PASS
 ```
 
-R1 已能把冻结的 PromptAssembly 交给任意 consumer/model；在模型 consumer 接入之前，R1 audit 只声明“input replay interface ready”，不伪造 model-quality 结果。
+R1/R3 已接入真实 DeepSeek Flash backend；缺 endpoint/key 时仍硬失败，不回退 scripted backend。真实模型结果必须保留 `ModelRequest / ModelAttempt / ModelUsage / PlannerDecision` ledger，并以当前 protocol revision 与 source manifest 区分开发批次；旧 protocol / scope-bug 结果只保留作 diagnosis，不与当前 confirmatory 拼表。
 
 结果到文档使用单向生成链：
 

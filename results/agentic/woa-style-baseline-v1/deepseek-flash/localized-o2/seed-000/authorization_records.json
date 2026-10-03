@@ -1,0 +1,451 @@
+[
+  {
+    "request_id": "model:0:0:1",
+    "assembly_id": "3cf49d83-6891-5474-8811-02878ce23767",
+    "world_revision": 1,
+    "raw_proposal": {
+      "decision_id": "decision:model:0:0:1",
+      "request_id": "model:0:0:1",
+      "stop": false,
+      "selected_plan_id": "install_required_profile",
+      "invocations": [],
+      "state_patch": {},
+      "reason_codes": [
+        "selected_supported_candidate_plan",
+        "install_required_profile_has_no_unresolved_conditions",
+        "unknown_target_configuration_guarded_by_any_target_mismatch_or_unknown",
+        "no_blocking_evidence_need_delays_supported_primary_action"
+      ]
+    },
+    "ready_supported_plan_ids": [
+      "install_required_profile"
+    ],
+    "selected_plan_id_after_repair": "install_required_profile",
+    "integrity": {
+      "valid": true,
+      "schema_ok": true,
+      "unit_ok": true,
+      "source_ok": true,
+      "fresh": true,
+      "conflict_free": true,
+      "scope_complete": true,
+      "authority_ok": true,
+      "blocking_need_count": 0,
+      "violations": {
+        "schema": [],
+        "unit": [],
+        "authority": [],
+        "source": [],
+        "freshness": [],
+        "conflict": [],
+        "scope": [],
+        "blocking_needs": [],
+        "unresolved_conditions": []
+      },
+      "used_evidence_ids": []
+    },
+    "repairs": [],
+    "unresolved_risks": [],
+    "governor": "APPLY",
+    "used_sources": [],
+    "final_decision": {
+      "decision_id": "decision:model:0:0:1",
+      "request_id": "model:0:0:1",
+      "stop": false,
+      "selected_plan_id": "install_required_profile",
+      "invocations": [],
+      "state_patch": {},
+      "reason_codes": [
+        "woa_governor:APPLY",
+        "woa_integrity_revalidated"
+      ]
+    }
+  },
+  {
+    "request_id": "model:0:60:2",
+    "assembly_id": "fa76ae5f-0d83-5454-b256-401bb670100f",
+    "world_revision": 2,
+    "raw_proposal": {
+      "decision_id": "decision:model:0:60:2",
+      "request_id": "model:0:60:2",
+      "stop": false,
+      "selected_plan_id": "install_required_profile",
+      "invocations": [],
+      "state_patch": {
+        "current_decision": "install_required_profile"
+      },
+      "reason_codes": [
+        "supported_candidate_plan_selected",
+        "action_target_configuration_guard_any_target_mismatch_or_unknown",
+        "n16_configuration_evidence_missing_blocks_hold_only",
+        "install_required_profile_unresolved_conditions_empty"
+      ]
+    },
+    "ready_supported_plan_ids": [
+      "install_required_profile"
+    ],
+    "selected_plan_id_after_repair": "install_required_profile",
+    "integrity": {
+      "valid": true,
+      "schema_ok": true,
+      "unit_ok": true,
+      "source_ok": true,
+      "fresh": true,
+      "conflict_free": true,
+      "scope_complete": true,
+      "authority_ok": true,
+      "blocking_need_count": 0,
+      "violations": {
+        "schema": [],
+        "unit": [],
+        "authority": [],
+        "source": [],
+        "freshness": [],
+        "conflict": [],
+        "scope": [],
+        "blocking_needs": [],
+        "unresolved_conditions": []
+      },
+      "used_evidence_ids": []
+    },
+    "repairs": [],
+    "unresolved_risks": [],
+    "governor": "APPLY",
+    "used_sources": [],
+    "final_decision": {
+      "decision_id": "decision:model:0:60:2",
+      "request_id": "model:0:60:2",
+      "stop": false,
+      "selected_plan_id": "install_required_profile",
+      "invocations": [],
+      "state_patch": {
+        "current_decision": "install_required_profile"
+      },
+      "reason_codes": [
+        "woa_governor:APPLY",
+        "woa_integrity_revalidated"
+      ]
+    }
+  },
+  {
+    "request_id": "model:0:10860:3",
+    "assembly_id": "241364b0-3709-5920-b7e3-84556e38cd0d",
+    "world_revision": 15,
+    "raw_proposal": {
+      "decision_id": "decision:model:0:10860:3",
+      "request_id": "model:0:10860:3",
+      "stop": true,
+      "selected_plan_id": "hold_current_profile",
+      "invocations": [],
+      "state_patch": {},
+      "reason_codes": [
+        "supported_primary_plan_selected",
+        "all_authorised_targets_match_required_profile",
+        "configuration_update_plan_dominated",
+        "no_open_evidence_need",
+        "no_external_side_effect_needed"
+      ]
+    },
+    "ready_supported_plan_ids": [
+      "hold_current_profile"
+    ],
+    "selected_plan_id_after_repair": "hold_current_profile",
+    "integrity": {
+      "valid": true,
+      "schema_ok": true,
+      "unit_ok": true,
+      "source_ok": true,
+      "fresh": true,
+      "conflict_free": true,
+      "scope_complete": true,
+      "authority_ok": true,
+      "blocking_need_count": 0,
+      "violations": {
+        "schema": [],
+        "unit": [],
+        "authority": [],
+        "source": [],
+        "freshness": [],
+        "conflict": [],
+        "scope": [],
+        "blocking_needs": [],
+        "unresolved_conditions": []
+      },
+      "used_evidence_ids": [
+        "comm-evidence:198993aaf1205980eac8cca7",
+        "comm-evidence:1df8f1eb1e80b1461bc1d029",
+        "comm-evidence:3d885dfb0e9dcfd69921f265",
+        "comm-evidence:5bd746c87c3ea23de8e436e6",
+        "comm-evidence:6bc6a7adb910739f35b8acad",
+        "comm-evidence:758f69b3a8c4c1d397b064b2",
+        "comm-evidence:8ce5ac42829a188888f8ea7b",
+        "comm-evidence:9cf444d9df8033a6581c1c31",
+        "comm-evidence:9dadf017a4253d136987de70",
+        "comm-evidence:c4f5cd5d31a2a91102f47d7c"
+      ]
+    },
+    "repairs": [],
+    "unresolved_risks": [],
+    "governor": "HOLD",
+    "used_sources": [
+      "comm-evidence:198993aaf1205980eac8cca7",
+      "comm-evidence:1df8f1eb1e80b1461bc1d029",
+      "comm-evidence:3d885dfb0e9dcfd69921f265",
+      "comm-evidence:5bd746c87c3ea23de8e436e6",
+      "comm-evidence:6bc6a7adb910739f35b8acad",
+      "comm-evidence:758f69b3a8c4c1d397b064b2",
+      "comm-evidence:8ce5ac42829a188888f8ea7b",
+      "comm-evidence:9cf444d9df8033a6581c1c31",
+      "comm-evidence:9dadf017a4253d136987de70",
+      "comm-evidence:c4f5cd5d31a2a91102f47d7c"
+    ],
+    "final_decision": {
+      "decision_id": "decision:model:0:10860:3",
+      "request_id": "model:0:10860:3",
+      "stop": true,
+      "selected_plan_id": "hold_current_profile",
+      "invocations": [],
+      "state_patch": {},
+      "reason_codes": [
+        "woa_governor:HOLD",
+        "woa_integrity_revalidated"
+      ]
+    }
+  },
+  {
+    "request_id": "model:0:21600:4",
+    "assembly_id": "be64d855-b46e-5d42-b038-450aac9a65eb",
+    "world_revision": 17,
+    "raw_proposal": {
+      "decision_id": "decision:model:0:21600:4",
+      "request_id": "model:0:21600:4",
+      "stop": false,
+      "selected_plan_id": "install_required_profile",
+      "invocations": [],
+      "state_patch": {
+        "current_decision": "install_required_profile",
+        "decision_revision": 1
+      },
+      "reason_codes": [
+        "candidate_dependency_satisfied",
+        "supported_plan_selected",
+        "configuration_mismatch_required_period",
+        "within_effect_ceiling"
+      ]
+    },
+    "ready_supported_plan_ids": [
+      "install_required_profile"
+    ],
+    "selected_plan_id_after_repair": "install_required_profile",
+    "integrity": {
+      "valid": true,
+      "schema_ok": true,
+      "unit_ok": true,
+      "source_ok": true,
+      "fresh": true,
+      "conflict_free": true,
+      "scope_complete": true,
+      "authority_ok": true,
+      "blocking_need_count": 0,
+      "violations": {
+        "schema": [],
+        "unit": [],
+        "authority": [],
+        "source": [],
+        "freshness": [],
+        "conflict": [],
+        "scope": [],
+        "blocking_needs": [],
+        "unresolved_conditions": []
+      },
+      "used_evidence_ids": [
+        "comm-evidence:0e48921f3b85f72f4162ed92",
+        "comm-evidence:1df8f1eb1e80b1461bc1d029",
+        "comm-evidence:36727736edb8f06d19fe6ef4",
+        "comm-evidence:7ba7527bb137798de55c89dc",
+        "comm-evidence:8003c18e16c6b087e048bf96",
+        "comm-evidence:8022eb444333c333ddb2bf33",
+        "comm-evidence:b129143c7926881be9179e79",
+        "comm-evidence:c4f5cd5d31a2a91102f47d7c",
+        "comm-evidence:cd15840a14799f3a334255ab",
+        "comm-evidence:d17697a7307d8a5567d42cee"
+      ]
+    },
+    "repairs": [],
+    "unresolved_risks": [],
+    "governor": "APPLY",
+    "used_sources": [
+      "comm-evidence:0e48921f3b85f72f4162ed92",
+      "comm-evidence:1df8f1eb1e80b1461bc1d029",
+      "comm-evidence:36727736edb8f06d19fe6ef4",
+      "comm-evidence:7ba7527bb137798de55c89dc",
+      "comm-evidence:8003c18e16c6b087e048bf96",
+      "comm-evidence:8022eb444333c333ddb2bf33",
+      "comm-evidence:b129143c7926881be9179e79",
+      "comm-evidence:c4f5cd5d31a2a91102f47d7c",
+      "comm-evidence:cd15840a14799f3a334255ab",
+      "comm-evidence:d17697a7307d8a5567d42cee"
+    ],
+    "final_decision": {
+      "decision_id": "decision:model:0:21600:4",
+      "request_id": "model:0:21600:4",
+      "stop": false,
+      "selected_plan_id": "install_required_profile",
+      "invocations": [],
+      "state_patch": {
+        "current_decision": "install_required_profile",
+        "decision_revision": 1
+      },
+      "reason_codes": [
+        "woa_governor:APPLY",
+        "woa_integrity_revalidated"
+      ]
+    }
+  },
+  {
+    "request_id": "model:0:36060:5",
+    "assembly_id": "31d9f0f5-a074-538b-9dbf-a8e3f8be63f6",
+    "world_revision": 31,
+    "raw_proposal": {
+      "decision_id": "decision:model:0:36060:5",
+      "request_id": "model:0:36060:5",
+      "stop": false,
+      "selected_plan_id": "install_required_profile",
+      "invocations": [],
+      "state_patch": {},
+      "reason_codes": [
+        "supported_candidate_plan_selected",
+        "required_period_300s_mismatch_confirmed_on_n13_n15_n16",
+        "hold_current_profile_rejected_by_evidence"
+      ]
+    },
+    "ready_supported_plan_ids": [
+      "install_required_profile"
+    ],
+    "selected_plan_id_after_repair": "install_required_profile",
+    "integrity": {
+      "valid": true,
+      "schema_ok": true,
+      "unit_ok": true,
+      "source_ok": true,
+      "fresh": true,
+      "conflict_free": true,
+      "scope_complete": true,
+      "authority_ok": true,
+      "blocking_need_count": 0,
+      "violations": {
+        "schema": [],
+        "unit": [],
+        "authority": [],
+        "source": [],
+        "freshness": [],
+        "conflict": [],
+        "scope": [],
+        "blocking_needs": [],
+        "unresolved_conditions": []
+      },
+      "used_evidence_ids": [
+        "comm-evidence:2459fac67c7367b43ff2baae",
+        "comm-evidence:421291d1b101de3adabd31fc",
+        "comm-evidence:459c853435aea3a23ce88ace",
+        "comm-evidence:7a2dad2eab973045e1cea662",
+        "comm-evidence:8fabdb0502256a9fddf8061e",
+        "comm-evidence:accbca862fa44323eec4c82c"
+      ]
+    },
+    "repairs": [],
+    "unresolved_risks": [],
+    "governor": "APPLY",
+    "used_sources": [
+      "comm-evidence:2459fac67c7367b43ff2baae",
+      "comm-evidence:421291d1b101de3adabd31fc",
+      "comm-evidence:459c853435aea3a23ce88ace",
+      "comm-evidence:7a2dad2eab973045e1cea662",
+      "comm-evidence:8fabdb0502256a9fddf8061e",
+      "comm-evidence:accbca862fa44323eec4c82c"
+    ],
+    "final_decision": {
+      "decision_id": "decision:model:0:36060:5",
+      "request_id": "model:0:36060:5",
+      "stop": false,
+      "selected_plan_id": "install_required_profile",
+      "invocations": [],
+      "state_patch": {},
+      "reason_codes": [
+        "woa_governor:APPLY",
+        "woa_integrity_revalidated"
+      ]
+    }
+  },
+  {
+    "request_id": "model:0:43260:6",
+    "assembly_id": "fab63432-06eb-50bd-acb4-7afd546b9130",
+    "world_revision": 54,
+    "raw_proposal": {
+      "decision_id": "decision:model:0:43260:6",
+      "request_id": "model:0:43260:6",
+      "stop": false,
+      "selected_plan_id": "install_required_profile",
+      "invocations": [],
+      "state_patch": {},
+      "reason_codes": [
+        "supported_plan_selected",
+        "confirmed_configuration_mismatch_on_n13_n15",
+        "required_period_300s_not_met"
+      ]
+    },
+    "ready_supported_plan_ids": [
+      "install_required_profile"
+    ],
+    "selected_plan_id_after_repair": "install_required_profile",
+    "integrity": {
+      "valid": true,
+      "schema_ok": true,
+      "unit_ok": true,
+      "source_ok": true,
+      "fresh": true,
+      "conflict_free": true,
+      "scope_complete": true,
+      "authority_ok": true,
+      "blocking_need_count": 0,
+      "violations": {
+        "schema": [],
+        "unit": [],
+        "authority": [],
+        "source": [],
+        "freshness": [],
+        "conflict": [],
+        "scope": [],
+        "blocking_needs": [],
+        "unresolved_conditions": []
+      },
+      "used_evidence_ids": [
+        "comm-evidence:0224681f37cb714b86647b84",
+        "comm-evidence:03b2bd8d5f936af5a6de15c7",
+        "comm-evidence:1b577fa6e187572af58fd679",
+        "comm-evidence:250b6299eb3520beb71059a3"
+      ]
+    },
+    "repairs": [],
+    "unresolved_risks": [],
+    "governor": "APPLY",
+    "used_sources": [
+      "comm-evidence:0224681f37cb714b86647b84",
+      "comm-evidence:03b2bd8d5f936af5a6de15c7",
+      "comm-evidence:1b577fa6e187572af58fd679",
+      "comm-evidence:250b6299eb3520beb71059a3"
+    ],
+    "final_decision": {
+      "decision_id": "decision:model:0:43260:6",
+      "request_id": "model:0:43260:6",
+      "stop": false,
+      "selected_plan_id": "install_required_profile",
+      "invocations": [],
+      "state_patch": {},
+      "reason_codes": [
+        "woa_governor:APPLY",
+        "woa_integrity_revalidated"
+      ]
+    }
+  }
+]

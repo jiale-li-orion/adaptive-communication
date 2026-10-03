@@ -1,0 +1,272 @@
+{
+  "experiment": "woa-style-fairness-audit-v1",
+  "status": "PASS",
+  "episodes": 15,
+  "planner_requests": 123,
+  "physical_equal_episodes": 15,
+  "failures": [],
+  "episode_rows": [
+    {
+      "task": "localized-o2",
+      "seed": 0,
+      "planner_requests": 6,
+      "physical_equal": true,
+      "evidence_expansion_per_request": [
+        1,
+        25,
+        29,
+        29,
+        29,
+        29
+      ],
+      "failures": []
+    },
+    {
+      "task": "localized-o2",
+      "seed": 1,
+      "planner_requests": 7,
+      "physical_equal": true,
+      "evidence_expansion_per_request": [
+        1,
+        23,
+        29,
+        29,
+        29,
+        29,
+        29
+      ],
+      "failures": []
+    },
+    {
+      "task": "localized-o2",
+      "seed": 2,
+      "planner_requests": 6,
+      "physical_equal": true,
+      "evidence_expansion_per_request": [
+        1,
+        19,
+        23,
+        29,
+        29,
+        29
+      ],
+      "failures": []
+    },
+    {
+      "task": "localized-o2",
+      "seed": 3,
+      "planner_requests": 8,
+      "physical_equal": true,
+      "evidence_expansion_per_request": [
+        1,
+        21,
+        27,
+        29,
+        29,
+        29,
+        29,
+        29
+      ],
+      "failures": []
+    },
+    {
+      "task": "localized-o2",
+      "seed": 4,
+      "planner_requests": 7,
+      "physical_equal": true,
+      "evidence_expansion_per_request": [
+        1,
+        19,
+        25,
+        29,
+        29,
+        29,
+        29
+      ],
+      "failures": []
+    },
+    {
+      "task": "o5",
+      "seed": 0,
+      "planner_requests": 11,
+      "physical_equal": true,
+      "evidence_expansion_per_request": [
+        1,
+        25,
+        27,
+        29,
+        29,
+        29,
+        29,
+        29,
+        29,
+        29,
+        29
+      ],
+      "failures": []
+    },
+    {
+      "task": "o5",
+      "seed": 1,
+      "planner_requests": 10,
+      "physical_equal": true,
+      "evidence_expansion_per_request": [
+        1,
+        23,
+        29,
+        29,
+        29,
+        29,
+        29,
+        29,
+        29,
+        29
+      ],
+      "failures": []
+    },
+    {
+      "task": "o5",
+      "seed": 2,
+      "planner_requests": 6,
+      "physical_equal": true,
+      "evidence_expansion_per_request": [
+        1,
+        19,
+        23,
+        29,
+        29,
+        29
+      ],
+      "failures": []
+    },
+    {
+      "task": "o5",
+      "seed": 3,
+      "planner_requests": 9,
+      "physical_equal": true,
+      "evidence_expansion_per_request": [
+        1,
+        21,
+        27,
+        29,
+        29,
+        29,
+        29,
+        29,
+        29
+      ],
+      "failures": []
+    },
+    {
+      "task": "o5",
+      "seed": 4,
+      "planner_requests": 9,
+      "physical_equal": true,
+      "evidence_expansion_per_request": [
+        1,
+        19,
+        25,
+        29,
+        29,
+        29,
+        29,
+        29,
+        29
+      ],
+      "failures": []
+    },
+    {
+      "task": "o6",
+      "seed": 0,
+      "planner_requests": 11,
+      "physical_equal": true,
+      "evidence_expansion_per_request": [
+        0,
+        12,
+        13,
+        14,
+        14,
+        14,
+        14,
+        14,
+        14,
+        14,
+        14
+      ],
+      "failures": []
+    },
+    {
+      "task": "o6",
+      "seed": 1,
+      "planner_requests": 8,
+      "physical_equal": true,
+      "evidence_expansion_per_request": [
+        0,
+        11,
+        14,
+        14,
+        14,
+        14,
+        14,
+        14
+      ],
+      "failures": []
+    },
+    {
+      "task": "o6",
+      "seed": 2,
+      "planner_requests": 6,
+      "physical_equal": true,
+      "evidence_expansion_per_request": [
+        0,
+        9,
+        11,
+        14,
+        14,
+        14
+      ],
+      "failures": []
+    },
+    {
+      "task": "o6",
+      "seed": 3,
+      "planner_requests": 9,
+      "physical_equal": true,
+      "evidence_expansion_per_request": [
+        0,
+        10,
+        13,
+        14,
+        14,
+        14,
+        14,
+        14,
+        14
+      ],
+      "failures": []
+    },
+    {
+      "task": "o6",
+      "seed": 4,
+      "planner_requests": 10,
+      "physical_equal": true,
+      "evidence_expansion_per_request": [
+        0,
+        9,
+        12,
+        14,
+        14,
+        14,
+        14,
+        14,
+        14,
+        14
+      ],
+      "failures": []
+    }
+  ],
+  "allowed_differences": [
+    "WOA-style evidence_slice may contain more legal Evidence World records",
+    "WOA-style candidate_action_context omits decision_sufficiency"
+  ]
+}
