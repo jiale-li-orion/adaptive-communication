@@ -283,6 +283,33 @@ shown to the model. Consequently, an unresolved proposition does not remain mode
 because it is unknown: when its plan is rejected or dominated, that dependency retires from the
 current decision surface while remaining auditable.
 
+The compiler is required to preserve three invariants.
+\begin{enumerate}
+\item \textbf{Audit completeness.} Projection never deletes the underlying provenance relation:
+$R_t^{\rm model}\subseteq R_t^{\rm control}\subseteq R_t^{\rm audit}$, and retired dependencies
+remain reconstructable for replay even when hidden from the planner.
+\item \textbf{Decision preservation.} Removing a relation from $R_t^{\rm model}$ is legal only
+when that relation belongs to a rejected/dominated plan or otherwise cannot change the current
+supported/blocked/stop status. Thus projection is defined relative to the current candidate
+lifecycle, not to a generic relevance score.
+\item \textbf{Execution consistency.} The model selects a semantic plan identifier; a deterministic
+Runtime expander owns concrete typed invocations. The same selected plan therefore has one
+authoritative effect scope regardless of how the model would have serialized individual calls.
+\end{enumerate}
+
+For an unresolved EvidenceNeed $n$ and plan $p$, let
+\begin{equation}
+\begin{aligned}
+L_t(n,p)=&\ \mathbf 1\{p\text{ is control-live at }t\}\\
+&\cdot\mathbf 1\{n\text{ can change }p\text{'s feasibility}\}.
+\end{aligned}
+\label{eq:dependency-live}
+\end{equation}
+Only dependencies with $L_t(n,p)=1$ may block the current decision or trigger acquisition. This
+definition is intentionally narrower than information relevance in general: an unknown fact can
+remain true, auditable, and potentially useful for another plan while being dead for the current
+commitment.
+
 Decision sufficiency is evaluated on $R_t^{\rm control}$. The runtime exposes four operational
 states:
 \begin{equation}
@@ -473,6 +500,54 @@ a held-out witness for dependency liveness and model transfer. A10/A11 establish
 blocking EvidenceNeed can drive an owner query, feasibility transition, semantic commitment, and
 physical communication consequence across two model families. None of these results establishes
 globally optimal acquisition, an optimal query ordering, or a universal minimum Context.
+
+\section{Discussion}
+\label{sec:discussion}
+\subsection{Two regimes of Agentic Communication}
+The experiments separate two regimes that are easy to conflate. In a \emph{decision-closed}
+state, the compiler has already determined the only control-live supported plan (or a sufficient
+zero-effect hold). The model is then a consumer of compiled semantics. A7 belongs to this regime:
+all 123 Method requests have a unique ready supported plan and no visible EvidenceNeed. The main
+benefit is therefore interface cost and execution discipline, not improved physical control. A8
+supports exactly that interpretation: the WOA-style arm is equally reliable while processing more
+model context.
+
+The second regime is \emph{decision-open}. A currently legal plan is blocked by an unknown whose
+resolution can change feasibility, and the evidence has a legal owner/path by which it may be
+obtained. A10/A11 activate this regime. The query is valuable because its positive and negative
+answers close the fallback guard differently, not because the runtime seeks more telemetry in
+general. Physical improvement appears only after this acquisition changes the committed
+communication action. This distinction is why we report the acquisition gain versus
+\emph{acquisition disabled}, rather than presenting it as a generic superiority claim over
+active-information policies.
+
+There is also a third, currently unfilled cell: decision-changing evidence that is remote enough
+to become stale or irrelevant before return. The failed centre-originated gateway probe is a
+useful boundary witness---the legal freshness gate rejected the delayed answer. The current paper
+does not introduce a new validity-horizon scheduler to fill that cell. AoI/VoI and networked-control
+literature already establish that timing and task value matter; a future method would need to show
+an additional typed commitment/invalidation structure rather than merely renaming freshness.
+
+\subsection{What is actually ``agentic'' here?}
+The model does not own the physical action vocabulary, the monitoring denominator, or the truth of
+the world. Those remain in Task, Capability, Evidence, and evaluator contracts. The Agentic part is
+the repeated choice between three semantic operations on a changing decision surface: commit a
+currently sufficient plan, acquire evidence that can change a live plan, or retain an explicit
+no-action commitment while asynchronous execution continues.
+
+This also explains why action scope and evidence scope need not coincide. A configuration may
+target one node while its feasibility depends on gateway-owned receipt or backhaul state. The
+required Context is therefore induced by plan dependencies and network ownership/path semantics,
+not by lexical similarity to the target object. Conversely, a large telemetry refresh can be
+irrelevant if it only updates retired plans. A9's MiMo failure is a concrete example: an unresolved
+condition was factually present but belonged to a rejected/dominated plan; leaving it on the
+model-facing surface caused unnecessary investigation.
+
+The resulting design principle is deliberately modest: use ordinary deterministic compilation for
+what can be made explicit, and reserve model decisions for the remaining semantic choice. Our
+frozen workload even falsified one tempting extension---minimum-basis selection---because no real
+alternative proof choice existed. That negative result is useful: it prevents an optimization
+problem from being manufactured solely to make the interface appear more algorithmic.
 
 \section{Related Work}
 \label{sec:related}
