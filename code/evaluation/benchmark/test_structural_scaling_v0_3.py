@@ -19,18 +19,22 @@ def main() -> int:
     assert s['3']['selected_query_count']==2
     assert s['4']['selected_query_count']==2
 
-    # Small structures do not justify conflict-analysis overhead.
-    assert s['2']['guided_over_exhaustive_memo_ratio'] > 1.0
-    # Once alias/obligation structure grows, pruning begins to pay for itself.
+    # Delivery-constraint preprocessing no longer requires exact policy solves.
+    # Guided exact memo work is lower even on the 2-world case; lightweight
+    # max-flow preprocessing is reported separately rather than hidden.
+    assert s['2']['guided_over_exhaustive_memo_ratio'] < 1.0
     assert s['3']['guided_over_exhaustive_memo_ratio'] < 1.0
     assert s['4']['guided_over_exhaustive_memo_ratio'] < 1.0
+    assert s['2']['mean_guided_structural_flow_solves'] > 0
+    assert s['3']['mean_guided_structural_flow_solves'] > s['2']['mean_guided_structural_flow_solves']
+    assert s['4']['mean_guided_structural_flow_solves'] > s['3']['mean_guided_structural_flow_solves']
 
     assert s['3']['mean_guided_subset_solves'] < s['3']['mean_exhaustive_subset_solves']
     assert s['4']['mean_guided_subset_solves'] < s['4']['mean_exhaustive_subset_solves']
 
     print(
-        'PASS structural scaling v0.3: preprocessing loses on 2-world cases '
-        'but reduces exact search work for 3/4-world obligation conflicts'
+        'PASS structural scaling v0.3: delivery-constraint preprocessing '
+        'reduces exact search work while reporting max-flow cost separately'
     )
     return 0
 

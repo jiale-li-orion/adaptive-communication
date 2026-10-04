@@ -45,6 +45,7 @@ def build_ledger(*,phase_limit:int=4,catalog_size:int=5) -> dict[str,Any]:
     exhaustive_memo=[]
     guided_memo=[]
     guided_preprocessing=[]
+    guided_structural_flow=[]
 
     by_outcome=defaultdict(lambda:Counter())
 
@@ -72,6 +73,7 @@ def build_ledger(*,phase_limit:int=4,catalog_size:int=5) -> dict[str,Any]:
                 exhaustive_memo.append(ediag.total_memo_nodes)
                 guided_memo.append(gdiag.total_memo_nodes)
                 guided_preprocessing.append(gdiag.preprocessing_solves)
+                guided_structural_flow.append(gdiag.structural_flow_solves)
 
             by_outcome[r.outcome_class]['count']+=1
             by_outcome[r.outcome_class]['best_single_success']+=int(one)
@@ -112,6 +114,7 @@ def build_ledger(*,phase_limit:int=4,catalog_size:int=5) -> dict[str,Any]:
         'mean_exhaustive_subset_solves':mean(exhaustive_subset_solves),
         'mean_guided_subset_solves':mean(guided_subset_solves),
         'mean_guided_preprocessing_solves':mean(guided_preprocessing),
+        'mean_guided_structural_flow_solves':mean(guided_structural_flow),
         'mean_exhaustive_total_memo_nodes':mean(exhaustive_memo),
         'mean_guided_total_memo_nodes':mean(guided_memo),
         'guided_over_exhaustive_memo_ratio':(

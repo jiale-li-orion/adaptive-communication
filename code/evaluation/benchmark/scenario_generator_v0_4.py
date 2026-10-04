@@ -41,9 +41,6 @@ def _stable_id(payload: Any) -> str:
     return sha256(raw).hexdigest()[:16]
 
 
-def _stable_id(payload: Any) -> str:
-    raw=json.dumps(payload,sort_keys=True,separators=(",",":")).encode()
-    return sha256(raw).hexdigest()[:16]
 
 
 def _queries(catalog_size:int=5) -> tuple[EvidenceQuery,...]:

@@ -81,12 +81,12 @@ All preprocessing exact solves are included in reported cost.
 
 Mean results over 6 actual Connecta phases：
 
-| catalog | exhaustive subset solves | guided subset solves | guided preprocessing solves | guided/exhaustive memo-node ratio |
+| catalog | exhaustive subset solves | guided subset solves | structural preprocessing | guided/exhaustive memo-node ratio |
 | ---: | ---: | ---: | ---: | ---: |
-| 3 | 6 | 3 | 6 | 0.682 |
-| 5 | 15 | 3 | 6 | 0.264 |
-| 7 | 28 | 3 | 6 | 0.143 |
-| 9 | 45 | 3 | 6 | 0.090 |
+| 3 | 6 | 3 | 12 flow solves | 0.441 |
+| 5 | 15 | 3 | 12 flow solves | 0.171 |
+| 7 | 28 | 3 | 12 flow solves | 0.092 |
+| 9 | 45 | 3 | 12 flow solves | 0.058 |
 
 The selector preserves the same exact minimum-cardinality evidence set as exhaustive search.
 
@@ -120,17 +120,18 @@ phases.
 
 Mean over 4 valid trace phases：
 
-| worlds / obligations | selected evidence | exact policy memo nodes | exhaustive subset solves | guided subset solves | guided preprocessing solves | guided / exhaustive memo ratio |
+| worlds / obligations | selected evidence | exact policy memo nodes | exhaustive subset solves | guided subset solves | structural preprocessing | guided / exhaustive memo ratio |
 | ---: | ---: | ---: | ---: | ---: | ---: | ---: |
-| 2 / 2 | 1 | 906 | 3 | 1 | 4 | 1.182 |
-| 3 / 3 | 2 | 5,241 | 10 | 3 | 6 | 0.502 |
-| 4 / 4 | 2 | 6,503 | 10 | 3 | 8 | 0.684 |
+| 2 / 2 | 1 | 906 | 3 | 1 | 6 flow solves | 0.545 |
+| 3 / 3 | 2 | 5,241 | 10 | 3 | 12 flow solves | 0.328 |
+| 4 / 4 | 2 | 6,503 | 10 | 3 | 20 flow solves | 0.424 |
 
 Interpretation：
 
 - conflict preprocessing is not free；
-- for the 2-world structure it costs more exact memo work than direct subset enumeration；
-- at 3/4 worlds the reduced evidence-subset search begins to repay preprocessing cost；
-- therefore the method should use a cheap-size / conflict threshold rather than force structural analysis on every case。
+- preprocessing now uses a time-expanded delivery-constraint max-flow witness instead of exact policy solves；
+- guided search reduces exact memo work even for the 2-world structure；
+- max-flow solve count grows with world/obligation structure and is reported separately；
+- wall-clock claims must include both graph construction and exact continuation verification。
 
-This crossover is a retained negative/positive result, not filtered out for presentation.
+The previous 2-world negative crossover disappeared after replacing exact-solver preprocessing with the delivery-constraint graph. The old result remains historically useful as evidence that preprocessing cost must be counted honestly.

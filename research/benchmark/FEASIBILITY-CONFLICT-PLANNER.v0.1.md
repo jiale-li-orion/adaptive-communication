@@ -106,3 +106,44 @@ owner evidence 返回后，仅过滤与返回值不一致的 alias worlds，然�
 3. computation/search reduction。
 
 学习方法只考虑用于搜索顺序、界估计或 context 表示，不拥有 legality / authority / execution truth。
+
+## 8. Delivery-constraint witness upgrade
+
+The multi-evidence selector no longer uses per-world exact-policy solves to
+construct its conflict-ordering signature.
+
+It now builds a time-expanded delivery-constraint graph over:
+
+- obligations；
+- terrestrial service opportunities；
+- satellite service opportunities；
+- shared satellite budget。
+
+For each hidden world, a small max-flow relaxation determines：
+
+- whether all obligations are physically deliverable；
+- which opportunities can serve each obligation；
+- which obligations are forced to consume the shared satellite budget。
+
+Across alias worlds, disagreement in the mandatory-satellite set becomes an
+explicit resource-conflict witness. Evidence is ranked by whether it separates
+worlds with different conflict signatures.
+
+Important boundary：
+
+- the graph witness ranks/prunes evidence search；
+- exact non-anticipative policy search still verifies the selected subset；
+- the graph is not claimed to replace the full causal oracle；
+- max-flow preprocessing cost is reported separately from exact-policy memo work。
+
+Current v0.4 query-required cases：
+
+    exhaustive subset solves mean    7.0
+    guided subset solves mean        1.4
+    exact memo ratio                 0.274
+    exact preprocessing solves       0
+    structural max-flow solves       12.0 mean
+
+This is the first implementation matching the cache06 method sketch directly:
+communication-feasibility structure guides evidence search, while correctness
+remains protected by the exact observation-matched continuation oracle.

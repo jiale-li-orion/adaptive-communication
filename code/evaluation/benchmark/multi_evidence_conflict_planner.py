@@ -7,6 +7,7 @@ from itertools import combinations
 from typing import Any
 
 from multi_evidence_scenario_tree import Bundle, solve
+from delivery_constraint_graph import world_resource_signatures_with_cost
 
 
 @dataclass(frozen=True)
@@ -123,6 +124,7 @@ class QuerySearchDiagnostics:
     candidate_query_ids: tuple[str, ...]
     subset_solves: int
     preprocessing_solves: int
+    structural_flow_solves: int
     total_memo_nodes: int
     selected_query_ids: tuple[str, ...]
     selected_mode: str
@@ -273,6 +275,7 @@ def conflict_guided_query_search(
             candidate_query_ids=(),
             subset_solves=0,
             preprocessing_solves=0,
+            structural_flow_solves=0,
             total_memo_nodes=no_query.memo_nodes,
             selected_query_ids=(),
             selected_mode=plan.mode,
@@ -280,13 +283,18 @@ def conflict_guided_query_search(
 
     constant, dominated, candidates = _safe_static_prune(bundle)
     qmap = {q.query_id: q for q in bundle.queries}
-    signatures, preprocessing_solves, preprocessing_memo_nodes = _direct_action_signatures(bundle)
+    # Structural preprocessing: derive per-world shared-resource signatures
+    # from the time-expanded delivery constraint graph.  Exact policy solves
+    # remain only in subset verification, so correctness is still solver-backed.
+    signatures, structural_flow_solves = world_resource_signatures_with_cost(bundle)
+    preprocessing_solves = 0
+    preprocessing_memo_nodes = 0
     scores = {
         qid: _conflict_pair_score(bundle, qid, signatures)
         for qid in candidates
     }
     subset_solves = 0
-    total_memo_nodes = no_query.memo_nodes + preprocessing_memo_nodes
+    total_memo_nodes = no_query.memo_nodes
 
     for width in range(1, len(candidates) + 1):
         subsets = list(combinations(candidates, width))
@@ -320,6 +328,7 @@ def conflict_guided_query_search(
                     candidate_query_ids=candidates,
                     subset_solves=subset_solves,
                     preprocessing_solves=preprocessing_solves,
+                    structural_flow_solves=structural_flow_solves,
                     total_memo_nodes=total_memo_nodes,
                     selected_query_ids=tuple(subset),
                     selected_mode=mode,
@@ -339,6 +348,7 @@ def conflict_guided_query_search(
         candidate_query_ids=candidates,
         subset_solves=subset_solves,
         preprocessing_solves=preprocessing_solves,
+        structural_flow_solves=structural_flow_solves,
         total_memo_nodes=total_memo_nodes,
         selected_query_ids=(),
         selected_mode=plan.mode,
@@ -373,6 +383,7 @@ def exhaustive_query_search(
             candidate_query_ids=ids,
             subset_solves=0,
             preprocessing_solves=0,
+            structural_flow_solves=0,
             total_memo_nodes=total_memo_nodes,
             selected_query_ids=(),
             selected_mode=plan.mode,
@@ -412,6 +423,7 @@ def exhaustive_query_search(
                 candidate_query_ids=ids,
                 subset_solves=subset_solves,
                 preprocessing_solves=0,
+                structural_flow_solves=0,
                 total_memo_nodes=total_memo_nodes,
                 selected_query_ids=best.query_ids,
                 selected_mode=mode,
@@ -431,6 +443,7 @@ def exhaustive_query_search(
         candidate_query_ids=ids,
         subset_solves=subset_solves,
         preprocessing_solves=0,
+        structural_flow_solves=0,
         total_memo_nodes=total_memo_nodes,
         selected_query_ids=(),
         selected_mode=plan.mode,

@@ -147,6 +147,7 @@ def run_structural_scaling(ks:tuple[int,...]=(2,3,4), phase_limit:int=4) -> dict
                 'exhaustive_subset_solves':exd.subset_solves,
                 'guided_subset_solves':gdd.subset_solves,
                 'guided_preprocessing_solves':gdd.preprocessing_solves,
+                'guided_structural_flow_solves':gdd.structural_flow_solves,
                 'exhaustive_total_memo_nodes':exd.total_memo_nodes,
                 'guided_total_memo_nodes':gdd.total_memo_nodes,
             })
@@ -164,6 +165,7 @@ def run_structural_scaling(ks:tuple[int,...]=(2,3,4), phase_limit:int=4) -> dict
             'mean_exhaustive_subset_solves':avg('exhaustive_subset_solves'),
             'mean_guided_subset_solves':avg('guided_subset_solves'),
             'mean_guided_preprocessing_solves':avg('guided_preprocessing_solves'),
+            'mean_guided_structural_flow_solves':avg('guided_structural_flow_solves'),
             'mean_exhaustive_total_memo_nodes':avg('exhaustive_total_memo_nodes'),
             'mean_guided_total_memo_nodes':avg('guided_total_memo_nodes'),
             'guided_over_exhaustive_memo_ratio':avg('guided_total_memo_nodes')/avg('exhaustive_total_memo_nodes'),
