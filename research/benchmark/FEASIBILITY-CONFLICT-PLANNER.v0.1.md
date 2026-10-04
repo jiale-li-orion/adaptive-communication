@@ -147,3 +147,30 @@ Current v0.4 query-required cases：
 This is the first implementation matching the cache06 method sketch directly:
 communication-feasibility structure guides evidence search, while correctness
 remains protected by the exact observation-matched continuation oracle.
+
+## 9. Incremental conflict context
+
+The current method now caches per-world delivery-feasibility witnesses once and
+updates the live context by filtering the alias support after legal observations.
+
+Supported updates currently include：
+
+- owner evidence result；
+- terrestrial ACK success / failure。
+
+After an observation arrives：
+
+1. incompatible alias worlds are removed；
+2. cached per-world feasibility witnesses are retained；
+3. the shared-resource conflict is re-aggregated over surviving aliases；
+4. no new max-flow solve is required unless the physical opportunity model itself changes。
+
+On the v0.4 two-conflict mechanism case：
+
+    initial aliases = 4
+    after primary_health = 2
+    after receipt_summary = 1
+    additional structural flow solves = 0
+
+This realizes the cache06 requirement that context be maintained as a live
+decision object instead of rebuilding a global summary after every event.

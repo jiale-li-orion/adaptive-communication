@@ -169,8 +169,12 @@ def world_feasibility_witness(bundle: Bundle, world: World) -> WorldFeasibilityW
     )
 
 
-def alias_conflict_witness(bundle: Bundle) -> AliasConflictWitness:
-    witnesses = tuple(world_feasibility_witness(bundle, w) for w in bundle.worlds)
+def aggregate_world_witnesses(
+    witnesses: tuple[WorldFeasibilityWitness, ...],
+    *,
+    satellite_budget: int,
+    inherited_flow_solve_count: int | None = None,
+) -> AliasConflictWitness:
     mandatory_sets = [set(w.mandatory_satellite_obligations) for w in witnesses]
     union = set().union(*mandatory_sets) if mandatory_sets else set()
     intersection = set.intersection(*mandatory_sets) if mandatory_sets else set()
@@ -182,23 +186,33 @@ def alias_conflict_witness(bundle: Bundle) -> AliasConflictWitness:
         and not all(oid in s for s in mandatory_sets)
     }
 
-    # This is a structural conflict witness, not a proof of information value:
-    # aliases disagree about which obligations require the shared resource, and
-    # reserving the union would exceed the actual budget.
     resource_conflict = bool(
-        all(w.feasible for w in witnesses)
+        witnesses
+        and all(w.feasible for w in witnesses)
         and differing
-        and len(union) > int(bundle.satellite_budget)
+        and len(union) > int(satellite_budget)
     )
 
     return AliasConflictWitness(
         world_witnesses=witnesses,
-        flow_solve_count=sum(w.flow_solve_count for w in witnesses),
+        flow_solve_count=(
+            sum(w.flow_solve_count for w in witnesses)
+            if inherited_flow_solve_count is None
+            else int(inherited_flow_solve_count)
+        ),
         mandatory_satellite_union=tuple(sorted(union)),
         mandatory_satellite_intersection=tuple(sorted(intersection)),
         differing_obligations=tuple(sorted(differing)),
-        shared_satellite_budget=int(bundle.satellite_budget),
+        shared_satellite_budget=int(satellite_budget),
         resource_conflict_present=resource_conflict,
+    )
+
+
+def alias_conflict_witness(bundle: Bundle) -> AliasConflictWitness:
+    witnesses = tuple(world_feasibility_witness(bundle, w) for w in bundle.worlds)
+    return aggregate_world_witnesses(
+        witnesses,
+        satellite_budget=int(bundle.satellite_budget),
     )
 
 
