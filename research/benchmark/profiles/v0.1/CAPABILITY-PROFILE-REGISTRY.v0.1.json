@@ -1,0 +1,351 @@
+{
+  "schema_version": "0.1",
+  "profiles": [
+    {
+      "schema_version": "0.1",
+      "capability_profile_id": "DZT0450_2023_leo_narrowband_satellite",
+      "source_refs": [
+        {
+          "source_id": "DZT0450_2023",
+          "source_class": "STANDARD",
+          "directness": "DIRECT_PARAMETER",
+          "snapshot_ref": "source_acquisition/field_evidence/china-geohazard-and-beidou/standards-guidance/dzt0450.txt",
+          "locator": "7.4.3.2-7.4.3.8"
+        }
+      ],
+      "scope": {
+        "domain": "geohazard monitoring data communication",
+        "path_class": "low_orbit_narrowband_satellite",
+        "jurisdiction": "PRC"
+      },
+      "capabilities": [
+        {
+          "capability_id": "leo_narrowband_uplink",
+          "owner": "communication_subsystem",
+          "constraints": {
+            "max_packet_bytes": 200,
+            "mean_latency_s_max": 5,
+            "success_rate_min": 0.99,
+            "send_period_s_min": 5,
+            "tx_power_w_max": 5,
+            "sleep_power_w_max": 0.005
+          },
+          "source_ref_ids": [
+            "DZT0450_2023"
+          ]
+        }
+      ],
+      "variables": {
+        "max_packet_bytes": {
+          "provenance_class": "FIXED_BY_SOURCE",
+          "answer_relevant": true,
+          "source_ref_ids": [
+            "DZT0450_2023"
+          ],
+          "value": 200
+        },
+        "mean_latency_s_max": {
+          "provenance_class": "FIXED_BY_SOURCE",
+          "answer_relevant": true,
+          "source_ref_ids": [
+            "DZT0450_2023"
+          ],
+          "value": 5
+        },
+        "success_rate_min": {
+          "provenance_class": "FIXED_BY_SOURCE",
+          "answer_relevant": true,
+          "source_ref_ids": [
+            "DZT0450_2023"
+          ],
+          "value": 0.99
+        },
+        "send_period_s_min": {
+          "provenance_class": "FIXED_BY_SOURCE",
+          "answer_relevant": true,
+          "source_ref_ids": [
+            "DZT0450_2023"
+          ],
+          "value": 5
+        },
+        "tx_power_w_max": {
+          "provenance_class": "FIXED_BY_SOURCE",
+          "answer_relevant": false,
+          "source_ref_ids": [
+            "DZT0450_2023"
+          ],
+          "value": 5
+        },
+        "sleep_power_w_max": {
+          "provenance_class": "FIXED_BY_SOURCE",
+          "answer_relevant": false,
+          "source_ref_ids": [
+            "DZT0450_2023"
+          ],
+          "value": 0.005
+        }
+      },
+      "unknowns": [],
+      "oracle_status": "READY_FOR_COMPATIBILITY",
+      "notes": [
+        "Power values are upper bounds, not an energy-per-message model.",
+        "A task case still needs source-compatible report payload size before packet-count feasibility can be solved."
+      ]
+    },
+    {
+      "schema_version": "0.1",
+      "capability_profile_id": "DZT0450_2023_satellite_short_message",
+      "source_refs": [
+        {
+          "source_id": "DZT0450_2023",
+          "source_class": "STANDARD",
+          "directness": "DIRECT_PARAMETER",
+          "snapshot_ref": "source_acquisition/field_evidence/china-geohazard-and-beidou/standards-guidance/dzt0450.txt",
+          "locator": "7.4.2.1-7.4.2.3"
+        }
+      ],
+      "scope": {
+        "domain": "geohazard monitoring data communication",
+        "path_class": "satellite_short_message",
+        "jurisdiction": "PRC"
+      },
+      "capabilities": [
+        {
+          "capability_id": "satellite_short_message",
+          "owner": "communication_subsystem",
+          "constraints": {
+            "mean_latency_s_max": 5,
+            "success_rate_min": 0.95
+          },
+          "source_ref_ids": [
+            "DZT0450_2023"
+          ]
+        }
+      ],
+      "variables": {
+        "mean_latency_s_max": {
+          "provenance_class": "FIXED_BY_SOURCE",
+          "answer_relevant": true,
+          "source_ref_ids": [
+            "DZT0450_2023"
+          ],
+          "value": 5
+        },
+        "success_rate_min": {
+          "provenance_class": "FIXED_BY_SOURCE",
+          "answer_relevant": true,
+          "source_ref_ids": [
+            "DZT0450_2023"
+          ],
+          "value": 0.95
+        },
+        "send_period_s_min": {
+          "provenance_class": "UNRESOLVED",
+          "answer_relevant": true,
+          "source_ref_ids": [
+            "DZT0450_2023"
+          ],
+          "unresolved_reason": "Current extracted text corrupts the numeric value in 7.4.2.3; do not guess."
+        },
+        "max_packet_bytes": {
+          "provenance_class": "UNRESOLVED",
+          "answer_relevant": true,
+          "source_ref_ids": [
+            "DZT0450_2023"
+          ],
+          "unresolved_reason": "No generic satellite-short-message payload bound is extracted from this standard section."
+        }
+      },
+      "unknowns": [
+        {
+          "field": "send_period_s_min",
+          "answer_relevant": true,
+          "reason": "OCR-corrupted numeric value; requires source recovery."
+        },
+        {
+          "field": "max_packet_bytes",
+          "answer_relevant": true,
+          "reason": "Needed for capacity feasibility when report payload size is nontrivial."
+        }
+      ],
+      "oracle_status": "PARTIAL_SOURCE_GAP",
+      "notes": [
+        "Do not substitute vendor BeiDou payload limits for the standard unless a device-specific case is explicitly constructed."
+      ]
+    },
+    {
+      "schema_version": "0.1",
+      "capability_profile_id": "F9164_BD305_4G_Beidou_dual_mode",
+      "source_refs": [
+        {
+          "source_id": "F9164_BD305",
+          "source_class": "DEVICE_DOCUMENT",
+          "directness": "DIRECT_CAPABILITY",
+          "snapshot_ref": "source_acquisition/field_evidence/china-geohazard-and-beidou/devices-vendors/ff_bd305.txt",
+          "locator": "product capability description"
+        }
+      ],
+      "scope": {
+        "domain": "geohazard/water remote telemetry",
+        "device": "F9164-BD305",
+        "path_class": "4G_plus_BeiDou"
+      },
+      "capabilities": [
+        {
+          "capability_id": "4g_primary_beidou_automatic_fallback",
+          "owner": "device_runtime",
+          "constraints": {
+            "beidou_regional_short_message_max_chinese_chars": 1000,
+            "fallback_rule": "use 4G when available; automatically switch to BeiDou when 4G is lost"
+          },
+          "source_ref_ids": [
+            "F9164_BD305"
+          ]
+        },
+        {
+          "capability_id": "remote_query_and_history_export",
+          "owner": "device_runtime",
+          "constraints": {},
+          "source_ref_ids": [
+            "F9164_BD305"
+          ]
+        }
+      ],
+      "variables": {
+        "beidou_regional_short_message_max_chinese_chars": {
+          "provenance_class": "FIXED_BY_SOURCE",
+          "answer_relevant": false,
+          "source_ref_ids": [
+            "F9164_BD305"
+          ],
+          "value": 1000
+        }
+      },
+      "unknowns": [
+        {
+          "field": "4g_energy_per_message",
+          "answer_relevant": false,
+          "reason": "Not specified in the acquired product material."
+        }
+      ],
+      "oracle_status": "READY_FOR_COMPATIBILITY",
+      "notes": [
+        "Device evidence owns capability/fallback behavior, not benchmark task authority.",
+        "Automatic failover is an ordinary baseline, not a new Agent action."
+      ]
+    },
+    {
+      "schema_version": "0.1",
+      "capability_profile_id": "PLAN_S_CONNECTA_IOT_MODULE_D2S",
+      "source_refs": [
+        {
+          "source_id": "PLAN_S_CONNECTA_IOT_MODULE_2026",
+          "source_class": "DEVICE_DOCUMENT",
+          "directness": "DIRECT_CAPABILITY",
+          "snapshot_ref": "source_acquisition/capabilities/satellite-short-message/service-capabilities/plan-s-connecta-iot-module-2026.remote.md",
+          "locator": "official Plan-S Modules & Antennas / Connecta pages"
+        }
+      ],
+      "scope": {
+        "domain": "remote environmental/IoT monitoring connectivity",
+        "path_class": "direct_to_satellite_lora_lr_fhss",
+        "service_family": "PLAN_S_CONNECTA_D2S",
+        "network": "Connecta IoT Network"
+      },
+      "capabilities": [
+        {
+          "capability_id": "connecta_d2s_uplink",
+          "owner": "device_runtime",
+          "constraints": {
+            "max_payload_bytes": 51,
+            "radio": "LoRa/LR-FHSS",
+            "terrestrial_mode": "LoRaWAN",
+            "wake_up": "TLE-based advanced wake-up"
+          },
+          "source_ref_ids": [
+            "PLAN_S_CONNECTA_IOT_MODULE_2026"
+          ]
+        },
+        {
+          "capability_id": "connecta_terrestrial_lorawan",
+          "owner": "device_runtime",
+          "constraints": {
+            "radio": "LoRaWAN",
+            "role": "terrestrial mode on the same dual terrestrial/NTN module"
+          },
+          "source_ref_ids": [
+            "PLAN_S_CONNECTA_IOT_MODULE_2026"
+          ]
+        }
+      ],
+      "variables": {
+        "max_payload_bytes": {
+          "provenance_class": "FIXED_BY_SOURCE",
+          "answer_relevant": true,
+          "source_ref_ids": [
+            "PLAN_S_CONNECTA_IOT_MODULE_2026"
+          ],
+          "value": 51
+        },
+        "deep_sleep_current_ua": {
+          "provenance_class": "FIXED_BY_SOURCE",
+          "answer_relevant": false,
+          "source_ref_ids": [
+            "PLAN_S_CONNECTA_IOT_MODULE_2026"
+          ],
+          "value": 6.8
+        },
+        "rx_current_ma": {
+          "provenance_class": "FIXED_BY_SOURCE",
+          "answer_relevant": false,
+          "source_ref_ids": [
+            "PLAN_S_CONNECTA_IOT_MODULE_2026"
+          ],
+          "value": 23
+        },
+        "tx_current_ma": {
+          "provenance_class": "FIXED_BY_SOURCE",
+          "answer_relevant": false,
+          "source_ref_ids": [
+            "PLAN_S_CONNECTA_IOT_MODULE_2026"
+          ],
+          "value": 161
+        },
+        "per_message_airtime_s": {
+          "provenance_class": "UNRESOLVED",
+          "answer_relevant": false,
+          "source_ref_ids": [
+            "PLAN_S_CONNECTA_IOT_MODULE_2026"
+          ],
+          "unresolved_reason": "Not stated in the currently acquired official public product material."
+        },
+        "pass_success_semantics": {
+          "provenance_class": "UNRESOLVED",
+          "answer_relevant": false,
+          "source_ref_ids": [
+            "PLAN_S_CONNECTA_IOT_MODULE_2026"
+          ],
+          "unresolved_reason": "No field-calibrated pass-level delivery-success trace is available in the acquired official product material."
+        }
+      },
+      "unknowns": [
+        {
+          "field": "per_message_airtime_s",
+          "answer_relevant": false,
+          "reason": "Needed for capacity/energy-hardness claims, but not for single-obligation V1 sanity."
+        },
+        {
+          "field": "pass_success_semantics",
+          "answer_relevant": false,
+          "reason": "Needed for realistic reliability evaluation; upper-envelope sanity track must be labelled CONTROLLED_STRESS."
+        }
+      ],
+      "oracle_status": "READY_FOR_COMPATIBILITY",
+      "notes": [
+        "This profile may pair with Connecta TLE geometry because product and constellation belong to the same Connecta service family.",
+        "It is not compatible by default with generic DZ/T 0450 low-orbit narrowband service semantics.",
+        "Dual terrestrial/NTN support is represented as two legal path capabilities owned by device runtime."
+      ]
+    }
+  ]
+}

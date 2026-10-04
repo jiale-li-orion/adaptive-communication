@@ -1,0 +1,924 @@
+{
+  "schema_version": "0.1",
+  "profiles": [
+    {
+      "schema_version": "0.1",
+      "profile_id": "DB11T1677_2019_rainfall_dual_path",
+      "families": [
+        "T1"
+      ],
+      "generator_status": "PARTIAL_SOURCE_GAP",
+      "source_refs": [
+        {
+          "source_id": "DB11T1677_2019",
+          "source_class": "LOCAL_STANDARD",
+          "directness": "DIRECT_TASK_AUTHORITY",
+          "snapshot_ref": null,
+          "locator": "rainfall monitoring clauses"
+        }
+      ],
+      "scope": {
+        "monitoring_item": "rainfall",
+        "phase": "pre-disaster monitoring",
+        "jurisdiction": "Beijing"
+      },
+      "heldout_groups": {
+        "SOURCE_FAMILY": "DB11T1677",
+        "JURISDICTION": "Beijing"
+      },
+      "variables": {
+        "dry_max_acquisition_interval_s": {
+          "provenance_class": "FIXED_BY_SOURCE",
+          "answer_relevant": true,
+          "source_ref_ids": [
+            "DB11T1677_2019"
+          ],
+          "value": 7200
+        },
+        "rain_max_acquisition_interval_s": {
+          "provenance_class": "FIXED_BY_SOURCE",
+          "answer_relevant": true,
+          "source_ref_ids": [
+            "DB11T1677_2019"
+          ],
+          "value": 300
+        },
+        "communication_classes": {
+          "provenance_class": "SOURCE_RANGE",
+          "answer_relevant": true,
+          "source_ref_ids": [
+            "DB11T1677_2019"
+          ],
+          "range": [
+            "GPRS",
+            "BeiDou"
+          ],
+          "sampling_rule": "source-profile enumeration"
+        },
+        "gprs_no_sun_endurance_days_at_5min": {
+          "provenance_class": "FIXED_BY_SOURCE",
+          "answer_relevant": true,
+          "source_ref_ids": [
+            "DB11T1677_2019"
+          ],
+          "value": 15
+        },
+        "beidou_no_sun_endurance_days_at_5min": {
+          "provenance_class": "FIXED_BY_SOURCE",
+          "answer_relevant": true,
+          "source_ref_ids": [
+            "DB11T1677_2019"
+          ],
+          "value": 7
+        },
+        "observed_device_fields": {
+          "provenance_class": "FIXED_BY_SOURCE",
+          "answer_relevant": false,
+          "source_ref_ids": [
+            "DB11T1677_2019"
+          ],
+          "value": [
+            "battery_voltage",
+            "signal_strength",
+            "upload_time",
+            "transmission_mode"
+          ]
+        },
+        "rain_state": {
+          "provenance_class": "SOURCE_RANGE",
+          "answer_relevant": true,
+          "source_ref_ids": [
+            "DB11T1677_2019"
+          ],
+          "range": [
+            "dry",
+            "rain"
+          ],
+          "sampling_rule": "enumerate source-defined operating states"
+        },
+        "communication_completion_semantics": {
+          "provenance_class": "UNRESOLVED",
+          "answer_relevant": true,
+          "source_ref_ids": [
+            "DB11T1677_2019"
+          ],
+          "unresolved_reason": "DB11/T 1677 specifies rainfall acquisition cadence and dual-channel capability, but does not directly define an upper-platform delivery deadline/completion rule for this profile."
+        }
+      },
+      "obligation_templates": [
+        {
+          "template_id": "rainfall_dry_monitoring",
+          "protected_subject": "rainfall monitoring information",
+          "trigger": {
+            "field": "rain_state",
+            "equals": "dry"
+          },
+          "completion_predicate": {
+            "kind": "observation_available"
+          },
+          "timing_semantics": {
+            "max_interval_s": 7200
+          },
+          "authority_owner": "monitoring_system",
+          "source_priority": null,
+          "expiration_rule": null,
+          "task_authority_source_ref_ids": [
+            "DB11T1677_2019"
+          ]
+        },
+        {
+          "template_id": "rainfall_active_monitoring",
+          "protected_subject": "rainfall monitoring information",
+          "trigger": {
+            "field": "rain_state",
+            "equals": "rain"
+          },
+          "completion_predicate": {
+            "kind": "observation_available"
+          },
+          "timing_semantics": {
+            "max_interval_s": 300
+          },
+          "authority_owner": "monitoring_system",
+          "source_priority": null,
+          "expiration_rule": null,
+          "task_authority_source_ref_ids": [
+            "DB11T1677_2019"
+          ]
+        }
+      ],
+      "capabilities": [
+        {
+          "capability_id": "gprs_transport",
+          "owner": "communication_subsystem",
+          "source_ref_ids": [
+            "DB11T1677_2019"
+          ],
+          "constraints": {
+            "class": "terrestrial"
+          }
+        },
+        {
+          "capability_id": "beidou_transport",
+          "owner": "communication_subsystem",
+          "source_ref_ids": [
+            "DB11T1677_2019"
+          ],
+          "constraints": {
+            "class": "satellite"
+          }
+        },
+        {
+          "capability_id": "observe_battery_signal",
+          "owner": "monitoring_platform",
+          "source_ref_ids": [
+            "DB11T1677_2019"
+          ],
+          "constraints": {}
+        }
+      ],
+      "authority_invariants": [
+        "dual-channel capability does not by itself authorize arbitrary external per-slot path override"
+      ],
+      "unknowns": [
+        {
+          "field": "communication_completion_semantics",
+          "answer_relevant": true,
+          "reason": "Acquisition cadence cannot be silently reinterpreted as communication-delivery deadline."
+        }
+      ]
+    },
+    {
+      "schema_version": "0.1",
+      "profile_id": "DB44T2457_2024_warning_reporting",
+      "families": [
+        "T1"
+      ],
+      "generator_status": "READY",
+      "source_refs": [
+        {
+          "source_id": "DB44T2457_2024",
+          "source_class": "LOCAL_STANDARD",
+          "directness": "DIRECT_TASK_AUTHORITY",
+          "snapshot_ref": null,
+          "locator": "warning-level reporting frequency table"
+        }
+      ],
+      "scope": {
+        "phase": "automated geohazard monitoring and warning",
+        "jurisdiction": "Guangdong"
+      },
+      "heldout_groups": {
+        "SOURCE_FAMILY": "DB44T2457",
+        "JURISDICTION": "Guangdong"
+      },
+      "variables": {
+        "monitoring_grade": {
+          "provenance_class": "SOURCE_RANGE",
+          "answer_relevant": true,
+          "source_ref_ids": [
+            "DB44T2457_2024"
+          ],
+          "range": [
+            1,
+            2,
+            3
+          ],
+          "sampling_rule": "source-profile enumeration"
+        },
+        "warning_state": {
+          "provenance_class": "SOURCE_RANGE",
+          "answer_relevant": true,
+          "source_ref_ids": [
+            "DB44T2457_2024"
+          ],
+          "range": [
+            "none_stable",
+            "blue",
+            "yellow",
+            "orange",
+            "red"
+          ],
+          "sampling_rule": "source-profile enumeration"
+        },
+        "cadence_table": {
+          "provenance_class": "FIXED_BY_SOURCE",
+          "answer_relevant": true,
+          "source_ref_ids": [
+            "DB44T2457_2024"
+          ],
+          "value": {
+            "grade1": [
+              "3-5d",
+              "6-12h",
+              "3-6h",
+              "30-60min",
+              "5min"
+            ],
+            "grade2": [
+              "5-7d",
+              "12-24h",
+              "6-12h",
+              "1-2h",
+              "5min"
+            ],
+            "grade3": [
+              "7-15d",
+              "1-3d",
+              "12-24h",
+              "2-4h",
+              "5min"
+            ]
+          }
+        },
+        "transport_classes": {
+          "provenance_class": "SOURCE_RANGE",
+          "answer_relevant": false,
+          "source_ref_ids": [
+            "DB44T2457_2024"
+          ],
+          "range": [
+            "mobile",
+            "LPWAN",
+            "high_or_low_orbit_satellite"
+          ],
+          "sampling_rule": "source-profile enumeration"
+        }
+      },
+      "obligation_templates": [
+        {
+          "template_id": "warning_state_reporting",
+          "protected_subject": "monitoring information",
+          "trigger": {
+            "kind": "monitoring_grade_warning_state_cell"
+          },
+          "completion_predicate": {
+            "kind": "timely_complete_report"
+          },
+          "timing_semantics": {
+            "kind": "table_lookup",
+            "variable": "cadence_table"
+          },
+          "authority_owner": "monitoring_unit",
+          "source_priority": null,
+          "expiration_rule": null,
+          "task_authority_source_ref_ids": [
+            "DB44T2457_2024"
+          ]
+        }
+      ],
+      "capabilities": [
+        {
+          "capability_id": "warning_dependent_reporting",
+          "owner": "monitoring_unit",
+          "source_ref_ids": [
+            "DB44T2457_2024"
+          ],
+          "constraints": {}
+        },
+        {
+          "capability_id": "multi_transport_reporting",
+          "owner": "communication_subsystem",
+          "source_ref_ids": [
+            "DB44T2457_2024"
+          ],
+          "constraints": {}
+        }
+      ],
+      "authority_invariants": [
+        "cadence is selected from the active monitoring-grade/warning-state cell, not globally invented"
+      ],
+      "unknowns": []
+    },
+    {
+      "schema_version": "0.1",
+      "profile_id": "DZT0450_2023_disconnect_recovery",
+      "families": [
+        "T1"
+      ],
+      "generator_status": "PARTIAL_SOURCE_GAP",
+      "source_refs": [
+        {
+          "source_id": "DZT0450_2023",
+          "source_class": "STANDARD",
+          "directness": "DIRECT_TASK_AUTHORITY",
+          "snapshot_ref": "source_acquisition/field_evidence/china-geohazard-and-beidou/standards-guidance/dzt0450.txt",
+          "locator": "6.3.2.5-7.4"
+        }
+      ],
+      "scope": {
+        "phase": "monitoring data communication",
+        "jurisdiction": "PRC"
+      },
+      "heldout_groups": {
+        "SOURCE_FAMILY": "DZT0450",
+        "JURISDICTION": "PRC-national"
+      },
+      "variables": {
+        "minimum_cache_days": {
+          "provenance_class": "FIXED_BY_SOURCE",
+          "answer_relevant": true,
+          "source_ref_ids": [
+            "DZT0450_2023"
+          ],
+          "value": 7
+        },
+        "satellite_short_message_latency_s_max": {
+          "provenance_class": "FIXED_BY_SOURCE",
+          "answer_relevant": true,
+          "source_ref_ids": [
+            "DZT0450_2023"
+          ],
+          "value": 5
+        },
+        "satellite_short_message_success_rate_min": {
+          "provenance_class": "FIXED_BY_SOURCE",
+          "answer_relevant": true,
+          "source_ref_ids": [
+            "DZT0450_2023"
+          ],
+          "value": 0.95
+        },
+        "leo_packet_bytes_max": {
+          "provenance_class": "FIXED_BY_SOURCE",
+          "answer_relevant": true,
+          "source_ref_ids": [
+            "DZT0450_2023"
+          ],
+          "value": 200
+        },
+        "leo_success_rate_min": {
+          "provenance_class": "FIXED_BY_SOURCE",
+          "answer_relevant": true,
+          "source_ref_ids": [
+            "DZT0450_2023"
+          ],
+          "value": 0.99
+        },
+        "reconnect_backlog_priority": {
+          "provenance_class": "UNRESOLVED",
+          "answer_relevant": true,
+          "source_ref_ids": [],
+          "unresolved_reason": "standard says cached data are sent as required but does not define general backlog-vs-fresh priority"
+        }
+      },
+      "obligation_templates": [
+        {
+          "template_id": "retain_during_outage",
+          "protected_subject": "monitoring records",
+          "trigger": {
+            "kind": "communication_unavailable"
+          },
+          "completion_predicate": {
+            "kind": "retained_locally",
+            "minimum_days": 7
+          },
+          "timing_semantics": {
+            "kind": "outage_lifecycle"
+          },
+          "authority_owner": "local_storage_runtime",
+          "source_priority": null,
+          "expiration_rule": null,
+          "task_authority_source_ref_ids": [
+            "DZT0450_2023"
+          ]
+        },
+        {
+          "template_id": "restore_after_reconnect",
+          "protected_subject": "cached monitoring records",
+          "trigger": {
+            "kind": "communication_restored"
+          },
+          "completion_predicate": {
+            "kind": "available_to_upper_platform_or_local_download"
+          },
+          "timing_semantics": {
+            "kind": "recovery_lifecycle"
+          },
+          "authority_owner": "monitoring_runtime",
+          "source_priority": null,
+          "expiration_rule": null,
+          "task_authority_source_ref_ids": [
+            "DZT0450_2023"
+          ]
+        }
+      ],
+      "capabilities": [
+        {
+          "capability_id": "local_cache",
+          "owner": "local_device",
+          "source_ref_ids": [
+            "DZT0450_2023"
+          ],
+          "constraints": {
+            "minimum_days": 7
+          }
+        },
+        {
+          "capability_id": "satellite_short_message",
+          "owner": "communication_subsystem",
+          "source_ref_ids": [
+            "DZT0450_2023"
+          ],
+          "constraints": {}
+        },
+        {
+          "capability_id": "leo_narrowband_satellite",
+          "owner": "communication_subsystem",
+          "source_ref_ids": [
+            "DZT0450_2023"
+          ],
+          "constraints": {}
+        },
+        {
+          "capability_id": "authorized_remote_control",
+          "owner": "authorized_service_endpoint",
+          "source_ref_ids": [
+            "DZT0450_2023"
+          ],
+          "constraints": {}
+        }
+      ],
+      "authority_invariants": [
+        "local threshold/alarm autonomy remains active",
+        "reconnect priority cannot be invented"
+      ],
+      "unknowns": [
+        {
+          "field": "reconnect_backlog_priority",
+          "answer_relevant": true,
+          "reason": "no general priority/completion semantics yet"
+        }
+      ]
+    },
+    {
+      "schema_version": "0.1",
+      "profile_id": "JIAOZUO_2024_geohazard_monitoring_deployment",
+      "families": [
+        "T1"
+      ],
+      "generator_status": "READY",
+      "source_refs": [
+        {
+          "source_id": "JIAOZUO_2024",
+          "source_class": "GOVERNMENT_PROCUREMENT",
+          "directness": "DIRECT_TASK_AUTHORITY",
+          "snapshot_ref": "source_acquisition/field_evidence/china-geohazard-and-beidou/field-cases/jiaozuo-geohazard-monitoring-procurement-2024.remote.md",
+          "locator": null
+        }
+      ],
+      "scope": {
+        "phase": "pre-disaster automated monitoring",
+        "jurisdiction": "Henan/Jiaozuo",
+        "sites": 30
+      },
+      "heldout_groups": {
+        "SOURCE_FAMILY": "JIAOZUO_2024",
+        "JURISDICTION": "Henan/Jiaozuo"
+      },
+      "variables": {
+        "routine_max_acquisition_interval_s": {
+          "provenance_class": "FIXED_BY_SOURCE",
+          "answer_relevant": true,
+          "source_ref_ids": [
+            "JIAOZUO_2024"
+          ],
+          "value": 3600
+        },
+        "communication_priority": {
+          "provenance_class": "FIXED_BY_SOURCE",
+          "answer_relevant": true,
+          "source_ref_ids": [
+            "JIAOZUO_2024"
+          ],
+          "value": [
+            "NB",
+            "4G/5G",
+            "BeiDou"
+          ]
+        },
+        "center_visible_state": {
+          "provenance_class": "FIXED_BY_SOURCE",
+          "answer_relevant": false,
+          "source_ref_ids": [
+            "JIAOZUO_2024"
+          ],
+          "value": [
+            "voltage_alarm",
+            "local_storage_state",
+            "device_work_state"
+          ]
+        }
+      },
+      "obligation_templates": [
+        {
+          "template_id": "routine_monitoring",
+          "protected_subject": "monitoring information",
+          "trigger": {
+            "kind": "normal_operation"
+          },
+          "completion_predicate": {
+            "kind": "delivered_to_required_platforms",
+            "targets": [
+              "local",
+              "national"
+            ]
+          },
+          "timing_semantics": {
+            "max_acquisition_interval_s": 3600
+          },
+          "authority_owner": "monitoring_system",
+          "source_priority": null,
+          "expiration_rule": null,
+          "task_authority_source_ref_ids": [
+            "JIAOZUO_2024"
+          ]
+        }
+      ],
+      "capabilities": [
+        {
+          "capability_id": "nb_transport",
+          "owner": "communication_subsystem",
+          "source_ref_ids": [
+            "JIAOZUO_2024"
+          ],
+          "constraints": {}
+        },
+        {
+          "capability_id": "4g5g_transport",
+          "owner": "communication_subsystem",
+          "source_ref_ids": [
+            "JIAOZUO_2024"
+          ],
+          "constraints": {}
+        },
+        {
+          "capability_id": "beidou_fallback",
+          "owner": "communication_subsystem",
+          "source_ref_ids": [
+            "JIAOZUO_2024"
+          ],
+          "constraints": {}
+        },
+        {
+          "capability_id": "remote_state_read",
+          "owner": "monitoring_center",
+          "source_ref_ids": [
+            "JIAOZUO_2024"
+          ],
+          "constraints": {}
+        },
+        {
+          "capability_id": "block_read_local_history",
+          "owner": "monitoring_center",
+          "source_ref_ids": [
+            "JIAOZUO_2024"
+          ],
+          "constraints": {}
+        }
+      ],
+      "authority_invariants": [
+        "source-defined communication priority is preserved",
+        "center visibility does not imply arbitrary per-slot path override"
+      ],
+      "unknowns": []
+    },
+    {
+      "schema_version": "0.1",
+      "profile_id": "YINING_2025_pre_disaster_warning_delivery",
+      "families": [
+        "T2"
+      ],
+      "generator_status": "READY",
+      "source_refs": [
+        {
+          "source_id": "YINING_2025",
+          "source_class": "GOVERNMENT_WORKFLOW",
+          "directness": "DIRECT_TASK_AUTHORITY",
+          "snapshot_ref": "source_acquisition/field_evidence/china-geohazard-and-beidou/standards-guidance/yining-geohazard-warning-call-response-2025.remote.md",
+          "locator": null
+        }
+      ],
+      "scope": {
+        "phase": "pre-disaster warning publication/call-response",
+        "jurisdiction": "Xinjiang/Yining"
+      },
+      "heldout_groups": {
+        "SOURCE_FAMILY": "YINING_2025",
+        "JURISDICTION": "Xinjiang/Yining"
+      },
+      "variables": {
+        "initial_call_response_deadline_min": {
+          "provenance_class": "FIXED_BY_SOURCE",
+          "answer_relevant": true,
+          "source_ref_ids": [
+            "YINING_2025"
+          ],
+          "value": 15
+        },
+        "draft_review_publish_deadline_min": {
+          "provenance_class": "FIXED_BY_SOURCE",
+          "answer_relevant": true,
+          "source_ref_ids": [
+            "YINING_2025"
+          ],
+          "value": 60
+        },
+        "municipal_to_township_deadline_min": {
+          "provenance_class": "FIXED_BY_SOURCE",
+          "answer_relevant": true,
+          "source_ref_ids": [
+            "YINING_2025"
+          ],
+          "value": 15
+        },
+        "township_to_village_deadline_min": {
+          "provenance_class": "FIXED_BY_SOURCE",
+          "answer_relevant": true,
+          "source_ref_ids": [
+            "YINING_2025"
+          ],
+          "value": 15
+        },
+        "village_to_public_deadline_min": {
+          "provenance_class": "FIXED_BY_SOURCE",
+          "answer_relevant": true,
+          "source_ref_ids": [
+            "YINING_2025"
+          ],
+          "value": 30
+        },
+        "responsible_person_channel_priority": {
+          "provenance_class": "FIXED_BY_SOURCE",
+          "answer_relevant": true,
+          "source_ref_ids": [
+            "YINING_2025"
+          ],
+          "value": [
+            "phone",
+            "WeChat",
+            "SMS"
+          ]
+        }
+      },
+      "obligation_templates": [
+        {
+          "template_id": "municipal_to_township",
+          "protected_subject": "warning information",
+          "trigger": {
+            "kind": "warning_published"
+          },
+          "completion_predicate": {
+            "kind": "recipient_acknowledged",
+            "recipient_role": "township"
+          },
+          "timing_semantics": {
+            "deadline_min": 15
+          },
+          "authority_owner": "municipal_warning_department",
+          "source_priority": 1,
+          "expiration_rule": null,
+          "task_authority_source_ref_ids": [
+            "YINING_2025"
+          ]
+        },
+        {
+          "template_id": "township_to_village",
+          "protected_subject": "warning information",
+          "trigger": {
+            "kind": "township_acknowledged"
+          },
+          "completion_predicate": {
+            "kind": "recipient_acknowledged",
+            "recipient_role": "village_community"
+          },
+          "timing_semantics": {
+            "deadline_min": 15
+          },
+          "authority_owner": "township_responsible_person",
+          "source_priority": 2,
+          "expiration_rule": null,
+          "task_authority_source_ref_ids": [
+            "YINING_2025"
+          ]
+        },
+        {
+          "template_id": "village_to_public",
+          "protected_subject": "warning information",
+          "trigger": {
+            "kind": "village_acknowledged"
+          },
+          "completion_predicate": {
+            "kind": "public_informed_and_avoidance_understood"
+          },
+          "timing_semantics": {
+            "deadline_min": 30
+          },
+          "authority_owner": "village_community_responsible_person",
+          "source_priority": 3,
+          "expiration_rule": null,
+          "task_authority_source_ref_ids": [
+            "YINING_2025"
+          ]
+        }
+      ],
+      "capabilities": [
+        {
+          "capability_id": "phone_delivery",
+          "owner": "responsible_person",
+          "source_ref_ids": [
+            "YINING_2025"
+          ],
+          "constraints": {}
+        },
+        {
+          "capability_id": "wechat_sms_redundancy",
+          "owner": "responsible_person",
+          "source_ref_ids": [
+            "YINING_2025"
+          ],
+          "constraints": {}
+        },
+        {
+          "capability_id": "retry_alternate_contact",
+          "owner": "responsible_person",
+          "source_ref_ids": [
+            "YINING_2025"
+          ],
+          "constraints": {}
+        },
+        {
+          "capability_id": "satellite_phone_fallback",
+          "owner": "emergency_communication",
+          "source_ref_ids": [
+            "YINING_2025"
+          ],
+          "constraints": {}
+        }
+      ],
+      "authority_invariants": [
+        "warning delivery follows the responsible-person chain",
+        "missed phone calls trigger retry/alternate contact rather than silent completion"
+      ],
+      "unknowns": []
+    },
+    {
+      "schema_version": "0.1",
+      "profile_id": "BAOSHAN_1262_progressive_call_response",
+      "families": [
+        "T2"
+      ],
+      "generator_status": "READY",
+      "source_refs": [
+        {
+          "source_id": "BAOSHAN_1262",
+          "source_class": "GOVERNMENT_WORKFLOW",
+          "directness": "DIRECT_TASK_AUTHORITY",
+          "snapshot_ref": "source_acquisition/field_evidence/china-geohazard-and-beidou/standards-guidance/baoshan-1262-geohazard-call-response.remote.md",
+          "locator": null
+        }
+      ],
+      "scope": {
+        "phase": "pre-disaster progressive call-response",
+        "jurisdiction": "Yunnan/Baoshan"
+      },
+      "heldout_groups": {
+        "SOURCE_FAMILY": "BAOSHAN_1262",
+        "JURISDICTION": "Yunnan/Baoshan"
+      },
+      "variables": {
+        "county_to_city_feedback_deadline_min": {
+          "provenance_class": "FIXED_BY_SOURCE",
+          "answer_relevant": true,
+          "source_ref_ids": [
+            "BAOSHAN_1262"
+          ],
+          "value": 30
+        },
+        "city_to_province_feedback_deadline_min": {
+          "provenance_class": "FIXED_BY_SOURCE",
+          "answer_relevant": true,
+          "source_ref_ids": [
+            "BAOSHAN_1262"
+          ],
+          "value": 50
+        },
+        "duplicate_suppression_rule": {
+          "provenance_class": "FIXED_BY_SOURCE",
+          "answer_relevant": true,
+          "source_ref_ids": [
+            "BAOSHAN_1262"
+          ],
+          "value": "unchanged already-called region need not be called repeatedly; changed/new region must be called"
+        },
+        "forecast_horizon_h": {
+          "provenance_class": "SOURCE_RANGE",
+          "answer_relevant": true,
+          "source_ref_ids": [
+            "BAOSHAN_1262"
+          ],
+          "range": [
+            12,
+            6,
+            2
+          ],
+          "sampling_rule": "enumerate source-defined progressive forecast horizons"
+        }
+      },
+      "obligation_templates": [
+        {
+          "template_id": "progressive_call_response",
+          "protected_subject": "warning information and feedback",
+          "trigger": {
+            "kind": "forecast_or_warning_state",
+            "field": "forecast_horizon_h"
+          },
+          "completion_predicate": {
+            "kind": "required_region_called_and_feedback_logged"
+          },
+          "timing_semantics": {
+            "county_to_city_deadline_min": 30,
+            "city_to_province_deadline_min": 50
+          },
+          "authority_owner": "duty_response_chain",
+          "source_priority": null,
+          "expiration_rule": null,
+          "task_authority_source_ref_ids": [
+            "BAOSHAN_1262"
+          ]
+        }
+      ],
+      "capabilities": [
+        {
+          "capability_id": "call_affected_region",
+          "owner": "duty_response_chain",
+          "source_ref_ids": [
+            "BAOSHAN_1262"
+          ],
+          "constraints": {}
+        },
+        {
+          "capability_id": "record_feedback_ledger",
+          "owner": "duty_room",
+          "source_ref_ids": [
+            "BAOSHAN_1262"
+          ],
+          "constraints": {}
+        },
+        {
+          "capability_id": "suppress_unchanged_duplicate",
+          "owner": "duty_response_chain",
+          "source_ref_ids": [
+            "BAOSHAN_1262"
+          ],
+          "constraints": {}
+        }
+      ],
+      "authority_invariants": [
+        "changed/new affected regions cannot be suppressed as duplicate",
+        "feedback state is part of completion"
+      ],
+      "unknowns": []
+    }
+  ]
+}

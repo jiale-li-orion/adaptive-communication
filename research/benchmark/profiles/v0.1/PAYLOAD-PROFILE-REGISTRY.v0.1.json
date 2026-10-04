@@ -1,0 +1,36 @@
+{
+  "schema_version": "0.1",
+  "profiles": [
+    {
+      "schema_version": "0.1",
+      "payload_profile_id": "DZT0450_TYPE1_SINGLE_SENSOR_EXAMPLE",
+      "source_refs": [
+        {
+          "source_id": "DZT0450_2023",
+          "source_class": "STANDARD",
+          "directness": "DIRECT_PARAMETER",
+          "snapshot_ref": "source_acquisition/field_evidence/china-geohazard-and-beidou/standards-guidance/dzt0450.txt",
+          "locator": "8.5.1 + normative Appendix D.1 example"
+        }
+      ],
+      "payload_class": "type1_realtime_single_sensor_standard_example",
+      "encoded_bytes": 32,
+      "derivation": {
+        "header_bytes": 3,
+        "example_ascii": "{\"484021\": {\"L2_LF_1\": 18.2}}",
+        "example_ascii_bytes": 29,
+        "formula": "3-byte Type-1 header + exact ASCII example string from Appendix D.1"
+      },
+      "scope": {
+        "data_format": "Type-1 real-time data upload",
+        "sensor_cardinality": 1,
+        "purpose": "source-example payload sanity profile"
+      },
+      "limitations": [
+        "This is an exact standard example payload, not a population distribution of report sizes.",
+        "Whitespace/serialization is preserved exactly as shown in the source example.",
+        "It must not be generalized to multi-sensor, GNSS raw, file, historical-batch, or arbitrary JSON reports."
+      ]
+    }
+  ]
+}

@@ -1,0 +1,138 @@
+{
+  "schema_version": "0.1",
+  "profiles": [
+    {
+      "schema_version": "0.1",
+      "trace_profile_id": "CONNECTA_20260922_TIBET_GEOMETRY_48H",
+      "provenance_class": "MODEL_DERIVED_TRACE",
+      "input_snapshots": [
+        {
+          "ref": "data/downloads/connecta_gp_2026-09-22/connecta_iot.tle",
+          "sha256": "040433b516de84a2b5d97aa7f3636558d1a12ee1de28a2d898db09262b835639",
+          "source_note": "Pinned Connecta GP/TLE snapshot, 16 objects."
+        }
+      ],
+      "derivation": {
+        "model": "SGP4 geometric visibility",
+        "version_or_code_ref": "local_research/episodes/2026-09-21-communication-method-and-agent-search/199-GPT-CONNECTA-ORBIT-VISIBILITY.py",
+        "parameters": {
+          "site_lat_deg": 30.33,
+          "site_lon_deg": 94.78,
+          "site_alt_m": 4650.16,
+          "start_utc": "2026-09-22T08:00:00+00:00",
+          "hours": 48,
+          "step_s": 60
+        }
+      },
+      "scope": {
+        "geometry": "satellite above elevation mask at one mountain site",
+        "domain": "terminal satellite opportunity geometry",
+        "not": [
+          "measured contact",
+          "PHY success",
+          "service authorization"
+        ],
+        "service_family": "PLAN_S_CONNECTA_D2S",
+        "task_jurisdiction_compatible": [
+          "Xizang"
+        ],
+        "site_profile_id": null,
+        "benchmark_role": "transfer_or_historical_geometry_only"
+      },
+      "trace_ref": "local_research/episodes/2026-09-21-communication-method-and-agent-search/199-GPT-CONNECTA-ORBIT-VISIBILITY.json",
+      "trace_sha256": "f3f08a568baa20e2801ec9db5d726db2ca7245e3d64cfa9eaeb096c9068818ea",
+      "variables": {
+        "elevation_mask_deg": {
+          "provenance_class": "CONTROLLED_STRESS",
+          "values": [
+            0,
+            5,
+            10,
+            20,
+            30
+          ],
+          "stress_rationale": "No field terrain skyline is asserted. Masks are explicit geometry sensitivity cells."
+        },
+        "visibility_windows": {
+          "provenance_class": "MODEL_DERIVED_TRACE",
+          "trace_ref": "199-GPT-CONNECTA-ORBIT-VISIBILITY.json",
+          "answer_relevant": true
+        }
+      },
+      "limitations": [
+        "Geometry opportunity only; a visible satellite is not automatically a usable service opportunity.",
+        "No terrain skyline is measured for the site; elevation masks are controlled stress.",
+        "No PHY fading, subscription/service eligibility, collision, or packet-success process is encoded.",
+        "The trace is a 48 h model-derived window from one pinned TLE snapshot and one site."
+      ]
+    },
+    {
+      "schema_version": "0.1",
+      "trace_profile_id": "CONNECTA_20260922_SIHUI_GEOMETRY_48H",
+      "provenance_class": "MODEL_DERIVED_TRACE",
+      "input_snapshots": [
+        {
+          "ref": "research/benchmark/traces/v0.1/CONNECTA_GP_20260922.tle",
+          "sha256": "040433b516de84a2b5d97aa7f3636558d1a12ee1de28a2d898db09262b835639",
+          "source_note": "Pinned Connecta GP/TLE snapshot, 16 objects."
+        }
+      ],
+      "derivation": {
+        "model": "SGP4 geometric visibility",
+        "version_or_code_ref": "code/evaluation/benchmark/derive_connecta_geometry.py + sgp4 2.27",
+        "parameters": {
+          "site_profile_id": "GUANGDONG_SIHUI_HIGH_SCHOOL_LANDSLIDE",
+          "site_lat_deg": 23.3188888889,
+          "site_lon_deg": 112.7163888889,
+          "site_alt_m": 16.0,
+          "site_altitude_source_ref_id": "OPEN_METEO_ELEVATION_20261004",
+          "start_utc": "2026-09-22T08:00:00+00:00",
+          "hours": 48,
+          "step_s": 60
+        }
+      },
+      "scope": {
+        "geometry": "satellite above elevation mask at the Guangdong Sihui field site",
+        "domain": "terminal satellite opportunity geometry",
+        "service_family": "PLAN_S_CONNECTA_D2S",
+        "task_jurisdiction_compatible": [
+          "Guangdong"
+        ],
+        "site_profile_id": "GUANGDONG_SIHUI_HIGH_SCHOOL_LANDSLIDE",
+        "benchmark_role": "source-site geometry",
+        "not": [
+          "measured contact",
+          "PHY success",
+          "service authorization"
+        ]
+      },
+      "trace_ref": "research/benchmark/traces/v0.1/CONNECTA_20260922_SIHUI_GEOMETRY_48H.json",
+      "trace_sha256": "10eae5e143c1ac50fcdfa600c4189600caaee11b64029f50a152291cf04a5842",
+      "variables": {
+        "elevation_mask_deg": {
+          "provenance_class": "CONTROLLED_STRESS",
+          "values": [
+            0,
+            5,
+            10,
+            20,
+            30
+          ],
+          "stress_rationale": "No field terrain skyline is asserted. Masks are explicit geometry sensitivity cells."
+        },
+        "visibility_windows": {
+          "provenance_class": "MODEL_DERIVED_TRACE",
+          "trace_ref": "sihui-connecta-alt16m.json",
+          "answer_relevant": true
+        }
+      },
+      "limitations": [
+        "Geometry opportunity only; a visible satellite is not automatically a usable service opportunity.",
+        "No field terrain skyline is measured for the site; elevation masks remain controlled stress.",
+        "No PHY fading, service eligibility, collision, or packet-success process is encoded.",
+        "The trace is a 48 h model-derived window from one pinned TLE snapshot and one field-site coordinate.",
+        "Plan-S Connecta is a candidate architecture profile, not evidence that the module was deployed at this historical monitoring site."
+      ]
+    }
+  ]
+}

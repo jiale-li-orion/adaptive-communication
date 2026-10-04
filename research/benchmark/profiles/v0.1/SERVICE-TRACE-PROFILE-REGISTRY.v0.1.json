@@ -1,0 +1,20 @@
+{
+  "schema_version": "0.1",
+  "profiles": [
+    {
+      "schema_version": "0.1",
+      "service_trace_profile_id": "GEOMETRY_UPPER_ENVELOPE_V0",
+      "provenance_class": "CONTROLLED_STRESS",
+      "service_rule": "every eligible send slot inside a model-derived geometry window succeeds",
+      "ack_rule": "successful send is acknowledged",
+      "failure_rule": "no additional service/PHY failure is injected",
+      "stress_rationale": "Upper-envelope V1 solvability sanity track. It isolates scheduling/capacity feasibility from uncalibrated service reliability.",
+      "claim_boundary": [
+        "not field-calibrated reliability",
+        "not a measured contact trace",
+        "not used to claim deployment success rate",
+        "not sufficient for decision-hard benchmark admission"
+      ]
+    }
+  ]
+}

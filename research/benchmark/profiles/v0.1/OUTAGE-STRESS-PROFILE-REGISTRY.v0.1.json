@@ -1,0 +1,20 @@
+{
+  "schema_version": "0.1",
+  "profiles": [
+    {
+      "schema_version": "0.1",
+      "outage_profile_id": "DEADLINE_RELATIVE_TERRESTRIAL_OUTAGE_V0",
+      "provenance_class": "CONTROLLED_STRESS",
+      "duration_over_deadline_cells": [0.5, 1.0, 2.0],
+      "start_rule": "terrestrial outage begins at the report release instant",
+      "terrestrial_service_rule": "outside the outage, one fitting report can be delivered within the trace step",
+      "stress_rationale": "Cover the three qualitative deadline regimes without pretending to know a field outage-duration distribution: recovery before deadline, at deadline, or after deadline.",
+      "claim_boundary": [
+        "not a field outage probability model",
+        "not a Guangdong operator outage trace",
+        "used for decision-validity stress only",
+        "ratios are relative to the source-defined report deadline"
+      ]
+    }
+  ]
+}

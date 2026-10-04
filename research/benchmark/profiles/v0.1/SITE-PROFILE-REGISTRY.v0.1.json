@@ -1,0 +1,67 @@
+{
+  "schema_version": "0.1",
+  "profiles": [
+    {
+      "schema_version": "0.1",
+      "site_profile_id": "GUANGDONG_SIHUI_HIGH_SCHOOL_LANDSLIDE",
+      "source_refs": [
+        {
+          "source_id": "GUANGDONG_2010_GEOHAZARD_PLAN",
+          "source_class": "GOVERNMENT_HAZARD_REGISTER",
+          "directness": "DIRECT_SITE_COORDINATE",
+          "locator": "2010 Guangdong important geohazard list, entry 468"
+        },
+        {
+          "source_id": "WEI_ET_AL_2011_GDCORS_LANDSLIDE",
+          "source_class": "PEER_REVIEWED_FIELD_DEPLOYMENT",
+          "directness": "DIRECT_FIELD_SITE",
+          "locator": "demonstration monitoring at Sihui High School landslide hazard"
+        },
+        {
+          "source_id": "OPEN_METEO_ELEVATION_20261004",
+          "source_class": "DATASET_DERIVED",
+          "directness": "DIRECT_SITE_ELEVATION",
+          "locator": "Open-Meteo elevation endpoint at exact registered coordinate"
+        }
+      ],
+      "jurisdiction": "Guangdong",
+      "site_identity": {
+        "name": "四会市东城区四会中学高中部滑坡隐患点",
+        "hazard_type": "landslide",
+        "government_register_scale": "extra_large",
+        "government_register_threatened_people": 4500,
+        "field_monitoring_evidence": "GPS/CORS remote deformation monitoring demonstration site"
+      },
+      "coordinates": {
+        "lat_deg": 23.3188888889,
+        "lon_deg": 112.7163888889,
+        "coordinate_source_ref_ids": [
+          "GUANGDONG_2010_GEOHAZARD_PLAN"
+        ]
+      },
+      "variables": {
+        "altitude_m": {
+          "provenance_class": "MODEL_DERIVED_TRACE",
+          "answer_relevant": true,
+          "source_ref_ids": [
+            "OPEN_METEO_ELEVATION_20261004"
+          ],
+          "value": 16.0,
+          "trace_ref": "/home/orion/Communications/source_acquisition/terrain/elevation/sihui-high-school-openmeteo-elevation-2026-10-04.json",
+          "unresolved_reason": null
+        }
+      },
+      "scope": {
+        "task_jurisdiction_compatible": [
+          "Guangdong"
+        ],
+        "use": "source-grounded Guangdong field-site geometry for Layer-1 sanity/coverage"
+      },
+      "limitations": [
+        "2011 field deployment predates DB44/T 2457-2024; the site supports site realism, not historical compliance with the later standard.",
+        "Current site identity supports a Guangdong benchmark profile but does not imply Plan-S Connecta was deployed there.",
+        "Altitude 16 m is DEM-derived from a public elevation service at the exact registered coordinate; it is not survey-grade."
+      ]
+    }
+  ]
+}

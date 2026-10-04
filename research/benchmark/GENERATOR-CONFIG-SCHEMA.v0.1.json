@@ -1,0 +1,33 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "adaptive-communication/research/benchmark/GENERATOR-CONFIG-SCHEMA.v0.1.json",
+  "title": "Layer-1 Scenario Generator Config",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_version",
+    "generator_id",
+    "task_profile_id",
+    "site_profile_id",
+    "capability_profile_id",
+    "trace_profile_id",
+    "payload_profile_id",
+    "service_profile_id",
+    "source_axes",
+    "controlled_axes",
+    "hard_case_filter"
+  ],
+  "properties": {
+    "schema_version": {"const": "0.1"},
+    "generator_id": {"const": "T1_ESCALATION_RESOURCE_COUPLING_V0"},
+    "task_profile_id": {"type": "string"},
+    "site_profile_id": {"type": "string"},
+    "capability_profile_id": {"type": "string"},
+    "trace_profile_id": {"type": "string"},
+    "payload_profile_id": {"type": "string"},
+    "service_profile_id": {"type": "string"},
+    "source_axes": {"type": "object"},
+    "controlled_axes": {"type": "object"},
+    "hard_case_filter": {"type": "object"}
+  }
+}

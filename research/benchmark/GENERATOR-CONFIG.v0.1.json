@@ -1,0 +1,40 @@
+{
+  "schema_version": "0.1",
+  "generator_id": "T1_ESCALATION_RESOURCE_COUPLING_V0",
+  "task_profile_id": "DB44T2457_2024_warning_reporting",
+  "site_profile_id": "GUANGDONG_SIHUI_HIGH_SCHOOL_LANDSLIDE",
+  "capability_profile_id": "PLAN_S_CONNECTA_IOT_MODULE_D2S",
+  "trace_profile_id": "CONNECTA_20260922_SIHUI_GEOMETRY_48H",
+  "payload_profile_id": "DZT0450_TYPE1_SINGLE_SENSOR_EXAMPLE",
+  "service_profile_id": "GEOMETRY_UPPER_ENVELOPE_V0",
+  "source_axes": {
+    "monitoring_grades": [1, 2, 3],
+    "warning_transitions": [
+      ["blue", "yellow"],
+      ["blue", "orange"],
+      ["blue", "red"],
+      ["yellow", "orange"],
+      ["yellow", "red"],
+      ["orange", "red"]
+    ],
+    "cadence_sampling": "enumerate_source_range_boundaries"
+  },
+  "controlled_axes": {
+    "transition_fraction_of_pre_deadline": [0.25, 0.5, 0.75],
+    "recovery_lag_post_intervals": [1.25, 1.75, 2.5],
+    "satellite_tx_budget_count": [1, 2, 3],
+    "post_obligation_count": [2, 3, 4],
+    "elevation_mask_deg": [5, 10, 20, 30],
+    "phase_bins": 8,
+    "satellite_reports_per_visible_step": 1,
+    "terrestrial_reports_per_step": 1,
+    "trace_step_s": 60
+  },
+  "hard_case_filter": {
+    "require_oracle_solvable": true,
+    "require_multiple_legal_first_actions": true,
+    "require_satellite_budget_binding": true,
+    "require_forced_send_wait_outcome_separation": true,
+    "require_greedy_baseline_failure": true
+  }
+}
