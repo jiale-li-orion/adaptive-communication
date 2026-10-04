@@ -1,0 +1,308 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "adaptive-communication/research/benchmark/SOURCE-PROFILE-SCHEMA.v0.1.json",
+  "title": "Source Profile Registry Entry",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_version",
+    "profile_id",
+    "families",
+    "generator_status",
+    "source_refs",
+    "scope",
+    "heldout_groups",
+    "variables",
+    "obligation_templates",
+    "capabilities",
+    "authority_invariants",
+    "unknowns"
+  ],
+  "properties": {
+    "schema_version": {
+      "const": "0.1"
+    },
+    "profile_id": {
+      "type": "string",
+      "minLength": 1
+    },
+    "families": {
+      "type": "array",
+      "minItems": 1,
+      "uniqueItems": true,
+      "items": {
+        "enum": [
+          "T1",
+          "T2"
+        ]
+      }
+    },
+    "generator_status": {
+      "enum": [
+        "READY",
+        "PARTIAL_SOURCE_GAP",
+        "SIMULATOR_GAP",
+        "ADJACENT_ONLY"
+      ]
+    },
+    "source_refs": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "$ref": "#/$defs/sourceRef"
+      }
+    },
+    "scope": {
+      "type": "object"
+    },
+    "heldout_groups": {
+      "type": "object",
+      "additionalProperties": {
+        "type": "string"
+      }
+    },
+    "variables": {
+      "type": "object",
+      "additionalProperties": {
+        "$ref": "#/$defs/variableSpec"
+      }
+    },
+    "obligation_templates": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/obligationTemplate"
+      }
+    },
+    "capabilities": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/capabilityTemplate"
+      }
+    },
+    "authority_invariants": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "unknowns": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/unknown"
+      }
+    },
+    "notes": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    }
+  },
+  "$defs": {
+    "sourceRef": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "source_id",
+        "source_class",
+        "directness"
+      ],
+      "properties": {
+        "source_id": {
+          "type": "string"
+        },
+        "source_class": {
+          "enum": [
+            "STANDARD",
+            "LOCAL_STANDARD",
+            "GOVERNMENT_WORKFLOW",
+            "GOVERNMENT_PROCUREMENT",
+            "FIELD_DEPLOYMENT",
+            "DEVICE_DOCUMENT",
+            "PEER_REVIEWED_ADJACENT",
+            "DRAFT_STANDARD",
+            "DATASET_TRACE"
+          ]
+        },
+        "directness": {
+          "enum": [
+            "DIRECT_TASK_AUTHORITY",
+            "DIRECT_AUTHORITY",
+            "DIRECT_CAPABILITY",
+            "DIRECT_PARAMETER",
+            "ADJACENT_MECHANISM",
+            "TRACE_ONLY"
+          ]
+        },
+        "snapshot_ref": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "locator": {
+          "type": [
+            "string",
+            "null"
+          ]
+        }
+      }
+    },
+    "variableSpec": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "provenance_class",
+        "answer_relevant",
+        "source_ref_ids"
+      ],
+      "properties": {
+        "provenance_class": {
+          "enum": [
+            "FIXED_BY_SOURCE",
+            "SOURCE_RANGE",
+            "EMPIRICAL_TRACE",
+            "MODEL_DERIVED_TRACE",
+            "CONTROLLED_STRESS",
+            "UNRESOLVED"
+          ]
+        },
+        "answer_relevant": {
+          "type": "boolean"
+        },
+        "source_ref_ids": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "value": {},
+        "range": {},
+        "trace_ref": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "sampling_rule": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "stress_rationale": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "unresolved_reason": {
+          "type": [
+            "string",
+            "null"
+          ]
+        }
+      }
+    },
+    "obligationTemplate": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "template_id",
+        "protected_subject",
+        "trigger",
+        "completion_predicate",
+        "timing_semantics",
+        "authority_owner",
+        "task_authority_source_ref_ids"
+      ],
+      "properties": {
+        "template_id": {
+          "type": "string"
+        },
+        "protected_subject": {
+          "type": "string"
+        },
+        "trigger": {
+          "type": "object"
+        },
+        "completion_predicate": {
+          "type": "object"
+        },
+        "timing_semantics": {
+          "type": "object"
+        },
+        "authority_owner": {
+          "type": "string"
+        },
+        "source_priority": {
+          "type": [
+            "integer",
+            "string",
+            "null"
+          ]
+        },
+        "expiration_rule": {
+          "type": [
+            "object",
+            "null"
+          ]
+        },
+        "task_authority_source_ref_ids": {
+          "type": "array",
+          "minItems": 1,
+          "items": {
+            "type": "string"
+          }
+        }
+      }
+    },
+    "capabilityTemplate": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "capability_id",
+        "owner",
+        "source_ref_ids"
+      ],
+      "properties": {
+        "capability_id": {
+          "type": "string"
+        },
+        "owner": {
+          "type": "string"
+        },
+        "source_ref_ids": {
+          "type": "array",
+          "minItems": 1,
+          "items": {
+            "type": "string"
+          }
+        },
+        "constraints": {
+          "type": "object"
+        }
+      }
+    },
+    "unknown": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "field",
+        "answer_relevant",
+        "reason"
+      ],
+      "properties": {
+        "field": {
+          "type": "string"
+        },
+        "answer_relevant": {
+          "type": "boolean"
+        },
+        "reason": {
+          "type": "string"
+        }
+      }
+    }
+  }
+}

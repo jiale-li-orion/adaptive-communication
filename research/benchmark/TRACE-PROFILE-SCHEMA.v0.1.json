@@ -1,0 +1,57 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "adaptive-communication/research/benchmark/TRACE-PROFILE-SCHEMA.v0.1.json",
+  "title": "Layer-1 Model/Empirical Trace Profile",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_version",
+    "trace_profile_id",
+    "provenance_class",
+    "input_snapshots",
+    "derivation",
+    "scope",
+    "trace_ref",
+    "variables",
+    "limitations"
+  ],
+  "properties": {
+    "schema_version": {"const": "0.1"},
+    "trace_profile_id": {"type": "string"},
+    "provenance_class": {
+      "enum": ["EMPIRICAL_TRACE", "MODEL_DERIVED_TRACE"]
+    },
+    "input_snapshots": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "object",
+        "required": ["ref", "sha256"],
+        "properties": {
+          "ref": {"type": "string"},
+          "sha256": {"type": "string", "pattern": "^[0-9a-f]{64}$"},
+          "source_note": {"type": ["string", "null"]}
+        },
+        "additionalProperties": false
+      }
+    },
+    "derivation": {
+      "type": "object",
+      "required": ["model", "version_or_code_ref"],
+      "properties": {
+        "model": {"type": "string"},
+        "version_or_code_ref": {"type": "string"},
+        "parameters": {"type": "object"}
+      },
+      "additionalProperties": false
+    },
+    "scope": {"type": "object"},
+    "trace_ref": {"type": "string"},
+    "trace_sha256": {"type": "string", "pattern": "^[0-9a-f]{64}$"},
+    "variables": {"type": "object"},
+    "limitations": {
+      "type": "array",
+      "items": {"type": "string"}
+    }
+  }
+}

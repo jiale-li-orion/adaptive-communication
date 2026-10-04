@@ -62,6 +62,22 @@ Case 中每一个影响 state transition、legal action、completion predicate �
 - train/dev/test 切分不能让同一 trace window 泄漏到多个 split；
 - 若 trace 只覆盖单一场景，不能外推为行业分布。
 
+### MODEL_DERIVED_TRACE
+
+来自外部可追溯输入经过冻结物理/几何模型推导的 trace，例如：
+
+- TLE / GP orbital elements + pinned SGP4 → satellite visibility windows；
+- terrain DEM + pinned line-of-sight model → geometric visibility；
+- source weather series + pinned physical transform → derived energy opportunity。
+
+要求：
+
+- 保存原始外部 input snapshot/hash；
+- 保存模型名称、版本、参数和代码版本；
+- 明确它是 model-derived opportunity，不是 measured service/PHY success；
+- 若模型输出只描述几何可见性，不能偷偷当作可用链路；
+- train/dev/test 不能共享同一外部 trace window 的派生片段。
+
 ### CONTROLLED_STRESS
 
 不是 field-calibrated 概率，而是为了覆盖边界/故障/hardness 进行的显式干预。

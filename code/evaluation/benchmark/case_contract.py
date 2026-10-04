@@ -14,6 +14,7 @@ PROVENANCE_CLASSES = {
     "FIXED_BY_SOURCE",
     "SOURCE_RANGE",
     "EMPIRICAL_TRACE",
+    "MODEL_DERIVED_TRACE",
     "CONTROLLED_STRESS",
     "UNRESOLVED",
 }
@@ -105,6 +106,17 @@ def unresolved_variables(case: Mapping[str, Any]) -> list[str]:
         klass = meta.get("class")
         if klass not in PROVENANCE_CLASSES:
             raise CaseContractError(f"unknown provenance class for {name!r}: {klass!r}")
+        if klass == "CONTROLLED_STRESS" and not meta.get("stress_rationale"):
+            raise CaseContractError(
+                f"CONTROLLED_STRESS provenance for {name!r} requires stress_rationale"
+            )
+        if klass in {"EMPIRICAL_TRACE", "MODEL_DERIVED_TRACE"}:
+            generator = case.get("generator", {})
+            trace_refs = generator.get("trace_refs") if isinstance(generator, Mapping) else None
+            if not isinstance(trace_refs, list) or not trace_refs:
+                raise CaseContractError(
+                    f"{klass} provenance for {name!r} requires generator.trace_refs"
+                )
         if klass == "UNRESOLVED":
             unresolved.append(str(name))
     return unresolved

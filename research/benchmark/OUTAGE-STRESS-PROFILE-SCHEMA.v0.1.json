@@ -1,0 +1,31 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "adaptive-communication/research/benchmark/OUTAGE-STRESS-PROFILE-SCHEMA.v0.1.json",
+  "title": "Layer-1 Terrestrial Outage Stress Profile",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_version",
+    "outage_profile_id",
+    "provenance_class",
+    "duration_over_deadline_cells",
+    "start_rule",
+    "terrestrial_service_rule",
+    "stress_rationale",
+    "claim_boundary"
+  ],
+  "properties": {
+    "schema_version": {"const": "0.1"},
+    "outage_profile_id": {"type": "string"},
+    "provenance_class": {"const": "CONTROLLED_STRESS"},
+    "duration_over_deadline_cells": {
+      "type": "array",
+      "minItems": 1,
+      "items": {"type": "number", "minimum": 0}
+    },
+    "start_rule": {"type": "string"},
+    "terrestrial_service_rule": {"type": "string"},
+    "stress_rationale": {"type": "string"},
+    "claim_boundary": {"type": "array", "items": {"type": "string"}}
+  }
+}
