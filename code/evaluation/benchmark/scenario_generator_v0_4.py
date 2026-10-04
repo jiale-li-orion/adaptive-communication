@@ -6,7 +6,15 @@ from collections import Counter
 from dataclasses import dataclass
 from typing import Any
 from hashlib import sha256
+from pathlib import Path
 import json
+import sys
+
+ROOT=Path(__file__).resolve().parents[3]
+if str(ROOT/'code') not in sys.path:
+    sys.path.insert(0,str(ROOT/'code'))
+
+from agentic_communication.capabilities import CommunicationCapabilityCatalog
 
 from multi_evidence_conflict_planner import (
     assess_query_subset,
@@ -43,16 +51,35 @@ def _stable_id(payload: Any) -> str:
 
 
 
+_CATALOG=CommunicationCapabilityCatalog()
+
+
+def _query_from_capability(query_id:str, capability_id:str, delay_s:int) -> EvidenceQuery:
+    binding=_CATALOG.binding(capability_id)
+    contract=_CATALOG.get(capability_id)
+    if binding.owner_location not in contract.authority_semantics:
+        raise ValueError(f'owner/authority mismatch for {capability_id}')
+    return EvidenceQuery(
+        query_id=query_id,
+        proposition=capability_id,
+        owner=binding.owner_location,
+        delay_s=delay_s,
+        capability_id=capability_id,
+        required_path=tuple(binding.required_path),
+        return_path=tuple(binding.return_path),
+        opportunity_dependency=tuple(binding.opportunity_dependency),
+    )
+
+
 def _queries(catalog_size:int=5) -> tuple[EvidenceQuery,...]:
     base=[
-        EvidenceQuery('primary_health','communication.gateway.primary_health','gateway',40),
-        EvidenceQuery('receipt_summary','communication.gateway.receipt_summary','gateway',20),
+        _query_from_capability('primary_health','communication.gateway.primary_health',40),
+        _query_from_capability('receipt_summary','communication.gateway.receipt_summary',20),
     ]
     for i in range(max(0,catalog_size-2)):
-        base.append(EvidenceQuery(
+        base.append(_query_from_capability(
             f'node_report:noise{i}',
             'communication.gateway.node_report',
-            'gateway',
             60+10*i,
         ))
     return tuple(base[:catalog_size])
@@ -62,71 +89,94 @@ def _canonical_observation(value: dict[str, Any]) -> str:
     return json.dumps(value, sort_keys=True, separators=(",", ":"))
 
 
-def _current_gateway_state(missing: tuple[int, int]) -> dict[str, dict[str, Any]]:
-    """Generate current/past gateway facts from the latent service regime.
+def _prehistory_events(missing:tuple[int,int], *, decision_t:int) -> tuple[tuple[int,str,str],...]:
+    """Generate already-happened gateway execution/receipt events.
 
-    The returned values are observations that could already exist at decision
-    time. They do not contain future opportunity times, obligation IDs, oracle
-    labels or direct "which report needs satellite" answers.
-
-    The correlation between these current facts and the later finite-service
-    pattern is part of the declared CONTROLLED_STRESS process model.
+    These events exist before the policy's initial decision. Evidence values are
+    aggregated from them; no future opportunity or obligation label is returned.
+    Their correlation with later service patterns is CONTROLLED_STRESS.
     """
-    a, b = missing
-    primary = (
-        {
-            "last_forward_age_s": 300,
-            "pending_depth": 1,
-            "oldest_pending_age_s": 420,
-            "query_path_reachable": True,
-        }
-        if a == 0
-        else {
-            "last_forward_age_s": 5400,
-            "pending_depth": 3,
-            "oldest_pending_age_s": 6000,
-            "query_path_reachable": True,
-        }
-    )
-    receipt = (
-        {
-            "recent_receipt_count": 3,
-            "last_receipt_age_s": 240,
-            "missing_receipt_count": 0,
-        }
-        if b == 2
-        else {
-            "recent_receipt_count": 0,
-            "last_receipt_age_s": 4800,
-            "missing_receipt_count": 2,
-        }
-    )
-    node = {
-        "soc_bucket": "nominal",
-        "cache_bucket": "noncritical",
-        "config_generation": 1,
+    a,b=missing
+    events:list[tuple[int,str,str]]=[]
+    if a==0:
+        events += [
+            (decision_t-300,'forward_ok','gw0'),
+            (decision_t-420,'queue_add','q0'),
+        ]
+    else:
+        events += [
+            (decision_t-5400,'forward_ok','gw0'),
+            (decision_t-6000,'queue_add','q0'),
+            (decision_t-5700,'queue_add','q1'),
+            (decision_t-5400,'queue_add','q2'),
+        ]
+    if b==2:
+        events += [
+            (decision_t-600,'receipt_ok','r0'),
+            (decision_t-400,'receipt_ok','r1'),
+            (decision_t-240,'receipt_ok','r2'),
+        ]
+    else:
+        events += [
+            (decision_t-4800,'receipt_ok','r-old'),
+            (decision_t-1200,'receipt_missing','r1'),
+            (decision_t-900,'receipt_missing','r2'),
+        ]
+    events += [
+        (decision_t-180,'node_soc','nominal'),
+        (decision_t-180,'node_cache','noncritical'),
+        (decision_t-180,'config_generation','1'),
+    ]
+    return tuple(sorted(events))
+
+
+def _aggregate_gateway_state(events:tuple[tuple[int,str,str],...], *, decision_t:int) -> dict[str,dict[str,Any]]:
+    forwards=[t for t,k,_ in events if k=='forward_ok']
+    adds=[(t,v) for t,k,v in events if k=='queue_add']
+    removes={v for _t,k,v in events if k=='queue_remove'}
+    outstanding=[(t,v) for t,v in adds if v not in removes]
+    receipts=[t for t,k,_ in events if k=='receipt_ok']
+    missing=[1 for _t,k,_ in events if k=='receipt_missing']
+    node={k:v for _t,k,v in events if k in {'node_soc','node_cache','config_generation'}}
+    return {
+        'primary_health':{
+            'last_forward_age_s': None if not forwards else decision_t-max(forwards),
+            'pending_depth':len(outstanding),
+            'oldest_pending_age_s': None if not outstanding else decision_t-min(t for t,_ in outstanding),
+            'query_path_reachable':True,
+        },
+        'receipt_summary':{
+            'recent_receipt_count':sum(decision_t-t<=900 for t in receipts),
+            'last_receipt_age_s':None if not receipts else decision_t-max(receipts),
+            'missing_receipt_count':sum(missing),
+        },
+        'node_report':{
+            'soc_bucket':node.get('node_soc','unknown'),
+            'cache_bucket':node.get('node_cache','unknown'),
+            'config_generation':int(node.get('config_generation','0')),
+        },
     }
-    return {"primary_health": primary, "receipt_summary": receipt, "node_report": node}
 
 
-def _evidence_values(missing:tuple[int,int],profile:str,queries:tuple[EvidenceQuery,...]) -> tuple[tuple[str,str],...]:
-    state=_current_gateway_state(missing)
+def _evidence_values(
+    *,
+    events:tuple[tuple[int,str,str],...],
+    decision_t:int,
+    profile:str,
+    queries:tuple[EvidenceQuery,...],
+) -> tuple[tuple[str,str],...]:
+    state=_aggregate_gateway_state(events,decision_t=decision_t)
     primary_live=profile in {'BOTH','PRIMARY_ONLY'}
     receipt_live=profile in {'BOTH','RECEIPT_ONLY'}
     vals={
-        'primary_health': (
-            _canonical_observation(state['primary_health']) if primary_live else 'same'
-        ),
-        'receipt_summary': (
-            _canonical_observation(state['receipt_summary']) if receipt_live else 'same'
-        ),
+        'primary_health':_canonical_observation(state['primary_health']) if primary_live else 'same',
+        'receipt_summary':_canonical_observation(state['receipt_summary']) if receipt_live else 'same',
     }
     node_value=_canonical_observation(state['node_report'])
     for q in queries:
         if q.query_id.startswith('node_report:'):
             vals[q.query_id]=node_value
     return tuple((q.query_id,vals[q.query_id]) for q in queries)
-
 
 def build_bundle(*,phase_index:int,start:int,sats:tuple[int,...],alias_set:tuple[tuple[int,int],...],evidence_profile:str,catalog_size:int=5) -> Bundle:
     if len(sats)!=4:
@@ -150,10 +200,16 @@ def build_bundle(*,phase_index:int,start:int,sats:tuple[int,...],alias_set:tuple
             raise ValueError(missing)
         suffix=seen[missing]; seen[missing]+=1
         terrestrial=tuple(rescue[i] for i in range(4) if i not in set(missing))
+        prehistory=_prehistory_events(missing,decision_t=start)
+        state=_aggregate_gateway_state(prehistory,decision_t=start)
         worlds.append(World(
             world_id=f'missing-{missing[0]}-{missing[1]}-v{suffix}',
             terrestrial_slots=terrestrial,
-            evidence_values=_evidence_values(missing,evidence_profile,queries),
+            evidence_values=_evidence_values(
+                events=prehistory,decision_t=start,profile=evidence_profile,queries=queries
+            ),
+            query_reachable=bool(state['primary_health']['query_path_reachable']),
+            prehistory_events=prehistory,
         ))
 
     fixed={start,*sats,*rescue}

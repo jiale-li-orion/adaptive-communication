@@ -19,6 +19,10 @@ class EvidenceQuery:
     proposition: str
     owner: str
     delay_s: int
+    capability_id: str | None = None
+    required_path: tuple[str, ...] = ()
+    return_path: tuple[str, ...] = ()
+    opportunity_dependency: tuple[str, ...] = ()
 
 
 @dataclass(frozen=True)
@@ -26,6 +30,9 @@ class World:
     world_id: str
     terrestrial_slots: tuple[int, ...]
     evidence_values: tuple[tuple[str, str], ...]
+    query_reachable: bool = True
+    prehistory_events: tuple[tuple[int, str, str], ...] = ()
+    passive_events: tuple[tuple[int, str, str], ...] = ()
 
     def value(self, query_id: str) -> str:
         return dict(self.evidence_values)[query_id]
@@ -37,6 +44,7 @@ class LocalState:
     sat_budget: int = 0
     issued_queries: tuple[str, ...] = ()
     pending_queries: tuple[tuple[str, int], ...] = ()
+    seen_passive_events: tuple[tuple[int, str], ...] = ()
 
 
 @dataclass(frozen=True)
@@ -81,8 +89,13 @@ def _success(bundle: Bundle, state: LocalState) -> bool:
 
 def _next_event_time(bundle: Bundle, t: int, states: dict[str, LocalState]) -> int | None:
     candidates = [x for x in bundle.fixed_event_times if x > t]
-    for state in states.values():
+    worlds = _world_map(bundle)
+    for wid, state in states.items():
         candidates.extend(arrival for _, arrival in state.pending_queries if arrival > t)
+        seen = set(state.seen_passive_events)
+        for event_t, key, _value in worlds[wid].passive_events:
+            if event_t > t and (event_t, key) not in seen:
+                candidates.append(event_t)
     return min(candidates) if candidates else None
 
 
@@ -91,32 +104,37 @@ def _normalize_due_queries(
     t: int,
     states: dict[str, LocalState],
 ) -> dict[str, dict[str, LocalState]]:
-    """Return observation-key -> normalized states after due query responses."""
+    """Apply due query responses and passive telemetry as observation events."""
     worlds = _world_map(bundle)
     branches: dict[str, dict[str, LocalState]] = {}
     for wid, state in states.items():
-        due = sorted(
-            (qid, arrival)
-            for qid, arrival in state.pending_queries
-            if arrival <= t
-        )
-        remaining = tuple(
-            (qid, arrival)
-            for qid, arrival in state.pending_queries
-            if arrival > t
-        )
-        observations = []
+        world = worlds[wid]
+        due = sorted((qid, arrival) for qid, arrival in state.pending_queries if arrival <= t)
+        remaining = tuple((qid, arrival) for qid, arrival in state.pending_queries if arrival > t)
+        observations: list[tuple[str, str]] = []
         for qid, _ in due:
-            observations.append((qid, worlds[wid].value(qid)))
-        obs_key = "|".join(f"{qid}={value}" for qid, value in observations) or "same"
+            if world.query_reachable:
+                observations.append((qid, world.value(qid)))
+            else:
+                observations.append((qid, "__TIMEOUT__"))
+
+        seen = set(state.seen_passive_events)
+        new_seen = set(seen)
+        for event_t, key, value in sorted(world.passive_events):
+            marker = (int(event_t), str(key))
+            if event_t <= t and marker not in seen:
+                observations.append((f"passive:{key}", str(value)))
+                new_seen.add(marker)
+
+        obs_key = "|".join(f"{qid}={value}" for qid, value in sorted(observations)) or "same"
         branches.setdefault(obs_key, {})[wid] = LocalState(
             delivered=state.delivered,
             sat_budget=state.sat_budget,
             issued_queries=state.issued_queries,
             pending_queries=remaining,
+            seen_passive_events=tuple(sorted(new_seen)),
         )
     return branches
-
 
 def _available_actions(bundle: Bundle, t: int, states: dict[str, LocalState]) -> list[Action]:
     vals = list(states.values())
@@ -137,12 +155,27 @@ def _available_actions(bundle: Bundle, t: int, states: dict[str, LocalState]) ->
     return actions
 
 
+
+def _validate_query_contracts(bundle: Bundle) -> None:
+    for query in bundle.queries:
+        # Legacy mechanism fixtures may omit binding metadata. Mainline bundles
+        # that declare a capability must be self-consistent and path-scoped.
+        if query.capability_id is None:
+            continue
+        if query.proposition != query.capability_id:
+            raise ValueError(f"query proposition/capability mismatch: {query.query_id}")
+        if not query.owner:
+            raise ValueError(f"query owner missing: {query.query_id}")
+        if not query.return_path or not query.opportunity_dependency:
+            raise ValueError(f"query path/opportunity contract missing: {query.query_id}")
+
 def solve(
     bundle: Bundle,
     *,
     forced_first_action: Action | None = None,
     disabled_queries: frozenset[str] = frozenset(),
 ) -> dict[str, Any]:
+    _validate_query_contracts(bundle)
     worlds = _world_map(bundle)
     queries = _query_map(bundle)
     start = bundle.fixed_event_times[0]
@@ -195,7 +228,7 @@ def solve(
                     issued = tuple(sorted(set(st.issued_queries) | {q.query_id}))
                     pending = tuple(sorted(st.pending_queries + ((q.query_id, t + q.delay_s),)))
                     branches["same"][wid] = LocalState(
-                        st.delivered, st.sat_budget, issued, pending
+                        st.delivered, st.sat_budget, issued, pending, st.seen_passive_events
                     )
                 # Asynchronous: issuing does not consume the current send opportunity.
                 next_t = t
@@ -214,6 +247,7 @@ def solve(
                         st.sat_budget - 1,
                         st.issued_queries,
                         st.pending_queries,
+                        st.seen_passive_events,
                     )
                 nt = _next_event_time(bundle, t, branches["same"])
                 if nt is None:
@@ -235,6 +269,7 @@ def solve(
                         st.sat_budget,
                         st.issued_queries,
                         st.pending_queries,
+                        st.seen_passive_events,
                     )
                     split.setdefault(f"ack:terr:{'ok' if ok else 'fail'}", {})[wid] = ns
                 branches = split

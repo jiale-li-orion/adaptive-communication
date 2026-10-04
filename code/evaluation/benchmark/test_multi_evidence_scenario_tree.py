@@ -129,7 +129,65 @@ def complementary_bundle() -> Bundle:
         ),
     )
 
+
+def passive_or_probe_contracts() -> None:
+    # Passive telemetry arrives before the irreversible satellite opportunity.
+    passive = Bundle(
+        bundle_id="passive-resolves-alias",
+        fixed_event_times=(0, 50, 100, 200, 500, 600, 700, 1000),
+        obligations=(Obligation("r0",0,500),Obligation("r1",500,1000)),
+        satellite_slots=(100,600),
+        worlds=(
+            World("wa",(200,),(),passive_events=((50,"mode","early"),)),
+            World("wb",(700,),(),passive_events=((50,"mode","late"),)),
+        ),
+        satellite_budget=1,
+        queries=(),
+    )
+    assert solve(passive)["solvable"], "passive telemetry must remain a legal free information path"
+
+    # Normal delivery attempt is also a probe: ACK success/failure partitions
+    # aliases without a dedicated sensing/query action.
+    send_probe = Bundle(
+        bundle_id="normal-send-as-probe",
+        fixed_event_times=(0,100,200,500),
+        obligations=(Obligation("r0",0,500),),
+        satellite_slots=(200,),
+        worlds=(
+            World("wa",(100,),()),
+            World("wb",(),()),
+        ),
+        satellite_budget=1,
+        queries=(),
+    )
+    assert solve(send_probe)["solvable"], "normal send ACK must be usable as observation"
+
+    # Declared capability exists, but the gateway return path is unreachable in
+    # both aliases. The query times out and cannot magically reveal hidden mode.
+    q=EvidenceQuery(
+        "primary_health", PRIMARY.proposition, "gateway", 40,
+        capability_id=PRIMARY.proposition,
+        required_path=("gateway_owner",),
+        return_path=("gateway_to_center_backhaul",),
+        opportunity_dependency=("gateway_reachability",),
+    )
+    unreachable = Bundle(
+        bundle_id="query-timeout-no-hidden-leak",
+        fixed_event_times=(0,40,100,200,500,600,700,1000),
+        obligations=(Obligation("r0",0,500),Obligation("r1",500,1000)),
+        satellite_slots=(100,600),
+        worlds=(
+            World("wa",(200,),(('primary_health','early'),),query_reachable=False),
+            World("wb",(700,),(('primary_health','late'),),query_reachable=False),
+        ),
+        satellite_budget=1,
+        queries=(q,),
+    )
+    forced=solve(unreachable,forced_first_action=("ISSUE_QUERY","primary_health"))
+    assert not forced["solvable"], "timeout must not act as oracle access"
+
 def main() -> int:
+    passive_or_probe_contracts()
     # Async regression: query issuance at t=0 must not consume a satellite slot
     # at t=100 while the response is still pending.
     async_bundle = Bundle(

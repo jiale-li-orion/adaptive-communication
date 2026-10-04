@@ -22,14 +22,16 @@ def main() -> int:
     assert initial.conflict.resource_conflict_present
     initial_flows=initial.accumulated_structural_flow_solves
 
-    d1=ctx.apply_query_result(query_id='primary_health',value='pairA-needs-0')
+    target=row.bundle.worlds[0]
+    values=dict(target.evidence_values)
+    d1=ctx.apply_query_result(query_id='primary_health',value=values['primary_health'])
     assert len(d1.remaining_world_ids)==2
     assert d1.structural_flow_solves_added==0
     mid=ctx.snapshot()
     assert mid.accumulated_structural_flow_solves==initial_flows
     assert mid.conflict.differing_obligations
 
-    d2=ctx.apply_query_result(query_id='receipt_summary',value='pairB-needs-2')
+    d2=ctx.apply_query_result(query_id='receipt_summary',value=values['receipt_summary'])
     assert len(d2.remaining_world_ids)==1
     assert d2.structural_flow_solves_added==0
     final=ctx.snapshot()

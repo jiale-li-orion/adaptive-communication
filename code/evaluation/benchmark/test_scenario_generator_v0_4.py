@@ -9,6 +9,7 @@ if str(HERE) not in sys.path:
     sys.path.insert(0,str(HERE))
 
 from experiment_ledger_v0_4 import build_ledger
+from agentic_communication.capabilities import CommunicationCapabilityCatalog
 from scenario_generator_v0_4 import generate,summarize
 
 
@@ -24,6 +25,15 @@ def main() -> int:
     }
     assert summary['exact_solvable_count']==9
     assert summary['no_query_solvable_count']==4
+
+    catalog=CommunicationCapabilityCatalog()
+    for q in rows[0].bundle.queries:
+        assert q.capability_id is not None
+        binding=catalog.binding(q.capability_id)
+        assert q.owner==binding.owner_location
+        assert q.required_path==tuple(binding.required_path)
+        assert q.return_path==tuple(binding.return_path)
+        assert q.opportunity_dependency==tuple(binding.opportunity_dependency)
 
     ids=[r.bundle.bundle_id for r in rows]
     ids2=[r.bundle.bundle_id for r in generate(phase_limit=1,catalog_size=5)]

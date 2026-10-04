@@ -29,3 +29,17 @@ query 返回值不包含 future opportunity、obligation ID、oracle witness 或
 当前不能 claim success-rate 优于 fixed two-query baseline。可以 claim 的只是：在保持 exact success 的同时，feasibility-conflict 能减少不必要 evidence/context selection 与 exact evidence-subset search；是否构成论文级算法贡献仍需后续方法审查。
 
 当前 v0.4 作为多冲突 process pilot 冻结。进一步的时间变化 conflict / freshness / learning 扩展不在本文件预先定案；后续以最新 cache06 与 reviewer/Astra 方法审查为准。
+
+## Contract closure update
+
+Current v0.4 mainline now additionally enforces:
+
+- gateway evidence is aggregated from an explicit pre-decision forwarding / queue / receipt event log rather than directly exposing the latent service label；
+- primary_health / receipt_summary / node_report query contracts freeze owner, required path, return path and opportunity dependency from the tracked communication capability registry；
+- gateway reachability failure produces query timeout rather than hidden-state access；
+- passive telemetry is an exogenous observation path in the same non-anticipative scenario tree；
+- normal terrestrial delivery ACK may partition alias worlds and therefore remains available as send-as-probe；
+- incremental conflict context consumes the same current JSON evidence contract as v0.4 and reuses cached world feasibility witnesses；
+- irreversible satellite commits expose conservative structural feasibility bounds：common-opportunity feasibility is a lower bound and per-world feasibility is an upper bound；ambiguous L=0,U=1 actions remain for exact continuation search。
+
+These changes close mechanism contracts only. They do not change the existing negative result that fixed primary_health + receipt_summary still matches conflict-guided success rate on the current pilot, and remote-read transport bytes / airtime / energy remain unmodeled.
