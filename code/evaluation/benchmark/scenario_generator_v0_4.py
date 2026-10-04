@@ -58,17 +58,73 @@ def _queries(catalog_size:int=5) -> tuple[EvidenceQuery,...]:
     return tuple(base[:catalog_size])
 
 
+def _canonical_observation(value: dict[str, Any]) -> str:
+    return json.dumps(value, sort_keys=True, separators=(",", ":"))
+
+
+def _current_gateway_state(missing: tuple[int, int]) -> dict[str, dict[str, Any]]:
+    """Generate current/past gateway facts from the latent service regime.
+
+    The returned values are observations that could already exist at decision
+    time. They do not contain future opportunity times, obligation IDs, oracle
+    labels or direct "which report needs satellite" answers.
+
+    The correlation between these current facts and the later finite-service
+    pattern is part of the declared CONTROLLED_STRESS process model.
+    """
+    a, b = missing
+    primary = (
+        {
+            "last_forward_age_s": 300,
+            "pending_depth": 1,
+            "oldest_pending_age_s": 420,
+            "query_path_reachable": True,
+        }
+        if a == 0
+        else {
+            "last_forward_age_s": 5400,
+            "pending_depth": 3,
+            "oldest_pending_age_s": 6000,
+            "query_path_reachable": True,
+        }
+    )
+    receipt = (
+        {
+            "recent_receipt_count": 3,
+            "last_receipt_age_s": 240,
+            "missing_receipt_count": 0,
+        }
+        if b == 2
+        else {
+            "recent_receipt_count": 0,
+            "last_receipt_age_s": 4800,
+            "missing_receipt_count": 2,
+        }
+    )
+    node = {
+        "soc_bucket": "nominal",
+        "cache_bucket": "noncritical",
+        "config_generation": 1,
+    }
+    return {"primary_health": primary, "receipt_summary": receipt, "node_report": node}
+
+
 def _evidence_values(missing:tuple[int,int],profile:str,queries:tuple[EvidenceQuery,...]) -> tuple[tuple[str,str],...]:
-    a,b=missing
+    state=_current_gateway_state(missing)
     primary_live=profile in {'BOTH','PRIMARY_ONLY'}
     receipt_live=profile in {'BOTH','RECEIPT_ONLY'}
     vals={
-        'primary_health': (f'pairA-needs-{a}' if primary_live else 'same'),
-        'receipt_summary': (f'pairB-needs-{b}' if receipt_live else 'same'),
+        'primary_health': (
+            _canonical_observation(state['primary_health']) if primary_live else 'same'
+        ),
+        'receipt_summary': (
+            _canonical_observation(state['receipt_summary']) if receipt_live else 'same'
+        ),
     }
+    node_value=_canonical_observation(state['node_report'])
     for q in queries:
         if q.query_id.startswith('node_report:'):
-            vals[q.query_id]='same'
+            vals[q.query_id]=node_value
     return tuple((q.query_id,vals[q.query_id]) for q in queries)
 
 

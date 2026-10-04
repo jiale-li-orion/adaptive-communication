@@ -16,8 +16,16 @@ v0.4 将 v0.3 的单一资源冲突扩展为两个独立时间段的 service con
 - information gap：36 个 exact-solvable bundles 中，20 个没有 paid evidence 无法完成；
 - algorithm gap：best single-query 32/36；fixed primary+receipt 36/36；conflict-guided 36/36；
 - evidence cost：conflict-guided 平均 0.67 条 query，fixed pair 为 2，always-query-all 为 5；
-- computation gap：query-required cases 上 conflict-guided exact search 的 memo work 约为 exhaustive 的 0.54。
+- computation gap：delivery-constraint witness 接入后，query-required cases 上 conflict-guided exact search 的 memo work 约为 exhaustive 的 0.274；另单独报告平均 12 次 lightweight max-flow structural solves。
 
-当前不能 claim success-rate 优于 fixed two-query baseline。可以 claim 的只是：在保持 exact success 的同时，feasibility-conflict 能减少不必要 evidence acquisition 和 exact evidence-subset search。
+当前 evidence values 由决策时刻已经存在的 gateway 状态 / 过去反馈投影生成：
 
-下一主线：让 conflict 与 evidence validity 随时间变化，测试 stale evidence、异步到达和阶段性重新取证，而不是继续扩大静态 catalog。
+- primary_health：last-forward age、pending depth、oldest pending age、query reachability；
+- receipt_summary：recent receipt count、last receipt age、missing receipt count；
+- node_report noise：当前设备状态摘要。
+
+query 返回值不包含 future opportunity、obligation ID、oracle witness 或 “which report needs satellite” 类答案标签。当前事实与未来有限服务窗口之间的相关性属于显式 CONTROLLED_STRESS 状态转移模型。
+
+当前不能 claim success-rate 优于 fixed two-query baseline。可以 claim 的只是：在保持 exact success 的同时，feasibility-conflict 能减少不必要 evidence/context selection 与 exact evidence-subset search；是否构成论文级算法贡献仍需后续方法审查。
+
+当前 v0.4 作为多冲突 process pilot 冻结。进一步的时间变化 conflict / freshness / learning 扩展不在本文件预先定案；后续以最新 cache06 与 reviewer/Astra 方法审查为准。
