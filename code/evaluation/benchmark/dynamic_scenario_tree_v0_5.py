@@ -12,7 +12,7 @@ Key semantics demanded by cache06/Astra:
 from __future__ import annotations
 
 from dataclasses import dataclass
-from typing import Any
+from typing import Any, Callable
 
 
 @dataclass(frozen=True)
@@ -102,6 +102,7 @@ class PendingDelivery:
 @dataclass(frozen=True)
 class LocalState:
     final_delivered: tuple[str,...] = ()
+    violated_obligations: tuple[str,...] = ()
     gateway_received: tuple[str,...] = ()
     pending_queries: tuple[PendingQuery,...] = ()
     pending_deliveries: tuple[PendingDelivery,...] = ()
@@ -132,12 +133,14 @@ def _pending(bundle:Bundle,st:LocalState,t:int) -> list[Obligation]:
 
 
 def _expired(bundle:Bundle,st:LocalState,t:int) -> bool:
+    if st.violated_obligations:
+        return True
     done=set(st.final_delivered)
     return any(o.oid not in done and o.deadline_s<t for o in bundle.obligations)
 
 
 def _success(bundle:Bundle,st:LocalState) -> bool:
-    return len(st.final_delivered)==len(bundle.obligations)
+    return not st.violated_obligations and len(st.final_delivered)==len(bundle.obligations)
 
 
 def _next_event(bundle:Bundle,t:int,states:dict[str,LocalState]) -> int|None:
@@ -162,7 +165,7 @@ def _normalize(bundle:Bundle,t:int,states:dict[str,LocalState]) -> dict[str,dict
     out:dict[str,dict[str,LocalState]]={}
     for wid,st in states.items():
         obs=[]
-        final=set(st.final_delivered); gateway=set(st.gateway_received)
+        final=set(st.final_delivered); violated=set(st.violated_obligations); gateway=set(st.gateway_received)
         pqs=[]
         for q in st.pending_queries:
             if q.arrive_at_s<=t:
@@ -176,8 +179,12 @@ def _normalize(bundle:Bundle,t:int,states:dict[str,LocalState]) -> dict[str,dict
                 if d.oid not in gateway:
                     gateway.add(d.oid); obs.append((f'gateway_receipt:{d.oid}','ok',f'sent@{d.send_at_s}'))
             if d.final_ack_at_s is not None and d.final_ack_at_s<=t and d.accepted:
-                if d.oid not in final:
-                    final.add(d.oid); obs.append((f'final_ack:{d.oid}','ok',f'sent@{d.send_at_s}'))
+                if d.oid not in final and d.oid not in violated:
+                    deadline=next(o.deadline_s for o in bundle.obligations if o.oid==d.oid)
+                    if d.final_ack_at_s<=deadline:
+                        final.add(d.oid); obs.append((f'final_ack:{d.oid}','ok',f'sent@{d.send_at_s}'))
+                    else:
+                        violated.add(d.oid); obs.append((f'final_ack:{d.oid}','late',f'sent@{d.send_at_s}'))
             if not (d.final_ack_at_s is not None and d.final_ack_at_s<=t):
                 pds.append(d)
         seen=set(st.seen_passive)
@@ -189,7 +196,7 @@ def _normalize(bundle:Bundle,t:int,states:dict[str,LocalState]) -> dict[str,dict
         key='|'.join(':'.join(x) for x in sorted(obs)) or 'same'
         trace=st.trace + tuple(('OBS',t,*x) for x in sorted(obs))
         ns=LocalState(
-            final_delivered=tuple(sorted(final)),gateway_received=tuple(sorted(gateway)),
+            final_delivered=tuple(sorted(final)),violated_obligations=tuple(sorted(violated)),gateway_received=tuple(sorted(gateway)),
             pending_queries=tuple(pqs),pending_deliveries=tuple(pds),seen_passive=tuple(sorted(new_seen)),
             next_request_seq=st.next_request_seq,sat_budget=st.sat_budget,trace=trace,
         )
@@ -216,13 +223,16 @@ def _actions(bundle:Bundle,t:int,states:dict[str,LocalState]) -> list[Action]:
     return a
 
 
-def solve(bundle:Bundle,*,max_decision_depth:int|None=None,forced_first_action:Action|None=None) -> dict[str,Any]:
+def solve(bundle:Bundle,*,max_decision_depth:int|None=None,forced_first_action:Action|None=None,disabled_queries:frozenset[str]=frozenset(),prefix_upper_bound:Callable[[Bundle,int,dict[str,LocalState]],bool]|None=None) -> dict[str,Any]:
     wm={w.world_id:w for w in bundle.worlds}; qm={q.query_id:q for q in bundle.queries}
     start=min(bundle.fixed_event_times)
     initial={w.world_id:LocalState(sat_budget=bundle.satellite_budget) for w in bundle.worlds}
     memo={}
 
-    def canon(states): return tuple(sorted(states.items()))
+    def state_key(st:LocalState):
+        # Execution trace is accounting-only and must not prevent memo merging.
+        return (st.final_delivered,st.violated_obligations,st.gateway_received,st.pending_queries,st.pending_deliveries,st.seen_passive,st.next_request_seq,st.sat_budget)
+    def canon(states): return tuple(sorted((wid,state_key(st)) for wid,st in states.items()))
 
     def rec(t:int,states:dict[str,LocalState],depth:int):
         norm=_normalize(bundle,t,states)
@@ -234,12 +244,14 @@ def solve(bundle:Bundle,*,max_decision_depth:int|None=None,forced_first_action:A
                 children.append({'observation':obs,'worlds':sorted(ch),'subpolicy':sub})
             return True,{'time_s':t,'event':'OBSERVATION','children':children}
         states=next(iter(norm.values()))
+        if prefix_upper_bound is not None and not prefix_upper_bound(bundle,t,states):
+            return (False,None)
         key=(t,depth,canon(states))
         if key in memo:return memo[key]
         if any(_expired(bundle,s,t) for s in states.values()): return (False,None)
         if all(_success(bundle,s) for s in states.values()): return (True,{'terminal':True})
         if max_decision_depth is not None and depth>=max_decision_depth: return (False,None)
-        actions=_actions(bundle,t,states)
+        actions=[a for a in _actions(bundle,t,states) if not (a[0]=='ISSUE_QUERY' and a[1] in disabled_queries)]
         if forced_first_action is not None and t==start and depth==0:
             actions=[x for x in actions if x==forced_first_action]
         for act,arg in actions:
@@ -257,22 +269,27 @@ def solve(bundle:Bundle,*,max_decision_depth:int|None=None,forced_first_action:A
                     value=wm[wid].owner_value(q.proposition,sample) if reachable else '__TIMEOUT__'
                     pq=PendingQuery(req,q.query_id,sample,arrive,value,reachable)
                     branches['same'][wid]=LocalState(
-                        st.final_delivered,st.gateway_received,tuple(sorted(st.pending_queries+(pq,),key=lambda x:(x.arrive_at_s,x.request_id))),
-                        st.pending_deliveries,st.seen_passive,st.next_request_seq+1,st.sat_budget,
-                        st.trace+(('QUERY',t,req,q.query_id,sample,arrive),),
+                        final_delivered=st.final_delivered,violated_obligations=st.violated_obligations,gateway_received=st.gateway_received,
+                        pending_queries=tuple(sorted(st.pending_queries+(pq,),key=lambda x:(x.arrive_at_s,x.request_id))),
+                        pending_deliveries=st.pending_deliveries,seen_passive=st.seen_passive,next_request_seq=st.next_request_seq+1,sat_budget=st.sat_budget,
+                        trace=st.trace+(('QUERY',t,req,q.query_id,sample,arrive),),
                     )
                 next_t=t
             elif act in {'SEND_TERR','SEND_SAT'}:
                 for wid,st in states.items():
                     if act=='SEND_SAT':
                         # Satellite completion is modeled as deterministic final delivery at action time in this pilot.
-                        ns=LocalState(tuple(sorted(set(st.final_delivered)|{str(arg)})),st.gateway_received,st.pending_queries,st.pending_deliveries,st.seen_passive,st.next_request_seq,st.sat_budget-1,st.trace+(('SEND_SAT',t,arg),))
+                        deadline=next(o.deadline_s for o in bundle.obligations if o.oid==str(arg))
+                        delivered=set(st.final_delivered); violated=set(st.violated_obligations)
+                        if t<=deadline: delivered.add(str(arg))
+                        else: violated.add(str(arg))
+                        ns=LocalState(final_delivered=tuple(sorted(delivered)),violated_obligations=tuple(sorted(violated)),gateway_received=st.gateway_received,pending_queries=st.pending_queries,pending_deliveries=st.pending_deliveries,seen_passive=st.seen_passive,next_request_seq=st.next_request_seq,sat_budget=st.sat_budget-1,trace=st.trace+(('SEND_SAT',t,arg),))
                     else:
                         de=wm[wid].delivery(str(arg),t)
                         if de is None:
                             de=DeliveryEvent(t,str(arg),False,None,None)
                         pd=PendingDelivery(str(arg),t,de.gateway_receipt_at_s,de.final_ack_at_s,de.accepted)
-                        ns=LocalState(st.final_delivered,st.gateway_received,st.pending_queries,st.pending_deliveries+(pd,),st.seen_passive,st.next_request_seq,st.sat_budget,st.trace+(('SEND_TERR',t,arg,de.accepted),))
+                        ns=LocalState(final_delivered=st.final_delivered,violated_obligations=st.violated_obligations,gateway_received=st.gateway_received,pending_queries=st.pending_queries,pending_deliveries=st.pending_deliveries+(pd,),seen_passive=st.seen_passive,next_request_seq=st.next_request_seq,sat_budget=st.sat_budget,trace=st.trace+(('SEND_TERR',t,arg,de.accepted),))
                     branches['same'][wid]=ns
                 nt=_next_event(bundle,t,branches['same'])
                 next_t=t if nt is None and all(_success(bundle,s) for s in branches['same'].values()) else nt
