@@ -160,3 +160,71 @@ if __name__=='__main__':
         'exact_solvable':sum(r.exact_solvable for r in rows),
         'coordinates':[r.coordinates for r in rows],
     },indent=2,sort_keys=True))
+
+
+def build_receipt_race_bundle(*,phase_index:int=1) -> Bundle:
+    """Action-dependent evidence mechanism for sequential EvidenceNeed.
+
+    World early-good:
+      A terrestrial send is gateway-received, but final ACK arrives only after
+      A's last usable satellite opportunity; B later needs the single satellite.
+    World late-good:
+      A terrestrial send fails and therefore needs the satellite; B later
+      succeeds terrestrially.
+
+    A gateway receipt-summary read between local receipt and final ACK reveals
+    only executed history.  It does not reveal future service directly.
+    """
+    start,_=phase_groups(4,phase_index+1)[phase_index]
+    sats=tuple(t for t in _slots() if start<=t<=start+8*3600)
+    if phase_index!=1:
+        # v0.1 mechanism is frozen on the first geometry phase that supplies
+        # both the early A rescue window and later B rescue window.
+        pass
+    a=Obligation('A',start,start+7200)
+    b=Obligation('B',start+10800,start+21600)
+    obligations=(a,b)
+    a_send=start+4500      # 33300 for phase 1
+    a_receipt=a_send+60
+    a_final=a.deadline_s-60  # after last usable A satellite start, before deadline
+    b_send=start+15300     # 44100 for phase 1
+    b_final=b_send+180
+
+    early_good=World(
+        world_id='early-good',
+        owner_state_events=(),
+        delivery_events=(
+            DeliveryEvent(a_send,'A',True,a_receipt,a_final),
+            DeliveryEvent(b_send,'B',False,None,None),
+        ),
+        query_reachable_times=(a_receipt,),
+    )
+    late_good=World(
+        world_id='late-good',
+        owner_state_events=(),
+        delivery_events=(
+            DeliveryEvent(a_send,'A',False,None,None),
+            DeliveryEvent(b_send,'B',True,b_send+60,b_final),
+        ),
+        query_reachable_times=(a_receipt,),
+    )
+    q=QueryCapability(
+        query_id='receipt_summary',
+        proposition='communication.gateway.receipt_summary',
+        owner='gateway',
+        sample_delay_s=0,
+        response_delay_s=120,
+        return_path=('gateway_to_center_backhaul',),
+        opportunity_dependency=('gateway_reachability',),
+    )
+    fixed={start,a.release_s,a.deadline_s,b.release_s,b.deadline_s,a_send,a_receipt,a_final,b_send,b_send+60,b_final,*sats}
+    return Bundle(
+        bundle_id=f'v05-receipt-race-p{phase_index}',
+        obligations=obligations,
+        worlds=(early_good,late_good),
+        fixed_event_times=tuple(sorted(fixed)),
+        terrestrial_send_times=(a_send,b_send),
+        satellite_send_times=sats,
+        satellite_budget=1,
+        queries=(q,),
+    )

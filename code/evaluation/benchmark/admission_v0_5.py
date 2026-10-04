@@ -8,7 +8,7 @@ from __future__ import annotations
 from dataclasses import asdict,dataclass
 import json
 
-from scenario_generator_v0_5 import build_bundle
+from scenario_generator_v0_5 import build_bundle,build_receipt_race_bundle
 from physical_admission_v0_5 import physical,sig
 
 
@@ -42,8 +42,27 @@ def candidates(process_family:str='shifted-window',phase_count:int=4):
     return [fast_audit(process_family,i) for i in range(phase_count)]
 
 
+
+
+def receipt_race_admission():
+    from frontier_guided_planner_v0_5 import solve_frontier_guided
+    from physical_admission_v0_5 import physical
+    b=build_receipt_race_bundle()
+    per={w.world_id:physical(b,w) for w in b.worlds}
+    with_query=solve_frontier_guided(b)
+    no_query=solve_frontier_guided(b,disabled_queries=frozenset(q.query_id for q in b.queries))
+    info=all(per.values()) and bool(with_query['solvable']) and not bool(no_query['solvable'])
+    return {
+        'process_family':'receipt-race','phase_index':1,
+        'per_world_physical':per,'all_worlds_physical':all(per.values()),
+        'joint_with_query':bool(with_query['solvable']),
+        'joint_no_query':bool(no_query['solvable']),
+        'information_positive':info,
+        'status':'INFORMATION_POSITIVE' if info else 'NOT_INFORMATION_POSITIVE',
+    }
+
 if __name__=='__main__':
     rows=[]
     rows.extend(candidates('independent-bits'))
     rows.extend(candidates('shifted-window'))
-    print(json.dumps([asdict(x) for x in rows],indent=2,sort_keys=True))
+    print(json.dumps([asdict(x) for x in rows]+[receipt_race_admission()],indent=2,sort_keys=True))

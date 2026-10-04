@@ -88,20 +88,20 @@ def _choose_action(bundle:Bundle,t:int,states:dict[str,LocalState],horizon_decis
     return scored[0][2]
 
 
-def solve_receding_horizon(bundle:Bundle,*,horizon_decisions:int=2,disabled_queries:frozenset[str]=frozenset(),max_replans:int|None=None) -> dict[str,Any]:
+def solve_receding_horizon(bundle:Bundle,*,horizon_decisions:int=2,disabled_queries:frozenset[str]=frozenset(),max_path_replans:int|None=None) -> dict[str,Any]:
     if horizon_decisions<1:raise ValueError('horizon_decisions must be >=1')
     start=min(bundle.fixed_event_times)
     initial={w.world_id:LocalState(sat_budget=bundle.satellite_budget) for w in bundle.worlds}
-    cap=max_replans or max(16,8*len(bundle.obligations)+4*len(bundle.fixed_event_times))
-    seen=set();replans=0
+    cap=max_path_replans or max(24,6*len(bundle.obligations)+3*len(bundle.fixed_event_times))
+    total_replans=0
 
-    def rec(t:int,states:dict[str,LocalState]):
-        nonlocal replans
+    def rec(t:int,states:dict[str,LocalState],seen_path:frozenset[Any],path_replans:int):
+        nonlocal total_replans
         norm=_normalize(bundle,t,states)
         if len(norm)>1 or next(iter(norm))!='same':
             children=[]
             for obs,ch in sorted(norm.items()):
-                ok,sub=rec(t,ch)
+                ok,sub=rec(t,ch,seen_path,path_replans)
                 if not ok:return False,None
                 children.append({'observation':obs,'worlds':sorted(ch),'subpolicy':sub})
             return True,{'time_s':t,'event':'OBSERVATION','children':children}
@@ -109,19 +109,20 @@ def solve_receding_horizon(bundle:Bundle,*,horizon_decisions:int=2,disabled_quer
         if any(_expired(bundle,st,t) for st in states.values()):return False,None
         if all(_success(bundle,st) for st in states.values()):return True,{'terminal':True}
         key=(t,_canon(states))
-        if key in seen or replans>=cap:return False,None
-        seen.add(key);replans+=1
+        if key in seen_path or path_replans>=cap:return False,None
+        total_replans+=1
         action=_choose_action(bundle,t,states,horizon_decisions,disabled_queries)
         if action is None:return False,None
         stepped=_step_action(bundle,t,states,action)
         if stepped is None:return False,None
         branches,next_t=stepped
         children=[]
+        next_seen=seen_path|{key}
         for obs,ch in sorted(branches.items()):
-            ok,sub=rec(next_t,ch)
+            ok,sub=rec(next_t,ch,next_seen,path_replans+1)
             if not ok:return False,None
             children.append({'observation':obs,'worlds':sorted(ch),'subpolicy':sub})
         return True,{'time_s':t,'action':action[0],'arg':action[1],'children':children}
 
-    solvable,policy=rec(start,initial)
-    return {'solvable':solvable,'policy':policy,'replans':replans,'horizon_decisions':horizon_decisions}
+    solvable,policy=rec(start,initial,frozenset(),0)
+    return {'solvable':solvable,'policy':policy,'replans':total_replans,'horizon_decisions':horizon_decisions,'max_path_replans':cap}

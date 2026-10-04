@@ -177,7 +177,7 @@ def _normalize(bundle:Bundle,t:int,states:dict[str,LocalState]) -> dict[str,dict
         for d in st.pending_deliveries:
             if d.gateway_receipt_at_s is not None and d.gateway_receipt_at_s<=t and d.accepted:
                 if d.oid not in gateway:
-                    gateway.add(d.oid); obs.append((f'gateway_receipt:{d.oid}','ok',f'sent@{d.send_at_s}'))
+                    gateway.add(d.oid)
             if d.final_ack_at_s is not None and d.final_ack_at_s<=t and d.accepted:
                 if d.oid not in final and d.oid not in violated:
                     deadline=next(o.deadline_s for o in bundle.obligations if o.oid==d.oid)
@@ -224,6 +224,33 @@ def _actions(bundle:Bundle,t:int,states:dict[str,LocalState]) -> list[Action]:
 
 
 
+
+
+def _sample_query_value(world:World,st:LocalState,q:QueryCapability,sample_at_s:int) -> str:
+    if q.proposition=='communication.gateway.receipt_summary':
+        if q.sample_delay_s!=0:
+            raise ValueError('receipt_summary currently requires zero sample delay')
+        received=','.join(sorted(st.gateway_received)) or 'none'
+        return f'gateway_received={received}'
+    return world.owner_value(q.proposition,sample_at_s)
+
+def _query_partitions(bundle:Bundle,t:int,states:dict[str,LocalState],query_id:str) -> bool:
+    """Whether issuing this query can produce different legal observations now.
+
+    Search-only dominance check: a query that deterministically yields the same
+    response (including timeout) in every compatible world cannot change a
+    non-anticipative feasibility policy and is omitted from exact search.
+    """
+    q=next(q for q in bundle.queries if q.query_id==query_id)
+    sample=t+q.sample_delay_s
+    wm={w.world_id:w for w in bundle.worlds}
+    outcomes=set()
+    for wid,st in states.items():
+        w=wm[wid]
+        outcomes.add(_sample_query_value(w,st,q,sample) if w.query_reachable(sample) else '__TIMEOUT__')
+        if len(outcomes)>1:return True
+    return False
+
 def _step_action(bundle:Bundle,t:int,states:dict[str,LocalState],action:Action) -> tuple[dict[str,dict[str,LocalState]],int] | None:
     """Apply one legal action using the canonical dynamic execution semantics."""
     wm={w.world_id:w for w in bundle.worlds}; qm={q.query_id:q for q in bundle.queries}
@@ -239,7 +266,7 @@ def _step_action(bundle:Bundle,t:int,states:dict[str,LocalState],action:Action) 
             req=f'{q.query_id}#{st.next_request_seq}'
             sample=t+q.sample_delay_s; arrive=sample+q.response_delay_s
             reachable=wm[wid].query_reachable(sample)
-            value=wm[wid].owner_value(q.proposition,sample) if reachable else '__TIMEOUT__'
+            value=_sample_query_value(wm[wid],st,q,sample) if reachable else '__TIMEOUT__'
             pq=PendingQuery(req,q.query_id,sample,arrive,value,reachable)
             branches['same'][wid]=LocalState(
                 final_delivered=st.final_delivered,violated_obligations=st.violated_obligations,gateway_received=st.gateway_received,
@@ -296,7 +323,7 @@ def solve(bundle:Bundle,*,max_decision_depth:int|None=None,forced_first_action:A
         if any(_expired(bundle,s,t) for s in states.values()): return (False,None)
         if all(_success(bundle,s) for s in states.values()): return (True,{'terminal':True})
         if max_decision_depth is not None and depth>=max_decision_depth: return (False,None)
-        actions=[a for a in _actions(bundle,t,states) if not (a[0]=='ISSUE_QUERY' and a[1] in disabled_queries)]
+        actions=[a for a in _actions(bundle,t,states) if not (a[0]=='ISSUE_QUERY' and (a[1] in disabled_queries or not _query_partitions(bundle,t,states,str(a[1]))))]
         if forced_first_action is not None and t==start and depth==0:
             actions=[x for x in actions if x==forced_first_action]
         for act,arg in actions:
