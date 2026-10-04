@@ -34,3 +34,23 @@
 7. 没有任何 evidence subset 能恢复共同策略时，返回 INFORMATION_INFEASIBLE。
 
 下一步：用 feasibility-conflict structure 对 evidence subset search 做剪枝，比较 exact subset enumeration 的搜索量与相同决策质量。
+
+## Conflict-guided subset search
+
+当前 evidence subset search 只做可证明安全的静态剪枝：
+
+- constant query：对当前 alias set 不产生任何 partition；
+- dominated query：同 owner、无额外显式资源成本、返回不更早，且另一个 query 的 partition 至少同样细。
+
+其它 query 不因 heuristic score 被删除。
+
+剩余 query 只按“分离多少 direct-action conflict pair”排序；排序影响搜索效率，不影响 correctness。
+
+在当前 4 个机制回归 case 上：
+
+    unstructured non-empty subsets = 28
+    conflict-guided exact subset solves = 6
+
+最终 evidence plan 与 reference exact subset search 一致。
+
+该结果仅验证剪枝/排序机制；catalog 只有三个真实已登记 gateway evidence capability，不能作为规模性结果。
