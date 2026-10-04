@@ -122,6 +122,8 @@ class QuerySearchDiagnostics:
     dominated_pruned: tuple[str, ...]
     candidate_query_ids: tuple[str, ...]
     subset_solves: int
+    preprocessing_solves: int
+    total_memo_nodes: int
     selected_query_ids: tuple[str, ...]
     selected_mode: str
 
@@ -185,12 +187,10 @@ def _safe_static_prune(bundle: Bundle) -> tuple[tuple[str, ...], tuple[str, ...]
     return tuple(sorted(constant)), tuple(sorted(dominated)), candidates
 
 
-def _direct_action_signatures(bundle: Bundle) -> dict[str, frozenset[str]]:
-    """Perfect-information first-action signatures used only for search ordering.
-
-    They never prune a query; they only rank which evidence is likely to split
-    worlds whose feasible direct commitments differ.
-    """
+def _direct_action_signatures(
+    bundle: Bundle,
+) -> tuple[dict[str, frozenset[str]], int, int]:
+    """Perfect-information first-action signatures plus exact preprocessing cost."""
     from multi_evidence_scenario_tree import Bundle as MBundle
 
     start = bundle.fixed_event_times[0]
@@ -205,6 +205,8 @@ def _direct_action_signatures(bundle: Bundle) -> dict[str, frozenset[str]]:
 
     all_q = frozenset(_query_ids(bundle))
     out: dict[str, frozenset[str]] = {}
+    solve_count = 0
+    memo_nodes = 0
     for world in bundle.worlds:
         single = MBundle(
             bundle_id=f"{bundle.bundle_id}::{world.world_id}",
@@ -223,14 +225,18 @@ def _direct_action_signatures(bundle: Bundle) -> dict[str, frozenset[str]]:
                 forced_first_action=action,
                 disabled_queries=all_q,
             )
+            solve_count += 1
+            memo_nodes += int(result["memo_nodes"])
             if result["solvable"]:
                 winning.append(f"{action[0]}:{action[1] or ''}")
         out[world.world_id] = frozenset(winning)
-    return out
+    return out, solve_count, memo_nodes
 
-
-def _conflict_pair_score(bundle: Bundle, query_id: str) -> int:
-    signatures = _direct_action_signatures(bundle)
+def _conflict_pair_score(
+    bundle: Bundle,
+    query_id: str,
+    signatures: dict[str, frozenset[str]],
+) -> int:
     worlds = list(bundle.worlds)
     values = {
         w.world_id: dict(w.evidence_values)[query_id]
@@ -244,7 +250,6 @@ def _conflict_pair_score(bundle: Bundle, query_id: str) -> int:
             if values[wa.world_id] != values[wb.world_id]:
                 score += 1
     return score
-
 
 def conflict_guided_query_search(
     bundle: Bundle,
@@ -267,14 +272,21 @@ def conflict_guided_query_search(
             dominated_pruned=(),
             candidate_query_ids=(),
             subset_solves=0,
+            preprocessing_solves=0,
+            total_memo_nodes=no_query.memo_nodes,
             selected_query_ids=(),
             selected_mode=plan.mode,
         )
 
     constant, dominated, candidates = _safe_static_prune(bundle)
     qmap = {q.query_id: q for q in bundle.queries}
-    scores = {qid: _conflict_pair_score(bundle, qid) for qid in candidates}
+    signatures, preprocessing_solves, preprocessing_memo_nodes = _direct_action_signatures(bundle)
+    scores = {
+        qid: _conflict_pair_score(bundle, qid, signatures)
+        for qid in candidates
+    }
     subset_solves = 0
+    total_memo_nodes = no_query.memo_nodes + preprocessing_memo_nodes
 
     for width in range(1, len(candidates) + 1):
         subsets = list(combinations(candidates, width))
@@ -288,6 +300,7 @@ def conflict_guided_query_search(
         for subset in subsets:
             subset_solves += 1
             assessed = assess_query_subset(bundle, tuple(subset))
+            total_memo_nodes += assessed.memo_nodes
             if assessed.solvable:
                 mode = "SINGLE_QUERY" if width == 1 else "MULTI_QUERY"
                 plan = EvidencePlan(
@@ -306,6 +319,8 @@ def conflict_guided_query_search(
                     dominated_pruned=dominated,
                     candidate_query_ids=candidates,
                     subset_solves=subset_solves,
+                    preprocessing_solves=preprocessing_solves,
+                    total_memo_nodes=total_memo_nodes,
                     selected_query_ids=tuple(subset),
                     selected_mode=mode,
                 )
@@ -323,6 +338,100 @@ def conflict_guided_query_search(
         dominated_pruned=dominated,
         candidate_query_ids=candidates,
         subset_solves=subset_solves,
+        preprocessing_solves=preprocessing_solves,
+        total_memo_nodes=total_memo_nodes,
+        selected_query_ids=(),
+        selected_mode=plan.mode,
+    )
+
+
+def exhaustive_query_search(
+    bundle: Bundle,
+) -> tuple[EvidencePlan, QuerySearchDiagnostics]:
+    """Exact minimum-cardinality evidence search without structural pruning.
+
+    This is the computation reference for the conflict-guided selector. It
+    evaluates every subset at a cardinality before choosing the least-delay
+    resolving set, so result quality is directly comparable.
+    """
+
+    ids = _query_ids(bundle)
+    no_query = assess_query_subset(bundle, ())
+    total_memo_nodes = no_query.memo_nodes
+    if no_query.solvable:
+        plan = EvidencePlan(
+            mode="NO_PAID_QUERY",
+            selected_query_ids=(),
+            no_query_solvable=True,
+            exact_solvable=True,
+            reason="No paid evidence is required.",
+        )
+        return plan, QuerySearchDiagnostics(
+            catalog_size=len(ids),
+            constant_pruned=(),
+            dominated_pruned=(),
+            candidate_query_ids=ids,
+            subset_solves=0,
+            preprocessing_solves=0,
+            total_memo_nodes=total_memo_nodes,
+            selected_query_ids=(),
+            selected_mode=plan.mode,
+        )
+
+    qmap = {q.query_id: q for q in bundle.queries}
+    subset_solves = 0
+    for width in range(1, len(ids) + 1):
+        winners: list[QueryAssessment] = []
+        for subset in combinations(ids, width):
+            subset_solves += 1
+            assessed = assess_query_subset(bundle, tuple(subset))
+            total_memo_nodes += assessed.memo_nodes
+            if assessed.solvable:
+                winners.append(assessed)
+        if winners:
+            best = min(
+                winners,
+                key=lambda x: (
+                    x.critical_path_delay_s,
+                    x.memo_nodes,
+                    x.query_ids,
+                ),
+            )
+            mode = "SINGLE_QUERY" if width == 1 else "MULTI_QUERY"
+            plan = EvidencePlan(
+                mode=mode,
+                selected_query_ids=best.query_ids,
+                no_query_solvable=False,
+                exact_solvable=True,
+                reason="Unstructured exact subset enumeration reference.",
+            )
+            return plan, QuerySearchDiagnostics(
+                catalog_size=len(ids),
+                constant_pruned=(),
+                dominated_pruned=(),
+                candidate_query_ids=ids,
+                subset_solves=subset_solves,
+                preprocessing_solves=0,
+                total_memo_nodes=total_memo_nodes,
+                selected_query_ids=best.query_ids,
+                selected_mode=mode,
+            )
+
+    plan = EvidencePlan(
+        mode="INFORMATION_INFEASIBLE",
+        selected_query_ids=(),
+        no_query_solvable=False,
+        exact_solvable=bool(solve(bundle)["solvable"]),
+        reason="No evidence subset restores a common successful policy.",
+    )
+    return plan, QuerySearchDiagnostics(
+        catalog_size=len(ids),
+        constant_pruned=(),
+        dominated_pruned=(),
+        candidate_query_ids=ids,
+        subset_solves=subset_solves,
+        preprocessing_solves=0,
+        total_memo_nodes=total_memo_nodes,
         selected_query_ids=(),
         selected_mode=plan.mode,
     )
