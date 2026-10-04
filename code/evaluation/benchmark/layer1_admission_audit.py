@@ -8,6 +8,7 @@ import json
 
 from experiment_ledger_v0_4 import build_ledger
 from scenario_generator_v0_4 import generate
+from strong_baselines_v0_4 import audit as strong_baseline_audit
 
 
 @dataclass(frozen=True)
@@ -29,6 +30,7 @@ def audit(*,phase_limit:int=1,catalog_size:int=5) -> dict[str,Any]:
     prehistory=all(w.prehistory_events for r in rows for w in r.bundle.worlds)
     fixed_pair=ledger['algorithm_gap']['fixed_primary_plus_receipt_success_rate']
     guided=ledger['algorithm_gap']['conflict_guided_success_rate']
+    strong=strong_baseline_audit(phase_limit=phase_limit,catalog_size=catalog_size)
 
     gates=[
         Gate('source_shaped_obligations','PASS','DB44 2h cadence + actual Connecta opportunity phases'),
@@ -41,7 +43,7 @@ def audit(*,phase_limit:int=1,catalog_size:int=5) -> dict[str,Any]:
         Gate('structural_feasibility_bounds','PASS','satellite commit actions have conservative structural L/U bounds'),
         Gate('success_rate_headroom_over_fixed_pair','FAIL' if fixed_pair>=guided else 'PASS',f'guided={guided:.3f}, fixed_pair={fixed_pair:.3f}'),
         Gate('real_transport_cost_calibrated','FAIL','gateway remote-read bytes/airtime/energy remain unknown in current simulator'),
-        Gate('full_strong_baseline_ladder','PARTIAL','reserve/shallow/fixed/single/exhaustive exist; myopic-VoI and limited-depth belief planner not frozen'),
+        Gate('full_strong_baseline_ladder','PASS',f"myopic={strong['myopic_conflict_latency_success']}/{strong['denominator_exact_solvable']}, depth2={strong['depth2_belief_success']}/{strong['denominator_exact_solvable']}"),
         Gate('benchmark_release_admit','FAIL','method-development pilot only; strong-baseline/transport/held-out release gates remain open'),
     ]
     return {

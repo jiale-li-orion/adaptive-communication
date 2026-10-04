@@ -43,3 +43,15 @@ Current v0.4 mainline now additionally enforces:
 - irreversible satellite commits expose conservative structural feasibility bounds：common-opportunity feasibility is a lower bound and per-world feasibility is an upper bound；ambiguous L=0,U=1 actions remain for exact continuation search。
 
 These changes close mechanism contracts only. They do not change the existing negative result that fixed primary_health + receipt_summary still matches conflict-guided success rate on the current pilot, and remote-read transport bytes / airtime / energy remain unmodeled.
+
+### Strong deterministic baselines
+
+On the 36 exact-solvable v0.4 pilot bundles:
+
+- no-paid-query exact: 16 / 36；
+- myopic conflict-separation-per-latency, one paid query maximum: 32 / 36；
+- depth-2 belief/evidence planner, at most two paid evidence capabilities: 36 / 36；
+- fixed primary_health + receipt_summary: 36 / 36；
+- conflict-guided: 36 / 36。
+
+Therefore current v0.4 has no task-success headroom over a two-evidence limited-depth planner. The retained method signal is conditional evidence/context/search reduction, not higher completion rate.
