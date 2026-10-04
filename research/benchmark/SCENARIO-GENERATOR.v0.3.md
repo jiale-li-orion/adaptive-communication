@@ -111,3 +111,26 @@ Next scaling must vary：
 - number of genuinely informative and partially redundant evidence sources；
 - multiple resource conflicts；
 - asynchronous overlapping evidence arrivals。
+
+## 7. Structural scaling pilot
+
+A second pilot varies alias-world count and obligation count together while
+keeping the same 2 h source cadence and using only actual Connecta opportunity
+phases.
+
+Mean over 4 valid trace phases：
+
+| worlds / obligations | selected evidence | exact policy memo nodes | exhaustive subset solves | guided subset solves | guided preprocessing solves | guided / exhaustive memo ratio |
+| ---: | ---: | ---: | ---: | ---: | ---: | ---: |
+| 2 / 2 | 1 | 906 | 3 | 1 | 4 | 1.182 |
+| 3 / 3 | 2 | 5,241 | 10 | 3 | 6 | 0.502 |
+| 4 / 4 | 2 | 6,503 | 10 | 3 | 8 | 0.684 |
+
+Interpretation：
+
+- conflict preprocessing is not free；
+- for the 2-world structure it costs more exact memo work than direct subset enumeration；
+- at 3/4 worlds the reduced evidence-subset search begins to repay preprocessing cost；
+- therefore the method should use a cheap-size / conflict threshold rather than force structural analysis on every case。
+
+This crossover is a retained negative/positive result, not filtered out for presentation.
