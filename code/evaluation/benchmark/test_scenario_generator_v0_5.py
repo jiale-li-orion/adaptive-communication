@@ -20,7 +20,7 @@ def main():
     assert len(later)>1
     # Future trajectories are not encoded in the initial observation.
     initial={w.owner_value('communication.gateway.primary_health',start) for w in b.worlds}
-    assert initial=={'healthy'}
+    assert len(initial)==1 and all('last_forward_age_s=' in x for x in initial)
     print('PASS v0.5 generator: two-stream six-obligation dynamic process preserves shared prefixes and future-state ambiguity without hidden-future encoding')
     return 0
 

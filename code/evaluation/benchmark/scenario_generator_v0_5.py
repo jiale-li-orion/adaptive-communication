@@ -30,13 +30,23 @@ class GeneratedDynamicBundle:
     exact_solvable: bool | None
 
 
+def _health_summary(*, recent_forward_ok:bool) -> str:
+    # Same proposition shape as the existing gateway primary-health interface:
+    # a summary of already-observed forwarding/queue history, not a future service bit.
+    if recent_forward_ok:
+        return 'last_forward_age_s=180;pending_depth=0;oldest_pending_age_s=0'
+    return 'last_forward_age_s=5400;pending_depth=2;oldest_pending_age_s=3600'
+
+
 def _owner_events(start:int, *, middle_good:bool, late_good:bool) -> tuple[OwnerStateEvent,...]:
-    # All worlds share the initial sampled state. Future service state diverges
-    # only after the decision process has started.
+    # Sampling at a phase boundary reports the PREVIOUS phase's forwarding history.
+    # The initial and first-boundary summaries are identical in all worlds; no query
+    # can directly reveal the service state of the phase that is about to begin.
     return (
-        OwnerStateEvent(start,'communication.gateway.primary_health','healthy'),
-        OwnerStateEvent(start+CADENCE_S,'communication.gateway.primary_health','healthy' if middle_good else 'degraded'),
-        OwnerStateEvent(start+2*CADENCE_S,'communication.gateway.primary_health','healthy' if late_good else 'degraded'),
+        OwnerStateEvent(start,'communication.gateway.primary_health',_health_summary(recent_forward_ok=True)),
+        OwnerStateEvent(start+CADENCE_S,'communication.gateway.primary_health',_health_summary(recent_forward_ok=True)),
+        OwnerStateEvent(start+2*CADENCE_S,'communication.gateway.primary_health',_health_summary(recent_forward_ok=middle_good)),
+        OwnerStateEvent(start+3*CADENCE_S,'communication.gateway.primary_health',_health_summary(recent_forward_ok=late_good)),
     )
 
 
@@ -85,9 +95,7 @@ def build_bundle(*, phase_index:int=0, process_family:str='independent-bits') ->
     worlds=[]
     for middle_good,late_good in support:
         wid=f'm{int(middle_good)}-l{int(late_good)}'
-        reachable=[start]
-        if middle_good: reachable.append(start+CADENCE_S)
-        if late_good: reachable.append(start+2*CADENCE_S)
+        reachable=[start,start+CADENCE_S,start+2*CADENCE_S,start+3*CADENCE_S]
         worlds.append(World(
             world_id=wid,
             owner_state_events=_owner_events(start,middle_good=middle_good,late_good=late_good),
