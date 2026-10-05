@@ -321,16 +321,17 @@ receipt-race、overlapping receipt chain、joint query–satellite Pareto、reso
 当前 Layer 1 尚未完成。下一步执行顺序冻结为：
 
 ```text
-DB44/T 2457-2024 source correction               [CURRENT]
+DB44/T 2457-2024 source correction               [DONE]
    ↳ pre-release profile had Table 15 (ground fissure) values
    ↳ corrected authority = §9.2.2.2 Table 11 (landslide)
    ↳ hazard_type fixed to landslide
-→ regenerate 58,752 recipe-derived world/evidence artifacts
-→ regenerate exact labels + V0–V9
-→ rebuild structure-aware split + frozen public test
-→ rerun frozen-split LLM baseline
-→ rebuild Q11 human/source audit package
-→ rerun Q0–Q12
+→ retry legality / duplicate-free resend semantics       [DONE v0.2]
+→ regenerate 58,752 recipe-derived exact labels         [DONE v0.2]
+→ regenerate V0–V9                                      [DONE v0.2]
+→ rebuild structure-aware split + frozen public test     [DONE v0.2]
+→ frozen-split LLM baseline                              [DEFERRED]
+→ rebuild Q11 human/source audit package                 [PENDING]
+→ rerun Q0–Q12                                           [AFTER Q11]
 → frozen BENCHMARK_ADMIT release
 ```
 
@@ -338,23 +339,23 @@ DB44/T 2457-2024 source correction               [CURRENT]
 
 Q11 source review uncovered a pre-release extraction error in `DB44T2457_2024_warning_reporting`: the profile had encoded the three monitoring-grade rows from **Table 15 (ground fissure)** while the project story and intended T1 authority are **landslide monitoring**. DB44/T 2457-2024 §9.2.2 explicitly makes reporting frequency depend on geohazard type; §9.2.2.2 Table 11 is the landslide table. The corrected Table 11 values are grade 1 = `1–3d / 6–12h / 4–6h / 30–60min / 5min`, grade 2 = `3–5d / 12–24h / 6–12h / 1–2h / 5min`, grade 3 = `5–7d / 1–2d / 12–24h / 2–4h / 5min`.
 
-The source correction preserves the combinatorial envelope: source expansion remains 27 DB44 reporting contracts, 17 contracts remain inside the ≤12h 48h-core composition, and the recipe universe remains 58,752. It **does change task timing values and therefore invalidates every downstream pre-release label/split/baseline digest produced from the old profile**. Previous counts such as 9,216 solver signatures, 73 V8 survivors, the 31,353-case pre-admission pool, 11,655-case public test and the 33-signature LLM baseline are historical pre-correction results until regeneration completes. They must not be quoted as current release facts.
+The source correction preserves the combinatorial envelope: source expansion remains 27 DB44 reporting contracts, 17 contracts remain inside the ≤12h 48h-core composition, and the recipe universe remains 58,752. It **does change task timing values**. Together with the later retry-legality fix, this invalidated the previous exact/V8/split/LLM lineage. The current machine lineage is `v0.2-retry-legality`; old 73-survivor / 435-recipe / 32-8-33 hard-split / 33-signature LLM numbers are historical only.
 
 Evidence index: `research/benchmark/source-evidence/DB44T2457_2024-landslide-table11.md`. Q11 remains human-reviewed after regeneration; the source correction itself cannot be waived by machine consistency checks.
 
 V8 必须区分 **same-information shortcut** 与 **deployment alternative**。gateway-local EDF/reserve 免费使用 gateway 已有 owner-local current state，并改变 planner placement；它是必须保留的强部署对照，但不能与同 placement / 同信息 policy 混成一个 `SHORTCUT_SOLVED` 判据。
 
-V8 当前已从 216-cell diagnostic 扩到全部 416 个 `PAID_EVIDENCE_REQUIRED` solver signatures。progressive same-information baseline ladder 包含 blind/fixed owner read、shallow rule、least-slack、always-query、latest-feasible、myopic flow-VoI、true depth-1/2 belief、receding horizon 3、flow-terminal depth 1–4；80 个 signature 进入 deep audit 后，再用 receding horizon 4/5/6 与 flow-terminal 5/6 压到 73 个；fixed/periodic query schedules 对这 73 个均未形成 shortcut。当前 73 signatures 投影回 435 recipes。它们全部属于 `FINITE_CROSSING_WINDOWS`，主要集中在 overlap 3/4 与 tight/recovery 组合。
+retry-legality v0.2 将“可能已经交付”与“禁止再次尝试”分离后，exact full-universe 标签变为：55,008 `NO_PAID_QUERY_REQUIRED`、2,106 `PAID_EVIDENCE_REQUIRED`、630 `INFORMATION_INFEASIBLE`、1,008 `MIXED_WORLD_SOLVABILITY`。相对 pre-retry lineage，594 个 paid-evidence recipes 与 594 个 information-infeasible recipes 转为 no-paid-query；另有 204 个 information-infeasible recipes 转为 paid-evidence。2,106 个 paid-evidence recipes 仍全部来自 `GATEWAY_SUMMARY_QUERY`，说明 ACK 可见性 / receiver retry semantics 是 task contract 的组成部分。
 
-73 / 435 仍然只是 **pre-admission V8 survivors**，不是 benchmark case count。简单、中等、复杂结构继续保留；ordinary mechanism 能解的 cells 用于刻画适用边界。若未来更强的同信息普通策略追平，降级的是对应 hardness / algorithm claim；不得反向发明拓扑、关闭 local autonomy 或删除合法反馈来制造困难。
+V0–V7 v0.2 覆盖 8,064 / 8,064 solver signatures。`VALIDITY_PENDING` recipes 中：18,252 `COMMON_SAFE_ACTION`、630 `INFORMATION_INFEASIBLE_DIAGNOSTIC`、384 `NO_BINDING_CONSTRAINT`、396 `UNIQUE_READY`、9,714 `V0_V7_PASS`。1,423 个 `V0_V7_PASS` signatures 进入同一 placement-preserving V8 ladder：1,346 个由 cheap policy rule 覆盖、23 个由 finite horizon 覆盖、13 个由 deep horizon 覆盖，最终保留 **41 个 signatures / 174 个 pre-admission recipes**。41 个 survivors 全部属于 `PAID_EVIDENCE_REQUIRED`，且全部集中在 `FINITE_CROSSING_WINDOWS + GATEWAY_SUMMARY_QUERY + overlap 3/4`；`MULTI_WINDOW_DYNAMIC` 已被现有 baseline ladder 覆盖。
+
+41 / 174 仍是 **pre-admission V8 survivors**，不是 benchmark case count。简单、中等、复杂结构继续保留；ordinary mechanism 能解的 cells 用于刻画适用边界。若未来更强的同信息普通策略追平，降级的是对应 hardness / algorithm claim；不得反向发明拓扑、关闭 local autonomy 或删除合法反馈来制造困难。
 
 V9 structural audit 已在 216 个 `VALIDITY_PENDING` 结构代表上通过：合法 physical witness 全部被独立 execution evaluator 接受；no-op、authority violation、虚构 service window、protected-subject corruption 与 missing completion mutation 全部被拒绝。
 
-V0–V7 full-universe projection 已覆盖 9,216 / 9,216 solver signatures，并投影回全部 58,752 recipes。全 universe disposition 为 41,112 `COMMON_SAFE_ACTION`、1,542 `INFORMATION_INFEASIBLE_DIAGNOSTIC`、384 `NO_BINDING_CONSTRAINT`、351 `UNIQUE_READY`、14,139 `V0_V7_PASS`、1,224 `V1_PHYSICAL_INVALID`。对全部 2,304 个 `V0_V7_PASS` signatures 继续执行同一套 placement-preserving V8 ladder 后，2,204 个由 cheap policy rule 覆盖、20 个由 finite horizon 覆盖、1 个由 deep horizon 覆盖、6 个由 deep flow-terminal 覆盖，最终保留 73 个 signatures，对应 435 个 pre-admission recipes。73 个 survivors 全部属于 `PAID_EVIDENCE_REQUIRED`。
+structure-aware split v0.2 已冻结到 `results/benchmark/layer1-structure-aware-split-v0.2-retry-legality.json`：pre-admission pool 为 **30,180 recipes**，train/dev/test = 15,108 / 11,268 / 3,804；hard survivors 为 60 / 90 / 24 recipes，对应 **16 / 18 / 7 signatures**。exact solver-signature cross-split overlap 为 0，component split violation 为 0。public-test identity v0.2 当前冻结 3,804 个 test cases。
 
-structure-aware split 已冻结到 `results/benchmark/layer1-structure-aware-split-v0.1.json`：translation-invariant trace geometry cluster 全局独占 split，并与 exact solver signature connectivity 合并成不可拆连通分量。当前 pre-admission pool 为 31,353 recipes，train/dev/test = 15,738 / 3,960 / 11,655；hard survivors 为 180 / 48 / 207 recipes，对应 32 / 8 / 33 signatures。三个 split 均覆盖 hard overlap 3/4、TIGHT/BALANCED/SLACK 与三种 recovery；exact signature、translation-equivalent trace shape 与一轴近邻跨 split overlap 均为 0。
-
-Q0–Q12 machine audit 当前为 **12 PASS / 1 BLOCKED**。Q8 public-test identity 已冻结 11,655 个 test cases；Q9 statistical protocol、Q10 release manifest + one-command reproduction、Q12 maintenance policy 已落地。Q6 frozen-split LLM baseline 已完成：DeepSeek official `deepseek-flash`，thinking disabled，覆盖全部 33 个 hard test signatures / 207 projected recipes；1,459 次 API 调用中 invalid action 为 0，最终 33 / 33 signatures 均因 `DEADLINE_EXPIRED` 失败，signature 与 projected-recipe success rate 均为 0。这个结果只说明该固定 generic LLM policy 没有解出 hard test，不作为模型能力的普遍结论。Q11 使用 pairwise-stratified set cover 将人工审计压缩为 23 条样本，覆盖 143 个 split / role / source-profile / hardness 及关键 pairwise tokens，0 uncovered，并给每个 split 保留 4 条 hard-survivor 冗余样本。Q11 必须由真实 reviewer 完成人工 source/task/oracle/evaluator 核查，不能由自动流程伪造 PASS。
+旧 Q6 DeepSeek frozen-test baseline 与旧 Q0–Q12 gate 状态均属于 pre-retry lineage，当前不再作为 release evidence。按当前决策暂不重跑 LLM；Q11 需要基于 v0.2 split 重新抽样并由真实 reviewer 完成 source/task/oracle/evaluator 核查。`BENCHMARK_ADMIT` 仍保持关闭。
 
 V8 的 baseline 分类与否决边界见 `V8-BASELINE-CONTRACT.v0.1.md`。generic exact / memo / dependency-cache / incremental AND–OR 属于 computation reference：它们取得 exact 任务质量是预期结果，不能因为“确定性算法能解”再次否定 benchmark；当前 16-cell computation reference 中 generic exact 平均约 54.6 ms、最大约 280.7 ms，no-paid-query 平均约 503.8 ms、最大约 4.0 s。这些数值只作为后续方法公平计算基线。
 

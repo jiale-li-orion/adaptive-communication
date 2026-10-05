@@ -29,18 +29,18 @@
 
 O1–O6 是历史 T1 operational regime/conformance assets；完整 task surface 与 closure 见 [TASK-COVERAGE-CLOSURE.v0.1.md](TASK-COVERAGE-CLOSURE.v0.1.md) 和 [TASK-SURFACE-REGISTRY.v0.1.json](TASK-SURFACE-REGISTRY.v0.1.json)。
 
-Q11 source review 于 2026-10-05 发现 DB44/T 2457-2024 profile 的 pre-release extraction bug：旧 cadence 恰好对应表 15 地裂缝，而项目原始场景与 intended T1 authority 是山区滑坡。profile 已改为 `hazard_type=landslide`，采用 §9.2.2.2 表 11。修正后 source expansion 仍为 27 个 DB44 reporting contracts，17 个进入 ≤12h core，generator 仍为 **58,752 candidate recipes**；组合规模稳定，但 deadline 数值变化会改变 world/exact/signature/split/baseline，因此旧的 9,216 signatures、73 survivors、32/8/33 hard split 与 Q-gate 计数全部暂按 historical pre-correction result 处理。当前正在全量重算。机器状态见 [LAYER1-CURRENT-STATE.v0.1.json](LAYER1-CURRENT-STATE.v0.1.json)。
+Q11 source review 于 2026-10-05 发现 DB44/T 2457-2024 profile 的 pre-release extraction bug：旧 cadence 对应表 15 地裂缝，而项目原始场景与 intended T1 authority 是山区滑坡。profile 已改为 `hazard_type=landslide`，采用 §9.2.2.2 表 11；随后 retry legality 也修正为“未知是否已交付 ≠ 禁止重试”。`v0.2-retry-legality` 已完成 exact→V0–V9→split→public-test 全链重算。当前 exact 为 8,064 solver signatures；V8 最终保留 41 hard signatures / 174 recipes；split hard train/dev/test signatures = 16/18/7；public test = 3,804 cases。旧 LLM/Q-gate lineage 暂按 historical result 处理，LLM rerun deferred，Q11 需基于 v0.2 重建。机器状态见 [LAYER1-CURRENT-STATE.v0.1.json](LAYER1-CURRENT-STATE.v0.1.json)。
 
 v0.1–v0.5、receipt-race、receipt-chain、joint query–satellite Pareto 和 continuation frontier 继续保留，但它们的角色是 generator/mechanism regression、exact-reference 与 shortcut audit。尤其 188-cell receipt grid **不是 benchmark case count**；当前普通 reserve/fixed-read/wait-ACK family 仍覆盖 frozen receipt-chain 的 exact cost frontier。
 
 当前唯一主工程：
 
-    DB44 landslide source correction                 [CURRENT]
-    → regenerate world / evidence / exact labels
-    → regenerate V0–V9
-    → rebuild held-out split / public test
-    → rerun frozen-split LLM baseline
-    → rebuild Q11 package and Q0–Q12
+    DB44 landslide source correction                 [DONE]
+    → retry legality correction                      [DONE v0.2]
+    → exact / V0–V9 regeneration                     [DONE v0.2]
+    → held-out split / public test                    [DONE v0.2]
+    → frozen-split LLM baseline                       [DEFERRED]
+    → rebuild Q11 package and Q0–Q12                  [PENDING]
     → frozen BENCHMARK_ADMIT release
 
 除 correctness/source/simulator blocker 外，默认不继续扩局部 receipt fixture，不先训练 RL/LLM，不让 Layer 2/3 方法反向塑造 Layer 1 分布。

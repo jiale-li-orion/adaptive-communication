@@ -12,6 +12,11 @@ SPLIT=ROOT/'results/benchmark/layer1-structure-aware-split-v0.1.json'
 CASES_PATH=ROOT/'results/benchmark/layer1-public-test-cases-v0.1.jsonl'
 
 
+def _ref(path:Path)->str:
+    resolved=path.resolve(); root=ROOT.resolve()
+    return str(resolved.relative_to(root)) if resolved.is_relative_to(root) else str(resolved)
+
+
 def main()->int:
     ap=argparse.ArgumentParser(); ap.add_argument('--split',type=Path,default=SPLIT); ap.add_argument('--cases-path',type=Path,default=CASES_PATH); args=ap.parse_args()
     split_path=args.split if args.split.is_absolute() else ROOT/args.split
@@ -44,7 +49,7 @@ def main()->int:
         'status':'FROZEN_PUBLIC_TEST_IDENTITY',
         'benchmark_version':'layer1-v0.1',
         'test_case_count':count,
-        'public_cases_ref':str(cases_path.relative_to(ROOT)) if cases_path.is_relative_to(ROOT) else str(cases_path),
+        'public_cases_ref':_ref(cases_path),
         'public_cases_sha256':digest.hexdigest(),
         'source_split_sha256':split_digest,
         'labels_withheld':['candidate_role','exact_classification','v0_v7_disposition','solver_signature','oracle/reference labels'],

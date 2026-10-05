@@ -26,6 +26,11 @@ V8_ALL_PASS = ROOT / "results/benchmark/layer1-v8-all-pass-v0.1.json"
 V8_SIG_ROWS = ROOT / "local_research/current/benchmark/generated/v8-all-pass-v0.1/signature-v8.jsonl"
 
 
+def _ref(path: Path) -> str:
+    resolved = path.resolve(); root = ROOT.resolve()
+    return str(resolved.relative_to(root)) if resolved.is_relative_to(root) else str(resolved)
+
+
 def _rows(path: Path) -> list[dict[str, Any]]:
     return [json.loads(line) for line in path.read_text(encoding="utf-8").splitlines() if line.strip()]
 
@@ -265,10 +270,10 @@ def build(*, recipe_validity: Path = RECIPE_VALIDITY, recipe_exact: Path = RECIP
             "mean": (sum(component_sizes) / len(component_sizes)) if component_sizes else 0.0,
         },
         "lineage_inputs": {
-            "recipe_validity": str(recipe_validity.relative_to(ROOT)) if recipe_validity.is_relative_to(ROOT) else str(recipe_validity),
-            "recipe_exact": str(recipe_exact.relative_to(ROOT)) if recipe_exact.is_relative_to(ROOT) else str(recipe_exact),
-            "v8_manifest": str(v8_manifest_path.relative_to(ROOT)) if v8_manifest_path.is_relative_to(ROOT) else str(v8_manifest_path),
-            "v8_signature_rows": str(v8_signature_rows.relative_to(ROOT)) if v8_signature_rows.is_relative_to(ROOT) else str(v8_signature_rows),
+            "recipe_validity": _ref(recipe_validity),
+            "recipe_exact": _ref(recipe_exact),
+            "v8_manifest": _ref(v8_manifest_path),
+            "v8_signature_rows": _ref(v8_signature_rows),
         },
         "by_role": dict(sorted(role_counts.items())),
         "by_split": dict(sorted(split_counts.items())),

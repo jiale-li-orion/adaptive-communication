@@ -1,0 +1,80 @@
+{
+  "blind_status": {
+    "DERIVED_FROM_NO_PAID_INFEASIBLE": 312,
+    "DERIVED_NOT_RUN": 252,
+    "EXACT": 7500
+  },
+  "bundle_count": 58752,
+  "completed_signature_count": 8064,
+  "exact_signature_labels_ref": "local_research/current/benchmark/generated/exact-labels-v0.2-retry-legality/signature-labels.jsonl",
+  "projected_filter_values": {
+    "V0_SOURCE_COMPLETE": {
+      "True": 58752
+    },
+    "V1_SOLVABLE": {
+      "False": 1008,
+      "True": 57744
+    },
+    "V2_MULTIPLE_LEGAL_OPTIONS": {
+      "False": 468,
+      "True": 58284
+    },
+    "V3_COMMON_SAFE_ACTION": {
+      "False": 46800,
+      "None": 1638,
+      "True": 10314
+    },
+    "V4_OBSERVATION_RELEVANCE": {
+      "False": 46800,
+      "None": 1638,
+      "True": 10314
+    },
+    "V5_BINDING_CONSTRAINT": {
+      "False": 4644,
+      "True": 54108
+    },
+    "V6_OUTCOME_SEPARATION": {
+      "False": 252,
+      "True": 58500
+    },
+    "V7_OBJECTIVE_DEFINED": {
+      "False": 297,
+      "None": 711,
+      "True": 57744
+    }
+  },
+  "projected_recipe_disposition": {
+    "COMMON_SAFE_ACTION": 46620,
+    "INFORMATION_INFEASIBLE_DIAGNOSTIC": 630,
+    "NO_BINDING_CONSTRAINT": 384,
+    "UNIQUE_READY": 396,
+    "V0_V7_PASS": 9714,
+    "V1_PHYSICAL_INVALID": 1008
+  },
+  "projected_validity_pending_disposition": {
+    "COMMON_SAFE_ACTION": 18252,
+    "INFORMATION_INFEASIBLE_DIAGNOSTIC": 630,
+    "NO_BINDING_CONSTRAINT": 384,
+    "UNIQUE_READY": 396,
+    "V0_V7_PASS": 9714
+  },
+  "projection_multiplicity": {
+    "max": 12,
+    "mean": 7.285714285714286
+  },
+  "recipe_labels_ref": "local_research/current/benchmark/generated/v0-v7-full-v0.2-retry-legality/recipe-validity.jsonl",
+  "release_status": "NOT_BENCHMARK_ADMIT",
+  "schema_version": "0.1",
+  "signature_disposition": {
+    "COMMON_SAFE_ACTION": 6276,
+    "INFORMATION_INFEASIBLE_DIAGNOSTIC": 84,
+    "NO_BINDING_CONSTRAINT": 32,
+    "UNIQUE_READY": 81,
+    "V0_V7_PASS": 1423,
+    "V1_PHYSICAL_INVALID": 168
+  },
+  "signature_labels_ref": "local_research/current/benchmark/generated/v0-v7-full-v0.2-retry-legality/signature-validity.jsonl",
+  "status": "COMPLETE",
+  "unique_solver_signature_count": 8064,
+  "validity_digest_sha256": "75f83449ea6d510fe92d91ad1fb713d13a10eead8a74b617a60311727dd4594d"
+}

@@ -38,9 +38,12 @@
     ]
   },
   "world_materialization": {
+    "schema_version": "0.1",
+    "materializer": "T1-dynamic-world-alias-bundle-v0.1",
+    "stage": "WORLD_BUNDLE_PRE_EVIDENCE_PRE_ORACLE",
+    "input_recipe_count": 58752,
     "bundle_count": 58752,
-    "bundle_id_stream_sha256": "329212d8512d761d627e71a7af51d89c8b5b0a79eb21e06651a27810e8164c52",
-    "bundles_with_preserved_source_blocker": 9792,
+    "bundle_id_stream_sha256": "5cd95d2991499db7766aa490d169bcf93ff0160190d7b0c29486976c74a93c71",
     "by_alias_world_count": {
       "1": 14688,
       "2": 14688,
@@ -53,19 +56,18 @@
       "MIXED_PASSIVE_QUERY_PROBE": 14688,
       "PASSIVE_ACK_ONLY": 14688
     },
-    "by_recovery_regime": {
-      "NO_RECOVERY_STATE": 19584,
-      "OUTAGE_CACHE_RETAIN": 19584,
-      "RECONNECT_RECONCILE_OBJECTIVE_CHECK": 19584
-    },
     "by_service_process": {
       "FINITE_CROSSING_WINDOWS": 14688,
       "MONOTONE_RECOVERY_NEGATIVE": 14688,
       "MULTI_WINDOW_DYNAMIC": 14688,
       "STEADY_AVAILABLE_CONTROL": 14688
     },
-    "input_recipe_count": 58752,
-    "materializer": "T1-dynamic-world-alias-bundle-v0.1",
+    "by_recovery_regime": {
+      "NO_RECOVERY_STATE": 19584,
+      "OUTAGE_CACHE_RETAIN": 19584,
+      "RECONNECT_RECONCILE_OBJECTIVE_CHECK": 19584
+    },
+    "bundles_with_preserved_source_blocker": 9792,
     "rules": [
       "One frozen candidate recipe materializes to one world/alias bundle.",
       "Materialized bundles are still NOT_BENCHMARK_ADMIT and have no oracle/V0-V9 labels.",
@@ -74,29 +76,38 @@
       "Workload overlap and service-process variation remain explicit CONTROLLED_STRESS coordinates.",
       "Reconnect backlog-vs-fresh priority remains unresolved; materialization preserves the V7 blocker.",
       "ACK/query/probe response values and arrival timing are deferred to the causal evidence stage."
-    ],
-    "schema_version": "0.1",
-    "stage": "WORLD_BUNDLE_PRE_EVIDENCE_PRE_ORACLE"
+    ]
   },
   "causal_evidence_process": {
+    "schema_version": "0.1",
+    "process": "T1-causal-observation-evidence-v0.1",
+    "stage": "CAUSAL_EVIDENCE_PRE_ORACLE",
+    "parent_bundle_count": 58752,
+    "process_count": 58752,
+    "process_id_stream_sha256": "9024e4ca78b7ab6101a64dd09d3837a2dce81459225762a57e8bc21f85f235b3",
     "by_evidence_regime": {
       "FULL_OBSERVATION_CONTROL": 14688,
       "GATEWAY_SUMMARY_QUERY": 14688,
       "MIXED_PASSIVE_QUERY_PROBE": 14688,
       "PASSIVE_ACK_ONLY": 14688
     },
-    "by_passive_ack_enabled": {
-      "false": 29376,
-      "true": 29376
-    },
     "by_query_capability_count": {
       "0": 29376,
       "1": 29376
     },
-    "parent_bundle_count": 58752,
-    "process": "T1-causal-observation-evidence-v0.1",
-    "process_count": 58752,
-    "process_id_stream_sha256": "fc87f0d5cbc5fa7ac265d289336326226fe4a8276b1222d00d2c6cf85821a87f",
+    "by_passive_ack_enabled": {
+      "false": 29376,
+      "true": 29376
+    },
+    "timing_contract": {
+      "query_response_delay_s": 60,
+      "query_timeout_s": 60,
+      "gateway_receipt_delay_s": 10,
+      "final_ack_delay_s": 30,
+      "ack_timeout_s": 60,
+      "satellite_completion_delay_s": 5,
+      "provenance": "CONTROLLED_STRESS"
+    },
     "rules": [
       "Queries sample current owner state before response arrival; later world changes cannot rewrite the sampled value.",
       "Query payloads contain current/past gateway facts only and never future service windows, plan labels or world ids.",
@@ -104,18 +115,7 @@
       "Gateway receipt and final completion ACK remain separate events.",
       "Normal send-as-probe is the ordinary SEND_TERR action and pays no extra synthetic tool cost.",
       "Owner query consumes one declared terrestrial opportunity-capacity unit; passive ACK is acquisition-free."
-    ],
-    "schema_version": "0.1",
-    "stage": "CAUSAL_EVIDENCE_PRE_ORACLE",
-    "timing_contract": {
-      "ack_timeout_s": 60,
-      "final_ack_delay_s": 30,
-      "gateway_receipt_delay_s": 10,
-      "provenance": "CONTROLLED_STRESS",
-      "query_response_delay_s": 60,
-      "query_timeout_s": 60,
-      "satellite_completion_delay_s": 5
-    }
+    ]
   },
   "scope": {
     "schema_version": "0.1",
@@ -296,17 +296,18 @@
     "historical_closure_policy": "Do not rerun closed standalone forms. Reuse them as easy/conformance/regression cells; only new compositions re-enter V0-V9 hardness mining."
   },
   "release_status": "NOT_BENCHMARK_ADMIT",
-  "next_stage": "DB44_LANDSLIDE_SOURCE_CORRECTION_REGENERATION",
+  "next_stage": "V02_MACHINE_FREEZE_Q11_PENDING_LLM_DEFERRED",
   "warnings": [
-    "DB44/T 2457-2024 source correction is in progress: old profile used Table 15 ground-fissure cadence; corrected profile uses §9.2.2.2 Table 11 landslide cadence.",
-    "All downstream pre-release labels, split counts, LLM baseline results and Q-gate counts from the pre-correction profile are historical until regeneration completes.",
-    "The combinatorial envelope remains 27 source contracts / 17 core contracts / 58,752 recipes.",
-    "Q11 must be rebuilt and reviewed by a real reviewer after regeneration.",
+    "Current machine lineage is v0.2-retry-legality; pre-retry exact/V8/split/LLM/Q-gate numbers are historical only.",
+    "Retry legality changes full-universe labels: 55,008 no-paid-query, 2,106 paid-evidence, 630 information-infeasible, 1,008 mixed-world-solvability recipes.",
+    "V8 v0.2 leaves 41 paid-evidence signatures / 174 pre-admission recipes, all finite-crossing gateway-summary-query overlap 3/4.",
+    "Frozen public test v0.2 contains 3,804 cases; the previous DeepSeek frozen-test baseline has not been rerun and is stale.",
+    "Q11 must be rebuilt on the v0.2 split and completed by a real reviewer before BENCHMARK_ADMIT.",
     "T2 remains SIMULATOR_GAP until actor-chain environment support exists."
   ],
   "exact_reference_oracle": {
     "schema_version": "0.1",
-    "implementation": "T1-exact-reference-oracle-v0.1",
+    "implementation": "T1-exact-reference-oracle-v0.2-retry-legality",
     "implementation_status": "IMPLEMENTED_PRE_ADMISSION",
     "references": [
       "HINDSIGHT_PHYSICAL_FEASIBILITY",
@@ -317,12 +318,25 @@
     "physical_full_scan": {
       "bundle_count": 58752,
       "bundle_physical_class": {
-        "ALL_WORLD_SOLVABLE": 57528,
-        "MIXED_WORLD_SOLVABILITY": 1224
+        "ALL_WORLD_SOLVABLE": 57744,
+        "MIXED_WORLD_SOLVABILITY": 1008
+      },
+      "by_pre_oracle_disposition": {
+        "EASY_CONFORMANCE|ALL_WORLD_SOLVABLE": 14688,
+        "NEGATIVE_REGRESSION|ALL_WORLD_SOLVABLE": 13680,
+        "NEGATIVE_REGRESSION|MIXED_WORLD_SOLVABILITY": 1008,
+        "VALIDITY_PENDING|ALL_WORLD_SOLVABLE": 29376
+      },
+      "by_service_process": {
+        "FINITE_CROSSING_WINDOWS|ALL_WORLD_SOLVABLE": 14688,
+        "MONOTONE_RECOVERY_NEGATIVE|ALL_WORLD_SOLVABLE": 13680,
+        "MONOTONE_RECOVERY_NEGATIVE|MIXED_WORLD_SOLVABILITY": 1008,
+        "MULTI_WINDOW_DYNAMIC|ALL_WORLD_SOLVABLE": 14688,
+        "STEADY_AVAILABLE_CONTROL|ALL_WORLD_SOLVABLE": 14688
       },
       "world_physical_class": {
-        "INFEASIBLE": 1548,
-        "SOLVABLE": 145332
+        "INFEASIBLE": 1260,
+        "SOLVABLE": 145620
       }
     },
     "hard_structure_audit": {
@@ -332,110 +346,112 @@
         "use": "construction diagnostic only; not a benchmark split or admission filter"
       },
       "outcome": {
-        "INFORMATION_INFEASIBLE": 12,
-        "NO_PAID_QUERY_REQUIRED": 189,
+        "INFORMATION_INFEASIBLE": 6,
+        "NO_PAID_QUERY_REQUIRED": 195,
         "PAID_EVIDENCE_REQUIRED": 15
       },
       "reference_counts": {
         "FULL_CURRENT_STATE": 216,
-        "F_OBSERVATION_MATCHED": 204,
-        "N_NO_PAID_QUERY": 189,
+        "F_OBSERVATION_MATCHED": 210,
+        "N_NO_PAID_QUERY": 195,
         "P_ALL_WORLD_PHYSICAL": 216
       },
-      "information_value_gap": 0.07352941176470588,
+      "information_value_gap": 0.07142857142857142,
       "search": {
         "max_memo_nodes_limit": 200000,
-        "mean_max_memo_nodes": 1492.5046296296296,
-        "observed_max_memo_nodes": 118660,
+        "mean_max_memo_nodes": 966.3148148148148,
+        "observed_max_memo_nodes": 160250,
         "search_limit_cells": [],
         "search_limit_count": 0
       }
     },
     "full_universe_observation_label_status": "COMPLETE",
-    "audit_ref": "results/benchmark/layer1-exact-reference-audit-v0.1.json",
+    "audit_ref": "results/benchmark/layer1-exact-reference-audit-v0.2-retry-legality.json",
     "full_universe_label_manifest": {
-      "manifest_ref": "results/benchmark/layer1-exact-label-manifest-v0.1.json",
+      "manifest_ref": "results/benchmark/layer1-exact-labels-v0.2-retry-legality.json",
       "status": "COMPLETE",
-      "unique_solver_signature_count": 9216,
-      "completed_signature_count": 9216,
-      "signature_label_digest_sha256": "160c0afa17291d4cbeaa5f2bc9fb4d86454016c14a3a696a89218ee6042b8abb",
+      "solver_version": "T1-exact-reference-oracle-v0.2-retry-legality",
+      "unique_solver_signature_count": 8064,
+      "completed_signature_count": 8064,
+      "signature_label_digest_sha256": "486e416bfb3983ba3a48a462e7299af944113b444bed75396e1460e2979306d7",
       "projected_recipe_classification": {
-        "INFORMATION_INFEASIBLE": 1542,
-        "MIXED_WORLD_SOLVABILITY": 1224,
-        "NO_PAID_QUERY_REQUIRED": 53424,
-        "PAID_EVIDENCE_REQUIRED": 2562
+        "INFORMATION_INFEASIBLE": 630,
+        "MIXED_WORLD_SOLVABILITY": 1008,
+        "NO_PAID_QUERY_REQUIRED": 55008,
+        "PAID_EVIDENCE_REQUIRED": 2106
       },
       "projected_validity_pending_classification": {
-        "INFORMATION_INFEASIBLE": 1542,
-        "NO_PAID_QUERY_REQUIRED": 25272,
-        "PAID_EVIDENCE_REQUIRED": 2562
+        "INFORMATION_INFEASIBLE": 630,
+        "NO_PAID_QUERY_REQUIRED": 26640,
+        "PAID_EVIDENCE_REQUIRED": 2106
       }
     }
   },
   "validity_filter_infrastructure": {
     "v0_v7": {
       "status": "DONE_FULL_UNIVERSE",
-      "signature_count": 9216,
+      "signature_count": 8064,
       "projected_recipe_disposition": {
-        "COMMON_SAFE_ACTION": 41112,
-        "INFORMATION_INFEASIBLE_DIAGNOSTIC": 1542,
+        "COMMON_SAFE_ACTION": 46620,
+        "INFORMATION_INFEASIBLE_DIAGNOSTIC": 630,
         "NO_BINDING_CONSTRAINT": 384,
-        "UNIQUE_READY": 351,
-        "V0_V7_PASS": 14139,
-        "V1_PHYSICAL_INVALID": 1224
+        "UNIQUE_READY": 396,
+        "V0_V7_PASS": 9714,
+        "V1_PHYSICAL_INVALID": 1008
       },
-      "audit_ref": "results/benchmark/layer1-v0-v7-full-v0.1.json"
+      "audit_ref": "results/benchmark/layer1-v0-v7-full-v0.2-retry-legality.json"
     },
     "v8": {
       "status": "DONE_ALL_V0_V7_PASS_SIGNATURES",
-      "input_signature_count": 2304,
+      "input_signature_count": 1423,
       "disposition": {
-        "CHEAP_POLICY_RULE": 2204,
-        "DEEP_FLOW_TERMINAL": 6,
-        "DEEP_HORIZON": 1,
-        "FINITE_HORIZON": 20,
-        "SURVIVES_V8_LADDER_V0_1": 73
+        "CHEAP_POLICY_RULE": 1346,
+        "DEEP_HORIZON": 13,
+        "FINITE_HORIZON": 23,
+        "SURVIVES_V8_LADDER_V0_1": 41
       },
-      "survivor_signature_count": 73,
-      "projected_survivor_recipe_count": 435,
-      "audit_ref": "results/benchmark/layer1-v8-all-pass-v0.1.json"
+      "survivor_signature_count": 41,
+      "projected_survivor_recipe_count": 174,
+      "audit_ref": "results/benchmark/layer1-v8-all-pass-v0.2-retry-legality.json"
     },
     "v9": {
       "status": "DONE",
       "passed": true,
       "structural_representative_count": 216,
-      "audit_ref": "results/benchmark/layer1-v9-evaluator-soundness-v0.1.json"
+      "audit_ref": "results/benchmark/layer1-v9-evaluator-soundness-v0.2-retry-legality.json"
     },
     "release_status": "NOT_BENCHMARK_ADMIT"
   },
   "structure_aware_split": {
     "status": "DONE",
-    "candidate_count": 31353,
+    "candidate_count": 30180,
     "by_split": {
-      "dev": 3960,
-      "test": 11655,
-      "train": 15738
+      "dev": 11268,
+      "test": 3804,
+      "train": 15108
     },
     "hard_recipe_by_split": {
-      "dev": 48,
-      "test": 207,
-      "train": 180
+      "train": 60,
+      "dev": 90,
+      "test": 24
     },
     "hard_signature_by_split": {
-      "dev": 8,
-      "test": 33,
-      "train": 32
+      "train": 16,
+      "dev": 18,
+      "test": 7
     },
     "leakage_passed": true,
-    "audit_ref": "results/benchmark/layer1-structure-aware-split-v0.1.json",
-    "coverage_ref": "results/benchmark/layer1-split-coverage-v0.1.json"
+    "audit_ref": "results/benchmark/layer1-structure-aware-split-v0.2-retry-legality.json",
+    "coverage_ref": "results/benchmark/layer1-split-coverage-v0.2-retry-legality.json"
   },
   "quality_gates": {
-    "status": "STALE_AFTER_SOURCE_CORRECTION",
-    "release_status": "NOT_BENCHMARK_ADMIT"
+    "status": "STALE_PENDING_V02_Q11_AND_GATE_REBUILD",
+    "release_status": "NOT_BENCHMARK_ADMIT",
+    "llm_baseline": "DEFERRED_PRE_RETRY_RESULT_STALE",
+    "human_source_audit": "PENDING_REBUILD_AND_REAL_REVIEW"
   },
   "source_correction": {
-    "status": "CURRENT_REGENERATION_REQUIRED",
+    "status": "MACHINE_REGENERATION_COMPLETE",
     "profile_id": "DB44T2457_2024_warning_reporting",
     "issue": "pre-release profile encoded DB44/T 2457-2024 Table 15 ground-fissure cadence while intended T1 hazard is landslide",
     "correct_authority": "DB44/T 2457-2024 §9.2.2.2 Table 11",
@@ -458,6 +474,65 @@
       "q11_sample",
       "quality_gates",
       "release_manifest"
-    ]
+    ],
+    "retry_legality_lineage": "v0.2-retry-legality",
+    "machine_regeneration": {
+      "exact": {
+        "status": "COMPLETE",
+        "unique_solver_signatures": 8064,
+        "recipe_classification": {
+          "NO_PAID_QUERY_REQUIRED": 55008,
+          "PAID_EVIDENCE_REQUIRED": 2106,
+          "INFORMATION_INFEASIBLE": 630,
+          "MIXED_WORLD_SOLVABILITY": 1008
+        }
+      },
+      "v0_v7": {
+        "status": "COMPLETE",
+        "pass_signatures": 1423,
+        "validity_pending_recipe_disposition": {
+          "COMMON_SAFE_ACTION": 18252,
+          "INFORMATION_INFEASIBLE_DIAGNOSTIC": 630,
+          "NO_BINDING_CONSTRAINT": 384,
+          "UNIQUE_READY": 396,
+          "V0_V7_PASS": 9714
+        }
+      },
+      "v8": {
+        "status": "COMPLETE",
+        "survivor_signatures": 41,
+        "survivor_recipes": 174,
+        "survivor_structure": "FINITE_CROSSING_WINDOWS + GATEWAY_SUMMARY_QUERY + overlap 3/4"
+      },
+      "v9": {
+        "status": "PASS",
+        "structural_representatives": 216
+      },
+      "split": {
+        "status": "COMPLETE",
+        "pre_admission_recipes": 30180,
+        "recipe_split": {
+          "train": 15108,
+          "dev": 11268,
+          "test": 3804
+        },
+        "hard_signature_split": {
+          "train": 16,
+          "dev": 18,
+          "test": 7
+        },
+        "hard_recipe_split": {
+          "train": 60,
+          "dev": 90,
+          "test": 24
+        },
+        "cross_split_signature_overlap": 0
+      },
+      "public_test": {
+        "status": "FROZEN_PUBLIC_TEST_IDENTITY",
+        "test_case_count": 3804,
+        "sha256": "23307c06ed7c9f9d992db4bcc5cee12b1703e38d997a293b3d1677cc1b91b6f5"
+      }
+    }
   }
 }

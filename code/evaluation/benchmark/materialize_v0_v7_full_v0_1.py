@@ -28,6 +28,11 @@ EXACT_SIGNATURE_LABELS=ROOT/'local_research/current/benchmark/generated/exact-la
 DEFAULT_OUT=ROOT/'local_research/current/benchmark/generated/v0-v7-full-v0.1'
 
 
+def _ref(path:Path)->str:
+    resolved=path.resolve(); root=ROOT.resolve()
+    return str(resolved.relative_to(root)) if resolved.is_relative_to(root) else str(resolved)
+
+
 def _load_exact_labels(path: Path = EXACT_SIGNATURE_LABELS) -> dict[str,dict[str,Any]]:
     out={}
     for line in path.read_text(encoding='utf-8').splitlines():
@@ -202,9 +207,9 @@ def materialize(*,out_dir:Path,workers:int,max_memo_nodes:int,resume:bool,
         'projected_filter_values':{k:dict(sorted(v.items())) for k,v in sorted(filter_pass.items())} if complete else {},
         'projection_multiplicity':{'mean':len(recipes)/len(representatives),'max':max(multiplicity.values())},
         'validity_digest_sha256':digest.hexdigest(),
-        'exact_signature_labels_ref':str(exact_signature_labels.relative_to(ROOT)) if exact_signature_labels.is_relative_to(ROOT) else str(exact_signature_labels),
-        'signature_labels_ref':str(sig_path.relative_to(ROOT)),
-        'recipe_labels_ref':str(recipe_path.relative_to(ROOT)) if complete else None,
+        'exact_signature_labels_ref':_ref(exact_signature_labels),
+        'signature_labels_ref':_ref(sig_path),
+        'recipe_labels_ref':_ref(recipe_path) if complete else None,
         'release_status':'NOT_BENCHMARK_ADMIT',
     }
 

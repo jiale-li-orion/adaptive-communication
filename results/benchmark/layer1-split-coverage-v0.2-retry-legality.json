@@ -1,0 +1,402 @@
+{
+  "hard_invariants": {
+    "exact_solver_signature_cross_split_overlap": {
+      "dev_test": 0,
+      "train_dev": 0,
+      "train_test": 0
+    },
+    "structural_component_leakage_passed": true
+  },
+  "hard_survivor": {
+    "axis_coverage": {
+      "dev": {
+        "evidence_regimes": {
+          "missing_from_global_hard_axes": [],
+          "observed": [
+            "GATEWAY_SUMMARY_QUERY"
+          ]
+        },
+        "overlap_counts": {
+          "missing_from_global_hard_axes": [],
+          "observed": [
+            3,
+            4
+          ]
+        },
+        "recovery_regimes": {
+          "missing_from_global_hard_axes": [],
+          "observed": [
+            "NO_RECOVERY_STATE",
+            "OUTAGE_CACHE_RETAIN",
+            "RECONNECT_RECONCILE_OBJECTIVE_CHECK"
+          ]
+        },
+        "resource_headroom": {
+          "missing_from_global_hard_axes": [],
+          "observed": [
+            "BALANCED",
+            "SLACK",
+            "TIGHT"
+          ]
+        },
+        "service_processes": {
+          "missing_from_global_hard_axes": [],
+          "observed": [
+            "FINITE_CROSSING_WINDOWS"
+          ]
+        }
+      },
+      "test": {
+        "evidence_regimes": {
+          "missing_from_global_hard_axes": [],
+          "observed": [
+            "GATEWAY_SUMMARY_QUERY"
+          ]
+        },
+        "overlap_counts": {
+          "missing_from_global_hard_axes": [],
+          "observed": [
+            3,
+            4
+          ]
+        },
+        "recovery_regimes": {
+          "missing_from_global_hard_axes": [],
+          "observed": [
+            "NO_RECOVERY_STATE",
+            "OUTAGE_CACHE_RETAIN",
+            "RECONNECT_RECONCILE_OBJECTIVE_CHECK"
+          ]
+        },
+        "resource_headroom": {
+          "missing_from_global_hard_axes": [],
+          "observed": [
+            "BALANCED",
+            "SLACK",
+            "TIGHT"
+          ]
+        },
+        "service_processes": {
+          "missing_from_global_hard_axes": [],
+          "observed": [
+            "FINITE_CROSSING_WINDOWS"
+          ]
+        }
+      },
+      "train": {
+        "evidence_regimes": {
+          "missing_from_global_hard_axes": [],
+          "observed": [
+            "GATEWAY_SUMMARY_QUERY"
+          ]
+        },
+        "overlap_counts": {
+          "missing_from_global_hard_axes": [],
+          "observed": [
+            3,
+            4
+          ]
+        },
+        "recovery_regimes": {
+          "missing_from_global_hard_axes": [],
+          "observed": [
+            "NO_RECOVERY_STATE",
+            "OUTAGE_CACHE_RETAIN",
+            "RECONNECT_RECONCILE_OBJECTIVE_CHECK"
+          ]
+        },
+        "resource_headroom": {
+          "missing_from_global_hard_axes": [],
+          "observed": [
+            "BALANCED",
+            "SLACK",
+            "TIGHT"
+          ]
+        },
+        "service_processes": {
+          "missing_from_global_hard_axes": [],
+          "observed": [
+            "FINITE_CROSSING_WINDOWS"
+          ]
+        }
+      }
+    },
+    "recipe_by_split": {
+      "dev": 90,
+      "test": 24,
+      "train": 60
+    },
+    "recipe_count": 174,
+    "signature_by_split": {
+      "dev": 18,
+      "test": 7,
+      "train": 16
+    }
+  },
+  "near_duplicate_one_axis": {
+    "evidence_regime": {
+      "cross_split_neighbor_fingerprint_count": 0,
+      "rows_in_cross_split_neighbor_fingerprints": 0
+    },
+    "monitoring_grade": {
+      "cross_split_neighbor_fingerprint_count": 0,
+      "rows_in_cross_split_neighbor_fingerprints": 0
+    },
+    "overlap_count": {
+      "cross_split_neighbor_fingerprint_count": 0,
+      "rows_in_cross_split_neighbor_fingerprints": 0
+    },
+    "recovery_regime": {
+      "cross_split_neighbor_fingerprint_count": 0,
+      "rows_in_cross_split_neighbor_fingerprints": 0
+    },
+    "report_interval_s": {
+      "cross_split_neighbor_fingerprint_count": 0,
+      "rows_in_cross_split_neighbor_fingerprints": 0
+    },
+    "resource_headroom": {
+      "cross_split_neighbor_fingerprint_count": 0,
+      "rows_in_cross_split_neighbor_fingerprints": 0
+    },
+    "warning_state": {
+      "cross_split_neighbor_fingerprint_count": 0,
+      "rows_in_cross_split_neighbor_fingerprints": 0
+    }
+  },
+  "release_status": "NOT_BENCHMARK_ADMIT",
+  "schema_version": "0.1",
+  "split_summary": {
+    "dev": {
+      "evidence_regimes": [
+        "FULL_OBSERVATION_CONTROL",
+        "GATEWAY_SUMMARY_QUERY",
+        "MIXED_PASSIVE_QUERY_PROBE",
+        "PASSIVE_ACK_ONLY"
+      ],
+      "geometry_shape_clusters": [
+        "GC03"
+      ],
+      "hardness": {
+        "H0_CONFORMANCE": 5508,
+        "H0_NEGATIVE_SHORTCUT_REGRESSION": 5508,
+        "H1_PARTIAL_OBSERVATION": 2754,
+        "H2_EVIDENCE_VALUE": 5760,
+        "H3_SHARED_RESOURCE_CONFLICT": 252,
+        "H4_COUPLED_SEQUENTIAL_COMMITMENT": 252,
+        "H5_PASSIVE_PROBE_QUERY_COMPETITION": 2754,
+        "H_RECOVERY_OBJECTIVE_CHECK": 3756
+      },
+      "max_signature_multiplicity": 12,
+      "overlap_counts": [
+        2,
+        3,
+        4
+      ],
+      "recipe_count": 11268,
+      "recovery_regimes": [
+        "NO_RECOVERY_STATE",
+        "OUTAGE_CACHE_RETAIN",
+        "RECONNECT_RECONCILE_OBJECTIVE_CHECK"
+      ],
+      "report_intervals_s": [
+        300,
+        1800,
+        3600,
+        7200,
+        14400,
+        21600,
+        43200
+      ],
+      "resource_headroom": [
+        "BALANCED",
+        "SLACK",
+        "TIGHT"
+      ],
+      "roles": {
+        "EASY_CONFORMANCE_CONTROL": 5508,
+        "HARD_PRE_ADMISSION_SURVIVOR": 90,
+        "INFORMATION_INFEASIBLE_DIAGNOSTIC": 162,
+        "NEGATIVE_SHORTCUT_REGRESSION_CONTROL": 5508
+      },
+      "service_processes": [
+        "FINITE_CROSSING_WINDOWS",
+        "MONOTONE_RECOVERY_NEGATIVE",
+        "STEADY_AVAILABLE_CONTROL"
+      ],
+      "signature_projection_ratio": 7.27906976744186,
+      "task_case_count": 17,
+      "task_surfaces": {
+        "T1.S0_STEADY_MONITORING": 11268,
+        "T1.S1_WARNING_CADENCE_TRANSITION": 11268,
+        "T1.S2_INTERMITTENT_BACKHAUL_FALLBACK": 5760,
+        "T1.S4_OUTAGE_CACHE_RETENTION": 7512,
+        "T1.S5_RECOVERY_RECONCILIATION": 3756,
+        "T1.S6_HETEROGENEOUS_PATH_PRIORITY": 5760,
+        "T1.S7_COMPOUND_CONTINUITY": 11268
+      },
+      "unique_signature_count": 1548,
+      "warning_states": [
+        "blue",
+        "orange",
+        "red",
+        "yellow"
+      ]
+    },
+    "test": {
+      "evidence_regimes": [
+        "FULL_OBSERVATION_CONTROL",
+        "GATEWAY_SUMMARY_QUERY",
+        "MIXED_PASSIVE_QUERY_PROBE",
+        "PASSIVE_ACK_ONLY"
+      ],
+      "geometry_shape_clusters": [
+        "GC01"
+      ],
+      "hardness": {
+        "H0_CONFORMANCE": 1836,
+        "H0_NEGATIVE_SHORTCUT_REGRESSION": 1836,
+        "H1_PARTIAL_OBSERVATION": 918,
+        "H2_EVIDENCE_VALUE": 1968,
+        "H3_SHARED_RESOURCE_CONFLICT": 132,
+        "H4_COUPLED_SEQUENTIAL_COMMITMENT": 132,
+        "H5_PASSIVE_PROBE_QUERY_COMPETITION": 918,
+        "H_RECOVERY_OBJECTIVE_CHECK": 1268
+      },
+      "max_signature_multiplicity": 12,
+      "overlap_counts": [
+        2,
+        3,
+        4
+      ],
+      "recipe_count": 3804,
+      "recovery_regimes": [
+        "NO_RECOVERY_STATE",
+        "OUTAGE_CACHE_RETAIN",
+        "RECONNECT_RECONCILE_OBJECTIVE_CHECK"
+      ],
+      "report_intervals_s": [
+        300,
+        1800,
+        3600,
+        7200,
+        14400,
+        21600,
+        43200
+      ],
+      "resource_headroom": [
+        "BALANCED",
+        "SLACK",
+        "TIGHT"
+      ],
+      "roles": {
+        "EASY_CONFORMANCE_CONTROL": 1836,
+        "HARD_PRE_ADMISSION_SURVIVOR": 24,
+        "INFORMATION_INFEASIBLE_DIAGNOSTIC": 108,
+        "NEGATIVE_PHYSICAL_INVALID_CONTROL": 360,
+        "NEGATIVE_SHORTCUT_REGRESSION_CONTROL": 1476
+      },
+      "service_processes": [
+        "FINITE_CROSSING_WINDOWS",
+        "MONOTONE_RECOVERY_NEGATIVE",
+        "STEADY_AVAILABLE_CONTROL"
+      ],
+      "signature_projection_ratio": 7.231939163498099,
+      "task_case_count": 17,
+      "task_surfaces": {
+        "T1.S0_STEADY_MONITORING": 3804,
+        "T1.S1_WARNING_CADENCE_TRANSITION": 3804,
+        "T1.S2_INTERMITTENT_BACKHAUL_FALLBACK": 1968,
+        "T1.S4_OUTAGE_CACHE_RETENTION": 2536,
+        "T1.S5_RECOVERY_RECONCILIATION": 1268,
+        "T1.S6_HETEROGENEOUS_PATH_PRIORITY": 1968,
+        "T1.S7_COMPOUND_CONTINUITY": 3804
+      },
+      "unique_signature_count": 526,
+      "warning_states": [
+        "blue",
+        "orange",
+        "red",
+        "yellow"
+      ]
+    },
+    "train": {
+      "evidence_regimes": [
+        "FULL_OBSERVATION_CONTROL",
+        "GATEWAY_SUMMARY_QUERY",
+        "MIXED_PASSIVE_QUERY_PROBE",
+        "PASSIVE_ACK_ONLY"
+      ],
+      "geometry_shape_clusters": [
+        "GC00",
+        "GC02"
+      ],
+      "hardness": {
+        "H0_CONFORMANCE": 7344,
+        "H0_NEGATIVE_SHORTCUT_REGRESSION": 7344,
+        "H1_PARTIAL_OBSERVATION": 3672,
+        "H2_EVIDENCE_VALUE": 7764,
+        "H3_SHARED_RESOURCE_CONFLICT": 420,
+        "H4_COUPLED_SEQUENTIAL_COMMITMENT": 420,
+        "H5_PASSIVE_PROBE_QUERY_COMPETITION": 3672,
+        "H_RECOVERY_OBJECTIVE_CHECK": 5036
+      },
+      "max_signature_multiplicity": 12,
+      "overlap_counts": [
+        2,
+        3,
+        4
+      ],
+      "recipe_count": 15108,
+      "recovery_regimes": [
+        "NO_RECOVERY_STATE",
+        "OUTAGE_CACHE_RETAIN",
+        "RECONNECT_RECONCILE_OBJECTIVE_CHECK"
+      ],
+      "report_intervals_s": [
+        300,
+        1800,
+        3600,
+        7200,
+        14400,
+        21600,
+        43200
+      ],
+      "resource_headroom": [
+        "BALANCED",
+        "SLACK",
+        "TIGHT"
+      ],
+      "roles": {
+        "EASY_CONFORMANCE_CONTROL": 7344,
+        "HARD_PRE_ADMISSION_SURVIVOR": 60,
+        "INFORMATION_INFEASIBLE_DIAGNOSTIC": 360,
+        "NEGATIVE_PHYSICAL_INVALID_CONTROL": 648,
+        "NEGATIVE_SHORTCUT_REGRESSION_CONTROL": 6696
+      },
+      "service_processes": [
+        "FINITE_CROSSING_WINDOWS",
+        "MONOTONE_RECOVERY_NEGATIVE",
+        "STEADY_AVAILABLE_CONTROL"
+      ],
+      "signature_projection_ratio": 7.253000480076812,
+      "task_case_count": 17,
+      "task_surfaces": {
+        "T1.S0_STEADY_MONITORING": 15108,
+        "T1.S1_WARNING_CADENCE_TRANSITION": 15108,
+        "T1.S2_INTERMITTENT_BACKHAUL_FALLBACK": 7764,
+        "T1.S4_OUTAGE_CACHE_RETENTION": 10072,
+        "T1.S5_RECOVERY_RECONCILIATION": 5036,
+        "T1.S6_HETEROGENEOUS_PATH_PRIORITY": 7764,
+        "T1.S7_COMPOUND_CONTINUITY": 15108
+      },
+      "unique_signature_count": 2083,
+      "warning_states": [
+        "blue",
+        "orange",
+        "red",
+        "yellow"
+      ]
+    }
+  },
+  "status": "SCALE_COVERAGE_NEAR_DUPLICATE_AUDIT"
+}

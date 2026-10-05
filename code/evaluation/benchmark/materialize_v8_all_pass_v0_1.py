@@ -31,6 +31,11 @@ V0V7_SIG = ROOT / "local_research/current/benchmark/generated/v0-v7-full-v0.1/si
 DEFAULT_OUT = ROOT / "local_research/current/benchmark/generated/v8-all-pass-v0.1"
 
 
+def _ref(path: Path) -> str:
+    resolved = path.resolve(); root = ROOT.resolve()
+    return str(resolved.relative_to(root)) if resolved.is_relative_to(root) else str(resolved)
+
+
 def _load_pass_labels(path: Path = V0V7_SIG) -> dict[str, dict[str, Any]]:
     out: dict[str, dict[str, Any]] = {}
     for line in path.read_text(encoding="utf-8").splitlines():
@@ -202,8 +207,8 @@ def materialize(*, out_dir: Path, workers: int, resume: bool,
         "projected_survivor_recipe_count": projected_survivor_recipes,
         "survivor_signatures": sorted(survivors),
         "v8_digest_sha256": digest.hexdigest(),
-        "v0_v7_signature_labels_ref": str(v0_v7_signature_labels.relative_to(ROOT)) if v0_v7_signature_labels.is_relative_to(ROOT) else str(v0_v7_signature_labels),
-        "signature_labels_ref": str(path.relative_to(ROOT)),
+        "v0_v7_signature_labels_ref": _ref(v0_v7_signature_labels),
+        "signature_labels_ref": _ref(path),
         "release_status": "NOT_BENCHMARK_ADMIT",
     }
 

@@ -30,19 +30,18 @@ WORLD_SCHEMA=ROOT/'research/benchmark/WORLD-BUNDLE-SCHEMA.v0.1.json'
 CAUSAL_MANIFEST=ROOT/'results/benchmark/layer1-causal-evidence-v0.1.json'
 CAUSAL_DOC=ROOT/'research/benchmark/CAUSAL-EVIDENCE-PROCESS.v0.1.md'
 CAUSAL_SCHEMA=ROOT/'research/benchmark/CAUSAL-EVIDENCE-SCHEMA.v0.1.json'
-EXACT_AUDIT=ROOT/'results/benchmark/layer1-exact-reference-audit-v0.1.json'
+EXACT_AUDIT=ROOT/'results/benchmark/layer1-exact-reference-audit-v0.2-retry-legality.json'
 EXACT_DOC=ROOT/'research/benchmark/EXACT-REFERENCE-ORACLE.v0.1.md'
 EXACT_LABEL_MATERIALIZER=ROOT/'code/evaluation/benchmark/materialize_exact_labels_v0_1.py'
-EXACT_LABEL_MANIFEST=ROOT/'results/benchmark/layer1-exact-label-manifest-v0.1.json'
+EXACT_LABEL_MANIFEST=ROOT/'results/benchmark/layer1-exact-labels-v0.2-retry-legality.json'
 V8_PAID=ROOT/'results/benchmark/layer1-v8-ordinary-baselines-v0.1.json'
 V8_ALL=ROOT/'results/benchmark/layer1-v8-all-structural-cells-v0.1.json'
-V0V7_FULL=ROOT/'results/benchmark/layer1-v0-v7-full-v0.1.json'
-V8_ALL_PASS=ROOT/'results/benchmark/layer1-v8-all-pass-v0.1.json'
-V9_AUDIT=ROOT/'results/benchmark/layer1-v9-evaluator-soundness-v0.1.json'
-SPLIT_MANIFEST=ROOT/'results/benchmark/layer1-structure-aware-split-v0.1.json'
-SPLIT_COVERAGE=ROOT/'results/benchmark/layer1-split-coverage-v0.1.json'
-QUALITY_GATES=ROOT/'results/benchmark/layer1-quality-gates-v0.1.json'
-LLM_BASELINE=ROOT/'results/benchmark/layer1-llm-baseline-v0.1.json'
+V0V7_FULL=ROOT/'results/benchmark/layer1-v0-v7-full-v0.2-retry-legality.json'
+V8_ALL_PASS=ROOT/'results/benchmark/layer1-v8-all-pass-v0.2-retry-legality.json'
+V9_AUDIT=ROOT/'results/benchmark/layer1-v9-evaluator-soundness-v0.2-retry-legality.json'
+SPLIT_MANIFEST=ROOT/'results/benchmark/layer1-structure-aware-split-v0.2-retry-legality.json'
+SPLIT_COVERAGE=ROOT/'results/benchmark/layer1-split-coverage-v0.2-retry-legality.json'
+PUBLIC_TEST=ROOT/'results/benchmark/layer1-public-test-freeze-v0.2-retry-legality.json'
 
 
 def main()->int:
@@ -90,7 +89,7 @@ def main()->int:
     labels=json.loads(EXACT_LABEL_MANIFEST.read_text(encoding='utf-8'))
     assert tracked_exact['full_universe_observation_label_status']=='COMPLETE'
     assert tracked_exact['full_universe_label_manifest']['status']==labels['status']=='COMPLETE'
-    assert tracked_exact['full_universe_label_manifest']['unique_solver_signature_count']==labels['unique_solver_signature_count']==9216
+    assert tracked_exact['full_universe_label_manifest']['unique_solver_signature_count']==labels['unique_solver_signature_count']==8064
     assert tracked_exact['full_universe_label_manifest']['signature_label_digest_sha256']==labels['signature_label_digest_sha256']
     vf=state['validity_filter_infrastructure']
     v0v7=json.loads(V0V7_FULL.read_text(encoding='utf-8'))
@@ -98,34 +97,31 @@ def main()->int:
     v9=json.loads(V9_AUDIT.read_text(encoding='utf-8'))
     split=json.loads(SPLIT_MANIFEST.read_text(encoding='utf-8'))
     coverage=json.loads(SPLIT_COVERAGE.read_text(encoding='utf-8'))
-    quality=json.loads(QUALITY_GATES.read_text(encoding='utf-8'))
-    llm=json.loads(LLM_BASELINE.read_text(encoding='utf-8'))
+    public_test=json.loads(PUBLIC_TEST.read_text(encoding='utf-8'))
     assert vf['v0_v7']['status']=='DONE_FULL_UNIVERSE'
-    assert vf['v0_v7']['signature_count']==v0v7['completed_signature_count']==9216
+    assert vf['v0_v7']['signature_count']==v0v7['completed_signature_count']==8064
     assert v0v7['status']=='COMPLETE'
     assert vf['v8']['status']=='DONE_ALL_V0_V7_PASS_SIGNATURES'
-    assert vf['v8']['input_signature_count']==v8['input_v0_v7_pass_signature_count']==2304
-    assert vf['v8']['survivor_signature_count']==v8['survivor_signature_count']==73
-    assert vf['v8']['projected_survivor_recipe_count']==v8['projected_survivor_recipe_count']==435
+    assert vf['v8']['input_signature_count']==v8['input_v0_v7_pass_signature_count']==1423
+    assert vf['v8']['survivor_signature_count']==v8['survivor_signature_count']==41
+    assert vf['v8']['projected_survivor_recipe_count']==v8['projected_survivor_recipe_count']==174
     assert v8['status']=='COMPLETE'
     assert vf['v9']['status']=='DONE'
     assert vf['v9']['passed'] is True and v9['passed'] is True
     assert state['structure_aware_split']['status']=='DONE'
-    assert state['structure_aware_split']['candidate_count']==split['candidate_count']==31353
+    assert state['structure_aware_split']['candidate_count']==split['candidate_count']==30180
     assert state['structure_aware_split']['leakage_passed'] is True
     assert split['leakage_audit']['passed'] is True
     assert all(
         x['cross_split_neighbor_fingerprint_count']==0
         for x in coverage['near_duplicate_one_axis'].values()
     )
-    assert llm['status']=='COMPLETE'
-    assert llm['completed_signature_count']==llm['test_hard_signature_count']==33
-    assert llm['invalid_actions']==0
-    assert state['quality_gates']['llm_baseline']['status']=='COMPLETE'
-    assert state['quality_gates']['gate_counts']==quality['gate_counts']=={'BLOCKED':1,'PASS':12}
-    assert quality['release_status']=='NOT_BENCHMARK_ADMIT'
-    assert [g['gate_id'] for g in quality['gates'] if g['status']!='PASS']==['Q11']
-    assert state['next_stage']=='Q11_HUMAN_SOURCE_AUDIT'
+    assert state['structure_aware_split']['hard_signature_by_split']=={'train':16,'dev':18,'test':7}
+    assert public_test['test_case_count']==3804
+    assert state['quality_gates']['status']=='STALE_PENDING_V02_Q11_AND_GATE_REBUILD'
+    assert state['quality_gates']['llm_baseline']=='DEFERRED_PRE_RETRY_RESULT_STALE'
+    assert state['quality_gates']['human_source_audit']=='PENDING_REBUILD_AND_REAL_REVIEW'
+    assert state['next_stage']=='V02_MACHINE_FREEZE_Q11_PENDING_LLM_DEFERRED'
 
     authority=AUTH.read_text(encoding='utf-8')
     assert '58,752 个 recipe 不是 benchmark cases' in authority
@@ -133,13 +129,11 @@ def main()->int:
     assert '当前唯一主工程' in authority
     assert 'T1 — Monitoring Information Continuity' in authority
     assert 'T2 — Warning Delivery & Response Handoff' in authority
-    assert 'causal observation/evidence process            [DONE v0.1]' in authority
-    assert 'full-universe exact observation labels         [DONE v0.1]' in authority
-    assert 'V0–V7 full-universe projection               [DONE / 9,216 signatures]' in authority
-    assert 'V8 all-pass signature ladder                 [DONE / 2,304 → 73 survivors]' in authority
-    assert 'structure-aware held-out split                 [DONE v0.1]' in authority
-    assert 'CURRENT: 12 PASS / 1 BLOCKED' in authority
-    assert 'Q11 human/source audit                       [PENDING HUMAN REVIEW]' in authority
+    assert 'retry legality / duplicate-free resend semantics       [DONE v0.2]' in authority
+    assert 'regenerate exact labels + V0–V9' not in authority
+    assert '41 个 signatures / 174 个 pre-admission recipes' in authority
+    assert 'public-test identity v0.2 当前冻结 3,804 个 test cases' in authority
+    assert 'frozen-split LLM baseline                              [DEFERRED]' in authority
     assert WORLD_DOC.exists()
     assert WORLD_SCHEMA.exists()
     assert CAUSAL_DOC.exists()
@@ -151,7 +145,7 @@ def main()->int:
         text=path.read_text(encoding='utf-8')
         assert 'LAYER1-AUTHORITY.md' in text, f'{path} no longer points to Layer-1 authority'
 
-    print('PASS Layer-1 authority: full-universe validity, V8/V9, held-out split, Q-gates and frozen LLM baseline are aligned; Q11 remains the sole release blocker')
+    print('PASS Layer-1 authority: retry-legality v0.2 exact/V0-V9/split/public-test machine lineage is aligned; LLM is deferred and Q11 remains pending before BENCHMARK_ADMIT')
     return 0
 
 
