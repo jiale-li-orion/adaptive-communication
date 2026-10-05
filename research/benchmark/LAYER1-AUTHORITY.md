@@ -321,22 +321,26 @@ receipt-race、overlapping receipt chain、joint query–satellite Pareto、reso
 当前 Layer 1 尚未完成。下一步执行顺序冻结为：
 
 ```text
-58,752 candidate recipes                         [DONE]
-→ dynamic world / alias-bundle materialization  [DONE v0.1]
-→ causal observation/evidence process            [DONE v0.1]
-→ exact oracle/reference implementation          [DONE v0.1]
-→ full-universe exact observation labels         [DONE v0.1]
-→ V0–V9 automatic filtering                     [DONE v0.1]
-   ↳ V0–V7 full-universe projection               [DONE / 9,216 signatures]
-   ↳ V8 all-pass signature ladder                 [DONE / 2,304 → 73 survivors]
-   ↳ V9 evaluator soundness                       [DONE / 216-cell mutation audit]
-→ structure-aware held-out split                 [DONE v0.1]
-→ scale / coverage / near-duplicate audit        [DONE v0.1]
-→ Q0–Q12 + source/task/evaluator audit           [CURRENT: 12 PASS / 1 BLOCKED]
-   ↳ Q6 frozen-split LLM/reasoning baseline       [DONE]
-   ↳ Q11 human/source audit                       [PENDING HUMAN REVIEW]
+DB44/T 2457-2024 source correction               [CURRENT]
+   ↳ pre-release profile had Table 15 (ground fissure) values
+   ↳ corrected authority = §9.2.2.2 Table 11 (landslide)
+   ↳ hazard_type fixed to landslide
+→ regenerate 58,752 recipe-derived world/evidence artifacts
+→ regenerate exact labels + V0–V9
+→ rebuild structure-aware split + frozen public test
+→ rerun frozen-split LLM baseline
+→ rebuild Q11 human/source audit package
+→ rerun Q0–Q12
 → frozen BENCHMARK_ADMIT release
 ```
+
+### 13.1 2026-10-05 source correction
+
+Q11 source review uncovered a pre-release extraction error in `DB44T2457_2024_warning_reporting`: the profile had encoded the three monitoring-grade rows from **Table 15 (ground fissure)** while the project story and intended T1 authority are **landslide monitoring**. DB44/T 2457-2024 §9.2.2 explicitly makes reporting frequency depend on geohazard type; §9.2.2.2 Table 11 is the landslide table. The corrected Table 11 values are grade 1 = `1–3d / 6–12h / 4–6h / 30–60min / 5min`, grade 2 = `3–5d / 12–24h / 6–12h / 1–2h / 5min`, grade 3 = `5–7d / 1–2d / 12–24h / 2–4h / 5min`.
+
+The source correction preserves the combinatorial envelope: source expansion remains 27 DB44 reporting contracts, 17 contracts remain inside the ≤12h 48h-core composition, and the recipe universe remains 58,752. It **does change task timing values and therefore invalidates every downstream pre-release label/split/baseline digest produced from the old profile**. Previous counts such as 9,216 solver signatures, 73 V8 survivors, the 31,353-case pre-admission pool, 11,655-case public test and the 33-signature LLM baseline are historical pre-correction results until regeneration completes. They must not be quoted as current release facts.
+
+Evidence index: `research/benchmark/source-evidence/DB44T2457_2024-landslide-table11.md`. Q11 remains human-reviewed after regeneration; the source correction itself cannot be waived by machine consistency checks.
 
 V8 必须区分 **same-information shortcut** 与 **deployment alternative**。gateway-local EDF/reserve 免费使用 gateway 已有 owner-local current state，并改变 planner placement；它是必须保留的强部署对照，但不能与同 placement / 同信息 policy 混成一个 `SHORTCUT_SOLVED` 判据。
 

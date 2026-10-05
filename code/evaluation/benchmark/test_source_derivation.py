@@ -45,7 +45,7 @@ def main() -> int:
         c for c in db44
         if c["world"]["monitoring_grade"] == 1 and c["world"]["warning_state"] == "none_stable"
     )
-    assert db44_reporting_range_s(grade1_normal) == (259200, 432000)
+    assert db44_reporting_range_s(grade1_normal) == (86400, 259200)
 
     derived = expand_source_ranges(nominal)
     # 12 ranged DB44 cells -> 24 boundary cases; 3 exact red cells -> 3;

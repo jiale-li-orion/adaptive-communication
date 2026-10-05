@@ -296,13 +296,12 @@
     "historical_closure_policy": "Do not rerun closed standalone forms. Reuse them as easy/conformance/regression cells; only new compositions re-enter V0-V9 hardness mining."
   },
   "release_status": "NOT_BENCHMARK_ADMIT",
-  "next_stage": "Q11_HUMAN_SOURCE_AUDIT",
+  "next_stage": "DB44_LANDSLIDE_SOURCE_CORRECTION_REGENERATION",
   "warnings": [
-    "73 solver signatures / 435 recipes are V8 pre-admission hard survivors, not the final benchmark case count.",
-    "Gateway-local EDF/reserve remains a deployment alternative and is not counted as a same-information shortcut.",
-    "The held-out split globally owns translation-invariant trace clusters; exact signatures and one-axis near neighbors do not cross splits.",
-    "DeepSeek official deepseek-flash frozen-test baseline is complete: 33/33 hard signatures evaluated, zero invalid actions, zero successes, all failures DEADLINE_EXPIRED.",
-    "Q11 requires a real reviewer over the 23-item pairwise-stratified audit package and cannot be auto-passed.",
+    "DB44/T 2457-2024 source correction is in progress: old profile used Table 15 ground-fissure cadence; corrected profile uses §9.2.2.2 Table 11 landslide cadence.",
+    "All downstream pre-release labels, split counts, LLM baseline results and Q-gate counts from the pre-correction profile are historical until regeneration completes.",
+    "The combinatorial envelope remains 27 source contracts / 17 core contracts / 58,752 recipes.",
+    "Q11 must be rebuilt and reviewed by a real reviewer after regeneration.",
     "T2 remains SIMULATOR_GAP until actor-chain environment support exists."
   ],
   "exact_reference_oracle": {
@@ -432,31 +431,33 @@
     "coverage_ref": "results/benchmark/layer1-split-coverage-v0.1.json"
   },
   "quality_gates": {
-    "status": "CURRENT",
-    "gate_counts": {
-      "PASS": 12,
-      "BLOCKED": 1
-    },
-    "blocked": [
-      "Q11_HUMAN_SOURCE_AUDIT_PENDING"
-    ],
-    "public_test_case_count": 11655,
-    "human_audit_sample_count": 23,
-    "llm_baseline": {
-      "status": "COMPLETE",
-      "model": "deepseek-flash",
-      "thinking": "disabled",
-      "test_hard_signature_count": 33,
-      "projected_test_recipe_count": 207,
-      "signature_success_count": 0,
-      "projected_test_recipe_success_count": 0,
-      "api_calls": 1459,
-      "invalid_actions": 0,
-      "failure_reasons": {
-        "DEADLINE_EXPIRED": 33
-      },
-      "audit_ref": "results/benchmark/layer1-llm-baseline-v0.1.json"
-    },
-    "audit_ref": "results/benchmark/layer1-quality-gates-v0.1.json"
+    "status": "STALE_AFTER_SOURCE_CORRECTION",
+    "release_status": "NOT_BENCHMARK_ADMIT"
+  },
+  "source_correction": {
+    "status": "CURRENT_REGENERATION_REQUIRED",
+    "profile_id": "DB44T2457_2024_warning_reporting",
+    "issue": "pre-release profile encoded DB44/T 2457-2024 Table 15 ground-fissure cadence while intended T1 hazard is landslide",
+    "correct_authority": "DB44/T 2457-2024 §9.2.2.2 Table 11",
+    "hazard_type": "landslide",
+    "evidence_ref": "research/benchmark/source-evidence/DB44T2457_2024-landslide-table11.md",
+    "source_contract_count": 27,
+    "core_contract_count": 17,
+    "recipe_count": 58752,
+    "invalidated_downstream_artifacts": [
+      "world_materialization",
+      "causal_evidence_process",
+      "exact_reference_oracle",
+      "exact_labels",
+      "v0_v7",
+      "v8",
+      "v9",
+      "structure_aware_split",
+      "public_test_freeze",
+      "llm_baseline",
+      "q11_sample",
+      "quality_gates",
+      "release_manifest"
+    ]
   }
 }

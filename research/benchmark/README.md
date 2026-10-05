@@ -29,24 +29,18 @@
 
 O1–O6 是历史 T1 operational regime/conformance assets；完整 task surface 与 closure 见 [TASK-COVERAGE-CLOSURE.v0.1.md](TASK-COVERAGE-CLOSURE.v0.1.md) 和 [TASK-SURFACE-REGISTRY.v0.1.json](TASK-SURFACE-REGISTRY.v0.1.json)。
 
-当前 T1 source authority 已解析 27 个 DB44 reporting contracts，其中 17 个进入当前 48h trace 的 core compositional universe。generator v0.1 冻结 **58,752 个 candidate recipes**：14,688 easy conformance、14,688 negative regression、29,376 validity-pending。dynamic world/alias、causal observation/evidence 与 full-universe exact labels 已完成；9,216 个 solver signatures 全部通过 V0–V7 projection，其中 2,304 个 signatures 为 `V0_V7_PASS`。这 2,304 个 signatures 全部进入同一 placement-preserving V8 ladder，最终 73 个 signatures 存活，对应 435 个 pre-admission hard recipes；其余 easy、negative、information-infeasible 等对象继续作为控制与诊断分层保留。V9 structural evaluator soundness audit 为 216 / 216 PASS。structure-aware split 已按 translation-invariant trace cluster 与 exact solver-signature connectivity 冻结，hard train/dev/test signatures 为 32 / 8 / 33，跨 split exact/near-duplicate overlap 为 0。DeepSeek `deepseek-flash` frozen-test baseline 已覆盖 33 / 33 hard test signatures，0 invalid action、0 success，全部因 deadline expired。Q0–Q12 当前为 **12 PASS / 1 BLOCKED**，唯一 blocker 是 23 条真实人工 source/task/oracle/evaluator 审计。机器状态见 [LAYER1-CURRENT-STATE.v0.1.json](LAYER1-CURRENT-STATE.v0.1.json)。
+Q11 source review 于 2026-10-05 发现 DB44/T 2457-2024 profile 的 pre-release extraction bug：旧 cadence 恰好对应表 15 地裂缝，而项目原始场景与 intended T1 authority 是山区滑坡。profile 已改为 `hazard_type=landslide`，采用 §9.2.2.2 表 11。修正后 source expansion 仍为 27 个 DB44 reporting contracts，17 个进入 ≤12h core，generator 仍为 **58,752 candidate recipes**；组合规模稳定，但 deadline 数值变化会改变 world/exact/signature/split/baseline，因此旧的 9,216 signatures、73 survivors、32/8/33 hard split 与 Q-gate 计数全部暂按 historical pre-correction result 处理。当前正在全量重算。机器状态见 [LAYER1-CURRENT-STATE.v0.1.json](LAYER1-CURRENT-STATE.v0.1.json)。
 
 v0.1–v0.5、receipt-race、receipt-chain、joint query–satellite Pareto 和 continuation frontier 继续保留，但它们的角色是 generator/mechanism regression、exact-reference 与 shortcut audit。尤其 188-cell receipt grid **不是 benchmark case count**；当前普通 reserve/fixed-read/wait-ACK family 仍覆盖 frozen receipt-chain 的 exact cost frontier。
 
 当前唯一主工程：
 
-    candidate recipes                              [DONE]
-    → dynamic world / alias-bundle materialization [DONE v0.1]
-    → causal observation/evidence process           [DONE v0.1]
-    → exact oracle/reference implementation         [DONE v0.1]
-    → full-universe exact observation labels        [DONE v0.1]
-    → V0–V9 automatic validity filtering            [DONE v0.1]
-      ↳ V0–V7 full-universe projection               [DONE / 9,216 signatures]
-      ↳ V8 all-pass signature ladder                 [DONE / 2,304 → 73 survivors]
-      ↳ V9 evaluator soundness                       [DONE / 216-cell audit]
-    → structure-aware held-out split                 [DONE v0.1]
-    → Q0–Q12 + human/source/evaluator audit          [CURRENT: 12 PASS / 1 BLOCKED]
-      ↳ Q11 human/source audit                       [PENDING HUMAN REVIEW]
+    DB44 landslide source correction                 [CURRENT]
+    → regenerate world / evidence / exact labels
+    → regenerate V0–V9
+    → rebuild held-out split / public test
+    → rerun frozen-split LLM baseline
+    → rebuild Q11 package and Q0–Q12
     → frozen BENCHMARK_ADMIT release
 
 除 correctness/source/simulator blocker 外，默认不继续扩局部 receipt fixture，不先训练 RL/LLM，不让 Layer 2/3 方法反向塑造 Layer 1 分布。

@@ -200,19 +200,28 @@
           "source_id": "DB44T2457_2024",
           "source_class": "LOCAL_STANDARD",
           "directness": "DIRECT_TASK_AUTHORITY",
-          "snapshot_ref": null,
-          "locator": "warning-level reporting frequency table"
+          "snapshot_ref": "research/benchmark/source-evidence/DB44T2457_2024-landslide-table11.md",
+          "locator": "9.2.2.2 / Table 11: landslide automated monitoring data reporting frequency"
         }
       ],
       "scope": {
         "phase": "automated geohazard monitoring and warning",
-        "jurisdiction": "Guangdong"
+        "jurisdiction": "Guangdong",
+        "hazard_type": "landslide"
       },
       "heldout_groups": {
         "SOURCE_FAMILY": "DB44T2457",
         "JURISDICTION": "Guangdong"
       },
       "variables": {
+        "hazard_type": {
+          "provenance_class": "FIXED_BY_SOURCE",
+          "answer_relevant": true,
+          "source_ref_ids": [
+            "DB44T2457_2024"
+          ],
+          "value": "landslide"
+        },
         "monitoring_grade": {
           "provenance_class": "SOURCE_RANGE",
           "answer_relevant": true,
@@ -249,22 +258,22 @@
           ],
           "value": {
             "grade1": [
-              "3-5d",
+              "1-3d",
               "6-12h",
-              "3-6h",
+              "4-6h",
               "30-60min",
               "5min"
             ],
             "grade2": [
-              "5-7d",
+              "3-5d",
               "12-24h",
               "6-12h",
               "1-2h",
               "5min"
             ],
             "grade3": [
-              "7-15d",
-              "1-3d",
+              "5-7d",
+              "1-2d",
               "12-24h",
               "2-4h",
               "5min"
