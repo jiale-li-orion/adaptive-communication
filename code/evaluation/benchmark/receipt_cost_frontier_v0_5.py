@@ -76,27 +76,35 @@ def _sum_children(children: list[tuple[str, dict[str, tree.LocalState], tuple[Pa
 
 def exact_cost_frontier(bundle: tree.Bundle, *,
                         max_queries_per_world: int | None = None,
-                        use_safe_upper_bound: bool = True) -> dict[str, Any]:
+                        use_safe_upper_bound: bool = True,
+                        start_at_s: int | None = None,
+                        initial_states: dict[str, tree.LocalState] | None = None,
+                        forced_first_action: tree.Action | None = None) -> dict[str, Any]:
     """Return every non-dominated successful aggregate cost point.
 
     max_queries_per_world is only a search guard.  For the current receipt
     fixtures it can be set to the number of useful read opportunities.  A None
     value leaves the search unbounded except by the finite event process.
     """
-    start = min(bundle.fixed_event_times)
-    initial = {w.world_id: tree.LocalState(sat_budget=bundle.satellite_budget)
-               for w in bundle.worlds}
+    if (start_at_s is None) != (initial_states is None):
+        raise ValueError('continuation requires both start_at_s and initial_states')
+    start = min(bundle.fixed_event_times) if start_at_s is None else start_at_s
+    initial = ({w.world_id: tree.LocalState(sat_budget=bundle.satellite_budget)
+                for w in bundle.worlds} if initial_states is None else dict(initial_states))
+    if not initial:
+        raise ValueError('empty continuation support')
+    base_query_count={wid:st.next_request_seq for wid,st in initial.items()}
     memo: dict[Any, tuple[ParetoWitness, ...]] = {}
     calls = 0
 
-    def rec(t: int, states: dict[str, tree.LocalState]) -> tuple[ParetoWitness, ...]:
+    def rec(t: int, states: dict[str, tree.LocalState], depth:int=0) -> tuple[ParetoWitness, ...]:
         nonlocal calls
         calls += 1
         norm = tree._normalize(bundle, t, states)
         if len(norm) > 1 or next(iter(norm)) != 'same':
             children = []
             for obs, ch in sorted(norm.items()):
-                fr = rec(t, ch)
+                fr = rec(t, ch, depth)
                 if not fr:
                     return ()
                 children.append((obs, ch, fr))
@@ -122,9 +130,12 @@ def exact_cost_frontier(bundle: tree.Bundle, *,
                 if not tree._query_partitions(bundle, t, states, str(action[1])):
                     continue
                 if max_queries_per_world is not None:
-                    if any(st.next_request_seq >= max_queries_per_world for st in states.values()):
+                    if any(st.next_request_seq-base_query_count[wid] >= max_queries_per_world
+                           for wid,st in states.items()):
                         continue
             filtered.append(action)
+        if forced_first_action is not None and depth==0 and t==start:
+            filtered=[a for a in filtered if a==forced_first_action]
 
         for action in filtered:
             stepped = tree._step_action(bundle, t, states, action)
@@ -134,7 +145,7 @@ def exact_cost_frontier(bundle: tree.Bundle, *,
             branch_rows = []
             valid = True
             for obs, ch in sorted(branches.items()):
-                fr = rec(nt, ch)
+                fr = rec(nt, ch, depth+1)
                 if not fr:
                     valid = False
                     break
@@ -155,7 +166,7 @@ def exact_cost_frontier(bundle: tree.Bundle, *,
         memo[key] = ans
         return ans
 
-    frontier = rec(start, initial)
+    frontier = rec(start, initial, 0)
     return {
         'solvable': bool(frontier),
         'points': [
