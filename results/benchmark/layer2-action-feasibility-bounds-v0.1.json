@@ -15,6 +15,16 @@
     "causal_lower_d4_vs_d2_fallback_call_delta": 0,
     "causal_lower_d6_vs_d4_expansion_delta": 0,
     "causal_lower_d6_vs_d4_fallback_call_delta": 0,
+    "choice_lower_d1_vs_upper_d0_expansion_delta": -116,
+    "choice_lower_d1_vs_upper_d0_fallback_call_delta": -4,
+    "choice_lower_d2_vs_d1_expansion_delta": -174,
+    "choice_lower_d2_vs_d1_fallback_call_delta": 24,
+    "choice_lower_d3_vs_d2_expansion_delta": -836,
+    "choice_lower_d3_vs_d2_fallback_call_delta": 62,
+    "choice_lower_d4_vs_d3_expansion_delta": -238,
+    "choice_lower_d4_vs_d3_fallback_call_delta": -4,
+    "choice_lower_d6_vs_d4_expansion_delta": -1256,
+    "choice_lower_d6_vs_d4_fallback_call_delta": 91,
     "common_lower_vs_satellite_lower_expansion_delta": 0,
     "common_lower_vs_satellite_lower_fallback_call_delta": 0,
     "lower_vs_upper_expansion_delta": 0,
@@ -40,6 +50,8 @@
     "exact_memo": {
       "all_certified_action_sets_match_reference": true,
       "causal_lower_depth": null,
+      "choice_lower_depth": null,
+      "choice_lower_nodes": 0,
       "classification_source_count": {
         "CERTIFICATE_HIT": 286,
         "EXACT_FALLBACK_FAILURE": 45,
@@ -65,6 +77,8 @@
     "monotone_memo": {
       "all_certified_action_sets_match_reference": true,
       "causal_lower_depth": null,
+      "choice_lower_depth": null,
+      "choice_lower_nodes": 0,
       "classification_source_count": {
         "CERTIFICATE_HIT": 286,
         "EXACT_FALLBACK_FAILURE": 45,
@@ -90,6 +104,8 @@
     "witness_domain": {
       "all_certified_action_sets_match_reference": true,
       "causal_lower_depth": null,
+      "choice_lower_depth": null,
+      "choice_lower_nodes": 0,
       "classification_source_count": {
         "CERTIFICATE_HIT": 286,
         "EXACT_FALLBACK_FAILURE": 45,
@@ -115,6 +131,8 @@
     "witness_domain_plus_causal_lower_d1_upper_d0": {
       "all_certified_action_sets_match_reference": true,
       "causal_lower_depth": 1,
+      "choice_lower_depth": null,
+      "choice_lower_nodes": 0,
       "classification_source_count": {
         "CAUSAL_LOWER_D1": 15,
         "CERTIFICATE_HIT": 273,
@@ -142,6 +160,8 @@
     "witness_domain_plus_causal_lower_d2_upper_d0": {
       "all_certified_action_sets_match_reference": true,
       "causal_lower_depth": 2,
+      "choice_lower_depth": null,
+      "choice_lower_nodes": 0,
       "classification_source_count": {
         "CAUSAL_LOWER_D2": 24,
         "CERTIFICATE_HIT": 266,
@@ -169,6 +189,8 @@
     "witness_domain_plus_causal_lower_d4_upper_d0": {
       "all_certified_action_sets_match_reference": true,
       "causal_lower_depth": 4,
+      "choice_lower_depth": null,
+      "choice_lower_nodes": 0,
       "classification_source_count": {
         "CAUSAL_LOWER_D4": 38,
         "CERTIFICATE_HIT": 252,
@@ -185,6 +207,151 @@
       "exact_fallback_fraction": 0.0875,
       "lower_nodes": 6444,
       "mode": "witness_domain",
+      "rows": [],
+      "search_limit_count": 0,
+      "upper_depth": 0,
+      "upper_nodes": 564,
+      "use_common_lower": false,
+      "use_lower": false,
+      "use_upper": true
+    },
+    "witness_domain_plus_causal_lower_d6_upper_d0": {
+      "all_certified_action_sets_match_reference": true,
+      "causal_lower_depth": 6,
+      "choice_lower_depth": null,
+      "choice_lower_nodes": 0,
+      "classification_source_count": {
+        "CAUSAL_LOWER_D6": 52,
+        "CERTIFICATE_HIT": 238,
+        "EXACT_FALLBACK_FAILURE": 31,
+        "EXACT_FALLBACK_SUCCESS": 25,
+        "KNOWN_FAILURE_HIT": 204,
+        "QUERY_BUDGET_EXHAUSTED": 76,
+        "STRUCTURAL_UPPER_PRUNE_D0": 14
+      },
+      "classified_action_count": 640,
+      "exact_calls_avoided_after_zero_expansion_probe": 584,
+      "exact_fallback_calls": 56,
+      "exact_fallback_expanded": 35184,
+      "exact_fallback_fraction": 0.0875,
+      "lower_nodes": 11946,
+      "mode": "witness_domain",
+      "rows": [],
+      "search_limit_count": 0,
+      "upper_depth": 0,
+      "upper_nodes": 564,
+      "use_common_lower": false,
+      "use_lower": false,
+      "use_upper": true
+    },
+    "witness_domain_plus_choice_lower_d1_upper_d0": {
+      "all_certified_action_sets_match_reference": true,
+      "causal_lower_depth": null,
+      "choice_lower_depth": 1,
+      "choice_lower_nodes": 73266,
+      "classification_source_count": {
+        "CERTIFICATE_HIT": 189,
+        "CHOICE_LOWER_D1": 101,
+        "EXACT_FALLBACK_FAILURE": 31,
+        "EXACT_FALLBACK_SUCCESS": 25,
+        "KNOWN_FAILURE_HIT": 204,
+        "QUERY_BUDGET_EXHAUSTED": 76,
+        "STRUCTURAL_UPPER_PRUNE_D0": 14
+      },
+      "classified_action_count": 640,
+      "exact_calls_avoided_after_zero_expansion_probe": 584,
+      "exact_fallback_calls": 56,
+      "exact_fallback_expanded": 35184,
+      "exact_fallback_fraction": 0.0875,
+      "lower_nodes": 0,
+      "mode": "witness_domain",
+      "rows": [],
+      "search_limit_count": 0,
+      "upper_depth": 0,
+      "upper_nodes": 564,
+      "use_common_lower": false,
+      "use_lower": false,
+      "use_upper": true
+    },
+    "witness_domain_plus_choice_lower_d2_upper_d0": {
+      "all_certified_action_sets_match_reference": true,
+      "causal_lower_depth": null,
+      "choice_lower_depth": 2,
+      "choice_lower_nodes": 221120,
+      "classification_source_count": {
+        "CERTIFICATE_HIT": 136,
+        "CHOICE_LOWER_D2": 158,
+        "EXACT_FALLBACK_FAILURE": 59,
+        "EXACT_FALLBACK_SUCCESS": 21,
+        "KNOWN_FAILURE_HIT": 176,
+        "QUERY_BUDGET_EXHAUSTED": 76,
+        "STRUCTURAL_UPPER_PRUNE_D0": 14
+      },
+      "classified_action_count": 640,
+      "exact_calls_avoided_after_zero_expansion_probe": 560,
+      "exact_fallback_calls": 80,
+      "exact_fallback_expanded": 35010,
+      "exact_fallback_fraction": 0.125,
+      "lower_nodes": 0,
+      "mode": "witness_domain",
+      "rows": [],
+      "search_limit_count": 0,
+      "upper_depth": 0,
+      "upper_nodes": 564,
+      "use_common_lower": false,
+      "use_lower": false,
+      "use_upper": true
+    },
+    "witness_domain_plus_choice_lower_d3_upper_d0": {
+      "all_certified_action_sets_match_reference": true,
+      "causal_lower_depth": null,
+      "choice_lower_depth": 3,
+      "choice_lower_nodes": 386413,
+      "classification_source_count": {
+        "CERTIFICATE_HIT": 115,
+        "CHOICE_LOWER_D3": 188,
+        "EXACT_FALLBACK_FAILURE": 130,
+        "EXACT_FALLBACK_SUCCESS": 12,
+        "KNOWN_FAILURE_HIT": 105,
+        "QUERY_BUDGET_EXHAUSTED": 76,
+        "STRUCTURAL_UPPER_PRUNE_D0": 14
+      },
+      "classified_action_count": 640,
+      "exact_calls_avoided_after_zero_expansion_probe": 498,
+      "exact_fallback_calls": 142,
+      "exact_fallback_expanded": 34174,
+      "exact_fallback_fraction": 0.221875,
+      "lower_nodes": 0,
+      "mode": "witness_domain",
+      "rows": [],
+      "search_limit_count": 0,
+      "upper_depth": 0,
+      "upper_nodes": 564,
+      "use_common_lower": false,
+      "use_lower": false,
+      "use_upper": true
+    },
+    "witness_domain_plus_choice_lower_d4_upper_d0": {
+      "all_certified_action_sets_match_reference": true,
+      "causal_lower_depth": null,
+      "choice_lower_depth": 4,
+      "choice_lower_nodes": 440517,
+      "classification_source_count": {
+        "CERTIFICATE_HIT": 43,
+        "CHOICE_LOWER_D4": 264,
+        "EXACT_FALLBACK_FAILURE": 130,
+        "EXACT_FALLBACK_SUCCESS": 8,
+        "KNOWN_FAILURE_HIT": 105,
+        "QUERY_BUDGET_EXHAUSTED": 76,
+        "STRUCTURAL_UPPER_PRUNE_D0": 14
+      },
+      "classified_action_count": 640,
+      "exact_calls_avoided_after_zero_expansion_probe": 502,
+      "exact_fallback_calls": 138,
+      "exact_fallback_expanded": 33936,
+      "exact_fallback_fraction": 0.215625,
+      "lower_nodes": 0,
+      "mode": "witness_domain",
       "rows": [
         {
           "all_sets_match": true,
@@ -200,9 +367,9 @@
                 },
                 {
                   "action_key": "WAIT:-",
-                  "lower": 0,
+                  "lower": 1,
                   "solvable": true,
-                  "source": "EXACT_FALLBACK_SUCCESS",
+                  "source": "CHOICE_LOWER_D4",
                   "upper": 1
                 }
               ],
@@ -221,14 +388,14 @@
                   "action_key": "ISSUE_QUERY:gateway_state_summary",
                   "lower": 0,
                   "solvable": false,
-                  "source": "KNOWN_FAILURE_HIT",
-                  "upper": 0
+                  "source": "EXACT_FALLBACK_FAILURE",
+                  "upper": 1
                 },
                 {
                   "action_key": "WAIT:-",
                   "lower": 1,
                   "solvable": true,
-                  "source": "CERTIFICATE_HIT",
+                  "source": "CHOICE_LOWER_D4",
                   "upper": 1
                 }
               ],
@@ -247,7 +414,7 @@
                   "action_key": "SEND_SAT:T1R-a32593dad622bc::report::00",
                   "lower": 1,
                   "solvable": true,
-                  "source": "CERTIFICATE_HIT",
+                  "source": "CHOICE_LOWER_D4",
                   "upper": 1
                 },
                 {
@@ -259,9 +426,9 @@
                 },
                 {
                   "action_key": "WAIT:-",
-                  "lower": 0,
+                  "lower": 1,
                   "solvable": true,
-                  "source": "EXACT_FALLBACK_SUCCESS",
+                  "source": "CHOICE_LOWER_D4",
                   "upper": 1
                 }
               ],
@@ -289,7 +456,7 @@
                   "action_key": "WAIT:-",
                   "lower": 1,
                   "solvable": true,
-                  "source": "CERTIFICATE_HIT",
+                  "source": "CHOICE_LOWER_D4",
                   "upper": 1
                 }
               ],
@@ -308,14 +475,14 @@
                   "action_key": "ISSUE_QUERY:gateway_state_summary",
                   "lower": 0,
                   "solvable": false,
-                  "source": "KNOWN_FAILURE_HIT",
-                  "upper": 0
+                  "source": "EXACT_FALLBACK_FAILURE",
+                  "upper": 1
                 },
                 {
                   "action_key": "WAIT:-",
                   "lower": 1,
                   "solvable": true,
-                  "source": "CERTIFICATE_HIT",
+                  "source": "CHOICE_LOWER_D4",
                   "upper": 1
                 }
               ],
@@ -334,14 +501,14 @@
                   "action_key": "ISSUE_QUERY:gateway_state_summary",
                   "lower": 0,
                   "solvable": false,
-                  "source": "KNOWN_FAILURE_HIT",
-                  "upper": 0
+                  "source": "EXACT_FALLBACK_FAILURE",
+                  "upper": 1
                 },
                 {
                   "action_key": "WAIT:-",
                   "lower": 1,
                   "solvable": true,
-                  "source": "CERTIFICATE_HIT",
+                  "source": "CHOICE_LOWER_D4",
                   "upper": 1
                 }
               ],
@@ -360,14 +527,14 @@
                   "action_key": "ISSUE_QUERY:gateway_state_summary",
                   "lower": 0,
                   "solvable": false,
-                  "source": "KNOWN_FAILURE_HIT",
-                  "upper": 0
+                  "source": "EXACT_FALLBACK_FAILURE",
+                  "upper": 1
                 },
                 {
                   "action_key": "WAIT:-",
                   "lower": 1,
                   "solvable": true,
-                  "source": "CERTIFICATE_HIT",
+                  "source": "CHOICE_LOWER_D4",
                   "upper": 1
                 }
               ],
@@ -386,14 +553,14 @@
                   "action_key": "ISSUE_QUERY:gateway_state_summary",
                   "lower": 0,
                   "solvable": false,
-                  "source": "KNOWN_FAILURE_HIT",
-                  "upper": 0
+                  "source": "EXACT_FALLBACK_FAILURE",
+                  "upper": 1
                 },
                 {
                   "action_key": "WAIT:-",
                   "lower": 1,
                   "solvable": true,
-                  "source": "CERTIFICATE_HIT",
+                  "source": "CHOICE_LOWER_D4",
                   "upper": 1
                 }
               ],
@@ -412,14 +579,14 @@
                   "action_key": "ISSUE_QUERY:gateway_state_summary",
                   "lower": 0,
                   "solvable": false,
-                  "source": "KNOWN_FAILURE_HIT",
-                  "upper": 0
+                  "source": "EXACT_FALLBACK_FAILURE",
+                  "upper": 1
                 },
                 {
                   "action_key": "WAIT:-",
                   "lower": 1,
                   "solvable": true,
-                  "source": "CERTIFICATE_HIT",
+                  "source": "CHOICE_LOWER_D4",
                   "upper": 1
                 }
               ],
@@ -438,14 +605,14 @@
                   "action_key": "ISSUE_QUERY:gateway_state_summary",
                   "lower": 0,
                   "solvable": false,
-                  "source": "KNOWN_FAILURE_HIT",
-                  "upper": 0
+                  "source": "EXACT_FALLBACK_FAILURE",
+                  "upper": 1
                 },
                 {
                   "action_key": "WAIT:-",
                   "lower": 1,
                   "solvable": true,
-                  "source": "CERTIFICATE_HIT",
+                  "source": "CHOICE_LOWER_D4",
                   "upper": 1
                 }
               ],
@@ -464,14 +631,14 @@
                   "action_key": "ISSUE_QUERY:gateway_state_summary",
                   "lower": 0,
                   "solvable": false,
-                  "source": "KNOWN_FAILURE_HIT",
-                  "upper": 0
+                  "source": "EXACT_FALLBACK_FAILURE",
+                  "upper": 1
                 },
                 {
                   "action_key": "WAIT:-",
                   "lower": 1,
                   "solvable": true,
-                  "source": "CERTIFICATE_HIT",
+                  "source": "CHOICE_LOWER_D4",
                   "upper": 1
                 }
               ],
@@ -490,14 +657,14 @@
                   "action_key": "SEND_TERR:T1R-a32593dad622bc::report::01",
                   "lower": 1,
                   "solvable": true,
-                  "source": "CERTIFICATE_HIT",
+                  "source": "CHOICE_LOWER_D4",
                   "upper": 1
                 },
                 {
                   "action_key": "ISSUE_QUERY:gateway_state_summary",
-                  "lower": 0,
+                  "lower": 1,
                   "solvable": true,
-                  "source": "EXACT_FALLBACK_SUCCESS",
+                  "source": "CHOICE_LOWER_D4",
                   "upper": 1
                 },
                 {
@@ -525,14 +692,14 @@
                   "action_key": "ISSUE_QUERY:gateway_state_summary",
                   "lower": 0,
                   "solvable": false,
-                  "source": "KNOWN_FAILURE_HIT",
-                  "upper": 0
+                  "source": "EXACT_FALLBACK_FAILURE",
+                  "upper": 1
                 },
                 {
                   "action_key": "WAIT:-",
                   "lower": 1,
                   "solvable": true,
-                  "source": "CERTIFICATE_HIT",
+                  "source": "CHOICE_LOWER_D4",
                   "upper": 1
                 }
               ],
@@ -551,14 +718,14 @@
                   "action_key": "ISSUE_QUERY:gateway_state_summary",
                   "lower": 0,
                   "solvable": false,
-                  "source": "KNOWN_FAILURE_HIT",
-                  "upper": 0
+                  "source": "EXACT_FALLBACK_FAILURE",
+                  "upper": 1
                 },
                 {
                   "action_key": "WAIT:-",
                   "lower": 1,
                   "solvable": true,
-                  "source": "CERTIFICATE_HIT",
+                  "source": "CHOICE_LOWER_D4",
                   "upper": 1
                 }
               ],
@@ -577,14 +744,14 @@
                   "action_key": "ISSUE_QUERY:gateway_state_summary",
                   "lower": 0,
                   "solvable": false,
-                  "source": "KNOWN_FAILURE_HIT",
-                  "upper": 0
+                  "source": "EXACT_FALLBACK_FAILURE",
+                  "upper": 1
                 },
                 {
                   "action_key": "WAIT:-",
                   "lower": 1,
                   "solvable": true,
-                  "source": "CERTIFICATE_HIT",
+                  "source": "CHOICE_LOWER_D4",
                   "upper": 1
                 }
               ],
@@ -603,14 +770,14 @@
                   "action_key": "ISSUE_QUERY:gateway_state_summary",
                   "lower": 0,
                   "solvable": false,
-                  "source": "KNOWN_FAILURE_HIT",
-                  "upper": 0
+                  "source": "EXACT_FALLBACK_FAILURE",
+                  "upper": 1
                 },
                 {
                   "action_key": "WAIT:-",
                   "lower": 1,
                   "solvable": true,
-                  "source": "CERTIFICATE_HIT",
+                  "source": "CHOICE_LOWER_D4",
                   "upper": 1
                 }
               ],
@@ -629,14 +796,14 @@
                   "action_key": "ISSUE_QUERY:gateway_state_summary",
                   "lower": 0,
                   "solvable": false,
-                  "source": "KNOWN_FAILURE_HIT",
-                  "upper": 0
+                  "source": "EXACT_FALLBACK_FAILURE",
+                  "upper": 1
                 },
                 {
                   "action_key": "WAIT:-",
                   "lower": 1,
                   "solvable": true,
-                  "source": "CERTIFICATE_HIT",
+                  "source": "CHOICE_LOWER_D4",
                   "upper": 1
                 }
               ],
@@ -655,14 +822,14 @@
                   "action_key": "ISSUE_QUERY:gateway_state_summary",
                   "lower": 0,
                   "solvable": false,
-                  "source": "KNOWN_FAILURE_HIT",
-                  "upper": 0
+                  "source": "EXACT_FALLBACK_FAILURE",
+                  "upper": 1
                 },
                 {
                   "action_key": "WAIT:-",
                   "lower": 1,
                   "solvable": true,
-                  "source": "CERTIFICATE_HIT",
+                  "source": "CHOICE_LOWER_D4",
                   "upper": 1
                 }
               ],
@@ -681,14 +848,14 @@
                   "action_key": "ISSUE_QUERY:gateway_state_summary",
                   "lower": 0,
                   "solvable": false,
-                  "source": "KNOWN_FAILURE_HIT",
-                  "upper": 0
+                  "source": "EXACT_FALLBACK_FAILURE",
+                  "upper": 1
                 },
                 {
                   "action_key": "WAIT:-",
                   "lower": 1,
                   "solvable": true,
-                  "source": "CERTIFICATE_HIT",
+                  "source": "CHOICE_LOWER_D4",
                   "upper": 1
                 }
               ],
@@ -707,14 +874,14 @@
                   "action_key": "ISSUE_QUERY:gateway_state_summary",
                   "lower": 0,
                   "solvable": false,
-                  "source": "KNOWN_FAILURE_HIT",
-                  "upper": 0
+                  "source": "EXACT_FALLBACK_FAILURE",
+                  "upper": 1
                 },
                 {
                   "action_key": "WAIT:-",
                   "lower": 1,
                   "solvable": true,
-                  "source": "CERTIFICATE_HIT",
+                  "source": "CHOICE_LOWER_D4",
                   "upper": 1
                 }
               ],
@@ -733,14 +900,14 @@
                   "action_key": "ISSUE_QUERY:gateway_state_summary",
                   "lower": 0,
                   "solvable": false,
-                  "source": "KNOWN_FAILURE_HIT",
-                  "upper": 0
+                  "source": "EXACT_FALLBACK_FAILURE",
+                  "upper": 1
                 },
                 {
                   "action_key": "WAIT:-",
                   "lower": 1,
                   "solvable": true,
-                  "source": "CERTIFICATE_HIT",
+                  "source": "CHOICE_LOWER_D4",
                   "upper": 1
                 }
               ],
@@ -759,14 +926,14 @@
                   "action_key": "ISSUE_QUERY:gateway_state_summary",
                   "lower": 0,
                   "solvable": false,
-                  "source": "KNOWN_FAILURE_HIT",
-                  "upper": 0
+                  "source": "EXACT_FALLBACK_FAILURE",
+                  "upper": 1
                 },
                 {
                   "action_key": "WAIT:-",
                   "lower": 1,
                   "solvable": true,
-                  "source": "CERTIFICATE_HIT",
+                  "source": "CHOICE_LOWER_D4",
                   "upper": 1
                 }
               ],
@@ -785,14 +952,14 @@
                   "action_key": "ISSUE_QUERY:gateway_state_summary",
                   "lower": 0,
                   "solvable": false,
-                  "source": "KNOWN_FAILURE_HIT",
-                  "upper": 0
+                  "source": "EXACT_FALLBACK_FAILURE",
+                  "upper": 1
                 },
                 {
                   "action_key": "WAIT:-",
                   "lower": 1,
                   "solvable": true,
-                  "source": "CAUSAL_LOWER_D4",
+                  "source": "CHOICE_LOWER_D4",
                   "upper": 1
                 }
               ],
@@ -811,21 +978,21 @@
                   "action_key": "SEND_SAT:T1R-a32593dad622bc::report::02",
                   "lower": 0,
                   "solvable": false,
-                  "source": "KNOWN_FAILURE_HIT",
-                  "upper": 0
+                  "source": "EXACT_FALLBACK_FAILURE",
+                  "upper": 1
                 },
                 {
                   "action_key": "ISSUE_QUERY:gateway_state_summary",
                   "lower": 0,
                   "solvable": false,
-                  "source": "KNOWN_FAILURE_HIT",
-                  "upper": 0
+                  "source": "EXACT_FALLBACK_FAILURE",
+                  "upper": 1
                 },
                 {
                   "action_key": "WAIT:-",
                   "lower": 1,
                   "solvable": true,
-                  "source": "CAUSAL_LOWER_D4",
+                  "source": "CHOICE_LOWER_D4",
                   "upper": 1
                 }
               ],
@@ -844,14 +1011,14 @@
                   "action_key": "ISSUE_QUERY:gateway_state_summary",
                   "lower": 0,
                   "solvable": false,
-                  "source": "KNOWN_FAILURE_HIT",
-                  "upper": 0
+                  "source": "EXACT_FALLBACK_FAILURE",
+                  "upper": 1
                 },
                 {
                   "action_key": "WAIT:-",
                   "lower": 1,
                   "solvable": true,
-                  "source": "CAUSAL_LOWER_D4",
+                  "source": "CHOICE_LOWER_D4",
                   "upper": 1
                 }
               ],
@@ -870,21 +1037,21 @@
                   "action_key": "SEND_TERR:T1R-a32593dad622bc::report::02",
                   "lower": 0,
                   "solvable": false,
-                  "source": "KNOWN_FAILURE_HIT",
-                  "upper": 0
+                  "source": "EXACT_FALLBACK_FAILURE",
+                  "upper": 1
                 },
                 {
                   "action_key": "ISSUE_QUERY:gateway_state_summary",
                   "lower": 1,
                   "solvable": true,
-                  "source": "CAUSAL_LOWER_D4",
+                  "source": "CHOICE_LOWER_D4",
                   "upper": 1
                 },
                 {
                   "action_key": "WAIT:-",
                   "lower": 1,
                   "solvable": true,
-                  "source": "CAUSAL_LOWER_D4",
+                  "source": "CHOICE_LOWER_D4",
                   "upper": 1
                 }
               ],
@@ -902,14 +1069,17 @@
           ],
           "boundary_count": 26,
           "lazy_counts": {
-            "causal_lower_hits": 5,
-            "certificate_hits": 21,
+            "causal_lower_hits": 0,
+            "certificate_hits": 0,
+            "choice_lower_hits": 29,
+            "choice_lower_nodes": 30080,
+            "choice_upper_nodes": 0,
             "classified_actions": 56,
             "common_lower_hits": 0,
-            "exact_fallback_calls": 6,
-            "exact_fallback_expanded": 4895,
-            "known_failure_hits": 24,
-            "lower_nodes": 696,
+            "exact_fallback_calls": 26,
+            "exact_fallback_expanded": 4638,
+            "known_failure_hits": 1,
+            "lower_nodes": 0,
             "search_limits": 0,
             "structural_lower_hits": 0,
             "upper_nodes": 56,
@@ -1222,7 +1392,7 @@
                   "action_key": "SEND_TERR:T1R-20e14985a492b6::report::01",
                   "lower": 1,
                   "solvable": true,
-                  "source": "CERTIFICATE_HIT",
+                  "source": "CHOICE_LOWER_D4",
                   "upper": 1
                 },
                 {
@@ -1262,7 +1432,7 @@
                   "action_key": "WAIT:-",
                   "lower": 1,
                   "solvable": true,
-                  "source": "CERTIFICATE_HIT",
+                  "source": "CHOICE_LOWER_D4",
                   "upper": 1
                 }
               ],
@@ -1288,7 +1458,7 @@
                   "action_key": "WAIT:-",
                   "lower": 1,
                   "solvable": true,
-                  "source": "CERTIFICATE_HIT",
+                  "source": "CHOICE_LOWER_D4",
                   "upper": 1
                 }
               ],
@@ -1314,7 +1484,7 @@
                   "action_key": "WAIT:-",
                   "lower": 1,
                   "solvable": true,
-                  "source": "CERTIFICATE_HIT",
+                  "source": "CHOICE_LOWER_D4",
                   "upper": 1
                 }
               ],
@@ -1340,7 +1510,7 @@
                   "action_key": "WAIT:-",
                   "lower": 1,
                   "solvable": true,
-                  "source": "CERTIFICATE_HIT",
+                  "source": "CHOICE_LOWER_D4",
                   "upper": 1
                 }
               ],
@@ -1366,7 +1536,7 @@
                   "action_key": "WAIT:-",
                   "lower": 1,
                   "solvable": true,
-                  "source": "CERTIFICATE_HIT",
+                  "source": "CHOICE_LOWER_D4",
                   "upper": 1
                 }
               ],
@@ -1392,7 +1562,7 @@
                   "action_key": "WAIT:-",
                   "lower": 1,
                   "solvable": true,
-                  "source": "CERTIFICATE_HIT",
+                  "source": "CHOICE_LOWER_D4",
                   "upper": 1
                 }
               ],
@@ -1418,7 +1588,7 @@
                   "action_key": "WAIT:-",
                   "lower": 1,
                   "solvable": true,
-                  "source": "CERTIFICATE_HIT",
+                  "source": "CHOICE_LOWER_D4",
                   "upper": 1
                 }
               ],
@@ -1444,7 +1614,7 @@
                   "action_key": "WAIT:-",
                   "lower": 1,
                   "solvable": true,
-                  "source": "CERTIFICATE_HIT",
+                  "source": "CHOICE_LOWER_D4",
                   "upper": 1
                 }
               ],
@@ -1470,7 +1640,7 @@
                   "action_key": "WAIT:-",
                   "lower": 1,
                   "solvable": true,
-                  "source": "CERTIFICATE_HIT",
+                  "source": "CHOICE_LOWER_D4",
                   "upper": 1
                 }
               ],
@@ -1496,7 +1666,7 @@
                   "action_key": "WAIT:-",
                   "lower": 1,
                   "solvable": true,
-                  "source": "CERTIFICATE_HIT",
+                  "source": "CHOICE_LOWER_D4",
                   "upper": 1
                 }
               ],
@@ -1522,7 +1692,7 @@
                   "action_key": "WAIT:-",
                   "lower": 1,
                   "solvable": true,
-                  "source": "CERTIFICATE_HIT",
+                  "source": "CHOICE_LOWER_D4",
                   "upper": 1
                 }
               ],
@@ -1555,7 +1725,7 @@
                   "action_key": "WAIT:-",
                   "lower": 1,
                   "solvable": true,
-                  "source": "CERTIFICATE_HIT",
+                  "source": "CHOICE_LOWER_D4",
                   "upper": 1
                 }
               ],
@@ -1581,7 +1751,7 @@
                   "action_key": "WAIT:-",
                   "lower": 1,
                   "solvable": true,
-                  "source": "CERTIFICATE_HIT",
+                  "source": "CHOICE_LOWER_D4",
                   "upper": 1
                 }
               ],
@@ -1607,14 +1777,14 @@
                   "action_key": "ISSUE_QUERY:gateway_state_summary",
                   "lower": 1,
                   "solvable": true,
-                  "source": "CERTIFICATE_HIT",
+                  "source": "CHOICE_LOWER_D4",
                   "upper": 1
                 },
                 {
                   "action_key": "WAIT:-",
-                  "lower": 0,
+                  "lower": 1,
                   "solvable": true,
-                  "source": "EXACT_FALLBACK_SUCCESS",
+                  "source": "CHOICE_LOWER_D4",
                   "upper": 1
                 }
               ],
@@ -1633,13 +1803,16 @@
           "boundary_count": 26,
           "lazy_counts": {
             "causal_lower_hits": 0,
-            "certificate_hits": 25,
+            "certificate_hits": 10,
+            "choice_lower_hits": 16,
+            "choice_lower_nodes": 123386,
+            "choice_upper_nodes": 0,
             "classified_actions": 56,
             "common_lower_hits": 0,
-            "exact_fallback_calls": 7,
-            "exact_fallback_expanded": 6559,
+            "exact_fallback_calls": 6,
+            "exact_fallback_expanded": 6477,
             "known_failure_hits": 24,
-            "lower_nodes": 778,
+            "lower_nodes": 0,
             "search_limits": 0,
             "structural_lower_hits": 0,
             "upper_nodes": 56,
@@ -1662,9 +1835,9 @@
                 },
                 {
                   "action_key": "WAIT:-",
-                  "lower": 0,
+                  "lower": 1,
                   "solvable": true,
-                  "source": "EXACT_FALLBACK_SUCCESS",
+                  "source": "CHOICE_LOWER_D4",
                   "upper": 1
                 }
               ],
@@ -1690,7 +1863,7 @@
                   "action_key": "WAIT:-",
                   "lower": 1,
                   "solvable": true,
-                  "source": "CERTIFICATE_HIT",
+                  "source": "CHOICE_LOWER_D4",
                   "upper": 1
                 }
               ],
@@ -1716,7 +1889,7 @@
                   "action_key": "WAIT:-",
                   "lower": 1,
                   "solvable": true,
-                  "source": "CERTIFICATE_HIT",
+                  "source": "CHOICE_LOWER_D4",
                   "upper": 1
                 }
               ],
@@ -1742,7 +1915,7 @@
                   "action_key": "WAIT:-",
                   "lower": 1,
                   "solvable": true,
-                  "source": "CERTIFICATE_HIT",
+                  "source": "CHOICE_LOWER_D4",
                   "upper": 1
                 }
               ],
@@ -1768,7 +1941,7 @@
                   "action_key": "WAIT:-",
                   "lower": 1,
                   "solvable": true,
-                  "source": "CERTIFICATE_HIT",
+                  "source": "CHOICE_LOWER_D4",
                   "upper": 1
                 }
               ],
@@ -1794,7 +1967,7 @@
                   "action_key": "WAIT:-",
                   "lower": 1,
                   "solvable": true,
-                  "source": "CERTIFICATE_HIT",
+                  "source": "CHOICE_LOWER_D4",
                   "upper": 1
                 }
               ],
@@ -1820,7 +1993,7 @@
                   "action_key": "WAIT:-",
                   "lower": 1,
                   "solvable": true,
-                  "source": "CERTIFICATE_HIT",
+                  "source": "CHOICE_LOWER_D4",
                   "upper": 1
                 }
               ],
@@ -1846,7 +2019,7 @@
                   "action_key": "WAIT:-",
                   "lower": 1,
                   "solvable": true,
-                  "source": "CERTIFICATE_HIT",
+                  "source": "CHOICE_LOWER_D4",
                   "upper": 1
                 }
               ],
@@ -1865,7 +2038,7 @@
                   "action_key": "SEND_TERR:T1R-7be713bad733ea::report::00",
                   "lower": 1,
                   "solvable": true,
-                  "source": "CERTIFICATE_HIT",
+                  "source": "CHOICE_LOWER_D4",
                   "upper": 1
                 },
                 {
@@ -1905,7 +2078,7 @@
                   "action_key": "WAIT:-",
                   "lower": 1,
                   "solvable": true,
-                  "source": "CERTIFICATE_HIT",
+                  "source": "CHOICE_LOWER_D4",
                   "upper": 1
                 }
               ],
@@ -1931,7 +2104,7 @@
                   "action_key": "WAIT:-",
                   "lower": 1,
                   "solvable": true,
-                  "source": "CERTIFICATE_HIT",
+                  "source": "CHOICE_LOWER_D4",
                   "upper": 1
                 }
               ],
@@ -1957,7 +2130,7 @@
                   "action_key": "WAIT:-",
                   "lower": 1,
                   "solvable": true,
-                  "source": "CERTIFICATE_HIT",
+                  "source": "CHOICE_LOWER_D4",
                   "upper": 1
                 }
               ],
@@ -1983,7 +2156,7 @@
                   "action_key": "WAIT:-",
                   "lower": 1,
                   "solvable": true,
-                  "source": "CERTIFICATE_HIT",
+                  "source": "CHOICE_LOWER_D4",
                   "upper": 1
                 }
               ],
@@ -2009,7 +2182,7 @@
                   "action_key": "WAIT:-",
                   "lower": 1,
                   "solvable": true,
-                  "source": "CERTIFICATE_HIT",
+                  "source": "CHOICE_LOWER_D4",
                   "upper": 1
                 }
               ],
@@ -2035,7 +2208,7 @@
                   "action_key": "WAIT:-",
                   "lower": 1,
                   "solvable": true,
-                  "source": "CERTIFICATE_HIT",
+                  "source": "CHOICE_LOWER_D4",
                   "upper": 1
                 }
               ],
@@ -2054,14 +2227,14 @@
                   "action_key": "SEND_TERR:T1R-7be713bad733ea::report::00",
                   "lower": 1,
                   "solvable": true,
-                  "source": "CERTIFICATE_HIT",
+                  "source": "CHOICE_LOWER_D4",
                   "upper": 1
                 },
                 {
                   "action_key": "SEND_TERR:T1R-7be713bad733ea::report::01",
-                  "lower": 0,
+                  "lower": 1,
                   "solvable": true,
-                  "source": "EXACT_FALLBACK_SUCCESS",
+                  "source": "CHOICE_LOWER_D4",
                   "upper": 1
                 },
                 {
@@ -2103,7 +2276,7 @@
                   "action_key": "WAIT:-",
                   "lower": 1,
                   "solvable": true,
-                  "source": "CERTIFICATE_HIT",
+                  "source": "CHOICE_LOWER_D4",
                   "upper": 1
                 }
               ],
@@ -2129,7 +2302,7 @@
                   "action_key": "WAIT:-",
                   "lower": 1,
                   "solvable": true,
-                  "source": "CERTIFICATE_HIT",
+                  "source": "CHOICE_LOWER_D4",
                   "upper": 1
                 }
               ],
@@ -2155,7 +2328,7 @@
                   "action_key": "WAIT:-",
                   "lower": 1,
                   "solvable": true,
-                  "source": "CERTIFICATE_HIT",
+                  "source": "CHOICE_LOWER_D4",
                   "upper": 1
                 }
               ],
@@ -2181,7 +2354,7 @@
                   "action_key": "WAIT:-",
                   "lower": 1,
                   "solvable": true,
-                  "source": "CERTIFICATE_HIT",
+                  "source": "CHOICE_LOWER_D4",
                   "upper": 1
                 }
               ],
@@ -2207,7 +2380,7 @@
                   "action_key": "WAIT:-",
                   "lower": 1,
                   "solvable": true,
-                  "source": "CERTIFICATE_HIT",
+                  "source": "CHOICE_LOWER_D4",
                   "upper": 1
                 }
               ],
@@ -2226,7 +2399,7 @@
                   "action_key": "SEND_TERR:T1R-7be713bad733ea::report::01",
                   "lower": 1,
                   "solvable": true,
-                  "source": "CERTIFICATE_HIT",
+                  "source": "CHOICE_LOWER_D4",
                   "upper": 1
                 },
                 {
@@ -2266,7 +2439,7 @@
                   "action_key": "WAIT:-",
                   "lower": 1,
                   "solvable": true,
-                  "source": "CERTIFICATE_HIT",
+                  "source": "CHOICE_LOWER_D4",
                   "upper": 1
                 }
               ],
@@ -2292,7 +2465,7 @@
                   "action_key": "WAIT:-",
                   "lower": 1,
                   "solvable": true,
-                  "source": "CERTIFICATE_HIT",
+                  "source": "CHOICE_LOWER_D4",
                   "upper": 1
                 }
               ],
@@ -2318,7 +2491,7 @@
                   "action_key": "WAIT:-",
                   "lower": 1,
                   "solvable": true,
-                  "source": "CERTIFICATE_HIT",
+                  "source": "CHOICE_LOWER_D4",
                   "upper": 1
                 }
               ],
@@ -2344,7 +2517,7 @@
                   "action_key": "WAIT:-",
                   "lower": 1,
                   "solvable": true,
-                  "source": "CERTIFICATE_HIT",
+                  "source": "CHOICE_LOWER_D4",
                   "upper": 1
                 }
               ],
@@ -2370,7 +2543,7 @@
                   "action_key": "WAIT:-",
                   "lower": 1,
                   "solvable": true,
-                  "source": "CERTIFICATE_HIT",
+                  "source": "CHOICE_LOWER_D4",
                   "upper": 1
                 }
               ],
@@ -2396,7 +2569,7 @@
                   "action_key": "WAIT:-",
                   "lower": 1,
                   "solvable": true,
-                  "source": "CERTIFICATE_HIT",
+                  "source": "CHOICE_LOWER_D4",
                   "upper": 1
                 }
               ],
@@ -2422,7 +2595,7 @@
                   "action_key": "WAIT:-",
                   "lower": 1,
                   "solvable": true,
-                  "source": "CERTIFICATE_HIT",
+                  "source": "CHOICE_LOWER_D4",
                   "upper": 1
                 }
               ],
@@ -2448,7 +2621,7 @@
                   "action_key": "WAIT:-",
                   "lower": 1,
                   "solvable": true,
-                  "source": "CERTIFICATE_HIT",
+                  "source": "CHOICE_LOWER_D4",
                   "upper": 1
                 }
               ],
@@ -2474,7 +2647,7 @@
                   "action_key": "WAIT:-",
                   "lower": 1,
                   "solvable": true,
-                  "source": "CERTIFICATE_HIT",
+                  "source": "CHOICE_LOWER_D4",
                   "upper": 1
                 }
               ],
@@ -2500,7 +2673,7 @@
                   "action_key": "WAIT:-",
                   "lower": 1,
                   "solvable": true,
-                  "source": "CAUSAL_LOWER_D4",
+                  "source": "CHOICE_LOWER_D4",
                   "upper": 1
                 }
               ],
@@ -2526,7 +2699,7 @@
                   "action_key": "WAIT:-",
                   "lower": 1,
                   "solvable": true,
-                  "source": "CAUSAL_LOWER_D4",
+                  "source": "CHOICE_LOWER_D4",
                   "upper": 1
                 }
               ],
@@ -2552,7 +2725,7 @@
                   "action_key": "WAIT:-",
                   "lower": 1,
                   "solvable": true,
-                  "source": "CAUSAL_LOWER_D4",
+                  "source": "CHOICE_LOWER_D4",
                   "upper": 1
                 }
               ],
@@ -2578,7 +2751,7 @@
                   "action_key": "WAIT:-",
                   "lower": 1,
                   "solvable": true,
-                  "source": "CAUSAL_LOWER_D4",
+                  "source": "CHOICE_LOWER_D4",
                   "upper": 1
                 }
               ],
@@ -2597,7 +2770,7 @@
                   "action_key": "SEND_TERR:T1R-7be713bad733ea::report::01",
                   "lower": 1,
                   "solvable": true,
-                  "source": "CAUSAL_LOWER_D4",
+                  "source": "CHOICE_LOWER_D4",
                   "upper": 1
                 },
                 {
@@ -2611,7 +2784,7 @@
                   "action_key": "WAIT:-",
                   "lower": 1,
                   "solvable": true,
-                  "source": "CAUSAL_LOWER_D4",
+                  "source": "CHOICE_LOWER_D4",
                   "upper": 1
                 }
               ],
@@ -2639,7 +2812,7 @@
                   "action_key": "WAIT:-",
                   "lower": 1,
                   "solvable": true,
-                  "source": "CAUSAL_LOWER_D4",
+                  "source": "CHOICE_LOWER_D4",
                   "upper": 1
                 }
               ],
@@ -2665,7 +2838,7 @@
                   "action_key": "WAIT:-",
                   "lower": 1,
                   "solvable": true,
-                  "source": "CAUSAL_LOWER_D4",
+                  "source": "CHOICE_LOWER_D4",
                   "upper": 1
                 }
               ],
@@ -2681,14 +2854,17 @@
           ],
           "boundary_count": 38,
           "lazy_counts": {
-            "causal_lower_hits": 8,
-            "certificate_hits": 30,
+            "causal_lower_hits": 0,
+            "certificate_hits": 0,
+            "choice_lower_hits": 40,
+            "choice_lower_nodes": 691,
+            "choice_upper_nodes": 0,
             "classified_actions": 81,
             "common_lower_hits": 0,
-            "exact_fallback_calls": 2,
-            "exact_fallback_expanded": 46,
+            "exact_fallback_calls": 0,
+            "exact_fallback_expanded": 0,
             "known_failure_hits": 0,
-            "lower_nodes": 227,
+            "lower_nodes": 0,
             "search_limits": 0,
             "structural_lower_hits": 0,
             "upper_nodes": 43,
@@ -2711,9 +2887,9 @@
                 },
                 {
                   "action_key": "WAIT:-",
-                  "lower": 0,
+                  "lower": 1,
                   "solvable": true,
-                  "source": "EXACT_FALLBACK_SUCCESS",
+                  "source": "CHOICE_LOWER_D4",
                   "upper": 1
                 }
               ],
@@ -2732,14 +2908,14 @@
                   "action_key": "ISSUE_QUERY:gateway_state_summary",
                   "lower": 0,
                   "solvable": false,
-                  "source": "KNOWN_FAILURE_HIT",
-                  "upper": 0
+                  "source": "EXACT_FALLBACK_FAILURE",
+                  "upper": 1
                 },
                 {
                   "action_key": "WAIT:-",
                   "lower": 1,
                   "solvable": true,
-                  "source": "CERTIFICATE_HIT",
+                  "source": "CHOICE_LOWER_D4",
                   "upper": 1
                 }
               ],
@@ -2758,14 +2934,14 @@
                   "action_key": "ISSUE_QUERY:gateway_state_summary",
                   "lower": 0,
                   "solvable": false,
-                  "source": "KNOWN_FAILURE_HIT",
-                  "upper": 0
+                  "source": "EXACT_FALLBACK_FAILURE",
+                  "upper": 1
                 },
                 {
                   "action_key": "WAIT:-",
                   "lower": 1,
                   "solvable": true,
-                  "source": "CERTIFICATE_HIT",
+                  "source": "CHOICE_LOWER_D4",
                   "upper": 1
                 }
               ],
@@ -2784,14 +2960,14 @@
                   "action_key": "ISSUE_QUERY:gateway_state_summary",
                   "lower": 0,
                   "solvable": false,
-                  "source": "KNOWN_FAILURE_HIT",
-                  "upper": 0
+                  "source": "EXACT_FALLBACK_FAILURE",
+                  "upper": 1
                 },
                 {
                   "action_key": "WAIT:-",
                   "lower": 1,
                   "solvable": true,
-                  "source": "CERTIFICATE_HIT",
+                  "source": "CHOICE_LOWER_D4",
                   "upper": 1
                 }
               ],
@@ -2810,14 +2986,14 @@
                   "action_key": "ISSUE_QUERY:gateway_state_summary",
                   "lower": 0,
                   "solvable": false,
-                  "source": "KNOWN_FAILURE_HIT",
-                  "upper": 0
+                  "source": "EXACT_FALLBACK_FAILURE",
+                  "upper": 1
                 },
                 {
                   "action_key": "WAIT:-",
                   "lower": 1,
                   "solvable": true,
-                  "source": "CERTIFICATE_HIT",
+                  "source": "CHOICE_LOWER_D4",
                   "upper": 1
                 }
               ],
@@ -2836,14 +3012,14 @@
                   "action_key": "ISSUE_QUERY:gateway_state_summary",
                   "lower": 0,
                   "solvable": false,
-                  "source": "KNOWN_FAILURE_HIT",
-                  "upper": 0
+                  "source": "EXACT_FALLBACK_FAILURE",
+                  "upper": 1
                 },
                 {
                   "action_key": "WAIT:-",
                   "lower": 1,
                   "solvable": true,
-                  "source": "CERTIFICATE_HIT",
+                  "source": "CHOICE_LOWER_D4",
                   "upper": 1
                 }
               ],
@@ -2862,14 +3038,14 @@
                   "action_key": "ISSUE_QUERY:gateway_state_summary",
                   "lower": 0,
                   "solvable": false,
-                  "source": "KNOWN_FAILURE_HIT",
-                  "upper": 0
+                  "source": "EXACT_FALLBACK_FAILURE",
+                  "upper": 1
                 },
                 {
                   "action_key": "WAIT:-",
                   "lower": 1,
                   "solvable": true,
-                  "source": "CERTIFICATE_HIT",
+                  "source": "CHOICE_LOWER_D4",
                   "upper": 1
                 }
               ],
@@ -2888,14 +3064,14 @@
                   "action_key": "ISSUE_QUERY:gateway_state_summary",
                   "lower": 0,
                   "solvable": false,
-                  "source": "KNOWN_FAILURE_HIT",
-                  "upper": 0
+                  "source": "EXACT_FALLBACK_FAILURE",
+                  "upper": 1
                 },
                 {
                   "action_key": "WAIT:-",
                   "lower": 1,
                   "solvable": true,
-                  "source": "CERTIFICATE_HIT",
+                  "source": "CHOICE_LOWER_D4",
                   "upper": 1
                 }
               ],
@@ -2914,7 +3090,7 @@
                   "action_key": "SEND_TERR:T1R-d2a98ca33ce5b4::report::00",
                   "lower": 1,
                   "solvable": true,
-                  "source": "CERTIFICATE_HIT",
+                  "source": "CHOICE_LOWER_D4",
                   "upper": 1
                 },
                 {
@@ -2947,14 +3123,14 @@
                   "action_key": "ISSUE_QUERY:gateway_state_summary",
                   "lower": 0,
                   "solvable": false,
-                  "source": "KNOWN_FAILURE_HIT",
-                  "upper": 0
+                  "source": "EXACT_FALLBACK_FAILURE",
+                  "upper": 1
                 },
                 {
                   "action_key": "WAIT:-",
                   "lower": 1,
                   "solvable": true,
-                  "source": "CERTIFICATE_HIT",
+                  "source": "CHOICE_LOWER_D4",
                   "upper": 1
                 }
               ],
@@ -2973,14 +3149,14 @@
                   "action_key": "ISSUE_QUERY:gateway_state_summary",
                   "lower": 0,
                   "solvable": false,
-                  "source": "KNOWN_FAILURE_HIT",
-                  "upper": 0
+                  "source": "EXACT_FALLBACK_FAILURE",
+                  "upper": 1
                 },
                 {
                   "action_key": "WAIT:-",
                   "lower": 1,
                   "solvable": true,
-                  "source": "CERTIFICATE_HIT",
+                  "source": "CHOICE_LOWER_D4",
                   "upper": 1
                 }
               ],
@@ -2999,14 +3175,14 @@
                   "action_key": "ISSUE_QUERY:gateway_state_summary",
                   "lower": 0,
                   "solvable": false,
-                  "source": "KNOWN_FAILURE_HIT",
-                  "upper": 0
+                  "source": "EXACT_FALLBACK_FAILURE",
+                  "upper": 1
                 },
                 {
                   "action_key": "WAIT:-",
                   "lower": 1,
                   "solvable": true,
-                  "source": "CERTIFICATE_HIT",
+                  "source": "CHOICE_LOWER_D4",
                   "upper": 1
                 }
               ],
@@ -3025,14 +3201,14 @@
                   "action_key": "ISSUE_QUERY:gateway_state_summary",
                   "lower": 0,
                   "solvable": false,
-                  "source": "KNOWN_FAILURE_HIT",
-                  "upper": 0
+                  "source": "EXACT_FALLBACK_FAILURE",
+                  "upper": 1
                 },
                 {
                   "action_key": "WAIT:-",
                   "lower": 1,
                   "solvable": true,
-                  "source": "CAUSAL_LOWER_D4",
+                  "source": "CHOICE_LOWER_D4",
                   "upper": 1
                 }
               ],
@@ -3051,14 +3227,14 @@
                   "action_key": "ISSUE_QUERY:gateway_state_summary",
                   "lower": 0,
                   "solvable": false,
-                  "source": "KNOWN_FAILURE_HIT",
-                  "upper": 0
+                  "source": "EXACT_FALLBACK_FAILURE",
+                  "upper": 1
                 },
                 {
                   "action_key": "WAIT:-",
                   "lower": 1,
                   "solvable": true,
-                  "source": "CAUSAL_LOWER_D4",
+                  "source": "CHOICE_LOWER_D4",
                   "upper": 1
                 }
               ],
@@ -3077,14 +3253,14 @@
                   "action_key": "ISSUE_QUERY:gateway_state_summary",
                   "lower": 0,
                   "solvable": false,
-                  "source": "KNOWN_FAILURE_HIT",
-                  "upper": 0
+                  "source": "EXACT_FALLBACK_FAILURE",
+                  "upper": 1
                 },
                 {
                   "action_key": "WAIT:-",
                   "lower": 1,
                   "solvable": true,
-                  "source": "CAUSAL_LOWER_D4",
+                  "source": "CHOICE_LOWER_D4",
                   "upper": 1
                 }
               ],
@@ -3103,14 +3279,14 @@
                   "action_key": "SEND_TERR:T1R-d2a98ca33ce5b4::report::01",
                   "lower": 0,
                   "solvable": false,
-                  "source": "KNOWN_FAILURE_HIT",
-                  "upper": 0
+                  "source": "EXACT_FALLBACK_FAILURE",
+                  "upper": 1
                 },
                 {
                   "action_key": "ISSUE_QUERY:gateway_state_summary",
                   "lower": 1,
                   "solvable": true,
-                  "source": "CAUSAL_LOWER_D4",
+                  "source": "CHOICE_LOWER_D4",
                   "upper": 1
                 },
                 {
@@ -3133,14 +3309,17 @@
           ],
           "boundary_count": 16,
           "lazy_counts": {
-            "causal_lower_hits": 4,
-            "certificate_hits": 11,
+            "causal_lower_hits": 0,
+            "certificate_hits": 0,
+            "choice_lower_hits": 16,
+            "choice_lower_nodes": 3580,
+            "choice_upper_nodes": 0,
             "classified_actions": 34,
             "common_lower_hits": 0,
-            "exact_fallback_calls": 3,
-            "exact_fallback_expanded": 350,
-            "known_failure_hits": 14,
-            "lower_nodes": 365,
+            "exact_fallback_calls": 16,
+            "exact_fallback_expanded": 272,
+            "known_failure_hits": 0,
+            "lower_nodes": 0,
             "search_limits": 0,
             "structural_lower_hits": 0,
             "upper_nodes": 34,
@@ -3366,7 +3545,7 @@
                   "action_key": "SEND_TERR:T1R-c969bec849683a::report::00",
                   "lower": 1,
                   "solvable": true,
-                  "source": "CERTIFICATE_HIT",
+                  "source": "CHOICE_LOWER_D4",
                   "upper": 1
                 },
                 {
@@ -3406,7 +3585,7 @@
                   "action_key": "WAIT:-",
                   "lower": 1,
                   "solvable": true,
-                  "source": "CERTIFICATE_HIT",
+                  "source": "CHOICE_LOWER_D4",
                   "upper": 1
                 }
               ],
@@ -3432,7 +3611,7 @@
                   "action_key": "WAIT:-",
                   "lower": 1,
                   "solvable": true,
-                  "source": "CERTIFICATE_HIT",
+                  "source": "CHOICE_LOWER_D4",
                   "upper": 1
                 }
               ],
@@ -3458,7 +3637,7 @@
                   "action_key": "WAIT:-",
                   "lower": 1,
                   "solvable": true,
-                  "source": "CERTIFICATE_HIT",
+                  "source": "CHOICE_LOWER_D4",
                   "upper": 1
                 }
               ],
@@ -3484,7 +3663,7 @@
                   "action_key": "WAIT:-",
                   "lower": 1,
                   "solvable": true,
-                  "source": "CERTIFICATE_HIT",
+                  "source": "CHOICE_LOWER_D4",
                   "upper": 1
                 }
               ],
@@ -3510,7 +3689,7 @@
                   "action_key": "WAIT:-",
                   "lower": 1,
                   "solvable": true,
-                  "source": "CERTIFICATE_HIT",
+                  "source": "CHOICE_LOWER_D4",
                   "upper": 1
                 }
               ],
@@ -3536,7 +3715,7 @@
                   "action_key": "WAIT:-",
                   "lower": 1,
                   "solvable": true,
-                  "source": "CERTIFICATE_HIT",
+                  "source": "CHOICE_LOWER_D4",
                   "upper": 1
                 }
               ],
@@ -3562,7 +3741,7 @@
                   "action_key": "ISSUE_QUERY:gateway_state_summary",
                   "lower": 1,
                   "solvable": true,
-                  "source": "CERTIFICATE_HIT",
+                  "source": "CHOICE_LOWER_D4",
                   "upper": 1
                 },
                 {
@@ -3586,13 +3765,16 @@
           "boundary_count": 16,
           "lazy_counts": {
             "causal_lower_hits": 0,
-            "certificate_hits": 15,
+            "certificate_hits": 7,
+            "choice_lower_hits": 8,
+            "choice_lower_nodes": 8885,
+            "choice_upper_nodes": 0,
             "classified_actions": 34,
             "common_lower_hits": 0,
             "exact_fallback_calls": 3,
             "exact_fallback_expanded": 410,
             "known_failure_hits": 14,
-            "lower_nodes": 396,
+            "lower_nodes": 0,
             "search_limits": 0,
             "structural_lower_hits": 0,
             "upper_nodes": 34,
@@ -3615,9 +3797,9 @@
                 },
                 {
                   "action_key": "WAIT:-",
-                  "lower": 0,
+                  "lower": 1,
                   "solvable": true,
-                  "source": "EXACT_FALLBACK_SUCCESS",
+                  "source": "CHOICE_LOWER_D4",
                   "upper": 1
                 }
               ],
@@ -3636,14 +3818,14 @@
                   "action_key": "ISSUE_QUERY:gateway_state_summary",
                   "lower": 0,
                   "solvable": false,
-                  "source": "KNOWN_FAILURE_HIT",
-                  "upper": 0
+                  "source": "EXACT_FALLBACK_FAILURE",
+                  "upper": 1
                 },
                 {
                   "action_key": "WAIT:-",
                   "lower": 1,
                   "solvable": true,
-                  "source": "CERTIFICATE_HIT",
+                  "source": "CHOICE_LOWER_D4",
                   "upper": 1
                 }
               ],
@@ -3662,7 +3844,7 @@
                   "action_key": "SEND_SAT:T1R-740f6be67bd019::report::00",
                   "lower": 1,
                   "solvable": true,
-                  "source": "CERTIFICATE_HIT",
+                  "source": "CHOICE_LOWER_D4",
                   "upper": 1
                 },
                 {
@@ -3674,9 +3856,9 @@
                 },
                 {
                   "action_key": "WAIT:-",
-                  "lower": 0,
+                  "lower": 1,
                   "solvable": true,
-                  "source": "EXACT_FALLBACK_SUCCESS",
+                  "source": "CHOICE_LOWER_D4",
                   "upper": 1
                 }
               ],
@@ -3704,7 +3886,7 @@
                   "action_key": "WAIT:-",
                   "lower": 1,
                   "solvable": true,
-                  "source": "CERTIFICATE_HIT",
+                  "source": "CHOICE_LOWER_D4",
                   "upper": 1
                 }
               ],
@@ -3723,14 +3905,14 @@
                   "action_key": "ISSUE_QUERY:gateway_state_summary",
                   "lower": 0,
                   "solvable": false,
-                  "source": "KNOWN_FAILURE_HIT",
-                  "upper": 0
+                  "source": "EXACT_FALLBACK_FAILURE",
+                  "upper": 1
                 },
                 {
                   "action_key": "WAIT:-",
                   "lower": 1,
                   "solvable": true,
-                  "source": "CERTIFICATE_HIT",
+                  "source": "CHOICE_LOWER_D4",
                   "upper": 1
                 }
               ],
@@ -3749,14 +3931,14 @@
                   "action_key": "ISSUE_QUERY:gateway_state_summary",
                   "lower": 0,
                   "solvable": false,
-                  "source": "KNOWN_FAILURE_HIT",
-                  "upper": 0
+                  "source": "EXACT_FALLBACK_FAILURE",
+                  "upper": 1
                 },
                 {
                   "action_key": "WAIT:-",
                   "lower": 1,
                   "solvable": true,
-                  "source": "CERTIFICATE_HIT",
+                  "source": "CHOICE_LOWER_D4",
                   "upper": 1
                 }
               ],
@@ -3775,14 +3957,14 @@
                   "action_key": "ISSUE_QUERY:gateway_state_summary",
                   "lower": 0,
                   "solvable": false,
-                  "source": "KNOWN_FAILURE_HIT",
-                  "upper": 0
+                  "source": "EXACT_FALLBACK_FAILURE",
+                  "upper": 1
                 },
                 {
                   "action_key": "WAIT:-",
                   "lower": 1,
                   "solvable": true,
-                  "source": "CERTIFICATE_HIT",
+                  "source": "CHOICE_LOWER_D4",
                   "upper": 1
                 }
               ],
@@ -3801,14 +3983,14 @@
                   "action_key": "ISSUE_QUERY:gateway_state_summary",
                   "lower": 0,
                   "solvable": false,
-                  "source": "KNOWN_FAILURE_HIT",
-                  "upper": 0
+                  "source": "EXACT_FALLBACK_FAILURE",
+                  "upper": 1
                 },
                 {
                   "action_key": "WAIT:-",
                   "lower": 1,
                   "solvable": true,
-                  "source": "CERTIFICATE_HIT",
+                  "source": "CHOICE_LOWER_D4",
                   "upper": 1
                 }
               ],
@@ -3827,14 +4009,14 @@
                   "action_key": "ISSUE_QUERY:gateway_state_summary",
                   "lower": 0,
                   "solvable": false,
-                  "source": "KNOWN_FAILURE_HIT",
-                  "upper": 0
+                  "source": "EXACT_FALLBACK_FAILURE",
+                  "upper": 1
                 },
                 {
                   "action_key": "WAIT:-",
                   "lower": 1,
                   "solvable": true,
-                  "source": "CERTIFICATE_HIT",
+                  "source": "CHOICE_LOWER_D4",
                   "upper": 1
                 }
               ],
@@ -3853,14 +4035,14 @@
                   "action_key": "ISSUE_QUERY:gateway_state_summary",
                   "lower": 0,
                   "solvable": false,
-                  "source": "KNOWN_FAILURE_HIT",
-                  "upper": 0
+                  "source": "EXACT_FALLBACK_FAILURE",
+                  "upper": 1
                 },
                 {
                   "action_key": "WAIT:-",
                   "lower": 1,
                   "solvable": true,
-                  "source": "CERTIFICATE_HIT",
+                  "source": "CHOICE_LOWER_D4",
                   "upper": 1
                 }
               ],
@@ -3879,14 +4061,14 @@
                   "action_key": "ISSUE_QUERY:gateway_state_summary",
                   "lower": 0,
                   "solvable": false,
-                  "source": "KNOWN_FAILURE_HIT",
-                  "upper": 0
+                  "source": "EXACT_FALLBACK_FAILURE",
+                  "upper": 1
                 },
                 {
                   "action_key": "WAIT:-",
                   "lower": 1,
                   "solvable": true,
-                  "source": "CERTIFICATE_HIT",
+                  "source": "CHOICE_LOWER_D4",
                   "upper": 1
                 }
               ],
@@ -3905,14 +4087,14 @@
                   "action_key": "SEND_TERR:T1R-740f6be67bd019::report::01",
                   "lower": 1,
                   "solvable": true,
-                  "source": "CERTIFICATE_HIT",
+                  "source": "CHOICE_LOWER_D4",
                   "upper": 1
                 },
                 {
                   "action_key": "ISSUE_QUERY:gateway_state_summary",
-                  "lower": 0,
+                  "lower": 1,
                   "solvable": true,
-                  "source": "EXACT_FALLBACK_SUCCESS",
+                  "source": "CHOICE_LOWER_D4",
                   "upper": 1
                 },
                 {
@@ -3940,14 +4122,14 @@
                   "action_key": "ISSUE_QUERY:gateway_state_summary",
                   "lower": 0,
                   "solvable": false,
-                  "source": "KNOWN_FAILURE_HIT",
-                  "upper": 0
+                  "source": "EXACT_FALLBACK_FAILURE",
+                  "upper": 1
                 },
                 {
                   "action_key": "WAIT:-",
                   "lower": 1,
                   "solvable": true,
-                  "source": "CERTIFICATE_HIT",
+                  "source": "CHOICE_LOWER_D4",
                   "upper": 1
                 }
               ],
@@ -3966,14 +4148,14 @@
                   "action_key": "ISSUE_QUERY:gateway_state_summary",
                   "lower": 0,
                   "solvable": false,
-                  "source": "KNOWN_FAILURE_HIT",
-                  "upper": 0
+                  "source": "EXACT_FALLBACK_FAILURE",
+                  "upper": 1
                 },
                 {
                   "action_key": "WAIT:-",
                   "lower": 1,
                   "solvable": true,
-                  "source": "CERTIFICATE_HIT",
+                  "source": "CHOICE_LOWER_D4",
                   "upper": 1
                 }
               ],
@@ -3992,14 +4174,14 @@
                   "action_key": "ISSUE_QUERY:gateway_state_summary",
                   "lower": 0,
                   "solvable": false,
-                  "source": "KNOWN_FAILURE_HIT",
-                  "upper": 0
+                  "source": "EXACT_FALLBACK_FAILURE",
+                  "upper": 1
                 },
                 {
                   "action_key": "WAIT:-",
                   "lower": 1,
                   "solvable": true,
-                  "source": "CERTIFICATE_HIT",
+                  "source": "CHOICE_LOWER_D4",
                   "upper": 1
                 }
               ],
@@ -4018,14 +4200,14 @@
                   "action_key": "ISSUE_QUERY:gateway_state_summary",
                   "lower": 0,
                   "solvable": false,
-                  "source": "KNOWN_FAILURE_HIT",
-                  "upper": 0
+                  "source": "EXACT_FALLBACK_FAILURE",
+                  "upper": 1
                 },
                 {
                   "action_key": "WAIT:-",
                   "lower": 1,
                   "solvable": true,
-                  "source": "CERTIFICATE_HIT",
+                  "source": "CHOICE_LOWER_D4",
                   "upper": 1
                 }
               ],
@@ -4044,14 +4226,14 @@
                   "action_key": "ISSUE_QUERY:gateway_state_summary",
                   "lower": 0,
                   "solvable": false,
-                  "source": "KNOWN_FAILURE_HIT",
-                  "upper": 0
+                  "source": "EXACT_FALLBACK_FAILURE",
+                  "upper": 1
                 },
                 {
                   "action_key": "WAIT:-",
                   "lower": 1,
                   "solvable": true,
-                  "source": "CERTIFICATE_HIT",
+                  "source": "CHOICE_LOWER_D4",
                   "upper": 1
                 }
               ],
@@ -4070,14 +4252,14 @@
                   "action_key": "ISSUE_QUERY:gateway_state_summary",
                   "lower": 0,
                   "solvable": false,
-                  "source": "KNOWN_FAILURE_HIT",
-                  "upper": 0
+                  "source": "EXACT_FALLBACK_FAILURE",
+                  "upper": 1
                 },
                 {
                   "action_key": "WAIT:-",
                   "lower": 1,
                   "solvable": true,
-                  "source": "CERTIFICATE_HIT",
+                  "source": "CHOICE_LOWER_D4",
                   "upper": 1
                 }
               ],
@@ -4096,14 +4278,14 @@
                   "action_key": "ISSUE_QUERY:gateway_state_summary",
                   "lower": 0,
                   "solvable": false,
-                  "source": "KNOWN_FAILURE_HIT",
-                  "upper": 0
+                  "source": "EXACT_FALLBACK_FAILURE",
+                  "upper": 1
                 },
                 {
                   "action_key": "WAIT:-",
                   "lower": 1,
                   "solvable": true,
-                  "source": "CERTIFICATE_HIT",
+                  "source": "CHOICE_LOWER_D4",
                   "upper": 1
                 }
               ],
@@ -4122,14 +4304,14 @@
                   "action_key": "ISSUE_QUERY:gateway_state_summary",
                   "lower": 0,
                   "solvable": false,
-                  "source": "KNOWN_FAILURE_HIT",
-                  "upper": 0
+                  "source": "EXACT_FALLBACK_FAILURE",
+                  "upper": 1
                 },
                 {
                   "action_key": "WAIT:-",
                   "lower": 1,
                   "solvable": true,
-                  "source": "CERTIFICATE_HIT",
+                  "source": "CHOICE_LOWER_D4",
                   "upper": 1
                 }
               ],
@@ -4148,14 +4330,14 @@
                   "action_key": "ISSUE_QUERY:gateway_state_summary",
                   "lower": 0,
                   "solvable": false,
-                  "source": "KNOWN_FAILURE_HIT",
-                  "upper": 0
+                  "source": "EXACT_FALLBACK_FAILURE",
+                  "upper": 1
                 },
                 {
                   "action_key": "WAIT:-",
                   "lower": 1,
                   "solvable": true,
-                  "source": "CERTIFICATE_HIT",
+                  "source": "CHOICE_LOWER_D4",
                   "upper": 1
                 }
               ],
@@ -4174,14 +4356,14 @@
                   "action_key": "ISSUE_QUERY:gateway_state_summary",
                   "lower": 0,
                   "solvable": false,
-                  "source": "KNOWN_FAILURE_HIT",
-                  "upper": 0
+                  "source": "EXACT_FALLBACK_FAILURE",
+                  "upper": 1
                 },
                 {
                   "action_key": "WAIT:-",
                   "lower": 1,
                   "solvable": true,
-                  "source": "CERTIFICATE_HIT",
+                  "source": "CHOICE_LOWER_D4",
                   "upper": 1
                 }
               ],
@@ -4200,14 +4382,14 @@
                   "action_key": "ISSUE_QUERY:gateway_state_summary",
                   "lower": 0,
                   "solvable": false,
-                  "source": "KNOWN_FAILURE_HIT",
-                  "upper": 0
+                  "source": "EXACT_FALLBACK_FAILURE",
+                  "upper": 1
                 },
                 {
                   "action_key": "WAIT:-",
                   "lower": 1,
                   "solvable": true,
-                  "source": "CAUSAL_LOWER_D4",
+                  "source": "CHOICE_LOWER_D4",
                   "upper": 1
                 }
               ],
@@ -4226,21 +4408,21 @@
                   "action_key": "SEND_SAT:T1R-740f6be67bd019::report::02",
                   "lower": 0,
                   "solvable": false,
-                  "source": "KNOWN_FAILURE_HIT",
-                  "upper": 0
+                  "source": "EXACT_FALLBACK_FAILURE",
+                  "upper": 1
                 },
                 {
                   "action_key": "ISSUE_QUERY:gateway_state_summary",
                   "lower": 0,
                   "solvable": false,
-                  "source": "KNOWN_FAILURE_HIT",
-                  "upper": 0
+                  "source": "EXACT_FALLBACK_FAILURE",
+                  "upper": 1
                 },
                 {
                   "action_key": "WAIT:-",
                   "lower": 1,
                   "solvable": true,
-                  "source": "CAUSAL_LOWER_D4",
+                  "source": "CHOICE_LOWER_D4",
                   "upper": 1
                 }
               ],
@@ -4259,14 +4441,14 @@
                   "action_key": "ISSUE_QUERY:gateway_state_summary",
                   "lower": 0,
                   "solvable": false,
-                  "source": "KNOWN_FAILURE_HIT",
-                  "upper": 0
+                  "source": "EXACT_FALLBACK_FAILURE",
+                  "upper": 1
                 },
                 {
                   "action_key": "WAIT:-",
                   "lower": 1,
                   "solvable": true,
-                  "source": "CAUSAL_LOWER_D4",
+                  "source": "CHOICE_LOWER_D4",
                   "upper": 1
                 }
               ],
@@ -4285,21 +4467,21 @@
                   "action_key": "SEND_TERR:T1R-740f6be67bd019::report::02",
                   "lower": 0,
                   "solvable": false,
-                  "source": "KNOWN_FAILURE_HIT",
-                  "upper": 0
+                  "source": "EXACT_FALLBACK_FAILURE",
+                  "upper": 1
                 },
                 {
                   "action_key": "ISSUE_QUERY:gateway_state_summary",
                   "lower": 1,
                   "solvable": true,
-                  "source": "CAUSAL_LOWER_D4",
+                  "source": "CHOICE_LOWER_D4",
                   "upper": 1
                 },
                 {
                   "action_key": "WAIT:-",
                   "lower": 1,
                   "solvable": true,
-                  "source": "CAUSAL_LOWER_D4",
+                  "source": "CHOICE_LOWER_D4",
                   "upper": 1
                 }
               ],
@@ -4317,14 +4499,17 @@
           ],
           "boundary_count": 26,
           "lazy_counts": {
-            "causal_lower_hits": 5,
-            "certificate_hits": 21,
+            "causal_lower_hits": 0,
+            "certificate_hits": 0,
+            "choice_lower_hits": 29,
+            "choice_lower_nodes": 30080,
+            "choice_upper_nodes": 0,
             "classified_actions": 56,
             "common_lower_hits": 0,
-            "exact_fallback_calls": 6,
-            "exact_fallback_expanded": 4895,
-            "known_failure_hits": 24,
-            "lower_nodes": 696,
+            "exact_fallback_calls": 26,
+            "exact_fallback_expanded": 4638,
+            "known_failure_hits": 1,
+            "lower_nodes": 0,
             "search_limits": 0,
             "structural_lower_hits": 0,
             "upper_nodes": 56,
@@ -4637,7 +4822,7 @@
                   "action_key": "SEND_TERR:T1R-55ff9330743b23::report::01",
                   "lower": 1,
                   "solvable": true,
-                  "source": "CERTIFICATE_HIT",
+                  "source": "CHOICE_LOWER_D4",
                   "upper": 1
                 },
                 {
@@ -4677,7 +4862,7 @@
                   "action_key": "WAIT:-",
                   "lower": 1,
                   "solvable": true,
-                  "source": "CERTIFICATE_HIT",
+                  "source": "CHOICE_LOWER_D4",
                   "upper": 1
                 }
               ],
@@ -4703,7 +4888,7 @@
                   "action_key": "WAIT:-",
                   "lower": 1,
                   "solvable": true,
-                  "source": "CERTIFICATE_HIT",
+                  "source": "CHOICE_LOWER_D4",
                   "upper": 1
                 }
               ],
@@ -4729,7 +4914,7 @@
                   "action_key": "WAIT:-",
                   "lower": 1,
                   "solvable": true,
-                  "source": "CERTIFICATE_HIT",
+                  "source": "CHOICE_LOWER_D4",
                   "upper": 1
                 }
               ],
@@ -4755,7 +4940,7 @@
                   "action_key": "WAIT:-",
                   "lower": 1,
                   "solvable": true,
-                  "source": "CERTIFICATE_HIT",
+                  "source": "CHOICE_LOWER_D4",
                   "upper": 1
                 }
               ],
@@ -4781,7 +4966,7 @@
                   "action_key": "WAIT:-",
                   "lower": 1,
                   "solvable": true,
-                  "source": "CERTIFICATE_HIT",
+                  "source": "CHOICE_LOWER_D4",
                   "upper": 1
                 }
               ],
@@ -4807,7 +4992,7 @@
                   "action_key": "WAIT:-",
                   "lower": 1,
                   "solvable": true,
-                  "source": "CERTIFICATE_HIT",
+                  "source": "CHOICE_LOWER_D4",
                   "upper": 1
                 }
               ],
@@ -4833,7 +5018,7 @@
                   "action_key": "WAIT:-",
                   "lower": 1,
                   "solvable": true,
-                  "source": "CERTIFICATE_HIT",
+                  "source": "CHOICE_LOWER_D4",
                   "upper": 1
                 }
               ],
@@ -4859,7 +5044,7 @@
                   "action_key": "WAIT:-",
                   "lower": 1,
                   "solvable": true,
-                  "source": "CERTIFICATE_HIT",
+                  "source": "CHOICE_LOWER_D4",
                   "upper": 1
                 }
               ],
@@ -4885,7 +5070,7 @@
                   "action_key": "WAIT:-",
                   "lower": 1,
                   "solvable": true,
-                  "source": "CERTIFICATE_HIT",
+                  "source": "CHOICE_LOWER_D4",
                   "upper": 1
                 }
               ],
@@ -4911,7 +5096,7 @@
                   "action_key": "WAIT:-",
                   "lower": 1,
                   "solvable": true,
-                  "source": "CERTIFICATE_HIT",
+                  "source": "CHOICE_LOWER_D4",
                   "upper": 1
                 }
               ],
@@ -4937,7 +5122,7 @@
                   "action_key": "WAIT:-",
                   "lower": 1,
                   "solvable": true,
-                  "source": "CERTIFICATE_HIT",
+                  "source": "CHOICE_LOWER_D4",
                   "upper": 1
                 }
               ],
@@ -4970,7 +5155,7 @@
                   "action_key": "WAIT:-",
                   "lower": 1,
                   "solvable": true,
-                  "source": "CERTIFICATE_HIT",
+                  "source": "CHOICE_LOWER_D4",
                   "upper": 1
                 }
               ],
@@ -4996,7 +5181,7 @@
                   "action_key": "WAIT:-",
                   "lower": 1,
                   "solvable": true,
-                  "source": "CERTIFICATE_HIT",
+                  "source": "CHOICE_LOWER_D4",
                   "upper": 1
                 }
               ],
@@ -5022,14 +5207,14 @@
                   "action_key": "ISSUE_QUERY:gateway_state_summary",
                   "lower": 1,
                   "solvable": true,
-                  "source": "CERTIFICATE_HIT",
+                  "source": "CHOICE_LOWER_D4",
                   "upper": 1
                 },
                 {
                   "action_key": "WAIT:-",
-                  "lower": 0,
+                  "lower": 1,
                   "solvable": true,
-                  "source": "EXACT_FALLBACK_SUCCESS",
+                  "source": "CHOICE_LOWER_D4",
                   "upper": 1
                 }
               ],
@@ -5048,13 +5233,16 @@
           "boundary_count": 26,
           "lazy_counts": {
             "causal_lower_hits": 0,
-            "certificate_hits": 25,
+            "certificate_hits": 10,
+            "choice_lower_hits": 16,
+            "choice_lower_nodes": 123386,
+            "choice_upper_nodes": 0,
             "classified_actions": 56,
             "common_lower_hits": 0,
-            "exact_fallback_calls": 7,
-            "exact_fallback_expanded": 6559,
+            "exact_fallback_calls": 6,
+            "exact_fallback_expanded": 6477,
             "known_failure_hits": 24,
-            "lower_nodes": 778,
+            "lower_nodes": 0,
             "search_limits": 0,
             "structural_lower_hits": 0,
             "upper_nodes": 56,
@@ -5077,9 +5265,9 @@
                 },
                 {
                   "action_key": "WAIT:-",
-                  "lower": 0,
+                  "lower": 1,
                   "solvable": true,
-                  "source": "EXACT_FALLBACK_SUCCESS",
+                  "source": "CHOICE_LOWER_D4",
                   "upper": 1
                 }
               ],
@@ -5105,7 +5293,7 @@
                   "action_key": "WAIT:-",
                   "lower": 1,
                   "solvable": true,
-                  "source": "CERTIFICATE_HIT",
+                  "source": "CHOICE_LOWER_D4",
                   "upper": 1
                 }
               ],
@@ -5131,7 +5319,7 @@
                   "action_key": "WAIT:-",
                   "lower": 1,
                   "solvable": true,
-                  "source": "CERTIFICATE_HIT",
+                  "source": "CHOICE_LOWER_D4",
                   "upper": 1
                 }
               ],
@@ -5157,7 +5345,7 @@
                   "action_key": "WAIT:-",
                   "lower": 1,
                   "solvable": true,
-                  "source": "CERTIFICATE_HIT",
+                  "source": "CHOICE_LOWER_D4",
                   "upper": 1
                 }
               ],
@@ -5183,7 +5371,7 @@
                   "action_key": "WAIT:-",
                   "lower": 1,
                   "solvable": true,
-                  "source": "CERTIFICATE_HIT",
+                  "source": "CHOICE_LOWER_D4",
                   "upper": 1
                 }
               ],
@@ -5209,7 +5397,7 @@
                   "action_key": "WAIT:-",
                   "lower": 1,
                   "solvable": true,
-                  "source": "CERTIFICATE_HIT",
+                  "source": "CHOICE_LOWER_D4",
                   "upper": 1
                 }
               ],
@@ -5235,7 +5423,7 @@
                   "action_key": "WAIT:-",
                   "lower": 1,
                   "solvable": true,
-                  "source": "CERTIFICATE_HIT",
+                  "source": "CHOICE_LOWER_D4",
                   "upper": 1
                 }
               ],
@@ -5261,7 +5449,7 @@
                   "action_key": "WAIT:-",
                   "lower": 1,
                   "solvable": true,
-                  "source": "CERTIFICATE_HIT",
+                  "source": "CHOICE_LOWER_D4",
                   "upper": 1
                 }
               ],
@@ -5280,7 +5468,7 @@
                   "action_key": "SEND_TERR:T1R-05d4eda97f06c3::report::00",
                   "lower": 1,
                   "solvable": true,
-                  "source": "CERTIFICATE_HIT",
+                  "source": "CHOICE_LOWER_D4",
                   "upper": 1
                 },
                 {
@@ -5320,7 +5508,7 @@
                   "action_key": "WAIT:-",
                   "lower": 1,
                   "solvable": true,
-                  "source": "CERTIFICATE_HIT",
+                  "source": "CHOICE_LOWER_D4",
                   "upper": 1
                 }
               ],
@@ -5346,7 +5534,7 @@
                   "action_key": "WAIT:-",
                   "lower": 1,
                   "solvable": true,
-                  "source": "CERTIFICATE_HIT",
+                  "source": "CHOICE_LOWER_D4",
                   "upper": 1
                 }
               ],
@@ -5372,7 +5560,7 @@
                   "action_key": "WAIT:-",
                   "lower": 1,
                   "solvable": true,
-                  "source": "CERTIFICATE_HIT",
+                  "source": "CHOICE_LOWER_D4",
                   "upper": 1
                 }
               ],
@@ -5398,7 +5586,7 @@
                   "action_key": "WAIT:-",
                   "lower": 1,
                   "solvable": true,
-                  "source": "CERTIFICATE_HIT",
+                  "source": "CHOICE_LOWER_D4",
                   "upper": 1
                 }
               ],
@@ -5424,7 +5612,7 @@
                   "action_key": "WAIT:-",
                   "lower": 1,
                   "solvable": true,
-                  "source": "CERTIFICATE_HIT",
+                  "source": "CHOICE_LOWER_D4",
                   "upper": 1
                 }
               ],
@@ -5450,7 +5638,7 @@
                   "action_key": "WAIT:-",
                   "lower": 1,
                   "solvable": true,
-                  "source": "CERTIFICATE_HIT",
+                  "source": "CHOICE_LOWER_D4",
                   "upper": 1
                 }
               ],
@@ -5469,14 +5657,14 @@
                   "action_key": "SEND_TERR:T1R-05d4eda97f06c3::report::00",
                   "lower": 1,
                   "solvable": true,
-                  "source": "CERTIFICATE_HIT",
+                  "source": "CHOICE_LOWER_D4",
                   "upper": 1
                 },
                 {
                   "action_key": "SEND_TERR:T1R-05d4eda97f06c3::report::01",
-                  "lower": 0,
+                  "lower": 1,
                   "solvable": true,
-                  "source": "EXACT_FALLBACK_SUCCESS",
+                  "source": "CHOICE_LOWER_D4",
                   "upper": 1
                 },
                 {
@@ -5518,7 +5706,7 @@
                   "action_key": "WAIT:-",
                   "lower": 1,
                   "solvable": true,
-                  "source": "CERTIFICATE_HIT",
+                  "source": "CHOICE_LOWER_D4",
                   "upper": 1
                 }
               ],
@@ -5544,7 +5732,7 @@
                   "action_key": "WAIT:-",
                   "lower": 1,
                   "solvable": true,
-                  "source": "CERTIFICATE_HIT",
+                  "source": "CHOICE_LOWER_D4",
                   "upper": 1
                 }
               ],
@@ -5570,7 +5758,7 @@
                   "action_key": "WAIT:-",
                   "lower": 1,
                   "solvable": true,
-                  "source": "CERTIFICATE_HIT",
+                  "source": "CHOICE_LOWER_D4",
                   "upper": 1
                 }
               ],
@@ -5596,7 +5784,7 @@
                   "action_key": "WAIT:-",
                   "lower": 1,
                   "solvable": true,
-                  "source": "CERTIFICATE_HIT",
+                  "source": "CHOICE_LOWER_D4",
                   "upper": 1
                 }
               ],
@@ -5622,7 +5810,7 @@
                   "action_key": "WAIT:-",
                   "lower": 1,
                   "solvable": true,
-                  "source": "CERTIFICATE_HIT",
+                  "source": "CHOICE_LOWER_D4",
                   "upper": 1
                 }
               ],
@@ -5641,7 +5829,7 @@
                   "action_key": "SEND_TERR:T1R-05d4eda97f06c3::report::01",
                   "lower": 1,
                   "solvable": true,
-                  "source": "CERTIFICATE_HIT",
+                  "source": "CHOICE_LOWER_D4",
                   "upper": 1
                 },
                 {
@@ -5681,7 +5869,7 @@
                   "action_key": "WAIT:-",
                   "lower": 1,
                   "solvable": true,
-                  "source": "CERTIFICATE_HIT",
+                  "source": "CHOICE_LOWER_D4",
                   "upper": 1
                 }
               ],
@@ -5707,7 +5895,7 @@
                   "action_key": "WAIT:-",
                   "lower": 1,
                   "solvable": true,
-                  "source": "CERTIFICATE_HIT",
+                  "source": "CHOICE_LOWER_D4",
                   "upper": 1
                 }
               ],
@@ -5733,7 +5921,7 @@
                   "action_key": "WAIT:-",
                   "lower": 1,
                   "solvable": true,
-                  "source": "CERTIFICATE_HIT",
+                  "source": "CHOICE_LOWER_D4",
                   "upper": 1
                 }
               ],
@@ -5759,7 +5947,7 @@
                   "action_key": "WAIT:-",
                   "lower": 1,
                   "solvable": true,
-                  "source": "CERTIFICATE_HIT",
+                  "source": "CHOICE_LOWER_D4",
                   "upper": 1
                 }
               ],
@@ -5785,7 +5973,7 @@
                   "action_key": "WAIT:-",
                   "lower": 1,
                   "solvable": true,
-                  "source": "CERTIFICATE_HIT",
+                  "source": "CHOICE_LOWER_D4",
                   "upper": 1
                 }
               ],
@@ -5811,7 +5999,7 @@
                   "action_key": "WAIT:-",
                   "lower": 1,
                   "solvable": true,
-                  "source": "CERTIFICATE_HIT",
+                  "source": "CHOICE_LOWER_D4",
                   "upper": 1
                 }
               ],
@@ -5837,7 +6025,7 @@
                   "action_key": "WAIT:-",
                   "lower": 1,
                   "solvable": true,
-                  "source": "CERTIFICATE_HIT",
+                  "source": "CHOICE_LOWER_D4",
                   "upper": 1
                 }
               ],
@@ -5863,7 +6051,7 @@
                   "action_key": "WAIT:-",
                   "lower": 1,
                   "solvable": true,
-                  "source": "CERTIFICATE_HIT",
+                  "source": "CHOICE_LOWER_D4",
                   "upper": 1
                 }
               ],
@@ -5889,7 +6077,7 @@
                   "action_key": "WAIT:-",
                   "lower": 1,
                   "solvable": true,
-                  "source": "CERTIFICATE_HIT",
+                  "source": "CHOICE_LOWER_D4",
                   "upper": 1
                 }
               ],
@@ -5915,7 +6103,7 @@
                   "action_key": "WAIT:-",
                   "lower": 1,
                   "solvable": true,
-                  "source": "CAUSAL_LOWER_D4",
+                  "source": "CHOICE_LOWER_D4",
                   "upper": 1
                 }
               ],
@@ -5941,7 +6129,7 @@
                   "action_key": "WAIT:-",
                   "lower": 1,
                   "solvable": true,
-                  "source": "CAUSAL_LOWER_D4",
+                  "source": "CHOICE_LOWER_D4",
                   "upper": 1
                 }
               ],
@@ -5967,7 +6155,7 @@
                   "action_key": "WAIT:-",
                   "lower": 1,
                   "solvable": true,
-                  "source": "CAUSAL_LOWER_D4",
+                  "source": "CHOICE_LOWER_D4",
                   "upper": 1
                 }
               ],
@@ -5993,7 +6181,7 @@
                   "action_key": "WAIT:-",
                   "lower": 1,
                   "solvable": true,
-                  "source": "CAUSAL_LOWER_D4",
+                  "source": "CHOICE_LOWER_D4",
                   "upper": 1
                 }
               ],
@@ -6012,7 +6200,7 @@
                   "action_key": "SEND_TERR:T1R-05d4eda97f06c3::report::01",
                   "lower": 1,
                   "solvable": true,
-                  "source": "CAUSAL_LOWER_D4",
+                  "source": "CHOICE_LOWER_D4",
                   "upper": 1
                 },
                 {
@@ -6026,7 +6214,7 @@
                   "action_key": "WAIT:-",
                   "lower": 1,
                   "solvable": true,
-                  "source": "CAUSAL_LOWER_D4",
+                  "source": "CHOICE_LOWER_D4",
                   "upper": 1
                 }
               ],
@@ -6054,7 +6242,7 @@
                   "action_key": "WAIT:-",
                   "lower": 1,
                   "solvable": true,
-                  "source": "CAUSAL_LOWER_D4",
+                  "source": "CHOICE_LOWER_D4",
                   "upper": 1
                 }
               ],
@@ -6080,7 +6268,7 @@
                   "action_key": "WAIT:-",
                   "lower": 1,
                   "solvable": true,
-                  "source": "CAUSAL_LOWER_D4",
+                  "source": "CHOICE_LOWER_D4",
                   "upper": 1
                 }
               ],
@@ -6096,14 +6284,17 @@
           ],
           "boundary_count": 38,
           "lazy_counts": {
-            "causal_lower_hits": 8,
-            "certificate_hits": 30,
+            "causal_lower_hits": 0,
+            "certificate_hits": 0,
+            "choice_lower_hits": 40,
+            "choice_lower_nodes": 691,
+            "choice_upper_nodes": 0,
             "classified_actions": 81,
             "common_lower_hits": 0,
-            "exact_fallback_calls": 2,
-            "exact_fallback_expanded": 46,
+            "exact_fallback_calls": 0,
+            "exact_fallback_expanded": 0,
             "known_failure_hits": 0,
-            "lower_nodes": 227,
+            "lower_nodes": 0,
             "search_limits": 0,
             "structural_lower_hits": 0,
             "upper_nodes": 43,
@@ -6126,9 +6317,9 @@
                 },
                 {
                   "action_key": "WAIT:-",
-                  "lower": 0,
+                  "lower": 1,
                   "solvable": true,
-                  "source": "EXACT_FALLBACK_SUCCESS",
+                  "source": "CHOICE_LOWER_D4",
                   "upper": 1
                 }
               ],
@@ -6147,14 +6338,14 @@
                   "action_key": "ISSUE_QUERY:gateway_state_summary",
                   "lower": 0,
                   "solvable": false,
-                  "source": "KNOWN_FAILURE_HIT",
-                  "upper": 0
+                  "source": "EXACT_FALLBACK_FAILURE",
+                  "upper": 1
                 },
                 {
                   "action_key": "WAIT:-",
                   "lower": 1,
                   "solvable": true,
-                  "source": "CERTIFICATE_HIT",
+                  "source": "CHOICE_LOWER_D4",
                   "upper": 1
                 }
               ],
@@ -6173,14 +6364,14 @@
                   "action_key": "ISSUE_QUERY:gateway_state_summary",
                   "lower": 0,
                   "solvable": false,
-                  "source": "KNOWN_FAILURE_HIT",
-                  "upper": 0
+                  "source": "EXACT_FALLBACK_FAILURE",
+                  "upper": 1
                 },
                 {
                   "action_key": "WAIT:-",
                   "lower": 1,
                   "solvable": true,
-                  "source": "CERTIFICATE_HIT",
+                  "source": "CHOICE_LOWER_D4",
                   "upper": 1
                 }
               ],
@@ -6199,14 +6390,14 @@
                   "action_key": "ISSUE_QUERY:gateway_state_summary",
                   "lower": 0,
                   "solvable": false,
-                  "source": "KNOWN_FAILURE_HIT",
-                  "upper": 0
+                  "source": "EXACT_FALLBACK_FAILURE",
+                  "upper": 1
                 },
                 {
                   "action_key": "WAIT:-",
                   "lower": 1,
                   "solvable": true,
-                  "source": "CERTIFICATE_HIT",
+                  "source": "CHOICE_LOWER_D4",
                   "upper": 1
                 }
               ],
@@ -6225,14 +6416,14 @@
                   "action_key": "ISSUE_QUERY:gateway_state_summary",
                   "lower": 0,
                   "solvable": false,
-                  "source": "KNOWN_FAILURE_HIT",
-                  "upper": 0
+                  "source": "EXACT_FALLBACK_FAILURE",
+                  "upper": 1
                 },
                 {
                   "action_key": "WAIT:-",
                   "lower": 1,
                   "solvable": true,
-                  "source": "CERTIFICATE_HIT",
+                  "source": "CHOICE_LOWER_D4",
                   "upper": 1
                 }
               ],
@@ -6251,14 +6442,14 @@
                   "action_key": "ISSUE_QUERY:gateway_state_summary",
                   "lower": 0,
                   "solvable": false,
-                  "source": "KNOWN_FAILURE_HIT",
-                  "upper": 0
+                  "source": "EXACT_FALLBACK_FAILURE",
+                  "upper": 1
                 },
                 {
                   "action_key": "WAIT:-",
                   "lower": 1,
                   "solvable": true,
-                  "source": "CERTIFICATE_HIT",
+                  "source": "CHOICE_LOWER_D4",
                   "upper": 1
                 }
               ],
@@ -6277,14 +6468,14 @@
                   "action_key": "ISSUE_QUERY:gateway_state_summary",
                   "lower": 0,
                   "solvable": false,
-                  "source": "KNOWN_FAILURE_HIT",
-                  "upper": 0
+                  "source": "EXACT_FALLBACK_FAILURE",
+                  "upper": 1
                 },
                 {
                   "action_key": "WAIT:-",
                   "lower": 1,
                   "solvable": true,
-                  "source": "CERTIFICATE_HIT",
+                  "source": "CHOICE_LOWER_D4",
                   "upper": 1
                 }
               ],
@@ -6303,14 +6494,14 @@
                   "action_key": "ISSUE_QUERY:gateway_state_summary",
                   "lower": 0,
                   "solvable": false,
-                  "source": "KNOWN_FAILURE_HIT",
-                  "upper": 0
+                  "source": "EXACT_FALLBACK_FAILURE",
+                  "upper": 1
                 },
                 {
                   "action_key": "WAIT:-",
                   "lower": 1,
                   "solvable": true,
-                  "source": "CERTIFICATE_HIT",
+                  "source": "CHOICE_LOWER_D4",
                   "upper": 1
                 }
               ],
@@ -6329,7 +6520,7 @@
                   "action_key": "SEND_TERR:T1R-3df3584ae2b835::report::00",
                   "lower": 1,
                   "solvable": true,
-                  "source": "CERTIFICATE_HIT",
+                  "source": "CHOICE_LOWER_D4",
                   "upper": 1
                 },
                 {
@@ -6362,14 +6553,14 @@
                   "action_key": "ISSUE_QUERY:gateway_state_summary",
                   "lower": 0,
                   "solvable": false,
-                  "source": "KNOWN_FAILURE_HIT",
-                  "upper": 0
+                  "source": "EXACT_FALLBACK_FAILURE",
+                  "upper": 1
                 },
                 {
                   "action_key": "WAIT:-",
                   "lower": 1,
                   "solvable": true,
-                  "source": "CERTIFICATE_HIT",
+                  "source": "CHOICE_LOWER_D4",
                   "upper": 1
                 }
               ],
@@ -6388,14 +6579,14 @@
                   "action_key": "ISSUE_QUERY:gateway_state_summary",
                   "lower": 0,
                   "solvable": false,
-                  "source": "KNOWN_FAILURE_HIT",
-                  "upper": 0
+                  "source": "EXACT_FALLBACK_FAILURE",
+                  "upper": 1
                 },
                 {
                   "action_key": "WAIT:-",
                   "lower": 1,
                   "solvable": true,
-                  "source": "CERTIFICATE_HIT",
+                  "source": "CHOICE_LOWER_D4",
                   "upper": 1
                 }
               ],
@@ -6414,14 +6605,14 @@
                   "action_key": "ISSUE_QUERY:gateway_state_summary",
                   "lower": 0,
                   "solvable": false,
-                  "source": "KNOWN_FAILURE_HIT",
-                  "upper": 0
+                  "source": "EXACT_FALLBACK_FAILURE",
+                  "upper": 1
                 },
                 {
                   "action_key": "WAIT:-",
                   "lower": 1,
                   "solvable": true,
-                  "source": "CERTIFICATE_HIT",
+                  "source": "CHOICE_LOWER_D4",
                   "upper": 1
                 }
               ],
@@ -6440,14 +6631,14 @@
                   "action_key": "ISSUE_QUERY:gateway_state_summary",
                   "lower": 0,
                   "solvable": false,
-                  "source": "KNOWN_FAILURE_HIT",
-                  "upper": 0
+                  "source": "EXACT_FALLBACK_FAILURE",
+                  "upper": 1
                 },
                 {
                   "action_key": "WAIT:-",
                   "lower": 1,
                   "solvable": true,
-                  "source": "CAUSAL_LOWER_D4",
+                  "source": "CHOICE_LOWER_D4",
                   "upper": 1
                 }
               ],
@@ -6466,14 +6657,14 @@
                   "action_key": "ISSUE_QUERY:gateway_state_summary",
                   "lower": 0,
                   "solvable": false,
-                  "source": "KNOWN_FAILURE_HIT",
-                  "upper": 0
+                  "source": "EXACT_FALLBACK_FAILURE",
+                  "upper": 1
                 },
                 {
                   "action_key": "WAIT:-",
                   "lower": 1,
                   "solvable": true,
-                  "source": "CAUSAL_LOWER_D4",
+                  "source": "CHOICE_LOWER_D4",
                   "upper": 1
                 }
               ],
@@ -6492,14 +6683,14 @@
                   "action_key": "ISSUE_QUERY:gateway_state_summary",
                   "lower": 0,
                   "solvable": false,
-                  "source": "KNOWN_FAILURE_HIT",
-                  "upper": 0
+                  "source": "EXACT_FALLBACK_FAILURE",
+                  "upper": 1
                 },
                 {
                   "action_key": "WAIT:-",
                   "lower": 1,
                   "solvable": true,
-                  "source": "CAUSAL_LOWER_D4",
+                  "source": "CHOICE_LOWER_D4",
                   "upper": 1
                 }
               ],
@@ -6518,14 +6709,14 @@
                   "action_key": "SEND_TERR:T1R-3df3584ae2b835::report::01",
                   "lower": 0,
                   "solvable": false,
-                  "source": "KNOWN_FAILURE_HIT",
-                  "upper": 0
+                  "source": "EXACT_FALLBACK_FAILURE",
+                  "upper": 1
                 },
                 {
                   "action_key": "ISSUE_QUERY:gateway_state_summary",
                   "lower": 1,
                   "solvable": true,
-                  "source": "CAUSAL_LOWER_D4",
+                  "source": "CHOICE_LOWER_D4",
                   "upper": 1
                 },
                 {
@@ -6548,14 +6739,17 @@
           ],
           "boundary_count": 16,
           "lazy_counts": {
-            "causal_lower_hits": 4,
-            "certificate_hits": 11,
+            "causal_lower_hits": 0,
+            "certificate_hits": 0,
+            "choice_lower_hits": 16,
+            "choice_lower_nodes": 3580,
+            "choice_upper_nodes": 0,
             "classified_actions": 34,
             "common_lower_hits": 0,
-            "exact_fallback_calls": 3,
-            "exact_fallback_expanded": 350,
-            "known_failure_hits": 14,
-            "lower_nodes": 365,
+            "exact_fallback_calls": 16,
+            "exact_fallback_expanded": 272,
+            "known_failure_hits": 0,
+            "lower_nodes": 0,
             "search_limits": 0,
             "structural_lower_hits": 0,
             "upper_nodes": 34,
@@ -6781,7 +6975,7 @@
                   "action_key": "SEND_TERR:T1R-5fe91fd0393d43::report::00",
                   "lower": 1,
                   "solvable": true,
-                  "source": "CERTIFICATE_HIT",
+                  "source": "CHOICE_LOWER_D4",
                   "upper": 1
                 },
                 {
@@ -6821,7 +7015,7 @@
                   "action_key": "WAIT:-",
                   "lower": 1,
                   "solvable": true,
-                  "source": "CERTIFICATE_HIT",
+                  "source": "CHOICE_LOWER_D4",
                   "upper": 1
                 }
               ],
@@ -6847,7 +7041,7 @@
                   "action_key": "WAIT:-",
                   "lower": 1,
                   "solvable": true,
-                  "source": "CERTIFICATE_HIT",
+                  "source": "CHOICE_LOWER_D4",
                   "upper": 1
                 }
               ],
@@ -6873,7 +7067,7 @@
                   "action_key": "WAIT:-",
                   "lower": 1,
                   "solvable": true,
-                  "source": "CERTIFICATE_HIT",
+                  "source": "CHOICE_LOWER_D4",
                   "upper": 1
                 }
               ],
@@ -6899,7 +7093,7 @@
                   "action_key": "WAIT:-",
                   "lower": 1,
                   "solvable": true,
-                  "source": "CERTIFICATE_HIT",
+                  "source": "CHOICE_LOWER_D4",
                   "upper": 1
                 }
               ],
@@ -6925,7 +7119,7 @@
                   "action_key": "WAIT:-",
                   "lower": 1,
                   "solvable": true,
-                  "source": "CERTIFICATE_HIT",
+                  "source": "CHOICE_LOWER_D4",
                   "upper": 1
                 }
               ],
@@ -6951,7 +7145,7 @@
                   "action_key": "WAIT:-",
                   "lower": 1,
                   "solvable": true,
-                  "source": "CERTIFICATE_HIT",
+                  "source": "CHOICE_LOWER_D4",
                   "upper": 1
                 }
               ],
@@ -6977,7 +7171,7 @@
                   "action_key": "ISSUE_QUERY:gateway_state_summary",
                   "lower": 1,
                   "solvable": true,
-                  "source": "CERTIFICATE_HIT",
+                  "source": "CHOICE_LOWER_D4",
                   "upper": 1
                 },
                 {
@@ -7001,13 +7195,16 @@
           "boundary_count": 16,
           "lazy_counts": {
             "causal_lower_hits": 0,
-            "certificate_hits": 15,
+            "certificate_hits": 7,
+            "choice_lower_hits": 8,
+            "choice_lower_nodes": 8885,
+            "choice_upper_nodes": 0,
             "classified_actions": 34,
             "common_lower_hits": 0,
             "exact_fallback_calls": 3,
             "exact_fallback_expanded": 410,
             "known_failure_hits": 14,
-            "lower_nodes": 396,
+            "lower_nodes": 0,
             "search_limits": 0,
             "structural_lower_hits": 0,
             "upper_nodes": 34,
@@ -7030,9 +7227,9 @@
                 },
                 {
                   "action_key": "WAIT:-",
-                  "lower": 0,
+                  "lower": 1,
                   "solvable": true,
-                  "source": "EXACT_FALLBACK_SUCCESS",
+                  "source": "CHOICE_LOWER_D4",
                   "upper": 1
                 }
               ],
@@ -7051,7 +7248,7 @@
                   "action_key": "SEND_SAT:T1R-ff799931fee10a::report::00",
                   "lower": 1,
                   "solvable": true,
-                  "source": "CERTIFICATE_HIT",
+                  "source": "CHOICE_LOWER_D4",
                   "upper": 1
                 },
                 {
@@ -7063,9 +7260,9 @@
                 },
                 {
                   "action_key": "WAIT:-",
-                  "lower": 0,
+                  "lower": 1,
                   "solvable": true,
-                  "source": "EXACT_FALLBACK_SUCCESS",
+                  "source": "CHOICE_LOWER_D4",
                   "upper": 1
                 }
               ],
@@ -7093,7 +7290,7 @@
                   "action_key": "WAIT:-",
                   "lower": 1,
                   "solvable": true,
-                  "source": "CERTIFICATE_HIT",
+                  "source": "CHOICE_LOWER_D4",
                   "upper": 1
                 }
               ],
@@ -7112,14 +7309,14 @@
                   "action_key": "ISSUE_QUERY:gateway_state_summary",
                   "lower": 0,
                   "solvable": false,
-                  "source": "KNOWN_FAILURE_HIT",
-                  "upper": 0
+                  "source": "EXACT_FALLBACK_FAILURE",
+                  "upper": 1
                 },
                 {
                   "action_key": "WAIT:-",
                   "lower": 1,
                   "solvable": true,
-                  "source": "CERTIFICATE_HIT",
+                  "source": "CHOICE_LOWER_D4",
                   "upper": 1
                 }
               ],
@@ -7138,14 +7335,14 @@
                   "action_key": "ISSUE_QUERY:gateway_state_summary",
                   "lower": 0,
                   "solvable": false,
-                  "source": "KNOWN_FAILURE_HIT",
-                  "upper": 0
+                  "source": "EXACT_FALLBACK_FAILURE",
+                  "upper": 1
                 },
                 {
                   "action_key": "WAIT:-",
                   "lower": 1,
                   "solvable": true,
-                  "source": "CERTIFICATE_HIT",
+                  "source": "CHOICE_LOWER_D4",
                   "upper": 1
                 }
               ],
@@ -7164,14 +7361,14 @@
                   "action_key": "ISSUE_QUERY:gateway_state_summary",
                   "lower": 0,
                   "solvable": false,
-                  "source": "KNOWN_FAILURE_HIT",
-                  "upper": 0
+                  "source": "EXACT_FALLBACK_FAILURE",
+                  "upper": 1
                 },
                 {
                   "action_key": "WAIT:-",
                   "lower": 1,
                   "solvable": true,
-                  "source": "CERTIFICATE_HIT",
+                  "source": "CHOICE_LOWER_D4",
                   "upper": 1
                 }
               ],
@@ -7190,14 +7387,14 @@
                   "action_key": "ISSUE_QUERY:gateway_state_summary",
                   "lower": 0,
                   "solvable": false,
-                  "source": "KNOWN_FAILURE_HIT",
-                  "upper": 0
+                  "source": "EXACT_FALLBACK_FAILURE",
+                  "upper": 1
                 },
                 {
                   "action_key": "WAIT:-",
                   "lower": 1,
                   "solvable": true,
-                  "source": "CERTIFICATE_HIT",
+                  "source": "CHOICE_LOWER_D4",
                   "upper": 1
                 }
               ],
@@ -7216,14 +7413,14 @@
                   "action_key": "ISSUE_QUERY:gateway_state_summary",
                   "lower": 0,
                   "solvable": false,
-                  "source": "KNOWN_FAILURE_HIT",
-                  "upper": 0
+                  "source": "EXACT_FALLBACK_FAILURE",
+                  "upper": 1
                 },
                 {
                   "action_key": "WAIT:-",
                   "lower": 1,
                   "solvable": true,
-                  "source": "CERTIFICATE_HIT",
+                  "source": "CHOICE_LOWER_D4",
                   "upper": 1
                 }
               ],
@@ -7242,14 +7439,14 @@
                   "action_key": "ISSUE_QUERY:gateway_state_summary",
                   "lower": 0,
                   "solvable": false,
-                  "source": "KNOWN_FAILURE_HIT",
-                  "upper": 0
+                  "source": "EXACT_FALLBACK_FAILURE",
+                  "upper": 1
                 },
                 {
                   "action_key": "WAIT:-",
                   "lower": 1,
                   "solvable": true,
-                  "source": "CERTIFICATE_HIT",
+                  "source": "CHOICE_LOWER_D4",
                   "upper": 1
                 }
               ],
@@ -7268,14 +7465,14 @@
                   "action_key": "ISSUE_QUERY:gateway_state_summary",
                   "lower": 0,
                   "solvable": false,
-                  "source": "KNOWN_FAILURE_HIT",
-                  "upper": 0
+                  "source": "EXACT_FALLBACK_FAILURE",
+                  "upper": 1
                 },
                 {
                   "action_key": "WAIT:-",
                   "lower": 1,
                   "solvable": true,
-                  "source": "CERTIFICATE_HIT",
+                  "source": "CHOICE_LOWER_D4",
                   "upper": 1
                 }
               ],
@@ -7294,14 +7491,14 @@
                   "action_key": "SEND_TERR:T1R-ff799931fee10a::report::01",
                   "lower": 1,
                   "solvable": true,
-                  "source": "CERTIFICATE_HIT",
+                  "source": "CHOICE_LOWER_D4",
                   "upper": 1
                 },
                 {
                   "action_key": "ISSUE_QUERY:gateway_state_summary",
-                  "lower": 0,
+                  "lower": 1,
                   "solvable": true,
-                  "source": "EXACT_FALLBACK_SUCCESS",
+                  "source": "CHOICE_LOWER_D4",
                   "upper": 1
                 },
                 {
@@ -7329,14 +7526,14 @@
                   "action_key": "ISSUE_QUERY:gateway_state_summary",
                   "lower": 0,
                   "solvable": false,
-                  "source": "KNOWN_FAILURE_HIT",
-                  "upper": 0
+                  "source": "EXACT_FALLBACK_FAILURE",
+                  "upper": 1
                 },
                 {
                   "action_key": "WAIT:-",
                   "lower": 1,
                   "solvable": true,
-                  "source": "CERTIFICATE_HIT",
+                  "source": "CHOICE_LOWER_D4",
                   "upper": 1
                 }
               ],
@@ -7355,14 +7552,14 @@
                   "action_key": "ISSUE_QUERY:gateway_state_summary",
                   "lower": 0,
                   "solvable": false,
-                  "source": "KNOWN_FAILURE_HIT",
-                  "upper": 0
+                  "source": "EXACT_FALLBACK_FAILURE",
+                  "upper": 1
                 },
                 {
                   "action_key": "WAIT:-",
                   "lower": 1,
                   "solvable": true,
-                  "source": "CERTIFICATE_HIT",
+                  "source": "CHOICE_LOWER_D4",
                   "upper": 1
                 }
               ],
@@ -7381,14 +7578,14 @@
                   "action_key": "ISSUE_QUERY:gateway_state_summary",
                   "lower": 0,
                   "solvable": false,
-                  "source": "KNOWN_FAILURE_HIT",
-                  "upper": 0
+                  "source": "EXACT_FALLBACK_FAILURE",
+                  "upper": 1
                 },
                 {
                   "action_key": "WAIT:-",
                   "lower": 1,
                   "solvable": true,
-                  "source": "CERTIFICATE_HIT",
+                  "source": "CHOICE_LOWER_D4",
                   "upper": 1
                 }
               ],
@@ -7407,14 +7604,14 @@
                   "action_key": "ISSUE_QUERY:gateway_state_summary",
                   "lower": 0,
                   "solvable": false,
-                  "source": "KNOWN_FAILURE_HIT",
-                  "upper": 0
+                  "source": "EXACT_FALLBACK_FAILURE",
+                  "upper": 1
                 },
                 {
                   "action_key": "WAIT:-",
                   "lower": 1,
                   "solvable": true,
-                  "source": "CERTIFICATE_HIT",
+                  "source": "CHOICE_LOWER_D4",
                   "upper": 1
                 }
               ],
@@ -7433,14 +7630,14 @@
                   "action_key": "ISSUE_QUERY:gateway_state_summary",
                   "lower": 0,
                   "solvable": false,
-                  "source": "KNOWN_FAILURE_HIT",
-                  "upper": 0
+                  "source": "EXACT_FALLBACK_FAILURE",
+                  "upper": 1
                 },
                 {
                   "action_key": "WAIT:-",
                   "lower": 1,
                   "solvable": true,
-                  "source": "CERTIFICATE_HIT",
+                  "source": "CHOICE_LOWER_D4",
                   "upper": 1
                 }
               ],
@@ -7459,14 +7656,14 @@
                   "action_key": "ISSUE_QUERY:gateway_state_summary",
                   "lower": 0,
                   "solvable": false,
-                  "source": "KNOWN_FAILURE_HIT",
-                  "upper": 0
+                  "source": "EXACT_FALLBACK_FAILURE",
+                  "upper": 1
                 },
                 {
                   "action_key": "WAIT:-",
                   "lower": 1,
                   "solvable": true,
-                  "source": "CERTIFICATE_HIT",
+                  "source": "CHOICE_LOWER_D4",
                   "upper": 1
                 }
               ],
@@ -7485,14 +7682,14 @@
                   "action_key": "ISSUE_QUERY:gateway_state_summary",
                   "lower": 0,
                   "solvable": false,
-                  "source": "KNOWN_FAILURE_HIT",
-                  "upper": 0
+                  "source": "EXACT_FALLBACK_FAILURE",
+                  "upper": 1
                 },
                 {
                   "action_key": "WAIT:-",
                   "lower": 1,
                   "solvable": true,
-                  "source": "CERTIFICATE_HIT",
+                  "source": "CHOICE_LOWER_D4",
                   "upper": 1
                 }
               ],
@@ -7511,14 +7708,14 @@
                   "action_key": "ISSUE_QUERY:gateway_state_summary",
                   "lower": 0,
                   "solvable": false,
-                  "source": "KNOWN_FAILURE_HIT",
-                  "upper": 0
+                  "source": "EXACT_FALLBACK_FAILURE",
+                  "upper": 1
                 },
                 {
                   "action_key": "WAIT:-",
                   "lower": 1,
                   "solvable": true,
-                  "source": "CERTIFICATE_HIT",
+                  "source": "CHOICE_LOWER_D4",
                   "upper": 1
                 }
               ],
@@ -7537,14 +7734,14 @@
                   "action_key": "ISSUE_QUERY:gateway_state_summary",
                   "lower": 0,
                   "solvable": false,
-                  "source": "KNOWN_FAILURE_HIT",
-                  "upper": 0
+                  "source": "EXACT_FALLBACK_FAILURE",
+                  "upper": 1
                 },
                 {
                   "action_key": "WAIT:-",
                   "lower": 1,
                   "solvable": true,
-                  "source": "CERTIFICATE_HIT",
+                  "source": "CHOICE_LOWER_D4",
                   "upper": 1
                 }
               ],
@@ -7563,14 +7760,14 @@
                   "action_key": "ISSUE_QUERY:gateway_state_summary",
                   "lower": 0,
                   "solvable": false,
-                  "source": "KNOWN_FAILURE_HIT",
-                  "upper": 0
+                  "source": "EXACT_FALLBACK_FAILURE",
+                  "upper": 1
                 },
                 {
                   "action_key": "WAIT:-",
                   "lower": 1,
                   "solvable": true,
-                  "source": "CERTIFICATE_HIT",
+                  "source": "CHOICE_LOWER_D4",
                   "upper": 1
                 }
               ],
@@ -7589,14 +7786,14 @@
                   "action_key": "ISSUE_QUERY:gateway_state_summary",
                   "lower": 0,
                   "solvable": false,
-                  "source": "KNOWN_FAILURE_HIT",
-                  "upper": 0
+                  "source": "EXACT_FALLBACK_FAILURE",
+                  "upper": 1
                 },
                 {
                   "action_key": "WAIT:-",
                   "lower": 1,
                   "solvable": true,
-                  "source": "CERTIFICATE_HIT",
+                  "source": "CHOICE_LOWER_D4",
                   "upper": 1
                 }
               ],
@@ -7615,21 +7812,21 @@
                   "action_key": "SEND_SAT:T1R-ff799931fee10a::report::02",
                   "lower": 0,
                   "solvable": false,
-                  "source": "KNOWN_FAILURE_HIT",
-                  "upper": 0
+                  "source": "EXACT_FALLBACK_FAILURE",
+                  "upper": 1
                 },
                 {
                   "action_key": "ISSUE_QUERY:gateway_state_summary",
                   "lower": 0,
                   "solvable": false,
-                  "source": "KNOWN_FAILURE_HIT",
-                  "upper": 0
+                  "source": "EXACT_FALLBACK_FAILURE",
+                  "upper": 1
                 },
                 {
                   "action_key": "WAIT:-",
                   "lower": 1,
                   "solvable": true,
-                  "source": "CERTIFICATE_HIT",
+                  "source": "CHOICE_LOWER_D4",
                   "upper": 1
                 }
               ],
@@ -7648,14 +7845,14 @@
                   "action_key": "ISSUE_QUERY:gateway_state_summary",
                   "lower": 0,
                   "solvable": false,
-                  "source": "KNOWN_FAILURE_HIT",
-                  "upper": 0
+                  "source": "EXACT_FALLBACK_FAILURE",
+                  "upper": 1
                 },
                 {
                   "action_key": "WAIT:-",
                   "lower": 1,
                   "solvable": true,
-                  "source": "CAUSAL_LOWER_D4",
+                  "source": "CHOICE_LOWER_D4",
                   "upper": 1
                 }
               ],
@@ -7674,21 +7871,21 @@
                   "action_key": "SEND_SAT:T1R-ff799931fee10a::report::02",
                   "lower": 0,
                   "solvable": false,
-                  "source": "KNOWN_FAILURE_HIT",
-                  "upper": 0
+                  "source": "EXACT_FALLBACK_FAILURE",
+                  "upper": 1
                 },
                 {
                   "action_key": "ISSUE_QUERY:gateway_state_summary",
                   "lower": 0,
                   "solvable": false,
-                  "source": "KNOWN_FAILURE_HIT",
-                  "upper": 0
+                  "source": "EXACT_FALLBACK_FAILURE",
+                  "upper": 1
                 },
                 {
                   "action_key": "WAIT:-",
                   "lower": 1,
                   "solvable": true,
-                  "source": "CAUSAL_LOWER_D4",
+                  "source": "CHOICE_LOWER_D4",
                   "upper": 1
                 }
               ],
@@ -7707,14 +7904,14 @@
                   "action_key": "ISSUE_QUERY:gateway_state_summary",
                   "lower": 0,
                   "solvable": false,
-                  "source": "KNOWN_FAILURE_HIT",
-                  "upper": 0
+                  "source": "EXACT_FALLBACK_FAILURE",
+                  "upper": 1
                 },
                 {
                   "action_key": "WAIT:-",
                   "lower": 1,
                   "solvable": true,
-                  "source": "CAUSAL_LOWER_D4",
+                  "source": "CHOICE_LOWER_D4",
                   "upper": 1
                 }
               ],
@@ -7733,14 +7930,14 @@
                   "action_key": "SEND_TERR:T1R-ff799931fee10a::report::02",
                   "lower": 0,
                   "solvable": false,
-                  "source": "KNOWN_FAILURE_HIT",
-                  "upper": 0
+                  "source": "EXACT_FALLBACK_FAILURE",
+                  "upper": 1
                 },
                 {
                   "action_key": "ISSUE_QUERY:gateway_state_summary",
                   "lower": 1,
                   "solvable": true,
-                  "source": "CAUSAL_LOWER_D4",
+                  "source": "CHOICE_LOWER_D4",
                   "upper": 1
                 },
                 {
@@ -7763,14 +7960,17 @@
           ],
           "boundary_count": 27,
           "lazy_counts": {
-            "causal_lower_hits": 4,
-            "certificate_hits": 22,
+            "causal_lower_hits": 0,
+            "certificate_hits": 0,
+            "choice_lower_hits": 29,
+            "choice_lower_nodes": 25649,
+            "choice_upper_nodes": 0,
             "classified_actions": 59,
             "common_lower_hits": 0,
-            "exact_fallback_calls": 7,
-            "exact_fallback_expanded": 4537,
-            "known_failure_hits": 26,
-            "lower_nodes": 745,
+            "exact_fallback_calls": 29,
+            "exact_fallback_expanded": 4215,
+            "known_failure_hits": 1,
+            "lower_nodes": 0,
             "search_limits": 0,
             "structural_lower_hits": 0,
             "upper_nodes": 59,
@@ -8057,7 +8257,7 @@
                   "action_key": "SEND_TERR:T1R-6f552cceffd06c::report::01",
                   "lower": 1,
                   "solvable": true,
-                  "source": "CERTIFICATE_HIT",
+                  "source": "CHOICE_LOWER_D4",
                   "upper": 1
                 },
                 {
@@ -8097,7 +8297,7 @@
                   "action_key": "WAIT:-",
                   "lower": 1,
                   "solvable": true,
-                  "source": "CERTIFICATE_HIT",
+                  "source": "CHOICE_LOWER_D4",
                   "upper": 1
                 }
               ],
@@ -8123,7 +8323,7 @@
                   "action_key": "WAIT:-",
                   "lower": 1,
                   "solvable": true,
-                  "source": "CERTIFICATE_HIT",
+                  "source": "CHOICE_LOWER_D4",
                   "upper": 1
                 }
               ],
@@ -8149,7 +8349,7 @@
                   "action_key": "WAIT:-",
                   "lower": 1,
                   "solvable": true,
-                  "source": "CERTIFICATE_HIT",
+                  "source": "CHOICE_LOWER_D4",
                   "upper": 1
                 }
               ],
@@ -8175,7 +8375,7 @@
                   "action_key": "WAIT:-",
                   "lower": 1,
                   "solvable": true,
-                  "source": "CERTIFICATE_HIT",
+                  "source": "CHOICE_LOWER_D4",
                   "upper": 1
                 }
               ],
@@ -8201,7 +8401,7 @@
                   "action_key": "WAIT:-",
                   "lower": 1,
                   "solvable": true,
-                  "source": "CERTIFICATE_HIT",
+                  "source": "CHOICE_LOWER_D4",
                   "upper": 1
                 }
               ],
@@ -8227,7 +8427,7 @@
                   "action_key": "WAIT:-",
                   "lower": 1,
                   "solvable": true,
-                  "source": "CERTIFICATE_HIT",
+                  "source": "CHOICE_LOWER_D4",
                   "upper": 1
                 }
               ],
@@ -8253,7 +8453,7 @@
                   "action_key": "WAIT:-",
                   "lower": 1,
                   "solvable": true,
-                  "source": "CERTIFICATE_HIT",
+                  "source": "CHOICE_LOWER_D4",
                   "upper": 1
                 }
               ],
@@ -8279,7 +8479,7 @@
                   "action_key": "WAIT:-",
                   "lower": 1,
                   "solvable": true,
-                  "source": "CERTIFICATE_HIT",
+                  "source": "CHOICE_LOWER_D4",
                   "upper": 1
                 }
               ],
@@ -8305,7 +8505,7 @@
                   "action_key": "WAIT:-",
                   "lower": 1,
                   "solvable": true,
-                  "source": "CERTIFICATE_HIT",
+                  "source": "CHOICE_LOWER_D4",
                   "upper": 1
                 }
               ],
@@ -8331,7 +8531,7 @@
                   "action_key": "WAIT:-",
                   "lower": 1,
                   "solvable": true,
-                  "source": "CERTIFICATE_HIT",
+                  "source": "CHOICE_LOWER_D4",
                   "upper": 1
                 }
               ],
@@ -8357,7 +8557,7 @@
                   "action_key": "WAIT:-",
                   "lower": 1,
                   "solvable": true,
-                  "source": "CERTIFICATE_HIT",
+                  "source": "CHOICE_LOWER_D4",
                   "upper": 1
                 }
               ],
@@ -8390,7 +8590,7 @@
                   "action_key": "WAIT:-",
                   "lower": 1,
                   "solvable": true,
-                  "source": "CERTIFICATE_HIT",
+                  "source": "CHOICE_LOWER_D4",
                   "upper": 1
                 }
               ],
@@ -8416,7 +8616,7 @@
                   "action_key": "WAIT:-",
                   "lower": 1,
                   "solvable": true,
-                  "source": "CERTIFICATE_HIT",
+                  "source": "CHOICE_LOWER_D4",
                   "upper": 1
                 }
               ],
@@ -8449,7 +8649,7 @@
                   "action_key": "WAIT:-",
                   "lower": 1,
                   "solvable": true,
-                  "source": "CERTIFICATE_HIT",
+                  "source": "CHOICE_LOWER_D4",
                   "upper": 1
                 }
               ],
@@ -8475,7 +8675,7 @@
                   "action_key": "WAIT:-",
                   "lower": 1,
                   "solvable": true,
-                  "source": "CERTIFICATE_HIT",
+                  "source": "CHOICE_LOWER_D4",
                   "upper": 1
                 }
               ],
@@ -8501,7 +8701,7 @@
                   "action_key": "ISSUE_QUERY:gateway_state_summary",
                   "lower": 1,
                   "solvable": true,
-                  "source": "CERTIFICATE_HIT",
+                  "source": "CHOICE_LOWER_D4",
                   "upper": 1
                 },
                 {
@@ -8525,13 +8725,16 @@
           "boundary_count": 27,
           "lazy_counts": {
             "causal_lower_hits": 0,
-            "certificate_hits": 26,
+            "certificate_hits": 9,
+            "choice_lower_hits": 17,
+            "choice_lower_nodes": 81624,
+            "choice_upper_nodes": 0,
             "classified_actions": 59,
             "common_lower_hits": 0,
             "exact_fallback_calls": 7,
             "exact_fallback_expanded": 6127,
             "known_failure_hits": 26,
-            "lower_nodes": 775,
+            "lower_nodes": 0,
             "search_limits": 0,
             "structural_lower_hits": 0,
             "upper_nodes": 59,
@@ -8548,24 +8751,24 @@
       "use_lower": false,
       "use_upper": true
     },
-    "witness_domain_plus_causal_lower_d6_upper_d0": {
+    "witness_domain_plus_choice_lower_d6_upper_d0": {
       "all_certified_action_sets_match_reference": true,
-      "causal_lower_depth": 6,
+      "causal_lower_depth": null,
+      "choice_lower_depth": 6,
+      "choice_lower_nodes": 203369,
       "classification_source_count": {
-        "CAUSAL_LOWER_D6": 52,
-        "CERTIFICATE_HIT": 238,
-        "EXACT_FALLBACK_FAILURE": 31,
-        "EXACT_FALLBACK_SUCCESS": 25,
-        "KNOWN_FAILURE_HIT": 204,
+        "CHOICE_LOWER_D6": 315,
+        "EXACT_FALLBACK_FAILURE": 229,
+        "KNOWN_FAILURE_HIT": 6,
         "QUERY_BUDGET_EXHAUSTED": 76,
         "STRUCTURAL_UPPER_PRUNE_D0": 14
       },
       "classified_action_count": 640,
-      "exact_calls_avoided_after_zero_expansion_probe": 584,
-      "exact_fallback_calls": 56,
-      "exact_fallback_expanded": 35184,
-      "exact_fallback_fraction": 0.0875,
-      "lower_nodes": 11946,
+      "exact_calls_avoided_after_zero_expansion_probe": 411,
+      "exact_fallback_calls": 229,
+      "exact_fallback_expanded": 32680,
+      "exact_fallback_fraction": 0.3578125,
+      "lower_nodes": 0,
       "mode": "witness_domain",
       "rows": [],
       "search_limit_count": 0,
@@ -8578,6 +8781,8 @@
     "witness_domain_plus_common_lower_upper": {
       "all_certified_action_sets_match_reference": true,
       "causal_lower_depth": null,
+      "choice_lower_depth": null,
+      "choice_lower_nodes": 0,
       "classification_source_count": {
         "CERTIFICATE_HIT": 280,
         "EXACT_FALLBACK_FAILURE": 31,
@@ -8605,6 +8810,8 @@
     "witness_domain_plus_lower_upper": {
       "all_certified_action_sets_match_reference": true,
       "causal_lower_depth": null,
+      "choice_lower_depth": null,
+      "choice_lower_nodes": 0,
       "classification_source_count": {
         "CERTIFICATE_HIT": 280,
         "EXACT_FALLBACK_FAILURE": 31,
@@ -8632,6 +8839,8 @@
     "witness_domain_plus_upper_d0": {
       "all_certified_action_sets_match_reference": true,
       "causal_lower_depth": null,
+      "choice_lower_depth": null,
+      "choice_lower_nodes": 0,
       "classification_source_count": {
         "CERTIFICATE_HIT": 286,
         "EXACT_FALLBACK_FAILURE": 31,
@@ -8658,6 +8867,8 @@
     "witness_domain_plus_upper_d1": {
       "all_certified_action_sets_match_reference": true,
       "causal_lower_depth": null,
+      "choice_lower_depth": null,
+      "choice_lower_nodes": 0,
       "classification_source_count": {
         "CERTIFICATE_HIT": 286,
         "EXACT_FALLBACK_FAILURE": 31,
@@ -8684,6 +8895,8 @@
     "witness_domain_plus_upper_d2": {
       "all_certified_action_sets_match_reference": true,
       "causal_lower_depth": null,
+      "choice_lower_depth": null,
+      "choice_lower_nodes": 0,
       "classification_source_count": {
         "CERTIFICATE_HIT": 286,
         "EXACT_FALLBACK_FAILURE": 31,
@@ -8710,6 +8923,8 @@
     "witness_domain_plus_upper_d4": {
       "all_certified_action_sets_match_reference": true,
       "causal_lower_depth": null,
+      "choice_lower_depth": null,
+      "choice_lower_nodes": 0,
       "classification_source_count": {
         "CERTIFICATE_HIT": 286,
         "EXACT_FALLBACK_FAILURE": 27,
@@ -8736,6 +8951,8 @@
     "witness_domain_plus_upper_d6": {
       "all_certified_action_sets_match_reference": true,
       "causal_lower_depth": null,
+      "choice_lower_depth": null,
+      "choice_lower_nodes": 0,
       "classification_source_count": {
         "CERTIFICATE_HIT": 286,
         "EXACT_FALLBACK_FAILURE": 27,

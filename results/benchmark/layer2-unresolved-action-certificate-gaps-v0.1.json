@@ -1,0 +1,549 @@
+{
+  "baseline": "witness_domain + causal_lower_d2 + causal_upper_d0 + exact fallback",
+  "by_outcome_action_and_gap": {
+    "FAILURE|ISSUE_QUERY|NO_UPPER_PRUNE_THROUGH_D12": 19,
+    "FAILURE|WAIT|NO_UPPER_PRUNE_THROUGH_D12": 6,
+    "FAILURE|WAIT|UPPER_PRUNE_DEPTH_4": 4,
+    "FAILURE|WAIT|UPPER_PRUNE_DEPTH_8": 2,
+    "SUCCESS|ISSUE_QUERY|NO_LOWER_CERT_THROUGH_D12": 3,
+    "SUCCESS|SEND_TERR|NO_LOWER_CERT_THROUGH_D12": 2,
+    "SUCCESS|WAIT|NO_LOWER_CERT_THROUGH_D12": 20
+  },
+  "claim_boundary": [
+    "This diagnoses the remaining exact fallbacks after the selected cheap d2-lower/d0-upper stack on twelve frozen cases.",
+    "A missing lower certificate through d12 means the current satellite/common structural leaves cannot prove the successful continuation within that bounded causal depth; it does not imply no compact certificate exists.",
+    "A missing upper prune through d12 means the current optimistic-flow causal upper cannot prove infeasibility within that bounded depth.",
+    "Choice-depth ignores passive WAIT transitions and counts only deliberate send/query decisions; observation splits remain AND nodes but do not consume choice depth.",
+    "The choice-depth upper uses the same accounting on the optimistic side: False remains a sound infeasibility certificate, while True is only unresolved/possible."
+  ],
+  "failure_choice_upper_depth_distribution": {
+    "CHOICE_UPPER_PRUNE_DEPTH_2": 6,
+    "CHOICE_UPPER_PRUNE_DEPTH_3": 7,
+    "CHOICE_UPPER_PRUNE_DEPTH_4": 18
+  },
+  "failure_upper_depth_distribution": {
+    "NO_UPPER_PRUNE_THROUGH_D12": 25,
+    "UPPER_PRUNE_DEPTH_4": 4,
+    "UPPER_PRUNE_DEPTH_8": 2
+  },
+  "fallback_count": 56,
+  "probe_depth": 12,
+  "rows": [
+    {
+      "action_key": "ISSUE_QUERY:gateway_state_summary",
+      "exact_outcome": "FAILURE",
+      "first_causal_upper_prune_depth": null,
+      "first_choice_upper_prune_depth": 4,
+      "recipe_id": "T1R-a32593dad622bc",
+      "signature": "ef1b77ace36a32d26343209bf12357064226bfe4c41def8b3dc0919365543ad2",
+      "time_s": 0
+    },
+    {
+      "action_key": "WAIT:-",
+      "exact_outcome": "SUCCESS",
+      "first_causal_lower_depth": null,
+      "first_choice_lower_depth": 3,
+      "recipe_id": "T1R-a32593dad622bc",
+      "signature": "ef1b77ace36a32d26343209bf12357064226bfe4c41def8b3dc0919365543ad2",
+      "time_s": 0
+    },
+    {
+      "action_key": "ISSUE_QUERY:gateway_state_summary",
+      "exact_outcome": "FAILURE",
+      "first_causal_upper_prune_depth": null,
+      "first_choice_upper_prune_depth": 4,
+      "recipe_id": "T1R-a32593dad622bc",
+      "signature": "ef1b77ace36a32d26343209bf12357064226bfe4c41def8b3dc0919365543ad2",
+      "time_s": 4500
+    },
+    {
+      "action_key": "WAIT:-",
+      "exact_outcome": "SUCCESS",
+      "first_causal_lower_depth": null,
+      "first_choice_lower_depth": 3,
+      "recipe_id": "T1R-a32593dad622bc",
+      "signature": "ef1b77ace36a32d26343209bf12357064226bfe4c41def8b3dc0919365543ad2",
+      "time_s": 4500
+    },
+    {
+      "action_key": "ISSUE_QUERY:gateway_state_summary",
+      "exact_outcome": "SUCCESS",
+      "first_causal_lower_depth": null,
+      "first_choice_lower_depth": 3,
+      "recipe_id": "T1R-a32593dad622bc",
+      "signature": "ef1b77ace36a32d26343209bf12357064226bfe4c41def8b3dc0919365543ad2",
+      "time_s": 16800
+    },
+    {
+      "action_key": "WAIT:-",
+      "exact_outcome": "FAILURE",
+      "first_causal_upper_prune_depth": null,
+      "first_choice_upper_prune_depth": 4,
+      "recipe_id": "T1R-a32593dad622bc",
+      "signature": "ef1b77ace36a32d26343209bf12357064226bfe4c41def8b3dc0919365543ad2",
+      "time_s": 16800
+    },
+    {
+      "action_key": "ISSUE_QUERY:gateway_state_summary",
+      "exact_outcome": "FAILURE",
+      "first_causal_upper_prune_depth": null,
+      "first_choice_upper_prune_depth": 4,
+      "recipe_id": "T1R-20e14985a492b6",
+      "signature": "53a1666df05b175cd62099797d2049bb13f9eebafdf7e7ed004ec2d689bc8bea",
+      "time_s": 0
+    },
+    {
+      "action_key": "WAIT:-",
+      "exact_outcome": "SUCCESS",
+      "first_causal_lower_depth": null,
+      "first_choice_lower_depth": 6,
+      "recipe_id": "T1R-20e14985a492b6",
+      "signature": "53a1666df05b175cd62099797d2049bb13f9eebafdf7e7ed004ec2d689bc8bea",
+      "time_s": 0
+    },
+    {
+      "action_key": "ISSUE_QUERY:gateway_state_summary",
+      "exact_outcome": "FAILURE",
+      "first_causal_upper_prune_depth": null,
+      "first_choice_upper_prune_depth": 4,
+      "recipe_id": "T1R-20e14985a492b6",
+      "signature": "53a1666df05b175cd62099797d2049bb13f9eebafdf7e7ed004ec2d689bc8bea",
+      "time_s": 4500
+    },
+    {
+      "action_key": "WAIT:-",
+      "exact_outcome": "SUCCESS",
+      "first_causal_lower_depth": null,
+      "first_choice_lower_depth": 6,
+      "recipe_id": "T1R-20e14985a492b6",
+      "signature": "53a1666df05b175cd62099797d2049bb13f9eebafdf7e7ed004ec2d689bc8bea",
+      "time_s": 4500
+    },
+    {
+      "action_key": "ISSUE_QUERY:gateway_state_summary",
+      "exact_outcome": "FAILURE",
+      "first_causal_upper_prune_depth": null,
+      "first_choice_upper_prune_depth": 3,
+      "recipe_id": "T1R-20e14985a492b6",
+      "signature": "53a1666df05b175cd62099797d2049bb13f9eebafdf7e7ed004ec2d689bc8bea",
+      "time_s": 16800
+    },
+    {
+      "action_key": "WAIT:-",
+      "exact_outcome": "FAILURE",
+      "first_causal_upper_prune_depth": null,
+      "first_choice_upper_prune_depth": 4,
+      "recipe_id": "T1R-20e14985a492b6",
+      "signature": "53a1666df05b175cd62099797d2049bb13f9eebafdf7e7ed004ec2d689bc8bea",
+      "time_s": 16800
+    },
+    {
+      "action_key": "WAIT:-",
+      "exact_outcome": "SUCCESS",
+      "first_causal_lower_depth": null,
+      "first_choice_lower_depth": 4,
+      "recipe_id": "T1R-20e14985a492b6",
+      "signature": "53a1666df05b175cd62099797d2049bb13f9eebafdf7e7ed004ec2d689bc8bea",
+      "time_s": 27600
+    },
+    {
+      "action_key": "WAIT:-",
+      "exact_outcome": "SUCCESS",
+      "first_causal_lower_depth": null,
+      "first_choice_lower_depth": 4,
+      "recipe_id": "T1R-7be713bad733ea",
+      "signature": "a8e1080b374d02fd31c59c5ef3726dbc02db734d5df5236d1441e8e94f3ef8d1",
+      "time_s": 0
+    },
+    {
+      "action_key": "SEND_TERR:T1R-7be713bad733ea::report::01",
+      "exact_outcome": "SUCCESS",
+      "first_causal_lower_depth": null,
+      "first_choice_lower_depth": 2,
+      "recipe_id": "T1R-7be713bad733ea",
+      "signature": "a8e1080b374d02fd31c59c5ef3726dbc02db734d5df5236d1441e8e94f3ef8d1",
+      "time_s": 16800
+    },
+    {
+      "action_key": "ISSUE_QUERY:gateway_state_summary",
+      "exact_outcome": "FAILURE",
+      "first_causal_upper_prune_depth": null,
+      "first_choice_upper_prune_depth": 3,
+      "recipe_id": "T1R-d2a98ca33ce5b4",
+      "signature": "5312f8b7b80e342ebd7cfdc5e6c64efe8df1cea176c8d5c2f6b92d835700aac5",
+      "time_s": 0
+    },
+    {
+      "action_key": "WAIT:-",
+      "exact_outcome": "SUCCESS",
+      "first_causal_lower_depth": null,
+      "first_choice_lower_depth": 2,
+      "recipe_id": "T1R-d2a98ca33ce5b4",
+      "signature": "5312f8b7b80e342ebd7cfdc5e6c64efe8df1cea176c8d5c2f6b92d835700aac5",
+      "time_s": 0
+    },
+    {
+      "action_key": "WAIT:-",
+      "exact_outcome": "FAILURE",
+      "first_causal_upper_prune_depth": 4,
+      "first_choice_upper_prune_depth": 2,
+      "recipe_id": "T1R-d2a98ca33ce5b4",
+      "signature": "5312f8b7b80e342ebd7cfdc5e6c64efe8df1cea176c8d5c2f6b92d835700aac5",
+      "time_s": 16800
+    },
+    {
+      "action_key": "ISSUE_QUERY:gateway_state_summary",
+      "exact_outcome": "FAILURE",
+      "first_causal_upper_prune_depth": null,
+      "first_choice_upper_prune_depth": 3,
+      "recipe_id": "T1R-c969bec849683a",
+      "signature": "6d7744f6edc523e2f323ab53614440d1a2e43192915ecfc887310faa4d53fa1f",
+      "time_s": 0
+    },
+    {
+      "action_key": "WAIT:-",
+      "exact_outcome": "SUCCESS",
+      "first_causal_lower_depth": null,
+      "first_choice_lower_depth": 5,
+      "recipe_id": "T1R-c969bec849683a",
+      "signature": "6d7744f6edc523e2f323ab53614440d1a2e43192915ecfc887310faa4d53fa1f",
+      "time_s": 0
+    },
+    {
+      "action_key": "WAIT:-",
+      "exact_outcome": "FAILURE",
+      "first_causal_upper_prune_depth": 4,
+      "first_choice_upper_prune_depth": 2,
+      "recipe_id": "T1R-c969bec849683a",
+      "signature": "6d7744f6edc523e2f323ab53614440d1a2e43192915ecfc887310faa4d53fa1f",
+      "time_s": 16800
+    },
+    {
+      "action_key": "ISSUE_QUERY:gateway_state_summary",
+      "exact_outcome": "FAILURE",
+      "first_causal_upper_prune_depth": null,
+      "first_choice_upper_prune_depth": 4,
+      "recipe_id": "T1R-740f6be67bd019",
+      "signature": "b87d843ab89fe57ce883c23cbf1713921d36ed632684040515e82b7635e89289",
+      "time_s": 0
+    },
+    {
+      "action_key": "WAIT:-",
+      "exact_outcome": "SUCCESS",
+      "first_causal_lower_depth": null,
+      "first_choice_lower_depth": 3,
+      "recipe_id": "T1R-740f6be67bd019",
+      "signature": "b87d843ab89fe57ce883c23cbf1713921d36ed632684040515e82b7635e89289",
+      "time_s": 0
+    },
+    {
+      "action_key": "ISSUE_QUERY:gateway_state_summary",
+      "exact_outcome": "FAILURE",
+      "first_causal_upper_prune_depth": null,
+      "first_choice_upper_prune_depth": 4,
+      "recipe_id": "T1R-740f6be67bd019",
+      "signature": "b87d843ab89fe57ce883c23cbf1713921d36ed632684040515e82b7635e89289",
+      "time_s": 2700
+    },
+    {
+      "action_key": "WAIT:-",
+      "exact_outcome": "SUCCESS",
+      "first_causal_lower_depth": null,
+      "first_choice_lower_depth": 3,
+      "recipe_id": "T1R-740f6be67bd019",
+      "signature": "b87d843ab89fe57ce883c23cbf1713921d36ed632684040515e82b7635e89289",
+      "time_s": 2700
+    },
+    {
+      "action_key": "ISSUE_QUERY:gateway_state_summary",
+      "exact_outcome": "SUCCESS",
+      "first_causal_lower_depth": null,
+      "first_choice_lower_depth": 3,
+      "recipe_id": "T1R-740f6be67bd019",
+      "signature": "b87d843ab89fe57ce883c23cbf1713921d36ed632684040515e82b7635e89289",
+      "time_s": 15000
+    },
+    {
+      "action_key": "WAIT:-",
+      "exact_outcome": "FAILURE",
+      "first_causal_upper_prune_depth": null,
+      "first_choice_upper_prune_depth": 4,
+      "recipe_id": "T1R-740f6be67bd019",
+      "signature": "b87d843ab89fe57ce883c23cbf1713921d36ed632684040515e82b7635e89289",
+      "time_s": 15000
+    },
+    {
+      "action_key": "ISSUE_QUERY:gateway_state_summary",
+      "exact_outcome": "FAILURE",
+      "first_causal_upper_prune_depth": null,
+      "first_choice_upper_prune_depth": 4,
+      "recipe_id": "T1R-55ff9330743b23",
+      "signature": "17c76f39f91cede5e38b7753c8b98fb7348556c68a71f129979b531d96ba408b",
+      "time_s": 0
+    },
+    {
+      "action_key": "WAIT:-",
+      "exact_outcome": "SUCCESS",
+      "first_causal_lower_depth": null,
+      "first_choice_lower_depth": 6,
+      "recipe_id": "T1R-55ff9330743b23",
+      "signature": "17c76f39f91cede5e38b7753c8b98fb7348556c68a71f129979b531d96ba408b",
+      "time_s": 0
+    },
+    {
+      "action_key": "ISSUE_QUERY:gateway_state_summary",
+      "exact_outcome": "FAILURE",
+      "first_causal_upper_prune_depth": null,
+      "first_choice_upper_prune_depth": 4,
+      "recipe_id": "T1R-55ff9330743b23",
+      "signature": "17c76f39f91cede5e38b7753c8b98fb7348556c68a71f129979b531d96ba408b",
+      "time_s": 2700
+    },
+    {
+      "action_key": "WAIT:-",
+      "exact_outcome": "SUCCESS",
+      "first_causal_lower_depth": null,
+      "first_choice_lower_depth": 6,
+      "recipe_id": "T1R-55ff9330743b23",
+      "signature": "17c76f39f91cede5e38b7753c8b98fb7348556c68a71f129979b531d96ba408b",
+      "time_s": 2700
+    },
+    {
+      "action_key": "ISSUE_QUERY:gateway_state_summary",
+      "exact_outcome": "FAILURE",
+      "first_causal_upper_prune_depth": null,
+      "first_choice_upper_prune_depth": 3,
+      "recipe_id": "T1R-55ff9330743b23",
+      "signature": "17c76f39f91cede5e38b7753c8b98fb7348556c68a71f129979b531d96ba408b",
+      "time_s": 15000
+    },
+    {
+      "action_key": "WAIT:-",
+      "exact_outcome": "FAILURE",
+      "first_causal_upper_prune_depth": null,
+      "first_choice_upper_prune_depth": 4,
+      "recipe_id": "T1R-55ff9330743b23",
+      "signature": "17c76f39f91cede5e38b7753c8b98fb7348556c68a71f129979b531d96ba408b",
+      "time_s": 15000
+    },
+    {
+      "action_key": "WAIT:-",
+      "exact_outcome": "SUCCESS",
+      "first_causal_lower_depth": null,
+      "first_choice_lower_depth": 4,
+      "recipe_id": "T1R-55ff9330743b23",
+      "signature": "17c76f39f91cede5e38b7753c8b98fb7348556c68a71f129979b531d96ba408b",
+      "time_s": 25800
+    },
+    {
+      "action_key": "WAIT:-",
+      "exact_outcome": "SUCCESS",
+      "first_causal_lower_depth": null,
+      "first_choice_lower_depth": 4,
+      "recipe_id": "T1R-05d4eda97f06c3",
+      "signature": "da9cb6a63a1c9e4748f5cd0ce9b0d695a67652b6159730a27eea3ba2f11d1411",
+      "time_s": 0
+    },
+    {
+      "action_key": "SEND_TERR:T1R-05d4eda97f06c3::report::01",
+      "exact_outcome": "SUCCESS",
+      "first_causal_lower_depth": null,
+      "first_choice_lower_depth": 2,
+      "recipe_id": "T1R-05d4eda97f06c3",
+      "signature": "da9cb6a63a1c9e4748f5cd0ce9b0d695a67652b6159730a27eea3ba2f11d1411",
+      "time_s": 15000
+    },
+    {
+      "action_key": "ISSUE_QUERY:gateway_state_summary",
+      "exact_outcome": "FAILURE",
+      "first_causal_upper_prune_depth": null,
+      "first_choice_upper_prune_depth": 3,
+      "recipe_id": "T1R-3df3584ae2b835",
+      "signature": "86cca705db402ff1eef4bbde7ff111eec5c7151e99d392b291c650599d59c02e",
+      "time_s": 0
+    },
+    {
+      "action_key": "WAIT:-",
+      "exact_outcome": "SUCCESS",
+      "first_causal_lower_depth": null,
+      "first_choice_lower_depth": 2,
+      "recipe_id": "T1R-3df3584ae2b835",
+      "signature": "86cca705db402ff1eef4bbde7ff111eec5c7151e99d392b291c650599d59c02e",
+      "time_s": 0
+    },
+    {
+      "action_key": "WAIT:-",
+      "exact_outcome": "FAILURE",
+      "first_causal_upper_prune_depth": 4,
+      "first_choice_upper_prune_depth": 2,
+      "recipe_id": "T1R-3df3584ae2b835",
+      "signature": "86cca705db402ff1eef4bbde7ff111eec5c7151e99d392b291c650599d59c02e",
+      "time_s": 15000
+    },
+    {
+      "action_key": "ISSUE_QUERY:gateway_state_summary",
+      "exact_outcome": "FAILURE",
+      "first_causal_upper_prune_depth": null,
+      "first_choice_upper_prune_depth": 3,
+      "recipe_id": "T1R-5fe91fd0393d43",
+      "signature": "510bcc4862e948e4f15a8c04a452f513e0925897b955397ba90e57fc690db2d0",
+      "time_s": 0
+    },
+    {
+      "action_key": "WAIT:-",
+      "exact_outcome": "SUCCESS",
+      "first_causal_lower_depth": null,
+      "first_choice_lower_depth": 5,
+      "recipe_id": "T1R-5fe91fd0393d43",
+      "signature": "510bcc4862e948e4f15a8c04a452f513e0925897b955397ba90e57fc690db2d0",
+      "time_s": 0
+    },
+    {
+      "action_key": "WAIT:-",
+      "exact_outcome": "FAILURE",
+      "first_causal_upper_prune_depth": 4,
+      "first_choice_upper_prune_depth": 2,
+      "recipe_id": "T1R-5fe91fd0393d43",
+      "signature": "510bcc4862e948e4f15a8c04a452f513e0925897b955397ba90e57fc690db2d0",
+      "time_s": 15000
+    },
+    {
+      "action_key": "ISSUE_QUERY:gateway_state_summary",
+      "exact_outcome": "FAILURE",
+      "first_causal_upper_prune_depth": null,
+      "first_choice_upper_prune_depth": 4,
+      "recipe_id": "T1R-ff799931fee10a",
+      "signature": "ad5d6e20a7790760d71f4664617c68b676c3fd90cd3fa389de3916ea3cc3fb62",
+      "time_s": 0
+    },
+    {
+      "action_key": "WAIT:-",
+      "exact_outcome": "SUCCESS",
+      "first_causal_lower_depth": null,
+      "first_choice_lower_depth": 3,
+      "recipe_id": "T1R-ff799931fee10a",
+      "signature": "ad5d6e20a7790760d71f4664617c68b676c3fd90cd3fa389de3916ea3cc3fb62",
+      "time_s": 0
+    },
+    {
+      "action_key": "ISSUE_QUERY:gateway_state_summary",
+      "exact_outcome": "FAILURE",
+      "first_causal_upper_prune_depth": null,
+      "first_choice_upper_prune_depth": 4,
+      "recipe_id": "T1R-ff799931fee10a",
+      "signature": "ad5d6e20a7790760d71f4664617c68b676c3fd90cd3fa389de3916ea3cc3fb62",
+      "time_s": 900
+    },
+    {
+      "action_key": "WAIT:-",
+      "exact_outcome": "SUCCESS",
+      "first_causal_lower_depth": null,
+      "first_choice_lower_depth": 3,
+      "recipe_id": "T1R-ff799931fee10a",
+      "signature": "ad5d6e20a7790760d71f4664617c68b676c3fd90cd3fa389de3916ea3cc3fb62",
+      "time_s": 900
+    },
+    {
+      "action_key": "ISSUE_QUERY:gateway_state_summary",
+      "exact_outcome": "SUCCESS",
+      "first_causal_lower_depth": null,
+      "first_choice_lower_depth": 3,
+      "recipe_id": "T1R-ff799931fee10a",
+      "signature": "ad5d6e20a7790760d71f4664617c68b676c3fd90cd3fa389de3916ea3cc3fb62",
+      "time_s": 14100
+    },
+    {
+      "action_key": "WAIT:-",
+      "exact_outcome": "FAILURE",
+      "first_causal_upper_prune_depth": null,
+      "first_choice_upper_prune_depth": 4,
+      "recipe_id": "T1R-ff799931fee10a",
+      "signature": "ad5d6e20a7790760d71f4664617c68b676c3fd90cd3fa389de3916ea3cc3fb62",
+      "time_s": 14100
+    },
+    {
+      "action_key": "WAIT:-",
+      "exact_outcome": "FAILURE",
+      "first_causal_upper_prune_depth": 8,
+      "first_choice_upper_prune_depth": 2,
+      "recipe_id": "T1R-ff799931fee10a",
+      "signature": "ad5d6e20a7790760d71f4664617c68b676c3fd90cd3fa389de3916ea3cc3fb62",
+      "time_s": 24900
+    },
+    {
+      "action_key": "ISSUE_QUERY:gateway_state_summary",
+      "exact_outcome": "FAILURE",
+      "first_causal_upper_prune_depth": null,
+      "first_choice_upper_prune_depth": 4,
+      "recipe_id": "T1R-6f552cceffd06c",
+      "signature": "9f09526db7534d46fe8d8f8bd6ac0235041935e38ff367d04fdcfba6b91a4761",
+      "time_s": 0
+    },
+    {
+      "action_key": "WAIT:-",
+      "exact_outcome": "SUCCESS",
+      "first_causal_lower_depth": null,
+      "first_choice_lower_depth": 6,
+      "recipe_id": "T1R-6f552cceffd06c",
+      "signature": "9f09526db7534d46fe8d8f8bd6ac0235041935e38ff367d04fdcfba6b91a4761",
+      "time_s": 0
+    },
+    {
+      "action_key": "ISSUE_QUERY:gateway_state_summary",
+      "exact_outcome": "FAILURE",
+      "first_causal_upper_prune_depth": null,
+      "first_choice_upper_prune_depth": 4,
+      "recipe_id": "T1R-6f552cceffd06c",
+      "signature": "9f09526db7534d46fe8d8f8bd6ac0235041935e38ff367d04fdcfba6b91a4761",
+      "time_s": 900
+    },
+    {
+      "action_key": "WAIT:-",
+      "exact_outcome": "SUCCESS",
+      "first_causal_lower_depth": null,
+      "first_choice_lower_depth": 6,
+      "recipe_id": "T1R-6f552cceffd06c",
+      "signature": "9f09526db7534d46fe8d8f8bd6ac0235041935e38ff367d04fdcfba6b91a4761",
+      "time_s": 900
+    },
+    {
+      "action_key": "ISSUE_QUERY:gateway_state_summary",
+      "exact_outcome": "FAILURE",
+      "first_causal_upper_prune_depth": null,
+      "first_choice_upper_prune_depth": 3,
+      "recipe_id": "T1R-6f552cceffd06c",
+      "signature": "9f09526db7534d46fe8d8f8bd6ac0235041935e38ff367d04fdcfba6b91a4761",
+      "time_s": 14100
+    },
+    {
+      "action_key": "WAIT:-",
+      "exact_outcome": "FAILURE",
+      "first_causal_upper_prune_depth": null,
+      "first_choice_upper_prune_depth": 4,
+      "recipe_id": "T1R-6f552cceffd06c",
+      "signature": "9f09526db7534d46fe8d8f8bd6ac0235041935e38ff367d04fdcfba6b91a4761",
+      "time_s": 14100
+    },
+    {
+      "action_key": "WAIT:-",
+      "exact_outcome": "FAILURE",
+      "first_causal_upper_prune_depth": 8,
+      "first_choice_upper_prune_depth": 2,
+      "recipe_id": "T1R-6f552cceffd06c",
+      "signature": "9f09526db7534d46fe8d8f8bd6ac0235041935e38ff367d04fdcfba6b91a4761",
+      "time_s": 24900
+    }
+  ],
+  "schema_version": "0.1",
+  "status": "UNRESOLVED_L_U_CERTIFICATE_GAP_DIAGNOSTIC",
+  "success_choice_lower_depth_distribution": {
+    "CHOICE_LOWER_DEPTH_2": 4,
+    "CHOICE_LOWER_DEPTH_3": 9,
+    "CHOICE_LOWER_DEPTH_4": 4,
+    "CHOICE_LOWER_DEPTH_5": 2,
+    "CHOICE_LOWER_DEPTH_6": 6
+  },
+  "success_lower_depth_distribution": {
+    "NO_LOWER_CERT_THROUGH_D12": 25
+  }
+}
