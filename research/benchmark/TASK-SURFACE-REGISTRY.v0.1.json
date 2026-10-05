@@ -1,0 +1,138 @@
+{
+  "schema_version": "0.1",
+  "authority": "cache06-full-read-2026-10-05",
+  "rule": "T1/T2 are Operational Families. O1-O6 are historical T1 regime/templates, not Family identities. Capabilities and hardness mechanisms never become task surfaces by themselves.",
+  "families": {
+    "T1_MONITORING_INFORMATION_CONTINUITY": {
+      "release_role": "MAIN",
+      "task_surfaces": [
+        {
+          "surface_id": "T1.S0_STEADY_MONITORING",
+          "semantics": "Maintain source-required monitoring information availability under the active reporting contract.",
+          "source_profiles": ["DB44T2457_2024_warning_reporting", "JIAOZUO_2024_geohazard_monitoring_deployment", "DB11T1677_2019_rainfall_dual_path"],
+          "historical_templates": ["o1-monitoring-continuity-v1"],
+          "standalone_disposition": "CONFORMANCE_REGRESSION",
+          "generator_role": "KEEP_EASY_ANCHOR",
+          "closure": "Historical O1 is replayable and physical-equivalent to deterministic comply; no standalone decision-hardness claim."
+        },
+        {
+          "surface_id": "T1.S1_WARNING_CADENCE_TRANSITION",
+          "semantics": "External authority changes the active monitoring/reporting cadence; newly released obligations follow the source-defined warning/grade contract.",
+          "source_profiles": ["DB44T2457_2024_warning_reporting"],
+          "historical_templates": ["o2-risk-escalation-v1", "o2-prealert-risk-escalation-v1"],
+          "standalone_disposition": "STANDALONE_CONFORMANCE",
+          "generator_role": "ACTIVE_WORKLOAD_TRANSITION_AXIS",
+          "closure": "Localized O2 control consumption was unique-ready in A7. The external warning transition remains valid as a workload/obligation-arrival axis; set_sampling/report_period is not itself a research task."
+        },
+        {
+          "surface_id": "T1.S2_INTERMITTENT_BACKHAUL_FALLBACK",
+          "semantics": "Maintain monitoring delivery across finite terrestrial service loss/recovery using authorized heterogeneous fallback paths.",
+          "source_profiles": ["DZT0450_2023_disconnect_recovery", "JIAOZUO_2024_geohazard_monitoring_deployment", "DB11T1677_2019_rainfall_dual_path"],
+          "historical_templates": ["o3-backhaul-outage-sustainment-v1"],
+          "standalone_disposition": "SIMPLE_FORM_SHORTCUT_SOLVED",
+          "generator_role": "ACTIVE_COMPOSITION_AXIS",
+          "closure": "One-shot permanent recovery / outage+two-path variants are closed by deadline-aware reserve+EDF or ordinary fallback. Only non-nested finite opportunities plus shared obligations/resources may re-enter hardness mining."
+        },
+        {
+          "surface_id": "T1.S3_ENERGY_CONSTRAINED_CONTINUITY",
+          "semantics": "Preserve authorized monitoring obligations under source/trace-grounded energy scarcity and communication energy accounting.",
+          "source_profiles": ["DB11T1677_2019_rainfall_dual_path", "JIAOZUO_2024_geohazard_monitoring_deployment"],
+          "historical_templates": ["o4-energy-constrained-monitoring-v1"],
+          "standalone_disposition": "BASELINED_NOT_GLOBALLY_CLOSED",
+          "generator_role": "ACTIVE_RESOURCE_AXIS_AFTER_CORE",
+          "closure": "Ordinary EnergyAware and dynamic-energy references exist; cache06 explicitly forbids claiming long-horizon/energy novelty from the historical O4 template alone. Energy may bind compositional cases but must not be an invented global quota."
+        },
+        {
+          "surface_id": "T1.S4_OUTAGE_CACHE_RETENTION",
+          "semantics": "Retain monitoring records locally during communication loss according to source-required storage semantics.",
+          "source_profiles": ["DZT0450_2023_disconnect_recovery"],
+          "historical_templates": ["o3-backhaul-outage-sustainment-v1", "o5-recovery-reconciliation-v1"],
+          "standalone_disposition": "CONFORMANCE_REGRESSION",
+          "generator_role": "ACTIVE_STATE_AXIS",
+          "closure": "DZT0450 requires at least seven days of cache. Retention itself is deterministic conformance; cache capacity must not be artificially shrunk to manufacture hardness."
+        },
+        {
+          "surface_id": "T1.S5_RECOVERY_RECONCILIATION",
+          "semantics": "After reconnect, restore source-required monitoring availability and reconcile in-flight/uncertain delivery state without inventing backlog priorities.",
+          "source_profiles": ["DZT0450_2023_disconnect_recovery", "JIAOZUO_2024_geohazard_monitoring_deployment"],
+          "historical_templates": ["o5-recovery-reconciliation-v1"],
+          "standalone_disposition": "PARTIAL_CLOSURE_SOURCE_GAP",
+          "generator_role": "ACTIVE_ONLY_WHEN_OBJECTIVE_DEFINED",
+          "closure": "Historical O5 control consumption was unique-ready in A7. DZT0450 says cached data are sent as required but does not define a general backlog-vs-fresh sacrifice priority; such priority-sensitive cases are OBJECTIVE_AMBIGUOUS unless another source resolves them."
+        },
+        {
+          "surface_id": "T1.S6_HETEROGENEOUS_PATH_PRIORITY",
+          "semantics": "Use source-authorized terrestrial/satellite path classes and preserve any source-defined priority or fallback boundary.",
+          "source_profiles": ["JIAOZUO_2024_geohazard_monitoring_deployment", "DB11T1677_2019_rainfall_dual_path", "DZT0450_2023_disconnect_recovery"],
+          "historical_templates": ["o3-backhaul-outage-sustainment-v1"],
+          "standalone_disposition": "SOURCE_RULE_CONFORMANCE",
+          "generator_role": "CAPABILITY_AND_CONFLICT_AXIS",
+          "closure": "Known path choice/ordinary fallback alone is not a decision-hard task. It becomes relevant only when legal observations, timing and shared resources make future feasibility differ."
+        },
+        {
+          "surface_id": "T1.S7_COMPOUND_CONTINUITY",
+          "semantics": "Compose monitoring obligations, warning-driven arrivals, intermittent opportunities, recovery state and finite resources in one continuous episode.",
+          "source_profiles": ["DB44T2457_2024_warning_reporting", "DZT0450_2023_disconnect_recovery", "JIAOZUO_2024_geohazard_monitoring_deployment", "DB11T1677_2019_rainfall_dual_path"],
+          "historical_templates": ["o6-compound-long-horizon-v1"],
+          "standalone_disposition": "HISTORICAL_TEMPLATE_CONFORMANCE",
+          "generator_role": "PRIMARY_COMPOSITION_TARGET",
+          "closure": "Historical O6 only proved runtime/conformance and must not be reused as a hardness claim. New cases must pass V0-V9 and strong-baseline gates after composition."
+        }
+      ]
+    },
+    "T2_WARNING_DELIVERY_RESPONSE_HANDOFF": {
+      "release_role": "BOUNDARY_EXTENSION",
+      "task_surfaces": [
+        {
+          "surface_id": "T2.S0_AUTHORITY_GATED_PUBLICATION",
+          "semantics": "Verify/authorize/publish a warning under the source authority chain and stage deadline.",
+          "source_profiles": ["YINING_2025_pre_disaster_warning_delivery"],
+          "historical_templates": [],
+          "standalone_disposition": "SIMULATOR_GAP",
+          "generator_role": "BLOCKED_UNTIL_T2_ENVIRONMENT",
+          "closure": "Source-supported; old sensor-node simulator lacks warning candidate/verification/publication authority state."
+        },
+        {
+          "surface_id": "T2.S1_HIERARCHICAL_WARNING_DELIVERY_ACK",
+          "semantics": "Deliver published warning through municipal/township/village/public responsibility chain with acknowledgement, retry and alternate channels.",
+          "source_profiles": ["YINING_2025_pre_disaster_warning_delivery"],
+          "historical_templates": [],
+          "standalone_disposition": "SIMULATOR_GAP",
+          "generator_role": "BLOCKED_UNTIL_T2_ENVIRONMENT",
+          "closure": "Source-supported 15/15/30 minute handoff chain; requires actor graph, multi-recipient delivery and authority-gated transitions."
+        },
+        {
+          "surface_id": "T2.S2_PROGRESSIVE_CALL_RESPONSE",
+          "semantics": "Execute progressive region call-response and feedback logging while suppressing only source-authorized unchanged duplicates.",
+          "source_profiles": ["BAOSHAN_1262_progressive_call_response"],
+          "historical_templates": [],
+          "standalone_disposition": "SIMULATOR_GAP",
+          "generator_role": "BLOCKED_UNTIL_T2_ENVIRONMENT",
+          "closure": "Source-supported 12/6/2h progression and 30/50min feedback; requires actor-chain and feedback-ledger environment."
+        }
+      ]
+    }
+  },
+  "not_task_surfaces": [
+    "sampling_interval_configuration",
+    "report_period_configuration",
+    "path_or_radio_name",
+    "cache_or_retransmission_tool",
+    "remote_state_read",
+    "receipt_summary_query",
+    "primary_health_query",
+    "node_report_query",
+    "probe",
+    "receipt-race",
+    "warning_level_as_a_label"
+  ],
+  "hardness_mechanisms": [
+    {"id": "H0_CONFORMANCE", "role": "easy/regression"},
+    {"id": "H1_PARTIAL_OBSERVATION", "role": "diagnostic when information is unavailable"},
+    {"id": "H2_EVIDENCE_VALUE", "role": "paid evidence changes existence/cost of a common causal continuation"},
+    {"id": "H3_SHARED_RESOURCE_CONFLICT", "role": "multiple obligations compete for actual opportunities/capacity/energy"},
+    {"id": "H4_COUPLED_SEQUENTIAL_COMMITMENT", "role": "at least two commitments interact across stages"},
+    {"id": "H5_PASSIVE_PROBE_QUERY_COMPETITION", "role": "dedicated query competes fairly with passive feedback and normal send-as-probe"},
+    {"id": "H6_AUTHORITY_GATED_DELIVERY", "role": "T2 authority/recipient-chain structure"}
+  ]
+}

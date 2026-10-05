@@ -18,6 +18,7 @@ from typing import Any
 from case_contract import validate_case_semantics
 from profile_contract import validate_source_profile
 from profile_expansion import expand_nominal_profile
+from task_surface_registry import closure_records, task_surface_ids_for_profile
 
 
 FAMILY_IDS = {
@@ -225,6 +226,7 @@ def compile_nominal_case(
         )
 
     world = _world_from_coordinate(profile, coordinate)
+    task_surfaces = task_surface_ids_for_profile(profile, world)
     obligations = _instantiate_obligations(profile, world)
     capabilities = _capabilities(profile)
     authority = _authority(profile, obligations, capabilities)
@@ -250,6 +252,8 @@ def compile_nominal_case(
             "parent_case_id": None,
         },
         "regime": _regime(profile, world),
+        "task_surfaces": task_surfaces,
+        "historical_closure": closure_records(task_surfaces),
         "hardness": _hardness(profile),
         "world": world,
         "variable_provenance": _provenance_map(profile, coordinate),
