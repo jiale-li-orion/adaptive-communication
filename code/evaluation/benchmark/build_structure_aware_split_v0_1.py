@@ -10,6 +10,7 @@ from __future__ import annotations
 from collections import Counter, defaultdict
 from hashlib import sha256
 from itertools import product
+import argparse
 import json
 from pathlib import Path
 from typing import Any
@@ -64,16 +65,17 @@ def _candidate_role(row: dict[str, Any], exact_class: str, v8_survivor: bool) ->
     return None
 
 
-def build() -> dict[str, Any]:
-    validity = _rows(RECIPE_VALIDITY)
-    exact = {str(r["recipe_id"]): r for r in _rows(RECIPE_EXACT)}
-    v8_rows = _rows(V8_SIG_ROWS)
+def build(*, recipe_validity: Path = RECIPE_VALIDITY, recipe_exact: Path = RECIPE_EXACT,
+          v8_manifest_path: Path = V8_ALL_PASS, v8_signature_rows: Path = V8_SIG_ROWS) -> dict[str, Any]:
+    validity = _rows(recipe_validity)
+    exact = {str(r["recipe_id"]): r for r in _rows(recipe_exact)}
+    v8_rows = _rows(v8_signature_rows)
     v8_survivor_sigs = {
         str(r["signature"])
         for r in v8_rows
         if r["v8_disposition"] == "SURVIVES_V8_LADDER_V0_1"
     }
-    v8_manifest = json.loads(V8_ALL_PASS.read_text(encoding="utf-8"))
+    v8_manifest = json.loads(v8_manifest_path.read_text(encoding="utf-8"))
     recipe_axes = {
         r.recipe_id: {
             "resource_headroom": r.resource_headroom,
@@ -262,6 +264,12 @@ def build() -> dict[str, Any]:
             "max": max(component_sizes) if component_sizes else 0,
             "mean": (sum(component_sizes) / len(component_sizes)) if component_sizes else 0.0,
         },
+        "lineage_inputs": {
+            "recipe_validity": str(recipe_validity.relative_to(ROOT)) if recipe_validity.is_relative_to(ROOT) else str(recipe_validity),
+            "recipe_exact": str(recipe_exact.relative_to(ROOT)) if recipe_exact.is_relative_to(ROOT) else str(recipe_exact),
+            "v8_manifest": str(v8_manifest_path.relative_to(ROOT)) if v8_manifest_path.is_relative_to(ROOT) else str(v8_manifest_path),
+            "v8_signature_rows": str(v8_signature_rows.relative_to(ROOT)) if v8_signature_rows.is_relative_to(ROOT) else str(v8_signature_rows),
+        },
         "by_role": dict(sorted(role_counts.items())),
         "by_split": dict(sorted(split_counts.items())),
         "by_split_role": {
@@ -292,4 +300,13 @@ def build() -> dict[str, Any]:
 
 
 if __name__ == "__main__":
-    print(json.dumps(build(), ensure_ascii=False, indent=2, sort_keys=True))
+    ap=argparse.ArgumentParser()
+    ap.add_argument('--recipe-validity',type=Path,default=RECIPE_VALIDITY)
+    ap.add_argument('--recipe-exact',type=Path,default=RECIPE_EXACT)
+    ap.add_argument('--v8-manifest',type=Path,default=V8_ALL_PASS)
+    ap.add_argument('--v8-signature-rows',type=Path,default=V8_SIG_ROWS)
+    args=ap.parse_args()
+    def rp(p): return p if p.is_absolute() else ROOT/p
+    print(json.dumps(build(recipe_validity=rp(args.recipe_validity),recipe_exact=rp(args.recipe_exact),
+                           v8_manifest_path=rp(args.v8_manifest),v8_signature_rows=rp(args.v8_signature_rows)),
+                     ensure_ascii=False, indent=2, sort_keys=True))

@@ -31,9 +31,9 @@ V0V7_SIG = ROOT / "local_research/current/benchmark/generated/v0-v7-full-v0.1/si
 DEFAULT_OUT = ROOT / "local_research/current/benchmark/generated/v8-all-pass-v0.1"
 
 
-def _load_pass_labels() -> dict[str, dict[str, Any]]:
+def _load_pass_labels(path: Path = V0V7_SIG) -> dict[str, dict[str, Any]]:
     out: dict[str, dict[str, Any]] = {}
-    for line in V0V7_SIG.read_text(encoding="utf-8").splitlines():
+    for line in path.read_text(encoding="utf-8").splitlines():
         if not line.strip():
             continue
         row = json.loads(line)
@@ -135,10 +135,11 @@ def _load_completed(path: Path) -> dict[str, dict[str, Any]]:
     return out
 
 
-def materialize(*, out_dir: Path, workers: int, resume: bool) -> dict[str, Any]:
+def materialize(*, out_dir: Path, workers: int, resume: bool,
+                v0_v7_signature_labels: Path = V0V7_SIG) -> dict[str, Any]:
     out_dir.mkdir(parents=True, exist_ok=True)
     path = out_dir / "signature-v8.jsonl"
-    labels = _load_pass_labels()
+    labels = _load_pass_labels(v0_v7_signature_labels)
     representatives, _recipes, multiplicity = _collect_universe()
     wanted = set(labels)
     if not wanted <= set(representatives):
@@ -201,6 +202,7 @@ def materialize(*, out_dir: Path, workers: int, resume: bool) -> dict[str, Any]:
         "projected_survivor_recipe_count": projected_survivor_recipes,
         "survivor_signatures": sorted(survivors),
         "v8_digest_sha256": digest.hexdigest(),
+        "v0_v7_signature_labels_ref": str(v0_v7_signature_labels.relative_to(ROOT)) if v0_v7_signature_labels.is_relative_to(ROOT) else str(v0_v7_signature_labels),
         "signature_labels_ref": str(path.relative_to(ROOT)),
         "release_status": "NOT_BENCHMARK_ADMIT",
     }
@@ -210,10 +212,13 @@ def main() -> int:
     ap = argparse.ArgumentParser()
     ap.add_argument("--out-dir", type=Path, default=DEFAULT_OUT)
     ap.add_argument("--workers", type=int, default=8)
+    ap.add_argument("--v0-v7-signature-labels", type=Path, default=V0V7_SIG)
     ap.add_argument("--resume", action="store_true")
     ap.add_argument("--manifest", type=Path)
     args = ap.parse_args()
-    manifest = materialize(out_dir=args.out_dir, workers=args.workers, resume=args.resume)
+    input_path=args.v0_v7_signature_labels if args.v0_v7_signature_labels.is_absolute() else ROOT/args.v0_v7_signature_labels
+    manifest = materialize(out_dir=args.out_dir, workers=args.workers, resume=args.resume,
+                           v0_v7_signature_labels=input_path)
     text = json.dumps(manifest, ensure_ascii=False, indent=2, sort_keys=True) + "\n"
     if args.manifest:
         args.manifest.parent.mkdir(parents=True, exist_ok=True)

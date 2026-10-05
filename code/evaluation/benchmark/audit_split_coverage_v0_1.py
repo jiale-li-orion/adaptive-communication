@@ -7,6 +7,7 @@ from hashlib import sha256
 import json
 from pathlib import Path
 from typing import Any
+import argparse
 
 from compositional_recipe_generator_v0_1 import core_recipes
 
@@ -48,8 +49,8 @@ def _fingerprint(row: dict[str, Any], axis: dict[str, Any], *, drop: str | None 
     return sha256(raw.encode("utf-8")).hexdigest()
 
 
-def audit() -> dict[str, Any]:
-    split = json.loads(SPLIT.read_text(encoding="utf-8"))
+def audit(split_path: Path = SPLIT) -> dict[str, Any]:
+    split = json.loads(split_path.read_text(encoding="utf-8"))
     rows = split["rows"]
     axes = _axis_index()
     by_split = defaultdict(lambda: {
@@ -190,4 +191,6 @@ def audit() -> dict[str, Any]:
 
 
 if __name__ == "__main__":
-    print(json.dumps(audit(), ensure_ascii=False, indent=2, sort_keys=True))
+    ap=argparse.ArgumentParser(); ap.add_argument('--split',type=Path,default=SPLIT); args=ap.parse_args()
+    p=args.split if args.split.is_absolute() else ROOT/args.split
+    print(json.dumps(audit(p), ensure_ascii=False, indent=2, sort_keys=True))

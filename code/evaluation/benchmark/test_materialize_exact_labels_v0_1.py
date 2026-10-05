@@ -15,7 +15,7 @@ def main() -> int:
     for b in rows[:8]:
         assert solver_signature(b) == solver_signature(b)
         payload = solver_signature_payload(b)
-        assert payload["solver_version"] == "T1-exact-reference-oracle-v0.1"
+        assert payload["solver_version"] == "T1-exact-reference-oracle-v0.2-retry-legality"
         assert len(payload["world_terrestrial_windows"]) == len(b["worlds"])
         process = attach_causal_evidence(b)
         assert payload["observation_process"]["direct_observation"] == bool(process["direct_observation"])

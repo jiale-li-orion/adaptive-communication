@@ -28,9 +28,9 @@ EXACT_SIGNATURE_LABELS=ROOT/'local_research/current/benchmark/generated/exact-la
 DEFAULT_OUT=ROOT/'local_research/current/benchmark/generated/v0-v7-full-v0.1'
 
 
-def _load_exact_labels() -> dict[str,dict[str,Any]]:
+def _load_exact_labels(path: Path = EXACT_SIGNATURE_LABELS) -> dict[str,dict[str,Any]]:
     out={}
-    for line in EXACT_SIGNATURE_LABELS.read_text(encoding='utf-8').splitlines():
+    for line in path.read_text(encoding='utf-8').splitlines():
         if line.strip():
             row=json.loads(line); out[str(row['signature'])]=row
     return out
@@ -151,11 +151,12 @@ def _load_completed(path:Path)->dict[str,dict[str,Any]]:
     return out
 
 
-def materialize(*,out_dir:Path,workers:int,max_memo_nodes:int,resume:bool)->dict[str,Any]:
+def materialize(*,out_dir:Path,workers:int,max_memo_nodes:int,resume:bool,
+                exact_signature_labels:Path=EXACT_SIGNATURE_LABELS)->dict[str,Any]:
     out_dir.mkdir(parents=True,exist_ok=True)
     sig_path=out_dir/'signature-validity.jsonl'; recipe_path=out_dir/'recipe-validity.jsonl'
     representatives,recipes,multiplicity=_collect_universe()
-    exact=_load_exact_labels()
+    exact=_load_exact_labels(exact_signature_labels)
     if set(representatives)!=set(exact):
         raise RuntimeError('exact-label signature universe drift')
     completed=_load_completed(sig_path) if resume else {}
@@ -201,6 +202,7 @@ def materialize(*,out_dir:Path,workers:int,max_memo_nodes:int,resume:bool)->dict
         'projected_filter_values':{k:dict(sorted(v.items())) for k,v in sorted(filter_pass.items())} if complete else {},
         'projection_multiplicity':{'mean':len(recipes)/len(representatives),'max':max(multiplicity.values())},
         'validity_digest_sha256':digest.hexdigest(),
+        'exact_signature_labels_ref':str(exact_signature_labels.relative_to(ROOT)) if exact_signature_labels.is_relative_to(ROOT) else str(exact_signature_labels),
         'signature_labels_ref':str(sig_path.relative_to(ROOT)),
         'recipe_labels_ref':str(recipe_path.relative_to(ROOT)) if complete else None,
         'release_status':'NOT_BENCHMARK_ADMIT',
@@ -210,9 +212,12 @@ def materialize(*,out_dir:Path,workers:int,max_memo_nodes:int,resume:bool)->dict
 def main()->int:
     ap=argparse.ArgumentParser(); ap.add_argument('--out-dir',type=Path,default=DEFAULT_OUT)
     ap.add_argument('--workers',type=int,default=8); ap.add_argument('--max-memo-nodes',type=int,default=200_000)
+    ap.add_argument('--exact-signature-labels',type=Path,default=EXACT_SIGNATURE_LABELS)
     ap.add_argument('--resume',action='store_true'); ap.add_argument('--manifest',type=Path)
     args=ap.parse_args()
-    m=materialize(out_dir=args.out_dir,workers=args.workers,max_memo_nodes=args.max_memo_nodes,resume=args.resume)
+    exact_path=args.exact_signature_labels if args.exact_signature_labels.is_absolute() else ROOT/args.exact_signature_labels
+    m=materialize(out_dir=args.out_dir,workers=args.workers,max_memo_nodes=args.max_memo_nodes,resume=args.resume,
+                  exact_signature_labels=exact_path)
     text=json.dumps(m,ensure_ascii=False,indent=2,sort_keys=True)+'\n'
     if args.manifest:
         args.manifest.parent.mkdir(parents=True,exist_ok=True); args.manifest.write_text(text,encoding='utf-8')
