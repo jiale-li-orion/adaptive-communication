@@ -334,10 +334,42 @@ def _active_common_obligations(
         oid = str(o["obligation_id"])
         if not (int(o["release_s"]) <= at_s <= int(o["deadline_s"])):
             continue
-        if any(oid in st.delivered or oid in _pending_oids(st) for st in states.values()):
+        # A common retry can still be useful when only some compatible worlds
+        # have completed the report. Whether it risks duplicate completion is
+        # path-specific, checked by _delivery_retry_allowed below.
+        if all(oid in st.delivered for st in states.values()):
+            continue
+        if any(oid in _pending_oids(st) for st in states.values()):
             continue
         out.append(oid)
     return out
+
+
+def _delivery_retry_allowed(
+    bundle: Mapping[str, Any],
+    states: Mapping[str, LocalState],
+    at_s: int,
+    kind: str,
+    oid: str,
+) -> bool:
+    """Preserve no-duplicate completion without forbidding harmless attempts.
+
+    Uses the whole compatible support, never the realized hidden world. A
+    terrestrial retry is safe if every already-completed world would reject
+    that attempt (no remaining service). SAT accepts in every compatible world
+    once its public resource preconditions hold, so its rule remains stricter.
+    This does not relax the separate one-in-flight restriction.
+    """
+    if kind == "SEND_SAT":
+        return not any(oid in st.delivered for st in states.values())
+    if kind != "SEND_TERR":
+        raise ValueError(f"Not a delivery action: {kind}")
+    wm = _world_map(bundle)
+    return not any(
+        oid in st.delivered
+        and _matching_terrestrial_window(wm[wid], st, at_s) is not None
+        for wid, st in states.items()
+    )
 
 
 def _normalize(
@@ -535,13 +567,15 @@ def solve_observation_matched(
         # Ordinary execution first; exactness is preserved because all legal
         # branches are still explored if earlier actions fail.
         if terr_can_have_effect(states, at_s):
-            actions.extend(("SEND_TERR", oid) for oid in active)
+            actions.extend(("SEND_TERR", oid) for oid in active
+                           if _delivery_retry_allowed(world_bundle, states, at_s, "SEND_TERR", oid))
         if all(
             st.satellite_budget > 0
             and _matching_satellite_window(world_bundle, st, at_s) is not None
             for st in states.values()
         ):
-            actions.extend(("SEND_SAT", oid) for oid in active)
+            actions.extend(("SEND_SAT", oid) for oid in active
+                           if _delivery_retry_allowed(world_bundle, states, at_s, "SEND_SAT", oid))
         if (
             not disable_paid_query
             and process["query_capabilities"]

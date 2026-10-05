@@ -1,0 +1,1322 @@
+{
+  "status": "DIAGNOSTIC_NOT_UNIVERSE_RELABEL",
+  "inputs_sha256": "933510d769cec6cae946d744710d2b7b791a1020134d2b49125b88d8b4a0a34d",
+  "solver_sha256": "01e638add9d9099ab79f08aa14c4e73a3d886691595bbd23d12d4f909055be35",
+  "selection": "first six distinct corrected PAID_EVIDENCE_REQUIRED solver signatures per process class in generator order; selected before ablation",
+  "source_profile_sha256": "1552ad001ca9ca8f0ee8fa754cb9e9cd8f6bae12f2781ae69b94a21133f487b8",
+  "minimal_witness": {
+    "historical_mask": {
+      "status": "EXACT",
+      "solvable": false,
+      "memo_nodes": 22
+    },
+    "duplicate_free_repair": {
+      "status": "EXACT",
+      "solvable": true,
+      "memo_nodes": 10,
+      "replay": {
+        "common_actions": [
+          [
+            0,
+            "SEND_TERR",
+            "o"
+          ],
+          [
+            100,
+            "SEND_TERR",
+            "o"
+          ]
+        ],
+        "world_outcomes": [
+          {
+            "world_id": "A",
+            "duplicate_completions": 0,
+            "accepted_transmissions": 1,
+            "satellite_used": 0,
+            "completed_at_s": {
+              "o": 30
+            }
+          },
+          {
+            "world_id": "B",
+            "duplicate_completions": 0,
+            "accepted_transmissions": 1,
+            "satellite_used": 0,
+            "completed_at_s": {
+              "o": 130
+            }
+          }
+        ]
+      }
+    },
+    "deduplicating_receiver": {
+      "status": "EXACT",
+      "solvable": true,
+      "memo_nodes": 13,
+      "replay": {
+        "common_actions": [
+          [
+            0,
+            "SEND_TERR",
+            "o"
+          ],
+          [
+            60,
+            "SEND_TERR",
+            "o"
+          ],
+          [
+            120,
+            "SEND_TERR",
+            "o"
+          ]
+        ],
+        "world_outcomes": [
+          {
+            "world_id": "A",
+            "duplicate_completions": 1,
+            "accepted_transmissions": 2,
+            "satellite_used": 0,
+            "completed_at_s": {
+              "o": 30
+            }
+          },
+          {
+            "world_id": "B",
+            "duplicate_completions": 0,
+            "accepted_transmissions": 1,
+            "satellite_used": 0,
+            "completed_at_s": {
+              "o": 150
+            }
+          }
+        ]
+      }
+    }
+  },
+  "rows": [
+    {
+      "signature": "ef1b77ace36a32d26343209bf12357064226bfe4c41def8b3dc0919365543ad2",
+      "recipe_id": "T1R-a32593dad622bc",
+      "process": "FINITE_CROSSING_WINDOWS",
+      "results": {
+        "historical_mask": {
+          "status": "EXACT",
+          "solvable": false,
+          "memo_nodes": 2636
+        },
+        "duplicate_free_repair": {
+          "status": "EXACT",
+          "solvable": false,
+          "memo_nodes": 2636
+        },
+        "deduplicating_receiver": {
+          "status": "EXACT",
+          "solvable": true,
+          "memo_nodes": 49,
+          "replay": {
+            "common_actions": [
+              [
+                4500,
+                "SEND_SAT",
+                "T1R-a32593dad622bc::report::00"
+              ],
+              [
+                16800,
+                "SEND_TERR",
+                "T1R-a32593dad622bc::report::01"
+              ],
+              [
+                22980,
+                "SEND_SAT",
+                "T1R-a32593dad622bc::report::01"
+              ],
+              [
+                27600,
+                "SEND_TERR",
+                "T1R-a32593dad622bc::report::02"
+              ],
+              [
+                38400,
+                "SEND_TERR",
+                "T1R-a32593dad622bc::report::02"
+              ]
+            ],
+            "world_outcomes": [
+              {
+                "world_id": "T1R-a32593dad622bc::W0-56d73f3c17",
+                "duplicate_completions": 1,
+                "accepted_transmissions": 4,
+                "satellite_used": 2,
+                "completed_at_s": {
+                  "T1R-a32593dad622bc::report::00": 4505,
+                  "T1R-a32593dad622bc::report::01": 22985,
+                  "T1R-a32593dad622bc::report::02": 27630
+                }
+              },
+              {
+                "world_id": "T1R-a32593dad622bc::W1-04f461621a",
+                "duplicate_completions": 1,
+                "accepted_transmissions": 4,
+                "satellite_used": 2,
+                "completed_at_s": {
+                  "T1R-a32593dad622bc::report::00": 4505,
+                  "T1R-a32593dad622bc::report::01": 16830,
+                  "T1R-a32593dad622bc::report::02": 38430
+                }
+              },
+              {
+                "world_id": "T1R-a32593dad622bc::W2-e5bef60525",
+                "duplicate_completions": 1,
+                "accepted_transmissions": 4,
+                "satellite_used": 2,
+                "completed_at_s": {
+                  "T1R-a32593dad622bc::report::00": 4505,
+                  "T1R-a32593dad622bc::report::01": 16830,
+                  "T1R-a32593dad622bc::report::02": 27630
+                }
+              }
+            ]
+          }
+        }
+      }
+    },
+    {
+      "signature": "53a1666df05b175cd62099797d2049bb13f9eebafdf7e7ed004ec2d689bc8bea",
+      "recipe_id": "T1R-20e14985a492b6",
+      "process": "FINITE_CROSSING_WINDOWS",
+      "results": {
+        "historical_mask": {
+          "status": "EXACT",
+          "solvable": false,
+          "memo_nodes": 10998
+        },
+        "duplicate_free_repair": {
+          "status": "EXACT",
+          "solvable": false,
+          "memo_nodes": 10998
+        },
+        "deduplicating_receiver": {
+          "status": "EXACT",
+          "solvable": true,
+          "memo_nodes": 55,
+          "replay": {
+            "common_actions": [
+              [
+                4500,
+                "SEND_SAT",
+                "T1R-20e14985a492b6::report::00"
+              ],
+              [
+                16800,
+                "SEND_TERR",
+                "T1R-20e14985a492b6::report::01"
+              ],
+              [
+                22980,
+                "SEND_SAT",
+                "T1R-20e14985a492b6::report::01"
+              ],
+              [
+                25380,
+                "SEND_SAT",
+                "T1R-20e14985a492b6::report::02"
+              ],
+              [
+                38400,
+                "SEND_TERR",
+                "T1R-20e14985a492b6::report::03"
+              ],
+              [
+                49200,
+                "SEND_TERR",
+                "T1R-20e14985a492b6::report::03"
+              ]
+            ],
+            "world_outcomes": [
+              {
+                "world_id": "T1R-20e14985a492b6::W0-67cef03a6c",
+                "duplicate_completions": 1,
+                "accepted_transmissions": 5,
+                "satellite_used": 3,
+                "completed_at_s": {
+                  "T1R-20e14985a492b6::report::00": 4505,
+                  "T1R-20e14985a492b6::report::01": 22985,
+                  "T1R-20e14985a492b6::report::02": 25385,
+                  "T1R-20e14985a492b6::report::03": 38430
+                }
+              },
+              {
+                "world_id": "T1R-20e14985a492b6::W1-f7791fe6c9",
+                "duplicate_completions": 2,
+                "accepted_transmissions": 6,
+                "satellite_used": 3,
+                "completed_at_s": {
+                  "T1R-20e14985a492b6::report::00": 4505,
+                  "T1R-20e14985a492b6::report::01": 16830,
+                  "T1R-20e14985a492b6::report::02": 25385,
+                  "T1R-20e14985a492b6::report::03": 38430
+                }
+              },
+              {
+                "world_id": "T1R-20e14985a492b6::W2-0fd93a4f30",
+                "duplicate_completions": 1,
+                "accepted_transmissions": 5,
+                "satellite_used": 3,
+                "completed_at_s": {
+                  "T1R-20e14985a492b6::report::00": 4505,
+                  "T1R-20e14985a492b6::report::01": 16830,
+                  "T1R-20e14985a492b6::report::02": 25385,
+                  "T1R-20e14985a492b6::report::03": 49230
+                }
+              },
+              {
+                "world_id": "T1R-20e14985a492b6::W3-9c0053a938",
+                "duplicate_completions": 1,
+                "accepted_transmissions": 5,
+                "satellite_used": 3,
+                "completed_at_s": {
+                  "T1R-20e14985a492b6::report::00": 4505,
+                  "T1R-20e14985a492b6::report::01": 16830,
+                  "T1R-20e14985a492b6::report::02": 25385,
+                  "T1R-20e14985a492b6::report::03": 38430
+                }
+              }
+            ]
+          }
+        }
+      }
+    },
+    {
+      "signature": "a8e1080b374d02fd31c59c5ef3726dbc02db734d5df5236d1441e8e94f3ef8d1",
+      "recipe_id": "T1R-7be713bad733ea",
+      "process": "MULTI_WINDOW_DYNAMIC",
+      "results": {
+        "historical_mask": {
+          "status": "EXACT",
+          "solvable": false,
+          "memo_nodes": 618
+        },
+        "duplicate_free_repair": {
+          "status": "EXACT",
+          "solvable": true,
+          "memo_nodes": 33,
+          "replay": {
+            "common_actions": [
+              [
+                4500,
+                "SEND_SAT",
+                "T1R-7be713bad733ea::report::00"
+              ],
+              [
+                16800,
+                "SEND_TERR",
+                "T1R-7be713bad733ea::report::01"
+              ],
+              [
+                27600,
+                "SEND_TERR",
+                "T1R-7be713bad733ea::report::01"
+              ]
+            ],
+            "world_outcomes": [
+              {
+                "world_id": "T1R-7be713bad733ea::W0-9e8a5dfbf3",
+                "duplicate_completions": 0,
+                "accepted_transmissions": 2,
+                "satellite_used": 1,
+                "completed_at_s": {
+                  "T1R-7be713bad733ea::report::00": 4505,
+                  "T1R-7be713bad733ea::report::01": 27630
+                }
+              },
+              {
+                "world_id": "T1R-7be713bad733ea::W1-ba8650caa1",
+                "duplicate_completions": 0,
+                "accepted_transmissions": 2,
+                "satellite_used": 1,
+                "completed_at_s": {
+                  "T1R-7be713bad733ea::report::00": 4505,
+                  "T1R-7be713bad733ea::report::01": 16830
+                }
+              }
+            ]
+          }
+        },
+        "deduplicating_receiver": {
+          "status": "EXACT",
+          "solvable": true,
+          "memo_nodes": 37,
+          "replay": {
+            "common_actions": [
+              [
+                4500,
+                "SEND_SAT",
+                "T1R-7be713bad733ea::report::00"
+              ],
+              [
+                16800,
+                "SEND_TERR",
+                "T1R-7be713bad733ea::report::01"
+              ],
+              [
+                20400,
+                "SEND_TERR",
+                "T1R-7be713bad733ea::report::01"
+              ],
+              [
+                27600,
+                "SEND_TERR",
+                "T1R-7be713bad733ea::report::01"
+              ]
+            ],
+            "world_outcomes": [
+              {
+                "world_id": "T1R-7be713bad733ea::W0-9e8a5dfbf3",
+                "duplicate_completions": 0,
+                "accepted_transmissions": 2,
+                "satellite_used": 1,
+                "completed_at_s": {
+                  "T1R-7be713bad733ea::report::00": 4505,
+                  "T1R-7be713bad733ea::report::01": 27630
+                }
+              },
+              {
+                "world_id": "T1R-7be713bad733ea::W1-ba8650caa1",
+                "duplicate_completions": 1,
+                "accepted_transmissions": 3,
+                "satellite_used": 1,
+                "completed_at_s": {
+                  "T1R-7be713bad733ea::report::00": 4505,
+                  "T1R-7be713bad733ea::report::01": 16830
+                }
+              }
+            ]
+          }
+        }
+      }
+    },
+    {
+      "signature": "5312f8b7b80e342ebd7cfdc5e6c64efe8df1cea176c8d5c2f6b92d835700aac5",
+      "recipe_id": "T1R-d2a98ca33ce5b4",
+      "process": "MULTI_WINDOW_DYNAMIC",
+      "results": {
+        "historical_mask": {
+          "status": "EXACT",
+          "solvable": false,
+          "memo_nodes": 4288
+        },
+        "duplicate_free_repair": {
+          "status": "EXACT",
+          "solvable": false,
+          "memo_nodes": 4288
+        },
+        "deduplicating_receiver": {
+          "status": "EXACT",
+          "solvable": true,
+          "memo_nodes": 63,
+          "replay": {
+            "common_actions": [
+              [
+                4500,
+                "SEND_SAT",
+                "T1R-d2a98ca33ce5b4::report::00"
+              ],
+              [
+                16800,
+                "SEND_TERR",
+                "T1R-d2a98ca33ce5b4::report::01"
+              ],
+              [
+                20400,
+                "SEND_TERR",
+                "T1R-d2a98ca33ce5b4::report::01"
+              ],
+              [
+                22980,
+                "SEND_SAT",
+                "T1R-d2a98ca33ce5b4::report::01"
+              ],
+              [
+                27600,
+                "SEND_TERR",
+                "T1R-d2a98ca33ce5b4::report::02"
+              ],
+              [
+                31200,
+                "SEND_TERR",
+                "T1R-d2a98ca33ce5b4::report::02"
+              ],
+              [
+                38400,
+                "SEND_TERR",
+                "T1R-d2a98ca33ce5b4::report::02"
+              ]
+            ],
+            "world_outcomes": [
+              {
+                "world_id": "T1R-d2a98ca33ce5b4::W0-42f25abebe",
+                "duplicate_completions": 2,
+                "accepted_transmissions": 5,
+                "satellite_used": 2,
+                "completed_at_s": {
+                  "T1R-d2a98ca33ce5b4::report::00": 4505,
+                  "T1R-d2a98ca33ce5b4::report::01": 22985,
+                  "T1R-d2a98ca33ce5b4::report::02": 27630
+                }
+              },
+              {
+                "world_id": "T1R-d2a98ca33ce5b4::W1-401fb5bac9",
+                "duplicate_completions": 2,
+                "accepted_transmissions": 5,
+                "satellite_used": 2,
+                "completed_at_s": {
+                  "T1R-d2a98ca33ce5b4::report::00": 4505,
+                  "T1R-d2a98ca33ce5b4::report::01": 16830,
+                  "T1R-d2a98ca33ce5b4::report::02": 38430
+                }
+              },
+              {
+                "world_id": "T1R-d2a98ca33ce5b4::W2-a9b66399df",
+                "duplicate_completions": 3,
+                "accepted_transmissions": 6,
+                "satellite_used": 2,
+                "completed_at_s": {
+                  "T1R-d2a98ca33ce5b4::report::00": 4505,
+                  "T1R-d2a98ca33ce5b4::report::01": 16830,
+                  "T1R-d2a98ca33ce5b4::report::02": 27630
+                }
+              }
+            ]
+          }
+        }
+      }
+    },
+    {
+      "signature": "6d7744f6edc523e2f323ab53614440d1a2e43192915ecfc887310faa4d53fa1f",
+      "recipe_id": "T1R-c969bec849683a",
+      "process": "MULTI_WINDOW_DYNAMIC",
+      "results": {
+        "historical_mask": {
+          "status": "EXACT",
+          "solvable": false,
+          "memo_nodes": 17875
+        },
+        "duplicate_free_repair": {
+          "status": "EXACT",
+          "solvable": false,
+          "memo_nodes": 17875
+        },
+        "deduplicating_receiver": {
+          "status": "EXACT",
+          "solvable": true,
+          "memo_nodes": 71,
+          "replay": {
+            "common_actions": [
+              [
+                4500,
+                "SEND_SAT",
+                "T1R-c969bec849683a::report::00"
+              ],
+              [
+                16800,
+                "SEND_TERR",
+                "T1R-c969bec849683a::report::01"
+              ],
+              [
+                20400,
+                "SEND_TERR",
+                "T1R-c969bec849683a::report::01"
+              ],
+              [
+                22980,
+                "SEND_SAT",
+                "T1R-c969bec849683a::report::01"
+              ],
+              [
+                25380,
+                "SEND_SAT",
+                "T1R-c969bec849683a::report::02"
+              ],
+              [
+                38400,
+                "SEND_TERR",
+                "T1R-c969bec849683a::report::03"
+              ],
+              [
+                42000,
+                "SEND_TERR",
+                "T1R-c969bec849683a::report::03"
+              ],
+              [
+                49200,
+                "SEND_TERR",
+                "T1R-c969bec849683a::report::03"
+              ]
+            ],
+            "world_outcomes": [
+              {
+                "world_id": "T1R-c969bec849683a::W0-d76c442d4d",
+                "duplicate_completions": 2,
+                "accepted_transmissions": 6,
+                "satellite_used": 3,
+                "completed_at_s": {
+                  "T1R-c969bec849683a::report::00": 4505,
+                  "T1R-c969bec849683a::report::01": 22985,
+                  "T1R-c969bec849683a::report::02": 25385,
+                  "T1R-c969bec849683a::report::03": 38430
+                }
+              },
+              {
+                "world_id": "T1R-c969bec849683a::W1-bc991f2a6a",
+                "duplicate_completions": 4,
+                "accepted_transmissions": 8,
+                "satellite_used": 3,
+                "completed_at_s": {
+                  "T1R-c969bec849683a::report::00": 4505,
+                  "T1R-c969bec849683a::report::01": 16830,
+                  "T1R-c969bec849683a::report::02": 25385,
+                  "T1R-c969bec849683a::report::03": 38430
+                }
+              },
+              {
+                "world_id": "T1R-c969bec849683a::W2-b2514efaff",
+                "duplicate_completions": 2,
+                "accepted_transmissions": 6,
+                "satellite_used": 3,
+                "completed_at_s": {
+                  "T1R-c969bec849683a::report::00": 4505,
+                  "T1R-c969bec849683a::report::01": 16830,
+                  "T1R-c969bec849683a::report::02": 25385,
+                  "T1R-c969bec849683a::report::03": 49230
+                }
+              },
+              {
+                "world_id": "T1R-c969bec849683a::W3-4377564506",
+                "duplicate_completions": 3,
+                "accepted_transmissions": 7,
+                "satellite_used": 3,
+                "completed_at_s": {
+                  "T1R-c969bec849683a::report::00": 4505,
+                  "T1R-c969bec849683a::report::01": 16830,
+                  "T1R-c969bec849683a::report::02": 25385,
+                  "T1R-c969bec849683a::report::03": 38430
+                }
+              }
+            ]
+          }
+        }
+      }
+    },
+    {
+      "signature": "b87d843ab89fe57ce883c23cbf1713921d36ed632684040515e82b7635e89289",
+      "recipe_id": "T1R-740f6be67bd019",
+      "process": "FINITE_CROSSING_WINDOWS",
+      "results": {
+        "historical_mask": {
+          "status": "EXACT",
+          "solvable": false,
+          "memo_nodes": 2636
+        },
+        "duplicate_free_repair": {
+          "status": "EXACT",
+          "solvable": false,
+          "memo_nodes": 2636
+        },
+        "deduplicating_receiver": {
+          "status": "EXACT",
+          "solvable": true,
+          "memo_nodes": 49,
+          "replay": {
+            "common_actions": [
+              [
+                2700,
+                "SEND_SAT",
+                "T1R-740f6be67bd019::report::00"
+              ],
+              [
+                15000,
+                "SEND_TERR",
+                "T1R-740f6be67bd019::report::01"
+              ],
+              [
+                21180,
+                "SEND_SAT",
+                "T1R-740f6be67bd019::report::01"
+              ],
+              [
+                25800,
+                "SEND_TERR",
+                "T1R-740f6be67bd019::report::02"
+              ],
+              [
+                36600,
+                "SEND_TERR",
+                "T1R-740f6be67bd019::report::02"
+              ]
+            ],
+            "world_outcomes": [
+              {
+                "world_id": "T1R-740f6be67bd019::W0-043ec5b4f0",
+                "duplicate_completions": 1,
+                "accepted_transmissions": 4,
+                "satellite_used": 2,
+                "completed_at_s": {
+                  "T1R-740f6be67bd019::report::00": 2705,
+                  "T1R-740f6be67bd019::report::01": 21185,
+                  "T1R-740f6be67bd019::report::02": 25830
+                }
+              },
+              {
+                "world_id": "T1R-740f6be67bd019::W1-014fa529ea",
+                "duplicate_completions": 1,
+                "accepted_transmissions": 4,
+                "satellite_used": 2,
+                "completed_at_s": {
+                  "T1R-740f6be67bd019::report::00": 2705,
+                  "T1R-740f6be67bd019::report::01": 15030,
+                  "T1R-740f6be67bd019::report::02": 36630
+                }
+              },
+              {
+                "world_id": "T1R-740f6be67bd019::W2-59128f4a71",
+                "duplicate_completions": 1,
+                "accepted_transmissions": 4,
+                "satellite_used": 2,
+                "completed_at_s": {
+                  "T1R-740f6be67bd019::report::00": 2705,
+                  "T1R-740f6be67bd019::report::01": 15030,
+                  "T1R-740f6be67bd019::report::02": 25830
+                }
+              }
+            ]
+          }
+        }
+      }
+    },
+    {
+      "signature": "17c76f39f91cede5e38b7753c8b98fb7348556c68a71f129979b531d96ba408b",
+      "recipe_id": "T1R-55ff9330743b23",
+      "process": "FINITE_CROSSING_WINDOWS",
+      "results": {
+        "historical_mask": {
+          "status": "EXACT",
+          "solvable": false,
+          "memo_nodes": 10998
+        },
+        "duplicate_free_repair": {
+          "status": "EXACT",
+          "solvable": false,
+          "memo_nodes": 10998
+        },
+        "deduplicating_receiver": {
+          "status": "EXACT",
+          "solvable": true,
+          "memo_nodes": 55,
+          "replay": {
+            "common_actions": [
+              [
+                2700,
+                "SEND_SAT",
+                "T1R-55ff9330743b23::report::00"
+              ],
+              [
+                15000,
+                "SEND_TERR",
+                "T1R-55ff9330743b23::report::01"
+              ],
+              [
+                21180,
+                "SEND_SAT",
+                "T1R-55ff9330743b23::report::01"
+              ],
+              [
+                23580,
+                "SEND_SAT",
+                "T1R-55ff9330743b23::report::02"
+              ],
+              [
+                36600,
+                "SEND_TERR",
+                "T1R-55ff9330743b23::report::03"
+              ],
+              [
+                47400,
+                "SEND_TERR",
+                "T1R-55ff9330743b23::report::03"
+              ]
+            ],
+            "world_outcomes": [
+              {
+                "world_id": "T1R-55ff9330743b23::W0-1386f43cdc",
+                "duplicate_completions": 1,
+                "accepted_transmissions": 5,
+                "satellite_used": 3,
+                "completed_at_s": {
+                  "T1R-55ff9330743b23::report::00": 2705,
+                  "T1R-55ff9330743b23::report::01": 21185,
+                  "T1R-55ff9330743b23::report::02": 23585,
+                  "T1R-55ff9330743b23::report::03": 36630
+                }
+              },
+              {
+                "world_id": "T1R-55ff9330743b23::W1-cb665b34f1",
+                "duplicate_completions": 2,
+                "accepted_transmissions": 6,
+                "satellite_used": 3,
+                "completed_at_s": {
+                  "T1R-55ff9330743b23::report::00": 2705,
+                  "T1R-55ff9330743b23::report::01": 15030,
+                  "T1R-55ff9330743b23::report::02": 23585,
+                  "T1R-55ff9330743b23::report::03": 36630
+                }
+              },
+              {
+                "world_id": "T1R-55ff9330743b23::W2-de481562ff",
+                "duplicate_completions": 1,
+                "accepted_transmissions": 5,
+                "satellite_used": 3,
+                "completed_at_s": {
+                  "T1R-55ff9330743b23::report::00": 2705,
+                  "T1R-55ff9330743b23::report::01": 15030,
+                  "T1R-55ff9330743b23::report::02": 23585,
+                  "T1R-55ff9330743b23::report::03": 47430
+                }
+              },
+              {
+                "world_id": "T1R-55ff9330743b23::W3-690a5fde16",
+                "duplicate_completions": 1,
+                "accepted_transmissions": 5,
+                "satellite_used": 3,
+                "completed_at_s": {
+                  "T1R-55ff9330743b23::report::00": 2705,
+                  "T1R-55ff9330743b23::report::01": 15030,
+                  "T1R-55ff9330743b23::report::02": 23585,
+                  "T1R-55ff9330743b23::report::03": 36630
+                }
+              }
+            ]
+          }
+        }
+      }
+    },
+    {
+      "signature": "da9cb6a63a1c9e4748f5cd0ce9b0d695a67652b6159730a27eea3ba2f11d1411",
+      "recipe_id": "T1R-05d4eda97f06c3",
+      "process": "MULTI_WINDOW_DYNAMIC",
+      "results": {
+        "historical_mask": {
+          "status": "EXACT",
+          "solvable": false,
+          "memo_nodes": 618
+        },
+        "duplicate_free_repair": {
+          "status": "EXACT",
+          "solvable": true,
+          "memo_nodes": 33,
+          "replay": {
+            "common_actions": [
+              [
+                2700,
+                "SEND_SAT",
+                "T1R-05d4eda97f06c3::report::00"
+              ],
+              [
+                15000,
+                "SEND_TERR",
+                "T1R-05d4eda97f06c3::report::01"
+              ],
+              [
+                25800,
+                "SEND_TERR",
+                "T1R-05d4eda97f06c3::report::01"
+              ]
+            ],
+            "world_outcomes": [
+              {
+                "world_id": "T1R-05d4eda97f06c3::W0-e1a7a8a764",
+                "duplicate_completions": 0,
+                "accepted_transmissions": 2,
+                "satellite_used": 1,
+                "completed_at_s": {
+                  "T1R-05d4eda97f06c3::report::00": 2705,
+                  "T1R-05d4eda97f06c3::report::01": 25830
+                }
+              },
+              {
+                "world_id": "T1R-05d4eda97f06c3::W1-7460f93ea3",
+                "duplicate_completions": 0,
+                "accepted_transmissions": 2,
+                "satellite_used": 1,
+                "completed_at_s": {
+                  "T1R-05d4eda97f06c3::report::00": 2705,
+                  "T1R-05d4eda97f06c3::report::01": 15030
+                }
+              }
+            ]
+          }
+        },
+        "deduplicating_receiver": {
+          "status": "EXACT",
+          "solvable": true,
+          "memo_nodes": 37,
+          "replay": {
+            "common_actions": [
+              [
+                2700,
+                "SEND_SAT",
+                "T1R-05d4eda97f06c3::report::00"
+              ],
+              [
+                15000,
+                "SEND_TERR",
+                "T1R-05d4eda97f06c3::report::01"
+              ],
+              [
+                18600,
+                "SEND_TERR",
+                "T1R-05d4eda97f06c3::report::01"
+              ],
+              [
+                25800,
+                "SEND_TERR",
+                "T1R-05d4eda97f06c3::report::01"
+              ]
+            ],
+            "world_outcomes": [
+              {
+                "world_id": "T1R-05d4eda97f06c3::W0-e1a7a8a764",
+                "duplicate_completions": 0,
+                "accepted_transmissions": 2,
+                "satellite_used": 1,
+                "completed_at_s": {
+                  "T1R-05d4eda97f06c3::report::00": 2705,
+                  "T1R-05d4eda97f06c3::report::01": 25830
+                }
+              },
+              {
+                "world_id": "T1R-05d4eda97f06c3::W1-7460f93ea3",
+                "duplicate_completions": 1,
+                "accepted_transmissions": 3,
+                "satellite_used": 1,
+                "completed_at_s": {
+                  "T1R-05d4eda97f06c3::report::00": 2705,
+                  "T1R-05d4eda97f06c3::report::01": 15030
+                }
+              }
+            ]
+          }
+        }
+      }
+    },
+    {
+      "signature": "86cca705db402ff1eef4bbde7ff111eec5c7151e99d392b291c650599d59c02e",
+      "recipe_id": "T1R-3df3584ae2b835",
+      "process": "MULTI_WINDOW_DYNAMIC",
+      "results": {
+        "historical_mask": {
+          "status": "EXACT",
+          "solvable": false,
+          "memo_nodes": 4288
+        },
+        "duplicate_free_repair": {
+          "status": "EXACT",
+          "solvable": false,
+          "memo_nodes": 4288
+        },
+        "deduplicating_receiver": {
+          "status": "EXACT",
+          "solvable": true,
+          "memo_nodes": 63,
+          "replay": {
+            "common_actions": [
+              [
+                2700,
+                "SEND_SAT",
+                "T1R-3df3584ae2b835::report::00"
+              ],
+              [
+                15000,
+                "SEND_TERR",
+                "T1R-3df3584ae2b835::report::01"
+              ],
+              [
+                18600,
+                "SEND_TERR",
+                "T1R-3df3584ae2b835::report::01"
+              ],
+              [
+                21180,
+                "SEND_SAT",
+                "T1R-3df3584ae2b835::report::01"
+              ],
+              [
+                25800,
+                "SEND_TERR",
+                "T1R-3df3584ae2b835::report::02"
+              ],
+              [
+                29400,
+                "SEND_TERR",
+                "T1R-3df3584ae2b835::report::02"
+              ],
+              [
+                36600,
+                "SEND_TERR",
+                "T1R-3df3584ae2b835::report::02"
+              ]
+            ],
+            "world_outcomes": [
+              {
+                "world_id": "T1R-3df3584ae2b835::W0-a2040693e3",
+                "duplicate_completions": 2,
+                "accepted_transmissions": 5,
+                "satellite_used": 2,
+                "completed_at_s": {
+                  "T1R-3df3584ae2b835::report::00": 2705,
+                  "T1R-3df3584ae2b835::report::01": 21185,
+                  "T1R-3df3584ae2b835::report::02": 25830
+                }
+              },
+              {
+                "world_id": "T1R-3df3584ae2b835::W1-5805f90bac",
+                "duplicate_completions": 2,
+                "accepted_transmissions": 5,
+                "satellite_used": 2,
+                "completed_at_s": {
+                  "T1R-3df3584ae2b835::report::00": 2705,
+                  "T1R-3df3584ae2b835::report::01": 15030,
+                  "T1R-3df3584ae2b835::report::02": 36630
+                }
+              },
+              {
+                "world_id": "T1R-3df3584ae2b835::W2-1b12982926",
+                "duplicate_completions": 3,
+                "accepted_transmissions": 6,
+                "satellite_used": 2,
+                "completed_at_s": {
+                  "T1R-3df3584ae2b835::report::00": 2705,
+                  "T1R-3df3584ae2b835::report::01": 15030,
+                  "T1R-3df3584ae2b835::report::02": 25830
+                }
+              }
+            ]
+          }
+        }
+      }
+    },
+    {
+      "signature": "510bcc4862e948e4f15a8c04a452f513e0925897b955397ba90e57fc690db2d0",
+      "recipe_id": "T1R-5fe91fd0393d43",
+      "process": "MULTI_WINDOW_DYNAMIC",
+      "results": {
+        "historical_mask": {
+          "status": "EXACT",
+          "solvable": false,
+          "memo_nodes": 17875
+        },
+        "duplicate_free_repair": {
+          "status": "EXACT",
+          "solvable": false,
+          "memo_nodes": 17875
+        },
+        "deduplicating_receiver": {
+          "status": "EXACT",
+          "solvable": true,
+          "memo_nodes": 71,
+          "replay": {
+            "common_actions": [
+              [
+                2700,
+                "SEND_SAT",
+                "T1R-5fe91fd0393d43::report::00"
+              ],
+              [
+                15000,
+                "SEND_TERR",
+                "T1R-5fe91fd0393d43::report::01"
+              ],
+              [
+                18600,
+                "SEND_TERR",
+                "T1R-5fe91fd0393d43::report::01"
+              ],
+              [
+                21180,
+                "SEND_SAT",
+                "T1R-5fe91fd0393d43::report::01"
+              ],
+              [
+                23580,
+                "SEND_SAT",
+                "T1R-5fe91fd0393d43::report::02"
+              ],
+              [
+                36600,
+                "SEND_TERR",
+                "T1R-5fe91fd0393d43::report::03"
+              ],
+              [
+                40200,
+                "SEND_TERR",
+                "T1R-5fe91fd0393d43::report::03"
+              ],
+              [
+                47400,
+                "SEND_TERR",
+                "T1R-5fe91fd0393d43::report::03"
+              ]
+            ],
+            "world_outcomes": [
+              {
+                "world_id": "T1R-5fe91fd0393d43::W0-5d01b220f6",
+                "duplicate_completions": 2,
+                "accepted_transmissions": 6,
+                "satellite_used": 3,
+                "completed_at_s": {
+                  "T1R-5fe91fd0393d43::report::00": 2705,
+                  "T1R-5fe91fd0393d43::report::01": 21185,
+                  "T1R-5fe91fd0393d43::report::02": 23585,
+                  "T1R-5fe91fd0393d43::report::03": 36630
+                }
+              },
+              {
+                "world_id": "T1R-5fe91fd0393d43::W1-74e0edc10f",
+                "duplicate_completions": 4,
+                "accepted_transmissions": 8,
+                "satellite_used": 3,
+                "completed_at_s": {
+                  "T1R-5fe91fd0393d43::report::00": 2705,
+                  "T1R-5fe91fd0393d43::report::01": 15030,
+                  "T1R-5fe91fd0393d43::report::02": 23585,
+                  "T1R-5fe91fd0393d43::report::03": 36630
+                }
+              },
+              {
+                "world_id": "T1R-5fe91fd0393d43::W2-c059b6e2cf",
+                "duplicate_completions": 2,
+                "accepted_transmissions": 6,
+                "satellite_used": 3,
+                "completed_at_s": {
+                  "T1R-5fe91fd0393d43::report::00": 2705,
+                  "T1R-5fe91fd0393d43::report::01": 15030,
+                  "T1R-5fe91fd0393d43::report::02": 23585,
+                  "T1R-5fe91fd0393d43::report::03": 47430
+                }
+              },
+              {
+                "world_id": "T1R-5fe91fd0393d43::W3-26b7ae72c1",
+                "duplicate_completions": 3,
+                "accepted_transmissions": 7,
+                "satellite_used": 3,
+                "completed_at_s": {
+                  "T1R-5fe91fd0393d43::report::00": 2705,
+                  "T1R-5fe91fd0393d43::report::01": 15030,
+                  "T1R-5fe91fd0393d43::report::02": 23585,
+                  "T1R-5fe91fd0393d43::report::03": 36630
+                }
+              }
+            ]
+          }
+        }
+      }
+    },
+    {
+      "signature": "ad5d6e20a7790760d71f4664617c68b676c3fd90cd3fa389de3916ea3cc3fb62",
+      "recipe_id": "T1R-ff799931fee10a",
+      "process": "FINITE_CROSSING_WINDOWS",
+      "results": {
+        "historical_mask": {
+          "status": "EXACT",
+          "solvable": false,
+          "memo_nodes": 2540
+        },
+        "duplicate_free_repair": {
+          "status": "EXACT",
+          "solvable": false,
+          "memo_nodes": 2540
+        },
+        "deduplicating_receiver": {
+          "status": "EXACT",
+          "solvable": true,
+          "memo_nodes": 48,
+          "replay": {
+            "common_actions": [
+              [
+                900,
+                "SEND_SAT",
+                "T1R-ff799931fee10a::report::00"
+              ],
+              [
+                14100,
+                "SEND_TERR",
+                "T1R-ff799931fee10a::report::01"
+              ],
+              [
+                19380,
+                "SEND_SAT",
+                "T1R-ff799931fee10a::report::01"
+              ],
+              [
+                24900,
+                "SEND_TERR",
+                "T1R-ff799931fee10a::report::02"
+              ],
+              [
+                35700,
+                "SEND_TERR",
+                "T1R-ff799931fee10a::report::02"
+              ]
+            ],
+            "world_outcomes": [
+              {
+                "world_id": "T1R-ff799931fee10a::W0-e1606b605a",
+                "duplicate_completions": 1,
+                "accepted_transmissions": 4,
+                "satellite_used": 2,
+                "completed_at_s": {
+                  "T1R-ff799931fee10a::report::00": 905,
+                  "T1R-ff799931fee10a::report::01": 19385,
+                  "T1R-ff799931fee10a::report::02": 24930
+                }
+              },
+              {
+                "world_id": "T1R-ff799931fee10a::W1-3c13d85e6f",
+                "duplicate_completions": 1,
+                "accepted_transmissions": 4,
+                "satellite_used": 2,
+                "completed_at_s": {
+                  "T1R-ff799931fee10a::report::00": 905,
+                  "T1R-ff799931fee10a::report::01": 14130,
+                  "T1R-ff799931fee10a::report::02": 35730
+                }
+              },
+              {
+                "world_id": "T1R-ff799931fee10a::W2-e577ec9ae9",
+                "duplicate_completions": 1,
+                "accepted_transmissions": 4,
+                "satellite_used": 2,
+                "completed_at_s": {
+                  "T1R-ff799931fee10a::report::00": 905,
+                  "T1R-ff799931fee10a::report::01": 14130,
+                  "T1R-ff799931fee10a::report::02": 24930
+                }
+              }
+            ]
+          }
+        }
+      }
+    },
+    {
+      "signature": "9f09526db7534d46fe8d8f8bd6ac0235041935e38ff367d04fdcfba6b91a4761",
+      "recipe_id": "T1R-6f552cceffd06c",
+      "process": "FINITE_CROSSING_WINDOWS",
+      "results": {
+        "historical_mask": {
+          "status": "EXACT",
+          "solvable": false,
+          "memo_nodes": 10061
+        },
+        "duplicate_free_repair": {
+          "status": "EXACT",
+          "solvable": false,
+          "memo_nodes": 10061
+        },
+        "deduplicating_receiver": {
+          "status": "EXACT",
+          "solvable": true,
+          "memo_nodes": 56,
+          "replay": {
+            "common_actions": [
+              [
+                900,
+                "SEND_SAT",
+                "T1R-6f552cceffd06c::report::00"
+              ],
+              [
+                14100,
+                "SEND_TERR",
+                "T1R-6f552cceffd06c::report::01"
+              ],
+              [
+                19380,
+                "SEND_SAT",
+                "T1R-6f552cceffd06c::report::01"
+              ],
+              [
+                21780,
+                "SEND_SAT",
+                "T1R-6f552cceffd06c::report::02"
+              ],
+              [
+                35700,
+                "SEND_TERR",
+                "T1R-6f552cceffd06c::report::03"
+              ],
+              [
+                46500,
+                "SEND_TERR",
+                "T1R-6f552cceffd06c::report::03"
+              ]
+            ],
+            "world_outcomes": [
+              {
+                "world_id": "T1R-6f552cceffd06c::W0-edc7f6b808",
+                "duplicate_completions": 1,
+                "accepted_transmissions": 5,
+                "satellite_used": 3,
+                "completed_at_s": {
+                  "T1R-6f552cceffd06c::report::00": 905,
+                  "T1R-6f552cceffd06c::report::01": 19385,
+                  "T1R-6f552cceffd06c::report::02": 21785,
+                  "T1R-6f552cceffd06c::report::03": 35730
+                }
+              },
+              {
+                "world_id": "T1R-6f552cceffd06c::W1-6aabc491a3",
+                "duplicate_completions": 2,
+                "accepted_transmissions": 6,
+                "satellite_used": 3,
+                "completed_at_s": {
+                  "T1R-6f552cceffd06c::report::00": 905,
+                  "T1R-6f552cceffd06c::report::01": 14130,
+                  "T1R-6f552cceffd06c::report::02": 21785,
+                  "T1R-6f552cceffd06c::report::03": 35730
+                }
+              },
+              {
+                "world_id": "T1R-6f552cceffd06c::W2-2b1222c8c5",
+                "duplicate_completions": 1,
+                "accepted_transmissions": 5,
+                "satellite_used": 3,
+                "completed_at_s": {
+                  "T1R-6f552cceffd06c::report::00": 905,
+                  "T1R-6f552cceffd06c::report::01": 14130,
+                  "T1R-6f552cceffd06c::report::02": 21785,
+                  "T1R-6f552cceffd06c::report::03": 46530
+                }
+              },
+              {
+                "world_id": "T1R-6f552cceffd06c::W3-e77bfafe23",
+                "duplicate_completions": 1,
+                "accepted_transmissions": 5,
+                "satellite_used": 3,
+                "completed_at_s": {
+                  "T1R-6f552cceffd06c::report::00": 905,
+                  "T1R-6f552cceffd06c::report::01": 14130,
+                  "T1R-6f552cceffd06c::report::02": 21785,
+                  "T1R-6f552cceffd06c::report::03": 35730
+                }
+              }
+            ]
+          }
+        }
+      }
+    }
+  ],
+  "solvable_counts": {
+    "historical_mask": 0,
+    "duplicate_free_repair": 2,
+    "deduplicating_receiver": 12
+  }
+}
