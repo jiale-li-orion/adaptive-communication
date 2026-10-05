@@ -7,7 +7,7 @@
 | Owner | 负责对象 | 当前状态 | 入口 |
 |---|---|---|---|
 | `substrate/` | 山区灾前监测通信物理、能量、缓存、机会、回传、fallback、执行生命周期与数学系统模型 | 稳定底座 | `substrate/README.md` |
-| `benchmark/` | Layer 1：source-grounded operational needs、Task construction、validity/hardness、conformance/decision benchmark | **research freeze 已完成**：v0.2-retry-legality 的 world/causal/exact、V0–V9、V8 hard 41 signatures / 174 recipes、held-out split 与 3,804-case public-test 已冻结；formal `BENCHMARK_ADMIT` 仍需 v0.2 Q11 human/source audit、Q0–Q12 refresh 与 release-evidence closure | `benchmark/LAYER1-AUTHORITY.md` · `benchmark/README.md` · `../spec/benchmark/LAYER1-DECISION-BENCHMARK-v0.2.md` |
+| `benchmark/` | Layer 1：source-grounded operational needs、Task construction、validity/hardness、conformance/decision benchmark | **research freeze 已完成**；v0.2 release evidence 已刷新为 **12 PASS / 1 BLOCKED**，Q6 LLM、agentic reducibility、communication attribution、Q10 reproducibility 均已闭合；formal `BENCHMARK_ADMIT` 只剩 Q11 真实 human/source review | `benchmark/LAYER1-AUTHORITY.md` · `benchmark/README.md` · `../spec/benchmark/LAYER1-DECISION-BENCHMARK-v0.2.md` |
 | `compiler/` | Layer 2：Task/Evidence/Capability/Execution 到 live decision surface、EvidenceNeed、commitment、persistent execution | 已有 A7–A11 机制证据，接口冻结 | `compiler/README.md` |
 | `policy/` | Layer 3：deterministic/search、LLM、未来 GNN/offline RL/hybrid policy；只在合法 decision surface 上做选择 | LLM/规则已有，learned policy 尚未实现 | `policy/README.md` |
 | `evaluation/` | replay、attribution、ablation、baseline fairness、生成结果摘要 | 横切三层 | `evaluation/README.md` |

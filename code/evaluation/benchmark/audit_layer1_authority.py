@@ -118,10 +118,13 @@ def main()->int:
     )
     assert state['structure_aware_split']['hard_signature_by_split']=={'train':16,'dev':18,'test':7}
     assert public_test['test_case_count']==3804
-    assert state['quality_gates']['status']=='STALE_PENDING_V02_Q11_AND_GATE_REBUILD'
-    assert state['quality_gates']['llm_baseline']=='DEFERRED_PRE_RETRY_RESULT_STALE'
-    assert state['quality_gates']['human_source_audit']=='PENDING_REBUILD_AND_REAL_REVIEW'
-    assert state['next_stage']=='V02_MACHINE_FREEZE_Q11_PENDING_LLM_DEFERRED'
+    assert state['quality_gates']['status']=='V02_RELEASE_GATES_REFRESHED_Q11_ONLY_BLOCKER'
+    assert state['quality_gates']['gate_counts']=={'PASS':12,'BLOCKED':1}
+    assert state['quality_gates']['llm_baseline']=='PASS_DEEPSEEK_FLASH_0_OF_7_HARD_SIGNATURES'
+    assert state['quality_gates']['agentic_reducibility']=='PASS_41_OF_41_HARD_SIGNATURES'
+    assert state['quality_gates']['communication_attribution']=='PASS_41_OF_41_HARD_SIGNATURES'
+    assert state['quality_gates']['human_source_audit']=='MACHINE_PREAUDIT_23_OF_23_PASS_HUMAN_REVIEW_PENDING'
+    assert state['next_stage']=='V02_Q11_HUMAN_REVIEW_ONLY_BEFORE_BENCHMARK_ADMIT'
 
     authority=AUTH.read_text(encoding='utf-8')
     assert '58,752 个 recipe 不是 benchmark cases' in authority
@@ -133,7 +136,7 @@ def main()->int:
     assert 'regenerate exact labels + V0–V9' not in authority
     assert '41 个 signatures / 174 个 pre-admission recipes' in authority
     assert 'public-test identity v0.2 当前冻结 3,804 个 test cases' in authority
-    assert 'frozen-split LLM baseline                              [DEFERRED]' in authority
+    assert 'frozen-split LLM baseline                              [DONE v0.2; DeepSeek 0/7]' in authority
     assert WORLD_DOC.exists()
     assert WORLD_SCHEMA.exists()
     assert CAUSAL_DOC.exists()
@@ -145,7 +148,7 @@ def main()->int:
         text=path.read_text(encoding='utf-8')
         assert 'LAYER1-AUTHORITY.md' in text, f'{path} no longer points to Layer-1 authority'
 
-    print('PASS Layer-1 authority: retry-legality v0.2 exact/V0-V9/split/public-test machine lineage is aligned; LLM is deferred and Q11 remains pending before BENCHMARK_ADMIT')
+    print('PASS Layer-1 authority: retry-legality v0.2 exact/V0-V9/split/public-test/LLM/release audits are aligned; Q0-Q12=12 PASS / 1 BLOCKED and only real Q11 human review remains before BENCHMARK_ADMIT')
     return 0
 
 

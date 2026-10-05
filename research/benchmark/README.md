@@ -92,12 +92,14 @@ Benchmark 必须证明“难点来自 communication/information structure”，�
 | External exact oracle | hindsight / full-current / observation-matched / no-paid-query 参照与 `INFORMATION_INFEASIBLE` 已实现 | **PASS / research freeze** |
 | Strong baseline / shortcut audit | V8 ladder 已完成，最终保留 41 hard signatures / 174 recipes | **PASS / research freeze** |
 | Structure-aware held-out split | hard train/dev/test signatures 16/18/7，solver-signature 与近邻 leakage 审计通过 | **PASS / research freeze** |
-| Single-shot / open-loop reducibility as a named release audit | 机制上已有 sequential observation/action dependence，但最终 v0.2 release contract 需单列冻结该 audit | **PENDING RELEASE EVIDENCE** |
-| Communication-attribution intervention matrix | 部分对照已存在；需在最终 v0.2 lineage 上按 G5 统一登记 | **PENDING RELEASE EVIDENCE** |
-| Q11 human/source audit | 旧 packet 已因 source/retry correction 过期 | **PENDING HUMAN REVIEW** |
-| Q0–Q12 + formal `BENCHMARK_ADMIT` | 需在 v0.2 Q11 后重跑/刷新 | **PENDING RELEASE** |
+| Single-shot / open-loop reducibility as a named release audit | 41/41 hard signatures：observation-matched exact 成功；no-paid-query 与 blind open-loop 均不能保证任务；full-current-state 可解 | **PASS / release evidence** |
+| Communication-attribution intervention matrix | 41/41 hard signatures 通过；41/41 source deadline + controlled capacity binding，17/41 另有 satellite-budget binding | **PASS / release evidence** |
+| Frozen-split LLM/reasoning baseline | DeepSeek Flash：7/7 hard signatures 失败，181 API calls，0 invalid action，全部 `DEADLINE_EXPIRED` | **PASS / baseline complete** |
+| Q10 reproducibility / release manifest | v0.2 pre-release manifest 绑定 31+ artifacts；one-command digest validation PASS | **PASS** |
+| Q11 human/source audit | v0.2 stratified sample 已重建；machine preaudit 23/23 PASS；真实 reviewer 尚未签五项 | **BLOCKED / human review only** |
+| Q0–Q12 + formal `BENCHMARK_ADMIT` | 当前 12 PASS / 1 BLOCKED，仅 Q11 未通过 | **PENDING Q11 ONLY** |
 
-因此当前判断固定为：**Layer 1 已满足继续做 Layer 2/3 研究所需的 research freeze；还没有满足公开 benchmark release 的全部毕业手续。缺口属于 release evidence / audit，不构成继续改 generator 的理由。**
+因此当前判断固定为：**Layer 1 已满足继续做 Layer 2/3 研究所需的 research freeze；机器侧 benchmark graduation/release evidence 已闭合，只剩不能自动完成的 Q11 真人 source/task/oracle/evaluator review。这个 blocker 不构成继续改 generator 或继续占用主研究线的理由。**
 
 ## Current authority and disposition
 
@@ -110,7 +112,7 @@ Benchmark 必须证明“难点来自 communication/information structure”，�
 
 O1–O6 是历史 T1 operational regime/conformance assets；完整 task surface 与 closure 见 [TASK-COVERAGE-CLOSURE.v0.1.md](TASK-COVERAGE-CLOSURE.v0.1.md) 和 [TASK-SURFACE-REGISTRY.v0.1.json](TASK-SURFACE-REGISTRY.v0.1.json)。
 
-Q11 source review 于 2026-10-05 发现 DB44/T 2457-2024 profile 的 pre-release extraction bug：旧 cadence 对应表 15 地裂缝，而项目原始场景与 intended T1 authority 是山区滑坡。profile 已改为 `hazard_type=landslide`，采用 §9.2.2.2 表 11；随后 retry legality 也修正为“未知是否已交付 ≠ 禁止重试”。`v0.2-retry-legality` 已完成 exact→V0–V9→split→public-test 全链重算。当前 exact 为 8,064 solver signatures；V8 最终保留 41 hard signatures / 174 recipes；split hard train/dev/test signatures = 16/18/7；public test = 3,804 cases。旧 LLM/Q-gate lineage 暂按 historical result 处理，LLM rerun deferred，Q11 需基于 v0.2 重建。机器状态见 [LAYER1-CURRENT-STATE.v0.1.json](LAYER1-CURRENT-STATE.v0.1.json)。
+Q11 source review 于 2026-10-05 发现 DB44/T 2457-2024 profile 的 pre-release extraction bug：旧 cadence 对应表 15 地裂缝，而项目原始场景与 intended T1 authority 是山区滑坡。profile 已改为 `hazard_type=landslide`，采用 §9.2.2.2 表 11；随后 retry legality 也修正为“未知是否已交付 ≠ 禁止重试”。`v0.2-retry-legality` 已完成 exact→V0–V9→split→public-test 全链重算。当前 exact 为 8,064 solver signatures；V8 最终保留 41 hard signatures / 174 recipes；split hard train/dev/test signatures = 16/18/7；public test = 3,804 cases。v0.2 LLM baseline、agentic-reducibility、communication-attribution、release manifest 与 Q0–Q12 已重新冻结；Q11 sample 也已基于 v0.2 重建并完成 23/23 machine preaudit，仍需真实 reviewer。机器状态见 [LAYER1-CURRENT-STATE.v0.1.json](LAYER1-CURRENT-STATE.v0.1.json)。
 
 v0.1–v0.5、receipt-race、receipt-chain、joint query–satellite Pareto 和 continuation frontier 继续保留，但它们的角色是 generator/mechanism regression、exact-reference 与 shortcut audit。尤其 188-cell receipt grid **不是 benchmark case count**；当前普通 reserve/fixed-read/wait-ACK family 仍覆盖 frozen receipt-chain 的 exact cost frontier。
 
@@ -120,9 +122,12 @@ v0.1–v0.5、receipt-race、receipt-chain、joint query–satellite Pareto 和 
     → retry legality correction                      [DONE v0.2]
     → exact / V0–V9 regeneration                     [DONE v0.2]
     → held-out split / public test                    [DONE v0.2]
-    → frozen-split LLM baseline                       [DEFERRED]
-    → rebuild Q11 package and Q0–Q12                  [PENDING]
-    → frozen BENCHMARK_ADMIT release
+    → frozen-split LLM baseline                       [DONE v0.2]
+    → agentic-reducibility / attribution audits       [DONE 41/41]
+    → rebuild Q11 package + machine preaudit           [DONE 23/23 MACHINE_PASS]
+    → Q0–Q12 refresh                                   [DONE 12 PASS / 1 BLOCKED]
+    → real Q11 reviewer signoff                        [PENDING]
+    → frozen BENCHMARK_ADMIT release                   [AFTER Q11]
 
 除 correctness/source/simulator blocker 外，默认不继续扩局部 receipt fixture，不先训练 RL/LLM，不让 Layer 2/3 方法反向塑造 Layer 1 分布。
 

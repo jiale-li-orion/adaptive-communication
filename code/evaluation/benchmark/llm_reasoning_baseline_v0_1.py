@@ -44,8 +44,8 @@ SYSTEM_PROMPT = """你是山区灾前监测通信调度的通用 reasoning basel
 只输出 JSON：{\"choice\": 整数}。不要输出解释。"""
 
 
-def _load_test_signatures() -> tuple[dict[str, str], Counter[str]]:
-    split = json.loads(SPLIT.read_text(encoding="utf-8"))
+def _load_test_signatures(split_path: Path) -> tuple[dict[str, str], Counter[str]]:
+    split = json.loads(split_path.read_text(encoding="utf-8"))
     rep: dict[str, str] = {}
     mult: Counter[str] = Counter()
     for row in split["rows"]:
@@ -285,12 +285,12 @@ def _load_completed(path: Path) -> dict[str, dict[str, Any]]:
     return out
 
 
-def materialize(*, out_dir: Path, model: str, workers: int, timeout_s: float, resume: bool, limit_signatures: int | None) -> dict[str, Any]:
+def materialize(*, out_dir: Path, split_path: Path, model: str, workers: int, timeout_s: float, resume: bool, limit_signatures: int | None) -> dict[str, Any]:
     if not out_dir.is_absolute():
         out_dir = ROOT / out_dir
     out_dir.mkdir(parents=True, exist_ok=True)
     rows_path = out_dir / "signature-results.jsonl"
-    rep, multiplicity = _load_test_signatures()
+    rep, multiplicity = _load_test_signatures(split_path)
     bundles = _collect_bundles(rep)
     completed = _load_completed(rows_path) if resume else {}
     if not resume and rows_path.exists():
@@ -330,6 +330,8 @@ def materialize(*, out_dir: Path, model: str, workers: int, timeout_s: float, re
         "thinking": "disabled",
         "reasoning_effort": "none",
         "max_tokens": 32,
+        "split_ref": str(split_path.relative_to(ROOT)),
+        "split_sha256": sha256(split_path.read_bytes()).hexdigest(),
         "information_contract": "frozen test hard signatures; causal observation history + public task/satellite state + placement-preserving legal actions only",
         "test_hard_signature_count": len(rep),
         "completed_signature_count": len(completed),
@@ -351,6 +353,7 @@ def materialize(*, out_dir: Path, model: str, workers: int, timeout_s: float, re
 def main() -> int:
     ap = argparse.ArgumentParser()
     ap.add_argument("--out-dir", type=Path, default=DEFAULT_OUT)
+    ap.add_argument("--split", type=Path, default=SPLIT)
     ap.add_argument("--model", required=True)
     ap.add_argument("--workers", type=int, default=2)
     ap.add_argument("--timeout-s", type=float, default=45.0)
@@ -358,8 +361,10 @@ def main() -> int:
     ap.add_argument("--limit-signatures", type=int)
     ap.add_argument("--manifest", type=Path)
     args = ap.parse_args()
+    split_path = args.split if args.split.is_absolute() else ROOT / args.split
     manifest = materialize(
         out_dir=args.out_dir,
+        split_path=split_path,
         model=args.model,
         workers=args.workers,
         timeout_s=args.timeout_s,

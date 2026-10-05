@@ -256,7 +256,7 @@ Layer 1 有两个不同的“完成”状态：
 
 当前 v0.2：**PENDING**。
 
-Pending release evidence 不能作为继续修改 generator 的理由；只有 correctness/source/simulator blocker 才允许打破 research freeze。
+当前 machine release evidence 已刷新为 **Q0–Q12 = 12 PASS / 1 BLOCKED**；agentic reducibility 与 communication attribution 均 41/41 PASS，DeepSeek Flash frozen-test baseline 已完成。唯一剩余 blocker 是 Q11 real human/source review。Pending human signoff 不能作为继续修改 generator 的理由；只有 correctness/source/simulator blocker 才允许打破 research freeze。
 
 ## 14. Current v0.2 machine state
 
@@ -272,7 +272,11 @@ Pending release evidence 不能作为继续修改 generator 的理由；只有 c
 - frozen public test: 3,804 cases；
 - public-test SHA256: `23307c06ed7c9f9d992db4bcc5cee12b1703e38d997a293b3d1677cc1b91b6f5`；
 - research freeze: PASS；
-- public `BENCHMARK_ADMIT`: PENDING Q11 + Q0–Q12 refresh + release evidence closure。
+- agentic reducibility: 41 / 41 hard signatures PASS；
+- communication attribution: 41 / 41 hard signatures PASS；
+- DeepSeek Flash frozen-test baseline: 0 / 7 hard signatures succeed, 0 invalid actions, all failures `DEADLINE_EXPIRED`；
+- Q0–Q12: 12 PASS / 1 BLOCKED；
+- public `BENCHMARK_ADMIT`: PENDING Q11 HUMAN REVIEW ONLY。
 
 ## 15. Non-goals
 

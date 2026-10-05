@@ -2,6 +2,7 @@
 """Render the Q11 review packet with machine-prechecked evidence attached."""
 from __future__ import annotations
 
+import argparse
 import json
 from pathlib import Path
 
@@ -19,12 +20,21 @@ def _find_check(sample: dict, group: str, name: str) -> dict | None:
 
 
 def main() -> int:
-    human = json.loads((R / "layer1-human-source-audit-v0.1.json").read_text(encoding="utf-8"))
-    pre = json.loads((R / "layer1-human-source-machine-preaudit-v0.1.json").read_text(encoding="utf-8"))
+    ap = argparse.ArgumentParser()
+    ap.add_argument('--audit', type=Path, default=R / 'layer1-human-source-audit-v0.1.json')
+    ap.add_argument('--preaudit', type=Path, default=R / 'layer1-human-source-machine-preaudit-v0.1.json')
+    ap.add_argument('--title-version', default='v0.1')
+    args = ap.parse_args()
+
+    def resolve(path: Path) -> Path:
+        return path if path.is_absolute() else ROOT / path
+
+    human = json.loads(resolve(args.audit).read_text(encoding="utf-8"))
+    pre = json.loads(resolve(args.preaudit).read_text(encoding="utf-8"))
     pre_by_id = {str(x["sample_id"]): x for x in pre["samples"]}
 
     lines = [
-        "# Layer-1 Q11 Human / Source Review Packet v0.1",
+        f"# Layer-1 Q11 Human / Source Review Packet {args.title_version}",
         "",
         "状态：**BLOCKED_PENDING_HUMAN_REVIEW**",
         "",
@@ -93,7 +103,7 @@ def main() -> int:
             "- notes:",
             "",
         ])
-    print("\n".join(lines))
+    print("\n".join(lines).rstrip())
     return 0
 
 

@@ -192,7 +192,7 @@ Oracle 首先做 hard-constraint feasibility，返回全部合法成功 plans / 
 - 14,688 `NEGATIVE_REGRESSION`
 - 29,376 `VALIDITY_PENDING`
 
-**这 58,752 个 recipe 不是 benchmark cases。** dynamic world、causal evidence 与 full-universe exact reference labels 已完成；当前仍未完成 V0–V9、strong-baseline shortcut audit、structural split 与 Q0–Q12，因此不能称 benchmark cases。
+**这 58,752 个 recipe 不是 benchmark cases。** 它们是 generator universe。v0.2 已完成 dynamic world、causal evidence、full-universe exact reference、V0–V9、strong-baseline shortcut audit、structure-aware split 与 public-test freeze；正式 benchmark release 由当前 Q0–Q12 + Q11 gate 决定，不能把 raw recipe count 当作 release case count。
 
 materialization 当前冻结状态：
 
@@ -319,7 +319,7 @@ receipt-race、overlapping receipt chain、joint query–satellite Pareto、reso
 
 ## 13. 当前唯一主工程
 
-当前 Layer 1 尚未完成。下一步执行顺序冻结为：
+当前 Layer 1 的机器侧 construction / release evidence 已完成；公开 `BENCHMARK_ADMIT` 只剩不可自动代签的 Q11 human/source review。执行顺序固定为：
 
 ```text
 DB44/T 2457-2024 source correction               [DONE]
@@ -330,10 +330,13 @@ DB44/T 2457-2024 source correction               [DONE]
 → regenerate 58,752 recipe-derived exact labels         [DONE v0.2]
 → regenerate V0–V9                                      [DONE v0.2]
 → rebuild structure-aware split + frozen public test     [DONE v0.2]
-→ frozen-split LLM baseline                              [DEFERRED]
-→ rebuild Q11 human/source audit package                 [PENDING]
-→ rerun Q0–Q12                                           [AFTER Q11]
-→ frozen BENCHMARK_ADMIT release
+→ frozen-split LLM baseline                              [DONE v0.2; DeepSeek 0/7]
+→ agentic-reducibility / communication attribution       [DONE 41/41]
+→ rebuild Q11 human/source audit package                 [DONE]
+→ machine preaudit                                       [DONE 23/23]
+→ rerun Q0–Q12                                           [DONE 12 PASS / 1 BLOCKED]
+→ real Q11 reviewer signoff                              [PENDING]
+→ frozen BENCHMARK_ADMIT release                         [AFTER Q11]
 ```
 
 ### 13.1 2026-10-05 source correction
@@ -356,23 +359,18 @@ V9 structural audit 已在 216 个 `VALIDITY_PENDING` 结构代表上通过：�
 
 structure-aware split v0.2 已冻结到 `results/benchmark/layer1-structure-aware-split-v0.2-retry-legality.json`：pre-admission pool 为 **30,180 recipes**，train/dev/test = 15,108 / 11,268 / 3,804；hard survivors 为 60 / 90 / 24 recipes，对应 **16 / 18 / 7 signatures**。exact solver-signature cross-split overlap 为 0，component split violation 为 0。public-test identity v0.2 当前冻结 3,804 个 test cases。
 
-旧 Q6 DeepSeek frozen-test baseline 与旧 Q0–Q12 gate 状态均属于 pre-retry lineage，当前不再作为 release evidence。按当前决策暂不重跑 LLM；Q11 需要基于 v0.2 split 重新抽样并由真实 reviewer 完成 source/task/oracle/evaluator 核查。`BENCHMARK_ADMIT` 仍保持关闭。
+旧 Q6 DeepSeek frozen-test baseline 与旧 Q0–Q12 gate 状态均属于 pre-retry lineage，继续只作历史证据。当前 v0.2 已重新运行 DeepSeek Flash frozen-test baseline：7/7 hard signatures 均失败，181 次 API 调用中 0 invalid action，失败全部为 `DEADLINE_EXPIRED`。agentic-reducibility 与 communication-attribution release audit 均在 41/41 hard signatures 上 PASS；Q11 sample 已基于 v0.2 split 重建，machine preaudit 为 23/23 PASS。Q0–Q12 当前为 **12 PASS / 1 BLOCKED**，唯一 blocker 是必须由真实 reviewer 完成的 Q11 source/task/oracle/evaluator 核查。`BENCHMARK_ADMIT` 在此之前保持关闭。
 
 V8 的 baseline 分类与否决边界见 `V8-BASELINE-CONTRACT.v0.1.md`。generic exact / memo / dependency-cache / incremental AND–OR 属于 computation reference：它们取得 exact 任务质量是预期结果，不能因为“确定性算法能解”再次否定 benchmark；当前 16-cell computation reference 中 generic exact 平均约 54.6 ms、最大约 280.7 ms，no-paid-query 平均约 503.8 ms、最大约 4.0 s。这些数值只作为后续方法公平计算基线。
 
-## 14. Layer 2/3 的未来方法方向
+## 14. Layer 2/3 的下一步边界
 
-Layer 1 稳定后，主方法对象是：
+Layer 1 不再替 Layer 2 指定某个 frontier / certificate / cache 算法。当前版本关系是：**Layer 2 v1 已先完成一版并有 A7–A11 等机制证据；旧 Layer 1 因 decision headroom 不足而被重做；现在 Layer 1 v0.2 已 research-freeze。**
 
-> **resource-conditioned causal continuation frontier / feasibility-conflict frontier**
+下一步先把 frozen Layer-2 v1 放到新 Layer-1 v0.2 hard decision surface 上重验。失败必须先分成：
 
-Context 应保留“未来选择”而不是只回答当前动作。方法应维护哪些后续方案仍可行、依赖哪些 evidence / resource condition、什么事件使证书失效，以及何时必须 query / wait / send / fallback / exact-replan。
+1. v1 已能解决；
+2. task/capability representation 或 binding 不完整；
+3. 输入已无损表达，但 v1 的 EvidenceNeed / Context / acquisition / execution decision semantics 真正失败。
 
-最终希望证明的不是“少两个 query”本身，而是：
-
-- 同任务质量、同合法信息条件下更低在线规划成本；或
-- 同计算预算下更接近 observation-matched exact；或
-- 同质量下减少真实取证且不把成本转移到其他资源；或
-- 在现实允许的通信/计算预算下扩大可完成任务区域。
-
-这部分不得反向修改 Layer 1 generator 以迁就方法。
+只有第 3 类才构成 Layer-2 v2 的研究问题。Layer 3 的 deterministic/search/LLM/learning 比较随后建立在这个真实 failure surface 上。任何 Layer 2/3 方法都不得反向修改 Layer 1 generator 以制造方法 headroom。

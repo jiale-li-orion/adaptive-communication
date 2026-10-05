@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
 from __future__ import annotations
 
+import argparse
 import json
 from pathlib import Path
 
@@ -10,12 +11,17 @@ SRC=ROOT/'results/benchmark/layer1-human-source-audit-v0.1.json'
 
 
 def main()->int:
-    d=json.loads(SRC.read_text(encoding='utf-8'))
+    ap=argparse.ArgumentParser()
+    ap.add_argument('--audit', type=Path, default=SRC)
+    ap.add_argument('--title-version', default='v0.1')
+    args=ap.parse_args()
+    src=args.audit if args.audit.is_absolute() else ROOT/args.audit
+    d=json.loads(src.read_text(encoding='utf-8'))
     lines=[
-        '# Layer-1 Human / Source Audit Worksheet v0.1',
+        f'# Layer-1 Human / Source Audit Worksheet {args.title_version}',
         '',
-        f"状态：{d['status']}  ",
-        f"样本数：{d['sample_count']}  ",
+        f"状态：{d['status']}",
+        f"样本数：{d['sample_count']}",
         '',
         '每条样本必须由 reviewer 独立核查 source extraction、authority/time semantics、task identity、oracle success set 与 evaluator trace。自动脚本不能替代此签字。',
         '',
@@ -43,7 +49,7 @@ def main()->int:
             '- notes:',
             '',
         ]
-    print('\n'.join(lines))
+    print('\n'.join(lines).rstrip())
     return 0
 
 

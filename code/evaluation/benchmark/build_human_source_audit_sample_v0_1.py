@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
 from __future__ import annotations
 
+import argparse
 from collections import Counter
 from hashlib import sha256
 import json
@@ -18,7 +19,11 @@ def _rank(recipe_id:str)->str:
 
 
 def main()->int:
-    split=json.loads(SPLIT.read_text(encoding='utf-8'))
+    ap=argparse.ArgumentParser()
+    ap.add_argument('--split', type=Path, default=SPLIT)
+    args=ap.parse_args()
+    split_path=args.split if args.split.is_absolute() else ROOT/args.split
+    split=json.loads(split_path.read_text(encoding='utf-8'))
     idx={r.recipe_id:r for r in core_recipes()}
     candidates=[]
     for row in split['rows']:
@@ -93,6 +98,8 @@ def main()->int:
     artifact={
         'schema_version':'0.1',
         'status':'PENDING_HUMAN_REVIEW',
+        'split_ref':str(split_path.relative_to(ROOT)),
+        'split_sha256':sha256(split_path.read_bytes()).hexdigest(),
         'sampling_rule':'stable greedy pairwise-stratified cover over split, candidate role, source profile and hardness interactions; plus four hard-survivor examples per split when available',
         'sample_count':len(samples),
         'coverage_token_count':len(set().union(*(tokens for _row,_r,tokens in candidates))),

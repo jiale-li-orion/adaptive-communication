@@ -6,6 +6,7 @@ and evidence pointers so a human reviewer can focus on semantic/source judgment.
 """
 from __future__ import annotations
 
+import argparse
 from copy import deepcopy
 import json
 from pathlib import Path
@@ -72,8 +73,25 @@ def _role_expectation(role: str) -> dict[str, Any]:
 
 
 def main() -> int:
-    human = json.loads((R / "layer1-human-source-audit-v0.1.json").read_text(encoding="utf-8"))
-    split = json.loads((R / "layer1-structure-aware-split-v0.1.json").read_text(encoding="utf-8"))
+    ap = argparse.ArgumentParser()
+    ap.add_argument('--audit', type=Path, default=R / 'layer1-human-source-audit-v0.1.json')
+    ap.add_argument('--split', type=Path, default=R / 'layer1-structure-aware-split-v0.1.json')
+    ap.add_argument('--exact-recipe', type=Path, default=EXACT_RECIPE)
+    ap.add_argument('--validity-recipe', type=Path, default=VALIDITY_RECIPE)
+    ap.add_argument('--v8-signature', type=Path, default=V8_SIG)
+    args = ap.parse_args()
+
+    def resolve(path: Path) -> Path:
+        return path if path.is_absolute() else ROOT / path
+
+    audit_path = resolve(args.audit)
+    split_path = resolve(args.split)
+    exact_path = resolve(args.exact_recipe)
+    validity_path = resolve(args.validity_recipe)
+    v8_path = resolve(args.v8_signature)
+
+    human = json.loads(audit_path.read_text(encoding="utf-8"))
+    split = json.loads(split_path.read_text(encoding="utf-8"))
     split_by_recipe = {str(r["recipe_id"]): r for r in split["rows"]}
     recipe_by_id = {r.recipe_id: r for r in core_recipes()}
     task_cases = {str(x["case_id"]): x for x in _db44_resolved_cases()}
@@ -81,9 +99,9 @@ def main() -> int:
         str(x["profile_id"]): x
         for x in json.loads((B / "profiles/v0.1/SOURCE-PROFILE-REGISTRY.v0.1.json").read_text(encoding="utf-8"))["profiles"]
     }
-    exact = _jsonl_index(EXACT_RECIPE, "recipe_id")
-    validity = _jsonl_index(VALIDITY_RECIPE, "recipe_id")
-    v8 = _jsonl_index(V8_SIG, "signature")
+    exact = _jsonl_index(exact_path, "recipe_id")
+    validity = _jsonl_index(validity_path, "recipe_id")
+    v8 = _jsonl_index(v8_path, "signature")
     wanted = {str(x["recipe_id"]) for x in human["samples"]}
     bundles = {}
     for b in iter_world_bundles():
@@ -302,6 +320,11 @@ def main() -> int:
     artifact = {
         "schema_version": "0.1",
         "status": "MACHINE_PREAUDIT_COMPLETE" if all_machine_pass else "MACHINE_PREAUDIT_HAS_FAILURES",
+        "audit_ref": str(audit_path.relative_to(ROOT)),
+        "split_ref": str(split_path.relative_to(ROOT)),
+        "exact_recipe_ref": str(exact_path.relative_to(ROOT)),
+        "validity_recipe_ref": str(validity_path.relative_to(ROOT)),
+        "v8_signature_ref": str(v8_path.relative_to(ROOT)),
         "sample_count": len(rendered),
         "machine_pass_count": sum(x["machine_status"] == "MACHINE_PASS" for x in rendered),
         "machine_fail_count": sum(x["machine_status"] == "MACHINE_FAIL" for x in rendered),

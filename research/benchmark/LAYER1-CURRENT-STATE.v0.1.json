@@ -1,113 +1,25 @@
 {
-  "schema_version": "0.1",
-  "status": "LAYER1_CONSTRUCTION_IN_PROGRESS",
   "authority_doc": "research/benchmark/LAYER1-AUTHORITY.md",
-  "main_family": "T1_MONITORING_INFORMATION_CONTINUITY",
   "boundary_family": "T2_WARNING_DELIVERY_RESPONSE_HANDOFF",
-  "generator": {
-    "schema_version": "0.1",
-    "generator": "T1-compositional-recipe-v0.1",
-    "stage": "PRE_WORLD_PRE_ORACLE",
-    "core_recipe_count": 58752,
-    "long_cadence_anchor_count": 10,
-    "db44_source_resolved_contract_count": 27,
-    "core_task_contract_count": 17,
-    "geometry_signature_count": 8,
-    "by_pre_oracle_disposition": {
-      "EASY_CONFORMANCE": 14688,
-      "NEGATIVE_REGRESSION": 14688,
-      "VALIDITY_PENDING": 29376
-    },
-    "by_warning_state": {
-      "blue": 10368,
-      "orange": 20736,
-      "red": 10368,
-      "yellow": 17280
-    },
-    "by_service_process": {
-      "FINITE_CROSSING_WINDOWS": 14688,
-      "MONOTONE_RECOVERY_NEGATIVE": 14688,
-      "MULTI_WINDOW_DYNAMIC": 14688,
-      "STEADY_AVAILABLE_CONTROL": 14688
-    },
-    "rules": [
-      "Recipes are not benchmark cases until dynamic world materialization and V0-V9.",
-      "UNRESOLVED source fields are absent from sampled axes.",
-      "Easy and negative-regression structures are intentionally retained.",
-      "T2 is excluded from this T1 universe until its actor-chain environment closes SIMULATOR_GAP."
-    ]
-  },
-  "world_materialization": {
-    "schema_version": "0.1",
-    "materializer": "T1-dynamic-world-alias-bundle-v0.1",
-    "stage": "WORLD_BUNDLE_PRE_EVIDENCE_PRE_ORACLE",
-    "input_recipe_count": 58752,
-    "bundle_count": 58752,
-    "bundle_id_stream_sha256": "5cd95d2991499db7766aa490d169bcf93ff0160190d7b0c29486976c74a93c71",
-    "by_alias_world_count": {
-      "1": 14688,
-      "2": 14688,
-      "3": 14688,
-      "4": 14688
-    },
-    "by_evidence_regime": {
-      "FULL_OBSERVATION_CONTROL": 14688,
-      "GATEWAY_SUMMARY_QUERY": 14688,
-      "MIXED_PASSIVE_QUERY_PROBE": 14688,
-      "PASSIVE_ACK_ONLY": 14688
-    },
-    "by_service_process": {
-      "FINITE_CROSSING_WINDOWS": 14688,
-      "MONOTONE_RECOVERY_NEGATIVE": 14688,
-      "MULTI_WINDOW_DYNAMIC": 14688,
-      "STEADY_AVAILABLE_CONTROL": 14688
-    },
-    "by_recovery_regime": {
-      "NO_RECOVERY_STATE": 19584,
-      "OUTAGE_CACHE_RETAIN": 19584,
-      "RECONNECT_RECONCILE_OBJECTIVE_CHECK": 19584
-    },
-    "bundles_with_preserved_source_blocker": 9792,
-    "rules": [
-      "One frozen candidate recipe materializes to one world/alias bundle.",
-      "Materialized bundles are still NOT_BENCHMARK_ADMIT and have no oracle/V0-V9 labels.",
-      "MODEL_DERIVED satellite geometry is public and identical across alias worlds.",
-      "Alias differences live in declared dynamic terrestrial/recovery state, never in hidden public geometry.",
-      "Workload overlap and service-process variation remain explicit CONTROLLED_STRESS coordinates.",
-      "Reconnect backlog-vs-fresh priority remains unresolved; materialization preserves the V7 blocker.",
-      "ACK/query/probe response values and arrival timing are deferred to the causal evidence stage."
-    ]
-  },
   "causal_evidence_process": {
-    "schema_version": "0.1",
-    "process": "T1-causal-observation-evidence-v0.1",
-    "stage": "CAUSAL_EVIDENCE_PRE_ORACLE",
-    "parent_bundle_count": 58752,
-    "process_count": 58752,
-    "process_id_stream_sha256": "9024e4ca78b7ab6101a64dd09d3837a2dce81459225762a57e8bc21f85f235b3",
     "by_evidence_regime": {
       "FULL_OBSERVATION_CONTROL": 14688,
       "GATEWAY_SUMMARY_QUERY": 14688,
       "MIXED_PASSIVE_QUERY_PROBE": 14688,
       "PASSIVE_ACK_ONLY": 14688
-    },
-    "by_query_capability_count": {
-      "0": 29376,
-      "1": 29376
     },
     "by_passive_ack_enabled": {
       "false": 29376,
       "true": 29376
     },
-    "timing_contract": {
-      "query_response_delay_s": 60,
-      "query_timeout_s": 60,
-      "gateway_receipt_delay_s": 10,
-      "final_ack_delay_s": 30,
-      "ack_timeout_s": 60,
-      "satellite_completion_delay_s": 5,
-      "provenance": "CONTROLLED_STRESS"
+    "by_query_capability_count": {
+      "0": 29376,
+      "1": 29376
     },
+    "parent_bundle_count": 58752,
+    "process": "T1-causal-observation-evidence-v0.1",
+    "process_count": 58752,
+    "process_id_stream_sha256": "9024e4ca78b7ab6101a64dd09d3837a2dce81459225762a57e8bc21f85f235b3",
     "rules": [
       "Queries sample current owner state before response arrival; later world changes cannot rewrite the sampled value.",
       "Query payloads contain current/past gateway facts only and never future service windows, plan labels or world ids.",
@@ -115,206 +27,69 @@
       "Gateway receipt and final completion ACK remain separate events.",
       "Normal send-as-probe is the ordinary SEND_TERR action and pays no extra synthetic tool cost.",
       "Owner query consumes one declared terrestrial opportunity-capacity unit; passive ACK is acquisition-free."
-    ]
-  },
-  "scope": {
+    ],
     "schema_version": "0.1",
-    "main_family": "T1_MONITORING_INFORMATION_CONTINUITY",
-    "boundary_family": "T2_WARNING_DELIVERY_RESPONSE_HANDOFF",
-    "t1_active_or_compositional_surfaces": [
-      {
-        "surface_id": "T1.S1_WARNING_CADENCE_TRANSITION",
-        "generator_role": "ACTIVE_WORKLOAD_TRANSITION_AXIS",
-        "standalone_disposition": "STANDALONE_CONFORMANCE",
-        "source_profiles": [
-          "DB44T2457_2024_warning_reporting"
-        ],
-        "profile_gaps": {}
-      },
-      {
-        "surface_id": "T1.S2_INTERMITTENT_BACKHAUL_FALLBACK",
-        "generator_role": "ACTIVE_COMPOSITION_AXIS",
-        "standalone_disposition": "SIMPLE_FORM_SHORTCUT_SOLVED",
-        "source_profiles": [
-          "DZT0450_2023_disconnect_recovery",
-          "JIAOZUO_2024_geohazard_monitoring_deployment",
-          "DB11T1677_2019_rainfall_dual_path"
-        ],
-        "profile_gaps": {
-          "DZT0450_2023_disconnect_recovery": [
-            "reconnect_backlog_priority"
-          ],
-          "DB11T1677_2019_rainfall_dual_path": [
-            "communication_completion_semantics"
-          ]
-        }
-      },
-      {
-        "surface_id": "T1.S3_ENERGY_CONSTRAINED_CONTINUITY",
-        "generator_role": "ACTIVE_RESOURCE_AXIS_AFTER_CORE",
-        "standalone_disposition": "BASELINED_NOT_GLOBALLY_CLOSED",
-        "source_profiles": [
-          "DB11T1677_2019_rainfall_dual_path",
-          "JIAOZUO_2024_geohazard_monitoring_deployment"
-        ],
-        "profile_gaps": {
-          "DB11T1677_2019_rainfall_dual_path": [
-            "communication_completion_semantics"
-          ]
-        }
-      },
-      {
-        "surface_id": "T1.S4_OUTAGE_CACHE_RETENTION",
-        "generator_role": "ACTIVE_STATE_AXIS",
-        "standalone_disposition": "CONFORMANCE_REGRESSION",
-        "source_profiles": [
-          "DZT0450_2023_disconnect_recovery"
-        ],
-        "profile_gaps": {
-          "DZT0450_2023_disconnect_recovery": [
-            "reconnect_backlog_priority"
-          ]
-        }
-      },
-      {
-        "surface_id": "T1.S5_RECOVERY_RECONCILIATION",
-        "generator_role": "ACTIVE_ONLY_WHEN_OBJECTIVE_DEFINED",
-        "standalone_disposition": "PARTIAL_CLOSURE_SOURCE_GAP",
-        "source_profiles": [
-          "DZT0450_2023_disconnect_recovery",
-          "JIAOZUO_2024_geohazard_monitoring_deployment"
-        ],
-        "profile_gaps": {
-          "DZT0450_2023_disconnect_recovery": [
-            "reconnect_backlog_priority"
-          ]
-        }
-      },
-      {
-        "surface_id": "T1.S6_HETEROGENEOUS_PATH_PRIORITY",
-        "generator_role": "CAPABILITY_AND_CONFLICT_AXIS",
-        "standalone_disposition": "SOURCE_RULE_CONFORMANCE",
-        "source_profiles": [
-          "JIAOZUO_2024_geohazard_monitoring_deployment",
-          "DB11T1677_2019_rainfall_dual_path",
-          "DZT0450_2023_disconnect_recovery"
-        ],
-        "profile_gaps": {
-          "DB11T1677_2019_rainfall_dual_path": [
-            "communication_completion_semantics"
-          ],
-          "DZT0450_2023_disconnect_recovery": [
-            "reconnect_backlog_priority"
-          ]
-        }
-      },
-      {
-        "surface_id": "T1.S7_COMPOUND_CONTINUITY",
-        "generator_role": "PRIMARY_COMPOSITION_TARGET",
-        "standalone_disposition": "HISTORICAL_TEMPLATE_CONFORMANCE",
-        "source_profiles": [
-          "DB44T2457_2024_warning_reporting",
-          "DZT0450_2023_disconnect_recovery",
-          "JIAOZUO_2024_geohazard_monitoring_deployment",
-          "DB11T1677_2019_rainfall_dual_path"
-        ],
-        "profile_gaps": {
-          "DZT0450_2023_disconnect_recovery": [
-            "reconnect_backlog_priority"
-          ],
-          "DB11T1677_2019_rainfall_dual_path": [
-            "communication_completion_semantics"
-          ]
-        }
-      }
-    ],
-    "t1_easy_conformance_anchors": [
-      {
-        "surface_id": "T1.S0_STEADY_MONITORING",
-        "generator_role": "KEEP_EASY_ANCHOR",
-        "standalone_disposition": "CONFORMANCE_REGRESSION",
-        "source_profiles": [
-          "DB44T2457_2024_warning_reporting",
-          "JIAOZUO_2024_geohazard_monitoring_deployment",
-          "DB11T1677_2019_rainfall_dual_path"
-        ],
-        "profile_gaps": {
-          "DB11T1677_2019_rainfall_dual_path": [
-            "communication_completion_semantics"
-          ]
-        }
-      }
-    ],
-    "t2_blocked_until_environment": [
-      {
-        "surface_id": "T2.S0_AUTHORITY_GATED_PUBLICATION",
-        "generator_role": "BLOCKED_UNTIL_T2_ENVIRONMENT",
-        "standalone_disposition": "SIMULATOR_GAP",
-        "source_profiles": [
-          "YINING_2025_pre_disaster_warning_delivery"
-        ]
-      },
-      {
-        "surface_id": "T2.S1_HIERARCHICAL_WARNING_DELIVERY_ACK",
-        "generator_role": "BLOCKED_UNTIL_T2_ENVIRONMENT",
-        "standalone_disposition": "SIMULATOR_GAP",
-        "source_profiles": [
-          "YINING_2025_pre_disaster_warning_delivery"
-        ]
-      },
-      {
-        "surface_id": "T2.S2_PROGRESSIVE_CALL_RESPONSE",
-        "generator_role": "BLOCKED_UNTIL_T2_ENVIRONMENT",
-        "standalone_disposition": "SIMULATOR_GAP",
-        "source_profiles": [
-          "BAOSHAN_1262_progressive_call_response"
-        ]
-      }
-    ],
-    "required_composition_dimensions": [
-      "multi_obligation_release_and_deadline",
-      "warning_driven_workload_transition",
-      "finite_non_nested_terrestrial_service_opportunities",
-      "intermittent_satellite_opportunities",
-      "shared_real_resource_or_capacity",
-      "outage_cache_and_recovery_state",
-      "legal_partial_evidence_and_async_feedback"
-    ],
-    "optional_after_core_dimensions": [
-      "source_or_trace_grounded_energy_pressure",
-      "future_authority_published_warning_transition"
-    ],
-    "forbidden_shortcuts": [
-      "one_shot_permanent_recovery_as_only_uncertainty",
-      "invented_backlog_vs_fresh_priority",
-      "artificially_reduced_source_required_cache",
-      "hidden_public_geometry",
-      "future_truth_encoded_in_current_query",
-      "capability_or_tool_name_promoted_to_task_family",
-      "receipt_race_promoted_to_task_family"
-    ],
-    "historical_closure_policy": "Do not rerun closed standalone forms. Reuse them as easy/conformance/regression cells; only new compositions re-enter V0-V9 hardness mining."
+    "stage": "CAUSAL_EVIDENCE_PRE_ORACLE",
+    "timing_contract": {
+      "ack_timeout_s": 60,
+      "final_ack_delay_s": 30,
+      "gateway_receipt_delay_s": 10,
+      "provenance": "CONTROLLED_STRESS",
+      "query_response_delay_s": 60,
+      "query_timeout_s": 60,
+      "satellite_completion_delay_s": 5
+    }
   },
-  "release_status": "NOT_BENCHMARK_ADMIT",
-  "next_stage": "V02_MACHINE_FREEZE_Q11_PENDING_LLM_DEFERRED",
-  "warnings": [
-    "Current machine lineage is v0.2-retry-legality; pre-retry exact/V8/split/LLM/Q-gate numbers are historical only.",
-    "Retry legality changes full-universe labels: 55,008 no-paid-query, 2,106 paid-evidence, 630 information-infeasible, 1,008 mixed-world-solvability recipes.",
-    "V8 v0.2 leaves 41 paid-evidence signatures / 174 pre-admission recipes, all finite-crossing gateway-summary-query overlap 3/4.",
-    "Frozen public test v0.2 contains 3,804 cases; the previous DeepSeek frozen-test baseline has not been rerun and is stale.",
-    "Q11 must be rebuilt on the v0.2 split and completed by a real reviewer before BENCHMARK_ADMIT.",
-    "T2 remains SIMULATOR_GAP until actor-chain environment support exists."
-  ],
   "exact_reference_oracle": {
-    "schema_version": "0.1",
+    "audit_ref": "results/benchmark/layer1-exact-reference-audit-v0.2-retry-legality.json",
+    "full_universe_label_manifest": {
+      "completed_signature_count": 8064,
+      "manifest_ref": "results/benchmark/layer1-exact-labels-v0.2-retry-legality.json",
+      "projected_recipe_classification": {
+        "INFORMATION_INFEASIBLE": 630,
+        "MIXED_WORLD_SOLVABILITY": 1008,
+        "NO_PAID_QUERY_REQUIRED": 55008,
+        "PAID_EVIDENCE_REQUIRED": 2106
+      },
+      "projected_validity_pending_classification": {
+        "INFORMATION_INFEASIBLE": 630,
+        "NO_PAID_QUERY_REQUIRED": 26640,
+        "PAID_EVIDENCE_REQUIRED": 2106
+      },
+      "signature_label_digest_sha256": "486e416bfb3983ba3a48a462e7299af944113b444bed75396e1460e2979306d7",
+      "solver_version": "T1-exact-reference-oracle-v0.2-retry-legality",
+      "status": "COMPLETE",
+      "unique_solver_signature_count": 8064
+    },
+    "full_universe_observation_label_status": "COMPLETE",
+    "hard_structure_audit": {
+      "information_value_gap": 0.07142857142857142,
+      "outcome": {
+        "INFORMATION_INFEASIBLE": 6,
+        "NO_PAID_QUERY_REQUIRED": 195,
+        "PAID_EVIDENCE_REQUIRED": 15
+      },
+      "reference_counts": {
+        "FULL_CURRENT_STATE": 216,
+        "F_OBSERVATION_MATCHED": 210,
+        "N_NO_PAID_QUERY": 195,
+        "P_ALL_WORLD_PHYSICAL": 216
+      },
+      "search": {
+        "max_memo_nodes_limit": 200000,
+        "mean_max_memo_nodes": 966.3148148148148,
+        "observed_max_memo_nodes": 160250,
+        "search_limit_cells": [],
+        "search_limit_count": 0
+      },
+      "selection": {
+        "cell_count": 216,
+        "rule": "VALIDITY_PENDING only; one minimum-stable-hash representative per service×evidence×overlap×headroom×recovery cell",
+        "use": "construction diagnostic only; not a benchmark split or admission filter"
+      }
+    },
     "implementation": "T1-exact-reference-oracle-v0.2-retry-legality",
     "implementation_status": "IMPLEMENTED_PRE_ADMISSION",
-    "references": [
-      "HINDSIGHT_PHYSICAL_FEASIBILITY",
-      "FULL_CURRENT_STATE",
-      "OBSERVATION_MATCHED_EXACT",
-      "OBSERVATION_MATCHED_NO_PAID_QUERY"
-    ],
     "physical_full_scan": {
       "bundle_count": 58752,
       "bundle_physical_class": {
@@ -339,127 +114,255 @@
         "SOLVABLE": 145620
       }
     },
-    "hard_structure_audit": {
-      "selection": {
-        "cell_count": 216,
-        "rule": "VALIDITY_PENDING only; one minimum-stable-hash representative per service×evidence×overlap×headroom×recovery cell",
-        "use": "construction diagnostic only; not a benchmark split or admission filter"
-      },
-      "outcome": {
-        "INFORMATION_INFEASIBLE": 6,
-        "NO_PAID_QUERY_REQUIRED": 195,
-        "PAID_EVIDENCE_REQUIRED": 15
-      },
-      "reference_counts": {
-        "FULL_CURRENT_STATE": 216,
-        "F_OBSERVATION_MATCHED": 210,
-        "N_NO_PAID_QUERY": 195,
-        "P_ALL_WORLD_PHYSICAL": 216
-      },
-      "information_value_gap": 0.07142857142857142,
-      "search": {
-        "max_memo_nodes_limit": 200000,
-        "mean_max_memo_nodes": 966.3148148148148,
-        "observed_max_memo_nodes": 160250,
-        "search_limit_cells": [],
-        "search_limit_count": 0
-      }
-    },
-    "full_universe_observation_label_status": "COMPLETE",
-    "audit_ref": "results/benchmark/layer1-exact-reference-audit-v0.2-retry-legality.json",
-    "full_universe_label_manifest": {
-      "manifest_ref": "results/benchmark/layer1-exact-labels-v0.2-retry-legality.json",
-      "status": "COMPLETE",
-      "solver_version": "T1-exact-reference-oracle-v0.2-retry-legality",
-      "unique_solver_signature_count": 8064,
-      "completed_signature_count": 8064,
-      "signature_label_digest_sha256": "486e416bfb3983ba3a48a462e7299af944113b444bed75396e1460e2979306d7",
-      "projected_recipe_classification": {
-        "INFORMATION_INFEASIBLE": 630,
-        "MIXED_WORLD_SOLVABILITY": 1008,
-        "NO_PAID_QUERY_REQUIRED": 55008,
-        "PAID_EVIDENCE_REQUIRED": 2106
-      },
-      "projected_validity_pending_classification": {
-        "INFORMATION_INFEASIBLE": 630,
-        "NO_PAID_QUERY_REQUIRED": 26640,
-        "PAID_EVIDENCE_REQUIRED": 2106
-      }
-    }
+    "references": [
+      "HINDSIGHT_PHYSICAL_FEASIBILITY",
+      "FULL_CURRENT_STATE",
+      "OBSERVATION_MATCHED_EXACT",
+      "OBSERVATION_MATCHED_NO_PAID_QUERY"
+    ],
+    "schema_version": "0.1"
   },
-  "validity_filter_infrastructure": {
-    "v0_v7": {
-      "status": "DONE_FULL_UNIVERSE",
-      "signature_count": 8064,
-      "projected_recipe_disposition": {
-        "COMMON_SAFE_ACTION": 46620,
-        "INFORMATION_INFEASIBLE_DIAGNOSTIC": 630,
-        "NO_BINDING_CONSTRAINT": 384,
-        "UNIQUE_READY": 396,
-        "V0_V7_PASS": 9714,
-        "V1_PHYSICAL_INVALID": 1008
-      },
-      "audit_ref": "results/benchmark/layer1-v0-v7-full-v0.2-retry-legality.json"
+  "generator": {
+    "by_pre_oracle_disposition": {
+      "EASY_CONFORMANCE": 14688,
+      "NEGATIVE_REGRESSION": 14688,
+      "VALIDITY_PENDING": 29376
     },
-    "v8": {
-      "status": "DONE_ALL_V0_V7_PASS_SIGNATURES",
-      "input_signature_count": 1423,
-      "disposition": {
-        "CHEAP_POLICY_RULE": 1346,
-        "DEEP_HORIZON": 13,
-        "FINITE_HORIZON": 23,
-        "SURVIVES_V8_LADDER_V0_1": 41
-      },
-      "survivor_signature_count": 41,
-      "projected_survivor_recipe_count": 174,
-      "audit_ref": "results/benchmark/layer1-v8-all-pass-v0.2-retry-legality.json"
+    "by_service_process": {
+      "FINITE_CROSSING_WINDOWS": 14688,
+      "MONOTONE_RECOVERY_NEGATIVE": 14688,
+      "MULTI_WINDOW_DYNAMIC": 14688,
+      "STEADY_AVAILABLE_CONTROL": 14688
     },
-    "v9": {
-      "status": "DONE",
-      "passed": true,
-      "structural_representative_count": 216,
-      "audit_ref": "results/benchmark/layer1-v9-evaluator-soundness-v0.2-retry-legality.json"
+    "by_warning_state": {
+      "blue": 10368,
+      "orange": 20736,
+      "red": 10368,
+      "yellow": 17280
     },
-    "release_status": "NOT_BENCHMARK_ADMIT"
+    "core_recipe_count": 58752,
+    "core_task_contract_count": 17,
+    "db44_source_resolved_contract_count": 27,
+    "generator": "T1-compositional-recipe-v0.1",
+    "geometry_signature_count": 8,
+    "long_cadence_anchor_count": 10,
+    "rules": [
+      "Recipes are not benchmark cases until dynamic world materialization and V0-V9.",
+      "UNRESOLVED source fields are absent from sampled axes.",
+      "Easy and negative-regression structures are intentionally retained.",
+      "T2 is excluded from this T1 universe until its actor-chain environment closes SIMULATOR_GAP."
+    ],
+    "schema_version": "0.1",
+    "stage": "PRE_WORLD_PRE_ORACLE"
   },
-  "structure_aware_split": {
-    "status": "DONE",
-    "candidate_count": 30180,
-    "by_split": {
-      "dev": 11268,
-      "test": 3804,
-      "train": 15108
-    },
-    "hard_recipe_by_split": {
-      "train": 60,
-      "dev": 90,
-      "test": 24
-    },
-    "hard_signature_by_split": {
-      "train": 16,
-      "dev": 18,
-      "test": 7
-    },
-    "leakage_passed": true,
-    "audit_ref": "results/benchmark/layer1-structure-aware-split-v0.2-retry-legality.json",
-    "coverage_ref": "results/benchmark/layer1-split-coverage-v0.2-retry-legality.json"
-  },
+  "main_family": "T1_MONITORING_INFORMATION_CONTINUITY",
+  "next_stage": "V02_Q11_HUMAN_REVIEW_ONLY_BEFORE_BENCHMARK_ADMIT",
   "quality_gates": {
-    "status": "STALE_PENDING_V02_Q11_AND_GATE_REBUILD",
+    "agentic_reducibility": "PASS_41_OF_41_HARD_SIGNATURES",
+    "agentic_reducibility_ref": "results/benchmark/layer1-agentic-reducibility-v0.2-retry-legality.json",
+    "communication_attribution": "PASS_41_OF_41_HARD_SIGNATURES",
+    "communication_attribution_ref": "results/benchmark/layer1-communication-attribution-v0.2-retry-legality.json",
+    "gate_counts": {
+      "BLOCKED": 1,
+      "PASS": 12
+    },
+    "human_source_audit": "MACHINE_PREAUDIT_23_OF_23_PASS_HUMAN_REVIEW_PENDING",
+    "human_source_audit_ref": "results/benchmark/layer1-human-source-audit-v0.2-retry-legality.json",
+    "human_source_preaudit_ref": "results/benchmark/layer1-human-source-machine-preaudit-v0.2-retry-legality.json",
+    "llm_baseline": "PASS_DEEPSEEK_FLASH_0_OF_7_HARD_SIGNATURES",
+    "llm_baseline_ref": "results/benchmark/layer1-llm-baseline-v0.2-retry-legality.json",
+    "quality_gate_ref": "results/benchmark/layer1-quality-gates-v0.2-retry-legality.json",
+    "release_manifest_ref": "results/benchmark/layer1-release-manifest-v0.2-retry-legality.json",
     "release_status": "NOT_BENCHMARK_ADMIT",
-    "llm_baseline": "DEFERRED_PRE_RETRY_RESULT_STALE",
-    "human_source_audit": "PENDING_REBUILD_AND_REAL_REVIEW"
+    "reproducibility": "PASS_PRE_RELEASE_MANIFEST_DIGEST_VALIDATION",
+    "reproduction_entry": "code/evaluation/benchmark/reproduce_layer1_v0_2_retry_legality.py",
+    "status": "V02_RELEASE_GATES_REFRESHED_Q11_ONLY_BLOCKER"
+  },
+  "release_status": "NOT_BENCHMARK_ADMIT",
+  "schema_version": "0.1",
+  "scope": {
+    "boundary_family": "T2_WARNING_DELIVERY_RESPONSE_HANDOFF",
+    "forbidden_shortcuts": [
+      "one_shot_permanent_recovery_as_only_uncertainty",
+      "invented_backlog_vs_fresh_priority",
+      "artificially_reduced_source_required_cache",
+      "hidden_public_geometry",
+      "future_truth_encoded_in_current_query",
+      "capability_or_tool_name_promoted_to_task_family",
+      "receipt_race_promoted_to_task_family"
+    ],
+    "historical_closure_policy": "Do not rerun closed standalone forms. Reuse them as easy/conformance/regression cells; only new compositions re-enter V0-V9 hardness mining.",
+    "main_family": "T1_MONITORING_INFORMATION_CONTINUITY",
+    "optional_after_core_dimensions": [
+      "source_or_trace_grounded_energy_pressure",
+      "future_authority_published_warning_transition"
+    ],
+    "required_composition_dimensions": [
+      "multi_obligation_release_and_deadline",
+      "warning_driven_workload_transition",
+      "finite_non_nested_terrestrial_service_opportunities",
+      "intermittent_satellite_opportunities",
+      "shared_real_resource_or_capacity",
+      "outage_cache_and_recovery_state",
+      "legal_partial_evidence_and_async_feedback"
+    ],
+    "schema_version": "0.1",
+    "t1_active_or_compositional_surfaces": [
+      {
+        "generator_role": "ACTIVE_WORKLOAD_TRANSITION_AXIS",
+        "profile_gaps": {},
+        "source_profiles": [
+          "DB44T2457_2024_warning_reporting"
+        ],
+        "standalone_disposition": "STANDALONE_CONFORMANCE",
+        "surface_id": "T1.S1_WARNING_CADENCE_TRANSITION"
+      },
+      {
+        "generator_role": "ACTIVE_COMPOSITION_AXIS",
+        "profile_gaps": {
+          "DB11T1677_2019_rainfall_dual_path": [
+            "communication_completion_semantics"
+          ],
+          "DZT0450_2023_disconnect_recovery": [
+            "reconnect_backlog_priority"
+          ]
+        },
+        "source_profiles": [
+          "DZT0450_2023_disconnect_recovery",
+          "JIAOZUO_2024_geohazard_monitoring_deployment",
+          "DB11T1677_2019_rainfall_dual_path"
+        ],
+        "standalone_disposition": "SIMPLE_FORM_SHORTCUT_SOLVED",
+        "surface_id": "T1.S2_INTERMITTENT_BACKHAUL_FALLBACK"
+      },
+      {
+        "generator_role": "ACTIVE_RESOURCE_AXIS_AFTER_CORE",
+        "profile_gaps": {
+          "DB11T1677_2019_rainfall_dual_path": [
+            "communication_completion_semantics"
+          ]
+        },
+        "source_profiles": [
+          "DB11T1677_2019_rainfall_dual_path",
+          "JIAOZUO_2024_geohazard_monitoring_deployment"
+        ],
+        "standalone_disposition": "BASELINED_NOT_GLOBALLY_CLOSED",
+        "surface_id": "T1.S3_ENERGY_CONSTRAINED_CONTINUITY"
+      },
+      {
+        "generator_role": "ACTIVE_STATE_AXIS",
+        "profile_gaps": {
+          "DZT0450_2023_disconnect_recovery": [
+            "reconnect_backlog_priority"
+          ]
+        },
+        "source_profiles": [
+          "DZT0450_2023_disconnect_recovery"
+        ],
+        "standalone_disposition": "CONFORMANCE_REGRESSION",
+        "surface_id": "T1.S4_OUTAGE_CACHE_RETENTION"
+      },
+      {
+        "generator_role": "ACTIVE_ONLY_WHEN_OBJECTIVE_DEFINED",
+        "profile_gaps": {
+          "DZT0450_2023_disconnect_recovery": [
+            "reconnect_backlog_priority"
+          ]
+        },
+        "source_profiles": [
+          "DZT0450_2023_disconnect_recovery",
+          "JIAOZUO_2024_geohazard_monitoring_deployment"
+        ],
+        "standalone_disposition": "PARTIAL_CLOSURE_SOURCE_GAP",
+        "surface_id": "T1.S5_RECOVERY_RECONCILIATION"
+      },
+      {
+        "generator_role": "CAPABILITY_AND_CONFLICT_AXIS",
+        "profile_gaps": {
+          "DB11T1677_2019_rainfall_dual_path": [
+            "communication_completion_semantics"
+          ],
+          "DZT0450_2023_disconnect_recovery": [
+            "reconnect_backlog_priority"
+          ]
+        },
+        "source_profiles": [
+          "JIAOZUO_2024_geohazard_monitoring_deployment",
+          "DB11T1677_2019_rainfall_dual_path",
+          "DZT0450_2023_disconnect_recovery"
+        ],
+        "standalone_disposition": "SOURCE_RULE_CONFORMANCE",
+        "surface_id": "T1.S6_HETEROGENEOUS_PATH_PRIORITY"
+      },
+      {
+        "generator_role": "PRIMARY_COMPOSITION_TARGET",
+        "profile_gaps": {
+          "DB11T1677_2019_rainfall_dual_path": [
+            "communication_completion_semantics"
+          ],
+          "DZT0450_2023_disconnect_recovery": [
+            "reconnect_backlog_priority"
+          ]
+        },
+        "source_profiles": [
+          "DB44T2457_2024_warning_reporting",
+          "DZT0450_2023_disconnect_recovery",
+          "JIAOZUO_2024_geohazard_monitoring_deployment",
+          "DB11T1677_2019_rainfall_dual_path"
+        ],
+        "standalone_disposition": "HISTORICAL_TEMPLATE_CONFORMANCE",
+        "surface_id": "T1.S7_COMPOUND_CONTINUITY"
+      }
+    ],
+    "t1_easy_conformance_anchors": [
+      {
+        "generator_role": "KEEP_EASY_ANCHOR",
+        "profile_gaps": {
+          "DB11T1677_2019_rainfall_dual_path": [
+            "communication_completion_semantics"
+          ]
+        },
+        "source_profiles": [
+          "DB44T2457_2024_warning_reporting",
+          "JIAOZUO_2024_geohazard_monitoring_deployment",
+          "DB11T1677_2019_rainfall_dual_path"
+        ],
+        "standalone_disposition": "CONFORMANCE_REGRESSION",
+        "surface_id": "T1.S0_STEADY_MONITORING"
+      }
+    ],
+    "t2_blocked_until_environment": [
+      {
+        "generator_role": "BLOCKED_UNTIL_T2_ENVIRONMENT",
+        "source_profiles": [
+          "YINING_2025_pre_disaster_warning_delivery"
+        ],
+        "standalone_disposition": "SIMULATOR_GAP",
+        "surface_id": "T2.S0_AUTHORITY_GATED_PUBLICATION"
+      },
+      {
+        "generator_role": "BLOCKED_UNTIL_T2_ENVIRONMENT",
+        "source_profiles": [
+          "YINING_2025_pre_disaster_warning_delivery"
+        ],
+        "standalone_disposition": "SIMULATOR_GAP",
+        "surface_id": "T2.S1_HIERARCHICAL_WARNING_DELIVERY_ACK"
+      },
+      {
+        "generator_role": "BLOCKED_UNTIL_T2_ENVIRONMENT",
+        "source_profiles": [
+          "BAOSHAN_1262_progressive_call_response"
+        ],
+        "standalone_disposition": "SIMULATOR_GAP",
+        "surface_id": "T2.S2_PROGRESSIVE_CALL_RESPONSE"
+      }
+    ]
   },
   "source_correction": {
-    "status": "MACHINE_REGENERATION_COMPLETE",
-    "profile_id": "DB44T2457_2024_warning_reporting",
-    "issue": "pre-release profile encoded DB44/T 2457-2024 Table 15 ground-fissure cadence while intended T1 hazard is landslide",
-    "correct_authority": "DB44/T 2457-2024 §9.2.2.2 Table 11",
-    "hazard_type": "landslide",
-    "evidence_ref": "research/benchmark/source-evidence/DB44T2457_2024-landslide-table11.md",
-    "source_contract_count": 27,
     "core_contract_count": 17,
-    "recipe_count": 58752,
+    "correct_authority": "DB44/T 2457-2024 §9.2.2.2 Table 11",
+    "evidence_ref": "research/benchmark/source-evidence/DB44T2457_2024-landslide-table11.md",
+    "hazard_type": "landslide",
     "invalidated_downstream_artifacts": [
       "world_materialization",
       "causal_evidence_process",
@@ -475,21 +378,46 @@
       "quality_gates",
       "release_manifest"
     ],
-    "retry_legality_lineage": "v0.2-retry-legality",
+    "issue": "pre-release profile encoded DB44/T 2457-2024 Table 15 ground-fissure cadence while intended T1 hazard is landslide",
     "machine_regeneration": {
       "exact": {
-        "status": "COMPLETE",
-        "unique_solver_signatures": 8064,
         "recipe_classification": {
-          "NO_PAID_QUERY_REQUIRED": 55008,
-          "PAID_EVIDENCE_REQUIRED": 2106,
           "INFORMATION_INFEASIBLE": 630,
-          "MIXED_WORLD_SOLVABILITY": 1008
-        }
+          "MIXED_WORLD_SOLVABILITY": 1008,
+          "NO_PAID_QUERY_REQUIRED": 55008,
+          "PAID_EVIDENCE_REQUIRED": 2106
+        },
+        "status": "COMPLETE",
+        "unique_solver_signatures": 8064
+      },
+      "public_test": {
+        "sha256": "23307c06ed7c9f9d992db4bcc5cee12b1703e38d997a293b3d1677cc1b91b6f5",
+        "status": "FROZEN_PUBLIC_TEST_IDENTITY",
+        "test_case_count": 3804
+      },
+      "split": {
+        "cross_split_signature_overlap": 0,
+        "hard_recipe_split": {
+          "dev": 90,
+          "test": 24,
+          "train": 60
+        },
+        "hard_signature_split": {
+          "dev": 18,
+          "test": 7,
+          "train": 16
+        },
+        "pre_admission_recipes": 30180,
+        "recipe_split": {
+          "dev": 11268,
+          "test": 3804,
+          "train": 15108
+        },
+        "status": "COMPLETE"
       },
       "v0_v7": {
-        "status": "COMPLETE",
         "pass_signatures": 1423,
+        "status": "COMPLETE",
         "validity_pending_recipe_disposition": {
           "COMMON_SAFE_ACTION": 18252,
           "INFORMATION_INFEASIBLE_DIAGNOSTIC": 630,
@@ -500,39 +428,126 @@
       },
       "v8": {
         "status": "COMPLETE",
-        "survivor_signatures": 41,
         "survivor_recipes": 174,
+        "survivor_signatures": 41,
         "survivor_structure": "FINITE_CROSSING_WINDOWS + GATEWAY_SUMMARY_QUERY + overlap 3/4"
       },
       "v9": {
         "status": "PASS",
         "structural_representatives": 216
-      },
-      "split": {
-        "status": "COMPLETE",
-        "pre_admission_recipes": 30180,
-        "recipe_split": {
-          "train": 15108,
-          "dev": 11268,
-          "test": 3804
-        },
-        "hard_signature_split": {
-          "train": 16,
-          "dev": 18,
-          "test": 7
-        },
-        "hard_recipe_split": {
-          "train": 60,
-          "dev": 90,
-          "test": 24
-        },
-        "cross_split_signature_overlap": 0
-      },
-      "public_test": {
-        "status": "FROZEN_PUBLIC_TEST_IDENTITY",
-        "test_case_count": 3804,
-        "sha256": "23307c06ed7c9f9d992db4bcc5cee12b1703e38d997a293b3d1677cc1b91b6f5"
       }
+    },
+    "profile_id": "DB44T2457_2024_warning_reporting",
+    "recipe_count": 58752,
+    "retry_legality_lineage": "v0.2-retry-legality",
+    "source_contract_count": 27,
+    "status": "MACHINE_REGENERATION_COMPLETE"
+  },
+  "status": "LAYER1_CONSTRUCTION_IN_PROGRESS",
+  "structure_aware_split": {
+    "audit_ref": "results/benchmark/layer1-structure-aware-split-v0.2-retry-legality.json",
+    "by_split": {
+      "dev": 11268,
+      "test": 3804,
+      "train": 15108
+    },
+    "candidate_count": 30180,
+    "coverage_ref": "results/benchmark/layer1-split-coverage-v0.2-retry-legality.json",
+    "hard_recipe_by_split": {
+      "dev": 90,
+      "test": 24,
+      "train": 60
+    },
+    "hard_signature_by_split": {
+      "dev": 18,
+      "test": 7,
+      "train": 16
+    },
+    "leakage_passed": true,
+    "status": "DONE"
+  },
+  "validity_filter_infrastructure": {
+    "release_status": "NOT_BENCHMARK_ADMIT",
+    "v0_v7": {
+      "audit_ref": "results/benchmark/layer1-v0-v7-full-v0.2-retry-legality.json",
+      "projected_recipe_disposition": {
+        "COMMON_SAFE_ACTION": 46620,
+        "INFORMATION_INFEASIBLE_DIAGNOSTIC": 630,
+        "NO_BINDING_CONSTRAINT": 384,
+        "UNIQUE_READY": 396,
+        "V0_V7_PASS": 9714,
+        "V1_PHYSICAL_INVALID": 1008
+      },
+      "signature_count": 8064,
+      "status": "DONE_FULL_UNIVERSE"
+    },
+    "v8": {
+      "audit_ref": "results/benchmark/layer1-v8-all-pass-v0.2-retry-legality.json",
+      "disposition": {
+        "CHEAP_POLICY_RULE": 1346,
+        "DEEP_HORIZON": 13,
+        "FINITE_HORIZON": 23,
+        "SURVIVES_V8_LADDER_V0_1": 41
+      },
+      "input_signature_count": 1423,
+      "projected_survivor_recipe_count": 174,
+      "status": "DONE_ALL_V0_V7_PASS_SIGNATURES",
+      "survivor_signature_count": 41
+    },
+    "v9": {
+      "audit_ref": "results/benchmark/layer1-v9-evaluator-soundness-v0.2-retry-legality.json",
+      "passed": true,
+      "status": "DONE",
+      "structural_representative_count": 216
     }
+  },
+  "warnings": [
+    "Current machine lineage is v0.2-retry-legality; pre-retry exact/V8/split/LLM/Q-gate numbers are historical only.",
+    "Retry legality changes full-universe labels: 55,008 no-paid-query, 2,106 paid-evidence, 630 information-infeasible, 1,008 mixed-world-solvability recipes.",
+    "V8 v0.2 leaves 41 paid-evidence signatures / 174 pre-admission recipes, all finite-crossing gateway-summary-query overlap 3/4.",
+    "Frozen public test v0.2 contains 3,804 cases. DeepSeek Flash frozen-test reasoning baseline has been rerun: 0/7 hard signatures succeed, all failures are DEADLINE_EXPIRED, with 0 invalid actions.",
+    "Q0-Q12 machine refresh is complete at 12 PASS / 1 BLOCKED; only Q11 real human/source review remains before BENCHMARK_ADMIT.",
+    "T2 remains SIMULATOR_GAP until actor-chain environment support exists."
+  ],
+  "world_materialization": {
+    "bundle_count": 58752,
+    "bundle_id_stream_sha256": "5cd95d2991499db7766aa490d169bcf93ff0160190d7b0c29486976c74a93c71",
+    "bundles_with_preserved_source_blocker": 9792,
+    "by_alias_world_count": {
+      "1": 14688,
+      "2": 14688,
+      "3": 14688,
+      "4": 14688
+    },
+    "by_evidence_regime": {
+      "FULL_OBSERVATION_CONTROL": 14688,
+      "GATEWAY_SUMMARY_QUERY": 14688,
+      "MIXED_PASSIVE_QUERY_PROBE": 14688,
+      "PASSIVE_ACK_ONLY": 14688
+    },
+    "by_recovery_regime": {
+      "NO_RECOVERY_STATE": 19584,
+      "OUTAGE_CACHE_RETAIN": 19584,
+      "RECONNECT_RECONCILE_OBJECTIVE_CHECK": 19584
+    },
+    "by_service_process": {
+      "FINITE_CROSSING_WINDOWS": 14688,
+      "MONOTONE_RECOVERY_NEGATIVE": 14688,
+      "MULTI_WINDOW_DYNAMIC": 14688,
+      "STEADY_AVAILABLE_CONTROL": 14688
+    },
+    "input_recipe_count": 58752,
+    "materializer": "T1-dynamic-world-alias-bundle-v0.1",
+    "rules": [
+      "One frozen candidate recipe materializes to one world/alias bundle.",
+      "Materialized bundles are still NOT_BENCHMARK_ADMIT and have no oracle/V0-V9 labels.",
+      "MODEL_DERIVED satellite geometry is public and identical across alias worlds.",
+      "Alias differences live in declared dynamic terrestrial/recovery state, never in hidden public geometry.",
+      "Workload overlap and service-process variation remain explicit CONTROLLED_STRESS coordinates.",
+      "Reconnect backlog-vs-fresh priority remains unresolved; materialization preserves the V7 blocker.",
+      "ACK/query/probe response values and arrival timing are deferred to the causal evidence stage."
+    ],
+    "schema_version": "0.1",
+    "stage": "WORLD_BUNDLE_PRE_EVIDENCE_PRE_ORACLE"
   }
 }
