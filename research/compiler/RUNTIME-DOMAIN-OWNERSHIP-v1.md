@@ -130,6 +130,47 @@ full-audit undetermined != model-facing undetermined automatically
 
 compact projection 必须在当前 model-visible control family 上重算 Decision Sufficiency。唯一 ready supported plan 若为 zero-effect hold，且不存在其它 control-visible live alternative / blocking need，则显式标记 `sufficient_for_no_action`；不能用含 shadow branch 的 full-audit uncertainty 诱导模型继续无意义调查。
 
+### Future-choice supervision / search guidance boundary
+
+Layer 2 的 exact future-choice oracle 可以产生 `legal / certified action set`、
+`can_defer / query_harmful / query_required / stop_acquisition` 等监督目标，但
+**oracle state 只能写 target，不能进入 model-facing feature**。
+
+任何 learned bound、search guidance 或 policy supervision 必须通过同一 lawful
+Context 边界生成输入。允许进入 feature 的信息包括：
+
+```text
+Operational Task / obligation contract
+公开 deadline / release / satellite geometry
+capability / evidence contract
+Runtime 当前时间与显式资源预算
+Agent 自己已提交的 action history
+已经通过合法 capability 到达 Evidence World 的 Evidence / Percept
+```
+
+以下 evaluator-only 内容禁止进入 feature，即使它能显著提高预测精度：
+
+```text
+realized hidden world id / alias-world truth
+latent terrestrial service realization
+未被合法 observation 暴露的 delivery acceptance / receipt state
+per-world LocalState / pending hidden completion
+oracle continuation witness / exact search internals
+```
+
+固定 invariant：
+
+```text
+exact future-choice truth = label authority
+lawful Context projection = feature authority
+label authority != feature authority
+```
+
+当前第一版 projection owner 为
+`code/evaluation/benchmark/future_choice_lawful_projection_v0_1.py`。它只定义
+未来可能使用的 learning/search-guidance 接口，不代表 learning 已经成为当前方法，
+也不允许绕开本文件已有的 Evidence World / owner / reachability / freshness 规则。
+
 ## 5. Capability ownership
 
 Agent 面向稳定 capability semantics：
