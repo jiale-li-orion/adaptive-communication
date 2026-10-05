@@ -1,6 +1,6 @@
 # Layer-2 v2 — Future-Choice / L-U
 
-状态：**DEV PASS / HELD-OUT PENDING**
+状态：**DEV PASS / HELD-OUT PASS**
 
 Layer-2 v2 针对 frozen v1 已确认的 category-C failure：v1 能识别 unresolved owner evidence，却不会判断“此刻取证以后，未来 obligation feasibility 是否仍成立”。Layer-1 v0.2 中 query 是真实通信 action，会消耗时间和通信机会，因此 evidence relevance 与 acquisition timing 必须在同一 causal state transition 内评估。
 
@@ -82,7 +82,36 @@ dev ablation 比较了 `root_query / query_recursive / all_recursive / none`。�
 
 因此 dev 阶段已经满足 `cache06.md` 要求的最低系统门：结果不再只是“少 memo node”，而是在相同 task quality / 相同资源点下同时降低 search expansion 与真实 wall time。
 
-## 5. Claim boundary
+## 5. Held-out result
+
+held-out hard split：7 signatures。测试在冻结 commit `2f0c47f976d9b013fe66c8298696d6834a23ae08` 上一次性运行；测试过程中没有修改源码。
+
+结果文件：`results/agentic/layer2-v2-matrix-test-all-recursive.json`。
+
+正确性 / task quality：
+
+- 7 / 7 v2 success；
+- 7 / 7 minimal resource point 与 generic exact 一致；
+- six ordinary baselines 均 0 / 7 success。
+
+相对 generic exact：
+
+- online expansions ratio：**0.23165**；
+- online wall ratio：**0.53251**；
+- 7 / 7 expansions 更低；
+- 7 / 7 wall 更低。
+
+相对更强的 **same-order ordered exact**：
+
+- ordered exact 先使用与 v2 相同的 action order，再做普通 exact search，因此隔离“只是排序更好”这一解释；
+- v2 online expansions ratio：**0.51107**；
+- v2 online wall ratio：**1.22621**；
+- 说明 L/U 本身在 held-out 上继续减少约一半搜索节点，但当前 Python structural-check 常数开销仍使 wall time 比 ordered exact 高 22.6%；
+- v2 仅在 2 / 7 signatures 上 wall time 优于 ordered exact。
+
+因此 Layer-2 v2 的 held-out 结论应写成：**future-choice L/U 在保持 exact task/resource outcome 的同时，稳定减少搜索空间；相对 generic exact 已获得端到端 wall-time 收益，但相对 same-order exact 的 wall-time 优势尚未成立。** 这个负边界不能隐藏，也不能通过重新调 held-out 参数修饰。
+
+## 6. Claim boundary
 
 当前可以说：
 
@@ -90,9 +119,8 @@ dev ablation 比较了 `root_query / query_recursive / all_recursive / none`。�
 
 当前还不能说：
 
-- held-out test 已通过；
 - v2 已经优于所有可能 planner；
 - L/U 已证明对任意 Agentic Communication task 都有复杂度优势；
 - learning 已经提供额外贡献。
 
-held-out test 必须在 v0.1 code freeze 后一次性运行；测试结果出来前不再根据 test 调参。
+下一阶段如果引入 learning，只允许改变 unresolved action 的 search order / ranking，不得改变 legality、L/U soundness、evidence ownership、task success 或 exact fallback correctness。这样才能把“搜索空间减少”进一步转成相对 strong ordered-exact 的真实 wall-time收益，而不把安全性押给 learned policy。
