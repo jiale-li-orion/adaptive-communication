@@ -10,9 +10,11 @@ Canonical contracts 见 `RUNTIME-DOMAIN-OWNERSHIP-v1.md`；方法关系见 `PLAN
 
 Layer 2 v1 仍然冻结为第一版 runtime/compiler 机制，但新的 Layer-1 v0.2 已经暴露出两个需要严格分开的结果。
 
-**第一，as-is compatibility 不成立。** `audit_layer1_v02_layer2_v1_representability.py` 在 41 个 frozen hard signatures 上得到 `0/41` lossless。原因是旧 O1–O6 compiler/registry/selector 仍围绕单 phase profile/fallback candidate family：它不能保留 3/4 个 overlapping obligation identity，也没有 per-obligation `WAIT / SEND_TERR / SEND_SAT / gateway_state_summary` binding。这个结果属于 **B 类兼容工程**，不能当方法贡献。
+**第一，as-is compatibility 不成立，但 B 类兼容缺口已经关闭。** `audit_layer1_v02_layer2_v1_representability.py` 在 41 个 frozen hard signatures 上得到 `0/41` lossless。原因是旧 O1–O6 compiler/registry/selector 仍围绕单 phase profile/fallback candidate family：它不能保留 3/4 个 overlapping obligation identity，也没有 per-obligation `WAIT / SEND_TERR / SEND_SAT / gateway_state_summary` binding。这个结果属于 **B 类兼容工程**，不能当方法贡献。随后新增 evaluation-only `layer1_v02_v1_binding.py`，只把公开 obligation contract 与 legal action surface 映射到现有 v1 `TaskContract / candidate_action_context / PlannedCapabilityInvocation`，不读取 future feasibility、hidden world、oracle witness 或 recommended action。
 
 机器结果：[`results/agentic/layer1-v02-layer2-v1-representability.json`](../../results/agentic/layer1-v02-layer2-v1-representability.json)。
+
+lossless-binding audit：41/41 hard signatures PASS；沿 exact policy tree 共检查 **2,224 个 reachable decision boundaries / 4,577 个 legal candidate actions**，typed invocation round-trip **0 mismatch**，结构化 hidden-field audit **0 leakage**。机器结果：[`results/agentic/layer1-v02-v1-lossless-binding.json`](../../results/agentic/layer1-v02-v1-lossless-binding.json)。这层 binding 只关闭兼容问题，不给 v1/v2 注入决策答案。
 
 **第二，v1 acquisition trigger 本身存在 C 类 decision-semantic failure。** 在一个 lossless binding 假设下，直接调用 frozen `ActionConditionedReferencePlannerConsumer` 可以确认：当 owner dependency unresolved 且 capability visible 时，v1 会先发起 query。随后使用 Layer-1 v0.2 的 frozen transition semantics，在 41 个 hard signatures 的 exact minimal-resource policy 首次 query 之前做 counterfactual：
 
@@ -31,4 +33,4 @@ Layer 2 v1 仍然冻结为第一版 runtime/compiler 机制，但新的 Layer-1 
 
 这使 `cache06.md` 保留的 future-choice / L-U 方法线正式成为 Layer-2 v2 主线。v2 应维护剩余 obligation、共享 opportunity/resource、evidence 与 pending execution 的动态可行前沿；`L_t(a)=1` 由可执行 causal continuation 支撑，`U_t(a)=0` 由 sound structural relaxation 排除，未决部分才继续取证、规划或 exact fallback。旧的“为每个 action 重新跑昂贵 depth-bounded proof stack”不代表这条方法线本身。
 
-下一步仍要先补一层**薄的 lossless benchmark→v1 contract binding**，用于端到端 v1/v2 对照；这层 adapter 只表达 public obligation/action/capability，不读取 hidden world、future feasibility、oracle witness 或 recommended action。随后才比较 v1、future-choice/L-U v2、strong ordinary planning 与 exact reference 的 task quality、真实 acquisition cost 和 online computation。
+薄的 lossless benchmark→v1 contract binding 已完成并通过 audit。下一步直接进入 future-choice/L-U v2 的端到端实现与对照，比较 v1、v2、strong ordinary planning 与 exact reference 的 task quality、真实 acquisition cost 和 online computation。

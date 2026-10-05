@@ -2,7 +2,7 @@
 
 # 间歇连接下的智能体通信：基于真实来源的决策基准与决策语义运行时
 
-> **当前研究结构：Layer-1 Decision Benchmark v0.2 → 薄的 lossless binding 接入 frozen Layer-2 v1 contract → Layer-2 v2 future-choice / L-U → Layer-3 policy/learning。** Layer 2 v1 在 benchmark 重置前已经完成一版：Task/Evidence/Capability/Execution ownership、多轮 EvidenceNeed 取证、candidate-action Context、persistent execution、replay/attribution、CR/CF/CS、WirelessOpsAgent-style 对照以及 A10/A11 query-positive 证据都已经形成正式结果。后来回头重做 Layer 1，是因为旧任务经过 compiler 后经常变成 `unique-ready`。现在新 benchmark 的重验已经把两类问题分开：旧 O1–O6 binding 在 41/41 hard signatures 上都不能无损表达；更重要的是，在假设 lossless binding 后，frozen v1 的 acquisition trigger 仍出现真实 decision-semantic failure。这个结果已经足够开启 v2；剩余 compatibility 工作只是一层薄 adapter，不再是继续改 Layer 1 的理由。
+> **当前研究结构：Layer-1 Decision Benchmark v0.2 → lossless Layer-1→v1 evaluation binding → Layer-2 v2 future-choice / L-U → Layer-3 policy/learning。** Layer 2 v1 在 benchmark 重置前已经完成一版：Task/Evidence/Capability/Execution ownership、多轮 EvidenceNeed 取证、candidate-action Context、persistent execution、replay/attribution、CR/CF/CS、WirelessOpsAgent-style 对照以及 A10/A11 query-positive 证据都已经形成正式结果。后来回头重做 Layer 1，是因为旧任务经过 compiler 后经常变成 `unique-ready`。新 benchmark 的重验已经把两类问题分开：旧 O1–O6 binding 在 41/41 hard signatures 上都不能无损表达；更重要的是，frozen v1 的 acquisition trigger 存在真实 decision-semantic failure。现在 compatibility gap 也已经由 evaluation-only thin binding 关闭：**41 hard signatures、2,224 个 reachable decision boundaries、4,577 个 legal candidate actions 全部 round-trip 一致，0 mismatch、0 hidden-field leakage。** 因此当前主线已经正式进入 Layer-2 v2，Layer 1 继续冻结。
 
 **Layer 1 的毕业标准不由 case 数决定。** 正式 Decision Benchmark 必须同时证明：case 具有连续步骤依赖、部分可观测和基于新证据的策略自适应；主动取证支付真实时间/通信/资源成本，并与被动反馈、正常发送兼探测公平竞争；动作真实改变物理状态与后续义务可完成性；核心成功由外部 non-anticipative oracle 判定；强 ordinary baseline 在结构留出集上仍留下决策余量；并通过 controlled intervention 证明难点来自通信与信息约束，而不是模型连基础任务都不会做。规范入口为 [Layer-1 Decision Benchmark v0.2](spec/benchmark/LAYER1-DECISION-BENCHMARK-v0.2.md)，模块级验收矩阵与当前状态见 [research/benchmark/README](research/benchmark/README.md)。正式 release 仍需完成 v0.2 Q11 human/source audit 与 Q0–Q12 refresh。
 当前 v0.2 的 release evidence 已刷新到 **Q0–Q12 = 12 PASS / 1 BLOCKED**：DeepSeek Flash frozen-test baseline 已完成，7/7 hard signatures 全部因 `DEADLINE_EXPIRED` 失败且 0 invalid action；agentic-reducibility 与 communication-attribution 两组 release audit 均在 41/41 hard signatures 上通过。正式 `BENCHMARK_ADMIT` 现在只剩 Q11 真实 human/source review，机器不能代签。
@@ -15,7 +15,7 @@
 
 **原系统论文阶段（历史状态）：系统论文工作稿。** 这一阶段已经得到组件级正结果，并把配置租约、单节点停止、保留视界等候选收敛为 scoped-negative 边界；完整 runtime 增量、迁移验证与匹配能力 Agent 验证则留给后续阶段。该阶段的设计取舍、负结果和开放问题继续保存在 [论文闭环计划](paper/RESEARCH_PLAN.md) 与 [CLAIMS](results/CLAIMS.md) 中，作为研究谱系的一部分长期保留。
 
-**当前研究主线：Layer 1 对方法研究已经冻结，Layer 2 v1 重验已经确认 compatibility gap 与真实 method gap 同时存在。** 旧 compiler/registry/selector 对新 overlapping-obligation surface 的 as-is lossless coverage 为 `0/41`；把这个表示问题隔离后，v1 对 unresolved owner evidence 的“立即取证”触发仍然失效。在 41 个 hard signatures 的 exact minimal-resource policy 首次 query 之前，共检查 808 个 query-legal boundary：只有 64 个强制 query 后仍能完成任务，**744/808 是 legal-but-harmful**；并且 **41/41** case 的第一次 query-legal 时刻都是 harmful，exact policy 都会等到更晚再 query。现在应正式推进 cache06 已收敛的 future-choice/L-U v2，并用薄 lossless binding 保持 v1/v2 公平比较。Layer 3 建立在这个明确 failure surface 上。
+**当前研究主线：Layer 1 对方法研究已经冻结，Layer 2 v1 重验已经确认 compatibility gap 与真实 method gap，同时 compatibility gap 已被薄 binding 关闭。** 旧 compiler/registry/selector 对新 overlapping-obligation surface 的 as-is lossless coverage 为 `0/41`；新的 evaluation-only binding 在 2,224 个 reachable decision boundaries / 4,577 个 candidate actions 上实现 0 mismatch 与 0 hidden leakage。基于这一无损接缝，v1 对 unresolved owner evidence 的“立即取证”触发仍然失效：在 41 个 hard signatures 的 exact minimal-resource policy 首次 query 之前，共检查 808 个 query-legal boundary，只有 64 个强制 query 后仍能完成任务，**744/808 是 legal-but-harmful**；并且 **41/41** case 的第一次 query-legal 时刻都是 harmful，exact policy 都会等到更晚再 query。现在正式推进 cache06 已收敛的 future-choice/L-U v2。Layer 3 建立在这个明确 failure surface 上。
 
 ## 0. 横向定位与当前 claim 边界
 
@@ -120,7 +120,11 @@ Benchmark 重置没有推翻这些机制，而是改变了检验它们的问题�
 Layer-1 v0.2 的公开 task/evidence/capability/execution state
     -> 既有 Layer-2 v1 Task/Evidence/Context/Capability contract
     -> B：旧 O1-O6 binding 在 41/41 hard signatures 上 lossy
-    -> 薄的 lossless Layer-1-to-v1 binding，仅负责 evaluation compatibility
+    -> 薄的 lossless Layer-1-to-v1 binding [DONE]
+       41/41 hard signatures PASS
+       2,224 reachable decision boundaries
+       4,577 legal candidate actions
+       0 action mismatch / 0 hidden-field leakage
     -> C：frozen v1 acquisition trigger 在新物理决策面上不安全
        808 个合法 pre-query boundary
        64 certified / 744 harmful
@@ -187,7 +191,7 @@ Layer 2 v1 **已经完成并冻结为第一版**。已有正式证据包括：
 
 研究后来回到 Layer 1，是因为 **benchmark decision headroom 不足**，不是 Layer 2 没做完。旧 benchmark/compiler 组合经常把问题编译成 `unique-ready`，Agent reasoning 很难和 ordinary compilation 做有效区分。
 
-Layer-1 v0.2 已经修复了原来的 benchmark 前置条件，而第一轮 v1 重验现在也暴露了真正的方法边界。旧 binding 仍然 lossy，所以端到端比较前还需要一个薄的 task/action/capability adapter；但 acquisition-trigger counterfactual 已经证明，兼容修复本身救不了 v1：owner query 即使合法且相关，过早取得仍可能消耗后续 obligation 必需的通信机会。这是新 benchmark 上第一个确认的 C 类 failure。
+Layer-1 v0.2 已经修复了原来的 benchmark 前置条件，而第一轮 v1 重验也暴露了真正的方法边界。旧 binding 虽然 lossy，但新的 evaluation-only adapter 已经无损关闭 compatibility gap，并且没有引入 oracle 或 hidden-state 信息。因此 acquisition-trigger counterfactual 现在可以排除“只是表示不兼容”的解释：owner query 即使合法且相关，过早取得仍可能消耗后续 obligation 必需的通信机会。这是新 benchmark 上第一个确认的 C 类 failure。
 
 post-reset 的方法线并没有被否掉。`cache06.md` 最终保留下来的 Layer-2 v2 假设，现在已经由 acquisition-trigger audit 提供了启动所需的 C 类 failure：**维护“保留未来可行选择”的通信 Context**。信息价值不由字段本身、freshness 或 uncertainty 单独决定，而由这条证据会不会改变后续可行计划、共享机会、剩余资源与执行承诺决定。query 一方面增加信息，另一方面也可能消耗时间和链路机会，因此信息收益与物理行动空间损失必须放在同一个 causal transition 里计算。
 
