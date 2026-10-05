@@ -10,6 +10,7 @@ from __future__ import annotations
 
 from dynamic_scenario_tree_v0_5 import Bundle,LocalState,solve
 from dynamic_feasibility_frontier_v0_5 import _world_certificate
+from future_choice_frontier_v0_5 import frontier_action_order
 
 
 def frontier_prefix_upper_bound(bundle:Bundle,t:int,states:dict[str,LocalState]) -> bool:
@@ -36,4 +37,4 @@ def frontier_prefix_upper_bound(bundle:Bundle,t:int,states:dict[str,LocalState])
 
 
 def solve_frontier_guided(bundle:Bundle,**kwargs):
-    return solve(bundle,prefix_upper_bound=frontier_prefix_upper_bound,**kwargs)
+    return solve(bundle,prefix_upper_bound=frontier_prefix_upper_bound,action_order=frontier_action_order,**kwargs)

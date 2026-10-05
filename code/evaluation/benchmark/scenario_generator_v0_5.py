@@ -228,3 +228,37 @@ def build_receipt_race_bundle(*,phase_index:int=1) -> Bundle:
         satellite_budget=1,
         queries=(q,),
     )
+
+
+def build_overlapping_receipt_chain_bundle(*,phase_index:int=1) -> Bundle:
+    """Three-obligation sequential receipt process with overlapping backup conflicts."""
+    start,_=phase_groups(4,phase_index+1)[phase_index]
+    sats=tuple(t for t in _slots() if start<=t<=start+8*3600)
+    a=Obligation('A',start,start+7200)
+    b=Obligation('B',start+10800,start+21600)
+    c=Obligation('C',start+18000,start+25200)
+    obligations=(a,b,c)
+    a_send=start+4500; b_send=start+15300; c_send=start+18900
+    a_receipt=a_send+60; b_receipt=b_send+60; c_receipt=c_send+60
+    a_final=a.deadline_s-60; b_final=b.deadline_s-60; c_final=c.deadline_s-60
+    patterns=((True,True,True),(True,True,False),(True,False,True),(True,False,False),(False,True,True),(False,True,False),(False,False,True))
+    worlds=[]
+    for a_ok,b_ok,c_ok in patterns:
+        rows=[]
+        for oid,send,receipt,final,ok in (('A',a_send,a_receipt,a_final,a_ok),('B',b_send,b_receipt,b_final,b_ok),('C',c_send,c_receipt,c_final,c_ok)):
+            rows.append(DeliveryEvent(send,oid,ok,receipt if ok else None,final if ok else None))
+        worlds.append(World(
+            world_id=f'a{int(a_ok)}-b{int(b_ok)}-c{int(c_ok)}',
+            owner_state_events=(),delivery_events=tuple(rows),query_reachable_times=(a_receipt,c_receipt),
+        ))
+    q=QueryCapability(
+        query_id='receipt_summary',proposition='communication.gateway.receipt_summary',owner='gateway',
+        sample_delay_s=0,response_delay_s=120,return_path=('gateway_to_center_backhaul',),opportunity_dependency=('gateway_reachability',),
+    )
+    fixed={start,*sats,a.release_s,a.deadline_s,b.release_s,b.deadline_s,c.release_s,c.deadline_s,
+           a_send,a_receipt,a_final,b_send,b_receipt,b_final,c_send,c_receipt,c_final}
+    return Bundle(
+        bundle_id=f'v05-overlap-receipt-chain-p{phase_index}',obligations=obligations,worlds=tuple(worlds),
+        fixed_event_times=tuple(sorted(fixed)),terrestrial_send_times=(a_send,b_send,c_send),
+        satellite_send_times=sats,satellite_budget=2,queries=(q,),
+    )

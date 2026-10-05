@@ -295,7 +295,7 @@ def _step_action(bundle:Bundle,t:int,states:dict[str,LocalState],action:Action) 
         return branches,next_t
     return None
 
-def solve(bundle:Bundle,*,max_decision_depth:int|None=None,forced_first_action:Action|None=None,disabled_queries:frozenset[str]=frozenset(),prefix_upper_bound:Callable[[Bundle,int,dict[str,LocalState]],bool]|None=None) -> dict[str,Any]:
+def solve(bundle:Bundle,*,max_decision_depth:int|None=None,forced_first_action:Action|None=None,disabled_queries:frozenset[str]=frozenset(),prefix_upper_bound:Callable[[Bundle,int,dict[str,LocalState]],bool]|None=None,action_order:Callable[[Bundle,int,dict[str,LocalState],list[Action]],list[Action]]|None=None) -> dict[str,Any]:
     wm={w.world_id:w for w in bundle.worlds}; qm={q.query_id:q for q in bundle.queries}
     start=min(bundle.fixed_event_times)
     initial={w.world_id:LocalState(sat_budget=bundle.satellite_budget) for w in bundle.worlds}
@@ -324,6 +324,8 @@ def solve(bundle:Bundle,*,max_decision_depth:int|None=None,forced_first_action:A
         if all(_success(bundle,s) for s in states.values()): return (True,{'terminal':True})
         if max_decision_depth is not None and depth>=max_decision_depth: return (False,None)
         actions=[a for a in _actions(bundle,t,states) if not (a[0]=='ISSUE_QUERY' and (a[1] in disabled_queries or not _query_partitions(bundle,t,states,str(a[1]))))]
+        if action_order is not None:
+            actions=action_order(bundle,t,states,actions)
         if forced_first_action is not None and t==start and depth==0:
             actions=[x for x in actions if x==forced_first_action]
         for act,arg in actions:
