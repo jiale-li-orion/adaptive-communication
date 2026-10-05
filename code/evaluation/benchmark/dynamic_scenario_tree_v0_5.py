@@ -295,10 +295,24 @@ def _step_action(bundle:Bundle,t:int,states:dict[str,LocalState],action:Action) 
         return branches,next_t
     return None
 
-def solve(bundle:Bundle,*,max_decision_depth:int|None=None,forced_first_action:Action|None=None,disabled_queries:frozenset[str]=frozenset(),prefix_upper_bound:Callable[[Bundle,int,dict[str,LocalState]],bool]|None=None,action_order:Callable[[Bundle,int,dict[str,LocalState],list[Action]],list[Action]]|None=None) -> dict[str,Any]:
+def solve(bundle:Bundle,*,max_decision_depth:int|None=None,forced_first_action:Action|None=None,disabled_queries:frozenset[str]=frozenset(),prefix_upper_bound:Callable[[Bundle,int,dict[str,LocalState]],bool]|None=None,action_order:Callable[[Bundle,int,dict[str,LocalState],list[Action]],list[Action]]|None=None,query_budget:int|None=None,start_at_s:int|None=None,initial_states:dict[str,LocalState]|None=None) -> dict[str,Any]:
+    """Robust causal feasibility, optionally from a legally reached history.
+
+    query_budget bounds *additional* acquisitions on each realized branch.
+    Previously issued queries may still return after this budget reaches zero.
+    Prefix states are a reference-oracle interface: callers must supply the
+    whole compatible support of a reached history, never the realized world.
+    """
+    if query_budget is not None and query_budget < 0:
+        raise ValueError('query_budget must be nonnegative')
+    if (start_at_s is None) != (initial_states is None):
+        raise ValueError('continuation requires both start_at_s and initial_states')
     wm={w.world_id:w for w in bundle.worlds}; qm={q.query_id:q for q in bundle.queries}
-    start=min(bundle.fixed_event_times)
-    initial={w.world_id:LocalState(sat_budget=bundle.satellite_budget) for w in bundle.worlds}
+    start=min(bundle.fixed_event_times) if start_at_s is None else start_at_s
+    initial=({w.world_id:LocalState(sat_budget=bundle.satellite_budget) for w in bundle.worlds}
+             if initial_states is None else dict(initial_states))
+    if not initial or not set(initial) <= set(wm):
+        raise ValueError('prefix must contain nonempty compatible bundle states')
     memo={}
 
     def state_key(st:LocalState):
@@ -306,24 +320,26 @@ def solve(bundle:Bundle,*,max_decision_depth:int|None=None,forced_first_action:A
         return (st.final_delivered,st.violated_obligations,st.gateway_received,st.pending_queries,st.pending_deliveries,st.seen_passive,st.next_request_seq,st.sat_budget)
     def canon(states): return tuple(sorted((wid,state_key(st)) for wid,st in states.items()))
 
-    def rec(t:int,states:dict[str,LocalState],depth:int):
+    def rec(t:int,states:dict[str,LocalState],depth:int,remaining_queries:int|None):
         norm=_normalize(bundle,t,states)
         if len(norm)>1 or next(iter(norm))!='same':
             children=[]
             for obs,ch in sorted(norm.items()):
-                ok,sub=rec(t,ch,depth)
+                ok,sub=rec(t,ch,depth,remaining_queries)
                 if not ok:return False,None
                 children.append({'observation':obs,'worlds':sorted(ch),'subpolicy':sub})
             return True,{'time_s':t,'event':'OBSERVATION','children':children}
         states=next(iter(norm.values()))
         if prefix_upper_bound is not None and not prefix_upper_bound(bundle,t,states):
             return (False,None)
-        key=(t,depth,canon(states))
+        key=(t,depth,remaining_queries,canon(states))
         if key in memo:return memo[key]
         if any(_expired(bundle,s,t) for s in states.values()): return (False,None)
         if all(_success(bundle,s) for s in states.values()): return (True,{'terminal':True})
         if max_decision_depth is not None and depth>=max_decision_depth: return (False,None)
-        actions=[a for a in _actions(bundle,t,states) if not (a[0]=='ISSUE_QUERY' and (a[1] in disabled_queries or not _query_partitions(bundle,t,states,str(a[1]))))]
+        # A no-information query is dominated in free feasibility search, but
+        # remains a legal forced action when auditing the action frontier.
+        actions=[a for a in _actions(bundle,t,states) if not (a[0]=='ISSUE_QUERY' and (remaining_queries==0 or a[1] in disabled_queries or (not _query_partitions(bundle,t,states,str(a[1])) and not (depth==0 and t==start and a==forced_first_action))))]
         if action_order is not None:
             actions=action_order(bundle,t,states,actions)
         if forced_first_action is not None and t==start and depth==0:
@@ -334,7 +350,8 @@ def solve(bundle:Bundle,*,max_decision_depth:int|None=None,forced_first_action:A
             branches,next_t=stepped
             children=[]; good=True
             for obs,ch in sorted(branches.items()):
-                ok,sub=rec(next_t,ch,depth+1)
+                next_queries=(remaining_queries-1 if act=='ISSUE_QUERY' and remaining_queries is not None else remaining_queries)
+                ok,sub=rec(next_t,ch,depth+1,next_queries)
                 if not ok:good=False;break
                 children.append({'observation':obs,'worlds':sorted(ch),'subpolicy':sub})
             if good:
@@ -342,7 +359,7 @@ def solve(bundle:Bundle,*,max_decision_depth:int|None=None,forced_first_action:A
                 memo[key]=ans;return ans
         memo[key]=(False,None);return memo[key]
 
-    solvable,policy=rec(start,initial,0)
+    solvable,policy=rec(start,initial,0,query_budget)
     return {'solvable':solvable,'policy':policy,'memo_nodes':len(memo)}
 
 

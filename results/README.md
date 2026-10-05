@@ -3,6 +3,7 @@
 results/ stores machine-readable evidence and frozen comparisons. Claim state is owned only by CLAIMS.md.
 
 - agentic/: Layer-2 / policy evaluation runs, including A7–A11 live-model evidence and supporting Agentic experiments.
+- benchmark/: Layer-1 mechanism audits; not automatically promoted to paper claims. `receipt-continuation-v0.5.json` is reproduced by `code/evaluation/benchmark/audit_receipt_continuation_v0_5.py`; scope and support assumptions are in `research/benchmark/RECEIPT-CONTINUATION-REVIEW.v0.5.md`.
 - communication-substrate/claims/: current C1–C11 communication-substrate evidence referenced by CLAIMS.md.
 - communication-substrate/calibration/: source-derived link/outage/energy calibration artifacts.
 - communication-substrate/physics/: terrain, coverage, ITM/LoRa and physical-substrate outputs used by the shared simulator.

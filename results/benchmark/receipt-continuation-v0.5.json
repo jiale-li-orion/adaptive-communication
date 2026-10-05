@@ -1,0 +1,439 @@
+{
+  "after_first_receipt": {
+    "query:receipt_summary#0:receipt_summary:gateway_received=A:sampled@33360": {
+      "action_frontier": [
+        {
+          "action": [
+            "WAIT",
+            null
+          ],
+          "minimum_future_queries": 0,
+          "winning_within_budget": true
+        },
+        {
+          "action": [
+            "ISSUE_QUERY",
+            "receipt_summary"
+          ],
+          "minimum_future_queries": 1,
+          "winning_within_budget": true
+        }
+      ],
+      "at_s": 33480,
+      "can_stop_acquiring": true,
+      "compatible_worlds": [
+        "a1-b0-c0",
+        "a1-b0-c1",
+        "a1-b1-c0",
+        "a1-b1-c1"
+      ],
+      "exact_solves": 4,
+      "memo_nodes": 54,
+      "minimum_future_queries": 0,
+      "query_search_limit": 1,
+      "scope": "exact reached history; full rebuild after every event"
+    },
+    "query:receipt_summary#0:receipt_summary:gateway_received=none:sampled@33360": {
+      "action_frontier": [
+        {
+          "action": [
+            "WAIT",
+            null
+          ],
+          "minimum_future_queries": 1,
+          "winning_within_budget": true
+        },
+        {
+          "action": [
+            "ISSUE_QUERY",
+            "receipt_summary"
+          ],
+          "minimum_future_queries": null,
+          "winning_within_budget": false
+        }
+      ],
+      "at_s": 33480,
+      "can_stop_acquiring": false,
+      "compatible_worlds": [
+        "a0-b0-c1",
+        "a0-b1-c0",
+        "a0-b1-c1"
+      ],
+      "exact_solves": 6,
+      "memo_nodes": 108,
+      "minimum_future_queries": 1,
+      "query_search_limit": 1,
+      "scope": "exact reached history; full rebuild after every event"
+    }
+  },
+  "chain_query_budget": {
+    "0": false,
+    "1": false,
+    "2": true
+  },
+  "cost_contract": "query count and response latency only; no calibrated bytes/energy",
+  "early_final_ack_no_query": true,
+  "guided_exact": {
+    "accounting": {
+      "max_query_requests": 2,
+      "max_total_sends": 5,
+      "per_world": {
+        "a0-b0-c1": {
+          "observations": 3,
+          "query_requests": 2,
+          "query_times_s": [
+            33360,
+            47760
+          ],
+          "satellite_sends": 2,
+          "terrestrial_sends": 3
+        },
+        "a0-b1-c0": {
+          "observations": 3,
+          "query_requests": 2,
+          "query_times_s": [
+            33360,
+            47760
+          ],
+          "satellite_sends": 2,
+          "terrestrial_sends": 3
+        },
+        "a0-b1-c1": {
+          "observations": 3,
+          "query_requests": 2,
+          "query_times_s": [
+            33360,
+            47760
+          ],
+          "satellite_sends": 2,
+          "terrestrial_sends": 3
+        },
+        "a1-b0-c0": {
+          "observations": 3,
+          "query_requests": 2,
+          "query_times_s": [
+            33360,
+            47760
+          ],
+          "satellite_sends": 2,
+          "terrestrial_sends": 3
+        },
+        "a1-b0-c1": {
+          "observations": 3,
+          "query_requests": 2,
+          "query_times_s": [
+            33360,
+            47760
+          ],
+          "satellite_sends": 2,
+          "terrestrial_sends": 3
+        },
+        "a1-b1-c0": {
+          "observations": 4,
+          "query_requests": 2,
+          "query_times_s": [
+            33360,
+            47760
+          ],
+          "satellite_sends": 1,
+          "terrestrial_sends": 3
+        },
+        "a1-b1-c1": {
+          "observations": 4,
+          "query_requests": 2,
+          "query_times_s": [
+            33360,
+            47760
+          ],
+          "satellite_sends": 1,
+          "terrestrial_sends": 3
+        }
+      }
+    },
+    "memo_nodes": 56,
+    "solvable": true
+  },
+  "late_query_solvable": false,
+  "ordinary_baselines": {
+    "conditional": {
+      "per_world": {
+        "a0-b0-c1": {
+          "queries": 2,
+          "satellite_sends": 2,
+          "success": true
+        },
+        "a0-b1-c0": {
+          "queries": 2,
+          "satellite_sends": 2,
+          "success": true
+        },
+        "a0-b1-c1": {
+          "queries": 2,
+          "satellite_sends": 1,
+          "success": true
+        },
+        "a1-b0-c0": {
+          "queries": 1,
+          "satellite_sends": 2,
+          "success": true
+        },
+        "a1-b0-c1": {
+          "queries": 1,
+          "satellite_sends": 2,
+          "success": true
+        },
+        "a1-b1-c0": {
+          "queries": 1,
+          "satellite_sends": 2,
+          "success": true
+        },
+        "a1-b1-c1": {
+          "queries": 1,
+          "satellite_sends": 2,
+          "success": true
+        }
+      },
+      "placement": "center",
+      "solvable": true,
+      "worlds_solved": 7
+    },
+    "fixed-read": {
+      "per_world": {
+        "a0-b0-c1": {
+          "queries": 2,
+          "satellite_sends": 2,
+          "success": true
+        },
+        "a0-b1-c0": {
+          "queries": 2,
+          "satellite_sends": 2,
+          "success": true
+        },
+        "a0-b1-c1": {
+          "queries": 2,
+          "satellite_sends": 1,
+          "success": true
+        },
+        "a1-b0-c0": {
+          "queries": 2,
+          "satellite_sends": 2,
+          "success": true
+        },
+        "a1-b0-c1": {
+          "queries": 2,
+          "satellite_sends": 1,
+          "success": true
+        },
+        "a1-b1-c0": {
+          "queries": 2,
+          "satellite_sends": 1,
+          "success": true
+        },
+        "a1-b1-c1": {
+          "queries": 2,
+          "satellite_sends": 0,
+          "success": true
+        }
+      },
+      "placement": "center",
+      "solvable": true,
+      "worlds_solved": 7
+    },
+    "gateway_local": {
+      "per_world": {
+        "a0-b0-c1": {
+          "queries": 0,
+          "satellite_sends": 2,
+          "success": true
+        },
+        "a0-b1-c0": {
+          "queries": 0,
+          "satellite_sends": 2,
+          "success": true
+        },
+        "a0-b1-c1": {
+          "queries": 0,
+          "satellite_sends": 1,
+          "success": true
+        },
+        "a1-b0-c0": {
+          "queries": 0,
+          "satellite_sends": 2,
+          "success": true
+        },
+        "a1-b0-c1": {
+          "queries": 0,
+          "satellite_sends": 1,
+          "success": true
+        },
+        "a1-b1-c0": {
+          "queries": 0,
+          "satellite_sends": 1,
+          "success": true
+        },
+        "a1-b1-c1": {
+          "queries": 0,
+          "satellite_sends": 0,
+          "success": true
+        }
+      },
+      "placement": "gateway",
+      "solvable": true,
+      "worlds_solved": 7
+    },
+    "passive": {
+      "per_world": {
+        "a0-b0-c1": {
+          "queries": 0,
+          "satellite_sends": 2,
+          "success": true
+        },
+        "a0-b1-c0": {
+          "queries": 0,
+          "satellite_sends": 2,
+          "success": false
+        },
+        "a0-b1-c1": {
+          "queries": 0,
+          "satellite_sends": 2,
+          "success": true
+        },
+        "a1-b0-c0": {
+          "queries": 0,
+          "satellite_sends": 2,
+          "success": false
+        },
+        "a1-b0-c1": {
+          "queries": 0,
+          "satellite_sends": 2,
+          "success": true
+        },
+        "a1-b1-c0": {
+          "queries": 0,
+          "satellite_sends": 2,
+          "success": false
+        },
+        "a1-b1-c1": {
+          "queries": 0,
+          "satellite_sends": 2,
+          "success": true
+        }
+      },
+      "placement": "center",
+      "solvable": false,
+      "worlds_solved": 4
+    }
+  },
+  "parent_physical": {
+    "a0-b0-c0": false,
+    "a0-b0-c1": true,
+    "a0-b1-c0": true,
+    "a0-b1-c1": true,
+    "a1-b0-c0": true,
+    "a1-b0-c1": true,
+    "a1-b1-c0": true,
+    "a1-b1-c1": true
+  },
+  "parent_robust_solvable": false,
+  "per_world_physical": {
+    "a0-b0-c1": true,
+    "a0-b1-c0": true,
+    "a0-b1-c1": true,
+    "a1-b0-c0": true,
+    "a1-b0-c1": true,
+    "a1-b1-c0": true,
+    "a1-b1-c1": true
+  },
+  "plain_exact": {
+    "accounting": {
+      "max_query_requests": 2,
+      "max_total_sends": 5,
+      "per_world": {
+        "a0-b0-c1": {
+          "observations": 3,
+          "query_requests": 2,
+          "query_times_s": [
+            33360,
+            47760
+          ],
+          "satellite_sends": 2,
+          "terrestrial_sends": 3
+        },
+        "a0-b1-c0": {
+          "observations": 3,
+          "query_requests": 2,
+          "query_times_s": [
+            33360,
+            47760
+          ],
+          "satellite_sends": 2,
+          "terrestrial_sends": 3
+        },
+        "a0-b1-c1": {
+          "observations": 4,
+          "query_requests": 2,
+          "query_times_s": [
+            33360,
+            47760
+          ],
+          "satellite_sends": 1,
+          "terrestrial_sends": 3
+        },
+        "a1-b0-c0": {
+          "observations": 2,
+          "query_requests": 1,
+          "query_times_s": [
+            33360
+          ],
+          "satellite_sends": 2,
+          "terrestrial_sends": 1
+        },
+        "a1-b0-c1": {
+          "observations": 2,
+          "query_requests": 1,
+          "query_times_s": [
+            33360
+          ],
+          "satellite_sends": 2,
+          "terrestrial_sends": 1
+        },
+        "a1-b1-c0": {
+          "observations": 2,
+          "query_requests": 1,
+          "query_times_s": [
+            33360
+          ],
+          "satellite_sends": 2,
+          "terrestrial_sends": 1
+        },
+        "a1-b1-c1": {
+          "observations": 2,
+          "query_requests": 1,
+          "query_times_s": [
+            33360
+          ],
+          "satellite_sends": 2,
+          "terrestrial_sends": 1
+        }
+      }
+    },
+    "memo_nodes": 676,
+    "solvable": true
+  },
+  "receipt_race_query_budget": {
+    "0": false,
+    "1": true
+  },
+  "scope": "mechanism fixture; not a method-performance claim",
+  "source_sha256": {
+    "audit_receipt_continuation_v0_5.py": "a55c0923353f072ac5b8aa29de869f64e2a48d0b32c36ddbc3a101b1793bd2f0",
+    "dynamic_feasibility_frontier_v0_5.py": "4dfea4a9664c41859043f35155d65781ef3645b314e3107579391e29f0d50fb7",
+    "dynamic_scenario_tree_v0_5.py": "5fcb313ae77f1a2e84c3aaae7ca1d6d1ca2308d0f0b2ab27747aee8bfde35227",
+    "frontier_guided_planner_v0_5.py": "52e9cfa726f9e75bfd35fe7cb1061e20222571f07d915c36ab690c924a03b2fc",
+    "future_choice_frontier_v0_5.py": "60c051fba9e5b2227b5152bebb6e30ee513f9e07e483f0ba7eb7a39301dacae0",
+    "receipt_continuation_v0_5.py": "170b89801501ef492f121d163263fc73985c02520137cd804829d3e4b834a733",
+    "receipt_reserve_baseline_v0_5.py": "4d7c2ec223db8e3feb4da68b900ae3f298decd86a8901e2b9e2ae4d5f6346fd7",
+    "scenario_generator_v0_5.py": "569c117629fa954c1b721d838388edaa26faa6d731c951a1ba720082f87c010d"
+  },
+  "support_contract": "seven-world pilot assumes at least one terrestrial success"
+}

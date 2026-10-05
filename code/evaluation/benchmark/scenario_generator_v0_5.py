@@ -230,8 +230,13 @@ def build_receipt_race_bundle(*,phase_index:int=1) -> Bundle:
     )
 
 
-def build_overlapping_receipt_chain_bundle(*,phase_index:int=1) -> Bundle:
-    """Three-obligation sequential receipt process with overlapping backup conflicts."""
+def build_overlapping_receipt_chain_bundle(*,phase_index:int=1,include_all_failed:bool=False) -> Bundle:
+    """Overlapping receipt pilot with an explicit support assumption.
+
+    The legacy seven-world fixture assumes at least one terrestrial success.
+    include_all_failed exposes the unrestricted parent process; physical
+    infeasibility must be reported, never silently filtered out of its belief.
+    """
     start,_=phase_groups(4,phase_index+1)[phase_index]
     sats=tuple(t for t in _slots() if start<=t<=start+8*3600)
     a=Obligation('A',start,start+7200)
@@ -242,6 +247,8 @@ def build_overlapping_receipt_chain_bundle(*,phase_index:int=1) -> Bundle:
     a_receipt=a_send+60; b_receipt=b_send+60; c_receipt=c_send+60
     a_final=a.deadline_s-60; b_final=b.deadline_s-60; c_final=c.deadline_s-60
     patterns=((True,True,True),(True,True,False),(True,False,True),(True,False,False),(False,True,True),(False,True,False),(False,False,True))
+    if include_all_failed:
+        patterns=patterns+((False,False,False),)
     worlds=[]
     for a_ok,b_ok,c_ok in patterns:
         rows=[]

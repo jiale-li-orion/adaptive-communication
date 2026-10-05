@@ -20,6 +20,8 @@
 
 ## Current disposition
 
+v0.5 最新审阅与可复现判别见 [条件收据续接审阅](RECEIPT-CONTINUATION-REVIEW.v0.5.md)。当前 receipt-chain 已证明条件取证与停止取证机制，但 ordinary EDF/reserve 同样覆盖；少取证与少用备用资源是不同目标，方法性能优势尚未成立。原始父过程、owner-local 对照与 bounded continuation oracle 已保留。
+
 `CONFORMANCE-SPLIT.v1.json` 与 `CONFORMANCE-ROBUSTNESS-MATRIX.v1.json` 保留 O1–O6 的 source-period、scope、owner、outage、scale 等坐标，用于 Runtime/physics/conformance 回归。A7 的 123/123 唯一 ready supported plan 说明这些开发状态大量已由 compiler 闭合，因此它们不再代表完整 Decision Benchmark。
 
 本地 source/task lineage 位于 `../../local_research/current/benchmark/`；其中旧 `task-challenge-pivot`、scenario-interface bridge、source audits 与 pain-point extraction 是本层的 provenance，不作为新文件重复发明。

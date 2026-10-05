@@ -4,6 +4,8 @@ English | [中文](README.zh.md)
 
 # Local Communication Control for Pre-Disaster Monitoring with Intermittent Backhaul
 
+**Latest Layer-1 review:** [Conditional receipt continuation](research/benchmark/RECEIPT-CONTINUATION-REVIEW.v0.5.md) establishes branch-dependent evidence need, while ordinary reserve/EDF still covers the current fixture. The next method target is the task-quality / evidence / backup-resource frontier, not query count alone.
+
 This repository studies battery/solar mountain geohazard monitoring: LoRaWAN Class A nodes reach a field gateway, which uses cellular backhaul and an uplink-only BeiDou short-message backup. Monitoring requirements and warning-level changes are externally authorised. The system executes their communication requirements.
 
 **Original field requirement:** pre-disaster mountain monitoring must keep useful sensing and return paths alive despite limited power and intermittent communication. This requirement remains first-order. The repository must not invent a communication task merely to activate an Agent or a learning algorithm; new Tasks are derived from source-backed operational needs and tested against the physical substrate.
