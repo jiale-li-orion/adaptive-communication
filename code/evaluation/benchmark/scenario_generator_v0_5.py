@@ -175,7 +175,6 @@ def build_receipt_race_bundle(*,phase_index:int=1) -> Bundle:
     A gateway receipt-summary read between local receipt and final ACK reveals
     only executed history.  It does not reveal future service directly.
     """
-    start,_=phase_groups(4,phase_index+1)[phase_index]
     sats=tuple(t for t in _slots() if start<=t<=start+8*3600)
     if phase_index!=1:
         # v0.1 mechanism is frozen on the first geometry phase that supplies
@@ -230,14 +229,13 @@ def build_receipt_race_bundle(*,phase_index:int=1) -> Bundle:
     )
 
 
-def build_overlapping_receipt_chain_bundle(*,phase_index:int=1,include_all_failed:bool=False) -> Bundle:
+def build_overlapping_receipt_chain_at_start(*,start:int,include_all_failed:bool=False,bundle_tag:str='custom') -> Bundle:
     """Overlapping receipt pilot with an explicit support assumption.
 
     The legacy seven-world fixture assumes at least one terrestrial success.
     include_all_failed exposes the unrestricted parent process; physical
     infeasibility must be reported, never silently filtered out of its belief.
     """
-    start,_=phase_groups(4,phase_index+1)[phase_index]
     sats=tuple(t for t in _slots() if start<=t<=start+8*3600)
     a=Obligation('A',start,start+7200)
     b=Obligation('B',start+10800,start+21600)
@@ -265,7 +263,12 @@ def build_overlapping_receipt_chain_bundle(*,phase_index:int=1,include_all_faile
     fixed={start,*sats,a.release_s,a.deadline_s,b.release_s,b.deadline_s,c.release_s,c.deadline_s,
            a_send,a_receipt,a_final,b_send,b_receipt,b_final,c_send,c_receipt,c_final}
     return Bundle(
-        bundle_id=f'v05-overlap-receipt-chain-p{phase_index}',obligations=obligations,worlds=tuple(worlds),
+        bundle_id=f'v05-overlap-receipt-chain-{bundle_tag}',obligations=obligations,worlds=tuple(worlds),
         fixed_event_times=tuple(sorted(fixed)),terrestrial_send_times=(a_send,b_send,c_send),
         satellite_send_times=sats,satellite_budget=2,queries=(q,),
     )
+
+def build_overlapping_receipt_chain_bundle(*,phase_index:int=1,include_all_failed:bool=False) -> Bundle:
+    start,_=phase_groups(4,phase_index+1)[phase_index]
+    return build_overlapping_receipt_chain_at_start(
+        start=start,include_all_failed=include_all_failed,bundle_tag=f'p{phase_index}')

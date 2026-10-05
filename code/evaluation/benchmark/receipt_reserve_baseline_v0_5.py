@@ -32,6 +32,7 @@ class PublicReceiptView:
     last_sample_at_s: int | None
     satellite_budget: int
     in_flight_queries: tuple[str, ...]
+    attempted_terrestrial: tuple[tuple[int, str], ...]
 
 
 def public_view(at_s, state, *, gateway_local=False):
@@ -47,12 +48,19 @@ def public_view(at_s, state, *, gateway_local=False):
                 receipts.update(value.split(','))
             sampled = max(sampled if sampled is not None else -1,
                           int(event[4].split('@')[1]))
+    attempts=[]
+    for event in state.trace:
+        if event[0]=='SEND_TERR':
+            # The controller knows what it attempted, but never reads event[3]
+            # (the hidden accepted/failure result).
+            attempts.append((int(event[1]), str(event[2])))
     if gateway_local:
         receipts.update(state.gateway_received)
         sampled = at_s
     return PublicReceiptView(at_s, state.final_delivered, tuple(sorted(receipts)),
                              sampled, state.sat_budget,
-                             tuple(q.query_id for q in state.pending_queries))
+                             tuple(q.query_id for q in state.pending_queries),
+                             tuple(sorted(set(attempts))))
 
 
 def common_reserve(contract, view):
@@ -90,14 +98,24 @@ def choose_action(contract, view, *, mode='conditional'):
     if (mode != 'passive' and t in contract.receipt_read_times
             and not view.in_flight_queries
             and view.last_sample_at_s != t
-            and (mode == 'fixed-read' or not common_reserve(contract, view))):
+            and (mode in {'fixed-read','fixed-read-wait'} or not common_reserve(contract, view))):
         return 'ISSUE_QUERY', contract.query_id
     if t in contract.satellite_times and view.satellite_budget:
         pending = sorted((o for o in contract.obligations
                           if o.oid not in secured and o.release_s <= t <= o.deadline_s),
                          key=lambda o: (o.deadline_s, o.oid))
         if pending:
-            return 'SEND_SAT', pending[0].oid
+            target=pending[0]
+            # Ordinary latest-feasible-rescue rule: if this report has already
+            # been attempted normally and a later backup slot still exists
+            # before its deadline, wait for ordinary ACK instead of consuming
+            # the early slot. No hidden delivery outcome is consulted.
+            if mode in {'conditional-wait','fixed-read-wait','passive-wait'}:
+                attempted=any(oid==target.oid for _,oid in view.attempted_terrestrial)
+                later=any(t < sat <= target.deadline_s for sat in contract.satellite_times)
+                if attempted and later:
+                    return 'WAIT', None
+            return 'SEND_SAT', target.oid
     return 'WAIT', None
 
 
