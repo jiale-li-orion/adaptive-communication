@@ -380,6 +380,8 @@ BENCHMARK_ADMIT 只能由完整 construction pipeline 产生，不能由单次 s
 
 ## 10. 当前执行顺序
 
+当前 Layer 1 的方向、taxonomy、closure 与工程状态以 [`LAYER1-AUTHORITY.md`](LAYER1-AUTHORITY.md) 为唯一 current-state authority；本协议只拥有 construction / admission 方法，不由局部 generator 版本改写全局方向。
+
     external operational corpus
     → canonical operational objects
     → provisional taxonomy

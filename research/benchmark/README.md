@@ -18,13 +18,34 @@
 
 一个 Decision Benchmark task 至少要能回答以下问题：来源是否支持这个 operational need；是否存在真实选择而非唯一已知写入；观测/不确定性是否可能改变选择；资源或时序约束是否实际 binding；不同合法策略是否产生 materially different physical outcomes；强 ordinary mechanism 是否仍留下需要决策的空间。增加节点数、seed 或窗口数量本身不增加 decision richness。
 
-## Current disposition
+## Current authority and disposition
 
-v0.5 最新审阅与可复现判别见 [条件收据续接审阅](RECEIPT-CONTINUATION-REVIEW.v0.5.md)。当前 receipt-chain 已证明条件取证与停止取证机制，但 ordinary EDF/reserve 同样覆盖；少取证与少用备用资源是不同目标，方法性能优势尚未成立。原始父过程、owner-local 对照与 bounded continuation oracle 已保留。
+**当前 Layer 1 全局状态只由 [LAYER1-AUTHORITY.md](LAYER1-AUTHORITY.md) 拥有。** 本 README 不再以某个 generator/receipt 版本代表全局进度。
 
-`CONFORMANCE-SPLIT.v1.json` 与 `CONFORMANCE-ROBUSTNESS-MATRIX.v1.json` 保留 O1–O6 的 source-period、scope、owner、outage、scale 等坐标，用于 Runtime/physics/conformance 回归。A7 的 123/123 唯一 ready supported plan 说明这些开发状态大量已由 compiler 闭合，因此它们不再代表完整 Decision Benchmark。
+当前一级 taxonomy：
 
-本地 source/task lineage 位于 `../../local_research/current/benchmark/`；其中旧 `task-challenge-pivot`、scenario-interface bridge、source audits 与 pain-point extraction 是本层的 provenance，不作为新文件重复发明。
+- **T1 Monitoring Information Continuity** — MAIN；
+- **T2 Warning Delivery & Response Handoff** — boundary extension，当前 actor-chain environment 为 `SIMULATOR_GAP`。
+
+O1–O6 是历史 T1 operational regime/conformance assets；完整 task surface 与 closure 见 [TASK-COVERAGE-CLOSURE.v0.1.md](TASK-COVERAGE-CLOSURE.v0.1.md) 和 [TASK-SURFACE-REGISTRY.v0.1.json](TASK-SURFACE-REGISTRY.v0.1.json)。
+
+当前 T1 source authority 已解析 27 个 DB44 reporting contracts，其中 17 个进入当前 48h trace 的 core compositional universe。当前 generator 产生 **58,752 个 pre-world/pre-oracle candidate recipes**：14,688 easy conformance、14,688 negative regression、29,376 validity-pending。它们尚未 materialize 成完整 alias bundles，也尚未过 V0–V9，因此**不是 benchmark cases**。机器状态见 [LAYER1-CURRENT-STATE.v0.1.json](LAYER1-CURRENT-STATE.v0.1.json)。
+
+v0.1–v0.5、receipt-race、receipt-chain、joint query–satellite Pareto 和 continuation frontier 继续保留，但它们的角色是 generator/mechanism regression、exact-reference 与 shortcut audit。尤其 188-cell receipt grid **不是 benchmark case count**；当前普通 reserve/fixed-read/wait-ACK family 仍覆盖 frozen receipt-chain 的 exact cost frontier。
+
+当前唯一主工程：
+
+    candidate recipes
+    → dynamic world / alias-bundle materialization
+    → causal observation/evidence process
+    → exact oracle/reference labels
+    → V0–V9 automatic validity filtering
+    → strong-baseline shortcut mining
+    → structure-aware held-out split
+    → Q0–Q12 + human/source/evaluator audit
+    → frozen BENCHMARK_ADMIT release
+
+除 correctness/source/simulator blocker 外，默认不继续扩局部 receipt fixture，不先训练 RL/LLM，不让 Layer 2/3 方法反向塑造 Layer 1 分布。
 
 
 ## Construction authority

@@ -1,13 +1,13 @@
 # Research Ownership
 
-状态：2026-10-04 ownership freeze。
+状态：2026-10-05 ownership freeze。
 
-本目录按研究对象分层，不再按实验轮次或某一版论文状态组织。`results/CLAIMS.md` 仍是 claim-state authority；本文件只定义谁拥有哪类语义。
+本目录按研究对象分层，不再按实验轮次或某一版论文状态组织。`results/CLAIMS.md` 仍是 claim-state authority；Layer 1 当前方向与状态由 [`benchmark/LAYER1-AUTHORITY.md`](benchmark/LAYER1-AUTHORITY.md) 唯一拥有；本文件只定义谁拥有哪类语义。
 
 | Owner | 负责对象 | 当前状态 | 入口 |
 |---|---|---|---|
 | `substrate/` | 山区灾前监测通信物理、能量、缓存、机会、回传、fallback、执行生命周期与数学系统模型 | 稳定底座 | `substrate/README.md` |
-| `benchmark/` | Layer 1：source-grounded operational needs、Task construction、validity/hardness、conformance/decision benchmark | 当前主瓶颈 | `benchmark/README.md` |
+| `benchmark/` | Layer 1：source-grounded operational needs、Task construction、validity/hardness、conformance/decision benchmark | 当前主瓶颈；58,752 pre-world/pre-oracle recipes，尚未 BENCHMARK_ADMIT | `benchmark/LAYER1-AUTHORITY.md` · `benchmark/README.md` |
 | `compiler/` | Layer 2：Task/Evidence/Capability/Execution 到 live decision surface、EvidenceNeed、commitment、persistent execution | 已有 A7–A11 机制证据，接口冻结 | `compiler/README.md` |
 | `policy/` | Layer 3：deterministic/search、LLM、未来 GNN/offline RL/hybrid policy；只在合法 decision surface 上做选择 | LLM/规则已有，learned policy 尚未实现 | `policy/README.md` |
 | `evaluation/` | replay、attribution、ablation、baseline fairness、生成结果摘要 | 横切三层 | `evaluation/README.md` |

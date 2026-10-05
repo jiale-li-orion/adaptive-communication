@@ -21,7 +21,9 @@ import sys
 HERE = os.path.dirname(os.path.abspath(__file__))
 ROOT = os.path.dirname(HERE)
 
-CHECKS = {'benchmark': [('evaluation/benchmark/test_case_contract.py',
+CHECKS = {'benchmark': [('evaluation/benchmark/audit_layer1_authority.py',
+                         'Layer-1 authority：taxonomy/scope/generator snapshot/README entry points must not drift'),
+                        ('evaluation/benchmark/test_case_contract.py',
                          'Layer-1 benchmark case contract：provenance/oracle/validity/split semantic guards'),
                         ('evaluation/benchmark/test_profile_contract.py',
                          'Layer-1 source profile contract：direct authority/provenance/adjacent evidence guards'),

@@ -1,0 +1,225 @@
+{
+  "schema_version": "0.1",
+  "status": "LAYER1_CONSTRUCTION_IN_PROGRESS",
+  "authority_doc": "research/benchmark/LAYER1-AUTHORITY.md",
+  "main_family": "T1_MONITORING_INFORMATION_CONTINUITY",
+  "boundary_family": "T2_WARNING_DELIVERY_RESPONSE_HANDOFF",
+  "generator": {
+    "schema_version": "0.1",
+    "generator": "T1-compositional-recipe-v0.1",
+    "stage": "PRE_WORLD_PRE_ORACLE",
+    "core_recipe_count": 58752,
+    "long_cadence_anchor_count": 10,
+    "db44_source_resolved_contract_count": 27,
+    "core_task_contract_count": 17,
+    "geometry_signature_count": 8,
+    "by_pre_oracle_disposition": {
+      "EASY_CONFORMANCE": 14688,
+      "NEGATIVE_REGRESSION": 14688,
+      "VALIDITY_PENDING": 29376
+    },
+    "by_warning_state": {
+      "blue": 10368,
+      "orange": 20736,
+      "red": 10368,
+      "yellow": 17280
+    },
+    "by_service_process": {
+      "FINITE_CROSSING_WINDOWS": 14688,
+      "MONOTONE_RECOVERY_NEGATIVE": 14688,
+      "MULTI_WINDOW_DYNAMIC": 14688,
+      "STEADY_AVAILABLE_CONTROL": 14688
+    },
+    "rules": [
+      "Recipes are not benchmark cases until dynamic world materialization and V0-V9.",
+      "UNRESOLVED source fields are absent from sampled axes.",
+      "Easy and negative-regression structures are intentionally retained.",
+      "T2 is excluded from this T1 universe until its actor-chain environment closes SIMULATOR_GAP."
+    ]
+  },
+  "scope": {
+    "schema_version": "0.1",
+    "main_family": "T1_MONITORING_INFORMATION_CONTINUITY",
+    "boundary_family": "T2_WARNING_DELIVERY_RESPONSE_HANDOFF",
+    "t1_active_or_compositional_surfaces": [
+      {
+        "surface_id": "T1.S1_WARNING_CADENCE_TRANSITION",
+        "generator_role": "ACTIVE_WORKLOAD_TRANSITION_AXIS",
+        "standalone_disposition": "STANDALONE_CONFORMANCE",
+        "source_profiles": [
+          "DB44T2457_2024_warning_reporting"
+        ],
+        "profile_gaps": {}
+      },
+      {
+        "surface_id": "T1.S2_INTERMITTENT_BACKHAUL_FALLBACK",
+        "generator_role": "ACTIVE_COMPOSITION_AXIS",
+        "standalone_disposition": "SIMPLE_FORM_SHORTCUT_SOLVED",
+        "source_profiles": [
+          "DZT0450_2023_disconnect_recovery",
+          "JIAOZUO_2024_geohazard_monitoring_deployment",
+          "DB11T1677_2019_rainfall_dual_path"
+        ],
+        "profile_gaps": {
+          "DZT0450_2023_disconnect_recovery": [
+            "reconnect_backlog_priority"
+          ],
+          "DB11T1677_2019_rainfall_dual_path": [
+            "communication_completion_semantics"
+          ]
+        }
+      },
+      {
+        "surface_id": "T1.S3_ENERGY_CONSTRAINED_CONTINUITY",
+        "generator_role": "ACTIVE_RESOURCE_AXIS_AFTER_CORE",
+        "standalone_disposition": "BASELINED_NOT_GLOBALLY_CLOSED",
+        "source_profiles": [
+          "DB11T1677_2019_rainfall_dual_path",
+          "JIAOZUO_2024_geohazard_monitoring_deployment"
+        ],
+        "profile_gaps": {
+          "DB11T1677_2019_rainfall_dual_path": [
+            "communication_completion_semantics"
+          ]
+        }
+      },
+      {
+        "surface_id": "T1.S4_OUTAGE_CACHE_RETENTION",
+        "generator_role": "ACTIVE_STATE_AXIS",
+        "standalone_disposition": "CONFORMANCE_REGRESSION",
+        "source_profiles": [
+          "DZT0450_2023_disconnect_recovery"
+        ],
+        "profile_gaps": {
+          "DZT0450_2023_disconnect_recovery": [
+            "reconnect_backlog_priority"
+          ]
+        }
+      },
+      {
+        "surface_id": "T1.S5_RECOVERY_RECONCILIATION",
+        "generator_role": "ACTIVE_ONLY_WHEN_OBJECTIVE_DEFINED",
+        "standalone_disposition": "PARTIAL_CLOSURE_SOURCE_GAP",
+        "source_profiles": [
+          "DZT0450_2023_disconnect_recovery",
+          "JIAOZUO_2024_geohazard_monitoring_deployment"
+        ],
+        "profile_gaps": {
+          "DZT0450_2023_disconnect_recovery": [
+            "reconnect_backlog_priority"
+          ]
+        }
+      },
+      {
+        "surface_id": "T1.S6_HETEROGENEOUS_PATH_PRIORITY",
+        "generator_role": "CAPABILITY_AND_CONFLICT_AXIS",
+        "standalone_disposition": "SOURCE_RULE_CONFORMANCE",
+        "source_profiles": [
+          "JIAOZUO_2024_geohazard_monitoring_deployment",
+          "DB11T1677_2019_rainfall_dual_path",
+          "DZT0450_2023_disconnect_recovery"
+        ],
+        "profile_gaps": {
+          "DB11T1677_2019_rainfall_dual_path": [
+            "communication_completion_semantics"
+          ],
+          "DZT0450_2023_disconnect_recovery": [
+            "reconnect_backlog_priority"
+          ]
+        }
+      },
+      {
+        "surface_id": "T1.S7_COMPOUND_CONTINUITY",
+        "generator_role": "PRIMARY_COMPOSITION_TARGET",
+        "standalone_disposition": "HISTORICAL_TEMPLATE_CONFORMANCE",
+        "source_profiles": [
+          "DB44T2457_2024_warning_reporting",
+          "DZT0450_2023_disconnect_recovery",
+          "JIAOZUO_2024_geohazard_monitoring_deployment",
+          "DB11T1677_2019_rainfall_dual_path"
+        ],
+        "profile_gaps": {
+          "DZT0450_2023_disconnect_recovery": [
+            "reconnect_backlog_priority"
+          ],
+          "DB11T1677_2019_rainfall_dual_path": [
+            "communication_completion_semantics"
+          ]
+        }
+      }
+    ],
+    "t1_easy_conformance_anchors": [
+      {
+        "surface_id": "T1.S0_STEADY_MONITORING",
+        "generator_role": "KEEP_EASY_ANCHOR",
+        "standalone_disposition": "CONFORMANCE_REGRESSION",
+        "source_profiles": [
+          "DB44T2457_2024_warning_reporting",
+          "JIAOZUO_2024_geohazard_monitoring_deployment",
+          "DB11T1677_2019_rainfall_dual_path"
+        ],
+        "profile_gaps": {
+          "DB11T1677_2019_rainfall_dual_path": [
+            "communication_completion_semantics"
+          ]
+        }
+      }
+    ],
+    "t2_blocked_until_environment": [
+      {
+        "surface_id": "T2.S0_AUTHORITY_GATED_PUBLICATION",
+        "generator_role": "BLOCKED_UNTIL_T2_ENVIRONMENT",
+        "standalone_disposition": "SIMULATOR_GAP",
+        "source_profiles": [
+          "YINING_2025_pre_disaster_warning_delivery"
+        ]
+      },
+      {
+        "surface_id": "T2.S1_HIERARCHICAL_WARNING_DELIVERY_ACK",
+        "generator_role": "BLOCKED_UNTIL_T2_ENVIRONMENT",
+        "standalone_disposition": "SIMULATOR_GAP",
+        "source_profiles": [
+          "YINING_2025_pre_disaster_warning_delivery"
+        ]
+      },
+      {
+        "surface_id": "T2.S2_PROGRESSIVE_CALL_RESPONSE",
+        "generator_role": "BLOCKED_UNTIL_T2_ENVIRONMENT",
+        "standalone_disposition": "SIMULATOR_GAP",
+        "source_profiles": [
+          "BAOSHAN_1262_progressive_call_response"
+        ]
+      }
+    ],
+    "required_composition_dimensions": [
+      "multi_obligation_release_and_deadline",
+      "warning_driven_workload_transition",
+      "finite_non_nested_terrestrial_service_opportunities",
+      "intermittent_satellite_opportunities",
+      "shared_real_resource_or_capacity",
+      "outage_cache_and_recovery_state",
+      "legal_partial_evidence_and_async_feedback"
+    ],
+    "optional_after_core_dimensions": [
+      "source_or_trace_grounded_energy_pressure",
+      "future_authority_published_warning_transition"
+    ],
+    "forbidden_shortcuts": [
+      "one_shot_permanent_recovery_as_only_uncertainty",
+      "invented_backlog_vs_fresh_priority",
+      "artificially_reduced_source_required_cache",
+      "hidden_public_geometry",
+      "future_truth_encoded_in_current_query",
+      "capability_or_tool_name_promoted_to_task_family",
+      "receipt_race_promoted_to_task_family"
+    ],
+    "historical_closure_policy": "Do not rerun closed standalone forms. Reuse them as easy/conformance/regression cells; only new compositions re-enter V0-V9 hardness mining."
+  },
+  "release_status": "NOT_BENCHMARK_ADMIT",
+  "next_stage": "DYNAMIC_WORLD_ALIAS_BUNDLE_MATERIALIZATION",
+  "warnings": [
+    "58,752 is a pre-world/pre-oracle recipe count, not benchmark case count.",
+    "The 188 receipt grid is a mechanism audit grid, not the benchmark.",
+    "T2 remains SIMULATOR_GAP until actor-chain environment support exists."
+  ]
+}

@@ -1,10 +1,10 @@
 English | [中文](README.zh.md)
 
-> **Current research architecture: Benchmark → Decision-Semantic Compiler → Policy.** Layer 1 reconstructs a source-grounded emergency-communication benchmark from the original mountain pre-disaster monitoring requirement and must expose genuine policy choice under uncertainty, resource conflict, and temporal constraints. Layer 2 compiles `Task + Evidence + Capability + Execution` into a typed live decision surface, EvidenceNeed, semantic commitment, and persistent execution. Layer 3 compares deterministic/search, LLM, GNN, offline-RL, or hybrid policies only after Layer 1 passes validity and hardness gates. The current bottleneck is **Layer 1**. O1–O6 and A7–A11 remain valuable conformance/mechanism evidence, but they are not by themselves a policy-hard benchmark. [research/README](research/README.md) is the current control plane; [CLAIMS](results/CLAIMS.md) remains the sole claim-state authority.
+> **Current research architecture: Benchmark → Decision-Semantic Compiler → Policy.** The current bottleneck is **Layer 1**. Its authoritative state is frozen in [Layer-1 Authority](research/benchmark/LAYER1-AUTHORITY.md); [CLAIMS](results/CLAIMS.md) remains the sole claim-state authority. O1–O6 are T1 conformance/regime assets, not six benchmark Families; receipt-race/receipt-chain are mechanism regressions, not the benchmark. The current T1 construction universe contains **58,752 pre-world/pre-oracle candidate recipes** and has not yet reached `BENCHMARK_ADMIT`.
 
 # Local Communication Control for Pre-Disaster Monitoring with Intermittent Backhaul
 
-**Latest Layer-1 review:** [Conditional receipt continuation](research/benchmark/RECEIPT-CONTINUATION-REVIEW.v0.5.md) establishes branch-dependent evidence need, while ordinary reserve/EDF still covers the current fixture. The next method target is the task-quality / evidence / backup-resource frontier, not query count alone.
+**Layer-1 current state:** T1 `Monitoring Information Continuity` is the main Family; T2 `Warning Delivery & Response Handoff` is a boundary extension with an explicit simulator gap. The source/corpus/task-surface/closure contracts are frozen, and the current main engineering path is `candidate recipes → dynamic alias bundles → causal oracle → V0–V9 → strong-baseline mining → structural split → Q0–Q12`. See [Layer-1 Authority](research/benchmark/LAYER1-AUTHORITY.md) and the machine-readable [current state](research/benchmark/LAYER1-CURRENT-STATE.v0.1.json).
 
 This repository studies battery/solar mountain geohazard monitoring: LoRaWAN Class A nodes reach a field gateway, which uses cellular backhaul and an uplink-only BeiDou short-message backup. Monitoring requirements and warning-level changes are externally authorised. The system executes their communication requirements.
 
@@ -23,7 +23,7 @@ This repository studies battery/solar mountain geohazard monitoring: LoRaWAN Cla
 | Latest buildable Agentic manuscript snapshot | [English PDF](paper/agentic/en/main.pdf) · [LaTeX](paper/agentic/en/main.tex) · [workspace README](paper/agentic/README.md) |
 | Systems-paper compatibility copies (still receive claim-correction propagation) | [English](paper/en/main.tex) · [Chinese](paper/zh/main.tex) · [paper/README](paper/README.md) |
 | Immutable pre-Agentic systems-paper snapshot | [paper/_archive/system-paper-2026-09-20](paper/_archive/system-paper-2026-09-20/README.md) · source commit `dd4f31a` |
-| Current research control plane | [research/README](research/README.md) · [Benchmark](research/benchmark/README.md) · [Compiler](research/compiler/README.md) · [Policy](research/policy/README.md) |
+| Current research control plane | [Layer-1 Authority](research/benchmark/LAYER1-AUTHORITY.md) · [research/README](research/README.md) · [Benchmark](research/benchmark/README.md) · [Compiler](research/compiler/README.md) · [Policy](research/policy/README.md) |
 | Current mathematical system model | [SYSTEM-MODEL-v1](research/substrate/SYSTEM-MODEL-v1.md) |
 | Runtime/domain ownership contract | [OWNERSHIP-v1](research/compiler/RUNTIME-DOMAIN-OWNERSHIP-v1.md) |
 | Systems-paper completion plan (historical stage) | [RESEARCH_PLAN](paper/RESEARCH_PLAN.md) |
@@ -39,6 +39,7 @@ This repository is both an implementation and an evidence system. The following 
 | Authority / invariant | Current rule |
 |---|---|
 | Claim truth | `results/CLAIMS.md` is the sole claim-state authority; README presents its current projection |
+| Layer-1 direction/state | `research/benchmark/LAYER1-AUTHORITY.md` is the sole current Layer-1 direction/state authority; versioned generator/receipt notes cannot override it |
 | Numeric truth | Experimental numbers originate in `results/` and reach papers/generated facts through `scripts/make_tables.py` or `scripts/make_agentic_artifacts.py` |
 | Scenario and parameters | `spec/substrate/instance-v1-manifest.md`, `spec/substrate/datasets.md`, and the source registry own deployment/data provenance; every method shares the same frozen scenario |
 | Mathematical model | `research/substrate/SYSTEM-MODEL-v1.md` is the public equation/model authority; local `docs/` may retain derivation notes while release dependencies remain in the tracked tree |
