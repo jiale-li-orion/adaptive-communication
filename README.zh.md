@@ -1,8 +1,8 @@
 中文 | [English](README.md)
 
-# 间歇连接下的智能体通信：基于真实来源的决策基准与未来选择上下文
+# 间歇连接下的智能体通信：基于真实来源的决策基准与决策语义运行时
 
-> **当前研究结构：来源约束 Benchmark → Future-Choice Context / Decision-Semantic Compiler → Policy / Learning。** Layer 1 已在修正后的 `v0.2-retry-legality` 谱系上完成技术冻结：DB44/T 2457-2024 使用滑坡表 11，retry legality 允许“可能已经交付”后的合法重试，exact→V0–V9→结构化切分→public test 已重新生成。固定 universe 保持 58,752 个 recipes；V8 最终留下 **41 个 hard signatures / 174 个 pre-admission recipes**，冻结 public test 为 **3,804 cases**。Layer 1 现在是后续方法研究的可信底座，不再为制造方法 headroom 反向修改。正式 `BENCHMARK_ADMIT` 仍需完成 v0.2 的人工 source audit 与 release gate 刷新。
+> **当前研究结构：Layer-1 Decision Benchmark v0.2 → 重验已冻结的 Layer-2 Compiler/Runtime v1 → 再决定是否开启 Layer-2 v2 或 Layer-3 policy/learning。** Layer 2 v1 在 benchmark 重置前已经完成一版：Task/Evidence/Capability/Execution ownership、多轮 EvidenceNeed 取证、candidate-action Context、persistent execution、replay/attribution、CR/CF/CS、WirelessOpsAgent-style 对照以及 A10/A11 query-positive 证据都已经形成正式结果。后来回头重做 Layer 1，是因为旧任务经过 compiler 后经常变成 `unique-ready`，缺少真正的 policy freedom，无法公平检验 Layer 2 的增量。现在 Layer 1 已在 `v0.2-retry-legality` 上完成技术冻结：58,752 个 recipes、41 个 hard signatures / 174 个 pre-admission recipes、3,804 个 frozen public-test cases。**当前主线不是再造一个 Layer 2，而是把现有 Layer-2 v1 原样放到新的 Layer-1 v0.2 决策面上重验；先区分兼容/表示问题与真实方法失效，只有后者才允许开启 v2。**
 
 研究电池与光伏供电的山区地灾监测网：LoRaWAN Class A 节点接入现场网关，蜂窝主回传配北斗短报文备用；备用仅上行，控制下行会随主回传中断。任务与预警等级由外部授权，系统负责监测要求的通信执行。
 
@@ -12,7 +12,7 @@
 
 **原系统论文阶段（历史状态）：系统论文工作稿。** 这一阶段已经得到组件级正结果，并把配置租约、单节点停止、保留视界等候选收敛为 scoped-negative 边界；完整 runtime 增量、迁移验证与匹配能力 Agent 验证则留给后续阶段。该阶段的设计取舍、负结果和开放问题继续保存在 [论文闭环计划](paper/RESEARCH_PLAN.md) 与 [CLAIMS](results/CLAIMS.md) 中，作为研究谱系的一部分长期保留。
 
-**当前研究主线：Benchmark 已进入研究冻结，方法主线转向 future-choice context。** 给定 operational obligations、合法 evidence、capability、剩余资源与 execution state，我们研究哪些动作仍能保持未来义务可完成，哪些缺失证据会改变这个集合，以及什么时候值得为取证支付真实通信成本。Policy / learning 只有在这个决策对象已经被清楚定义、可以由外部 oracle 检查之后才进入比较。
+**当前研究主线：Layer 1 不再为了方法 headroom 继续扩题，Layer 2 也不预先重写。** 现在首先在 41 个 v0.2 hard signatures 上重跑已有 Layer-2 v1 evaluation matrix，判断 v1 是否已经能处理新的开放决策面；失败若来自 task/capability 表示不完整，只做兼容修复；只有在输入已经无损表达后仍出现 EvidenceNeed / Context / acquisition / execution 决策失败，才构成 Layer-2 v2 的研究问题。Layer 3 必须等这一步完成后再正式展开。
 
 ## 0. 横向定位与当前 claim 边界
 
@@ -90,7 +90,7 @@ Benchmark 的横向对照也固定下来：α³-Bench 已覆盖交互式无线 A
 
 系统由成熟原语组成。新的系统价值通过组合、执行位置和实际业务后果来验证；模块统一、对象规范与 Agent 接口则承担工程复用价值。
 
-## 4. Decision-Semantic Compiler 与 Future-Choice Context
+## 4. Decision-Semantic Compiler v1 与新 Benchmark 重验
 
 Decision-Semantic Compiler 继续使用同一个山区灾前监测 physical/data plane，把合法的 Task/Evidence/Capability/Execution 状态编译成模型可消费的 live decision surface：
 
@@ -107,25 +107,25 @@ Physical/Data Plane
     -> Communication metrics + Agent/runtime trace
 ```
 
-当前 Layer 2 的方法对象已经从“把更多信息塞进 Context”收敛为 **future-choice context**：在当前义务、证据、资源和执行状态下，哪些下一步动作仍然保持至少一条合法因果续接路径。
+Layer 2 v1 已经是完成过的一版机制，不是待填空的 placeholder。它拥有 Task、合法 Evidence、Capability、Context、PlannerDecision 与 physical execution 之间的 typed runtime boundary，并已经实现 owner-scoped evidence acquisition、多轮 Context revision、action-conditioned candidate surface、persistent execution state、deterministic/reference consumer、PromptAssembly、replay 与 attribution。
+
+Benchmark 重置没有推翻这些机制，而是改变了检验它们的问题难度。旧 O1–O6 中大量任务经过 compilation 后会收敛成唯一 ready action；新的 Layer-1 v0.2 hard subset 则保留 obligation-level deadline、未知 service、有限 backup resource 与多个合法下一步动作。
+
+当前正确顺序是：
 
 ```text
-legal_actions(t)
-    -> certified_actions(t, Q, B)
-    -> future-choice context
+Layer-1 v0.2 的公开 task/evidence/capability/execution state
+    -> 既有 Layer-2 v1 Task/Evidence/Context/Capability contract
+    -> 既有 deterministic / compiled / evidence-aware / action-conditioned / model baseline
+    -> physical + task outcome
+
+然后把失败分成：
+    A. v1 已经解决；
+    B. 缺 lossless representation / capability binding；
+    C. 输入已经正确表达，但 v1 decision semantics 仍失败。
 ```
 
-`legal(a)` 只表示动作此刻可执行；`certified(a)` 表示强制执行 `a` 后，仍然存在完成全部剩余义务的合法因果策略。两者已经在 retry-corrected workload 中出现真实分离：某些 query 仍然合法，却会消耗任务后续所需的 terrestrial opportunity，从而退出 certified future-choice set；同一 query 之后还可能重新进入该集合。
-
-exact frontier 只承担 reference，不是计划中的在线算法。当前结构化方法把 action feasibility 分成两个可审计界：
-
-```text
-L_t(a) = 1  -> 已有可重放 causal witness 证明该动作安全
-U_t(a) = 0  -> 结构松弛已经证明该动作不可能保住后续完成性
-L_t(a) = 0, U_t(a) = 1 -> 尚未判定，需要 exact fallback 或 learned guidance
-```
-
-资源有效域与 dependency separator 已经证明是 sound primitive，但在当前小规模 hard cases 上只带来有限的额外计算收益。当前真正保留的方法对象是 **action-conditioned future-choice frontier、它的有效条件，以及何时需要重新证明**。
+只有 C 才能作为开启 Layer-2 v2 的证据。B 属于兼容工程，不能重新包装成算法贡献。
 
 **两层 Task 明确分开。** Operational Task 是 benchmark/业务语义，回答“这个山区监测系统现在要完成什么”；Runtime TaskContract 是一次 Agent harness 执行实例的程序语义，回答“本次 run 的 target、evidence contract、effect ceiling、temporal contract、completion predicate 是什么”。两层对象各自拥有稳定 schema 与 revision。
 
@@ -170,21 +170,25 @@ device tool 直接复用既有物理模型。`gateway_backup` 作用于现有 `J
 
 Gold replacement 已覆盖 upstream `Task / EvidenceNeed / Percept / Context` 与 planner `selection / order / arguments / policy`；attribution protocol 先用受控 corruption 自检，再用于未来真实模型 failure decomposition。
 
-### 4.5 当前 Layer 2 证据与尚未完成的证明目标
+### 4.5 当前 Layer 2 状态
 
-retry-corrected 诊断线已经建立以下事实，而且没有反向修改 Layer 1 task semantics：
+Layer 2 v1 **已经完成并冻结为第一版**。已有正式证据包括：
 
-- resource-domain certificate 正确，但相对普通资源单调缓存只有很小的额外复用收益；
-- dependency separator 的自然 collision 能保持 correctness 与 witness replay，但索引开销吃掉了小幅 expansion 收益；
-- exact conditional frontier 可以把“合法动作”和“仍保持未来义务可完成的动作”分开；
-- query sufficiency 可以随时间非单调变化，真实前缀中出现 `certified -> uncertified -> certified`；
-- held-out closed-loop 结果已经显示 future-choice-aware control 能避开 legal-but-harmful query，而 no-query / earliest-legal-query 等普通策略可以失败。
+- Task / Evidence / Context / Capability / Execution ownership 与 typed runtime contracts；
+- `EvidenceNeed -> capability -> Percept -> Context revision -> action/stop` 多轮执行；
+- candidate-action Context 与 action-conditioned deterministic/reference consumer；
+- persistent execution / lifecycle state 与 replay/attribution；
+- CR / CF / CS、普通 compiled baseline；
+- WirelessOpsAgent-style same-interface comparison；
+- A10/A11 query-positive acquisition，以及冻结 gateway-backup family 上的双模型 transfer。
 
-Layer 2 尚未毕业的关键门不是继续加深 bounded planner。真正需要证明的是：通信结构能否形成带有明确 validity / invalidation 条件的可复用 Context，并在同信息、同 predicate、同任务质量下，相对强 generic exact baseline 获得净计算收益。当前小规模 held-out hard cases 上 generic exact 仍然更快；这一负结果保留为方法边界。下一步公平计算实验使用受控结构规模轴，而不回头修改 benchmark 来制造 headroom。
+研究后来回到 Layer 1，是因为 **benchmark decision headroom 不足**，不是 Layer 2 没做完。旧 benchmark/compiler 组合经常把问题编译成 `unique-ready`，Agent reasoning 很难和 ordinary compilation 做有效区分。
+
+Layer-1 v0.2 现在已经修复了这个前置条件。因此下一步是 **重验 Layer 2 v1，而不是先重写它**：在新 hard subset 上重跑 frozen v1 matrix，确认哪些机制仍成立，并把真正的 v1 failure 与表示/绑定问题分开。continuation/frontier/certificate 等 post-reset 探索分支只保留为 research lineage，目前不拥有 Layer-2 主方法。
 
 ## 5. 历史底座证据与冻结 claim 台账
 
-下面的 `C*` / `A*` 仍是可复现资产和重要对照，**但已经不再拥有当前研究方向**。它们属于早期系统/runtime 与 Agentic paper 谱系；当前 Layer 1 / Layer 2 状态分别由 benchmark authority 与 future-choice 实验产物拥有。`results/CLAIMS.md` 继续作为这些历史/冻结结果族的 claim ledger。
+下面的 `C*` / `A*` 仍是可复现资产和重要对照，**但已经不再拥有当前研究方向**。它们属于早期系统/runtime 与 Agentic paper 谱系；当前 Layer 1 由 benchmark authority 拥有，当前 Layer 2 则由已冻结的 Compiler/Runtime v1 与其新 Benchmark 重验状态共同定义。`results/CLAIMS.md` 继续作为这些历史/冻结结果族的 claim ledger。
 
 - **源端到期**：修正网关 deadline 边界后，标准逐记录 expiry 仍是所测缓存模型中受支持的跨段 placement 结果。具体 effect size 与 paired interval 只由冻结 result / 自动生成论文表持有，入口页不再复制数字。[C3 结果](results/communication-substrate/claims/r37e_full_seeds.json)
 - **配置终止**：固定 TTL 在两个受检相位覆盖候选的存活与黄级交付工作点。候选能量门没有独立收益；单节点声明模型中的普通组合也追平所扫风险权重下的同信息精确停止参照。[配置矩阵](results/communication-substrate/claims/c5_matrix.json) · [序列参照](results/communication-substrate/claims/c5_seqref.json)
@@ -238,23 +242,30 @@ source-grounded benchmark
     -> exact oracle / hardness / frozen split
 
 Layer 2
-future-choice context / decision-semantic compiler
-    -> action-relative evidence sufficiency
-    -> certified future choices
-    -> context validity / invalidation
-    -> structural lower / upper feasibility certificates
+Decision-Semantic Compiler / Runtime v1
+    -> 已完成并冻结第一版机制
+    -> Task / Evidence / Context / Capability / Execution
+    -> 多轮取证 + persistent execution + replay
+    -> CR / CF / CS / WOA-style / A10-A11
+
+当前接缝
+Layer-1 v0.2 -> Layer-2 v1 重验
+    -> 在真正开放的 decision task 上测试既有 v1
+    -> 区分 compatibility gap 与 decision-semantic failure
+    -> 只有后者才开启 Layer-2 v2
 
 Layer 3
 policy / learning
-    -> 使用 Layer 2 对象做 decision input、supervision 或 search guidance
-    -> 分开统计 task outcome、acquisition cost 与 online computation
+    -> 暂缓到 v0.2 -> v1 重验完成
+    -> 再比较 deterministic / search / LLM / learned / hybrid
+    -> task outcome、acquisition cost、online computation 分账
 ```
 
 三笔账始终分开：**信息/取证成本、任务/通信结果、planner computation**。exact 能解不等于信息问题消失；无查询策略存在不等于资源/计算问题消失；closed-loop 成功也不能替代算法计算优势。
 
-当前 Layer 2 已经出现明确的语义收益：future-choice-aware control 能在 held-out hard signatures 上避开 legal-but-harmful query，而 naive no-query 与 earliest-legal-query 可以失败。同时，当前小规模 hard cases 上强 generic exact 仍快于现有 L/U proof stack。后续方法工作因此只允许围绕 context validity、受控结构规模、learned bound/search guidance 展开；不再通过加深 ad-hoc bound search 或修改 benchmark 取得“方法优势”。
+post-reset 探索已经在新 benchmark 上观察到 legal-but-harmful acquisition 与非平凡 continuation 等现象。这些结果保留为探索谱系，但在 v0.2→v1 重验完成之前，不提升为取代 frozen v1 的主方法。
 
-learning 是 solver choice，不是问题定义。若 deterministic future-choice certificate 在结构 scaling 上仍无法超过 generic exact，它仍可以作为 learned bound target、search guidance 或 policy supervision；任何 learning 扩展都必须保持冻结 task semantics、evidence contract 与 evaluator 不变。
+learning 仍然只是 solver choice，不是问题定义。已有 Layer-2 v1 在新 benchmark 上的能力边界没有重新测清之前，不开启新的 Layer-3 learning claim。
 
 ## 7. 场景、物理模型与外推边界
 
