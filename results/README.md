@@ -13,3 +13,11 @@ results/ stores machine-readable evidence and frozen comparisons. Claim state is
 - history/registries/: historical result registries whose narrative/paths were valid for an earlier repository layout.
 
 A file under legacy-communication/ is provenance, not a current claim. A current claim must appear in CLAIMS.md and point to an existing result.
+
+2026-10-05 retry-semantics diagnostic: `benchmark/layer1-retry-review-inputs.json`
+freezes twelve DB44 landslide-corrected paid-evidence signatures before the retry
+mask repair; `benchmark/layer1-retry-review.json` records historical-mask,
+duplicate-free repair and deduplicating-receiver comparisons. These are bounded
+diagnostics, not replacement universe labels. Reproduce with
+`code/evaluation/benchmark/audit_retry_action_mask_v0_1.py`; see
+`research/benchmark/LAYER1-RETRY-SEMANTICS-REVIEW-2026-10-05.md` for scope and handoff.

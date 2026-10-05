@@ -24,6 +24,7 @@ from exact_reference_oracle_v0_1 import (
     PendingDelivery,
     PendingQuery,
     _active_common_obligations,
+    _delivery_retry_allowed,
     _attempt_lattice,
     _expired,
     _matching_satellite_window,
@@ -67,12 +68,14 @@ def _legal_actions(bundle, process, states, at_s: int) -> list[Action]:
     active = _active_common_obligations(bundle, states, at_s)
     actions: list[Action] = []
     if any(_matching_terrestrial_window(wm[wid], st, at_s) is not None for wid, st in states.items()):
-        actions.extend(("SEND_TERR", oid) for oid in active)
+        actions.extend(("SEND_TERR", oid) for oid in active
+                       if _delivery_retry_allowed(bundle, states, at_s, "SEND_TERR", oid))
     if all(
         st.satellite_budget > 0 and _matching_satellite_window(bundle, st, at_s) is not None
         for st in states.values()
     ):
-        actions.extend(("SEND_SAT", oid) for oid in active)
+        actions.extend(("SEND_SAT", oid) for oid in active
+                       if _delivery_retry_allowed(bundle, states, at_s, "SEND_SAT", oid))
     if (
         process["query_capabilities"]
         and all(st.pending_query is None for st in states.values())

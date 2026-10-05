@@ -26,7 +26,7 @@ from exact_reference_oracle_v0_1 import hindsight_bundle_reference, solve_observ
 
 ROOT = Path(__file__).resolve().parents[3]
 DEFAULT_OUT = ROOT / "local_research/current/benchmark/generated/exact-labels-v0.1"
-SOLVER_VERSION = "T1-exact-reference-oracle-v0.1"
+SOLVER_VERSION = "T1-exact-reference-oracle-v0.2-retry-legality"
 
 
 def _canonical_hash(payload: Any) -> str:
