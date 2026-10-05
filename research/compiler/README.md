@@ -33,4 +33,6 @@ lossless-binding audit：41/41 hard signatures PASS；沿 exact policy tree 共�
 
 这使 `cache06.md` 保留的 future-choice / L-U 方法线正式成为 Layer-2 v2 主线。v2 应维护剩余 obligation、共享 opportunity/resource、evidence 与 pending execution 的动态可行前沿；`L_t(a)=1` 由可执行 causal continuation 支撑，`U_t(a)=0` 由 sound structural relaxation 排除，未决部分才继续取证、规划或 exact fallback。旧的“为每个 action 重新跑昂贵 depth-bounded proof stack”不代表这条方法线本身。
 
-薄的 lossless benchmark→v1 contract binding 已完成并通过 audit。下一步直接进入 future-choice/L-U v2 的端到端实现与对照，比较 v1、v2、strong ordinary planning 与 exact reference 的 task quality、真实 acquisition cost 和 online computation。
+完整 v1 revalidation matrix 见 [`LAYER2-V1-REVALIDATION-v0.2.md`](LAYER2-V1-REVALIDATION-v0.2.md)：10 个机制项最终为 **A=4 / B=5 / C=1**。唯一确认的 C 类 failure 是 acquisition timing；B 类只表示旧 O1–O6 task binding 不能直接迁移，不能包装成方法失败。
+
+Layer-2 v2 第一版已经进入可评测状态，设计与 dev 结果见 [`LAYER2-V2-FUTURE-CHOICE-v0.1.md`](LAYER2-V2-FUTURE-CHOICE-v0.1.md)。当前实现采用 cheap sound structural `U=0`、replayable causal `L=1` 与 shared-memo exact fallback；不再为每个 action 重跑 depth-bounded proof stack。18 个 frozen dev hard signatures 上：**18/18 task/resource outcome 与 generic exact 一致，six ordinary baselines 0/18；同资源点 online expansions 为 exact 的 13.995%，wall time 为 32.880%，18/18 case 均更快。** held-out test 尚未运行，不能提前升级为 test claim。

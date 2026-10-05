@@ -1,0 +1,136 @@
+{
+  "claim_boundary": [
+    "B rows are not counted as v1 method failures.",
+    "Historical A7-A11 evidence remains historical unless the mechanism is explicitly re-executed on Layer-1 v0.2.",
+    "The confirmed C result is acquisition timing: relevance/ownership alone is insufficient when acquisition changes future task feasibility."
+  ],
+  "classification_rule": {
+    "A": "transfers or remains valid without changing decision semantics",
+    "B": "task-specific implementation/binding prevents a fair direct transfer",
+    "C": "after a lossless binding, frozen v1 decision semantics fail"
+  },
+  "experiment": "layer2-v1-full-revalidation-matrix-on-layer1-v0.2",
+  "matrix": [
+    {
+      "class": "A",
+      "evidence": {
+        "candidate_actions": 4577,
+        "decision_boundaries": 2224,
+        "hard_signatures": 41,
+        "hidden_field_leakage": 0,
+        "roundtrip_mismatches": 0
+      },
+      "mechanism": "Task/Evidence/Context/Capability runtime contracts",
+      "verdict": "TRANSFERRED_THROUGH_LOSSLESS_BINDING"
+    },
+    {
+      "class": "B",
+      "evidence": {
+        "lossless": 0,
+        "lossy": 41
+      },
+      "mechanism": "old O1-O6 compiler/registry/selector binding",
+      "verdict": "TASK_SPECIFIC_LOSSY_AS_IS"
+    },
+    {
+      "class": "A",
+      "evidence": {
+        "initial_stop_count": 41,
+        "signature_count": 41,
+        "unique_plan_count": 0
+      },
+      "interpretation": "The lossless binding preserves all legal actions as conditional, so ordinary unique-ready compilation no longer solves the hard surface.",
+      "mechanism": "CompiledChecklist ordinary baseline",
+      "verdict": "NO_LONGER_SATURATES_OPEN_DECISION_SURFACE"
+    },
+    {
+      "class": "B",
+      "evidence": {
+        "binding_error_count": 41,
+        "gateway_summary_query_count": 0,
+        "signature_count": 41
+      },
+      "mechanism": "EvidenceAwareComply owner acquisition",
+      "verdict": "OLD_CAPABILITY_IDS_DO_NOT_BIND_GATEWAY_STATE_SUMMARY"
+    },
+    {
+      "class": "C",
+      "evidence": {
+        "all_minimal_query_budget_one": true,
+        "exact_query_later_than_first_legal": 41,
+        "protocol_query_trigger_count": 41,
+        "signature_count": 41,
+        "signatures_with_first_legal_query_harmful": 41,
+        "signatures_with_harmful_query_boundary": 41,
+        "split_counts": {
+          "dev": 18,
+          "test": 7,
+          "train": 16
+        },
+        "total_certified_query_boundaries": 64,
+        "total_harmful_query_boundaries": 744,
+        "total_legal_query_boundaries": 808
+      },
+      "mechanism": "ActionConditionedReference active dependency acquisition trigger",
+      "verdict": "QUERY_RELEVANCE_WITHOUT_FUTURE_CHOICE_SAFETY"
+    },
+    {
+      "class": "B",
+      "evidence": {
+        "lossless_binding_decision_sufficiency": "UNRESOLVED_BY_BINDING",
+        "reason": "A fair bridge cannot inject future-feasibility labels; v1 O1-O6 selector does not compute obligation-level future choice."
+      },
+      "mechanism": "Decision Sufficiency / candidate feasibility compiler",
+      "verdict": "OLD_SELECTOR_IS_PROFILE_FALLBACK_SPECIFIC"
+    },
+    {
+      "class": "A",
+      "evidence": {
+        "note": "Physical executor wiring for Layer-1 evaluation capabilities is evaluation infrastructure, not a v1 semantic change.",
+        "typed_action_roundtrip_mismatch": 0
+      },
+      "mechanism": "persistent execution / typed invocation lifecycle",
+      "verdict": "CONTRACT_LEVEL_TRANSFERRED"
+    },
+    {
+      "class": "B",
+      "evidence": {
+        "reason": "Their frozen fragments encode O1-O6 profile/fallback semantics; recreating them for Layer-1 v0.2 would require a new model-facing compiler and is not evidence about the frozen v1 method itself."
+      },
+      "mechanism": "CR/CF/CS model-facing ablations",
+      "verdict": "OLD_CONTEXT_COORDINATES_NOT_DIRECTLY_PORTABLE"
+    },
+    {
+      "class": "B",
+      "evidence": {
+        "reason": "The frozen WOA-style adapter shares the old profile/fallback capability family. A new adaptation belongs in the later policy comparison, not in v1 compatibility accounting."
+      },
+      "mechanism": "WirelessOpsAgent-style adaptation",
+      "verdict": "OLD_DOMAIN_ADAPTER_NOT_DIRECTLY_PORTABLE"
+    },
+    {
+      "class": "A",
+      "evidence": {
+        "reason": "The old gateway-backup family still proves v1 can execute useful multi-round acquisition, but Layer-1 v0.2 shows acquisition timing is not universally safe."
+      },
+      "mechanism": "A10/A11 query-positive mechanism evidence",
+      "verdict": "HISTORICAL_RESULT_RETAINED_NOT_TRANSFER_CLAIM"
+    }
+  ],
+  "schema_version": "0.1",
+  "status": "COMPLETE",
+  "summary": {
+    "action_conditioned_gateway_summary_query_count": 41,
+    "class_counts": {
+      "A": 4,
+      "B": 5,
+      "C": 1
+    },
+    "compiled_checklist_initial_stop_count": 41,
+    "confirmed_category_c_failure_count": 1,
+    "evidence_aware_binding_error_count": 41,
+    "evidence_aware_gateway_summary_query_count": 0,
+    "hard_signature_count": 41,
+    "mechanism_count": 10
+  }
+}
