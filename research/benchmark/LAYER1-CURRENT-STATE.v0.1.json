@@ -37,6 +37,86 @@
       "T2 is excluded from this T1 universe until its actor-chain environment closes SIMULATOR_GAP."
     ]
   },
+  "world_materialization": {
+    "bundle_count": 58752,
+    "bundle_id_stream_sha256": "329212d8512d761d627e71a7af51d89c8b5b0a79eb21e06651a27810e8164c52",
+    "bundles_with_preserved_source_blocker": 9792,
+    "by_alias_world_count": {
+      "1": 14688,
+      "2": 14688,
+      "3": 14688,
+      "4": 14688
+    },
+    "by_evidence_regime": {
+      "FULL_OBSERVATION_CONTROL": 14688,
+      "GATEWAY_SUMMARY_QUERY": 14688,
+      "MIXED_PASSIVE_QUERY_PROBE": 14688,
+      "PASSIVE_ACK_ONLY": 14688
+    },
+    "by_recovery_regime": {
+      "NO_RECOVERY_STATE": 19584,
+      "OUTAGE_CACHE_RETAIN": 19584,
+      "RECONNECT_RECONCILE_OBJECTIVE_CHECK": 19584
+    },
+    "by_service_process": {
+      "FINITE_CROSSING_WINDOWS": 14688,
+      "MONOTONE_RECOVERY_NEGATIVE": 14688,
+      "MULTI_WINDOW_DYNAMIC": 14688,
+      "STEADY_AVAILABLE_CONTROL": 14688
+    },
+    "input_recipe_count": 58752,
+    "materializer": "T1-dynamic-world-alias-bundle-v0.1",
+    "rules": [
+      "One frozen candidate recipe materializes to one world/alias bundle.",
+      "Materialized bundles are still NOT_BENCHMARK_ADMIT and have no oracle/V0-V9 labels.",
+      "MODEL_DERIVED satellite geometry is public and identical across alias worlds.",
+      "Alias differences live in declared dynamic terrestrial/recovery state, never in hidden public geometry.",
+      "Workload overlap and service-process variation remain explicit CONTROLLED_STRESS coordinates.",
+      "Reconnect backlog-vs-fresh priority remains unresolved; materialization preserves the V7 blocker.",
+      "ACK/query/probe response values and arrival timing are deferred to the causal evidence stage."
+    ],
+    "schema_version": "0.1",
+    "stage": "WORLD_BUNDLE_PRE_EVIDENCE_PRE_ORACLE"
+  },
+  "causal_evidence_process": {
+    "by_evidence_regime": {
+      "FULL_OBSERVATION_CONTROL": 14688,
+      "GATEWAY_SUMMARY_QUERY": 14688,
+      "MIXED_PASSIVE_QUERY_PROBE": 14688,
+      "PASSIVE_ACK_ONLY": 14688
+    },
+    "by_passive_ack_enabled": {
+      "false": 29376,
+      "true": 29376
+    },
+    "by_query_capability_count": {
+      "0": 29376,
+      "1": 29376
+    },
+    "parent_bundle_count": 58752,
+    "process": "T1-causal-observation-evidence-v0.1",
+    "process_count": 58752,
+    "process_id_stream_sha256": "fc87f0d5cbc5fa7ac265d289336326226fe4a8276b1222d00d2c6cf85821a87f",
+    "rules": [
+      "Queries sample current owner state before response arrival; later world changes cannot rewrite the sampled value.",
+      "Query payloads contain current/past gateway facts only and never future service windows, plan labels or world ids.",
+      "Passive delivery evidence exists only after an executed send.",
+      "Gateway receipt and final completion ACK remain separate events.",
+      "Normal send-as-probe is the ordinary SEND_TERR action and pays no extra synthetic tool cost.",
+      "Owner query consumes one declared terrestrial opportunity-capacity unit; passive ACK is acquisition-free."
+    ],
+    "schema_version": "0.1",
+    "stage": "CAUSAL_EVIDENCE_PRE_ORACLE",
+    "timing_contract": {
+      "ack_timeout_s": 60,
+      "final_ack_delay_s": 30,
+      "gateway_receipt_delay_s": 10,
+      "provenance": "CONTROLLED_STRESS",
+      "query_response_delay_s": 60,
+      "query_timeout_s": 60,
+      "satellite_completion_delay_s": 5
+    }
+  },
   "scope": {
     "schema_version": "0.1",
     "main_family": "T1_MONITORING_INFORMATION_CONTINUITY",
@@ -216,10 +296,167 @@
     "historical_closure_policy": "Do not rerun closed standalone forms. Reuse them as easy/conformance/regression cells; only new compositions re-enter V0-V9 hardness mining."
   },
   "release_status": "NOT_BENCHMARK_ADMIT",
-  "next_stage": "DYNAMIC_WORLD_ALIAS_BUNDLE_MATERIALIZATION",
+  "next_stage": "Q11_HUMAN_SOURCE_AUDIT",
   "warnings": [
-    "58,752 is a pre-world/pre-oracle recipe count, not benchmark case count.",
-    "The 188 receipt grid is a mechanism audit grid, not the benchmark.",
+    "73 solver signatures / 435 recipes are V8 pre-admission hard survivors, not the final benchmark case count.",
+    "Gateway-local EDF/reserve remains a deployment alternative and is not counted as a same-information shortcut.",
+    "The held-out split globally owns translation-invariant trace clusters; exact signatures and one-axis near neighbors do not cross splits.",
+    "DeepSeek official deepseek-flash frozen-test baseline is complete: 33/33 hard signatures evaluated, zero invalid actions, zero successes, all failures DEADLINE_EXPIRED.",
+    "Q11 requires a real reviewer over the 23-item pairwise-stratified audit package and cannot be auto-passed.",
     "T2 remains SIMULATOR_GAP until actor-chain environment support exists."
-  ]
+  ],
+  "exact_reference_oracle": {
+    "schema_version": "0.1",
+    "implementation": "T1-exact-reference-oracle-v0.1",
+    "implementation_status": "IMPLEMENTED_PRE_ADMISSION",
+    "references": [
+      "HINDSIGHT_PHYSICAL_FEASIBILITY",
+      "FULL_CURRENT_STATE",
+      "OBSERVATION_MATCHED_EXACT",
+      "OBSERVATION_MATCHED_NO_PAID_QUERY"
+    ],
+    "physical_full_scan": {
+      "bundle_count": 58752,
+      "bundle_physical_class": {
+        "ALL_WORLD_SOLVABLE": 57528,
+        "MIXED_WORLD_SOLVABILITY": 1224
+      },
+      "world_physical_class": {
+        "INFEASIBLE": 1548,
+        "SOLVABLE": 145332
+      }
+    },
+    "hard_structure_audit": {
+      "selection": {
+        "cell_count": 216,
+        "rule": "VALIDITY_PENDING only; one minimum-stable-hash representative per service×evidence×overlap×headroom×recovery cell",
+        "use": "construction diagnostic only; not a benchmark split or admission filter"
+      },
+      "outcome": {
+        "INFORMATION_INFEASIBLE": 12,
+        "NO_PAID_QUERY_REQUIRED": 189,
+        "PAID_EVIDENCE_REQUIRED": 15
+      },
+      "reference_counts": {
+        "FULL_CURRENT_STATE": 216,
+        "F_OBSERVATION_MATCHED": 204,
+        "N_NO_PAID_QUERY": 189,
+        "P_ALL_WORLD_PHYSICAL": 216
+      },
+      "information_value_gap": 0.07352941176470588,
+      "search": {
+        "max_memo_nodes_limit": 200000,
+        "mean_max_memo_nodes": 1492.5046296296296,
+        "observed_max_memo_nodes": 118660,
+        "search_limit_cells": [],
+        "search_limit_count": 0
+      }
+    },
+    "full_universe_observation_label_status": "COMPLETE",
+    "audit_ref": "results/benchmark/layer1-exact-reference-audit-v0.1.json",
+    "full_universe_label_manifest": {
+      "manifest_ref": "results/benchmark/layer1-exact-label-manifest-v0.1.json",
+      "status": "COMPLETE",
+      "unique_solver_signature_count": 9216,
+      "completed_signature_count": 9216,
+      "signature_label_digest_sha256": "160c0afa17291d4cbeaa5f2bc9fb4d86454016c14a3a696a89218ee6042b8abb",
+      "projected_recipe_classification": {
+        "INFORMATION_INFEASIBLE": 1542,
+        "MIXED_WORLD_SOLVABILITY": 1224,
+        "NO_PAID_QUERY_REQUIRED": 53424,
+        "PAID_EVIDENCE_REQUIRED": 2562
+      },
+      "projected_validity_pending_classification": {
+        "INFORMATION_INFEASIBLE": 1542,
+        "NO_PAID_QUERY_REQUIRED": 25272,
+        "PAID_EVIDENCE_REQUIRED": 2562
+      }
+    }
+  },
+  "validity_filter_infrastructure": {
+    "v0_v7": {
+      "status": "DONE_FULL_UNIVERSE",
+      "signature_count": 9216,
+      "projected_recipe_disposition": {
+        "COMMON_SAFE_ACTION": 41112,
+        "INFORMATION_INFEASIBLE_DIAGNOSTIC": 1542,
+        "NO_BINDING_CONSTRAINT": 384,
+        "UNIQUE_READY": 351,
+        "V0_V7_PASS": 14139,
+        "V1_PHYSICAL_INVALID": 1224
+      },
+      "audit_ref": "results/benchmark/layer1-v0-v7-full-v0.1.json"
+    },
+    "v8": {
+      "status": "DONE_ALL_V0_V7_PASS_SIGNATURES",
+      "input_signature_count": 2304,
+      "disposition": {
+        "CHEAP_POLICY_RULE": 2204,
+        "DEEP_FLOW_TERMINAL": 6,
+        "DEEP_HORIZON": 1,
+        "FINITE_HORIZON": 20,
+        "SURVIVES_V8_LADDER_V0_1": 73
+      },
+      "survivor_signature_count": 73,
+      "projected_survivor_recipe_count": 435,
+      "audit_ref": "results/benchmark/layer1-v8-all-pass-v0.1.json"
+    },
+    "v9": {
+      "status": "DONE",
+      "passed": true,
+      "structural_representative_count": 216,
+      "audit_ref": "results/benchmark/layer1-v9-evaluator-soundness-v0.1.json"
+    },
+    "release_status": "NOT_BENCHMARK_ADMIT"
+  },
+  "structure_aware_split": {
+    "status": "DONE",
+    "candidate_count": 31353,
+    "by_split": {
+      "dev": 3960,
+      "test": 11655,
+      "train": 15738
+    },
+    "hard_recipe_by_split": {
+      "dev": 48,
+      "test": 207,
+      "train": 180
+    },
+    "hard_signature_by_split": {
+      "dev": 8,
+      "test": 33,
+      "train": 32
+    },
+    "leakage_passed": true,
+    "audit_ref": "results/benchmark/layer1-structure-aware-split-v0.1.json",
+    "coverage_ref": "results/benchmark/layer1-split-coverage-v0.1.json"
+  },
+  "quality_gates": {
+    "status": "CURRENT",
+    "gate_counts": {
+      "PASS": 12,
+      "BLOCKED": 1
+    },
+    "blocked": [
+      "Q11_HUMAN_SOURCE_AUDIT_PENDING"
+    ],
+    "public_test_case_count": 11655,
+    "human_audit_sample_count": 23,
+    "llm_baseline": {
+      "status": "COMPLETE",
+      "model": "deepseek-flash",
+      "thinking": "disabled",
+      "test_hard_signature_count": 33,
+      "projected_test_recipe_count": 207,
+      "signature_success_count": 0,
+      "projected_test_recipe_success_count": 0,
+      "api_calls": 1459,
+      "invalid_actions": 0,
+      "failure_reasons": {
+        "DEADLINE_EXPIRED": 33
+      },
+      "audit_ref": "results/benchmark/layer1-llm-baseline-v0.1.json"
+    },
+    "audit_ref": "results/benchmark/layer1-quality-gates-v0.1.json"
+  }
 }

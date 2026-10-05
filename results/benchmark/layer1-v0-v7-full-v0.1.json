@@ -1,0 +1,79 @@
+{
+  "blind_status": {
+    "DERIVED_FROM_NO_PAID_INFEASIBLE": 416,
+    "DERIVED_NOT_RUN": 488,
+    "EXACT": 8312
+  },
+  "bundle_count": 58752,
+  "completed_signature_count": 9216,
+  "projected_filter_values": {
+    "V0_SOURCE_COMPLETE": {
+      "True": 58752
+    },
+    "V1_SOLVABLE": {
+      "False": 1224,
+      "True": 57528
+    },
+    "V2_MULTIPLE_LEGAL_OPTIONS": {
+      "False": 468,
+      "True": 58284
+    },
+    "V3_COMMON_SAFE_ACTION": {
+      "False": 41112,
+      "None": 2766,
+      "True": 14874
+    },
+    "V4_OBSERVATION_RELEVANCE": {
+      "False": 41112,
+      "None": 2766,
+      "True": 14874
+    },
+    "V5_BINDING_CONSTRAINT": {
+      "False": 4860,
+      "True": 53892
+    },
+    "V6_OUTCOME_SEPARATION": {
+      "False": 117,
+      "True": 58635
+    },
+    "V7_OBJECTIVE_DEFINED": {
+      "False": 393,
+      "None": 831,
+      "True": 57528
+    }
+  },
+  "projected_recipe_disposition": {
+    "COMMON_SAFE_ACTION": 41112,
+    "INFORMATION_INFEASIBLE_DIAGNOSTIC": 1542,
+    "NO_BINDING_CONSTRAINT": 384,
+    "UNIQUE_READY": 351,
+    "V0_V7_PASS": 14139,
+    "V1_PHYSICAL_INVALID": 1224
+  },
+  "projected_validity_pending_disposition": {
+    "COMMON_SAFE_ACTION": 12960,
+    "INFORMATION_INFEASIBLE_DIAGNOSTIC": 1542,
+    "NO_BINDING_CONSTRAINT": 384,
+    "UNIQUE_READY": 351,
+    "V0_V7_PASS": 14139
+  },
+  "projection_multiplicity": {
+    "max": 12,
+    "mean": 6.375
+  },
+  "recipe_labels_ref": "local_research/current/benchmark/generated/v0-v7-full-v0.1/recipe-validity.jsonl",
+  "release_status": "NOT_BENCHMARK_ADMIT",
+  "schema_version": "0.1",
+  "signature_disposition": {
+    "COMMON_SAFE_ACTION": 6320,
+    "INFORMATION_INFEASIBLE_DIAGNOSTIC": 248,
+    "NO_BINDING_CONSTRAINT": 32,
+    "UNIQUE_READY": 72,
+    "V0_V7_PASS": 2304,
+    "V1_PHYSICAL_INVALID": 240
+  },
+  "signature_labels_ref": "local_research/current/benchmark/generated/v0-v7-full-v0.1/signature-validity.jsonl",
+  "status": "COMPLETE",
+  "unique_solver_signature_count": 9216,
+  "validity_digest_sha256": "d312179148116f945616223ac443fea9414be0c5776906fa563ae3afc4d4ecce"
+}

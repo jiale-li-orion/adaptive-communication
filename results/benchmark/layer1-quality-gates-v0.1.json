@@ -1,0 +1,142 @@
+{
+  "all_pass": false,
+  "gate_counts": {
+    "BLOCKED": 1,
+    "PASS": 12
+  },
+  "gates": [
+    {
+      "blockers": [],
+      "evidence": [
+        "research/benchmark/LAYER1-AUTHORITY.md",
+        "research/benchmark/V8-BASELINE-CONTRACT.v0.1.md",
+        "results/benchmark/layer1-v8-all-pass-v0.1.json"
+      ],
+      "gate_id": "Q0",
+      "reason": "Target construct is frozen as T1 monitoring-information continuity; ordinary saturation is reported as boundary evidence instead of being rebranded as agentic hardness.",
+      "status": "PASS"
+    },
+    {
+      "blockers": [],
+      "evidence": [
+        "results/benchmark/layer1-v0-v7-full-v0.1.json",
+        "research/benchmark/TASK-COVERAGE-CLOSURE.v0.1.md"
+      ],
+      "gate_id": "Q1",
+      "reason": "Full universe is source/task classified; physically invalid and information-infeasible objects retain explicit dispositions instead of being scored as policy failures.",
+      "status": "PASS"
+    },
+    {
+      "blockers": [],
+      "evidence": [
+        "results/benchmark/layer1-v9-evaluator-soundness-v0.1.json"
+      ],
+      "gate_id": "Q2",
+      "reason": "Independent execution evaluator accepts legal witnesses and rejects no-op, authority, physics, protected-state and missing-execution mutations.",
+      "status": "PASS"
+    },
+    {
+      "blockers": [],
+      "evidence": [
+        "research/benchmark/TASK-SURFACE-REGISTRY.v0.1.json",
+        "research/benchmark/TASK-COVERAGE-CLOSURE.v0.1.md",
+        "research/benchmark/profiles/v0.1/SOURCE-PROFILE-REGISTRY.v0.1.json"
+      ],
+      "gate_id": "Q3",
+      "reason": "T1 taxonomy and source profiles are versioned and direct task authority is separated from adjacent mechanism evidence.",
+      "status": "PASS"
+    },
+    {
+      "blockers": [],
+      "evidence": [
+        "results/benchmark/layer1-structure-aware-split-v0.1.json",
+        "results/benchmark/layer1-split-coverage-v0.1.json"
+      ],
+      "gate_id": "Q4",
+      "reason": "Pre-admission pool covers easy, negative, information-infeasible and hard survivor roles; held-out split is structural and near-duplicate audits are clean.",
+      "status": "PASS"
+    },
+    {
+      "blockers": [],
+      "evidence": [
+        "results/benchmark/layer1-v0-v7-full-v0.1.json",
+        "results/benchmark/layer1-v8-all-pass-v0.1.json"
+      ],
+      "gate_id": "Q5",
+      "reason": "Hard subset passed V0-V7 and the placement-preserving V8 ladder; controls remain separately labeled instead of inheriting hardness claims.",
+      "status": "PASS"
+    },
+    {
+      "blockers": [],
+      "evidence": [
+        "results/benchmark/layer1-v8-all-pass-v0.1.json",
+        "results/benchmark/layer1-v8-current-v0.1.json",
+        "research/benchmark/V8-BASELINE-CONTRACT.v0.1.md"
+      ],
+      "gate_id": "Q6",
+      "reason": "Rule/local/EDF/search/oracle ladder exists; release gate still requires an LLM/reasoning-agent baseline on the frozen split.",
+      "status": "PASS"
+    },
+    {
+      "blockers": [],
+      "evidence": [
+        "results/benchmark/layer1-structure-aware-split-v0.1.json",
+        "results/benchmark/layer1-split-coverage-v0.1.json"
+      ],
+      "gate_id": "Q7",
+      "reason": "Translation-invariant empirical trace clusters are split-exclusive; exact signatures and one-axis source/template neighbors do not cross splits.",
+      "status": "PASS"
+    },
+    {
+      "blockers": [],
+      "evidence": [
+        "results/benchmark/layer1-public-test-freeze-v0.1.json"
+      ],
+      "gate_id": "Q8",
+      "reason": "Development generator and frozen public test identity must be separated before release.",
+      "status": "PASS"
+    },
+    {
+      "blockers": [],
+      "evidence": [
+        "research/benchmark/STATISTICAL-REPORTING.v0.1.md"
+      ],
+      "gate_id": "Q9",
+      "reason": "Statistical protocol must define repeated stochastic runs, intervals, paired comparisons, stratification and invalid-run handling before leaderboard reporting.",
+      "status": "PASS"
+    },
+    {
+      "blockers": [],
+      "evidence": [
+        "code/evaluation/benchmark/reproduce_layer1_v0_1.py",
+        "results/benchmark/layer1-release-manifest-v0.1.json"
+      ],
+      "gate_id": "Q10",
+      "reason": "Release needs immutable artifact bindings and a one-command validation/reproduction entry.",
+      "status": "PASS"
+    },
+    {
+      "blockers": [
+        "human/source audit pending reviewer completion"
+      ],
+      "evidence": [
+        "results/benchmark/layer1-human-source-audit-v0.1.json"
+      ],
+      "gate_id": "Q11",
+      "reason": "Human/source review cannot be auto-passed; a stratified audit sample and reviewer disposition are required.",
+      "status": "BLOCKED"
+    },
+    {
+      "blockers": [],
+      "evidence": [
+        "research/benchmark/BENCHMARK-MAINTENANCE.v0.1.md"
+      ],
+      "gate_id": "Q12",
+      "reason": "Schema/source/generator/case versions and flaw migration policy must be frozen for lifecycle maintenance.",
+      "status": "PASS"
+    }
+  ],
+  "release_status": "NOT_BENCHMARK_ADMIT",
+  "schema_version": "0.1",
+  "status": "QUALITY_GATE_AUDIT"
+}

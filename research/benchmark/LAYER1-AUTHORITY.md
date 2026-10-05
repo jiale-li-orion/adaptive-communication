@@ -191,7 +191,30 @@ Oracle 首先做 hard-constraint feasibility，返回全部合法成功 plans / 
 - 14,688 `NEGATIVE_REGRESSION`
 - 29,376 `VALIDITY_PENDING`
 
-**这 58,752 个对象不是 benchmark cases。** 它们还没有 dynamic-world / alias-bundle materialization，也没有经过 V0–V9；只能称 candidate recipes。
+**这 58,752 个 recipe 不是 benchmark cases。** dynamic world、causal evidence 与 full-universe exact reference labels 已完成；当前仍未完成 V0–V9、strong-baseline shortcut audit、structural split 与 Q0–Q12，因此不能称 benchmark cases。
+
+materialization 当前冻结状态：
+
+- 58,752 recipe → 58,752 world bundles；
+- physical world support 与 evidence regime 解耦：steady control 为 1-world；其余 dynamic service process 由 `overlap_count` 决定 bounded support size。当前分布为 14,688 个 1-world、14,688 个 2-world、14,688 个 3-world、14,688 个 4-world bundle；
+- 公开 Connecta geometry 在所有 alias worlds 中保持相同，不作为 hidden answer bit；
+- dynamic terrestrial schedule、recovery state 与 workload density 保持 `CONTROLLED_STRESS` provenance；
+- 9,792 个 validity-pending reconnect bundle 继续携带 `reconnect_backlog_priority` source blocker；
+- causal observation/evidence process 已完成：query 只采样 current/past owner state，`sampled_at` 与 `arrived_at` 分离，passive ACK 只由真实 SEND 触发，normal send-as-probe 复用正常发送动作；
+- owner query / passive ACK 各覆盖 29,376 个 process；exact reference 已消费同一 causal contract，并完成 29,376 个 `VALIDITY_PENDING` bundles 的 full-universe label projection。
+
+world 机器快照见 `results/benchmark/layer1-world-materialization-v0.1.json`；causal evidence 快照见 `results/benchmark/layer1-causal-evidence-v0.1.json`；exact audit 见 `results/benchmark/layer1-exact-reference-audit-v0.1.json`。语义分别见 `DYNAMIC-WORLD-MATERIALIZATION.v0.1.md`、`CAUSAL-EVIDENCE-PROCESS.v0.1.md`、`EXACT-REFERENCE-ORACLE.v0.1.md`。
+
+exact reference 当前冻结事实：
+
+- 58,752 bundles 中 57,528 为 `ALL_WORLD_SOLVABLE`，1,224 为 `MIXED_WORLD_SOLVABILITY`；后者全部属于 `MONOTONE_RECOVERY_NEGATIVE` controlled-stress cells；
+- `VALIDITY_PENDING` 的 216 个结构 cell 已做 deterministic stratified causal exact audit，无 search-limit；
+- 四 reference 计数为 `P=216`、`FULL_CURRENT_STATE=216`、`F=204`、`N=189`；189 cell 为 `NO_PAID_QUERY_REQUIRED`，15 cell 为 `PAID_EVIDENCE_REQUIRED`，12 cell 为 `INFORMATION_INFEASIBLE`；
+- structural diagnostic 的 `Delta_info = 15/204 ≈ 7.35%` 只说明 generator 存在 genuine EvidenceNeed，不代表最终 benchmark 中 7.35% 的 cases 需要 paid query；
+- exact search 在该 audit 中最大 118,660 memo nodes，200,000 上限下 216 cells 全部收敛；
+- full-universe exact 求解把 58,752 recipes 压成 9,216 个 solver-equivalent signatures；投影后全 universe 为 53,424 `NO_PAID_QUERY_REQUIRED`、2,562 `PAID_EVIDENCE_REQUIRED`、1,542 `INFORMATION_INFEASIBLE`、1,224 `MIXED_WORLD_SOLVABILITY`；其中 `VALIDITY_PENDING` 为 25,272 / 2,562 / 1,542；
+- full label digest 为 `160c0afa17291d4cbeaa5f2bc9fb4d86454016c14a3a696a89218ee6042b8abb`；
+- V0–V7 stratified audit 已完成；V9 structural evaluator soundness audit 已通过 216 / 216。V8 必须按 placement 分账：第一层 216-cell audit 中 100 个 cell 被 same-information ordinary baselines 覆盖、116 个存活；`gateway_local_edf_reserve` 对 216 / 216 成功，但它改变 planner placement，只作为 deployment alternative。paid-evidence 全量 signature ladder 已进一步从 416 个 signatures 压到 73 个 survivors，对应 435 个 pre-admission recipes。它们仍不是最终 hard benchmark count。
 
 同理：receipt 188-grid 是 v0.5 mechanism/process audit grid，不是 benchmark case count。
 
@@ -298,19 +321,38 @@ receipt-race、overlapping receipt chain、joint query–satellite Pareto、reso
 当前 Layer 1 尚未完成。下一步执行顺序冻结为：
 
 ```text
-58,752 candidate recipes
-→ dynamic world / alias-bundle materialization
-→ causal observation/evidence process
-→ exact oracle/reference labels
-→ V0–V9 automatic filtering
-→ strong-baseline shortcut mining
-→ structure-aware held-out split
-→ scale / coverage / near-duplicate audit
-→ Q0–Q12 + source/task/evaluator audit
+58,752 candidate recipes                         [DONE]
+→ dynamic world / alias-bundle materialization  [DONE v0.1]
+→ causal observation/evidence process            [DONE v0.1]
+→ exact oracle/reference implementation          [DONE v0.1]
+→ full-universe exact observation labels         [DONE v0.1]
+→ V0–V9 automatic filtering                     [DONE v0.1]
+   ↳ V0–V7 full-universe projection               [DONE / 9,216 signatures]
+   ↳ V8 all-pass signature ladder                 [DONE / 2,304 → 73 survivors]
+   ↳ V9 evaluator soundness                       [DONE / 216-cell mutation audit]
+→ structure-aware held-out split                 [DONE v0.1]
+→ scale / coverage / near-duplicate audit        [DONE v0.1]
+→ Q0–Q12 + source/task/evaluator audit           [CURRENT: 12 PASS / 1 BLOCKED]
+   ↳ Q6 frozen-split LLM/reasoning baseline       [DONE]
+   ↳ Q11 human/source audit                       [PENDING HUMAN REVIEW]
 → frozen BENCHMARK_ADMIT release
 ```
 
-除 correctness blocker、source gap 或 simulator gap 外，当前默认不继续扩局部 receipt fixture，不先训练 RL/LLM，不先优化 Layer 2/3 leaderboard。
+V8 必须区分 **same-information shortcut** 与 **deployment alternative**。gateway-local EDF/reserve 免费使用 gateway 已有 owner-local current state，并改变 planner placement；它是必须保留的强部署对照，但不能与同 placement / 同信息 policy 混成一个 `SHORTCUT_SOLVED` 判据。
+
+V8 当前已从 216-cell diagnostic 扩到全部 416 个 `PAID_EVIDENCE_REQUIRED` solver signatures。progressive same-information baseline ladder 包含 blind/fixed owner read、shallow rule、least-slack、always-query、latest-feasible、myopic flow-VoI、true depth-1/2 belief、receding horizon 3、flow-terminal depth 1–4；80 个 signature 进入 deep audit 后，再用 receding horizon 4/5/6 与 flow-terminal 5/6 压到 73 个；fixed/periodic query schedules 对这 73 个均未形成 shortcut。当前 73 signatures 投影回 435 recipes。它们全部属于 `FINITE_CROSSING_WINDOWS`，主要集中在 overlap 3/4 与 tight/recovery 组合。
+
+73 / 435 仍然只是 **pre-admission V8 survivors**，不是 benchmark case count。简单、中等、复杂结构继续保留；ordinary mechanism 能解的 cells 用于刻画适用边界。若未来更强的同信息普通策略追平，降级的是对应 hardness / algorithm claim；不得反向发明拓扑、关闭 local autonomy 或删除合法反馈来制造困难。
+
+V9 structural audit 已在 216 个 `VALIDITY_PENDING` 结构代表上通过：合法 physical witness 全部被独立 execution evaluator 接受；no-op、authority violation、虚构 service window、protected-subject corruption 与 missing completion mutation 全部被拒绝。
+
+V0–V7 full-universe projection 已覆盖 9,216 / 9,216 solver signatures，并投影回全部 58,752 recipes。全 universe disposition 为 41,112 `COMMON_SAFE_ACTION`、1,542 `INFORMATION_INFEASIBLE_DIAGNOSTIC`、384 `NO_BINDING_CONSTRAINT`、351 `UNIQUE_READY`、14,139 `V0_V7_PASS`、1,224 `V1_PHYSICAL_INVALID`。对全部 2,304 个 `V0_V7_PASS` signatures 继续执行同一套 placement-preserving V8 ladder 后，2,204 个由 cheap policy rule 覆盖、20 个由 finite horizon 覆盖、1 个由 deep horizon 覆盖、6 个由 deep flow-terminal 覆盖，最终保留 73 个 signatures，对应 435 个 pre-admission recipes。73 个 survivors 全部属于 `PAID_EVIDENCE_REQUIRED`。
+
+structure-aware split 已冻结到 `results/benchmark/layer1-structure-aware-split-v0.1.json`：translation-invariant trace geometry cluster 全局独占 split，并与 exact solver signature connectivity 合并成不可拆连通分量。当前 pre-admission pool 为 31,353 recipes，train/dev/test = 15,738 / 3,960 / 11,655；hard survivors 为 180 / 48 / 207 recipes，对应 32 / 8 / 33 signatures。三个 split 均覆盖 hard overlap 3/4、TIGHT/BALANCED/SLACK 与三种 recovery；exact signature、translation-equivalent trace shape 与一轴近邻跨 split overlap 均为 0。
+
+Q0–Q12 machine audit 当前为 **12 PASS / 1 BLOCKED**。Q8 public-test identity 已冻结 11,655 个 test cases；Q9 statistical protocol、Q10 release manifest + one-command reproduction、Q12 maintenance policy 已落地。Q6 frozen-split LLM baseline 已完成：DeepSeek official `deepseek-flash`，thinking disabled，覆盖全部 33 个 hard test signatures / 207 projected recipes；1,459 次 API 调用中 invalid action 为 0，最终 33 / 33 signatures 均因 `DEADLINE_EXPIRED` 失败，signature 与 projected-recipe success rate 均为 0。这个结果只说明该固定 generic LLM policy 没有解出 hard test，不作为模型能力的普遍结论。Q11 使用 pairwise-stratified set cover 将人工审计压缩为 23 条样本，覆盖 143 个 split / role / source-profile / hardness 及关键 pairwise tokens，0 uncovered，并给每个 split 保留 4 条 hard-survivor 冗余样本。Q11 必须由真实 reviewer 完成人工 source/task/oracle/evaluator 核查，不能由自动流程伪造 PASS。
+
+V8 的 baseline 分类与否决边界见 `V8-BASELINE-CONTRACT.v0.1.md`。generic exact / memo / dependency-cache / incremental AND–OR 属于 computation reference：它们取得 exact 任务质量是预期结果，不能因为“确定性算法能解”再次否定 benchmark；当前 16-cell computation reference 中 generic exact 平均约 54.6 ms、最大约 280.7 ms，no-paid-query 平均约 503.8 ms、最大约 4.0 s。这些数值只作为后续方法公平计算基线。
 
 ## 14. Layer 2/3 的未来方法方向
 

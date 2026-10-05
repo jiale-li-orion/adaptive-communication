@@ -1,0 +1,3579 @@
+{
+  "by_structure": {
+    "FINITE_CROSSING_WINDOWS|FULL_OBSERVATION_CONTROL|SHORTCUT_SOLVED_SAME_INFORMATION": 9,
+    "FINITE_CROSSING_WINDOWS|FULL_OBSERVATION_CONTROL|SURVIVES_SAME_INFORMATION_ORDINARY_BASELINES": 18,
+    "FINITE_CROSSING_WINDOWS|GATEWAY_SUMMARY_QUERY|SHORTCUT_SOLVED_SAME_INFORMATION": 11,
+    "FINITE_CROSSING_WINDOWS|GATEWAY_SUMMARY_QUERY|SURVIVES_SAME_INFORMATION_ORDINARY_BASELINES": 16,
+    "FINITE_CROSSING_WINDOWS|MIXED_PASSIVE_QUERY_PROBE|SHORTCUT_SOLVED_SAME_INFORMATION": 13,
+    "FINITE_CROSSING_WINDOWS|MIXED_PASSIVE_QUERY_PROBE|SURVIVES_SAME_INFORMATION_ORDINARY_BASELINES": 14,
+    "FINITE_CROSSING_WINDOWS|PASSIVE_ACK_ONLY|SHORTCUT_SOLVED_SAME_INFORMATION": 15,
+    "FINITE_CROSSING_WINDOWS|PASSIVE_ACK_ONLY|SURVIVES_SAME_INFORMATION_ORDINARY_BASELINES": 12,
+    "MULTI_WINDOW_DYNAMIC|FULL_OBSERVATION_CONTROL|SHORTCUT_SOLVED_SAME_INFORMATION": 13,
+    "MULTI_WINDOW_DYNAMIC|FULL_OBSERVATION_CONTROL|SURVIVES_SAME_INFORMATION_ORDINARY_BASELINES": 14,
+    "MULTI_WINDOW_DYNAMIC|GATEWAY_SUMMARY_QUERY|SHORTCUT_SOLVED_SAME_INFORMATION": 16,
+    "MULTI_WINDOW_DYNAMIC|GATEWAY_SUMMARY_QUERY|SURVIVES_SAME_INFORMATION_ORDINARY_BASELINES": 11,
+    "MULTI_WINDOW_DYNAMIC|MIXED_PASSIVE_QUERY_PROBE|SHORTCUT_SOLVED_SAME_INFORMATION": 11,
+    "MULTI_WINDOW_DYNAMIC|MIXED_PASSIVE_QUERY_PROBE|SURVIVES_SAME_INFORMATION_ORDINARY_BASELINES": 16,
+    "MULTI_WINDOW_DYNAMIC|PASSIVE_ACK_ONLY|SHORTCUT_SOLVED_SAME_INFORMATION": 12,
+    "MULTI_WINDOW_DYNAMIC|PASSIVE_ACK_ONLY|SURVIVES_SAME_INFORMATION_ORDINARY_BASELINES": 15
+  },
+  "cell_count": 216,
+  "deployment_alternative_coverage": {
+    "gateway_local_edf_reserve": 216
+  },
+  "disposition": {
+    "SHORTCUT_SOLVED_SAME_INFORMATION": 100,
+    "SURVIVES_SAME_INFORMATION_ORDINARY_BASELINES": 116
+  },
+  "rows": [
+    {
+      "cell": [
+        "FINITE_CROSSING_WINDOWS",
+        "FULL_OBSERVATION_CONTROL",
+        "2",
+        "BALANCED",
+        "NO_RECOVERY_STATE"
+      ],
+      "deployment_alternatives": [
+        "gateway_local_edf_reserve"
+      ],
+      "disposition": "SURVIVES_SAME_INFORMATION_ORDINARY_BASELINES",
+      "recipe_id": "T1R-6c1133698a4bcd",
+      "same_information_shortcut_baselines": []
+    },
+    {
+      "cell": [
+        "FINITE_CROSSING_WINDOWS",
+        "FULL_OBSERVATION_CONTROL",
+        "2",
+        "BALANCED",
+        "OUTAGE_CACHE_RETAIN"
+      ],
+      "deployment_alternatives": [
+        "gateway_local_edf_reserve"
+      ],
+      "disposition": "SHORTCUT_SOLVED_SAME_INFORMATION",
+      "recipe_id": "T1R-abc6c72ff538de",
+      "same_information_shortcut_baselines": [
+        "blind_satellite_edf"
+      ]
+    },
+    {
+      "cell": [
+        "FINITE_CROSSING_WINDOWS",
+        "FULL_OBSERVATION_CONTROL",
+        "2",
+        "BALANCED",
+        "RECONNECT_RECONCILE_OBJECTIVE_CHECK"
+      ],
+      "deployment_alternatives": [
+        "gateway_local_edf_reserve"
+      ],
+      "disposition": "SHORTCUT_SOLVED_SAME_INFORMATION",
+      "recipe_id": "T1R-e3037298f451c4",
+      "same_information_shortcut_baselines": [
+        "blind_satellite_edf"
+      ]
+    },
+    {
+      "cell": [
+        "FINITE_CROSSING_WINDOWS",
+        "FULL_OBSERVATION_CONTROL",
+        "2",
+        "SLACK",
+        "NO_RECOVERY_STATE"
+      ],
+      "deployment_alternatives": [
+        "gateway_local_edf_reserve"
+      ],
+      "disposition": "SHORTCUT_SOLVED_SAME_INFORMATION",
+      "recipe_id": "T1R-8cb2a135fd5907",
+      "same_information_shortcut_baselines": [
+        "blind_satellite_edf"
+      ]
+    },
+    {
+      "cell": [
+        "FINITE_CROSSING_WINDOWS",
+        "FULL_OBSERVATION_CONTROL",
+        "2",
+        "SLACK",
+        "OUTAGE_CACHE_RETAIN"
+      ],
+      "deployment_alternatives": [
+        "gateway_local_edf_reserve"
+      ],
+      "disposition": "SHORTCUT_SOLVED_SAME_INFORMATION",
+      "recipe_id": "T1R-43309c301ea6b5",
+      "same_information_shortcut_baselines": [
+        "blind_satellite_edf"
+      ]
+    },
+    {
+      "cell": [
+        "FINITE_CROSSING_WINDOWS",
+        "FULL_OBSERVATION_CONTROL",
+        "2",
+        "SLACK",
+        "RECONNECT_RECONCILE_OBJECTIVE_CHECK"
+      ],
+      "deployment_alternatives": [
+        "gateway_local_edf_reserve"
+      ],
+      "disposition": "SURVIVES_SAME_INFORMATION_ORDINARY_BASELINES",
+      "recipe_id": "T1R-230a94df909d4f",
+      "same_information_shortcut_baselines": []
+    },
+    {
+      "cell": [
+        "FINITE_CROSSING_WINDOWS",
+        "FULL_OBSERVATION_CONTROL",
+        "2",
+        "TIGHT",
+        "NO_RECOVERY_STATE"
+      ],
+      "deployment_alternatives": [
+        "gateway_local_edf_reserve"
+      ],
+      "disposition": "SURVIVES_SAME_INFORMATION_ORDINARY_BASELINES",
+      "recipe_id": "T1R-269206de0934c5",
+      "same_information_shortcut_baselines": []
+    },
+    {
+      "cell": [
+        "FINITE_CROSSING_WINDOWS",
+        "FULL_OBSERVATION_CONTROL",
+        "2",
+        "TIGHT",
+        "OUTAGE_CACHE_RETAIN"
+      ],
+      "deployment_alternatives": [
+        "gateway_local_edf_reserve"
+      ],
+      "disposition": "SURVIVES_SAME_INFORMATION_ORDINARY_BASELINES",
+      "recipe_id": "T1R-6cbbef721e8cbc",
+      "same_information_shortcut_baselines": []
+    },
+    {
+      "cell": [
+        "FINITE_CROSSING_WINDOWS",
+        "FULL_OBSERVATION_CONTROL",
+        "2",
+        "TIGHT",
+        "RECONNECT_RECONCILE_OBJECTIVE_CHECK"
+      ],
+      "deployment_alternatives": [
+        "gateway_local_edf_reserve"
+      ],
+      "disposition": "SURVIVES_SAME_INFORMATION_ORDINARY_BASELINES",
+      "recipe_id": "T1R-ba2cf7d1e0b1fc",
+      "same_information_shortcut_baselines": []
+    },
+    {
+      "cell": [
+        "FINITE_CROSSING_WINDOWS",
+        "FULL_OBSERVATION_CONTROL",
+        "3",
+        "BALANCED",
+        "NO_RECOVERY_STATE"
+      ],
+      "deployment_alternatives": [
+        "gateway_local_edf_reserve"
+      ],
+      "disposition": "SURVIVES_SAME_INFORMATION_ORDINARY_BASELINES",
+      "recipe_id": "T1R-50cf9fad6c02ff",
+      "same_information_shortcut_baselines": []
+    },
+    {
+      "cell": [
+        "FINITE_CROSSING_WINDOWS",
+        "FULL_OBSERVATION_CONTROL",
+        "3",
+        "BALANCED",
+        "OUTAGE_CACHE_RETAIN"
+      ],
+      "deployment_alternatives": [
+        "gateway_local_edf_reserve"
+      ],
+      "disposition": "SHORTCUT_SOLVED_SAME_INFORMATION",
+      "recipe_id": "T1R-2e108d2f8005c4",
+      "same_information_shortcut_baselines": [
+        "blind_satellite_edf"
+      ]
+    },
+    {
+      "cell": [
+        "FINITE_CROSSING_WINDOWS",
+        "FULL_OBSERVATION_CONTROL",
+        "3",
+        "BALANCED",
+        "RECONNECT_RECONCILE_OBJECTIVE_CHECK"
+      ],
+      "deployment_alternatives": [
+        "gateway_local_edf_reserve"
+      ],
+      "disposition": "SHORTCUT_SOLVED_SAME_INFORMATION",
+      "recipe_id": "T1R-459d8a9a4fd7f1",
+      "same_information_shortcut_baselines": [
+        "blind_satellite_edf"
+      ]
+    },
+    {
+      "cell": [
+        "FINITE_CROSSING_WINDOWS",
+        "FULL_OBSERVATION_CONTROL",
+        "3",
+        "SLACK",
+        "NO_RECOVERY_STATE"
+      ],
+      "deployment_alternatives": [
+        "gateway_local_edf_reserve"
+      ],
+      "disposition": "SURVIVES_SAME_INFORMATION_ORDINARY_BASELINES",
+      "recipe_id": "T1R-4105666a94d13e",
+      "same_information_shortcut_baselines": []
+    },
+    {
+      "cell": [
+        "FINITE_CROSSING_WINDOWS",
+        "FULL_OBSERVATION_CONTROL",
+        "3",
+        "SLACK",
+        "OUTAGE_CACHE_RETAIN"
+      ],
+      "deployment_alternatives": [
+        "gateway_local_edf_reserve"
+      ],
+      "disposition": "SURVIVES_SAME_INFORMATION_ORDINARY_BASELINES",
+      "recipe_id": "T1R-9e483b2069ffc5",
+      "same_information_shortcut_baselines": []
+    },
+    {
+      "cell": [
+        "FINITE_CROSSING_WINDOWS",
+        "FULL_OBSERVATION_CONTROL",
+        "3",
+        "SLACK",
+        "RECONNECT_RECONCILE_OBJECTIVE_CHECK"
+      ],
+      "deployment_alternatives": [
+        "gateway_local_edf_reserve"
+      ],
+      "disposition": "SURVIVES_SAME_INFORMATION_ORDINARY_BASELINES",
+      "recipe_id": "T1R-13c7f5ae8d968f",
+      "same_information_shortcut_baselines": []
+    },
+    {
+      "cell": [
+        "FINITE_CROSSING_WINDOWS",
+        "FULL_OBSERVATION_CONTROL",
+        "3",
+        "TIGHT",
+        "NO_RECOVERY_STATE"
+      ],
+      "deployment_alternatives": [
+        "gateway_local_edf_reserve"
+      ],
+      "disposition": "SURVIVES_SAME_INFORMATION_ORDINARY_BASELINES",
+      "recipe_id": "T1R-12f2cab7cd4c26",
+      "same_information_shortcut_baselines": []
+    },
+    {
+      "cell": [
+        "FINITE_CROSSING_WINDOWS",
+        "FULL_OBSERVATION_CONTROL",
+        "3",
+        "TIGHT",
+        "OUTAGE_CACHE_RETAIN"
+      ],
+      "deployment_alternatives": [
+        "gateway_local_edf_reserve"
+      ],
+      "disposition": "SURVIVES_SAME_INFORMATION_ORDINARY_BASELINES",
+      "recipe_id": "T1R-0c2f7e7ed95a5a",
+      "same_information_shortcut_baselines": []
+    },
+    {
+      "cell": [
+        "FINITE_CROSSING_WINDOWS",
+        "FULL_OBSERVATION_CONTROL",
+        "3",
+        "TIGHT",
+        "RECONNECT_RECONCILE_OBJECTIVE_CHECK"
+      ],
+      "deployment_alternatives": [
+        "gateway_local_edf_reserve"
+      ],
+      "disposition": "SURVIVES_SAME_INFORMATION_ORDINARY_BASELINES",
+      "recipe_id": "T1R-32c407a6ddcff0",
+      "same_information_shortcut_baselines": []
+    },
+    {
+      "cell": [
+        "FINITE_CROSSING_WINDOWS",
+        "FULL_OBSERVATION_CONTROL",
+        "4",
+        "BALANCED",
+        "NO_RECOVERY_STATE"
+      ],
+      "deployment_alternatives": [
+        "gateway_local_edf_reserve"
+      ],
+      "disposition": "SURVIVES_SAME_INFORMATION_ORDINARY_BASELINES",
+      "recipe_id": "T1R-f3d9f1f06a4790",
+      "same_information_shortcut_baselines": []
+    },
+    {
+      "cell": [
+        "FINITE_CROSSING_WINDOWS",
+        "FULL_OBSERVATION_CONTROL",
+        "4",
+        "BALANCED",
+        "OUTAGE_CACHE_RETAIN"
+      ],
+      "deployment_alternatives": [
+        "gateway_local_edf_reserve"
+      ],
+      "disposition": "SHORTCUT_SOLVED_SAME_INFORMATION",
+      "recipe_id": "T1R-6085483c57e4e1",
+      "same_information_shortcut_baselines": [
+        "blind_satellite_edf"
+      ]
+    },
+    {
+      "cell": [
+        "FINITE_CROSSING_WINDOWS",
+        "FULL_OBSERVATION_CONTROL",
+        "4",
+        "BALANCED",
+        "RECONNECT_RECONCILE_OBJECTIVE_CHECK"
+      ],
+      "deployment_alternatives": [
+        "gateway_local_edf_reserve"
+      ],
+      "disposition": "SURVIVES_SAME_INFORMATION_ORDINARY_BASELINES",
+      "recipe_id": "T1R-8f36a5671d7bac",
+      "same_information_shortcut_baselines": []
+    },
+    {
+      "cell": [
+        "FINITE_CROSSING_WINDOWS",
+        "FULL_OBSERVATION_CONTROL",
+        "4",
+        "SLACK",
+        "NO_RECOVERY_STATE"
+      ],
+      "deployment_alternatives": [
+        "gateway_local_edf_reserve"
+      ],
+      "disposition": "SHORTCUT_SOLVED_SAME_INFORMATION",
+      "recipe_id": "T1R-2486df5a9d1c04",
+      "same_information_shortcut_baselines": [
+        "blind_satellite_edf"
+      ]
+    },
+    {
+      "cell": [
+        "FINITE_CROSSING_WINDOWS",
+        "FULL_OBSERVATION_CONTROL",
+        "4",
+        "SLACK",
+        "OUTAGE_CACHE_RETAIN"
+      ],
+      "deployment_alternatives": [
+        "gateway_local_edf_reserve"
+      ],
+      "disposition": "SHORTCUT_SOLVED_SAME_INFORMATION",
+      "recipe_id": "T1R-b6dfe53c46b18c",
+      "same_information_shortcut_baselines": [
+        "blind_satellite_edf"
+      ]
+    },
+    {
+      "cell": [
+        "FINITE_CROSSING_WINDOWS",
+        "FULL_OBSERVATION_CONTROL",
+        "4",
+        "SLACK",
+        "RECONNECT_RECONCILE_OBJECTIVE_CHECK"
+      ],
+      "deployment_alternatives": [
+        "gateway_local_edf_reserve"
+      ],
+      "disposition": "SURVIVES_SAME_INFORMATION_ORDINARY_BASELINES",
+      "recipe_id": "T1R-2aeb8ceb43139d",
+      "same_information_shortcut_baselines": []
+    },
+    {
+      "cell": [
+        "FINITE_CROSSING_WINDOWS",
+        "FULL_OBSERVATION_CONTROL",
+        "4",
+        "TIGHT",
+        "NO_RECOVERY_STATE"
+      ],
+      "deployment_alternatives": [
+        "gateway_local_edf_reserve"
+      ],
+      "disposition": "SURVIVES_SAME_INFORMATION_ORDINARY_BASELINES",
+      "recipe_id": "T1R-27af5b11ca922d",
+      "same_information_shortcut_baselines": []
+    },
+    {
+      "cell": [
+        "FINITE_CROSSING_WINDOWS",
+        "FULL_OBSERVATION_CONTROL",
+        "4",
+        "TIGHT",
+        "OUTAGE_CACHE_RETAIN"
+      ],
+      "deployment_alternatives": [
+        "gateway_local_edf_reserve"
+      ],
+      "disposition": "SURVIVES_SAME_INFORMATION_ORDINARY_BASELINES",
+      "recipe_id": "T1R-0af39c17aef87f",
+      "same_information_shortcut_baselines": []
+    },
+    {
+      "cell": [
+        "FINITE_CROSSING_WINDOWS",
+        "FULL_OBSERVATION_CONTROL",
+        "4",
+        "TIGHT",
+        "RECONNECT_RECONCILE_OBJECTIVE_CHECK"
+      ],
+      "deployment_alternatives": [
+        "gateway_local_edf_reserve"
+      ],
+      "disposition": "SURVIVES_SAME_INFORMATION_ORDINARY_BASELINES",
+      "recipe_id": "T1R-a7272f9be67ab3",
+      "same_information_shortcut_baselines": []
+    },
+    {
+      "cell": [
+        "FINITE_CROSSING_WINDOWS",
+        "GATEWAY_SUMMARY_QUERY",
+        "2",
+        "BALANCED",
+        "NO_RECOVERY_STATE"
+      ],
+      "deployment_alternatives": [
+        "gateway_local_edf_reserve"
+      ],
+      "disposition": "SHORTCUT_SOLVED_SAME_INFORMATION",
+      "recipe_id": "T1R-d648d88e5945c8",
+      "same_information_shortcut_baselines": [
+        "blind_satellite_edf",
+        "fixed_owner_read_edf"
+      ]
+    },
+    {
+      "cell": [
+        "FINITE_CROSSING_WINDOWS",
+        "GATEWAY_SUMMARY_QUERY",
+        "2",
+        "BALANCED",
+        "OUTAGE_CACHE_RETAIN"
+      ],
+      "deployment_alternatives": [
+        "gateway_local_edf_reserve"
+      ],
+      "disposition": "SHORTCUT_SOLVED_SAME_INFORMATION",
+      "recipe_id": "T1R-464b68ae4b678d",
+      "same_information_shortcut_baselines": [
+        "blind_satellite_edf",
+        "fixed_owner_read_edf"
+      ]
+    },
+    {
+      "cell": [
+        "FINITE_CROSSING_WINDOWS",
+        "GATEWAY_SUMMARY_QUERY",
+        "2",
+        "BALANCED",
+        "RECONNECT_RECONCILE_OBJECTIVE_CHECK"
+      ],
+      "deployment_alternatives": [
+        "gateway_local_edf_reserve"
+      ],
+      "disposition": "SURVIVES_SAME_INFORMATION_ORDINARY_BASELINES",
+      "recipe_id": "T1R-d670c2aa6a0353",
+      "same_information_shortcut_baselines": []
+    },
+    {
+      "cell": [
+        "FINITE_CROSSING_WINDOWS",
+        "GATEWAY_SUMMARY_QUERY",
+        "2",
+        "SLACK",
+        "NO_RECOVERY_STATE"
+      ],
+      "deployment_alternatives": [
+        "gateway_local_edf_reserve"
+      ],
+      "disposition": "SURVIVES_SAME_INFORMATION_ORDINARY_BASELINES",
+      "recipe_id": "T1R-2a5353ea279047",
+      "same_information_shortcut_baselines": []
+    },
+    {
+      "cell": [
+        "FINITE_CROSSING_WINDOWS",
+        "GATEWAY_SUMMARY_QUERY",
+        "2",
+        "SLACK",
+        "OUTAGE_CACHE_RETAIN"
+      ],
+      "deployment_alternatives": [
+        "gateway_local_edf_reserve"
+      ],
+      "disposition": "SHORTCUT_SOLVED_SAME_INFORMATION",
+      "recipe_id": "T1R-d6f5736918c10e",
+      "same_information_shortcut_baselines": [
+        "blind_satellite_edf",
+        "fixed_owner_read_edf"
+      ]
+    },
+    {
+      "cell": [
+        "FINITE_CROSSING_WINDOWS",
+        "GATEWAY_SUMMARY_QUERY",
+        "2",
+        "SLACK",
+        "RECONNECT_RECONCILE_OBJECTIVE_CHECK"
+      ],
+      "deployment_alternatives": [
+        "gateway_local_edf_reserve"
+      ],
+      "disposition": "SURVIVES_SAME_INFORMATION_ORDINARY_BASELINES",
+      "recipe_id": "T1R-3459b20913e8cf",
+      "same_information_shortcut_baselines": []
+    },
+    {
+      "cell": [
+        "FINITE_CROSSING_WINDOWS",
+        "GATEWAY_SUMMARY_QUERY",
+        "2",
+        "TIGHT",
+        "NO_RECOVERY_STATE"
+      ],
+      "deployment_alternatives": [
+        "gateway_local_edf_reserve"
+      ],
+      "disposition": "SURVIVES_SAME_INFORMATION_ORDINARY_BASELINES",
+      "recipe_id": "T1R-11fe3399592f8e",
+      "same_information_shortcut_baselines": []
+    },
+    {
+      "cell": [
+        "FINITE_CROSSING_WINDOWS",
+        "GATEWAY_SUMMARY_QUERY",
+        "2",
+        "TIGHT",
+        "OUTAGE_CACHE_RETAIN"
+      ],
+      "deployment_alternatives": [
+        "gateway_local_edf_reserve"
+      ],
+      "disposition": "SURVIVES_SAME_INFORMATION_ORDINARY_BASELINES",
+      "recipe_id": "T1R-c595071383db8c",
+      "same_information_shortcut_baselines": []
+    },
+    {
+      "cell": [
+        "FINITE_CROSSING_WINDOWS",
+        "GATEWAY_SUMMARY_QUERY",
+        "2",
+        "TIGHT",
+        "RECONNECT_RECONCILE_OBJECTIVE_CHECK"
+      ],
+      "deployment_alternatives": [
+        "gateway_local_edf_reserve"
+      ],
+      "disposition": "SURVIVES_SAME_INFORMATION_ORDINARY_BASELINES",
+      "recipe_id": "T1R-9172a06141c796",
+      "same_information_shortcut_baselines": []
+    },
+    {
+      "cell": [
+        "FINITE_CROSSING_WINDOWS",
+        "GATEWAY_SUMMARY_QUERY",
+        "3",
+        "BALANCED",
+        "NO_RECOVERY_STATE"
+      ],
+      "deployment_alternatives": [
+        "gateway_local_edf_reserve"
+      ],
+      "disposition": "SURVIVES_SAME_INFORMATION_ORDINARY_BASELINES",
+      "recipe_id": "T1R-5fdcd2104eadd4",
+      "same_information_shortcut_baselines": []
+    },
+    {
+      "cell": [
+        "FINITE_CROSSING_WINDOWS",
+        "GATEWAY_SUMMARY_QUERY",
+        "3",
+        "BALANCED",
+        "OUTAGE_CACHE_RETAIN"
+      ],
+      "deployment_alternatives": [
+        "gateway_local_edf_reserve"
+      ],
+      "disposition": "SHORTCUT_SOLVED_SAME_INFORMATION",
+      "recipe_id": "T1R-145cf158ecf21f",
+      "same_information_shortcut_baselines": [
+        "blind_satellite_edf",
+        "fixed_owner_read_edf"
+      ]
+    },
+    {
+      "cell": [
+        "FINITE_CROSSING_WINDOWS",
+        "GATEWAY_SUMMARY_QUERY",
+        "3",
+        "BALANCED",
+        "RECONNECT_RECONCILE_OBJECTIVE_CHECK"
+      ],
+      "deployment_alternatives": [
+        "gateway_local_edf_reserve"
+      ],
+      "disposition": "SHORTCUT_SOLVED_SAME_INFORMATION",
+      "recipe_id": "T1R-1db65cf56ca474",
+      "same_information_shortcut_baselines": [
+        "blind_satellite_edf",
+        "fixed_owner_read_edf"
+      ]
+    },
+    {
+      "cell": [
+        "FINITE_CROSSING_WINDOWS",
+        "GATEWAY_SUMMARY_QUERY",
+        "3",
+        "SLACK",
+        "NO_RECOVERY_STATE"
+      ],
+      "deployment_alternatives": [
+        "gateway_local_edf_reserve"
+      ],
+      "disposition": "SURVIVES_SAME_INFORMATION_ORDINARY_BASELINES",
+      "recipe_id": "T1R-ca05e738cd976e",
+      "same_information_shortcut_baselines": []
+    },
+    {
+      "cell": [
+        "FINITE_CROSSING_WINDOWS",
+        "GATEWAY_SUMMARY_QUERY",
+        "3",
+        "SLACK",
+        "OUTAGE_CACHE_RETAIN"
+      ],
+      "deployment_alternatives": [
+        "gateway_local_edf_reserve"
+      ],
+      "disposition": "SHORTCUT_SOLVED_SAME_INFORMATION",
+      "recipe_id": "T1R-92a2eb72cca85e",
+      "same_information_shortcut_baselines": [
+        "blind_satellite_edf",
+        "fixed_owner_read_edf"
+      ]
+    },
+    {
+      "cell": [
+        "FINITE_CROSSING_WINDOWS",
+        "GATEWAY_SUMMARY_QUERY",
+        "3",
+        "SLACK",
+        "RECONNECT_RECONCILE_OBJECTIVE_CHECK"
+      ],
+      "deployment_alternatives": [
+        "gateway_local_edf_reserve"
+      ],
+      "disposition": "SHORTCUT_SOLVED_SAME_INFORMATION",
+      "recipe_id": "T1R-8eae02962580e0",
+      "same_information_shortcut_baselines": [
+        "blind_satellite_edf",
+        "fixed_owner_read_edf"
+      ]
+    },
+    {
+      "cell": [
+        "FINITE_CROSSING_WINDOWS",
+        "GATEWAY_SUMMARY_QUERY",
+        "3",
+        "TIGHT",
+        "NO_RECOVERY_STATE"
+      ],
+      "deployment_alternatives": [
+        "gateway_local_edf_reserve"
+      ],
+      "disposition": "SURVIVES_SAME_INFORMATION_ORDINARY_BASELINES",
+      "recipe_id": "T1R-e57dd865fcbf89",
+      "same_information_shortcut_baselines": []
+    },
+    {
+      "cell": [
+        "FINITE_CROSSING_WINDOWS",
+        "GATEWAY_SUMMARY_QUERY",
+        "3",
+        "TIGHT",
+        "OUTAGE_CACHE_RETAIN"
+      ],
+      "deployment_alternatives": [
+        "gateway_local_edf_reserve"
+      ],
+      "disposition": "SURVIVES_SAME_INFORMATION_ORDINARY_BASELINES",
+      "recipe_id": "T1R-9dee0d6a7e9599",
+      "same_information_shortcut_baselines": []
+    },
+    {
+      "cell": [
+        "FINITE_CROSSING_WINDOWS",
+        "GATEWAY_SUMMARY_QUERY",
+        "3",
+        "TIGHT",
+        "RECONNECT_RECONCILE_OBJECTIVE_CHECK"
+      ],
+      "deployment_alternatives": [
+        "gateway_local_edf_reserve"
+      ],
+      "disposition": "SURVIVES_SAME_INFORMATION_ORDINARY_BASELINES",
+      "recipe_id": "T1R-c31aa32a08ba9a",
+      "same_information_shortcut_baselines": []
+    },
+    {
+      "cell": [
+        "FINITE_CROSSING_WINDOWS",
+        "GATEWAY_SUMMARY_QUERY",
+        "4",
+        "BALANCED",
+        "NO_RECOVERY_STATE"
+      ],
+      "deployment_alternatives": [
+        "gateway_local_edf_reserve"
+      ],
+      "disposition": "SURVIVES_SAME_INFORMATION_ORDINARY_BASELINES",
+      "recipe_id": "T1R-161d5a448306de",
+      "same_information_shortcut_baselines": []
+    },
+    {
+      "cell": [
+        "FINITE_CROSSING_WINDOWS",
+        "GATEWAY_SUMMARY_QUERY",
+        "4",
+        "BALANCED",
+        "OUTAGE_CACHE_RETAIN"
+      ],
+      "deployment_alternatives": [
+        "gateway_local_edf_reserve"
+      ],
+      "disposition": "SHORTCUT_SOLVED_SAME_INFORMATION",
+      "recipe_id": "T1R-1d6ee0717749d0",
+      "same_information_shortcut_baselines": [
+        "blind_satellite_edf",
+        "fixed_owner_read_edf"
+      ]
+    },
+    {
+      "cell": [
+        "FINITE_CROSSING_WINDOWS",
+        "GATEWAY_SUMMARY_QUERY",
+        "4",
+        "BALANCED",
+        "RECONNECT_RECONCILE_OBJECTIVE_CHECK"
+      ],
+      "deployment_alternatives": [
+        "gateway_local_edf_reserve"
+      ],
+      "disposition": "SHORTCUT_SOLVED_SAME_INFORMATION",
+      "recipe_id": "T1R-c9290019dff5e5",
+      "same_information_shortcut_baselines": [
+        "blind_satellite_edf",
+        "fixed_owner_read_edf"
+      ]
+    },
+    {
+      "cell": [
+        "FINITE_CROSSING_WINDOWS",
+        "GATEWAY_SUMMARY_QUERY",
+        "4",
+        "SLACK",
+        "NO_RECOVERY_STATE"
+      ],
+      "deployment_alternatives": [
+        "gateway_local_edf_reserve"
+      ],
+      "disposition": "SURVIVES_SAME_INFORMATION_ORDINARY_BASELINES",
+      "recipe_id": "T1R-25c4e992759266",
+      "same_information_shortcut_baselines": []
+    },
+    {
+      "cell": [
+        "FINITE_CROSSING_WINDOWS",
+        "GATEWAY_SUMMARY_QUERY",
+        "4",
+        "SLACK",
+        "OUTAGE_CACHE_RETAIN"
+      ],
+      "deployment_alternatives": [
+        "gateway_local_edf_reserve"
+      ],
+      "disposition": "SHORTCUT_SOLVED_SAME_INFORMATION",
+      "recipe_id": "T1R-6a5bb80299218f",
+      "same_information_shortcut_baselines": [
+        "blind_satellite_edf",
+        "fixed_owner_read_edf"
+      ]
+    },
+    {
+      "cell": [
+        "FINITE_CROSSING_WINDOWS",
+        "GATEWAY_SUMMARY_QUERY",
+        "4",
+        "SLACK",
+        "RECONNECT_RECONCILE_OBJECTIVE_CHECK"
+      ],
+      "deployment_alternatives": [
+        "gateway_local_edf_reserve"
+      ],
+      "disposition": "SHORTCUT_SOLVED_SAME_INFORMATION",
+      "recipe_id": "T1R-ed79d1329c2dcd",
+      "same_information_shortcut_baselines": [
+        "blind_satellite_edf",
+        "fixed_owner_read_edf"
+      ]
+    },
+    {
+      "cell": [
+        "FINITE_CROSSING_WINDOWS",
+        "GATEWAY_SUMMARY_QUERY",
+        "4",
+        "TIGHT",
+        "NO_RECOVERY_STATE"
+      ],
+      "deployment_alternatives": [
+        "gateway_local_edf_reserve"
+      ],
+      "disposition": "SURVIVES_SAME_INFORMATION_ORDINARY_BASELINES",
+      "recipe_id": "T1R-3103a3f89cff02",
+      "same_information_shortcut_baselines": []
+    },
+    {
+      "cell": [
+        "FINITE_CROSSING_WINDOWS",
+        "GATEWAY_SUMMARY_QUERY",
+        "4",
+        "TIGHT",
+        "OUTAGE_CACHE_RETAIN"
+      ],
+      "deployment_alternatives": [
+        "gateway_local_edf_reserve"
+      ],
+      "disposition": "SURVIVES_SAME_INFORMATION_ORDINARY_BASELINES",
+      "recipe_id": "T1R-9e05bb899bc5c7",
+      "same_information_shortcut_baselines": []
+    },
+    {
+      "cell": [
+        "FINITE_CROSSING_WINDOWS",
+        "GATEWAY_SUMMARY_QUERY",
+        "4",
+        "TIGHT",
+        "RECONNECT_RECONCILE_OBJECTIVE_CHECK"
+      ],
+      "deployment_alternatives": [
+        "gateway_local_edf_reserve"
+      ],
+      "disposition": "SURVIVES_SAME_INFORMATION_ORDINARY_BASELINES",
+      "recipe_id": "T1R-59915e15b6d5dc",
+      "same_information_shortcut_baselines": []
+    },
+    {
+      "cell": [
+        "FINITE_CROSSING_WINDOWS",
+        "MIXED_PASSIVE_QUERY_PROBE",
+        "2",
+        "BALANCED",
+        "NO_RECOVERY_STATE"
+      ],
+      "deployment_alternatives": [
+        "gateway_local_edf_reserve"
+      ],
+      "disposition": "SHORTCUT_SOLVED_SAME_INFORMATION",
+      "recipe_id": "T1R-5599d5b5500ce1",
+      "same_information_shortcut_baselines": [
+        "blind_satellite_edf",
+        "fixed_owner_read_edf",
+        "send_probe_ack_fallback"
+      ]
+    },
+    {
+      "cell": [
+        "FINITE_CROSSING_WINDOWS",
+        "MIXED_PASSIVE_QUERY_PROBE",
+        "2",
+        "BALANCED",
+        "OUTAGE_CACHE_RETAIN"
+      ],
+      "deployment_alternatives": [
+        "gateway_local_edf_reserve"
+      ],
+      "disposition": "SURVIVES_SAME_INFORMATION_ORDINARY_BASELINES",
+      "recipe_id": "T1R-928821f2932ff2",
+      "same_information_shortcut_baselines": []
+    },
+    {
+      "cell": [
+        "FINITE_CROSSING_WINDOWS",
+        "MIXED_PASSIVE_QUERY_PROBE",
+        "2",
+        "BALANCED",
+        "RECONNECT_RECONCILE_OBJECTIVE_CHECK"
+      ],
+      "deployment_alternatives": [
+        "gateway_local_edf_reserve"
+      ],
+      "disposition": "SURVIVES_SAME_INFORMATION_ORDINARY_BASELINES",
+      "recipe_id": "T1R-072e046f85f23c",
+      "same_information_shortcut_baselines": []
+    },
+    {
+      "cell": [
+        "FINITE_CROSSING_WINDOWS",
+        "MIXED_PASSIVE_QUERY_PROBE",
+        "2",
+        "SLACK",
+        "NO_RECOVERY_STATE"
+      ],
+      "deployment_alternatives": [
+        "gateway_local_edf_reserve"
+      ],
+      "disposition": "SHORTCUT_SOLVED_SAME_INFORMATION",
+      "recipe_id": "T1R-612b241cdf7e33",
+      "same_information_shortcut_baselines": [
+        "blind_satellite_edf",
+        "fixed_owner_read_edf",
+        "send_probe_ack_fallback"
+      ]
+    },
+    {
+      "cell": [
+        "FINITE_CROSSING_WINDOWS",
+        "MIXED_PASSIVE_QUERY_PROBE",
+        "2",
+        "SLACK",
+        "OUTAGE_CACHE_RETAIN"
+      ],
+      "deployment_alternatives": [
+        "gateway_local_edf_reserve"
+      ],
+      "disposition": "SURVIVES_SAME_INFORMATION_ORDINARY_BASELINES",
+      "recipe_id": "T1R-d984104a8d9a0d",
+      "same_information_shortcut_baselines": []
+    },
+    {
+      "cell": [
+        "FINITE_CROSSING_WINDOWS",
+        "MIXED_PASSIVE_QUERY_PROBE",
+        "2",
+        "SLACK",
+        "RECONNECT_RECONCILE_OBJECTIVE_CHECK"
+      ],
+      "deployment_alternatives": [
+        "gateway_local_edf_reserve"
+      ],
+      "disposition": "SHORTCUT_SOLVED_SAME_INFORMATION",
+      "recipe_id": "T1R-d039bd3d578fef",
+      "same_information_shortcut_baselines": [
+        "blind_satellite_edf",
+        "fixed_owner_read_edf",
+        "send_probe_ack_fallback"
+      ]
+    },
+    {
+      "cell": [
+        "FINITE_CROSSING_WINDOWS",
+        "MIXED_PASSIVE_QUERY_PROBE",
+        "2",
+        "TIGHT",
+        "NO_RECOVERY_STATE"
+      ],
+      "deployment_alternatives": [
+        "gateway_local_edf_reserve"
+      ],
+      "disposition": "SURVIVES_SAME_INFORMATION_ORDINARY_BASELINES",
+      "recipe_id": "T1R-53764116154a07",
+      "same_information_shortcut_baselines": []
+    },
+    {
+      "cell": [
+        "FINITE_CROSSING_WINDOWS",
+        "MIXED_PASSIVE_QUERY_PROBE",
+        "2",
+        "TIGHT",
+        "OUTAGE_CACHE_RETAIN"
+      ],
+      "deployment_alternatives": [
+        "gateway_local_edf_reserve"
+      ],
+      "disposition": "SURVIVES_SAME_INFORMATION_ORDINARY_BASELINES",
+      "recipe_id": "T1R-8fc2225492d38e",
+      "same_information_shortcut_baselines": []
+    },
+    {
+      "cell": [
+        "FINITE_CROSSING_WINDOWS",
+        "MIXED_PASSIVE_QUERY_PROBE",
+        "2",
+        "TIGHT",
+        "RECONNECT_RECONCILE_OBJECTIVE_CHECK"
+      ],
+      "deployment_alternatives": [
+        "gateway_local_edf_reserve"
+      ],
+      "disposition": "SURVIVES_SAME_INFORMATION_ORDINARY_BASELINES",
+      "recipe_id": "T1R-449c61c18af1bf",
+      "same_information_shortcut_baselines": []
+    },
+    {
+      "cell": [
+        "FINITE_CROSSING_WINDOWS",
+        "MIXED_PASSIVE_QUERY_PROBE",
+        "3",
+        "BALANCED",
+        "NO_RECOVERY_STATE"
+      ],
+      "deployment_alternatives": [
+        "gateway_local_edf_reserve"
+      ],
+      "disposition": "SHORTCUT_SOLVED_SAME_INFORMATION",
+      "recipe_id": "T1R-b9116fc4bf4bdc",
+      "same_information_shortcut_baselines": [
+        "blind_satellite_edf",
+        "fixed_owner_read_edf",
+        "send_probe_ack_fallback"
+      ]
+    },
+    {
+      "cell": [
+        "FINITE_CROSSING_WINDOWS",
+        "MIXED_PASSIVE_QUERY_PROBE",
+        "3",
+        "BALANCED",
+        "OUTAGE_CACHE_RETAIN"
+      ],
+      "deployment_alternatives": [
+        "gateway_local_edf_reserve"
+      ],
+      "disposition": "SHORTCUT_SOLVED_SAME_INFORMATION",
+      "recipe_id": "T1R-8b8e4a9a722bd2",
+      "same_information_shortcut_baselines": [
+        "blind_satellite_edf",
+        "fixed_owner_read_edf",
+        "send_probe_ack_fallback"
+      ]
+    },
+    {
+      "cell": [
+        "FINITE_CROSSING_WINDOWS",
+        "MIXED_PASSIVE_QUERY_PROBE",
+        "3",
+        "BALANCED",
+        "RECONNECT_RECONCILE_OBJECTIVE_CHECK"
+      ],
+      "deployment_alternatives": [
+        "gateway_local_edf_reserve"
+      ],
+      "disposition": "SHORTCUT_SOLVED_SAME_INFORMATION",
+      "recipe_id": "T1R-66a0eeafbc77ff",
+      "same_information_shortcut_baselines": [
+        "blind_satellite_edf",
+        "fixed_owner_read_edf",
+        "send_probe_ack_fallback"
+      ]
+    },
+    {
+      "cell": [
+        "FINITE_CROSSING_WINDOWS",
+        "MIXED_PASSIVE_QUERY_PROBE",
+        "3",
+        "SLACK",
+        "NO_RECOVERY_STATE"
+      ],
+      "deployment_alternatives": [
+        "gateway_local_edf_reserve"
+      ],
+      "disposition": "SHORTCUT_SOLVED_SAME_INFORMATION",
+      "recipe_id": "T1R-af1bf816b44879",
+      "same_information_shortcut_baselines": [
+        "blind_satellite_edf",
+        "fixed_owner_read_edf",
+        "send_probe_ack_fallback"
+      ]
+    },
+    {
+      "cell": [
+        "FINITE_CROSSING_WINDOWS",
+        "MIXED_PASSIVE_QUERY_PROBE",
+        "3",
+        "SLACK",
+        "OUTAGE_CACHE_RETAIN"
+      ],
+      "deployment_alternatives": [
+        "gateway_local_edf_reserve"
+      ],
+      "disposition": "SHORTCUT_SOLVED_SAME_INFORMATION",
+      "recipe_id": "T1R-2ee17253237f30",
+      "same_information_shortcut_baselines": [
+        "blind_satellite_edf",
+        "fixed_owner_read_edf",
+        "send_probe_ack_fallback"
+      ]
+    },
+    {
+      "cell": [
+        "FINITE_CROSSING_WINDOWS",
+        "MIXED_PASSIVE_QUERY_PROBE",
+        "3",
+        "SLACK",
+        "RECONNECT_RECONCILE_OBJECTIVE_CHECK"
+      ],
+      "deployment_alternatives": [
+        "gateway_local_edf_reserve"
+      ],
+      "disposition": "SURVIVES_SAME_INFORMATION_ORDINARY_BASELINES",
+      "recipe_id": "T1R-294d2c95065571",
+      "same_information_shortcut_baselines": []
+    },
+    {
+      "cell": [
+        "FINITE_CROSSING_WINDOWS",
+        "MIXED_PASSIVE_QUERY_PROBE",
+        "3",
+        "TIGHT",
+        "NO_RECOVERY_STATE"
+      ],
+      "deployment_alternatives": [
+        "gateway_local_edf_reserve"
+      ],
+      "disposition": "SURVIVES_SAME_INFORMATION_ORDINARY_BASELINES",
+      "recipe_id": "T1R-d267c9c8e35c97",
+      "same_information_shortcut_baselines": []
+    },
+    {
+      "cell": [
+        "FINITE_CROSSING_WINDOWS",
+        "MIXED_PASSIVE_QUERY_PROBE",
+        "3",
+        "TIGHT",
+        "OUTAGE_CACHE_RETAIN"
+      ],
+      "deployment_alternatives": [
+        "gateway_local_edf_reserve"
+      ],
+      "disposition": "SURVIVES_SAME_INFORMATION_ORDINARY_BASELINES",
+      "recipe_id": "T1R-05711a4dc9d3eb",
+      "same_information_shortcut_baselines": []
+    },
+    {
+      "cell": [
+        "FINITE_CROSSING_WINDOWS",
+        "MIXED_PASSIVE_QUERY_PROBE",
+        "3",
+        "TIGHT",
+        "RECONNECT_RECONCILE_OBJECTIVE_CHECK"
+      ],
+      "deployment_alternatives": [
+        "gateway_local_edf_reserve"
+      ],
+      "disposition": "SURVIVES_SAME_INFORMATION_ORDINARY_BASELINES",
+      "recipe_id": "T1R-f7faae25889897",
+      "same_information_shortcut_baselines": []
+    },
+    {
+      "cell": [
+        "FINITE_CROSSING_WINDOWS",
+        "MIXED_PASSIVE_QUERY_PROBE",
+        "4",
+        "BALANCED",
+        "NO_RECOVERY_STATE"
+      ],
+      "deployment_alternatives": [
+        "gateway_local_edf_reserve"
+      ],
+      "disposition": "SHORTCUT_SOLVED_SAME_INFORMATION",
+      "recipe_id": "T1R-9410ac02e1528a",
+      "same_information_shortcut_baselines": [
+        "blind_satellite_edf",
+        "fixed_owner_read_edf",
+        "send_probe_ack_fallback"
+      ]
+    },
+    {
+      "cell": [
+        "FINITE_CROSSING_WINDOWS",
+        "MIXED_PASSIVE_QUERY_PROBE",
+        "4",
+        "BALANCED",
+        "OUTAGE_CACHE_RETAIN"
+      ],
+      "deployment_alternatives": [
+        "gateway_local_edf_reserve"
+      ],
+      "disposition": "SHORTCUT_SOLVED_SAME_INFORMATION",
+      "recipe_id": "T1R-e2357749a01d3c",
+      "same_information_shortcut_baselines": [
+        "blind_satellite_edf",
+        "fixed_owner_read_edf",
+        "send_probe_ack_fallback"
+      ]
+    },
+    {
+      "cell": [
+        "FINITE_CROSSING_WINDOWS",
+        "MIXED_PASSIVE_QUERY_PROBE",
+        "4",
+        "BALANCED",
+        "RECONNECT_RECONCILE_OBJECTIVE_CHECK"
+      ],
+      "deployment_alternatives": [
+        "gateway_local_edf_reserve"
+      ],
+      "disposition": "SHORTCUT_SOLVED_SAME_INFORMATION",
+      "recipe_id": "T1R-9b49881d044e9b",
+      "same_information_shortcut_baselines": [
+        "blind_satellite_edf",
+        "fixed_owner_read_edf",
+        "send_probe_ack_fallback"
+      ]
+    },
+    {
+      "cell": [
+        "FINITE_CROSSING_WINDOWS",
+        "MIXED_PASSIVE_QUERY_PROBE",
+        "4",
+        "SLACK",
+        "NO_RECOVERY_STATE"
+      ],
+      "deployment_alternatives": [
+        "gateway_local_edf_reserve"
+      ],
+      "disposition": "SHORTCUT_SOLVED_SAME_INFORMATION",
+      "recipe_id": "T1R-56598808f2502e",
+      "same_information_shortcut_baselines": [
+        "blind_satellite_edf",
+        "fixed_owner_read_edf",
+        "send_probe_ack_fallback"
+      ]
+    },
+    {
+      "cell": [
+        "FINITE_CROSSING_WINDOWS",
+        "MIXED_PASSIVE_QUERY_PROBE",
+        "4",
+        "SLACK",
+        "OUTAGE_CACHE_RETAIN"
+      ],
+      "deployment_alternatives": [
+        "gateway_local_edf_reserve"
+      ],
+      "disposition": "SURVIVES_SAME_INFORMATION_ORDINARY_BASELINES",
+      "recipe_id": "T1R-9868bc24fd6f6b",
+      "same_information_shortcut_baselines": []
+    },
+    {
+      "cell": [
+        "FINITE_CROSSING_WINDOWS",
+        "MIXED_PASSIVE_QUERY_PROBE",
+        "4",
+        "SLACK",
+        "RECONNECT_RECONCILE_OBJECTIVE_CHECK"
+      ],
+      "deployment_alternatives": [
+        "gateway_local_edf_reserve"
+      ],
+      "disposition": "SHORTCUT_SOLVED_SAME_INFORMATION",
+      "recipe_id": "T1R-0d3f605127a6ed",
+      "same_information_shortcut_baselines": [
+        "blind_satellite_edf",
+        "fixed_owner_read_edf",
+        "send_probe_ack_fallback"
+      ]
+    },
+    {
+      "cell": [
+        "FINITE_CROSSING_WINDOWS",
+        "MIXED_PASSIVE_QUERY_PROBE",
+        "4",
+        "TIGHT",
+        "NO_RECOVERY_STATE"
+      ],
+      "deployment_alternatives": [
+        "gateway_local_edf_reserve"
+      ],
+      "disposition": "SURVIVES_SAME_INFORMATION_ORDINARY_BASELINES",
+      "recipe_id": "T1R-f6f344866dea76",
+      "same_information_shortcut_baselines": []
+    },
+    {
+      "cell": [
+        "FINITE_CROSSING_WINDOWS",
+        "MIXED_PASSIVE_QUERY_PROBE",
+        "4",
+        "TIGHT",
+        "OUTAGE_CACHE_RETAIN"
+      ],
+      "deployment_alternatives": [
+        "gateway_local_edf_reserve"
+      ],
+      "disposition": "SURVIVES_SAME_INFORMATION_ORDINARY_BASELINES",
+      "recipe_id": "T1R-5a2d918d42c950",
+      "same_information_shortcut_baselines": []
+    },
+    {
+      "cell": [
+        "FINITE_CROSSING_WINDOWS",
+        "MIXED_PASSIVE_QUERY_PROBE",
+        "4",
+        "TIGHT",
+        "RECONNECT_RECONCILE_OBJECTIVE_CHECK"
+      ],
+      "deployment_alternatives": [
+        "gateway_local_edf_reserve"
+      ],
+      "disposition": "SURVIVES_SAME_INFORMATION_ORDINARY_BASELINES",
+      "recipe_id": "T1R-9c6ff255bfee58",
+      "same_information_shortcut_baselines": []
+    },
+    {
+      "cell": [
+        "FINITE_CROSSING_WINDOWS",
+        "PASSIVE_ACK_ONLY",
+        "2",
+        "BALANCED",
+        "NO_RECOVERY_STATE"
+      ],
+      "deployment_alternatives": [
+        "gateway_local_edf_reserve"
+      ],
+      "disposition": "SHORTCUT_SOLVED_SAME_INFORMATION",
+      "recipe_id": "T1R-dc2b6b98b77db1",
+      "same_information_shortcut_baselines": [
+        "blind_satellite_edf",
+        "send_probe_ack_fallback"
+      ]
+    },
+    {
+      "cell": [
+        "FINITE_CROSSING_WINDOWS",
+        "PASSIVE_ACK_ONLY",
+        "2",
+        "BALANCED",
+        "OUTAGE_CACHE_RETAIN"
+      ],
+      "deployment_alternatives": [
+        "gateway_local_edf_reserve"
+      ],
+      "disposition": "SHORTCUT_SOLVED_SAME_INFORMATION",
+      "recipe_id": "T1R-71162f29302368",
+      "same_information_shortcut_baselines": [
+        "blind_satellite_edf",
+        "send_probe_ack_fallback"
+      ]
+    },
+    {
+      "cell": [
+        "FINITE_CROSSING_WINDOWS",
+        "PASSIVE_ACK_ONLY",
+        "2",
+        "BALANCED",
+        "RECONNECT_RECONCILE_OBJECTIVE_CHECK"
+      ],
+      "deployment_alternatives": [
+        "gateway_local_edf_reserve"
+      ],
+      "disposition": "SHORTCUT_SOLVED_SAME_INFORMATION",
+      "recipe_id": "T1R-e6f5b6973331d2",
+      "same_information_shortcut_baselines": [
+        "blind_satellite_edf",
+        "send_probe_ack_fallback"
+      ]
+    },
+    {
+      "cell": [
+        "FINITE_CROSSING_WINDOWS",
+        "PASSIVE_ACK_ONLY",
+        "2",
+        "SLACK",
+        "NO_RECOVERY_STATE"
+      ],
+      "deployment_alternatives": [
+        "gateway_local_edf_reserve"
+      ],
+      "disposition": "SHORTCUT_SOLVED_SAME_INFORMATION",
+      "recipe_id": "T1R-dc37a61312a65d",
+      "same_information_shortcut_baselines": [
+        "blind_satellite_edf",
+        "send_probe_ack_fallback"
+      ]
+    },
+    {
+      "cell": [
+        "FINITE_CROSSING_WINDOWS",
+        "PASSIVE_ACK_ONLY",
+        "2",
+        "SLACK",
+        "OUTAGE_CACHE_RETAIN"
+      ],
+      "deployment_alternatives": [
+        "gateway_local_edf_reserve"
+      ],
+      "disposition": "SHORTCUT_SOLVED_SAME_INFORMATION",
+      "recipe_id": "T1R-b9dd25cb437f24",
+      "same_information_shortcut_baselines": [
+        "blind_satellite_edf",
+        "send_probe_ack_fallback"
+      ]
+    },
+    {
+      "cell": [
+        "FINITE_CROSSING_WINDOWS",
+        "PASSIVE_ACK_ONLY",
+        "2",
+        "SLACK",
+        "RECONNECT_RECONCILE_OBJECTIVE_CHECK"
+      ],
+      "deployment_alternatives": [
+        "gateway_local_edf_reserve"
+      ],
+      "disposition": "SHORTCUT_SOLVED_SAME_INFORMATION",
+      "recipe_id": "T1R-1d25701d92686d",
+      "same_information_shortcut_baselines": [
+        "blind_satellite_edf",
+        "send_probe_ack_fallback"
+      ]
+    },
+    {
+      "cell": [
+        "FINITE_CROSSING_WINDOWS",
+        "PASSIVE_ACK_ONLY",
+        "2",
+        "TIGHT",
+        "NO_RECOVERY_STATE"
+      ],
+      "deployment_alternatives": [
+        "gateway_local_edf_reserve"
+      ],
+      "disposition": "SURVIVES_SAME_INFORMATION_ORDINARY_BASELINES",
+      "recipe_id": "T1R-e462af8e823a8f",
+      "same_information_shortcut_baselines": []
+    },
+    {
+      "cell": [
+        "FINITE_CROSSING_WINDOWS",
+        "PASSIVE_ACK_ONLY",
+        "2",
+        "TIGHT",
+        "OUTAGE_CACHE_RETAIN"
+      ],
+      "deployment_alternatives": [
+        "gateway_local_edf_reserve"
+      ],
+      "disposition": "SURVIVES_SAME_INFORMATION_ORDINARY_BASELINES",
+      "recipe_id": "T1R-6ab7ae6c9c06a8",
+      "same_information_shortcut_baselines": []
+    },
+    {
+      "cell": [
+        "FINITE_CROSSING_WINDOWS",
+        "PASSIVE_ACK_ONLY",
+        "2",
+        "TIGHT",
+        "RECONNECT_RECONCILE_OBJECTIVE_CHECK"
+      ],
+      "deployment_alternatives": [
+        "gateway_local_edf_reserve"
+      ],
+      "disposition": "SURVIVES_SAME_INFORMATION_ORDINARY_BASELINES",
+      "recipe_id": "T1R-0a59a9f84b08b2",
+      "same_information_shortcut_baselines": []
+    },
+    {
+      "cell": [
+        "FINITE_CROSSING_WINDOWS",
+        "PASSIVE_ACK_ONLY",
+        "3",
+        "BALANCED",
+        "NO_RECOVERY_STATE"
+      ],
+      "deployment_alternatives": [
+        "gateway_local_edf_reserve"
+      ],
+      "disposition": "SHORTCUT_SOLVED_SAME_INFORMATION",
+      "recipe_id": "T1R-f5e7e53c915043",
+      "same_information_shortcut_baselines": [
+        "blind_satellite_edf",
+        "send_probe_ack_fallback"
+      ]
+    },
+    {
+      "cell": [
+        "FINITE_CROSSING_WINDOWS",
+        "PASSIVE_ACK_ONLY",
+        "3",
+        "BALANCED",
+        "OUTAGE_CACHE_RETAIN"
+      ],
+      "deployment_alternatives": [
+        "gateway_local_edf_reserve"
+      ],
+      "disposition": "SHORTCUT_SOLVED_SAME_INFORMATION",
+      "recipe_id": "T1R-319a7e61f6c77b",
+      "same_information_shortcut_baselines": [
+        "blind_satellite_edf",
+        "send_probe_ack_fallback"
+      ]
+    },
+    {
+      "cell": [
+        "FINITE_CROSSING_WINDOWS",
+        "PASSIVE_ACK_ONLY",
+        "3",
+        "BALANCED",
+        "RECONNECT_RECONCILE_OBJECTIVE_CHECK"
+      ],
+      "deployment_alternatives": [
+        "gateway_local_edf_reserve"
+      ],
+      "disposition": "SHORTCUT_SOLVED_SAME_INFORMATION",
+      "recipe_id": "T1R-4d323db3c1d499",
+      "same_information_shortcut_baselines": [
+        "blind_satellite_edf",
+        "send_probe_ack_fallback"
+      ]
+    },
+    {
+      "cell": [
+        "FINITE_CROSSING_WINDOWS",
+        "PASSIVE_ACK_ONLY",
+        "3",
+        "SLACK",
+        "NO_RECOVERY_STATE"
+      ],
+      "deployment_alternatives": [
+        "gateway_local_edf_reserve"
+      ],
+      "disposition": "SURVIVES_SAME_INFORMATION_ORDINARY_BASELINES",
+      "recipe_id": "T1R-fb26a69f1514f8",
+      "same_information_shortcut_baselines": []
+    },
+    {
+      "cell": [
+        "FINITE_CROSSING_WINDOWS",
+        "PASSIVE_ACK_ONLY",
+        "3",
+        "SLACK",
+        "OUTAGE_CACHE_RETAIN"
+      ],
+      "deployment_alternatives": [
+        "gateway_local_edf_reserve"
+      ],
+      "disposition": "SHORTCUT_SOLVED_SAME_INFORMATION",
+      "recipe_id": "T1R-d90e25535a183b",
+      "same_information_shortcut_baselines": [
+        "blind_satellite_edf",
+        "send_probe_ack_fallback"
+      ]
+    },
+    {
+      "cell": [
+        "FINITE_CROSSING_WINDOWS",
+        "PASSIVE_ACK_ONLY",
+        "3",
+        "SLACK",
+        "RECONNECT_RECONCILE_OBJECTIVE_CHECK"
+      ],
+      "deployment_alternatives": [
+        "gateway_local_edf_reserve"
+      ],
+      "disposition": "SHORTCUT_SOLVED_SAME_INFORMATION",
+      "recipe_id": "T1R-c2fe2a23612d86",
+      "same_information_shortcut_baselines": [
+        "blind_satellite_edf",
+        "send_probe_ack_fallback"
+      ]
+    },
+    {
+      "cell": [
+        "FINITE_CROSSING_WINDOWS",
+        "PASSIVE_ACK_ONLY",
+        "3",
+        "TIGHT",
+        "NO_RECOVERY_STATE"
+      ],
+      "deployment_alternatives": [
+        "gateway_local_edf_reserve"
+      ],
+      "disposition": "SURVIVES_SAME_INFORMATION_ORDINARY_BASELINES",
+      "recipe_id": "T1R-80f3621ff2e02b",
+      "same_information_shortcut_baselines": []
+    },
+    {
+      "cell": [
+        "FINITE_CROSSING_WINDOWS",
+        "PASSIVE_ACK_ONLY",
+        "3",
+        "TIGHT",
+        "OUTAGE_CACHE_RETAIN"
+      ],
+      "deployment_alternatives": [
+        "gateway_local_edf_reserve"
+      ],
+      "disposition": "SURVIVES_SAME_INFORMATION_ORDINARY_BASELINES",
+      "recipe_id": "T1R-743e47be9f28ab",
+      "same_information_shortcut_baselines": []
+    },
+    {
+      "cell": [
+        "FINITE_CROSSING_WINDOWS",
+        "PASSIVE_ACK_ONLY",
+        "3",
+        "TIGHT",
+        "RECONNECT_RECONCILE_OBJECTIVE_CHECK"
+      ],
+      "deployment_alternatives": [
+        "gateway_local_edf_reserve"
+      ],
+      "disposition": "SURVIVES_SAME_INFORMATION_ORDINARY_BASELINES",
+      "recipe_id": "T1R-b19fcc7cef16a9",
+      "same_information_shortcut_baselines": []
+    },
+    {
+      "cell": [
+        "FINITE_CROSSING_WINDOWS",
+        "PASSIVE_ACK_ONLY",
+        "4",
+        "BALANCED",
+        "NO_RECOVERY_STATE"
+      ],
+      "deployment_alternatives": [
+        "gateway_local_edf_reserve"
+      ],
+      "disposition": "SURVIVES_SAME_INFORMATION_ORDINARY_BASELINES",
+      "recipe_id": "T1R-c6ec70ba476dc7",
+      "same_information_shortcut_baselines": []
+    },
+    {
+      "cell": [
+        "FINITE_CROSSING_WINDOWS",
+        "PASSIVE_ACK_ONLY",
+        "4",
+        "BALANCED",
+        "OUTAGE_CACHE_RETAIN"
+      ],
+      "deployment_alternatives": [
+        "gateway_local_edf_reserve"
+      ],
+      "disposition": "SHORTCUT_SOLVED_SAME_INFORMATION",
+      "recipe_id": "T1R-617a6198ee30e0",
+      "same_information_shortcut_baselines": [
+        "blind_satellite_edf",
+        "send_probe_ack_fallback"
+      ]
+    },
+    {
+      "cell": [
+        "FINITE_CROSSING_WINDOWS",
+        "PASSIVE_ACK_ONLY",
+        "4",
+        "BALANCED",
+        "RECONNECT_RECONCILE_OBJECTIVE_CHECK"
+      ],
+      "deployment_alternatives": [
+        "gateway_local_edf_reserve"
+      ],
+      "disposition": "SHORTCUT_SOLVED_SAME_INFORMATION",
+      "recipe_id": "T1R-3565b2f12f138c",
+      "same_information_shortcut_baselines": [
+        "blind_satellite_edf",
+        "send_probe_ack_fallback"
+      ]
+    },
+    {
+      "cell": [
+        "FINITE_CROSSING_WINDOWS",
+        "PASSIVE_ACK_ONLY",
+        "4",
+        "SLACK",
+        "NO_RECOVERY_STATE"
+      ],
+      "deployment_alternatives": [
+        "gateway_local_edf_reserve"
+      ],
+      "disposition": "SHORTCUT_SOLVED_SAME_INFORMATION",
+      "recipe_id": "T1R-9adebeb03c2075",
+      "same_information_shortcut_baselines": [
+        "blind_satellite_edf",
+        "send_probe_ack_fallback"
+      ]
+    },
+    {
+      "cell": [
+        "FINITE_CROSSING_WINDOWS",
+        "PASSIVE_ACK_ONLY",
+        "4",
+        "SLACK",
+        "OUTAGE_CACHE_RETAIN"
+      ],
+      "deployment_alternatives": [
+        "gateway_local_edf_reserve"
+      ],
+      "disposition": "SURVIVES_SAME_INFORMATION_ORDINARY_BASELINES",
+      "recipe_id": "T1R-7f83c99a7685fe",
+      "same_information_shortcut_baselines": []
+    },
+    {
+      "cell": [
+        "FINITE_CROSSING_WINDOWS",
+        "PASSIVE_ACK_ONLY",
+        "4",
+        "SLACK",
+        "RECONNECT_RECONCILE_OBJECTIVE_CHECK"
+      ],
+      "deployment_alternatives": [
+        "gateway_local_edf_reserve"
+      ],
+      "disposition": "SHORTCUT_SOLVED_SAME_INFORMATION",
+      "recipe_id": "T1R-46f9adf0cd874f",
+      "same_information_shortcut_baselines": [
+        "blind_satellite_edf",
+        "send_probe_ack_fallback"
+      ]
+    },
+    {
+      "cell": [
+        "FINITE_CROSSING_WINDOWS",
+        "PASSIVE_ACK_ONLY",
+        "4",
+        "TIGHT",
+        "NO_RECOVERY_STATE"
+      ],
+      "deployment_alternatives": [
+        "gateway_local_edf_reserve"
+      ],
+      "disposition": "SURVIVES_SAME_INFORMATION_ORDINARY_BASELINES",
+      "recipe_id": "T1R-4a94b9c341755f",
+      "same_information_shortcut_baselines": []
+    },
+    {
+      "cell": [
+        "FINITE_CROSSING_WINDOWS",
+        "PASSIVE_ACK_ONLY",
+        "4",
+        "TIGHT",
+        "OUTAGE_CACHE_RETAIN"
+      ],
+      "deployment_alternatives": [
+        "gateway_local_edf_reserve"
+      ],
+      "disposition": "SURVIVES_SAME_INFORMATION_ORDINARY_BASELINES",
+      "recipe_id": "T1R-a798d00e05d18d",
+      "same_information_shortcut_baselines": []
+    },
+    {
+      "cell": [
+        "FINITE_CROSSING_WINDOWS",
+        "PASSIVE_ACK_ONLY",
+        "4",
+        "TIGHT",
+        "RECONNECT_RECONCILE_OBJECTIVE_CHECK"
+      ],
+      "deployment_alternatives": [
+        "gateway_local_edf_reserve"
+      ],
+      "disposition": "SURVIVES_SAME_INFORMATION_ORDINARY_BASELINES",
+      "recipe_id": "T1R-fd3d213b89ed85",
+      "same_information_shortcut_baselines": []
+    },
+    {
+      "cell": [
+        "MULTI_WINDOW_DYNAMIC",
+        "FULL_OBSERVATION_CONTROL",
+        "2",
+        "BALANCED",
+        "NO_RECOVERY_STATE"
+      ],
+      "deployment_alternatives": [
+        "gateway_local_edf_reserve"
+      ],
+      "disposition": "SHORTCUT_SOLVED_SAME_INFORMATION",
+      "recipe_id": "T1R-b8887c37e7c3eb",
+      "same_information_shortcut_baselines": [
+        "blind_satellite_edf"
+      ]
+    },
+    {
+      "cell": [
+        "MULTI_WINDOW_DYNAMIC",
+        "FULL_OBSERVATION_CONTROL",
+        "2",
+        "BALANCED",
+        "OUTAGE_CACHE_RETAIN"
+      ],
+      "deployment_alternatives": [
+        "gateway_local_edf_reserve"
+      ],
+      "disposition": "SHORTCUT_SOLVED_SAME_INFORMATION",
+      "recipe_id": "T1R-c6cb2392f0ef01",
+      "same_information_shortcut_baselines": [
+        "blind_satellite_edf"
+      ]
+    },
+    {
+      "cell": [
+        "MULTI_WINDOW_DYNAMIC",
+        "FULL_OBSERVATION_CONTROL",
+        "2",
+        "BALANCED",
+        "RECONNECT_RECONCILE_OBJECTIVE_CHECK"
+      ],
+      "deployment_alternatives": [
+        "gateway_local_edf_reserve"
+      ],
+      "disposition": "SURVIVES_SAME_INFORMATION_ORDINARY_BASELINES",
+      "recipe_id": "T1R-bfc475c93ed0e8",
+      "same_information_shortcut_baselines": []
+    },
+    {
+      "cell": [
+        "MULTI_WINDOW_DYNAMIC",
+        "FULL_OBSERVATION_CONTROL",
+        "2",
+        "SLACK",
+        "NO_RECOVERY_STATE"
+      ],
+      "deployment_alternatives": [
+        "gateway_local_edf_reserve"
+      ],
+      "disposition": "SHORTCUT_SOLVED_SAME_INFORMATION",
+      "recipe_id": "T1R-d47b4daf720ffc",
+      "same_information_shortcut_baselines": [
+        "blind_satellite_edf"
+      ]
+    },
+    {
+      "cell": [
+        "MULTI_WINDOW_DYNAMIC",
+        "FULL_OBSERVATION_CONTROL",
+        "2",
+        "SLACK",
+        "OUTAGE_CACHE_RETAIN"
+      ],
+      "deployment_alternatives": [
+        "gateway_local_edf_reserve"
+      ],
+      "disposition": "SHORTCUT_SOLVED_SAME_INFORMATION",
+      "recipe_id": "T1R-da75f3af86a3fa",
+      "same_information_shortcut_baselines": [
+        "blind_satellite_edf"
+      ]
+    },
+    {
+      "cell": [
+        "MULTI_WINDOW_DYNAMIC",
+        "FULL_OBSERVATION_CONTROL",
+        "2",
+        "SLACK",
+        "RECONNECT_RECONCILE_OBJECTIVE_CHECK"
+      ],
+      "deployment_alternatives": [
+        "gateway_local_edf_reserve"
+      ],
+      "disposition": "SHORTCUT_SOLVED_SAME_INFORMATION",
+      "recipe_id": "T1R-65ea65ff4fd761",
+      "same_information_shortcut_baselines": [
+        "blind_satellite_edf"
+      ]
+    },
+    {
+      "cell": [
+        "MULTI_WINDOW_DYNAMIC",
+        "FULL_OBSERVATION_CONTROL",
+        "2",
+        "TIGHT",
+        "NO_RECOVERY_STATE"
+      ],
+      "deployment_alternatives": [
+        "gateway_local_edf_reserve"
+      ],
+      "disposition": "SURVIVES_SAME_INFORMATION_ORDINARY_BASELINES",
+      "recipe_id": "T1R-8d4343956ba6c2",
+      "same_information_shortcut_baselines": []
+    },
+    {
+      "cell": [
+        "MULTI_WINDOW_DYNAMIC",
+        "FULL_OBSERVATION_CONTROL",
+        "2",
+        "TIGHT",
+        "OUTAGE_CACHE_RETAIN"
+      ],
+      "deployment_alternatives": [
+        "gateway_local_edf_reserve"
+      ],
+      "disposition": "SURVIVES_SAME_INFORMATION_ORDINARY_BASELINES",
+      "recipe_id": "T1R-b4739201624337",
+      "same_information_shortcut_baselines": []
+    },
+    {
+      "cell": [
+        "MULTI_WINDOW_DYNAMIC",
+        "FULL_OBSERVATION_CONTROL",
+        "2",
+        "TIGHT",
+        "RECONNECT_RECONCILE_OBJECTIVE_CHECK"
+      ],
+      "deployment_alternatives": [
+        "gateway_local_edf_reserve"
+      ],
+      "disposition": "SURVIVES_SAME_INFORMATION_ORDINARY_BASELINES",
+      "recipe_id": "T1R-2c979878d860e8",
+      "same_information_shortcut_baselines": []
+    },
+    {
+      "cell": [
+        "MULTI_WINDOW_DYNAMIC",
+        "FULL_OBSERVATION_CONTROL",
+        "3",
+        "BALANCED",
+        "NO_RECOVERY_STATE"
+      ],
+      "deployment_alternatives": [
+        "gateway_local_edf_reserve"
+      ],
+      "disposition": "SHORTCUT_SOLVED_SAME_INFORMATION",
+      "recipe_id": "T1R-714f9398ab06bb",
+      "same_information_shortcut_baselines": [
+        "blind_satellite_edf"
+      ]
+    },
+    {
+      "cell": [
+        "MULTI_WINDOW_DYNAMIC",
+        "FULL_OBSERVATION_CONTROL",
+        "3",
+        "BALANCED",
+        "OUTAGE_CACHE_RETAIN"
+      ],
+      "deployment_alternatives": [
+        "gateway_local_edf_reserve"
+      ],
+      "disposition": "SURVIVES_SAME_INFORMATION_ORDINARY_BASELINES",
+      "recipe_id": "T1R-5bee56d97e637b",
+      "same_information_shortcut_baselines": []
+    },
+    {
+      "cell": [
+        "MULTI_WINDOW_DYNAMIC",
+        "FULL_OBSERVATION_CONTROL",
+        "3",
+        "BALANCED",
+        "RECONNECT_RECONCILE_OBJECTIVE_CHECK"
+      ],
+      "deployment_alternatives": [
+        "gateway_local_edf_reserve"
+      ],
+      "disposition": "SHORTCUT_SOLVED_SAME_INFORMATION",
+      "recipe_id": "T1R-4843ab6c9fe552",
+      "same_information_shortcut_baselines": [
+        "blind_satellite_edf"
+      ]
+    },
+    {
+      "cell": [
+        "MULTI_WINDOW_DYNAMIC",
+        "FULL_OBSERVATION_CONTROL",
+        "3",
+        "SLACK",
+        "NO_RECOVERY_STATE"
+      ],
+      "deployment_alternatives": [
+        "gateway_local_edf_reserve"
+      ],
+      "disposition": "SHORTCUT_SOLVED_SAME_INFORMATION",
+      "recipe_id": "T1R-3350cc134db408",
+      "same_information_shortcut_baselines": [
+        "blind_satellite_edf"
+      ]
+    },
+    {
+      "cell": [
+        "MULTI_WINDOW_DYNAMIC",
+        "FULL_OBSERVATION_CONTROL",
+        "3",
+        "SLACK",
+        "OUTAGE_CACHE_RETAIN"
+      ],
+      "deployment_alternatives": [
+        "gateway_local_edf_reserve"
+      ],
+      "disposition": "SHORTCUT_SOLVED_SAME_INFORMATION",
+      "recipe_id": "T1R-abf60029cf5c6f",
+      "same_information_shortcut_baselines": [
+        "blind_satellite_edf"
+      ]
+    },
+    {
+      "cell": [
+        "MULTI_WINDOW_DYNAMIC",
+        "FULL_OBSERVATION_CONTROL",
+        "3",
+        "SLACK",
+        "RECONNECT_RECONCILE_OBJECTIVE_CHECK"
+      ],
+      "deployment_alternatives": [
+        "gateway_local_edf_reserve"
+      ],
+      "disposition": "SURVIVES_SAME_INFORMATION_ORDINARY_BASELINES",
+      "recipe_id": "T1R-abff9f6bcd8bd0",
+      "same_information_shortcut_baselines": []
+    },
+    {
+      "cell": [
+        "MULTI_WINDOW_DYNAMIC",
+        "FULL_OBSERVATION_CONTROL",
+        "3",
+        "TIGHT",
+        "NO_RECOVERY_STATE"
+      ],
+      "deployment_alternatives": [
+        "gateway_local_edf_reserve"
+      ],
+      "disposition": "SURVIVES_SAME_INFORMATION_ORDINARY_BASELINES",
+      "recipe_id": "T1R-2f6542e7002aaf",
+      "same_information_shortcut_baselines": []
+    },
+    {
+      "cell": [
+        "MULTI_WINDOW_DYNAMIC",
+        "FULL_OBSERVATION_CONTROL",
+        "3",
+        "TIGHT",
+        "OUTAGE_CACHE_RETAIN"
+      ],
+      "deployment_alternatives": [
+        "gateway_local_edf_reserve"
+      ],
+      "disposition": "SURVIVES_SAME_INFORMATION_ORDINARY_BASELINES",
+      "recipe_id": "T1R-4307ceb7e8467d",
+      "same_information_shortcut_baselines": []
+    },
+    {
+      "cell": [
+        "MULTI_WINDOW_DYNAMIC",
+        "FULL_OBSERVATION_CONTROL",
+        "3",
+        "TIGHT",
+        "RECONNECT_RECONCILE_OBJECTIVE_CHECK"
+      ],
+      "deployment_alternatives": [
+        "gateway_local_edf_reserve"
+      ],
+      "disposition": "SURVIVES_SAME_INFORMATION_ORDINARY_BASELINES",
+      "recipe_id": "T1R-48014e1b90be65",
+      "same_information_shortcut_baselines": []
+    },
+    {
+      "cell": [
+        "MULTI_WINDOW_DYNAMIC",
+        "FULL_OBSERVATION_CONTROL",
+        "4",
+        "BALANCED",
+        "NO_RECOVERY_STATE"
+      ],
+      "deployment_alternatives": [
+        "gateway_local_edf_reserve"
+      ],
+      "disposition": "SHORTCUT_SOLVED_SAME_INFORMATION",
+      "recipe_id": "T1R-fe158192cdfb46",
+      "same_information_shortcut_baselines": [
+        "blind_satellite_edf"
+      ]
+    },
+    {
+      "cell": [
+        "MULTI_WINDOW_DYNAMIC",
+        "FULL_OBSERVATION_CONTROL",
+        "4",
+        "BALANCED",
+        "OUTAGE_CACHE_RETAIN"
+      ],
+      "deployment_alternatives": [
+        "gateway_local_edf_reserve"
+      ],
+      "disposition": "SURVIVES_SAME_INFORMATION_ORDINARY_BASELINES",
+      "recipe_id": "T1R-55376394285a96",
+      "same_information_shortcut_baselines": []
+    },
+    {
+      "cell": [
+        "MULTI_WINDOW_DYNAMIC",
+        "FULL_OBSERVATION_CONTROL",
+        "4",
+        "BALANCED",
+        "RECONNECT_RECONCILE_OBJECTIVE_CHECK"
+      ],
+      "deployment_alternatives": [
+        "gateway_local_edf_reserve"
+      ],
+      "disposition": "SHORTCUT_SOLVED_SAME_INFORMATION",
+      "recipe_id": "T1R-20e4f863f6cd5f",
+      "same_information_shortcut_baselines": [
+        "blind_satellite_edf"
+      ]
+    },
+    {
+      "cell": [
+        "MULTI_WINDOW_DYNAMIC",
+        "FULL_OBSERVATION_CONTROL",
+        "4",
+        "SLACK",
+        "NO_RECOVERY_STATE"
+      ],
+      "deployment_alternatives": [
+        "gateway_local_edf_reserve"
+      ],
+      "disposition": "SHORTCUT_SOLVED_SAME_INFORMATION",
+      "recipe_id": "T1R-33100b3360b87f",
+      "same_information_shortcut_baselines": [
+        "blind_satellite_edf"
+      ]
+    },
+    {
+      "cell": [
+        "MULTI_WINDOW_DYNAMIC",
+        "FULL_OBSERVATION_CONTROL",
+        "4",
+        "SLACK",
+        "OUTAGE_CACHE_RETAIN"
+      ],
+      "deployment_alternatives": [
+        "gateway_local_edf_reserve"
+      ],
+      "disposition": "SURVIVES_SAME_INFORMATION_ORDINARY_BASELINES",
+      "recipe_id": "T1R-c04e9f486a4426",
+      "same_information_shortcut_baselines": []
+    },
+    {
+      "cell": [
+        "MULTI_WINDOW_DYNAMIC",
+        "FULL_OBSERVATION_CONTROL",
+        "4",
+        "SLACK",
+        "RECONNECT_RECONCILE_OBJECTIVE_CHECK"
+      ],
+      "deployment_alternatives": [
+        "gateway_local_edf_reserve"
+      ],
+      "disposition": "SHORTCUT_SOLVED_SAME_INFORMATION",
+      "recipe_id": "T1R-298f1c7c1b58bb",
+      "same_information_shortcut_baselines": [
+        "blind_satellite_edf"
+      ]
+    },
+    {
+      "cell": [
+        "MULTI_WINDOW_DYNAMIC",
+        "FULL_OBSERVATION_CONTROL",
+        "4",
+        "TIGHT",
+        "NO_RECOVERY_STATE"
+      ],
+      "deployment_alternatives": [
+        "gateway_local_edf_reserve"
+      ],
+      "disposition": "SURVIVES_SAME_INFORMATION_ORDINARY_BASELINES",
+      "recipe_id": "T1R-dc34e98926e95f",
+      "same_information_shortcut_baselines": []
+    },
+    {
+      "cell": [
+        "MULTI_WINDOW_DYNAMIC",
+        "FULL_OBSERVATION_CONTROL",
+        "4",
+        "TIGHT",
+        "OUTAGE_CACHE_RETAIN"
+      ],
+      "deployment_alternatives": [
+        "gateway_local_edf_reserve"
+      ],
+      "disposition": "SURVIVES_SAME_INFORMATION_ORDINARY_BASELINES",
+      "recipe_id": "T1R-3f5d5880cb380f",
+      "same_information_shortcut_baselines": []
+    },
+    {
+      "cell": [
+        "MULTI_WINDOW_DYNAMIC",
+        "FULL_OBSERVATION_CONTROL",
+        "4",
+        "TIGHT",
+        "RECONNECT_RECONCILE_OBJECTIVE_CHECK"
+      ],
+      "deployment_alternatives": [
+        "gateway_local_edf_reserve"
+      ],
+      "disposition": "SURVIVES_SAME_INFORMATION_ORDINARY_BASELINES",
+      "recipe_id": "T1R-c5b486e659bf84",
+      "same_information_shortcut_baselines": []
+    },
+    {
+      "cell": [
+        "MULTI_WINDOW_DYNAMIC",
+        "GATEWAY_SUMMARY_QUERY",
+        "2",
+        "BALANCED",
+        "NO_RECOVERY_STATE"
+      ],
+      "deployment_alternatives": [
+        "gateway_local_edf_reserve"
+      ],
+      "disposition": "SHORTCUT_SOLVED_SAME_INFORMATION",
+      "recipe_id": "T1R-40901850870f4e",
+      "same_information_shortcut_baselines": [
+        "blind_satellite_edf",
+        "fixed_owner_read_edf"
+      ]
+    },
+    {
+      "cell": [
+        "MULTI_WINDOW_DYNAMIC",
+        "GATEWAY_SUMMARY_QUERY",
+        "2",
+        "BALANCED",
+        "OUTAGE_CACHE_RETAIN"
+      ],
+      "deployment_alternatives": [
+        "gateway_local_edf_reserve"
+      ],
+      "disposition": "SHORTCUT_SOLVED_SAME_INFORMATION",
+      "recipe_id": "T1R-febcec9504f071",
+      "same_information_shortcut_baselines": [
+        "blind_satellite_edf",
+        "fixed_owner_read_edf"
+      ]
+    },
+    {
+      "cell": [
+        "MULTI_WINDOW_DYNAMIC",
+        "GATEWAY_SUMMARY_QUERY",
+        "2",
+        "BALANCED",
+        "RECONNECT_RECONCILE_OBJECTIVE_CHECK"
+      ],
+      "deployment_alternatives": [
+        "gateway_local_edf_reserve"
+      ],
+      "disposition": "SHORTCUT_SOLVED_SAME_INFORMATION",
+      "recipe_id": "T1R-71423d06d53da6",
+      "same_information_shortcut_baselines": [
+        "blind_satellite_edf",
+        "fixed_owner_read_edf"
+      ]
+    },
+    {
+      "cell": [
+        "MULTI_WINDOW_DYNAMIC",
+        "GATEWAY_SUMMARY_QUERY",
+        "2",
+        "SLACK",
+        "NO_RECOVERY_STATE"
+      ],
+      "deployment_alternatives": [
+        "gateway_local_edf_reserve"
+      ],
+      "disposition": "SHORTCUT_SOLVED_SAME_INFORMATION",
+      "recipe_id": "T1R-00f2604c84be2f",
+      "same_information_shortcut_baselines": [
+        "blind_satellite_edf",
+        "fixed_owner_read_edf"
+      ]
+    },
+    {
+      "cell": [
+        "MULTI_WINDOW_DYNAMIC",
+        "GATEWAY_SUMMARY_QUERY",
+        "2",
+        "SLACK",
+        "OUTAGE_CACHE_RETAIN"
+      ],
+      "deployment_alternatives": [
+        "gateway_local_edf_reserve"
+      ],
+      "disposition": "SHORTCUT_SOLVED_SAME_INFORMATION",
+      "recipe_id": "T1R-4564a52a34dc1b",
+      "same_information_shortcut_baselines": [
+        "blind_satellite_edf",
+        "fixed_owner_read_edf"
+      ]
+    },
+    {
+      "cell": [
+        "MULTI_WINDOW_DYNAMIC",
+        "GATEWAY_SUMMARY_QUERY",
+        "2",
+        "SLACK",
+        "RECONNECT_RECONCILE_OBJECTIVE_CHECK"
+      ],
+      "deployment_alternatives": [
+        "gateway_local_edf_reserve"
+      ],
+      "disposition": "SHORTCUT_SOLVED_SAME_INFORMATION",
+      "recipe_id": "T1R-0ee1d7df4af324",
+      "same_information_shortcut_baselines": [
+        "blind_satellite_edf",
+        "fixed_owner_read_edf"
+      ]
+    },
+    {
+      "cell": [
+        "MULTI_WINDOW_DYNAMIC",
+        "GATEWAY_SUMMARY_QUERY",
+        "2",
+        "TIGHT",
+        "NO_RECOVERY_STATE"
+      ],
+      "deployment_alternatives": [
+        "gateway_local_edf_reserve"
+      ],
+      "disposition": "SURVIVES_SAME_INFORMATION_ORDINARY_BASELINES",
+      "recipe_id": "T1R-b0d985ca672302",
+      "same_information_shortcut_baselines": []
+    },
+    {
+      "cell": [
+        "MULTI_WINDOW_DYNAMIC",
+        "GATEWAY_SUMMARY_QUERY",
+        "2",
+        "TIGHT",
+        "OUTAGE_CACHE_RETAIN"
+      ],
+      "deployment_alternatives": [
+        "gateway_local_edf_reserve"
+      ],
+      "disposition": "SURVIVES_SAME_INFORMATION_ORDINARY_BASELINES",
+      "recipe_id": "T1R-3d60369b902456",
+      "same_information_shortcut_baselines": []
+    },
+    {
+      "cell": [
+        "MULTI_WINDOW_DYNAMIC",
+        "GATEWAY_SUMMARY_QUERY",
+        "2",
+        "TIGHT",
+        "RECONNECT_RECONCILE_OBJECTIVE_CHECK"
+      ],
+      "deployment_alternatives": [
+        "gateway_local_edf_reserve"
+      ],
+      "disposition": "SURVIVES_SAME_INFORMATION_ORDINARY_BASELINES",
+      "recipe_id": "T1R-dd4f852a538a49",
+      "same_information_shortcut_baselines": []
+    },
+    {
+      "cell": [
+        "MULTI_WINDOW_DYNAMIC",
+        "GATEWAY_SUMMARY_QUERY",
+        "3",
+        "BALANCED",
+        "NO_RECOVERY_STATE"
+      ],
+      "deployment_alternatives": [
+        "gateway_local_edf_reserve"
+      ],
+      "disposition": "SHORTCUT_SOLVED_SAME_INFORMATION",
+      "recipe_id": "T1R-93b9ede5702401",
+      "same_information_shortcut_baselines": [
+        "blind_satellite_edf",
+        "fixed_owner_read_edf"
+      ]
+    },
+    {
+      "cell": [
+        "MULTI_WINDOW_DYNAMIC",
+        "GATEWAY_SUMMARY_QUERY",
+        "3",
+        "BALANCED",
+        "OUTAGE_CACHE_RETAIN"
+      ],
+      "deployment_alternatives": [
+        "gateway_local_edf_reserve"
+      ],
+      "disposition": "SHORTCUT_SOLVED_SAME_INFORMATION",
+      "recipe_id": "T1R-6b567782a6cd42",
+      "same_information_shortcut_baselines": [
+        "blind_satellite_edf",
+        "fixed_owner_read_edf"
+      ]
+    },
+    {
+      "cell": [
+        "MULTI_WINDOW_DYNAMIC",
+        "GATEWAY_SUMMARY_QUERY",
+        "3",
+        "BALANCED",
+        "RECONNECT_RECONCILE_OBJECTIVE_CHECK"
+      ],
+      "deployment_alternatives": [
+        "gateway_local_edf_reserve"
+      ],
+      "disposition": "SHORTCUT_SOLVED_SAME_INFORMATION",
+      "recipe_id": "T1R-47338a33ff165d",
+      "same_information_shortcut_baselines": [
+        "blind_satellite_edf",
+        "fixed_owner_read_edf"
+      ]
+    },
+    {
+      "cell": [
+        "MULTI_WINDOW_DYNAMIC",
+        "GATEWAY_SUMMARY_QUERY",
+        "3",
+        "SLACK",
+        "NO_RECOVERY_STATE"
+      ],
+      "deployment_alternatives": [
+        "gateway_local_edf_reserve"
+      ],
+      "disposition": "SHORTCUT_SOLVED_SAME_INFORMATION",
+      "recipe_id": "T1R-0eed3fd1d6f7d4",
+      "same_information_shortcut_baselines": [
+        "blind_satellite_edf",
+        "fixed_owner_read_edf"
+      ]
+    },
+    {
+      "cell": [
+        "MULTI_WINDOW_DYNAMIC",
+        "GATEWAY_SUMMARY_QUERY",
+        "3",
+        "SLACK",
+        "OUTAGE_CACHE_RETAIN"
+      ],
+      "deployment_alternatives": [
+        "gateway_local_edf_reserve"
+      ],
+      "disposition": "SURVIVES_SAME_INFORMATION_ORDINARY_BASELINES",
+      "recipe_id": "T1R-3522073e9d485c",
+      "same_information_shortcut_baselines": []
+    },
+    {
+      "cell": [
+        "MULTI_WINDOW_DYNAMIC",
+        "GATEWAY_SUMMARY_QUERY",
+        "3",
+        "SLACK",
+        "RECONNECT_RECONCILE_OBJECTIVE_CHECK"
+      ],
+      "deployment_alternatives": [
+        "gateway_local_edf_reserve"
+      ],
+      "disposition": "SHORTCUT_SOLVED_SAME_INFORMATION",
+      "recipe_id": "T1R-7d08bd76c3a7ac",
+      "same_information_shortcut_baselines": [
+        "blind_satellite_edf",
+        "fixed_owner_read_edf"
+      ]
+    },
+    {
+      "cell": [
+        "MULTI_WINDOW_DYNAMIC",
+        "GATEWAY_SUMMARY_QUERY",
+        "3",
+        "TIGHT",
+        "NO_RECOVERY_STATE"
+      ],
+      "deployment_alternatives": [
+        "gateway_local_edf_reserve"
+      ],
+      "disposition": "SURVIVES_SAME_INFORMATION_ORDINARY_BASELINES",
+      "recipe_id": "T1R-6b5631801a4a1f",
+      "same_information_shortcut_baselines": []
+    },
+    {
+      "cell": [
+        "MULTI_WINDOW_DYNAMIC",
+        "GATEWAY_SUMMARY_QUERY",
+        "3",
+        "TIGHT",
+        "OUTAGE_CACHE_RETAIN"
+      ],
+      "deployment_alternatives": [
+        "gateway_local_edf_reserve"
+      ],
+      "disposition": "SURVIVES_SAME_INFORMATION_ORDINARY_BASELINES",
+      "recipe_id": "T1R-62ec428b9f6c9d",
+      "same_information_shortcut_baselines": []
+    },
+    {
+      "cell": [
+        "MULTI_WINDOW_DYNAMIC",
+        "GATEWAY_SUMMARY_QUERY",
+        "3",
+        "TIGHT",
+        "RECONNECT_RECONCILE_OBJECTIVE_CHECK"
+      ],
+      "deployment_alternatives": [
+        "gateway_local_edf_reserve"
+      ],
+      "disposition": "SURVIVES_SAME_INFORMATION_ORDINARY_BASELINES",
+      "recipe_id": "T1R-2fe194f5bdea9c",
+      "same_information_shortcut_baselines": []
+    },
+    {
+      "cell": [
+        "MULTI_WINDOW_DYNAMIC",
+        "GATEWAY_SUMMARY_QUERY",
+        "4",
+        "BALANCED",
+        "NO_RECOVERY_STATE"
+      ],
+      "deployment_alternatives": [
+        "gateway_local_edf_reserve"
+      ],
+      "disposition": "SHORTCUT_SOLVED_SAME_INFORMATION",
+      "recipe_id": "T1R-ebc10fe94b9223",
+      "same_information_shortcut_baselines": [
+        "blind_satellite_edf",
+        "fixed_owner_read_edf"
+      ]
+    },
+    {
+      "cell": [
+        "MULTI_WINDOW_DYNAMIC",
+        "GATEWAY_SUMMARY_QUERY",
+        "4",
+        "BALANCED",
+        "OUTAGE_CACHE_RETAIN"
+      ],
+      "deployment_alternatives": [
+        "gateway_local_edf_reserve"
+      ],
+      "disposition": "SURVIVES_SAME_INFORMATION_ORDINARY_BASELINES",
+      "recipe_id": "T1R-76437e0434ad4e",
+      "same_information_shortcut_baselines": []
+    },
+    {
+      "cell": [
+        "MULTI_WINDOW_DYNAMIC",
+        "GATEWAY_SUMMARY_QUERY",
+        "4",
+        "BALANCED",
+        "RECONNECT_RECONCILE_OBJECTIVE_CHECK"
+      ],
+      "deployment_alternatives": [
+        "gateway_local_edf_reserve"
+      ],
+      "disposition": "SHORTCUT_SOLVED_SAME_INFORMATION",
+      "recipe_id": "T1R-662d5179d8d1c1",
+      "same_information_shortcut_baselines": [
+        "blind_satellite_edf",
+        "fixed_owner_read_edf"
+      ]
+    },
+    {
+      "cell": [
+        "MULTI_WINDOW_DYNAMIC",
+        "GATEWAY_SUMMARY_QUERY",
+        "4",
+        "SLACK",
+        "NO_RECOVERY_STATE"
+      ],
+      "deployment_alternatives": [
+        "gateway_local_edf_reserve"
+      ],
+      "disposition": "SHORTCUT_SOLVED_SAME_INFORMATION",
+      "recipe_id": "T1R-6a54fd5b6afc3b",
+      "same_information_shortcut_baselines": [
+        "blind_satellite_edf",
+        "fixed_owner_read_edf"
+      ]
+    },
+    {
+      "cell": [
+        "MULTI_WINDOW_DYNAMIC",
+        "GATEWAY_SUMMARY_QUERY",
+        "4",
+        "SLACK",
+        "OUTAGE_CACHE_RETAIN"
+      ],
+      "deployment_alternatives": [
+        "gateway_local_edf_reserve"
+      ],
+      "disposition": "SHORTCUT_SOLVED_SAME_INFORMATION",
+      "recipe_id": "T1R-123a3c707b9c82",
+      "same_information_shortcut_baselines": [
+        "blind_satellite_edf",
+        "fixed_owner_read_edf"
+      ]
+    },
+    {
+      "cell": [
+        "MULTI_WINDOW_DYNAMIC",
+        "GATEWAY_SUMMARY_QUERY",
+        "4",
+        "SLACK",
+        "RECONNECT_RECONCILE_OBJECTIVE_CHECK"
+      ],
+      "deployment_alternatives": [
+        "gateway_local_edf_reserve"
+      ],
+      "disposition": "SHORTCUT_SOLVED_SAME_INFORMATION",
+      "recipe_id": "T1R-de2798eea6d2f3",
+      "same_information_shortcut_baselines": [
+        "blind_satellite_edf",
+        "fixed_owner_read_edf"
+      ]
+    },
+    {
+      "cell": [
+        "MULTI_WINDOW_DYNAMIC",
+        "GATEWAY_SUMMARY_QUERY",
+        "4",
+        "TIGHT",
+        "NO_RECOVERY_STATE"
+      ],
+      "deployment_alternatives": [
+        "gateway_local_edf_reserve"
+      ],
+      "disposition": "SURVIVES_SAME_INFORMATION_ORDINARY_BASELINES",
+      "recipe_id": "T1R-aaa2721d42e005",
+      "same_information_shortcut_baselines": []
+    },
+    {
+      "cell": [
+        "MULTI_WINDOW_DYNAMIC",
+        "GATEWAY_SUMMARY_QUERY",
+        "4",
+        "TIGHT",
+        "OUTAGE_CACHE_RETAIN"
+      ],
+      "deployment_alternatives": [
+        "gateway_local_edf_reserve"
+      ],
+      "disposition": "SURVIVES_SAME_INFORMATION_ORDINARY_BASELINES",
+      "recipe_id": "T1R-c723364b2d2155",
+      "same_information_shortcut_baselines": []
+    },
+    {
+      "cell": [
+        "MULTI_WINDOW_DYNAMIC",
+        "GATEWAY_SUMMARY_QUERY",
+        "4",
+        "TIGHT",
+        "RECONNECT_RECONCILE_OBJECTIVE_CHECK"
+      ],
+      "deployment_alternatives": [
+        "gateway_local_edf_reserve"
+      ],
+      "disposition": "SURVIVES_SAME_INFORMATION_ORDINARY_BASELINES",
+      "recipe_id": "T1R-7a21f5ce9d8d41",
+      "same_information_shortcut_baselines": []
+    },
+    {
+      "cell": [
+        "MULTI_WINDOW_DYNAMIC",
+        "MIXED_PASSIVE_QUERY_PROBE",
+        "2",
+        "BALANCED",
+        "NO_RECOVERY_STATE"
+      ],
+      "deployment_alternatives": [
+        "gateway_local_edf_reserve"
+      ],
+      "disposition": "SHORTCUT_SOLVED_SAME_INFORMATION",
+      "recipe_id": "T1R-932cc13443d188",
+      "same_information_shortcut_baselines": [
+        "blind_satellite_edf",
+        "fixed_owner_read_edf",
+        "send_probe_ack_fallback"
+      ]
+    },
+    {
+      "cell": [
+        "MULTI_WINDOW_DYNAMIC",
+        "MIXED_PASSIVE_QUERY_PROBE",
+        "2",
+        "BALANCED",
+        "OUTAGE_CACHE_RETAIN"
+      ],
+      "deployment_alternatives": [
+        "gateway_local_edf_reserve"
+      ],
+      "disposition": "SHORTCUT_SOLVED_SAME_INFORMATION",
+      "recipe_id": "T1R-bbabe720853531",
+      "same_information_shortcut_baselines": [
+        "blind_satellite_edf",
+        "fixed_owner_read_edf",
+        "send_probe_ack_fallback"
+      ]
+    },
+    {
+      "cell": [
+        "MULTI_WINDOW_DYNAMIC",
+        "MIXED_PASSIVE_QUERY_PROBE",
+        "2",
+        "BALANCED",
+        "RECONNECT_RECONCILE_OBJECTIVE_CHECK"
+      ],
+      "deployment_alternatives": [
+        "gateway_local_edf_reserve"
+      ],
+      "disposition": "SURVIVES_SAME_INFORMATION_ORDINARY_BASELINES",
+      "recipe_id": "T1R-4be19f01e644f9",
+      "same_information_shortcut_baselines": []
+    },
+    {
+      "cell": [
+        "MULTI_WINDOW_DYNAMIC",
+        "MIXED_PASSIVE_QUERY_PROBE",
+        "2",
+        "SLACK",
+        "NO_RECOVERY_STATE"
+      ],
+      "deployment_alternatives": [
+        "gateway_local_edf_reserve"
+      ],
+      "disposition": "SHORTCUT_SOLVED_SAME_INFORMATION",
+      "recipe_id": "T1R-17fa8d5fa449ce",
+      "same_information_shortcut_baselines": [
+        "blind_satellite_edf",
+        "fixed_owner_read_edf",
+        "send_probe_ack_fallback"
+      ]
+    },
+    {
+      "cell": [
+        "MULTI_WINDOW_DYNAMIC",
+        "MIXED_PASSIVE_QUERY_PROBE",
+        "2",
+        "SLACK",
+        "OUTAGE_CACHE_RETAIN"
+      ],
+      "deployment_alternatives": [
+        "gateway_local_edf_reserve"
+      ],
+      "disposition": "SHORTCUT_SOLVED_SAME_INFORMATION",
+      "recipe_id": "T1R-338ad1878c1f03",
+      "same_information_shortcut_baselines": [
+        "blind_satellite_edf",
+        "fixed_owner_read_edf",
+        "send_probe_ack_fallback"
+      ]
+    },
+    {
+      "cell": [
+        "MULTI_WINDOW_DYNAMIC",
+        "MIXED_PASSIVE_QUERY_PROBE",
+        "2",
+        "SLACK",
+        "RECONNECT_RECONCILE_OBJECTIVE_CHECK"
+      ],
+      "deployment_alternatives": [
+        "gateway_local_edf_reserve"
+      ],
+      "disposition": "SURVIVES_SAME_INFORMATION_ORDINARY_BASELINES",
+      "recipe_id": "T1R-6d9c46b3dde4bb",
+      "same_information_shortcut_baselines": []
+    },
+    {
+      "cell": [
+        "MULTI_WINDOW_DYNAMIC",
+        "MIXED_PASSIVE_QUERY_PROBE",
+        "2",
+        "TIGHT",
+        "NO_RECOVERY_STATE"
+      ],
+      "deployment_alternatives": [
+        "gateway_local_edf_reserve"
+      ],
+      "disposition": "SURVIVES_SAME_INFORMATION_ORDINARY_BASELINES",
+      "recipe_id": "T1R-9ca77c2685fff4",
+      "same_information_shortcut_baselines": []
+    },
+    {
+      "cell": [
+        "MULTI_WINDOW_DYNAMIC",
+        "MIXED_PASSIVE_QUERY_PROBE",
+        "2",
+        "TIGHT",
+        "OUTAGE_CACHE_RETAIN"
+      ],
+      "deployment_alternatives": [
+        "gateway_local_edf_reserve"
+      ],
+      "disposition": "SURVIVES_SAME_INFORMATION_ORDINARY_BASELINES",
+      "recipe_id": "T1R-d881ec062a4f68",
+      "same_information_shortcut_baselines": []
+    },
+    {
+      "cell": [
+        "MULTI_WINDOW_DYNAMIC",
+        "MIXED_PASSIVE_QUERY_PROBE",
+        "2",
+        "TIGHT",
+        "RECONNECT_RECONCILE_OBJECTIVE_CHECK"
+      ],
+      "deployment_alternatives": [
+        "gateway_local_edf_reserve"
+      ],
+      "disposition": "SURVIVES_SAME_INFORMATION_ORDINARY_BASELINES",
+      "recipe_id": "T1R-e081d0caa0d10a",
+      "same_information_shortcut_baselines": []
+    },
+    {
+      "cell": [
+        "MULTI_WINDOW_DYNAMIC",
+        "MIXED_PASSIVE_QUERY_PROBE",
+        "3",
+        "BALANCED",
+        "NO_RECOVERY_STATE"
+      ],
+      "deployment_alternatives": [
+        "gateway_local_edf_reserve"
+      ],
+      "disposition": "SURVIVES_SAME_INFORMATION_ORDINARY_BASELINES",
+      "recipe_id": "T1R-3cf3b399624517",
+      "same_information_shortcut_baselines": []
+    },
+    {
+      "cell": [
+        "MULTI_WINDOW_DYNAMIC",
+        "MIXED_PASSIVE_QUERY_PROBE",
+        "3",
+        "BALANCED",
+        "OUTAGE_CACHE_RETAIN"
+      ],
+      "deployment_alternatives": [
+        "gateway_local_edf_reserve"
+      ],
+      "disposition": "SHORTCUT_SOLVED_SAME_INFORMATION",
+      "recipe_id": "T1R-f74c78b2b3d050",
+      "same_information_shortcut_baselines": [
+        "blind_satellite_edf",
+        "fixed_owner_read_edf",
+        "send_probe_ack_fallback"
+      ]
+    },
+    {
+      "cell": [
+        "MULTI_WINDOW_DYNAMIC",
+        "MIXED_PASSIVE_QUERY_PROBE",
+        "3",
+        "BALANCED",
+        "RECONNECT_RECONCILE_OBJECTIVE_CHECK"
+      ],
+      "deployment_alternatives": [
+        "gateway_local_edf_reserve"
+      ],
+      "disposition": "SHORTCUT_SOLVED_SAME_INFORMATION",
+      "recipe_id": "T1R-725c3561ec4b89",
+      "same_information_shortcut_baselines": [
+        "blind_satellite_edf",
+        "fixed_owner_read_edf",
+        "send_probe_ack_fallback"
+      ]
+    },
+    {
+      "cell": [
+        "MULTI_WINDOW_DYNAMIC",
+        "MIXED_PASSIVE_QUERY_PROBE",
+        "3",
+        "SLACK",
+        "NO_RECOVERY_STATE"
+      ],
+      "deployment_alternatives": [
+        "gateway_local_edf_reserve"
+      ],
+      "disposition": "SURVIVES_SAME_INFORMATION_ORDINARY_BASELINES",
+      "recipe_id": "T1R-148ed9f64acb04",
+      "same_information_shortcut_baselines": []
+    },
+    {
+      "cell": [
+        "MULTI_WINDOW_DYNAMIC",
+        "MIXED_PASSIVE_QUERY_PROBE",
+        "3",
+        "SLACK",
+        "OUTAGE_CACHE_RETAIN"
+      ],
+      "deployment_alternatives": [
+        "gateway_local_edf_reserve"
+      ],
+      "disposition": "SHORTCUT_SOLVED_SAME_INFORMATION",
+      "recipe_id": "T1R-a93904972f66e0",
+      "same_information_shortcut_baselines": [
+        "blind_satellite_edf",
+        "fixed_owner_read_edf",
+        "send_probe_ack_fallback"
+      ]
+    },
+    {
+      "cell": [
+        "MULTI_WINDOW_DYNAMIC",
+        "MIXED_PASSIVE_QUERY_PROBE",
+        "3",
+        "SLACK",
+        "RECONNECT_RECONCILE_OBJECTIVE_CHECK"
+      ],
+      "deployment_alternatives": [
+        "gateway_local_edf_reserve"
+      ],
+      "disposition": "SHORTCUT_SOLVED_SAME_INFORMATION",
+      "recipe_id": "T1R-69452b342ef64d",
+      "same_information_shortcut_baselines": [
+        "blind_satellite_edf",
+        "fixed_owner_read_edf",
+        "send_probe_ack_fallback"
+      ]
+    },
+    {
+      "cell": [
+        "MULTI_WINDOW_DYNAMIC",
+        "MIXED_PASSIVE_QUERY_PROBE",
+        "3",
+        "TIGHT",
+        "NO_RECOVERY_STATE"
+      ],
+      "deployment_alternatives": [
+        "gateway_local_edf_reserve"
+      ],
+      "disposition": "SURVIVES_SAME_INFORMATION_ORDINARY_BASELINES",
+      "recipe_id": "T1R-5a3491bebf63b7",
+      "same_information_shortcut_baselines": []
+    },
+    {
+      "cell": [
+        "MULTI_WINDOW_DYNAMIC",
+        "MIXED_PASSIVE_QUERY_PROBE",
+        "3",
+        "TIGHT",
+        "OUTAGE_CACHE_RETAIN"
+      ],
+      "deployment_alternatives": [
+        "gateway_local_edf_reserve"
+      ],
+      "disposition": "SURVIVES_SAME_INFORMATION_ORDINARY_BASELINES",
+      "recipe_id": "T1R-4f4d3e561af4fc",
+      "same_information_shortcut_baselines": []
+    },
+    {
+      "cell": [
+        "MULTI_WINDOW_DYNAMIC",
+        "MIXED_PASSIVE_QUERY_PROBE",
+        "3",
+        "TIGHT",
+        "RECONNECT_RECONCILE_OBJECTIVE_CHECK"
+      ],
+      "deployment_alternatives": [
+        "gateway_local_edf_reserve"
+      ],
+      "disposition": "SURVIVES_SAME_INFORMATION_ORDINARY_BASELINES",
+      "recipe_id": "T1R-2cd201bc6bbfb6",
+      "same_information_shortcut_baselines": []
+    },
+    {
+      "cell": [
+        "MULTI_WINDOW_DYNAMIC",
+        "MIXED_PASSIVE_QUERY_PROBE",
+        "4",
+        "BALANCED",
+        "NO_RECOVERY_STATE"
+      ],
+      "deployment_alternatives": [
+        "gateway_local_edf_reserve"
+      ],
+      "disposition": "SHORTCUT_SOLVED_SAME_INFORMATION",
+      "recipe_id": "T1R-59b412131346f1",
+      "same_information_shortcut_baselines": [
+        "blind_satellite_edf",
+        "fixed_owner_read_edf",
+        "send_probe_ack_fallback"
+      ]
+    },
+    {
+      "cell": [
+        "MULTI_WINDOW_DYNAMIC",
+        "MIXED_PASSIVE_QUERY_PROBE",
+        "4",
+        "BALANCED",
+        "OUTAGE_CACHE_RETAIN"
+      ],
+      "deployment_alternatives": [
+        "gateway_local_edf_reserve"
+      ],
+      "disposition": "SURVIVES_SAME_INFORMATION_ORDINARY_BASELINES",
+      "recipe_id": "T1R-b0ac7ecf876909",
+      "same_information_shortcut_baselines": []
+    },
+    {
+      "cell": [
+        "MULTI_WINDOW_DYNAMIC",
+        "MIXED_PASSIVE_QUERY_PROBE",
+        "4",
+        "BALANCED",
+        "RECONNECT_RECONCILE_OBJECTIVE_CHECK"
+      ],
+      "deployment_alternatives": [
+        "gateway_local_edf_reserve"
+      ],
+      "disposition": "SHORTCUT_SOLVED_SAME_INFORMATION",
+      "recipe_id": "T1R-abffd911e8b90e",
+      "same_information_shortcut_baselines": [
+        "blind_satellite_edf",
+        "fixed_owner_read_edf",
+        "send_probe_ack_fallback"
+      ]
+    },
+    {
+      "cell": [
+        "MULTI_WINDOW_DYNAMIC",
+        "MIXED_PASSIVE_QUERY_PROBE",
+        "4",
+        "SLACK",
+        "NO_RECOVERY_STATE"
+      ],
+      "deployment_alternatives": [
+        "gateway_local_edf_reserve"
+      ],
+      "disposition": "SURVIVES_SAME_INFORMATION_ORDINARY_BASELINES",
+      "recipe_id": "T1R-9d12ae57a5a989",
+      "same_information_shortcut_baselines": []
+    },
+    {
+      "cell": [
+        "MULTI_WINDOW_DYNAMIC",
+        "MIXED_PASSIVE_QUERY_PROBE",
+        "4",
+        "SLACK",
+        "OUTAGE_CACHE_RETAIN"
+      ],
+      "deployment_alternatives": [
+        "gateway_local_edf_reserve"
+      ],
+      "disposition": "SHORTCUT_SOLVED_SAME_INFORMATION",
+      "recipe_id": "T1R-4f36f3ecf74a1d",
+      "same_information_shortcut_baselines": [
+        "blind_satellite_edf",
+        "fixed_owner_read_edf",
+        "send_probe_ack_fallback"
+      ]
+    },
+    {
+      "cell": [
+        "MULTI_WINDOW_DYNAMIC",
+        "MIXED_PASSIVE_QUERY_PROBE",
+        "4",
+        "SLACK",
+        "RECONNECT_RECONCILE_OBJECTIVE_CHECK"
+      ],
+      "deployment_alternatives": [
+        "gateway_local_edf_reserve"
+      ],
+      "disposition": "SURVIVES_SAME_INFORMATION_ORDINARY_BASELINES",
+      "recipe_id": "T1R-c7ad605bf53d26",
+      "same_information_shortcut_baselines": []
+    },
+    {
+      "cell": [
+        "MULTI_WINDOW_DYNAMIC",
+        "MIXED_PASSIVE_QUERY_PROBE",
+        "4",
+        "TIGHT",
+        "NO_RECOVERY_STATE"
+      ],
+      "deployment_alternatives": [
+        "gateway_local_edf_reserve"
+      ],
+      "disposition": "SURVIVES_SAME_INFORMATION_ORDINARY_BASELINES",
+      "recipe_id": "T1R-1f20658c702ebe",
+      "same_information_shortcut_baselines": []
+    },
+    {
+      "cell": [
+        "MULTI_WINDOW_DYNAMIC",
+        "MIXED_PASSIVE_QUERY_PROBE",
+        "4",
+        "TIGHT",
+        "OUTAGE_CACHE_RETAIN"
+      ],
+      "deployment_alternatives": [
+        "gateway_local_edf_reserve"
+      ],
+      "disposition": "SURVIVES_SAME_INFORMATION_ORDINARY_BASELINES",
+      "recipe_id": "T1R-2cbd6177830ee8",
+      "same_information_shortcut_baselines": []
+    },
+    {
+      "cell": [
+        "MULTI_WINDOW_DYNAMIC",
+        "MIXED_PASSIVE_QUERY_PROBE",
+        "4",
+        "TIGHT",
+        "RECONNECT_RECONCILE_OBJECTIVE_CHECK"
+      ],
+      "deployment_alternatives": [
+        "gateway_local_edf_reserve"
+      ],
+      "disposition": "SURVIVES_SAME_INFORMATION_ORDINARY_BASELINES",
+      "recipe_id": "T1R-8d329cdeeff812",
+      "same_information_shortcut_baselines": []
+    },
+    {
+      "cell": [
+        "MULTI_WINDOW_DYNAMIC",
+        "PASSIVE_ACK_ONLY",
+        "2",
+        "BALANCED",
+        "NO_RECOVERY_STATE"
+      ],
+      "deployment_alternatives": [
+        "gateway_local_edf_reserve"
+      ],
+      "disposition": "SHORTCUT_SOLVED_SAME_INFORMATION",
+      "recipe_id": "T1R-5e7e15908771e6",
+      "same_information_shortcut_baselines": [
+        "blind_satellite_edf",
+        "send_probe_ack_fallback"
+      ]
+    },
+    {
+      "cell": [
+        "MULTI_WINDOW_DYNAMIC",
+        "PASSIVE_ACK_ONLY",
+        "2",
+        "BALANCED",
+        "OUTAGE_CACHE_RETAIN"
+      ],
+      "deployment_alternatives": [
+        "gateway_local_edf_reserve"
+      ],
+      "disposition": "SHORTCUT_SOLVED_SAME_INFORMATION",
+      "recipe_id": "T1R-1323c7d7d240b1",
+      "same_information_shortcut_baselines": [
+        "blind_satellite_edf",
+        "send_probe_ack_fallback"
+      ]
+    },
+    {
+      "cell": [
+        "MULTI_WINDOW_DYNAMIC",
+        "PASSIVE_ACK_ONLY",
+        "2",
+        "BALANCED",
+        "RECONNECT_RECONCILE_OBJECTIVE_CHECK"
+      ],
+      "deployment_alternatives": [
+        "gateway_local_edf_reserve"
+      ],
+      "disposition": "SHORTCUT_SOLVED_SAME_INFORMATION",
+      "recipe_id": "T1R-cedab79197c7d3",
+      "same_information_shortcut_baselines": [
+        "blind_satellite_edf",
+        "send_probe_ack_fallback"
+      ]
+    },
+    {
+      "cell": [
+        "MULTI_WINDOW_DYNAMIC",
+        "PASSIVE_ACK_ONLY",
+        "2",
+        "SLACK",
+        "NO_RECOVERY_STATE"
+      ],
+      "deployment_alternatives": [
+        "gateway_local_edf_reserve"
+      ],
+      "disposition": "SHORTCUT_SOLVED_SAME_INFORMATION",
+      "recipe_id": "T1R-1985ec991af3c8",
+      "same_information_shortcut_baselines": [
+        "blind_satellite_edf",
+        "send_probe_ack_fallback"
+      ]
+    },
+    {
+      "cell": [
+        "MULTI_WINDOW_DYNAMIC",
+        "PASSIVE_ACK_ONLY",
+        "2",
+        "SLACK",
+        "OUTAGE_CACHE_RETAIN"
+      ],
+      "deployment_alternatives": [
+        "gateway_local_edf_reserve"
+      ],
+      "disposition": "SURVIVES_SAME_INFORMATION_ORDINARY_BASELINES",
+      "recipe_id": "T1R-8434dff1b655b0",
+      "same_information_shortcut_baselines": []
+    },
+    {
+      "cell": [
+        "MULTI_WINDOW_DYNAMIC",
+        "PASSIVE_ACK_ONLY",
+        "2",
+        "SLACK",
+        "RECONNECT_RECONCILE_OBJECTIVE_CHECK"
+      ],
+      "deployment_alternatives": [
+        "gateway_local_edf_reserve"
+      ],
+      "disposition": "SHORTCUT_SOLVED_SAME_INFORMATION",
+      "recipe_id": "T1R-4ffc71883089e7",
+      "same_information_shortcut_baselines": [
+        "blind_satellite_edf",
+        "send_probe_ack_fallback"
+      ]
+    },
+    {
+      "cell": [
+        "MULTI_WINDOW_DYNAMIC",
+        "PASSIVE_ACK_ONLY",
+        "2",
+        "TIGHT",
+        "NO_RECOVERY_STATE"
+      ],
+      "deployment_alternatives": [
+        "gateway_local_edf_reserve"
+      ],
+      "disposition": "SURVIVES_SAME_INFORMATION_ORDINARY_BASELINES",
+      "recipe_id": "T1R-c103fa28748910",
+      "same_information_shortcut_baselines": []
+    },
+    {
+      "cell": [
+        "MULTI_WINDOW_DYNAMIC",
+        "PASSIVE_ACK_ONLY",
+        "2",
+        "TIGHT",
+        "OUTAGE_CACHE_RETAIN"
+      ],
+      "deployment_alternatives": [
+        "gateway_local_edf_reserve"
+      ],
+      "disposition": "SURVIVES_SAME_INFORMATION_ORDINARY_BASELINES",
+      "recipe_id": "T1R-fb794317f285f6",
+      "same_information_shortcut_baselines": []
+    },
+    {
+      "cell": [
+        "MULTI_WINDOW_DYNAMIC",
+        "PASSIVE_ACK_ONLY",
+        "2",
+        "TIGHT",
+        "RECONNECT_RECONCILE_OBJECTIVE_CHECK"
+      ],
+      "deployment_alternatives": [
+        "gateway_local_edf_reserve"
+      ],
+      "disposition": "SURVIVES_SAME_INFORMATION_ORDINARY_BASELINES",
+      "recipe_id": "T1R-e985091bfe3be7",
+      "same_information_shortcut_baselines": []
+    },
+    {
+      "cell": [
+        "MULTI_WINDOW_DYNAMIC",
+        "PASSIVE_ACK_ONLY",
+        "3",
+        "BALANCED",
+        "NO_RECOVERY_STATE"
+      ],
+      "deployment_alternatives": [
+        "gateway_local_edf_reserve"
+      ],
+      "disposition": "SHORTCUT_SOLVED_SAME_INFORMATION",
+      "recipe_id": "T1R-56d6b134b3cf52",
+      "same_information_shortcut_baselines": [
+        "blind_satellite_edf",
+        "send_probe_ack_fallback"
+      ]
+    },
+    {
+      "cell": [
+        "MULTI_WINDOW_DYNAMIC",
+        "PASSIVE_ACK_ONLY",
+        "3",
+        "BALANCED",
+        "OUTAGE_CACHE_RETAIN"
+      ],
+      "deployment_alternatives": [
+        "gateway_local_edf_reserve"
+      ],
+      "disposition": "SHORTCUT_SOLVED_SAME_INFORMATION",
+      "recipe_id": "T1R-53fe737de45c6d",
+      "same_information_shortcut_baselines": [
+        "blind_satellite_edf",
+        "send_probe_ack_fallback"
+      ]
+    },
+    {
+      "cell": [
+        "MULTI_WINDOW_DYNAMIC",
+        "PASSIVE_ACK_ONLY",
+        "3",
+        "BALANCED",
+        "RECONNECT_RECONCILE_OBJECTIVE_CHECK"
+      ],
+      "deployment_alternatives": [
+        "gateway_local_edf_reserve"
+      ],
+      "disposition": "SHORTCUT_SOLVED_SAME_INFORMATION",
+      "recipe_id": "T1R-1c22e9ccd921ff",
+      "same_information_shortcut_baselines": [
+        "blind_satellite_edf",
+        "send_probe_ack_fallback"
+      ]
+    },
+    {
+      "cell": [
+        "MULTI_WINDOW_DYNAMIC",
+        "PASSIVE_ACK_ONLY",
+        "3",
+        "SLACK",
+        "NO_RECOVERY_STATE"
+      ],
+      "deployment_alternatives": [
+        "gateway_local_edf_reserve"
+      ],
+      "disposition": "SHORTCUT_SOLVED_SAME_INFORMATION",
+      "recipe_id": "T1R-6dc90cfd190cf9",
+      "same_information_shortcut_baselines": [
+        "blind_satellite_edf",
+        "send_probe_ack_fallback"
+      ]
+    },
+    {
+      "cell": [
+        "MULTI_WINDOW_DYNAMIC",
+        "PASSIVE_ACK_ONLY",
+        "3",
+        "SLACK",
+        "OUTAGE_CACHE_RETAIN"
+      ],
+      "deployment_alternatives": [
+        "gateway_local_edf_reserve"
+      ],
+      "disposition": "SURVIVES_SAME_INFORMATION_ORDINARY_BASELINES",
+      "recipe_id": "T1R-9c4b0f3bb27a05",
+      "same_information_shortcut_baselines": []
+    },
+    {
+      "cell": [
+        "MULTI_WINDOW_DYNAMIC",
+        "PASSIVE_ACK_ONLY",
+        "3",
+        "SLACK",
+        "RECONNECT_RECONCILE_OBJECTIVE_CHECK"
+      ],
+      "deployment_alternatives": [
+        "gateway_local_edf_reserve"
+      ],
+      "disposition": "SHORTCUT_SOLVED_SAME_INFORMATION",
+      "recipe_id": "T1R-9af3908f369d98",
+      "same_information_shortcut_baselines": [
+        "blind_satellite_edf",
+        "send_probe_ack_fallback"
+      ]
+    },
+    {
+      "cell": [
+        "MULTI_WINDOW_DYNAMIC",
+        "PASSIVE_ACK_ONLY",
+        "3",
+        "TIGHT",
+        "NO_RECOVERY_STATE"
+      ],
+      "deployment_alternatives": [
+        "gateway_local_edf_reserve"
+      ],
+      "disposition": "SURVIVES_SAME_INFORMATION_ORDINARY_BASELINES",
+      "recipe_id": "T1R-7c94ca91296eb0",
+      "same_information_shortcut_baselines": []
+    },
+    {
+      "cell": [
+        "MULTI_WINDOW_DYNAMIC",
+        "PASSIVE_ACK_ONLY",
+        "3",
+        "TIGHT",
+        "OUTAGE_CACHE_RETAIN"
+      ],
+      "deployment_alternatives": [
+        "gateway_local_edf_reserve"
+      ],
+      "disposition": "SURVIVES_SAME_INFORMATION_ORDINARY_BASELINES",
+      "recipe_id": "T1R-7a9e068d7eb413",
+      "same_information_shortcut_baselines": []
+    },
+    {
+      "cell": [
+        "MULTI_WINDOW_DYNAMIC",
+        "PASSIVE_ACK_ONLY",
+        "3",
+        "TIGHT",
+        "RECONNECT_RECONCILE_OBJECTIVE_CHECK"
+      ],
+      "deployment_alternatives": [
+        "gateway_local_edf_reserve"
+      ],
+      "disposition": "SURVIVES_SAME_INFORMATION_ORDINARY_BASELINES",
+      "recipe_id": "T1R-50489cde1953ed",
+      "same_information_shortcut_baselines": []
+    },
+    {
+      "cell": [
+        "MULTI_WINDOW_DYNAMIC",
+        "PASSIVE_ACK_ONLY",
+        "4",
+        "BALANCED",
+        "NO_RECOVERY_STATE"
+      ],
+      "deployment_alternatives": [
+        "gateway_local_edf_reserve"
+      ],
+      "disposition": "SHORTCUT_SOLVED_SAME_INFORMATION",
+      "recipe_id": "T1R-892e8dcb81fea4",
+      "same_information_shortcut_baselines": [
+        "blind_satellite_edf",
+        "send_probe_ack_fallback"
+      ]
+    },
+    {
+      "cell": [
+        "MULTI_WINDOW_DYNAMIC",
+        "PASSIVE_ACK_ONLY",
+        "4",
+        "BALANCED",
+        "OUTAGE_CACHE_RETAIN"
+      ],
+      "deployment_alternatives": [
+        "gateway_local_edf_reserve"
+      ],
+      "disposition": "SURVIVES_SAME_INFORMATION_ORDINARY_BASELINES",
+      "recipe_id": "T1R-8ac20823e6891a",
+      "same_information_shortcut_baselines": []
+    },
+    {
+      "cell": [
+        "MULTI_WINDOW_DYNAMIC",
+        "PASSIVE_ACK_ONLY",
+        "4",
+        "BALANCED",
+        "RECONNECT_RECONCILE_OBJECTIVE_CHECK"
+      ],
+      "deployment_alternatives": [
+        "gateway_local_edf_reserve"
+      ],
+      "disposition": "SURVIVES_SAME_INFORMATION_ORDINARY_BASELINES",
+      "recipe_id": "T1R-eb0b5d74690857",
+      "same_information_shortcut_baselines": []
+    },
+    {
+      "cell": [
+        "MULTI_WINDOW_DYNAMIC",
+        "PASSIVE_ACK_ONLY",
+        "4",
+        "SLACK",
+        "NO_RECOVERY_STATE"
+      ],
+      "deployment_alternatives": [
+        "gateway_local_edf_reserve"
+      ],
+      "disposition": "SHORTCUT_SOLVED_SAME_INFORMATION",
+      "recipe_id": "T1R-b332d45ff25559",
+      "same_information_shortcut_baselines": [
+        "blind_satellite_edf",
+        "send_probe_ack_fallback"
+      ]
+    },
+    {
+      "cell": [
+        "MULTI_WINDOW_DYNAMIC",
+        "PASSIVE_ACK_ONLY",
+        "4",
+        "SLACK",
+        "OUTAGE_CACHE_RETAIN"
+      ],
+      "deployment_alternatives": [
+        "gateway_local_edf_reserve"
+      ],
+      "disposition": "SURVIVES_SAME_INFORMATION_ORDINARY_BASELINES",
+      "recipe_id": "T1R-18ce99e4d51458",
+      "same_information_shortcut_baselines": []
+    },
+    {
+      "cell": [
+        "MULTI_WINDOW_DYNAMIC",
+        "PASSIVE_ACK_ONLY",
+        "4",
+        "SLACK",
+        "RECONNECT_RECONCILE_OBJECTIVE_CHECK"
+      ],
+      "deployment_alternatives": [
+        "gateway_local_edf_reserve"
+      ],
+      "disposition": "SURVIVES_SAME_INFORMATION_ORDINARY_BASELINES",
+      "recipe_id": "T1R-a2803f0f0615a7",
+      "same_information_shortcut_baselines": []
+    },
+    {
+      "cell": [
+        "MULTI_WINDOW_DYNAMIC",
+        "PASSIVE_ACK_ONLY",
+        "4",
+        "TIGHT",
+        "NO_RECOVERY_STATE"
+      ],
+      "deployment_alternatives": [
+        "gateway_local_edf_reserve"
+      ],
+      "disposition": "SURVIVES_SAME_INFORMATION_ORDINARY_BASELINES",
+      "recipe_id": "T1R-1ddf4fa03ccd70",
+      "same_information_shortcut_baselines": []
+    },
+    {
+      "cell": [
+        "MULTI_WINDOW_DYNAMIC",
+        "PASSIVE_ACK_ONLY",
+        "4",
+        "TIGHT",
+        "OUTAGE_CACHE_RETAIN"
+      ],
+      "deployment_alternatives": [
+        "gateway_local_edf_reserve"
+      ],
+      "disposition": "SURVIVES_SAME_INFORMATION_ORDINARY_BASELINES",
+      "recipe_id": "T1R-60a47b94bf221b",
+      "same_information_shortcut_baselines": []
+    },
+    {
+      "cell": [
+        "MULTI_WINDOW_DYNAMIC",
+        "PASSIVE_ACK_ONLY",
+        "4",
+        "TIGHT",
+        "RECONNECT_RECONCILE_OBJECTIVE_CHECK"
+      ],
+      "deployment_alternatives": [
+        "gateway_local_edf_reserve"
+      ],
+      "disposition": "SURVIVES_SAME_INFORMATION_ORDINARY_BASELINES",
+      "recipe_id": "T1R-96d2032ff227f1",
+      "same_information_shortcut_baselines": []
+    }
+  ],
+  "same_information_shortcut_coverage": {
+    "blind_satellite_edf": 100,
+    "fixed_owner_read_edf": 51,
+    "send_probe_ack_fallback": 51
+  },
+  "schema_version": "0.1",
+  "status": "V8_ALL_STRUCTURAL_CELLS_ORDINARY_BASELINE_AUDIT"
+}

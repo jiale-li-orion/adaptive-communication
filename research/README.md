@@ -7,7 +7,7 @@
 | Owner | 负责对象 | 当前状态 | 入口 |
 |---|---|---|---|
 | `substrate/` | 山区灾前监测通信物理、能量、缓存、机会、回传、fallback、执行生命周期与数学系统模型 | 稳定底座 | `substrate/README.md` |
-| `benchmark/` | Layer 1：source-grounded operational needs、Task construction、validity/hardness、conformance/decision benchmark | 当前主瓶颈；58,752 pre-world/pre-oracle recipes，尚未 BENCHMARK_ADMIT | `benchmark/LAYER1-AUTHORITY.md` · `benchmark/README.md` |
+| `benchmark/` | Layer 1：source-grounded operational needs、Task construction、validity/hardness、conformance/decision benchmark | 当前主瓶颈；world/causal/exact、V0–V9、held-out split 与自动 quality gates 已收口；Q0–Q12 为 12 PASS / 1 BLOCKED，仅 Q11 真实人工 source audit 未完成 | `benchmark/LAYER1-AUTHORITY.md` · `benchmark/README.md` |
 | `compiler/` | Layer 2：Task/Evidence/Capability/Execution 到 live decision surface、EvidenceNeed、commitment、persistent execution | 已有 A7–A11 机制证据，接口冻结 | `compiler/README.md` |
 | `policy/` | Layer 3：deterministic/search、LLM、未来 GNN/offline RL/hybrid policy；只在合法 decision surface 上做选择 | LLM/规则已有，learned policy 尚未实现 | `policy/README.md` |
 | `evaluation/` | replay、attribution、ablation、baseline fairness、生成结果摘要 | 横切三层 | `evaluation/README.md` |

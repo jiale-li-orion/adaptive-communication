@@ -1,0 +1,124 @@
+{
+  "contract": "research/benchmark/V8-BASELINE-CONTRACT.v0.1.md",
+  "current_paid_survivor_projection": {
+    "interpretation": "pre-admission V8 survivor projection; not benchmark case count",
+    "projected_recipe_count": 435,
+    "signature_count": 73
+  },
+  "deep_horizon": {
+    "baseline_coverage": {},
+    "disposition": {
+      "SURVIVES_DEEP_HORIZON_V0_1": 16
+    },
+    "input_survivor_count": 16
+  },
+  "fixed_query_tail": {
+    "baseline_coverage": {},
+    "disposition": {
+      "SURVIVES_FIXED_QUERY_TAIL_V0_1": 73
+    },
+    "input_signature_count": 73,
+    "survivor_signature_count": 73
+  },
+  "flow_terminal": {
+    "baseline_coverage": {},
+    "disposition": {
+      "SURVIVES_FLOW_TERMINAL_V0_1": 16
+    },
+    "input_survivor_count": 16
+  },
+  "generic_exact_computation_reference": {
+    "role": "COMPUTATION_REFERENCE_NOT_ADMISSION_VERDICT",
+    "summary": {
+      "exact_max_memo_nodes": 7151,
+      "exact_max_wall_ms": 280.6795599972247,
+      "exact_mean_memo_nodes": 2097.875,
+      "exact_mean_wall_ms": 54.627447811981256,
+      "no_query_max_wall_ms": 4000.5180070002098,
+      "no_query_mean_wall_ms": 503.8404178126257
+    },
+    "survivor_count": 16
+  },
+  "paid_evidence_first_layer": {
+    "cell_count": 15,
+    "deployment_alternative_coverage": {
+      "gateway_local_edf_reserve": 15
+    },
+    "disposition": {
+      "SURVIVES_SAME_INFORMATION_ORDINARY_BASELINES": 15
+    },
+    "same_information_shortcut_coverage": {}
+  },
+  "paid_signature_deep_audit": {
+    "baseline_coverage": {
+      "depth_5_flow_terminal": 4,
+      "depth_6_flow_terminal": 2,
+      "receding_horizon_4": 1
+    },
+    "disposition": {
+      "SHORTCUT_SOLVED_DEEP_PAID_SIGNATURE": 7,
+      "SURVIVES_DEEP_PAID_SIGNATURE_V0_1": 73
+    },
+    "input_signature_count": 80,
+    "survivor_signature_count": 73
+  },
+  "paid_signature_progressive_audit": {
+    "baseline_coverage": {
+      "least_slack": 309,
+      "myopic_flow_voi": 106,
+      "receding_horizon_3": 20,
+      "shallow_rule_combiner": 95,
+      "true_depth_2_belief": 4
+    },
+    "disposition": {
+      "CHEAP_POLICY_RULE": 316,
+      "FINITE_HORIZON": 20,
+      "SURVIVES_V8_PAID_SIGNATURE_LADDER_V0_1": 80
+    },
+    "paid_signature_count": 416,
+    "survivor_signature_count": 80
+  },
+  "placement_boundary": {
+    "gateway_local_autonomy_role": "DEPLOYMENT_ALTERNATIVE",
+    "generic_exact_role": "COMPUTATION_REFERENCE_NOT_ADMISSION_VERDICT",
+    "same_information_shortcuts_drive_hardness_verdict": true
+  },
+  "policy_ladder": {
+    "baseline_coverage": {
+      "receding_horizon_3": 100,
+      "shallow_rule_combiner": 80,
+      "true_depth_1_belief": 88,
+      "true_depth_2_belief": 89
+    },
+    "disposition": {
+      "SHORTCUT_SOLVED_POLICY_LADDER": 100,
+      "SURVIVES_POLICY_LADDER_V0_1": 16
+    },
+    "input_survivor_count": 116
+  },
+  "release_status": "NOT_BENCHMARK_ADMIT",
+  "rule_tail": {
+    "baseline_coverage": {},
+    "disposition": {
+      "SURVIVES_RULE_TAIL_V0_1": 16
+    },
+    "input_survivor_count": 16
+  },
+  "schema_version": "0.1",
+  "status": "V8_PLACEMENT_AWARE_IN_PROGRESS",
+  "structural_first_layer": {
+    "cell_count": 216,
+    "deployment_alternative_coverage": {
+      "gateway_local_edf_reserve": 216
+    },
+    "disposition": {
+      "SHORTCUT_SOLVED_SAME_INFORMATION": 100,
+      "SURVIVES_SAME_INFORMATION_ORDINARY_BASELINES": 116
+    },
+    "same_information_shortcut_coverage": {
+      "blind_satellite_edf": 100,
+      "fixed_owner_read_edf": 51,
+      "send_probe_ack_fallback": 51
+    }
+  }
+}

@@ -1,0 +1,39 @@
+{
+  "by_evidence_regime": {
+    "FULL_OBSERVATION_CONTROL": 14688,
+    "GATEWAY_SUMMARY_QUERY": 14688,
+    "MIXED_PASSIVE_QUERY_PROBE": 14688,
+    "PASSIVE_ACK_ONLY": 14688
+  },
+  "by_passive_ack_enabled": {
+    "false": 29376,
+    "true": 29376
+  },
+  "by_query_capability_count": {
+    "0": 29376,
+    "1": 29376
+  },
+  "parent_bundle_count": 58752,
+  "process": "T1-causal-observation-evidence-v0.1",
+  "process_count": 58752,
+  "process_id_stream_sha256": "fc87f0d5cbc5fa7ac265d289336326226fe4a8276b1222d00d2c6cf85821a87f",
+  "rules": [
+    "Queries sample current owner state before response arrival; later world changes cannot rewrite the sampled value.",
+    "Query payloads contain current/past gateway facts only and never future service windows, plan labels or world ids.",
+    "Passive delivery evidence exists only after an executed send.",
+    "Gateway receipt and final completion ACK remain separate events.",
+    "Normal send-as-probe is the ordinary SEND_TERR action and pays no extra synthetic tool cost.",
+    "Owner query consumes one declared terrestrial opportunity-capacity unit; passive ACK is acquisition-free."
+  ],
+  "schema_version": "0.1",
+  "stage": "CAUSAL_EVIDENCE_PRE_ORACLE",
+  "timing_contract": {
+    "ack_timeout_s": 60,
+    "final_ack_delay_s": 30,
+    "gateway_receipt_delay_s": 10,
+    "provenance": "CONTROLLED_STRESS",
+    "query_response_delay_s": 60,
+    "query_timeout_s": 60,
+    "satellite_completion_delay_s": 5
+  }
+}

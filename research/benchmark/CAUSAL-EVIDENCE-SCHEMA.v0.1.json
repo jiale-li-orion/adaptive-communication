@@ -1,0 +1,55 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "adaptive-communication/research/benchmark/CAUSAL-EVIDENCE-SCHEMA.v0.1.json",
+  "title": "Layer-1 Causal Observation/Evidence Process v0.1",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_version",
+    "process_id",
+    "parent_bundle_id",
+    "recipe_id",
+    "stage",
+    "evidence_regime",
+    "direct_observation",
+    "query_capabilities",
+    "passive_observation_rules",
+    "normal_send_probe_rules",
+    "world_owner_processes",
+    "history_contract",
+    "resource_contract",
+    "release_status",
+    "next_stage"
+  ],
+  "properties": {
+    "schema_version": {"const": "0.1"},
+    "process_id": {"type": "string", "pattern": "^T1E-"},
+    "parent_bundle_id": {"type": "string", "pattern": "^T1B-"},
+    "recipe_id": {"type": "string", "pattern": "^T1R-"},
+    "stage": {"const": "CAUSAL_EVIDENCE_PRE_ORACLE"},
+    "evidence_regime": {"type": "string"},
+    "direct_observation": {"type": "boolean"},
+    "query_capabilities": {"type": "array", "items": {"type": "object"}},
+    "passive_observation_rules": {"type": "array", "items": {"type": "object"}},
+    "normal_send_probe_rules": {"type": "array", "items": {"type": "object"}},
+    "world_owner_processes": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "object",
+        "required": [
+          "world_id",
+          "owner",
+          "proposition",
+          "terrestrial_intervals",
+          "owner_state_events",
+          "future_state_visibility"
+        ]
+      }
+    },
+    "history_contract": {"type": "object"},
+    "resource_contract": {"type": "object"},
+    "release_status": {"const": "NOT_BENCHMARK_ADMIT"},
+    "next_stage": {"const": "EXACT_ORACLE_REFERENCE_LABELS"}
+  }
+}

@@ -1,0 +1,41 @@
+{
+  "bundle_count": 58752,
+  "bundle_id_stream_sha256": "329212d8512d761d627e71a7af51d89c8b5b0a79eb21e06651a27810e8164c52",
+  "bundles_with_preserved_source_blocker": 9792,
+  "by_alias_world_count": {
+    "1": 14688,
+    "2": 14688,
+    "3": 14688,
+    "4": 14688
+  },
+  "by_evidence_regime": {
+    "FULL_OBSERVATION_CONTROL": 14688,
+    "GATEWAY_SUMMARY_QUERY": 14688,
+    "MIXED_PASSIVE_QUERY_PROBE": 14688,
+    "PASSIVE_ACK_ONLY": 14688
+  },
+  "by_recovery_regime": {
+    "NO_RECOVERY_STATE": 19584,
+    "OUTAGE_CACHE_RETAIN": 19584,
+    "RECONNECT_RECONCILE_OBJECTIVE_CHECK": 19584
+  },
+  "by_service_process": {
+    "FINITE_CROSSING_WINDOWS": 14688,
+    "MONOTONE_RECOVERY_NEGATIVE": 14688,
+    "MULTI_WINDOW_DYNAMIC": 14688,
+    "STEADY_AVAILABLE_CONTROL": 14688
+  },
+  "input_recipe_count": 58752,
+  "materializer": "T1-dynamic-world-alias-bundle-v0.1",
+  "rules": [
+    "One frozen candidate recipe materializes to one world/alias bundle.",
+    "Materialized bundles are still NOT_BENCHMARK_ADMIT and have no oracle/V0-V9 labels.",
+    "MODEL_DERIVED satellite geometry is public and identical across alias worlds.",
+    "Alias differences live in declared dynamic terrestrial/recovery state, never in hidden public geometry.",
+    "Workload overlap and service-process variation remain explicit CONTROLLED_STRESS coordinates.",
+    "Reconnect backlog-vs-fresh priority remains unresolved; materialization preserves the V7 blocker.",
+    "ACK/query/probe response values and arrival timing are deferred to the causal evidence stage."
+  ],
+  "schema_version": "0.1",
+  "stage": "WORLD_BUNDLE_PRE_EVIDENCE_PRE_ORACLE"
+}

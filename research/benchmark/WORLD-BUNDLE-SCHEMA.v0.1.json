@@ -1,0 +1,111 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "adaptive-communication/research/benchmark/WORLD-BUNDLE-SCHEMA.v0.1.json",
+  "title": "Layer-1 Dynamic World / Alias Bundle v0.1",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_version",
+    "bundle_id",
+    "materializer",
+    "stage",
+    "recipe_id",
+    "family",
+    "task_case_id",
+    "task_surface_ids",
+    "source_profiles",
+    "hardness_candidates",
+    "pre_oracle_disposition",
+    "blockers",
+    "public_environment",
+    "obligations",
+    "recovery",
+    "observation_projection",
+    "worlds",
+    "provenance",
+    "release_status",
+    "next_stage"
+  ],
+  "properties": {
+    "schema_version": {"const": "0.1"},
+    "bundle_id": {"type": "string", "pattern": "^T1B-"},
+    "materializer": {"const": "T1-dynamic-world-alias-bundle-v0.1"},
+    "stage": {"const": "WORLD_BUNDLE_PRE_EVIDENCE_PRE_ORACLE"},
+    "recipe_id": {"type": "string", "pattern": "^T1R-"},
+    "family": {"const": "T1_MONITORING_INFORMATION_CONTINUITY"},
+    "task_case_id": {"type": "string"},
+    "task_surface_ids": {"type": "array", "items": {"type": "string"}},
+    "source_profiles": {"type": "array", "items": {"type": "string"}},
+    "hardness_candidates": {"type": "array", "items": {"type": "string"}},
+    "pre_oracle_disposition": {"type": "string"},
+    "blockers": {"type": "array", "items": {"type": "string"}},
+    "public_environment": {
+      "type": "object",
+      "required": [
+        "geometry_signature_id",
+        "geometry_trace_id",
+        "geometry_mask_deg",
+        "geometry_start_s",
+        "horizon_s",
+        "warning_transition",
+        "satellite_windows",
+        "satellite_budget_units",
+        "satellite_budget_provenance",
+        "terrestrial_process_class",
+        "terrestrial_process_provenance",
+        "path_priority_rule"
+      ]
+    },
+    "obligations": {
+      "type": "array",
+      "minItems": 2,
+      "items": {
+        "type": "object",
+        "required": [
+          "obligation_id",
+          "stream_index",
+          "protected_subject",
+          "release_s",
+          "deadline_s",
+          "source_interval_s",
+          "authority_owner",
+          "source_ref_ids",
+          "workload_provenance"
+        ]
+      }
+    },
+    "recovery": {"type": "object"},
+    "observation_projection": {
+      "type": "object",
+      "required": [
+        "evidence_regime",
+        "projection_provenance",
+        "initial_public_observation_hash",
+        "hidden_fields",
+        "alias_world_ids",
+        "evidence_surfaces",
+        "causal_evidence_status"
+      ],
+      "properties": {
+        "evidence_regime": {"type": "string"},
+        "projection_provenance": {"enum": ["FULL_CURRENT_STATE", "CAPABILITY_DEPENDENT"]},
+        "initial_public_observation_hash": {"type": "string"},
+        "hidden_fields": {"type": "array", "items": {"type": "string"}},
+        "alias_world_ids": {"type": "array", "minItems": 1, "items": {"type": "string"}},
+        "evidence_surfaces": {"type": "array", "items": {"type": "object"}},
+        "causal_evidence_status": {"const": "PENDING_NEXT_STAGE"}
+      }
+    },
+    "worlds": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "object",
+        "required": ["world_id", "latent_state", "terrestrial_windows", "public_satellite_window_ref"]
+      }
+    },
+    "provenance": {"type": "object"},
+    "release_status": {"const": "NOT_BENCHMARK_ADMIT"},
+    "next_stage": {"const": "CAUSAL_OBSERVATION_EVIDENCE_PROCESS"}
+  }
+}
