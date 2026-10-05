@@ -25,15 +25,21 @@ def _key(action) -> str:
 
 
 VARIANTS = {
-    "exact_memo": ("exact_memo", False, False),
-    "monotone_memo": ("monotone_memo", False, False),
-    "witness_domain": ("witness_domain", False, False),
-    "witness_domain_plus_upper": ("witness_domain", True, False),
-    "witness_domain_plus_lower_upper": ("witness_domain", True, True),
+    "exact_memo": ("exact_memo", False, False, False, 0),
+    "monotone_memo": ("monotone_memo", False, False, False, 0),
+    "witness_domain": ("witness_domain", False, False, False, 0),
+    "witness_domain_plus_upper_d0": ("witness_domain", True, False, False, 0),
+    "witness_domain_plus_upper_d1": ("witness_domain", True, False, False, 1),
+    "witness_domain_plus_upper_d2": ("witness_domain", True, False, False, 2),
+    "witness_domain_plus_upper_d4": ("witness_domain", True, False, False, 4),
+    "witness_domain_plus_upper_d6": ("witness_domain", True, False, False, 6),
+    "witness_domain_plus_lower_upper": ("witness_domain", True, True, False, 0),
+    "witness_domain_plus_common_lower_upper": ("witness_domain", True, True, True, 0),
 }
 
 
 def _run_variant(frozen, ref_by_sig, *, mode: str, use_upper: bool, use_lower: bool,
+                 use_common_lower: bool, upper_depth: int,
                  max_expansions: int, keep_rows: bool):
     sources = Counter()
     totals = Counter()
@@ -48,7 +54,10 @@ def _run_variant(frozen, ref_by_sig, *, mode: str, use_upper: bool, use_lower: b
             continue
         q, b, solved = chosen
         process = attach_causal_evidence(bundle)
-        lazy = LazyActionFeasibility(bundle, mode=mode, use_upper=use_upper, use_lower=use_lower)
+        lazy = LazyActionFeasibility(
+            bundle, mode=mode, use_upper=use_upper, use_lower=use_lower,
+            use_common_lower=use_common_lower, upper_depth=upper_depth,
+        )
         states = _initial(bundle, b)
         at_s = min(_attempt_lattice(bundle))
         node = solved["policy"]
@@ -111,6 +120,8 @@ def _run_variant(frozen, ref_by_sig, *, mode: str, use_upper: bool, use_lower: b
         "mode": mode,
         "use_upper": use_upper,
         "use_lower": use_lower,
+        "use_common_lower": use_common_lower,
+        "upper_depth": upper_depth,
         "all_certified_action_sets_match_reference": all_sets_match,
         "classified_action_count": classified,
         "classification_source_count": dict(sorted(sources.items())),
@@ -118,6 +129,7 @@ def _run_variant(frozen, ref_by_sig, *, mode: str, use_upper: bool, use_lower: b
         "exact_calls_avoided_after_zero_expansion_probe": classified - fallback,
         "exact_fallback_fraction": (fallback / classified) if classified else None,
         "exact_fallback_expanded": int(totals["exact_fallback_expanded"]),
+        "upper_nodes": int(totals["upper_nodes"]),
         "search_limit_count": int(totals["search_limits"]),
         "rows": rows,
     }
@@ -134,28 +146,44 @@ def main() -> int:
     reference = json.loads(REFERENCE.read_text(encoding="utf-8"))
     ref_by_sig = {str(r["signature"]): r["result"]["boundaries"] for r in reference["rows"]}
     variants = {}
-    for name, (mode, use_upper, use_lower) in VARIANTS.items():
+    for name, (mode, use_upper, use_lower, use_common_lower, upper_depth) in VARIANTS.items():
         variants[name] = _run_variant(
             frozen, ref_by_sig,
             mode=mode, use_upper=use_upper, use_lower=use_lower,
+            use_common_lower=use_common_lower, upper_depth=upper_depth,
             max_expansions=args.max_expansions,
-            keep_rows=(name == "witness_domain_plus_lower_upper"),
+            keep_rows=(name == "witness_domain_plus_common_lower_upper"),
         )
 
     exact = variants["exact_memo"]
     mono = variants["monotone_memo"]
     witness = variants["witness_domain"]
-    bounded = variants["witness_domain_plus_upper"]
+    bounded0 = variants["witness_domain_plus_upper_d0"]
+    bounded1 = variants["witness_domain_plus_upper_d1"]
+    bounded2 = variants["witness_domain_plus_upper_d2"]
+    bounded4 = variants["witness_domain_plus_upper_d4"]
+    bounded6 = variants["witness_domain_plus_upper_d6"]
     full = variants["witness_domain_plus_lower_upper"]
+    common = variants["witness_domain_plus_common_lower_upper"]
     incremental = {
         "monotone_vs_exact_fallback_call_delta": mono["exact_fallback_calls"] - exact["exact_fallback_calls"],
         "witness_vs_monotone_fallback_call_delta": witness["exact_fallback_calls"] - mono["exact_fallback_calls"],
-        "upper_vs_witness_fallback_call_delta": bounded["exact_fallback_calls"] - witness["exact_fallback_calls"],
+        "upper_d0_vs_witness_fallback_call_delta": bounded0["exact_fallback_calls"] - witness["exact_fallback_calls"],
+        "upper_d1_vs_d0_fallback_call_delta": bounded1["exact_fallback_calls"] - bounded0["exact_fallback_calls"],
+        "upper_d2_vs_d1_fallback_call_delta": bounded2["exact_fallback_calls"] - bounded1["exact_fallback_calls"],
+        "upper_d4_vs_d2_fallback_call_delta": bounded4["exact_fallback_calls"] - bounded2["exact_fallback_calls"],
+        "upper_d6_vs_d4_fallback_call_delta": bounded6["exact_fallback_calls"] - bounded4["exact_fallback_calls"],
         "monotone_vs_exact_expansion_delta": mono["exact_fallback_expanded"] - exact["exact_fallback_expanded"],
         "witness_vs_monotone_expansion_delta": witness["exact_fallback_expanded"] - mono["exact_fallback_expanded"],
-        "upper_vs_witness_expansion_delta": bounded["exact_fallback_expanded"] - witness["exact_fallback_expanded"],
-        "lower_vs_upper_fallback_call_delta": full["exact_fallback_calls"] - bounded["exact_fallback_calls"],
-        "lower_vs_upper_expansion_delta": full["exact_fallback_expanded"] - bounded["exact_fallback_expanded"],
+        "upper_d0_vs_witness_expansion_delta": bounded0["exact_fallback_expanded"] - witness["exact_fallback_expanded"],
+        "upper_d1_vs_d0_expansion_delta": bounded1["exact_fallback_expanded"] - bounded0["exact_fallback_expanded"],
+        "upper_d2_vs_d1_expansion_delta": bounded2["exact_fallback_expanded"] - bounded1["exact_fallback_expanded"],
+        "upper_d4_vs_d2_expansion_delta": bounded4["exact_fallback_expanded"] - bounded2["exact_fallback_expanded"],
+        "upper_d6_vs_d4_expansion_delta": bounded6["exact_fallback_expanded"] - bounded4["exact_fallback_expanded"],
+        "lower_vs_upper_fallback_call_delta": full["exact_fallback_calls"] - bounded0["exact_fallback_calls"],
+        "lower_vs_upper_expansion_delta": full["exact_fallback_expanded"] - bounded0["exact_fallback_expanded"],
+        "common_lower_vs_satellite_lower_fallback_call_delta": common["exact_fallback_calls"] - full["exact_fallback_calls"],
+        "common_lower_vs_satellite_lower_expansion_delta": common["exact_fallback_expanded"] - full["exact_fallback_expanded"],
     }
     all_match = all(v["all_certified_action_sets_match_reference"] for v in variants.values())
     search_limits = sum(v["search_limit_count"] for v in variants.values())
@@ -179,7 +207,7 @@ def main() -> int:
         "variants": {
             name: {k: row[k] for k in [
                 "classified_action_count", "classification_source_count", "exact_fallback_calls",
-                "exact_fallback_fraction", "exact_fallback_expanded", "search_limit_count",
+                "exact_fallback_fraction", "exact_fallback_expanded", "upper_nodes", "search_limit_count",
             ]}
             for name, row in variants.items()
         },
