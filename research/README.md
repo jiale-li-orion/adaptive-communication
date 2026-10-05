@@ -7,7 +7,7 @@
 | Owner | 负责对象 | 当前状态 | 入口 |
 |---|---|---|---|
 | `substrate/` | 山区灾前监测通信物理、能量、缓存、机会、回传、fallback、执行生命周期与数学系统模型 | 稳定底座 | `substrate/README.md` |
-| `benchmark/` | Layer 1：source-grounded operational needs、Task construction、validity/hardness、conformance/decision benchmark | 当前主瓶颈；world/causal/exact、V0–V9、held-out split 与自动 quality gates 已收口；Q0–Q12 为 12 PASS / 1 BLOCKED，仅 Q11 真实人工 source audit 未完成 | `benchmark/LAYER1-AUTHORITY.md` · `benchmark/README.md` |
+| `benchmark/` | Layer 1：source-grounded operational needs、Task construction、validity/hardness、conformance/decision benchmark | **research freeze 已完成**：v0.2-retry-legality 的 world/causal/exact、V0–V9、V8 hard 41 signatures / 174 recipes、held-out split 与 3,804-case public-test 已冻结；formal `BENCHMARK_ADMIT` 仍需 v0.2 Q11 human/source audit、Q0–Q12 refresh 与 release-evidence closure | `benchmark/LAYER1-AUTHORITY.md` · `benchmark/README.md` · `../spec/benchmark/LAYER1-DECISION-BENCHMARK-v0.2.md` |
 | `compiler/` | Layer 2：Task/Evidence/Capability/Execution 到 live decision surface、EvidenceNeed、commitment、persistent execution | 已有 A7–A11 机制证据，接口冻结 | `compiler/README.md` |
 | `policy/` | Layer 3：deterministic/search、LLM、未来 GNN/offline RL/hybrid policy；只在合法 decision surface 上做选择 | LLM/规则已有，learned policy 尚未实现 | `policy/README.md` |
 | `evaluation/` | replay、attribution、ablation、baseline fairness、生成结果摘要 | 横切三层 | `evaluation/README.md` |
@@ -18,7 +18,9 @@
 
 Layer 1 从原始山区灾前需求和可核查来源构造 Operational Task，并要求 task 在物理系统中激活真实 policy choice、partial evidence、resource conflict 或 temporal dependence。Layer 2 将合法 Task、Evidence、Capability 与 Execution 编译成 typed live decision surface。Layer 3 在该合法空间内选择 commit/query/wait/fallback/replan 等策略。通信结果由独立 physical scorer 评价。
 
-当前 O1–O6 与 A7–A11 不被删除：O1–O6 主要保留为 Runtime/semantic conformance suite；A7–A11 保留为 Layer 2 的机制与执行证据。新的 Decision Benchmark 只有通过 `benchmark/` 的 validity/hardness gate 才能晋级。
+当前版本关系固定为：**Layer 2 v1 已先完成一版机制并由 A7–A11 等结果冻结；由于旧 Layer 1 大量任务在 compilation 后退化为 `unique-ready`，研究随后回到 Layer 1 重做 Decision Benchmark；Layer 1 v0.2 现已 research-freeze。当前主线是用新 Layer-1 v0.2 重验 frozen Layer-2 v1，而不是预先重写 Layer 2。** 只有在 task/capability 已无损表达后，v1 仍出现真正 EvidenceNeed / Context / acquisition / execution 决策失败，才开启 Layer-2 v2；Layer 3 的新 policy/learning claim 随后再展开。
+
+O1–O6 继续作为 T1 Runtime/semantic conformance/regime assets；A7–A11 继续作为 Layer-2 v1 的机制与执行证据。Layer-1 v0.2 的毕业标准与 release 状态见 `benchmark/README.md` 和 `../spec/benchmark/LAYER1-DECISION-BENCHMARK-v0.2.md`。
 
 ## Ownership invariants
 

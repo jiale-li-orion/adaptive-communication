@@ -18,6 +18,87 @@
 
 一个 Decision Benchmark task 至少要能回答以下问题：来源是否支持这个 operational need；是否存在真实选择而非唯一已知写入；观测/不确定性是否可能改变选择；资源或时序约束是否实际 binding；不同合法策略是否产生 materially different physical outcomes；强 ordinary mechanism 是否仍留下需要决策的空间。增加节点数、seed 或窗口数量本身不增加 decision richness。
 
+## Benchmark graduation contract
+
+Layer 1 的完成标准不是“generator 能产 case”或“hard case 数量足够”，而是下面六组条件同时成立。该摘要来自 `cache06.md` 与 `调研cache.md` 已冻结的设计决策；正式规范见 [`spec/benchmark/LAYER1-DECISION-BENCHMARK-v0.2.md`](../../spec/benchmark/LAYER1-DECISION-BENCHMARK-v0.2.md)，release gate 由 [`BENCHMARK-QUALITY-GATE.v0.1.md`](BENCHMARK-QUALITY-GATE.v0.1.md) 执行。
+
+### G1. Agentic case threshold
+
+进入主 Decision Benchmark 的 case 必须同时具有：
+
+1. **Sequential interdependence**：后续动作依赖前序动作产生的新 observation / execution result；
+2. **Partial observability**：关键当前状态不能直接暴露给 policy，必须通过合法 observation / query / execution feedback 获得；
+3. **Adaptive strategy formation**：新证据能够改变后续合法/可行策略，而不是预先输出一条固定 open-loop 序列即可完成。
+
+每个主 hardness family 都要做 single-shot / open-loop reducibility audit。若把当前合法 observation 一次性给 policy 后，一轮静态选择或固定 open-loop sequence 已接近 observation-matched oracle，则该 case 降为 communication reasoning / conformance，不用于证明 Agentic Communication 能力。
+
+### G2. Source-grounded causal communication loop
+
+Benchmark 的可 defend 空间要求以下对象同时存在：
+
+- 现实义务可追溯到 field / standard / operational source；
+- evidence sufficiency 直接约束发送、等待、探测、回退等具体行动；
+- 主动取证支付真实时间、链路机会或其他资源成本，并允许 timeout / failure；
+- 正常发送、ACK、被动遥测等自然反馈不能被普通基线剥夺；
+- action 消耗真实通信/资源状态，并改变后续 obligation feasibility；
+- 长期间歇连接、状态老化与恢复属于同一 causal process；
+- evaluator / oracle 与 Agent 输入隔离。
+
+### G3. EvidenceNeed and oracle semantics
+
+EvidenceNeed 不能由“存在未知字段”定义。对于同一合法历史下的 alias worlds，必须先排除共同 zero-regret commitment；随后比较 observation-matched `query-enabled` 与 `no-paid-query` 最优策略，只有付费取证在保留 passive telemetry、ACK、normal-send-as-probe 后仍严格增加可实现任务价值，才能声明正 EvidenceNeed。
+
+Oracle 至少分离：
+
+- hindsight physical feasibility；
+- full-current-state causal feasibility；
+- observation-matched exact policy；
+- observation-matched no-paid-query policy。
+
+相同 visible history 必须选择相同 action；逐 hidden world 各取一条成功轨迹不构成合法 policy。
+
+### G4. Strong ordinary-baseline headroom
+
+Hardness 不能靠弱 baseline 制造。正式 ladder 至少覆盖：deadline-reserve/EDF、greedy fallback、fixed-priority / least-slack、latest-feasible-send、always-query-then-plan、never-query + passive feedback、myopic VoI、belief-aware rolling planner、开发集调优的 shallow rule/tree，以及 observation-matched exact reference。
+
+Admission 看的是普通短视/浅层策略在**结构留出集**上是否饱和；generic exact 能解小实例是预期行为，不构成 benchmark invalidity。
+
+### G5. Communication attribution and causal interventions
+
+Benchmark 必须证明“难点来自 communication/information structure”，不能把模型基础能力不足误写成通信困难。正式 evaluation matrix 至少应包含适用的：
+
+- full system；
+- no communication / no paid acquisition；
+- oracle communication / perfect current observation；
+- no active sensing；
+- no memory（若任务需要历史）；
+- remove resource conflict；
+- relaxed deadline；
+- controlled delay / stale evidence / disabled fallback 等单因素 intervention。
+
+若移除资源竞争、给予及时完美证据或放宽 deadline 后困难没有按预期减弱，需要重新审查 construct validity。
+
+### G6. Release-quality benchmark artifact
+
+正式 `BENCHMARK_ADMIT` 还要求：source/profile/case provenance、V0–V9、structure-aware held-out split、near-duplicate leakage audit、Q0–Q12、human/source audit、evaluator mutation tests、baseline/result manifests、统计报告、known-flaw / maintenance policy 与 frozen benchmark version 全部闭合。
+
+### Current v0.2 status against the graduation contract
+
+| Graduation requirement | v0.2 current state | Disposition |
+|---|---|---|
+| Source-grounded operational obligation / Family Identity | T1 source correction、profile/provenance、Family merge discipline 已闭合 | **PASS / research freeze** |
+| Partial observability + causal evidence | alias worlds、owner query、passive ACK、normal send-as-probe、non-anticipative history 已实现 | **PASS / research freeze** |
+| Real acquisition/execution cost changes future feasibility | query 消耗真实 terrestrial opportunity；send/wait/retry/ACK 进入同一 execution ledger | **PASS / research freeze** |
+| External exact oracle | hindsight / full-current / observation-matched / no-paid-query 参照与 `INFORMATION_INFEASIBLE` 已实现 | **PASS / research freeze** |
+| Strong baseline / shortcut audit | V8 ladder 已完成，最终保留 41 hard signatures / 174 recipes | **PASS / research freeze** |
+| Structure-aware held-out split | hard train/dev/test signatures 16/18/7，solver-signature 与近邻 leakage 审计通过 | **PASS / research freeze** |
+| Single-shot / open-loop reducibility as a named release audit | 机制上已有 sequential observation/action dependence，但最终 v0.2 release contract 需单列冻结该 audit | **PENDING RELEASE EVIDENCE** |
+| Communication-attribution intervention matrix | 部分对照已存在；需在最终 v0.2 lineage 上按 G5 统一登记 | **PENDING RELEASE EVIDENCE** |
+| Q11 human/source audit | 旧 packet 已因 source/retry correction 过期 | **PENDING HUMAN REVIEW** |
+| Q0–Q12 + formal `BENCHMARK_ADMIT` | 需在 v0.2 Q11 后重跑/刷新 | **PENDING RELEASE** |
+
+因此当前判断固定为：**Layer 1 已满足继续做 Layer 2/3 研究所需的 research freeze；还没有满足公开 benchmark release 的全部毕业手续。缺口属于 release evidence / audit，不构成继续改 generator 的理由。**
+
 ## Current authority and disposition
 
 **当前 Layer 1 全局状态只由 [LAYER1-AUTHORITY.md](LAYER1-AUTHORITY.md) 拥有。** 本 README 不再以某个 generator/receipt 版本代表全局进度。

@@ -10,11 +10,12 @@ Layer 1 相关信息发生冲突时，按以下顺序解释：
 
 1. `results/CLAIMS.md`：已经支持 / scoped-negative / formative / retracted 的事实主张；
 2. **本文件 `LAYER1-AUTHORITY.md`**：Layer 1 当前研究方向与冻结状态；
-3. `BENCHMARK-CONSTRUCTION-PROTOCOL.v0.1.md`：construction / admission / release 方法学；
-4. `TASK-SURFACE-REGISTRY.v0.1.json`：Family / task surface / historical closure 的机器可读 authority；
-5. `FAMILY-ENVIRONMENT-CONTRACT.v0.1.md`：T1/T2 environment boundary 与 simulator mapping；
-6. `BENCHMARK-QUALITY-GATE.v0.1.md`：Q0–Q12 release gate；
-7. `SCENARIO-GENERATOR.v0.*`、`V0.5-*`、receipt 文档：版本化机制实验与 regression，不拥有全局方向。
+3. `../../spec/benchmark/LAYER1-DECISION-BENCHMARK-v0.2.md`：当前 v0.2 environment / observation / action / oracle / graduation 的 normative contract；
+4. `BENCHMARK-CONSTRUCTION-PROTOCOL.v0.1.md`：construction / admission / release 方法学；
+5. `TASK-SURFACE-REGISTRY.v0.1.json`：Family / task surface / historical closure 的机器可读 authority；
+6. `FAMILY-ENVIRONMENT-CONTRACT.v0.1.md`：T1/T2 environment boundary 与 simulator mapping；
+7. `BENCHMARK-QUALITY-GATE.v0.1.md`：Q0–Q12 release gate；
+8. `SCENARIO-GENERATOR.v0.*`、`V0.5-*`、receipt 文档：版本化机制实验与 regression，不拥有全局方向。
 
 顶层 README、`research/README.md`、`research/benchmark/README.md` 只投影本 authority，不另立研究路线。
 

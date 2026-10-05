@@ -15,6 +15,8 @@
 - 说明哪些能力明确不在 scope 内；
 - 检查 trivial shortcut / irrelevant skill dependency；
 - 若一个 ordinary mechanism 即可饱和结果，降低 claim，不继续包装为 agentic capability。
+- 对主 Agentic split 明确检查 **Sequential interdependence / Partial observability / Adaptive strategy formation**；
+- 执行 single-shot / open-loop reducibility audit：若当前合法 observation 一次性给出后，静态选择或固定 open-loop sequence 已接近 observation-matched oracle，则该 case 不得承担 Agentic Communication 主 claim。
 
 失败：CONSTRUCT_INVALID。
 
@@ -71,6 +73,9 @@
 - observation/evidence can change legal/feasible plan set when relevant；
 - legal policies产生 materially different obligation-feasibility transition；
 - hardness 不能由 arbitrary hidden field / reward weight 制造。
+- intended EvidenceNeed 必须比较 observation-matched `query-enabled` 与 `no-paid-query`，后者仍保留 passive telemetry、等待后自然证据、ACK 与 normal send-as-probe；
+- query、probe、wait、send 的 acquisition/execution cost 必须进入同一 physical/resource ledger；
+- 去掉资源竞争、给予完美及时 current evidence、放宽 deadline 后，对应困难应按预期减弱；否则重新检查 construct。
 
 失败：DECISION_DEGENERATE。
 
@@ -81,6 +86,12 @@
 - static source-backed rule；
 - ordinary automatic/local mechanism；
 - greedy / EDF / fixed-priority where semantically legal；
+- latest-feasible-send / least-slack；
+- always-query-then-plan；
+- never-query + passive telemetry / ACK / normal send-as-probe；
+- myopic VoI；
+- belief-aware rolling / finite-horizon planner；
+- development-tuned shallow rule / tree，用来发现两层 if-else 之类的 shortcut；
 - observation-matched deterministic search/planner；
 - full-state feasibility oracle；
 - clairvoyant upper bound；
@@ -88,6 +99,8 @@
 - learned policy only when repeated state-dependent choice justifies it。
 
 要求报告 baseline saturation / headroom。
+
+同时必须有 communication attribution controls，在适用任务上比较 full system 与 no-communication/no-paid-acquisition、oracle/perfect-current-observation、no-active-sensing、no-memory，以及至少一组单因素 resource/deadline/evidence intervention。目标是区分通信/信息困难与模型基础任务能力不足。
 
 失败：BASELINE_INCOMPLETE。
 
