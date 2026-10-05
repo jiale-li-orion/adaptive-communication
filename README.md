@@ -1,10 +1,10 @@
 English | [中文](README.zh.md)
 
-> **Current research architecture: Benchmark → Decision-Semantic Compiler → Policy.** Layer 1 now has a corrected machine lineage: DB44/T 2457-2024 is fixed to landslide Table 11, retry legality no longer treats “possibly delivered” as “cannot retry”, and exact→V0–V9→split→public-test has been regenerated as `v0.2-retry-legality`. The 58,752-recipe universe remains fixed; current V8 leaves **41 hard signatures / 174 pre-admission recipes**. The old LLM/Q-gate lineage is stale; LLM rerun is deferred and Q11 must be rebuilt on v0.2 before `BENCHMARK_ADMIT`.
+> **Current research architecture: Source-grounded Benchmark → Future-Choice Context / Decision-Semantic Compiler → Policy / Learning.** Layer 1 is technically frozen on the corrected `v0.2-retry-legality` lineage: DB44/T 2457-2024 uses landslide Table 11, retry legality permits lawful retransmission after uncertain delivery, and exact→V0–V9→split→public-test has been regenerated. The fixed universe remains 58,752 recipes; V8 leaves **41 hard signatures / 174 pre-admission recipes** and the frozen public test contains **3,804 cases**. Layer 1 is now a research substrate, not a tuning target for later methods. Formal `BENCHMARK_ADMIT` still requires the v0.2 human/source audit and release-gate refresh.
 
 # Local Communication Control for Pre-Disaster Monitoring with Intermittent Backhaul
 
-**Layer-1 current state:** T1 `Monitoring Information Continuity` is the main Family; T2 `Warning Delivery & Response Handoff` remains a boundary extension with an explicit simulator gap. v0.2 exact labels are 55,008 no-paid-query / 2,106 paid-evidence / 630 information-infeasible / 1,008 mixed-world-solvability recipes. V0–V7 leaves 1,423 pass signatures; V8 leaves 41 signatures / 174 recipes, all `FINITE_CROSSING_WINDOWS + GATEWAY_SUMMARY_QUERY + overlap 3/4`. The structure-aware split contains 30,180 pre-admission recipes with hard train/dev/test signatures 16/18/7 and zero cross-split solver-signature leakage; public test identity is frozen at 3,804 cases. LLM rerun is deferred; Q11 remains pending on this lineage. See [Layer-1 Authority](research/benchmark/LAYER1-AUTHORITY.md) and the machine-readable [current state](research/benchmark/LAYER1-CURRENT-STATE.v0.1.json).
+**Layer-1 current state:** T1 `Monitoring Information Continuity` is the main Family; T2 `Warning Delivery & Response Handoff` remains a boundary extension with an explicit simulator gap. v0.2 exact labels are 55,008 no-paid-query / 2,106 paid-evidence / 630 information-infeasible / 1,008 mixed-world-solvability recipes. V0–V7 leaves 1,423 pass signatures; V8 leaves 41 signatures / 174 recipes, all `FINITE_CROSSING_WINDOWS + GATEWAY_SUMMARY_QUERY + overlap 3/4`. The structure-aware split contains 30,180 pre-admission recipes with hard train/dev/test signatures 16/18/7 and zero cross-split solver-signature leakage; public test identity is frozen at 3,804 cases. **Research freeze: yes. Public release admission: not yet.** Q11 and the v0.2 release gates still need to be rebuilt; they do not justify further generator redesign. See [Layer-1 Authority](research/benchmark/LAYER1-AUTHORITY.md) and the machine-readable [current state](research/benchmark/LAYER1-CURRENT-STATE.v0.1.json).
 
 This repository studies battery/solar mountain geohazard monitoring: LoRaWAN Class A nodes reach a field gateway, which uses cellular backhaul and an uplink-only BeiDou short-message backup. Monitoring requirements and warning-level changes are externally authorised. The system executes their communication requirements.
 
@@ -14,7 +14,45 @@ This repository studies battery/solar mountain geohazard monitoring: LoRaWAN Cla
 
 **Historical systems-paper stage:** that stage produced component-level positive results and narrowed configuration leasing, single-node stopping and retention-horizon tuning into scoped-negative boundaries. The systems-paper compatibility copies, immutable archive, `CLAIMS`, Git and withdrawn-result snapshots preserve those design choices, negative results and open questions as part of the research lineage.
 
-**Current research line:** first construct a **source-grounded Decision Benchmark** whose Task defines mission constraints rather than a preselected action. Only after the benchmark exposes multiple legal policies with materially different physical outcomes do we evaluate the Decision-Semantic Compiler and policy learners on the same evidence/capability/execution boundary.
+**Current research line:** the benchmark is no longer being expanded to manufacture method headroom. The active problem is now the decision layer exposed by the frozen benchmark: given operational obligations, lawful evidence, capabilities, remaining resources and execution state, determine **which actions still preserve future obligation feasibility**, which missing evidence can change that set, and when additional acquisition is worth its physical cost. Policy / learning is evaluated only after this decision object is defined and externally checkable.
+
+## 0. External positioning and current claim boundary
+
+The repository now sits inside the emerging **Agentic Semantic Communication / Agentic Communication Networks** literature, but it does not claim novelty from adding an Agent to a communication loop. The 2026 literature already covers most broad mechanism claims that are easy to overstate:
+
+- task-aware semantic transmission and content selection;
+- active probing / feedback acquisition under communication cost;
+- “information insufficient → request more information → decide again” loops;
+- context acquisition, ageing, persistence and delivery lifecycles;
+- intent / task compilation into communication workflows;
+- cross-step memory reuse and incremental semantic transmission;
+- dynamic communication-pipeline reconfiguration;
+- value-of-information send / no-send policies;
+- world-model prediction and proactive transmission;
+- long-horizon physical closed loops and counterfactual semantic value;
+- freshness-aware semantic value and online channel adaptation.
+
+Representative neighbours include RAMSemCom, Reasoning-Native Agentic Communication, Wireless Context Engineering, SkillComm, WM-CDT, GOSC / SVoI, imperfect-CSIT agentic link adaptation, Agentic TokenCom, AAMTSC and A2SSC. These works are treated as prior art, not renamed as our contribution.
+
+The defensible research objects are narrower:
+
+```text
+source-grounded operational obligation
+    + action-relative evidence sufficiency
+    + heterogeneous capability for evidence acquisition
+    + intermittent long-horizon obligation feasibility
+    + external oracle for action / completion validity
+```
+
+The key distinction is **action validity rather than inference quality**. Existing systems often ask whether information is sufficient to answer a question, worth transmitting, fresh enough, or causally valuable to long-term reward. This repository asks a stricter operational question:
+
+```text
+Under the current real obligation and resource state,
+which communication actions are still authorised by sufficient evidence,
+and after taking one of them, which future obligations remain feasible?
+```
+
+This positioning also fixes the benchmark comparison. α³-Bench already provides interactive wireless-Agent control; 6G-Bench provides standards-derived network reasoning and oracle decisions; RAMSemCom already provides active information acquisition with wireless cost. The Layer-1 benchmark is therefore justified by the **combination** of source-traceable operational obligations, partial observation, costly acquisition, asynchronous physical state transitions, obligation-feasibility transitions, long intermittent connectivity / recovery, and an external exact oracle—not by “interaction”, “active sensing” or “physical communication” alone.
 
 ## 1. Current paper, historical manuscripts, and authority entry points
 
@@ -67,7 +105,7 @@ A monitoring obligation requires an in-window sample, LoRa access to the gateway
 
 The system uses mature primitives. Research value is demonstrated through composition, execution placement and physical outcomes; unified naming, object models and Agent interfaces provide engineering reuse.
 
-## 4. Decision-Semantic Compiler and current conformance suite
+## 4. Decision-Semantic Compiler and future-choice context
 
 The Decision-Semantic Compiler stays on the same mountain pre-disaster monitoring physical/data plane and maps lawful Task/Evidence/Capability/Execution state into a model-facing decision surface:
 
@@ -83,6 +121,26 @@ Physical/Data Plane
     -> existing communication simulator
     -> Communication metrics + Agent/runtime trace
 ```
+
+The current Layer-2 method object is no longer “build a richer prompt” or “retrieve more context”. It is a **future-choice context**: a compact, externally checkable representation of which next actions still preserve at least one valid causal continuation.
+
+```text
+legal_actions(t)
+    -> certified_actions(t, Q, B)
+    -> future-choice context
+```
+
+`legal(a)` only means that an action is executable now. `certified(a)` means that, after forcing `a`, at least one causal policy still completes all remaining obligations under the current evidence/resource boundary. This distinction is already observable in the frozen retry-corrected workloads: a query can remain legally executable while consuming the terrestrial opportunity required by the task and therefore leave the certified future-choice set; in some cases the same query later re-enters that set.
+
+The exact frontier is used as a reference, not as the intended online method. Current structural prototypes decompose action feasibility into sound lower / upper statements:
+
+```text
+L_t(a) = 1  -> a replayable causal witness already proves the action safe
+U_t(a) = 0  -> a structural relaxation proves no valid continuation can survive
+L_t(a) = 0, U_t(a) = 1 -> unresolved; exact fallback or learned guidance is required
+```
+
+Resource-validity domains and dependency separators are retained as useful but limited primitives: they are sound, yet their incremental computational benefit is small on current small hard cases. The stronger current object is the action-conditioned future-choice frontier and its validity conditions.
 
 **The two meanings of Task are frozen separately.** An Operational Task is benchmark/business semantics: what this mountain monitoring system must accomplish. A Runtime TaskContract is one Agent-harness execution instance: its targets, evidence contract, effect ceiling, temporal contract, and completion predicate. Each layer owns a stable schema and revision.
 
@@ -127,6 +185,18 @@ Each run emits a typed trace containing TaskRun, Context revision, CapabilityReq
 
 Gold replacement covers upstream `Task / EvidenceNeed / Percept / Context` and planner `selection / order / arguments / policy`. The attribution protocol is self-checked with controlled corruption before it is used for frozen real-model failure decomposition.
 
+### 4.5 Current Layer-2 evidence and open proof target
+
+The retry-corrected diagnostic line has established the following without changing Layer-1 task semantics:
+
+- resource-domain certificates are sound but add only marginal reuse beyond ordinary resource monotonicity;
+- dependency-separator collisions preserve correctness and witness replay, but their indexing overhead removes the small expansion gain;
+- exact conditional frontiers separate legal actions from actions that preserve future feasibility;
+- query sufficiency can be non-monotone in time: `certified -> uncertified -> certified` occurs on real causal prefixes;
+- held-out future-choice controllers can preserve task success while naive no-query and earliest-legal-query policies fail, demonstrating that future-choice semantics have physical decision consequences.
+
+The remaining Layer-2 proof target is **not another cache or deeper bounded planner**. It is to show that communication structure yields a reusable context with explicit validity / invalidation conditions and a net computational advantage against a strong same-information, same-predicate generic exact baseline. On the present small held-out hard cases, generic exact is still faster than the current L/U proof stack; this is recorded as a result, not hidden. The next fair computation test therefore uses controlled structural scaling of coupled obligation/conflict width while keeping the T1 semantics, information contract and decision predicate fixed.
+
 ## 5. Current reproducible evidence and claim projection
 
 - **Source expiry:** under the corrected gateway deadline boundary, standard per-record expiry remains a supported cross-segment placement result in the tested cache model. Numeric effect sizes and paired intervals are owned by the frozen result / generated paper table rather than this entry page. [C3 data](results/communication-substrate/claims/r37e_full_seeds.json)
@@ -165,15 +235,39 @@ Current states below are a checked projection of [CLAIMS](results/CLAIMS.md); th
 
 The `A*` namespace now contains deterministic/infrastructure claims plus narrowly scoped A7–A11 model-effect claims. A7 covers query-negative development tasks; A8 shows the same-interface WirelessOpsAgent-style reliability tie with 35.804% higher total model-token cost than the Method; A9 adds held-out Qili/NASA-POWER-2024 transfer across DeepSeek Flash and MiMo v2.6 Flash. A10 closes the previously missing query-positive loop on one gateway-backup family with DeepSeek Flash. A11 repeats the same frozen acquisition loop with MiMo v2.6 Flash: 5/5 episodes preserve the deterministic query-positive physical reference and improve TDR/AoI versus no acquisition. These claims establish a two-model witness for one acquisition family, not globally optimal or universal evidence acquisition.
 
-## 6. Frozen Agentic paper state
+## 6. Historical Agentic paper lineage versus current research program
 
-The pre-API stack remains the deterministic/fairness substrate, but the current paper state has moved beyond it. A7–A11 are frozen live-model claims spanning the v6 main table, a same-interface WirelessOpsAgent-style strong comparison, held-out Qili/NASA-POWER-2024 transfer, and a query-positive gateway-backup acquisition loop reproduced with DeepSeek Flash and MiMo v2.6 Flash. The paper-level compact numeric authority is `results/agentic/paper-v1/paper-results.json`; the complete claim ceiling remains `results/CLAIMS.md`.
+The A7–A11 live-model results remain frozen evidence, not the current research control plane. They cover the historical v6 paper table, same-interface WirelessOpsAgent-style comparison, held-out source/model transfer, and one query-positive gateway-backup acquisition family reproduced with DeepSeek Flash and MiMo v2.6 Flash. Their compact numeric authority remains `results/agentic/paper-v1/paper-results.json`; the complete claim ceiling remains `results/CLAIMS.md`.
 
-`make agentic-preapi` is the single credential-free entry point. It reruns catalog conformance, O2 global/localized, the five-arm Agent matrix, ordinary communication baselines, source-period, robustness, task transfer, attribution infrastructure and frozen model inputs, then checks generated artifacts/manifests. The full repository gate and JointControlPlane anchor gate both pass.
+`make agentic-preapi` still reproduces the credential-free runtime/conformance substrate. The three frozen model-facing inputs under `results/agentic/model-context-inputs-v1/` remain useful for historical model comparisons. None of those assets are discarded; they have been demoted from “next paper direction” to **controlled historical baselines and runtime evidence**.
 
-Three model-facing inputs are frozen under `results/agentic/model-context-inputs-v1/`: task-conditioned, FullDump, and generic-ReAct. They share the same Operational Task, capability surface and paired physical reference. generic-ReAct deliberately omits EvidenceNeed / InvestigationState harness artifacts so future model comparison can isolate harness cognition rather than mixing different tool surfaces.
+The current research program is broader and stricter:
 
-The next stage is paper freeze and repository release, not another model search. The current novelty boundary is intentionally narrow: dynamic plan/dependency liveness, separation of audit/control/model surfaces, persistent semantic commitment, communication-constrained owner acquisition, and asynchronous physical execution/replay. Generic decision-aware acquisition, action sufficiency, certificate minimization, provenance witness selection, and VoI/freshness are treated as prior art rather than rebranded novelty. A frozen-input basis-selection headroom audit found no real alternative-proof choice in the current paper workloads, so that side study is closed.
+```text
+Layer 1
+source-grounded benchmark
+    -> operational obligation
+    -> partial observation / causal execution
+    -> exact oracle / hardness / frozen split
+
+Layer 2
+future-choice context / decision-semantic compiler
+    -> action-relative evidence sufficiency
+    -> certified future choices
+    -> context validity / invalidation
+    -> structural lower / upper feasibility certificates
+
+Layer 3
+policy / learning
+    -> use Layer-2 objects as decision inputs, supervision or search guidance
+    -> measure task success, acquisition cost and online computation separately
+```
+
+The three accounting ledgers remain separate: **information/acquisition cost**, **task/communication outcome**, and **planner computation**. Exact success does not erase an information problem; a no-query successful policy does not erase resource or computation questions; a closed-loop task-success result does not by itself establish a computational method advantage.
+
+Current Layer-2 experiments already show a strong semantic signal: future-choice-aware control can avoid legal-but-harmful queries on held-out hard signatures, while naive no-query and earliest-legal-query policies can fail. At the same time, strong generic exact planning is still faster than the present L/U proof stack on the current small held-out cases. This negative computation result is part of the method boundary. Further method work therefore targets reusable validity conditions and controlled structural scaling, rather than deeper ad-hoc bound search or benchmark redesign.
+
+Learning remains a solver choice, not the problem definition. If deterministic future-choice certificates do not dominate generic exact under structural scaling, they may still serve as learned bound targets, search guidance or policy supervision. Any such extension must keep the frozen task semantics, evidence contract and evaluator fixed.
 
 ## 7. Scenario, physical model and extrapolation boundary
 
