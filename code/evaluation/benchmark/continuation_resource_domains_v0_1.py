@@ -60,7 +60,7 @@ def _common_budget(states):
 class ContinuationPlanner:
     """One immutable process session; explicit boundaries prevent stale reuse."""
 
-    def __init__(self, bundle, *, mode='witness_domain'):
+    def __init__(self, bundle, *, mode='witness_domain', observer=None, separator_key_fn=None):
         if mode not in MODES:
             raise ValueError(mode)
         self.bundle = deepcopy(bundle)
@@ -68,12 +68,18 @@ class ContinuationPlanner:
         if self.process['direct_observation']:
             raise ValueError('direct-current-state observations expose budget; transfer not supported')
         self.mode = mode
+        self.observer = observer
+        self.separator_key_fn = separator_key_fn
         self.process_digest = sha256(json.dumps(self.bundle, sort_keys=True).encode()).hexdigest()
         self._memo = {}
         self._success_domains = {}
         self._failure_domains = {}
+        self._separator_success = {}
         self.counts = dict(expanded=0, exact_hits=0, domain_hits=0, negative_domain_hits=0,
-                           domain_comparisons=0, recursive_calls=0)
+                           domain_comparisons=0, recursive_calls=0,
+                           separator_hits=0, separator_replay_checks=0,
+                           separator_replay_failures=0, separator_replay_wall_s=0.0,
+                           separator_comparisons=0)
 
     def _lookup(self, boundary, resources):
         full = (boundary, resources)
@@ -112,6 +118,47 @@ class ContinuationPlanner:
             rows[:] = [(lower, w) for lower, w in rows if not _leq(requirement, lower)]
             rows.append((requirement, witness))
 
+    def _store_separator_success(self, t, support, witness):
+        if self.separator_key_fn is None or witness is None:
+            return
+        key = self.separator_key_fn(t, support)
+        rows = self._separator_success.setdefault(key, [])
+        digest = sha256(json.dumps(witness.policy, sort_keys=True).encode()).hexdigest()
+        if any(row[2] == digest for row in rows):
+            return
+        # Keep multiple policies even when one resource requirement dominates
+        # another.  Under a compressed boundary, replay validity can differ.
+        rows.append((witness.requirement, witness, digest))
+
+    def _lookup_separator_success(self, t, support, remaining_q, resources):
+        if self.separator_key_fn is None:
+            return False, None
+        key = self.separator_key_fn(t, support)
+        rows = self._separator_success.get(key, ())
+        for requirement, witness, _digest in sorted(rows, key=lambda x: (sum(x[0]), x[0], x[2])):
+            self.counts['separator_comparisons'] += 1
+            if not _leq(requirement, resources):
+                continue
+            self.counts['separator_replay_checks'] += 1
+            started = perf_counter()
+            try:
+                actual = verify_witness(
+                    self.bundle, t, dict(support), witness.policy,
+                    query_budget=remaining_q,
+                )
+            except Exception:
+                self.counts['separator_replay_failures'] += 1
+                self.counts['separator_replay_wall_s'] += perf_counter() - started
+                continue
+            self.counts['separator_replay_wall_s'] += perf_counter() - started
+            actual_requirement = (int(actual[0]), int(actual[1]))
+            if not _leq(actual_requirement, resources):
+                self.counts['separator_replay_failures'] += 1
+                continue
+            self.counts['separator_hits'] += 1
+            return True, Witness(actual_requirement[0], actual_requirement[1], witness.policy)
+        return False, None
+
     def solve(self, at_s: int, states: dict[str, LocalState], *, query_budget: int,
               max_expansions: int = 50000):
         if query_budget < 0 or max_expansions < 0:
@@ -138,8 +185,14 @@ class ContinuationPlanner:
             support = next(iter(branches.values()))
             boundary = _boundary(t, support)
             resources = (remaining_q, _common_budget(support))
+            if self.observer is not None:
+                self.observer(t, support, remaining_q)
             found, witness = self._lookup(boundary, resources)
             if found:
+                return witness
+            found, witness = self._lookup_separator_success(t, support, remaining_q, resources)
+            if found:
+                self._store(boundary, resources, witness)
                 return witness
             if any(_expired(self.bundle, st, t) for st in support.values()):
                 self._store(boundary, resources, None)
@@ -166,6 +219,7 @@ class ContinuationPlanner:
                                        worlds=sorted(support), subpolicy=continuation.policy))
                 assert _leq(witness.requirement, resources)
                 self._store(boundary, resources, witness)
+                self._store_separator_success(t, support, witness)
                 return witness
             self._store(boundary, resources, None)
             return None

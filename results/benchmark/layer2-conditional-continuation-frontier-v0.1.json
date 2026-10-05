@@ -1,0 +1,5233 @@
+{
+  "by_evidence_gain_type": {
+    "INFORMATION_FEASIBILITY_GAIN": 10,
+    "NO_INFORMATION_GAIN_IN_Q_B_RECTANGLE": 2
+  },
+  "by_process_and_gain": {
+    "FINITE_CROSSING_WINDOWS|INFORMATION_FEASIBILITY_GAIN": 6,
+    "MULTI_WINDOW_DYNAMIC|INFORMATION_FEASIBILITY_GAIN": 4,
+    "MULTI_WINDOW_DYNAMIC|NO_INFORMATION_GAIN_IN_Q_B_RECTANGLE": 2
+  },
+  "claim_boundary": [
+    "The twelve inputs were selected as paid-evidence-required under the pre-retry corrected-source oracle; this is a semantic diagnostic, not a random sample.",
+    "The retry-legality repair is active. Receiver deduplication is not enabled.",
+    "Evidence feasibility gain and satellite-resource gain are distinct outcomes.",
+    "Absence of resource gain in this sample does not imply absence in the regenerated universe."
+  ],
+  "frontier_shape_count": {
+    "((0, 0),)": 2,
+    "((1, 0),)": 4,
+    "((1, 2),)": 6
+  },
+  "inputs_ref": "results/benchmark/layer1-retry-review-inputs.json",
+  "inputs_sha256": "933510d769cec6cae946d744710d2b7b791a1020134d2b49125b88d8b4a0a34d",
+  "rows": [
+    {
+      "frontier": {
+        "bundle_id": "T1B-77253c4720e726d1",
+        "cells": [
+          {
+            "metrics": {
+              "domain_comparisons": 0,
+              "domain_hits": 0,
+              "exact_hits": 0,
+              "expanded": 36,
+              "memo_entries": 39,
+              "negative_domain_hits": 0,
+              "recursive_calls": 39,
+              "separator_comparisons": 0,
+              "separator_hits": 0,
+              "separator_replay_checks": 0,
+              "separator_replay_failures": 0,
+              "separator_replay_wall_s": 0.0,
+              "wall_s": 0.001520887999504339
+            },
+            "query_budget": 0,
+            "satellite_budget": 0,
+            "solvable": false,
+            "status": "EXACT",
+            "witness_requirement": null
+          },
+          {
+            "metrics": {
+              "domain_comparisons": 39,
+              "domain_hits": 0,
+              "exact_hits": 30,
+              "expanded": 565,
+              "memo_entries": 636,
+              "negative_domain_hits": 0,
+              "recursive_calls": 627,
+              "separator_comparisons": 0,
+              "separator_hits": 0,
+              "separator_replay_checks": 0,
+              "separator_replay_failures": 0,
+              "separator_replay_wall_s": 0.0,
+              "wall_s": 0.026043948004371487
+            },
+            "query_budget": 0,
+            "satellite_budget": 1,
+            "solvable": false,
+            "status": "EXACT",
+            "witness_requirement": null
+          },
+          {
+            "metrics": {
+              "domain_comparisons": 597,
+              "domain_hits": 0,
+              "exact_hits": 135,
+              "expanded": 2463,
+              "memo_entries": 3272,
+              "negative_domain_hits": 0,
+              "recursive_calls": 2771,
+              "separator_comparisons": 0,
+              "separator_hits": 0,
+              "separator_replay_checks": 0,
+              "separator_replay_failures": 0,
+              "separator_replay_wall_s": 0.0,
+              "wall_s": 0.13411026499670697
+            },
+            "query_budget": 0,
+            "satellite_budget": 2,
+            "solvable": false,
+            "status": "EXACT",
+            "witness_requirement": null
+          },
+          {
+            "metrics": {
+              "domain_comparisons": 39,
+              "domain_hits": 0,
+              "exact_hits": 31,
+              "expanded": 154,
+              "memo_entries": 3436,
+              "negative_domain_hits": 0,
+              "recursive_calls": 228,
+              "separator_comparisons": 0,
+              "separator_hits": 0,
+              "separator_replay_checks": 0,
+              "separator_replay_failures": 0,
+              "separator_replay_wall_s": 0.0,
+              "wall_s": 0.008458684002107475
+            },
+            "query_budget": 1,
+            "satellite_budget": 0,
+            "solvable": false,
+            "status": "EXACT",
+            "witness_requirement": null
+          },
+          {
+            "metrics": {
+              "domain_comparisons": 756,
+              "domain_hits": 0,
+              "exact_hits": 630,
+              "expanded": 3000,
+              "memo_entries": 6560,
+              "negative_domain_hits": 0,
+              "recursive_calls": 4296,
+              "separator_comparisons": 0,
+              "separator_hits": 0,
+              "separator_replay_checks": 0,
+              "separator_replay_failures": 0,
+              "separator_replay_wall_s": 0.0,
+              "wall_s": 0.16912847899948247
+            },
+            "query_budget": 1,
+            "satellite_budget": 1,
+            "solvable": false,
+            "status": "EXACT",
+            "witness_requirement": null
+          },
+          {
+            "metrics": {
+              "domain_comparisons": 768,
+              "domain_hits": 1,
+              "exact_hits": 180,
+              "expanded": 2644,
+              "memo_entries": 9382,
+              "negative_domain_hits": 0,
+              "recursive_calls": 3054,
+              "separator_comparisons": 0,
+              "separator_hits": 0,
+              "separator_replay_checks": 0,
+              "separator_replay_failures": 0,
+              "separator_replay_wall_s": 0.0,
+              "wall_s": 0.14679083400551463
+            },
+            "policy_sha256": "1b43b7ca6b81c8f2fbcd88b5373efd641bec45cf92a6ae3cb7433a2b18a33cfa",
+            "query_budget": 1,
+            "replay_requirement": [
+              1,
+              2
+            ],
+            "satellite_budget": 2,
+            "solvable": true,
+            "status": "EXACT",
+            "witness_requirement": [
+              1,
+              2
+            ]
+          },
+          {
+            "metrics": {
+              "domain_comparisons": 209,
+              "domain_hits": 0,
+              "exact_hits": 32,
+              "expanded": 154,
+              "memo_entries": 9546,
+              "negative_domain_hits": 0,
+              "recursive_calls": 229,
+              "separator_comparisons": 0,
+              "separator_hits": 0,
+              "separator_replay_checks": 0,
+              "separator_replay_failures": 0,
+              "separator_replay_wall_s": 0.0,
+              "wall_s": 0.008614461999968626
+            },
+            "query_budget": 2,
+            "satellite_budget": 0,
+            "solvable": false,
+            "status": "EXACT",
+            "witness_requirement": null
+          },
+          {
+            "metrics": {
+              "domain_comparisons": 3695,
+              "domain_hits": 19,
+              "exact_hits": 1008,
+              "expanded": 3953,
+              "memo_entries": 13674,
+              "negative_domain_hits": 0,
+              "recursive_calls": 6028,
+              "separator_comparisons": 0,
+              "separator_hits": 0,
+              "separator_replay_checks": 0,
+              "separator_replay_failures": 0,
+              "separator_replay_wall_s": 0.0,
+              "wall_s": 0.2337822720000986
+            },
+            "query_budget": 2,
+            "satellite_budget": 1,
+            "solvable": false,
+            "status": "EXACT",
+            "witness_requirement": null
+          },
+          {
+            "metrics": {
+              "domain_comparisons": 1,
+              "domain_hits": 1,
+              "exact_hits": 0,
+              "expanded": 0,
+              "memo_entries": 13674,
+              "negative_domain_hits": 0,
+              "recursive_calls": 1,
+              "separator_comparisons": 0,
+              "separator_hits": 0,
+              "separator_replay_checks": 0,
+              "separator_replay_failures": 0,
+              "separator_replay_wall_s": 0.0,
+              "wall_s": 0.0003247559943702072
+            },
+            "policy_sha256": "1b43b7ca6b81c8f2fbcd88b5373efd641bec45cf92a6ae3cb7433a2b18a33cfa",
+            "query_budget": 2,
+            "replay_requirement": [
+              1,
+              2
+            ],
+            "satellite_budget": 2,
+            "solvable": true,
+            "status": "EXACT",
+            "witness_requirement": [
+              1,
+              2
+            ]
+          },
+          {
+            "metrics": {
+              "domain_comparisons": 251,
+              "domain_hits": 0,
+              "exact_hits": 32,
+              "expanded": 154,
+              "memo_entries": 13838,
+              "negative_domain_hits": 0,
+              "recursive_calls": 229,
+              "separator_comparisons": 0,
+              "separator_hits": 0,
+              "separator_replay_checks": 0,
+              "separator_replay_failures": 0,
+              "separator_replay_wall_s": 0.0,
+              "wall_s": 0.018753552001726348
+            },
+            "query_budget": 3,
+            "satellite_budget": 0,
+            "solvable": false,
+            "status": "EXACT",
+            "witness_requirement": null
+          },
+          {
+            "metrics": {
+              "domain_comparisons": 5602,
+              "domain_hits": 19,
+              "exact_hits": 1023,
+              "expanded": 3953,
+              "memo_entries": 17966,
+              "negative_domain_hits": 0,
+              "recursive_calls": 6043,
+              "separator_comparisons": 0,
+              "separator_hits": 0,
+              "separator_replay_checks": 0,
+              "separator_replay_failures": 0,
+              "separator_replay_wall_s": 0.0,
+              "wall_s": 0.2511128850019304
+            },
+            "query_budget": 3,
+            "satellite_budget": 1,
+            "solvable": false,
+            "status": "EXACT",
+            "witness_requirement": null
+          },
+          {
+            "metrics": {
+              "domain_comparisons": 1,
+              "domain_hits": 1,
+              "exact_hits": 0,
+              "expanded": 0,
+              "memo_entries": 17966,
+              "negative_domain_hits": 0,
+              "recursive_calls": 1,
+              "separator_comparisons": 0,
+              "separator_hits": 0,
+              "separator_replay_checks": 0,
+              "separator_replay_failures": 0,
+              "separator_replay_wall_s": 0.0,
+              "wall_s": 0.0003952309998567216
+            },
+            "policy_sha256": "1b43b7ca6b81c8f2fbcd88b5373efd641bec45cf92a6ae3cb7433a2b18a33cfa",
+            "query_budget": 3,
+            "replay_requirement": [
+              1,
+              2
+            ],
+            "satellite_budget": 2,
+            "solvable": true,
+            "status": "EXACT",
+            "witness_requirement": [
+              1,
+              2
+            ]
+          }
+        ],
+        "context": {
+          "can_stop_acquiring_for_feasibility": false,
+          "completeness": "complete over the declared integer Q/B rectangle only",
+          "minimum_query_budget_for_any_success": 1,
+          "minimum_satellite_budget_with_query_allowed": 2,
+          "minimum_satellite_budget_without_paid_query": null,
+          "satellite_budget_released_by_allowing_query": null
+        },
+        "evidence_gain_type": "INFORMATION_FEASIBILITY_GAIN",
+        "frontier_points": [
+          {
+            "certified_witness_requirement": [
+              1,
+              2
+            ],
+            "policy_sha256": "1b43b7ca6b81c8f2fbcd88b5373efd641bec45cf92a6ae3cb7433a2b18a33cfa",
+            "query_budget": 1,
+            "satellite_budget": 2,
+            "validity_domain": {
+              "boundary_condition": "same causal execution/evidence boundary; later reuse requires certificate validation",
+              "query_budget_at_least": 1,
+              "satellite_budget_at_least": 2
+            }
+          }
+        ],
+        "recipe_id": "T1R-a32593dad622bc",
+        "resource_rectangle": {
+          "query_budget": [
+            0,
+            3
+          ],
+          "satellite_budget": [
+            0,
+            2
+          ]
+        },
+        "rules": [
+          "Q is an analysis/selection bound, not a source SLA.",
+          "Every positive frontier witness is replayed in its target resource cell.",
+          "Feasibility gain and resource gain are reported separately; no weighted scalar reward is introduced.",
+          "A query-free feasible point means evidence acquisition can stop for feasibility, not that more evidence can never improve another unmodeled cost."
+        ],
+        "schema_version": "0.1",
+        "status": "EXACT_BOUNDED_CONDITIONAL_FRONTIER"
+      },
+      "index": 0,
+      "process": "FINITE_CROSSING_WINDOWS",
+      "recipe_id": "T1R-a32593dad622bc",
+      "signature": "ef1b77ace36a32d26343209bf12357064226bfe4c41def8b3dc0919365543ad2"
+    },
+    {
+      "frontier": {
+        "bundle_id": "T1B-88fe4d43238a8026",
+        "cells": [
+          {
+            "metrics": {
+              "domain_comparisons": 0,
+              "domain_hits": 0,
+              "exact_hits": 0,
+              "expanded": 36,
+              "memo_entries": 39,
+              "negative_domain_hits": 0,
+              "recursive_calls": 39,
+              "separator_comparisons": 0,
+              "separator_hits": 0,
+              "separator_replay_checks": 0,
+              "separator_replay_failures": 0,
+              "separator_replay_wall_s": 0.0,
+              "wall_s": 0.0018723480025073513
+            },
+            "query_budget": 0,
+            "satellite_budget": 0,
+            "solvable": false,
+            "status": "EXACT",
+            "witness_requirement": null
+          },
+          {
+            "metrics": {
+              "domain_comparisons": 39,
+              "domain_hits": 0,
+              "exact_hits": 30,
+              "expanded": 565,
+              "memo_entries": 636,
+              "negative_domain_hits": 0,
+              "recursive_calls": 627,
+              "separator_comparisons": 0,
+              "separator_hits": 0,
+              "separator_replay_checks": 0,
+              "separator_replay_failures": 0,
+              "separator_replay_wall_s": 0.0,
+              "wall_s": 0.03229458400164731
+            },
+            "query_budget": 0,
+            "satellite_budget": 1,
+            "solvable": false,
+            "status": "EXACT",
+            "witness_requirement": null
+          },
+          {
+            "metrics": {
+              "domain_comparisons": 597,
+              "domain_hits": 0,
+              "exact_hits": 135,
+              "expanded": 2787,
+              "memo_entries": 3650,
+              "negative_domain_hits": 0,
+              "recursive_calls": 3149,
+              "separator_comparisons": 0,
+              "separator_hits": 0,
+              "separator_replay_checks": 0,
+              "separator_replay_failures": 0,
+              "separator_replay_wall_s": 0.0,
+              "wall_s": 0.19836911199672613
+            },
+            "query_budget": 0,
+            "satellite_budget": 2,
+            "solvable": false,
+            "status": "EXACT",
+            "witness_requirement": null
+          },
+          {
+            "metrics": {
+              "domain_comparisons": 3014,
+              "domain_hits": 0,
+              "exact_hits": 389,
+              "expanded": 10273,
+              "memo_entries": 14648,
+              "negative_domain_hits": 0,
+              "recursive_calls": 11387,
+              "separator_comparisons": 0,
+              "separator_hits": 0,
+              "separator_replay_checks": 0,
+              "separator_replay_failures": 0,
+              "separator_replay_wall_s": 0.0,
+              "wall_s": 0.9075124849987333
+            },
+            "query_budget": 0,
+            "satellite_budget": 3,
+            "solvable": false,
+            "status": "EXACT",
+            "witness_requirement": null
+          },
+          {
+            "metrics": {
+              "domain_comparisons": 39,
+              "domain_hits": 0,
+              "exact_hits": 31,
+              "expanded": 154,
+              "memo_entries": 14812,
+              "negative_domain_hits": 0,
+              "recursive_calls": 228,
+              "separator_comparisons": 0,
+              "separator_hits": 0,
+              "separator_replay_checks": 0,
+              "separator_replay_failures": 0,
+              "separator_replay_wall_s": 0.0,
+              "wall_s": 0.010336307001125533
+            },
+            "query_budget": 1,
+            "satellite_budget": 0,
+            "solvable": false,
+            "status": "EXACT",
+            "witness_requirement": null
+          },
+          {
+            "metrics": {
+              "domain_comparisons": 756,
+              "domain_hits": 0,
+              "exact_hits": 630,
+              "expanded": 3063,
+              "memo_entries": 17999,
+              "negative_domain_hits": 0,
+              "recursive_calls": 4359,
+              "separator_comparisons": 0,
+              "separator_hits": 0,
+              "separator_replay_checks": 0,
+              "separator_replay_failures": 0,
+              "separator_replay_wall_s": 0.0,
+              "wall_s": 0.19981248499971116
+            },
+            "query_budget": 1,
+            "satellite_budget": 1,
+            "solvable": false,
+            "status": "EXACT",
+            "witness_requirement": null
+          },
+          {
+            "metrics": {
+              "domain_comparisons": 768,
+              "domain_hits": 1,
+              "exact_hits": 182,
+              "expanded": 3018,
+              "memo_entries": 21249,
+              "negative_domain_hits": 0,
+              "recursive_calls": 3482,
+              "separator_comparisons": 0,
+              "separator_hits": 0,
+              "separator_replay_checks": 0,
+              "separator_replay_failures": 0,
+              "separator_replay_wall_s": 0.0,
+              "wall_s": 0.25650595399929443
+            },
+            "policy_sha256": "48623496e13963846c6b0aa5b710f7181cf83d01aab72139782d879b2d993e42",
+            "query_budget": 1,
+            "replay_requirement": [
+              1,
+              2
+            ],
+            "satellite_budget": 2,
+            "solvable": true,
+            "status": "EXACT",
+            "witness_requirement": [
+              1,
+              2
+            ]
+          },
+          {
+            "metrics": {
+              "domain_comparisons": 1,
+              "domain_hits": 1,
+              "exact_hits": 0,
+              "expanded": 0,
+              "memo_entries": 21249,
+              "negative_domain_hits": 0,
+              "recursive_calls": 1,
+              "separator_comparisons": 0,
+              "separator_hits": 0,
+              "separator_replay_checks": 0,
+              "separator_replay_failures": 0,
+              "separator_replay_wall_s": 0.0,
+              "wall_s": 0.0004989380031474866
+            },
+            "policy_sha256": "48623496e13963846c6b0aa5b710f7181cf83d01aab72139782d879b2d993e42",
+            "query_budget": 1,
+            "replay_requirement": [
+              1,
+              2
+            ],
+            "satellite_budget": 3,
+            "solvable": true,
+            "status": "EXACT",
+            "witness_requirement": [
+              1,
+              2
+            ]
+          },
+          {
+            "metrics": {
+              "domain_comparisons": 209,
+              "domain_hits": 0,
+              "exact_hits": 32,
+              "expanded": 154,
+              "memo_entries": 21413,
+              "negative_domain_hits": 0,
+              "recursive_calls": 229,
+              "separator_comparisons": 0,
+              "separator_hits": 0,
+              "separator_replay_checks": 0,
+              "separator_replay_failures": 0,
+              "separator_replay_wall_s": 0.0,
+              "wall_s": 0.010272458996041678
+            },
+            "query_budget": 2,
+            "satellite_budget": 0,
+            "solvable": false,
+            "status": "EXACT",
+            "witness_requirement": null
+          },
+          {
+            "metrics": {
+              "domain_comparisons": 3708,
+              "domain_hits": 19,
+              "exact_hits": 1008,
+              "expanded": 3953,
+              "memo_entries": 25541,
+              "negative_domain_hits": 0,
+              "recursive_calls": 6028,
+              "separator_comparisons": 0,
+              "separator_hits": 0,
+              "separator_replay_checks": 0,
+              "separator_replay_failures": 0,
+              "separator_replay_wall_s": 0.0,
+              "wall_s": 0.3340704200018081
+            },
+            "query_budget": 2,
+            "satellite_budget": 1,
+            "solvable": false,
+            "status": "EXACT",
+            "witness_requirement": null
+          },
+          {
+            "metrics": {
+              "domain_comparisons": 1,
+              "domain_hits": 1,
+              "exact_hits": 0,
+              "expanded": 0,
+              "memo_entries": 25541,
+              "negative_domain_hits": 0,
+              "recursive_calls": 1,
+              "separator_comparisons": 0,
+              "separator_hits": 0,
+              "separator_replay_checks": 0,
+              "separator_replay_failures": 0,
+              "separator_replay_wall_s": 0.0,
+              "wall_s": 0.0005123640003148466
+            },
+            "policy_sha256": "48623496e13963846c6b0aa5b710f7181cf83d01aab72139782d879b2d993e42",
+            "query_budget": 2,
+            "replay_requirement": [
+              1,
+              2
+            ],
+            "satellite_budget": 2,
+            "solvable": true,
+            "status": "EXACT",
+            "witness_requirement": [
+              1,
+              2
+            ]
+          },
+          {
+            "metrics": {
+              "domain_comparisons": 1,
+              "domain_hits": 1,
+              "exact_hits": 0,
+              "expanded": 0,
+              "memo_entries": 25541,
+              "negative_domain_hits": 0,
+              "recursive_calls": 1,
+              "separator_comparisons": 0,
+              "separator_hits": 0,
+              "separator_replay_checks": 0,
+              "separator_replay_failures": 0,
+              "separator_replay_wall_s": 0.0,
+              "wall_s": 0.0010068730043713003
+            },
+            "policy_sha256": "48623496e13963846c6b0aa5b710f7181cf83d01aab72139782d879b2d993e42",
+            "query_budget": 2,
+            "replay_requirement": [
+              1,
+              2
+            ],
+            "satellite_budget": 3,
+            "solvable": true,
+            "status": "EXACT",
+            "witness_requirement": [
+              1,
+              2
+            ]
+          },
+          {
+            "metrics": {
+              "domain_comparisons": 251,
+              "domain_hits": 0,
+              "exact_hits": 32,
+              "expanded": 154,
+              "memo_entries": 25705,
+              "negative_domain_hits": 0,
+              "recursive_calls": 229,
+              "separator_comparisons": 0,
+              "separator_hits": 0,
+              "separator_replay_checks": 0,
+              "separator_replay_failures": 0,
+              "separator_replay_wall_s": 0.0,
+              "wall_s": 0.012265049997949973
+            },
+            "query_budget": 3,
+            "satellite_budget": 0,
+            "solvable": false,
+            "status": "EXACT",
+            "witness_requirement": null
+          },
+          {
+            "metrics": {
+              "domain_comparisons": 5615,
+              "domain_hits": 19,
+              "exact_hits": 1023,
+              "expanded": 3953,
+              "memo_entries": 29833,
+              "negative_domain_hits": 0,
+              "recursive_calls": 6043,
+              "separator_comparisons": 0,
+              "separator_hits": 0,
+              "separator_replay_checks": 0,
+              "separator_replay_failures": 0,
+              "separator_replay_wall_s": 0.0,
+              "wall_s": 0.35459283700038213
+            },
+            "query_budget": 3,
+            "satellite_budget": 1,
+            "solvable": false,
+            "status": "EXACT",
+            "witness_requirement": null
+          },
+          {
+            "metrics": {
+              "domain_comparisons": 1,
+              "domain_hits": 1,
+              "exact_hits": 0,
+              "expanded": 0,
+              "memo_entries": 29833,
+              "negative_domain_hits": 0,
+              "recursive_calls": 1,
+              "separator_comparisons": 0,
+              "separator_hits": 0,
+              "separator_replay_checks": 0,
+              "separator_replay_failures": 0,
+              "separator_replay_wall_s": 0.0,
+              "wall_s": 0.0005940170012763701
+            },
+            "policy_sha256": "48623496e13963846c6b0aa5b710f7181cf83d01aab72139782d879b2d993e42",
+            "query_budget": 3,
+            "replay_requirement": [
+              1,
+              2
+            ],
+            "satellite_budget": 2,
+            "solvable": true,
+            "status": "EXACT",
+            "witness_requirement": [
+              1,
+              2
+            ]
+          },
+          {
+            "metrics": {
+              "domain_comparisons": 1,
+              "domain_hits": 1,
+              "exact_hits": 0,
+              "expanded": 0,
+              "memo_entries": 29833,
+              "negative_domain_hits": 0,
+              "recursive_calls": 1,
+              "separator_comparisons": 0,
+              "separator_hits": 0,
+              "separator_replay_checks": 0,
+              "separator_replay_failures": 0,
+              "separator_replay_wall_s": 0.0,
+              "wall_s": 0.00044814200373366475
+            },
+            "policy_sha256": "48623496e13963846c6b0aa5b710f7181cf83d01aab72139782d879b2d993e42",
+            "query_budget": 3,
+            "replay_requirement": [
+              1,
+              2
+            ],
+            "satellite_budget": 3,
+            "solvable": true,
+            "status": "EXACT",
+            "witness_requirement": [
+              1,
+              2
+            ]
+          },
+          {
+            "metrics": {
+              "domain_comparisons": 251,
+              "domain_hits": 0,
+              "exact_hits": 32,
+              "expanded": 154,
+              "memo_entries": 29997,
+              "negative_domain_hits": 0,
+              "recursive_calls": 229,
+              "separator_comparisons": 0,
+              "separator_hits": 0,
+              "separator_replay_checks": 0,
+              "separator_replay_failures": 0,
+              "separator_replay_wall_s": 0.0,
+              "wall_s": 0.012555618006445002
+            },
+            "query_budget": 4,
+            "satellite_budget": 0,
+            "solvable": false,
+            "status": "EXACT",
+            "witness_requirement": null
+          },
+          {
+            "metrics": {
+              "domain_comparisons": 5615,
+              "domain_hits": 19,
+              "exact_hits": 1023,
+              "expanded": 3953,
+              "memo_entries": 34125,
+              "negative_domain_hits": 0,
+              "recursive_calls": 6043,
+              "separator_comparisons": 0,
+              "separator_hits": 0,
+              "separator_replay_checks": 0,
+              "separator_replay_failures": 0,
+              "separator_replay_wall_s": 0.0,
+              "wall_s": 0.28829051299544517
+            },
+            "query_budget": 4,
+            "satellite_budget": 1,
+            "solvable": false,
+            "status": "EXACT",
+            "witness_requirement": null
+          },
+          {
+            "metrics": {
+              "domain_comparisons": 1,
+              "domain_hits": 1,
+              "exact_hits": 0,
+              "expanded": 0,
+              "memo_entries": 34125,
+              "negative_domain_hits": 0,
+              "recursive_calls": 1,
+              "separator_comparisons": 0,
+              "separator_hits": 0,
+              "separator_replay_checks": 0,
+              "separator_replay_failures": 0,
+              "separator_replay_wall_s": 0.0,
+              "wall_s": 0.0004969639994669706
+            },
+            "policy_sha256": "48623496e13963846c6b0aa5b710f7181cf83d01aab72139782d879b2d993e42",
+            "query_budget": 4,
+            "replay_requirement": [
+              1,
+              2
+            ],
+            "satellite_budget": 2,
+            "solvable": true,
+            "status": "EXACT",
+            "witness_requirement": [
+              1,
+              2
+            ]
+          },
+          {
+            "metrics": {
+              "domain_comparisons": 1,
+              "domain_hits": 1,
+              "exact_hits": 0,
+              "expanded": 0,
+              "memo_entries": 34125,
+              "negative_domain_hits": 0,
+              "recursive_calls": 1,
+              "separator_comparisons": 0,
+              "separator_hits": 0,
+              "separator_replay_checks": 0,
+              "separator_replay_failures": 0,
+              "separator_replay_wall_s": 0.0,
+              "wall_s": 0.0004457890026969835
+            },
+            "policy_sha256": "48623496e13963846c6b0aa5b710f7181cf83d01aab72139782d879b2d993e42",
+            "query_budget": 4,
+            "replay_requirement": [
+              1,
+              2
+            ],
+            "satellite_budget": 3,
+            "solvable": true,
+            "status": "EXACT",
+            "witness_requirement": [
+              1,
+              2
+            ]
+          }
+        ],
+        "context": {
+          "can_stop_acquiring_for_feasibility": false,
+          "completeness": "complete over the declared integer Q/B rectangle only",
+          "minimum_query_budget_for_any_success": 1,
+          "minimum_satellite_budget_with_query_allowed": 2,
+          "minimum_satellite_budget_without_paid_query": null,
+          "satellite_budget_released_by_allowing_query": null
+        },
+        "evidence_gain_type": "INFORMATION_FEASIBILITY_GAIN",
+        "frontier_points": [
+          {
+            "certified_witness_requirement": [
+              1,
+              2
+            ],
+            "policy_sha256": "48623496e13963846c6b0aa5b710f7181cf83d01aab72139782d879b2d993e42",
+            "query_budget": 1,
+            "satellite_budget": 2,
+            "validity_domain": {
+              "boundary_condition": "same causal execution/evidence boundary; later reuse requires certificate validation",
+              "query_budget_at_least": 1,
+              "satellite_budget_at_least": 2
+            }
+          }
+        ],
+        "recipe_id": "T1R-20e14985a492b6",
+        "resource_rectangle": {
+          "query_budget": [
+            0,
+            4
+          ],
+          "satellite_budget": [
+            0,
+            3
+          ]
+        },
+        "rules": [
+          "Q is an analysis/selection bound, not a source SLA.",
+          "Every positive frontier witness is replayed in its target resource cell.",
+          "Feasibility gain and resource gain are reported separately; no weighted scalar reward is introduced.",
+          "A query-free feasible point means evidence acquisition can stop for feasibility, not that more evidence can never improve another unmodeled cost."
+        ],
+        "schema_version": "0.1",
+        "status": "EXACT_BOUNDED_CONDITIONAL_FRONTIER"
+      },
+      "index": 1,
+      "process": "FINITE_CROSSING_WINDOWS",
+      "recipe_id": "T1R-20e14985a492b6",
+      "signature": "53a1666df05b175cd62099797d2049bb13f9eebafdf7e7ed004ec2d689bc8bea"
+    },
+    {
+      "frontier": {
+        "bundle_id": "T1B-31b7425f6159f51d",
+        "cells": [
+          {
+            "metrics": {
+              "domain_comparisons": 0,
+              "domain_hits": 0,
+              "exact_hits": 0,
+              "expanded": 38,
+              "memo_entries": 38,
+              "negative_domain_hits": 0,
+              "recursive_calls": 39,
+              "separator_comparisons": 0,
+              "separator_hits": 0,
+              "separator_replay_checks": 0,
+              "separator_replay_failures": 0,
+              "separator_replay_wall_s": 0.0,
+              "wall_s": 0.001248754997504875
+            },
+            "policy_sha256": "9901b38998e9f0383c8609b549711280b4ae13e1b3e8e70c73e0469f9dbf9db4",
+            "query_budget": 0,
+            "replay_requirement": [
+              0,
+              0
+            ],
+            "satellite_budget": 0,
+            "solvable": true,
+            "status": "EXACT",
+            "witness_requirement": [
+              0,
+              0
+            ]
+          },
+          {
+            "metrics": {
+              "domain_comparisons": 1,
+              "domain_hits": 1,
+              "exact_hits": 0,
+              "expanded": 0,
+              "memo_entries": 38,
+              "negative_domain_hits": 0,
+              "recursive_calls": 1,
+              "separator_comparisons": 0,
+              "separator_hits": 0,
+              "separator_replay_checks": 0,
+              "separator_replay_failures": 0,
+              "separator_replay_wall_s": 0.0,
+              "wall_s": 0.00011798500054283068
+            },
+            "policy_sha256": "9901b38998e9f0383c8609b549711280b4ae13e1b3e8e70c73e0469f9dbf9db4",
+            "query_budget": 0,
+            "replay_requirement": [
+              0,
+              0
+            ],
+            "satellite_budget": 1,
+            "solvable": true,
+            "status": "EXACT",
+            "witness_requirement": [
+              0,
+              0
+            ]
+          },
+          {
+            "metrics": {
+              "domain_comparisons": 1,
+              "domain_hits": 1,
+              "exact_hits": 0,
+              "expanded": 0,
+              "memo_entries": 38,
+              "negative_domain_hits": 0,
+              "recursive_calls": 1,
+              "separator_comparisons": 0,
+              "separator_hits": 0,
+              "separator_replay_checks": 0,
+              "separator_replay_failures": 0,
+              "separator_replay_wall_s": 0.0,
+              "wall_s": 0.00010833200212800875
+            },
+            "policy_sha256": "9901b38998e9f0383c8609b549711280b4ae13e1b3e8e70c73e0469f9dbf9db4",
+            "query_budget": 1,
+            "replay_requirement": [
+              0,
+              0
+            ],
+            "satellite_budget": 0,
+            "solvable": true,
+            "status": "EXACT",
+            "witness_requirement": [
+              0,
+              0
+            ]
+          },
+          {
+            "metrics": {
+              "domain_comparisons": 1,
+              "domain_hits": 1,
+              "exact_hits": 0,
+              "expanded": 0,
+              "memo_entries": 38,
+              "negative_domain_hits": 0,
+              "recursive_calls": 1,
+              "separator_comparisons": 0,
+              "separator_hits": 0,
+              "separator_replay_checks": 0,
+              "separator_replay_failures": 0,
+              "separator_replay_wall_s": 0.0,
+              "wall_s": 8.911800250643864e-05
+            },
+            "policy_sha256": "9901b38998e9f0383c8609b549711280b4ae13e1b3e8e70c73e0469f9dbf9db4",
+            "query_budget": 1,
+            "replay_requirement": [
+              0,
+              0
+            ],
+            "satellite_budget": 1,
+            "solvable": true,
+            "status": "EXACT",
+            "witness_requirement": [
+              0,
+              0
+            ]
+          },
+          {
+            "metrics": {
+              "domain_comparisons": 1,
+              "domain_hits": 1,
+              "exact_hits": 0,
+              "expanded": 0,
+              "memo_entries": 38,
+              "negative_domain_hits": 0,
+              "recursive_calls": 1,
+              "separator_comparisons": 0,
+              "separator_hits": 0,
+              "separator_replay_checks": 0,
+              "separator_replay_failures": 0,
+              "separator_replay_wall_s": 0.0,
+              "wall_s": 0.00010562199895503
+            },
+            "policy_sha256": "9901b38998e9f0383c8609b549711280b4ae13e1b3e8e70c73e0469f9dbf9db4",
+            "query_budget": 2,
+            "replay_requirement": [
+              0,
+              0
+            ],
+            "satellite_budget": 0,
+            "solvable": true,
+            "status": "EXACT",
+            "witness_requirement": [
+              0,
+              0
+            ]
+          },
+          {
+            "metrics": {
+              "domain_comparisons": 1,
+              "domain_hits": 1,
+              "exact_hits": 0,
+              "expanded": 0,
+              "memo_entries": 38,
+              "negative_domain_hits": 0,
+              "recursive_calls": 1,
+              "separator_comparisons": 0,
+              "separator_hits": 0,
+              "separator_replay_checks": 0,
+              "separator_replay_failures": 0,
+              "separator_replay_wall_s": 0.0,
+              "wall_s": 0.00010359099542256445
+            },
+            "policy_sha256": "9901b38998e9f0383c8609b549711280b4ae13e1b3e8e70c73e0469f9dbf9db4",
+            "query_budget": 2,
+            "replay_requirement": [
+              0,
+              0
+            ],
+            "satellite_budget": 1,
+            "solvable": true,
+            "status": "EXACT",
+            "witness_requirement": [
+              0,
+              0
+            ]
+          }
+        ],
+        "context": {
+          "can_stop_acquiring_for_feasibility": true,
+          "completeness": "complete over the declared integer Q/B rectangle only",
+          "minimum_query_budget_for_any_success": 0,
+          "minimum_satellite_budget_with_query_allowed": 0,
+          "minimum_satellite_budget_without_paid_query": 0,
+          "satellite_budget_released_by_allowing_query": 0
+        },
+        "evidence_gain_type": "NO_INFORMATION_GAIN_IN_Q_B_RECTANGLE",
+        "frontier_points": [
+          {
+            "certified_witness_requirement": [
+              0,
+              0
+            ],
+            "policy_sha256": "9901b38998e9f0383c8609b549711280b4ae13e1b3e8e70c73e0469f9dbf9db4",
+            "query_budget": 0,
+            "satellite_budget": 0,
+            "validity_domain": {
+              "boundary_condition": "same causal execution/evidence boundary; later reuse requires certificate validation",
+              "query_budget_at_least": 0,
+              "satellite_budget_at_least": 0
+            }
+          }
+        ],
+        "recipe_id": "T1R-7be713bad733ea",
+        "resource_rectangle": {
+          "query_budget": [
+            0,
+            2
+          ],
+          "satellite_budget": [
+            0,
+            1
+          ]
+        },
+        "rules": [
+          "Q is an analysis/selection bound, not a source SLA.",
+          "Every positive frontier witness is replayed in its target resource cell.",
+          "Feasibility gain and resource gain are reported separately; no weighted scalar reward is introduced.",
+          "A query-free feasible point means evidence acquisition can stop for feasibility, not that more evidence can never improve another unmodeled cost."
+        ],
+        "schema_version": "0.1",
+        "status": "EXACT_BOUNDED_CONDITIONAL_FRONTIER"
+      },
+      "index": 2,
+      "process": "MULTI_WINDOW_DYNAMIC",
+      "recipe_id": "T1R-7be713bad733ea",
+      "signature": "a8e1080b374d02fd31c59c5ef3726dbc02db734d5df5236d1441e8e94f3ef8d1"
+    },
+    {
+      "frontier": {
+        "bundle_id": "T1B-2de9aecbd6de3395",
+        "cells": [
+          {
+            "metrics": {
+              "domain_comparisons": 0,
+              "domain_hits": 0,
+              "exact_hits": 1,
+              "expanded": 114,
+              "memo_entries": 123,
+              "negative_domain_hits": 0,
+              "recursive_calls": 124,
+              "separator_comparisons": 0,
+              "separator_hits": 0,
+              "separator_replay_checks": 0,
+              "separator_replay_failures": 0,
+              "separator_replay_wall_s": 0.0,
+              "wall_s": 0.005949013000645209
+            },
+            "query_budget": 0,
+            "satellite_budget": 0,
+            "solvable": false,
+            "status": "EXACT",
+            "witness_requirement": null
+          },
+          {
+            "metrics": {
+              "domain_comparisons": 123,
+              "domain_hits": 0,
+              "exact_hits": 46,
+              "expanded": 1216,
+              "memo_entries": 1416,
+              "negative_domain_hits": 0,
+              "recursive_calls": 1339,
+              "separator_comparisons": 0,
+              "separator_hits": 0,
+              "separator_replay_checks": 0,
+              "separator_replay_failures": 0,
+              "separator_replay_wall_s": 0.0,
+              "wall_s": 0.06301402600365691
+            },
+            "query_budget": 0,
+            "satellite_budget": 1,
+            "solvable": false,
+            "status": "EXACT",
+            "witness_requirement": null
+          },
+          {
+            "metrics": {
+              "domain_comparisons": 1293,
+              "domain_hits": 0,
+              "exact_hits": 151,
+              "expanded": 4003,
+              "memo_entries": 5704,
+              "negative_domain_hits": 0,
+              "recursive_calls": 4439,
+              "separator_comparisons": 0,
+              "separator_hits": 0,
+              "separator_replay_checks": 0,
+              "separator_replay_failures": 0,
+              "separator_replay_wall_s": 0.0,
+              "wall_s": 0.42993744800332934
+            },
+            "query_budget": 0,
+            "satellite_budget": 2,
+            "solvable": false,
+            "status": "EXACT",
+            "witness_requirement": null
+          },
+          {
+            "metrics": {
+              "domain_comparisons": 29,
+              "domain_hits": 0,
+              "exact_hits": 25,
+              "expanded": 289,
+              "memo_entries": 6005,
+              "negative_domain_hits": 0,
+              "recursive_calls": 355,
+              "separator_comparisons": 0,
+              "separator_hits": 0,
+              "separator_replay_checks": 0,
+              "separator_replay_failures": 0,
+              "separator_replay_wall_s": 0.0,
+              "wall_s": 0.013349861997994594
+            },
+            "policy_sha256": "6340fb761107d9ee0b64e9fbfa935f5ec7dc67013b391646d2f007ce9918cbba",
+            "query_budget": 1,
+            "replay_requirement": [
+              1,
+              0
+            ],
+            "satellite_budget": 0,
+            "solvable": true,
+            "status": "EXACT",
+            "witness_requirement": [
+              1,
+              0
+            ]
+          },
+          {
+            "metrics": {
+              "domain_comparisons": 1,
+              "domain_hits": 1,
+              "exact_hits": 0,
+              "expanded": 0,
+              "memo_entries": 6005,
+              "negative_domain_hits": 0,
+              "recursive_calls": 1,
+              "separator_comparisons": 0,
+              "separator_hits": 0,
+              "separator_replay_checks": 0,
+              "separator_replay_failures": 0,
+              "separator_replay_wall_s": 0.0,
+              "wall_s": 0.0004131340028834529
+            },
+            "policy_sha256": "6340fb761107d9ee0b64e9fbfa935f5ec7dc67013b391646d2f007ce9918cbba",
+            "query_budget": 1,
+            "replay_requirement": [
+              1,
+              0
+            ],
+            "satellite_budget": 1,
+            "solvable": true,
+            "status": "EXACT",
+            "witness_requirement": [
+              1,
+              0
+            ]
+          },
+          {
+            "metrics": {
+              "domain_comparisons": 1,
+              "domain_hits": 1,
+              "exact_hits": 0,
+              "expanded": 0,
+              "memo_entries": 6005,
+              "negative_domain_hits": 0,
+              "recursive_calls": 1,
+              "separator_comparisons": 0,
+              "separator_hits": 0,
+              "separator_replay_checks": 0,
+              "separator_replay_failures": 0,
+              "separator_replay_wall_s": 0.0,
+              "wall_s": 0.00035893599851988256
+            },
+            "policy_sha256": "6340fb761107d9ee0b64e9fbfa935f5ec7dc67013b391646d2f007ce9918cbba",
+            "query_budget": 1,
+            "replay_requirement": [
+              1,
+              0
+            ],
+            "satellite_budget": 2,
+            "solvable": true,
+            "status": "EXACT",
+            "witness_requirement": [
+              1,
+              0
+            ]
+          },
+          {
+            "metrics": {
+              "domain_comparisons": 1,
+              "domain_hits": 1,
+              "exact_hits": 0,
+              "expanded": 0,
+              "memo_entries": 6005,
+              "negative_domain_hits": 0,
+              "recursive_calls": 1,
+              "separator_comparisons": 0,
+              "separator_hits": 0,
+              "separator_replay_checks": 0,
+              "separator_replay_failures": 0,
+              "separator_replay_wall_s": 0.0,
+              "wall_s": 0.0003794250005739741
+            },
+            "policy_sha256": "6340fb761107d9ee0b64e9fbfa935f5ec7dc67013b391646d2f007ce9918cbba",
+            "query_budget": 2,
+            "replay_requirement": [
+              1,
+              0
+            ],
+            "satellite_budget": 0,
+            "solvable": true,
+            "status": "EXACT",
+            "witness_requirement": [
+              1,
+              0
+            ]
+          },
+          {
+            "metrics": {
+              "domain_comparisons": 1,
+              "domain_hits": 1,
+              "exact_hits": 0,
+              "expanded": 0,
+              "memo_entries": 6005,
+              "negative_domain_hits": 0,
+              "recursive_calls": 1,
+              "separator_comparisons": 0,
+              "separator_hits": 0,
+              "separator_replay_checks": 0,
+              "separator_replay_failures": 0,
+              "separator_replay_wall_s": 0.0,
+              "wall_s": 0.0004217340028844774
+            },
+            "policy_sha256": "6340fb761107d9ee0b64e9fbfa935f5ec7dc67013b391646d2f007ce9918cbba",
+            "query_budget": 2,
+            "replay_requirement": [
+              1,
+              0
+            ],
+            "satellite_budget": 1,
+            "solvable": true,
+            "status": "EXACT",
+            "witness_requirement": [
+              1,
+              0
+            ]
+          },
+          {
+            "metrics": {
+              "domain_comparisons": 1,
+              "domain_hits": 1,
+              "exact_hits": 0,
+              "expanded": 0,
+              "memo_entries": 6005,
+              "negative_domain_hits": 0,
+              "recursive_calls": 1,
+              "separator_comparisons": 0,
+              "separator_hits": 0,
+              "separator_replay_checks": 0,
+              "separator_replay_failures": 0,
+              "separator_replay_wall_s": 0.0,
+              "wall_s": 0.00036054000520380214
+            },
+            "policy_sha256": "6340fb761107d9ee0b64e9fbfa935f5ec7dc67013b391646d2f007ce9918cbba",
+            "query_budget": 2,
+            "replay_requirement": [
+              1,
+              0
+            ],
+            "satellite_budget": 2,
+            "solvable": true,
+            "status": "EXACT",
+            "witness_requirement": [
+              1,
+              0
+            ]
+          },
+          {
+            "metrics": {
+              "domain_comparisons": 1,
+              "domain_hits": 1,
+              "exact_hits": 0,
+              "expanded": 0,
+              "memo_entries": 6005,
+              "negative_domain_hits": 0,
+              "recursive_calls": 1,
+              "separator_comparisons": 0,
+              "separator_hits": 0,
+              "separator_replay_checks": 0,
+              "separator_replay_failures": 0,
+              "separator_replay_wall_s": 0.0,
+              "wall_s": 0.00037690099998144433
+            },
+            "policy_sha256": "6340fb761107d9ee0b64e9fbfa935f5ec7dc67013b391646d2f007ce9918cbba",
+            "query_budget": 3,
+            "replay_requirement": [
+              1,
+              0
+            ],
+            "satellite_budget": 0,
+            "solvable": true,
+            "status": "EXACT",
+            "witness_requirement": [
+              1,
+              0
+            ]
+          },
+          {
+            "metrics": {
+              "domain_comparisons": 1,
+              "domain_hits": 1,
+              "exact_hits": 0,
+              "expanded": 0,
+              "memo_entries": 6005,
+              "negative_domain_hits": 0,
+              "recursive_calls": 1,
+              "separator_comparisons": 0,
+              "separator_hits": 0,
+              "separator_replay_checks": 0,
+              "separator_replay_failures": 0,
+              "separator_replay_wall_s": 0.0,
+              "wall_s": 0.00040094999712891877
+            },
+            "policy_sha256": "6340fb761107d9ee0b64e9fbfa935f5ec7dc67013b391646d2f007ce9918cbba",
+            "query_budget": 3,
+            "replay_requirement": [
+              1,
+              0
+            ],
+            "satellite_budget": 1,
+            "solvable": true,
+            "status": "EXACT",
+            "witness_requirement": [
+              1,
+              0
+            ]
+          },
+          {
+            "metrics": {
+              "domain_comparisons": 1,
+              "domain_hits": 1,
+              "exact_hits": 0,
+              "expanded": 0,
+              "memo_entries": 6005,
+              "negative_domain_hits": 0,
+              "recursive_calls": 1,
+              "separator_comparisons": 0,
+              "separator_hits": 0,
+              "separator_replay_checks": 0,
+              "separator_replay_failures": 0,
+              "separator_replay_wall_s": 0.0,
+              "wall_s": 0.00038662100268993527
+            },
+            "policy_sha256": "6340fb761107d9ee0b64e9fbfa935f5ec7dc67013b391646d2f007ce9918cbba",
+            "query_budget": 3,
+            "replay_requirement": [
+              1,
+              0
+            ],
+            "satellite_budget": 2,
+            "solvable": true,
+            "status": "EXACT",
+            "witness_requirement": [
+              1,
+              0
+            ]
+          }
+        ],
+        "context": {
+          "can_stop_acquiring_for_feasibility": false,
+          "completeness": "complete over the declared integer Q/B rectangle only",
+          "minimum_query_budget_for_any_success": 1,
+          "minimum_satellite_budget_with_query_allowed": 0,
+          "minimum_satellite_budget_without_paid_query": null,
+          "satellite_budget_released_by_allowing_query": null
+        },
+        "evidence_gain_type": "INFORMATION_FEASIBILITY_GAIN",
+        "frontier_points": [
+          {
+            "certified_witness_requirement": [
+              1,
+              0
+            ],
+            "policy_sha256": "6340fb761107d9ee0b64e9fbfa935f5ec7dc67013b391646d2f007ce9918cbba",
+            "query_budget": 1,
+            "satellite_budget": 0,
+            "validity_domain": {
+              "boundary_condition": "same causal execution/evidence boundary; later reuse requires certificate validation",
+              "query_budget_at_least": 1,
+              "satellite_budget_at_least": 0
+            }
+          }
+        ],
+        "recipe_id": "T1R-d2a98ca33ce5b4",
+        "resource_rectangle": {
+          "query_budget": [
+            0,
+            3
+          ],
+          "satellite_budget": [
+            0,
+            2
+          ]
+        },
+        "rules": [
+          "Q is an analysis/selection bound, not a source SLA.",
+          "Every positive frontier witness is replayed in its target resource cell.",
+          "Feasibility gain and resource gain are reported separately; no weighted scalar reward is introduced.",
+          "A query-free feasible point means evidence acquisition can stop for feasibility, not that more evidence can never improve another unmodeled cost."
+        ],
+        "schema_version": "0.1",
+        "status": "EXACT_BOUNDED_CONDITIONAL_FRONTIER"
+      },
+      "index": 3,
+      "process": "MULTI_WINDOW_DYNAMIC",
+      "recipe_id": "T1R-d2a98ca33ce5b4",
+      "signature": "5312f8b7b80e342ebd7cfdc5e6c64efe8df1cea176c8d5c2f6b92d835700aac5"
+    },
+    {
+      "frontier": {
+        "bundle_id": "T1B-3f8317befc81dbf6",
+        "cells": [
+          {
+            "metrics": {
+              "domain_comparisons": 0,
+              "domain_hits": 0,
+              "exact_hits": 1,
+              "expanded": 114,
+              "memo_entries": 123,
+              "negative_domain_hits": 0,
+              "recursive_calls": 124,
+              "separator_comparisons": 0,
+              "separator_hits": 0,
+              "separator_replay_checks": 0,
+              "separator_replay_failures": 0,
+              "separator_replay_wall_s": 0.0,
+              "wall_s": 0.006642770997132175
+            },
+            "query_budget": 0,
+            "satellite_budget": 0,
+            "solvable": false,
+            "status": "EXACT",
+            "witness_requirement": null
+          },
+          {
+            "metrics": {
+              "domain_comparisons": 123,
+              "domain_hits": 0,
+              "exact_hits": 46,
+              "expanded": 1216,
+              "memo_entries": 1416,
+              "negative_domain_hits": 0,
+              "recursive_calls": 1339,
+              "separator_comparisons": 0,
+              "separator_hits": 0,
+              "separator_replay_checks": 0,
+              "separator_replay_failures": 0,
+              "separator_replay_wall_s": 0.0,
+              "wall_s": 0.08232159299950581
+            },
+            "query_budget": 0,
+            "satellite_budget": 1,
+            "solvable": false,
+            "status": "EXACT",
+            "witness_requirement": null
+          },
+          {
+            "metrics": {
+              "domain_comparisons": 1293,
+              "domain_hits": 0,
+              "exact_hits": 178,
+              "expanded": 5758,
+              "memo_entries": 7675,
+              "negative_domain_hits": 0,
+              "recursive_calls": 6437,
+              "separator_comparisons": 0,
+              "separator_hits": 0,
+              "separator_replay_checks": 0,
+              "separator_replay_failures": 0,
+              "separator_replay_wall_s": 0.0,
+              "wall_s": 0.43871776900050463
+            },
+            "query_budget": 0,
+            "satellite_budget": 2,
+            "solvable": false,
+            "status": "EXACT",
+            "witness_requirement": null
+          },
+          {
+            "metrics": {
+              "domain_comparisons": 6259,
+              "domain_hits": 0,
+              "exact_hits": 432,
+              "expanded": 16656,
+              "memo_entries": 25550,
+              "negative_domain_hits": 0,
+              "recursive_calls": 18307,
+              "separator_comparisons": 0,
+              "separator_hits": 0,
+              "separator_replay_checks": 0,
+              "separator_replay_failures": 0,
+              "separator_replay_wall_s": 0.0,
+              "wall_s": 1.2306244770006742
+            },
+            "query_budget": 0,
+            "satellite_budget": 3,
+            "solvable": false,
+            "status": "EXACT",
+            "witness_requirement": null
+          },
+          {
+            "metrics": {
+              "domain_comparisons": 29,
+              "domain_hits": 0,
+              "exact_hits": 25,
+              "expanded": 349,
+              "memo_entries": 25912,
+              "negative_domain_hits": 0,
+              "recursive_calls": 416,
+              "separator_comparisons": 0,
+              "separator_hits": 0,
+              "separator_replay_checks": 0,
+              "separator_replay_failures": 0,
+              "separator_replay_wall_s": 0.0,
+              "wall_s": 0.02537878700240981
+            },
+            "policy_sha256": "2b9b125ae76ed9f5df3eafc9511b36a1414874052c5bffa23457fb772d1332fa",
+            "query_budget": 1,
+            "replay_requirement": [
+              1,
+              0
+            ],
+            "satellite_budget": 0,
+            "solvable": true,
+            "status": "EXACT",
+            "witness_requirement": [
+              1,
+              0
+            ]
+          },
+          {
+            "metrics": {
+              "domain_comparisons": 1,
+              "domain_hits": 1,
+              "exact_hits": 0,
+              "expanded": 0,
+              "memo_entries": 25912,
+              "negative_domain_hits": 0,
+              "recursive_calls": 1,
+              "separator_comparisons": 0,
+              "separator_hits": 0,
+              "separator_replay_checks": 0,
+              "separator_replay_failures": 0,
+              "separator_replay_wall_s": 0.0,
+              "wall_s": 0.00055761599651305
+            },
+            "policy_sha256": "2b9b125ae76ed9f5df3eafc9511b36a1414874052c5bffa23457fb772d1332fa",
+            "query_budget": 1,
+            "replay_requirement": [
+              1,
+              0
+            ],
+            "satellite_budget": 1,
+            "solvable": true,
+            "status": "EXACT",
+            "witness_requirement": [
+              1,
+              0
+            ]
+          },
+          {
+            "metrics": {
+              "domain_comparisons": 1,
+              "domain_hits": 1,
+              "exact_hits": 0,
+              "expanded": 0,
+              "memo_entries": 25912,
+              "negative_domain_hits": 0,
+              "recursive_calls": 1,
+              "separator_comparisons": 0,
+              "separator_hits": 0,
+              "separator_replay_checks": 0,
+              "separator_replay_failures": 0,
+              "separator_replay_wall_s": 0.0,
+              "wall_s": 0.0005874609996681102
+            },
+            "policy_sha256": "2b9b125ae76ed9f5df3eafc9511b36a1414874052c5bffa23457fb772d1332fa",
+            "query_budget": 1,
+            "replay_requirement": [
+              1,
+              0
+            ],
+            "satellite_budget": 2,
+            "solvable": true,
+            "status": "EXACT",
+            "witness_requirement": [
+              1,
+              0
+            ]
+          },
+          {
+            "metrics": {
+              "domain_comparisons": 1,
+              "domain_hits": 1,
+              "exact_hits": 0,
+              "expanded": 0,
+              "memo_entries": 25912,
+              "negative_domain_hits": 0,
+              "recursive_calls": 1,
+              "separator_comparisons": 0,
+              "separator_hits": 0,
+              "separator_replay_checks": 0,
+              "separator_replay_failures": 0,
+              "separator_replay_wall_s": 0.0,
+              "wall_s": 0.0006792809945181943
+            },
+            "policy_sha256": "2b9b125ae76ed9f5df3eafc9511b36a1414874052c5bffa23457fb772d1332fa",
+            "query_budget": 1,
+            "replay_requirement": [
+              1,
+              0
+            ],
+            "satellite_budget": 3,
+            "solvable": true,
+            "status": "EXACT",
+            "witness_requirement": [
+              1,
+              0
+            ]
+          },
+          {
+            "metrics": {
+              "domain_comparisons": 1,
+              "domain_hits": 1,
+              "exact_hits": 0,
+              "expanded": 0,
+              "memo_entries": 25912,
+              "negative_domain_hits": 0,
+              "recursive_calls": 1,
+              "separator_comparisons": 0,
+              "separator_hits": 0,
+              "separator_replay_checks": 0,
+              "separator_replay_failures": 0,
+              "separator_replay_wall_s": 0.0,
+              "wall_s": 0.0006760250034858473
+            },
+            "policy_sha256": "2b9b125ae76ed9f5df3eafc9511b36a1414874052c5bffa23457fb772d1332fa",
+            "query_budget": 2,
+            "replay_requirement": [
+              1,
+              0
+            ],
+            "satellite_budget": 0,
+            "solvable": true,
+            "status": "EXACT",
+            "witness_requirement": [
+              1,
+              0
+            ]
+          },
+          {
+            "metrics": {
+              "domain_comparisons": 1,
+              "domain_hits": 1,
+              "exact_hits": 0,
+              "expanded": 0,
+              "memo_entries": 25912,
+              "negative_domain_hits": 0,
+              "recursive_calls": 1,
+              "separator_comparisons": 0,
+              "separator_hits": 0,
+              "separator_replay_checks": 0,
+              "separator_replay_failures": 0,
+              "separator_replay_wall_s": 0.0,
+              "wall_s": 0.000552427998627536
+            },
+            "policy_sha256": "2b9b125ae76ed9f5df3eafc9511b36a1414874052c5bffa23457fb772d1332fa",
+            "query_budget": 2,
+            "replay_requirement": [
+              1,
+              0
+            ],
+            "satellite_budget": 1,
+            "solvable": true,
+            "status": "EXACT",
+            "witness_requirement": [
+              1,
+              0
+            ]
+          },
+          {
+            "metrics": {
+              "domain_comparisons": 1,
+              "domain_hits": 1,
+              "exact_hits": 0,
+              "expanded": 0,
+              "memo_entries": 25912,
+              "negative_domain_hits": 0,
+              "recursive_calls": 1,
+              "separator_comparisons": 0,
+              "separator_hits": 0,
+              "separator_replay_checks": 0,
+              "separator_replay_failures": 0,
+              "separator_replay_wall_s": 0.0,
+              "wall_s": 0.0005189750008867122
+            },
+            "policy_sha256": "2b9b125ae76ed9f5df3eafc9511b36a1414874052c5bffa23457fb772d1332fa",
+            "query_budget": 2,
+            "replay_requirement": [
+              1,
+              0
+            ],
+            "satellite_budget": 2,
+            "solvable": true,
+            "status": "EXACT",
+            "witness_requirement": [
+              1,
+              0
+            ]
+          },
+          {
+            "metrics": {
+              "domain_comparisons": 1,
+              "domain_hits": 1,
+              "exact_hits": 0,
+              "expanded": 0,
+              "memo_entries": 25912,
+              "negative_domain_hits": 0,
+              "recursive_calls": 1,
+              "separator_comparisons": 0,
+              "separator_hits": 0,
+              "separator_replay_checks": 0,
+              "separator_replay_failures": 0,
+              "separator_replay_wall_s": 0.0,
+              "wall_s": 0.0005650340026477352
+            },
+            "policy_sha256": "2b9b125ae76ed9f5df3eafc9511b36a1414874052c5bffa23457fb772d1332fa",
+            "query_budget": 2,
+            "replay_requirement": [
+              1,
+              0
+            ],
+            "satellite_budget": 3,
+            "solvable": true,
+            "status": "EXACT",
+            "witness_requirement": [
+              1,
+              0
+            ]
+          },
+          {
+            "metrics": {
+              "domain_comparisons": 1,
+              "domain_hits": 1,
+              "exact_hits": 0,
+              "expanded": 0,
+              "memo_entries": 25912,
+              "negative_domain_hits": 0,
+              "recursive_calls": 1,
+              "separator_comparisons": 0,
+              "separator_hits": 0,
+              "separator_replay_checks": 0,
+              "separator_replay_failures": 0,
+              "separator_replay_wall_s": 0.0,
+              "wall_s": 0.0006058799990569241
+            },
+            "policy_sha256": "2b9b125ae76ed9f5df3eafc9511b36a1414874052c5bffa23457fb772d1332fa",
+            "query_budget": 3,
+            "replay_requirement": [
+              1,
+              0
+            ],
+            "satellite_budget": 0,
+            "solvable": true,
+            "status": "EXACT",
+            "witness_requirement": [
+              1,
+              0
+            ]
+          },
+          {
+            "metrics": {
+              "domain_comparisons": 1,
+              "domain_hits": 1,
+              "exact_hits": 0,
+              "expanded": 0,
+              "memo_entries": 25912,
+              "negative_domain_hits": 0,
+              "recursive_calls": 1,
+              "separator_comparisons": 0,
+              "separator_hits": 0,
+              "separator_replay_checks": 0,
+              "separator_replay_failures": 0,
+              "separator_replay_wall_s": 0.0,
+              "wall_s": 0.000859860003401991
+            },
+            "policy_sha256": "2b9b125ae76ed9f5df3eafc9511b36a1414874052c5bffa23457fb772d1332fa",
+            "query_budget": 3,
+            "replay_requirement": [
+              1,
+              0
+            ],
+            "satellite_budget": 1,
+            "solvable": true,
+            "status": "EXACT",
+            "witness_requirement": [
+              1,
+              0
+            ]
+          },
+          {
+            "metrics": {
+              "domain_comparisons": 1,
+              "domain_hits": 1,
+              "exact_hits": 0,
+              "expanded": 0,
+              "memo_entries": 25912,
+              "negative_domain_hits": 0,
+              "recursive_calls": 1,
+              "separator_comparisons": 0,
+              "separator_hits": 0,
+              "separator_replay_checks": 0,
+              "separator_replay_failures": 0,
+              "separator_replay_wall_s": 0.0,
+              "wall_s": 0.0006472120003309101
+            },
+            "policy_sha256": "2b9b125ae76ed9f5df3eafc9511b36a1414874052c5bffa23457fb772d1332fa",
+            "query_budget": 3,
+            "replay_requirement": [
+              1,
+              0
+            ],
+            "satellite_budget": 2,
+            "solvable": true,
+            "status": "EXACT",
+            "witness_requirement": [
+              1,
+              0
+            ]
+          },
+          {
+            "metrics": {
+              "domain_comparisons": 1,
+              "domain_hits": 1,
+              "exact_hits": 0,
+              "expanded": 0,
+              "memo_entries": 25912,
+              "negative_domain_hits": 0,
+              "recursive_calls": 1,
+              "separator_comparisons": 0,
+              "separator_hits": 0,
+              "separator_replay_checks": 0,
+              "separator_replay_failures": 0,
+              "separator_replay_wall_s": 0.0,
+              "wall_s": 0.0006771020052838139
+            },
+            "policy_sha256": "2b9b125ae76ed9f5df3eafc9511b36a1414874052c5bffa23457fb772d1332fa",
+            "query_budget": 3,
+            "replay_requirement": [
+              1,
+              0
+            ],
+            "satellite_budget": 3,
+            "solvable": true,
+            "status": "EXACT",
+            "witness_requirement": [
+              1,
+              0
+            ]
+          },
+          {
+            "metrics": {
+              "domain_comparisons": 1,
+              "domain_hits": 1,
+              "exact_hits": 0,
+              "expanded": 0,
+              "memo_entries": 25912,
+              "negative_domain_hits": 0,
+              "recursive_calls": 1,
+              "separator_comparisons": 0,
+              "separator_hits": 0,
+              "separator_replay_checks": 0,
+              "separator_replay_failures": 0,
+              "separator_replay_wall_s": 0.0,
+              "wall_s": 0.0005929369945079088
+            },
+            "policy_sha256": "2b9b125ae76ed9f5df3eafc9511b36a1414874052c5bffa23457fb772d1332fa",
+            "query_budget": 4,
+            "replay_requirement": [
+              1,
+              0
+            ],
+            "satellite_budget": 0,
+            "solvable": true,
+            "status": "EXACT",
+            "witness_requirement": [
+              1,
+              0
+            ]
+          },
+          {
+            "metrics": {
+              "domain_comparisons": 1,
+              "domain_hits": 1,
+              "exact_hits": 0,
+              "expanded": 0,
+              "memo_entries": 25912,
+              "negative_domain_hits": 0,
+              "recursive_calls": 1,
+              "separator_comparisons": 0,
+              "separator_hits": 0,
+              "separator_replay_checks": 0,
+              "separator_replay_failures": 0,
+              "separator_replay_wall_s": 0.0,
+              "wall_s": 0.0011460730020189658
+            },
+            "policy_sha256": "2b9b125ae76ed9f5df3eafc9511b36a1414874052c5bffa23457fb772d1332fa",
+            "query_budget": 4,
+            "replay_requirement": [
+              1,
+              0
+            ],
+            "satellite_budget": 1,
+            "solvable": true,
+            "status": "EXACT",
+            "witness_requirement": [
+              1,
+              0
+            ]
+          },
+          {
+            "metrics": {
+              "domain_comparisons": 1,
+              "domain_hits": 1,
+              "exact_hits": 0,
+              "expanded": 0,
+              "memo_entries": 25912,
+              "negative_domain_hits": 0,
+              "recursive_calls": 1,
+              "separator_comparisons": 0,
+              "separator_hits": 0,
+              "separator_replay_checks": 0,
+              "separator_replay_failures": 0,
+              "separator_replay_wall_s": 0.0,
+              "wall_s": 0.0005101119968458079
+            },
+            "policy_sha256": "2b9b125ae76ed9f5df3eafc9511b36a1414874052c5bffa23457fb772d1332fa",
+            "query_budget": 4,
+            "replay_requirement": [
+              1,
+              0
+            ],
+            "satellite_budget": 2,
+            "solvable": true,
+            "status": "EXACT",
+            "witness_requirement": [
+              1,
+              0
+            ]
+          },
+          {
+            "metrics": {
+              "domain_comparisons": 1,
+              "domain_hits": 1,
+              "exact_hits": 0,
+              "expanded": 0,
+              "memo_entries": 25912,
+              "negative_domain_hits": 0,
+              "recursive_calls": 1,
+              "separator_comparisons": 0,
+              "separator_hits": 0,
+              "separator_replay_checks": 0,
+              "separator_replay_failures": 0,
+              "separator_replay_wall_s": 0.0,
+              "wall_s": 0.0005012699984945357
+            },
+            "policy_sha256": "2b9b125ae76ed9f5df3eafc9511b36a1414874052c5bffa23457fb772d1332fa",
+            "query_budget": 4,
+            "replay_requirement": [
+              1,
+              0
+            ],
+            "satellite_budget": 3,
+            "solvable": true,
+            "status": "EXACT",
+            "witness_requirement": [
+              1,
+              0
+            ]
+          }
+        ],
+        "context": {
+          "can_stop_acquiring_for_feasibility": false,
+          "completeness": "complete over the declared integer Q/B rectangle only",
+          "minimum_query_budget_for_any_success": 1,
+          "minimum_satellite_budget_with_query_allowed": 0,
+          "minimum_satellite_budget_without_paid_query": null,
+          "satellite_budget_released_by_allowing_query": null
+        },
+        "evidence_gain_type": "INFORMATION_FEASIBILITY_GAIN",
+        "frontier_points": [
+          {
+            "certified_witness_requirement": [
+              1,
+              0
+            ],
+            "policy_sha256": "2b9b125ae76ed9f5df3eafc9511b36a1414874052c5bffa23457fb772d1332fa",
+            "query_budget": 1,
+            "satellite_budget": 0,
+            "validity_domain": {
+              "boundary_condition": "same causal execution/evidence boundary; later reuse requires certificate validation",
+              "query_budget_at_least": 1,
+              "satellite_budget_at_least": 0
+            }
+          }
+        ],
+        "recipe_id": "T1R-c969bec849683a",
+        "resource_rectangle": {
+          "query_budget": [
+            0,
+            4
+          ],
+          "satellite_budget": [
+            0,
+            3
+          ]
+        },
+        "rules": [
+          "Q is an analysis/selection bound, not a source SLA.",
+          "Every positive frontier witness is replayed in its target resource cell.",
+          "Feasibility gain and resource gain are reported separately; no weighted scalar reward is introduced.",
+          "A query-free feasible point means evidence acquisition can stop for feasibility, not that more evidence can never improve another unmodeled cost."
+        ],
+        "schema_version": "0.1",
+        "status": "EXACT_BOUNDED_CONDITIONAL_FRONTIER"
+      },
+      "index": 4,
+      "process": "MULTI_WINDOW_DYNAMIC",
+      "recipe_id": "T1R-c969bec849683a",
+      "signature": "6d7744f6edc523e2f323ab53614440d1a2e43192915ecfc887310faa4d53fa1f"
+    },
+    {
+      "frontier": {
+        "bundle_id": "T1B-71530f34b74416e7",
+        "cells": [
+          {
+            "metrics": {
+              "domain_comparisons": 0,
+              "domain_hits": 0,
+              "exact_hits": 0,
+              "expanded": 36,
+              "memo_entries": 39,
+              "negative_domain_hits": 0,
+              "recursive_calls": 39,
+              "separator_comparisons": 0,
+              "separator_hits": 0,
+              "separator_replay_checks": 0,
+              "separator_replay_failures": 0,
+              "separator_replay_wall_s": 0.0,
+              "wall_s": 0.0014008970028953627
+            },
+            "query_budget": 0,
+            "satellite_budget": 0,
+            "solvable": false,
+            "status": "EXACT",
+            "witness_requirement": null
+          },
+          {
+            "metrics": {
+              "domain_comparisons": 39,
+              "domain_hits": 0,
+              "exact_hits": 30,
+              "expanded": 565,
+              "memo_entries": 636,
+              "negative_domain_hits": 0,
+              "recursive_calls": 627,
+              "separator_comparisons": 0,
+              "separator_hits": 0,
+              "separator_replay_checks": 0,
+              "separator_replay_failures": 0,
+              "separator_replay_wall_s": 0.0,
+              "wall_s": 0.03280138300033286
+            },
+            "query_budget": 0,
+            "satellite_budget": 1,
+            "solvable": false,
+            "status": "EXACT",
+            "witness_requirement": null
+          },
+          {
+            "metrics": {
+              "domain_comparisons": 597,
+              "domain_hits": 0,
+              "exact_hits": 135,
+              "expanded": 2463,
+              "memo_entries": 3272,
+              "negative_domain_hits": 0,
+              "recursive_calls": 2771,
+              "separator_comparisons": 0,
+              "separator_hits": 0,
+              "separator_replay_checks": 0,
+              "separator_replay_failures": 0,
+              "separator_replay_wall_s": 0.0,
+              "wall_s": 0.335387705003086
+            },
+            "query_budget": 0,
+            "satellite_budget": 2,
+            "solvable": false,
+            "status": "EXACT",
+            "witness_requirement": null
+          },
+          {
+            "metrics": {
+              "domain_comparisons": 39,
+              "domain_hits": 0,
+              "exact_hits": 31,
+              "expanded": 154,
+              "memo_entries": 3436,
+              "negative_domain_hits": 0,
+              "recursive_calls": 228,
+              "separator_comparisons": 0,
+              "separator_hits": 0,
+              "separator_replay_checks": 0,
+              "separator_replay_failures": 0,
+              "separator_replay_wall_s": 0.0,
+              "wall_s": 0.009450528996239882
+            },
+            "query_budget": 1,
+            "satellite_budget": 0,
+            "solvable": false,
+            "status": "EXACT",
+            "witness_requirement": null
+          },
+          {
+            "metrics": {
+              "domain_comparisons": 756,
+              "domain_hits": 0,
+              "exact_hits": 630,
+              "expanded": 3000,
+              "memo_entries": 6560,
+              "negative_domain_hits": 0,
+              "recursive_calls": 4296,
+              "separator_comparisons": 0,
+              "separator_hits": 0,
+              "separator_replay_checks": 0,
+              "separator_replay_failures": 0,
+              "separator_replay_wall_s": 0.0,
+              "wall_s": 0.16860279899992747
+            },
+            "query_budget": 1,
+            "satellite_budget": 1,
+            "solvable": false,
+            "status": "EXACT",
+            "witness_requirement": null
+          },
+          {
+            "metrics": {
+              "domain_comparisons": 768,
+              "domain_hits": 1,
+              "exact_hits": 180,
+              "expanded": 2644,
+              "memo_entries": 9382,
+              "negative_domain_hits": 0,
+              "recursive_calls": 3054,
+              "separator_comparisons": 0,
+              "separator_hits": 0,
+              "separator_replay_checks": 0,
+              "separator_replay_failures": 0,
+              "separator_replay_wall_s": 0.0,
+              "wall_s": 0.17479811199882533
+            },
+            "policy_sha256": "8938eacbff23b0a91acbdb32d2926819542d9e7ba7277f48ffd8b4a32e08d452",
+            "query_budget": 1,
+            "replay_requirement": [
+              1,
+              2
+            ],
+            "satellite_budget": 2,
+            "solvable": true,
+            "status": "EXACT",
+            "witness_requirement": [
+              1,
+              2
+            ]
+          },
+          {
+            "metrics": {
+              "domain_comparisons": 209,
+              "domain_hits": 0,
+              "exact_hits": 32,
+              "expanded": 154,
+              "memo_entries": 9546,
+              "negative_domain_hits": 0,
+              "recursive_calls": 229,
+              "separator_comparisons": 0,
+              "separator_hits": 0,
+              "separator_replay_checks": 0,
+              "separator_replay_failures": 0,
+              "separator_replay_wall_s": 0.0,
+              "wall_s": 0.009790294003323652
+            },
+            "query_budget": 2,
+            "satellite_budget": 0,
+            "solvable": false,
+            "status": "EXACT",
+            "witness_requirement": null
+          },
+          {
+            "metrics": {
+              "domain_comparisons": 3695,
+              "domain_hits": 19,
+              "exact_hits": 1008,
+              "expanded": 3953,
+              "memo_entries": 13674,
+              "negative_domain_hits": 0,
+              "recursive_calls": 6028,
+              "separator_comparisons": 0,
+              "separator_hits": 0,
+              "separator_replay_checks": 0,
+              "separator_replay_failures": 0,
+              "separator_replay_wall_s": 0.0,
+              "wall_s": 0.23781777499971213
+            },
+            "query_budget": 2,
+            "satellite_budget": 1,
+            "solvable": false,
+            "status": "EXACT",
+            "witness_requirement": null
+          },
+          {
+            "metrics": {
+              "domain_comparisons": 1,
+              "domain_hits": 1,
+              "exact_hits": 0,
+              "expanded": 0,
+              "memo_entries": 13674,
+              "negative_domain_hits": 0,
+              "recursive_calls": 1,
+              "separator_comparisons": 0,
+              "separator_hits": 0,
+              "separator_replay_checks": 0,
+              "separator_replay_failures": 0,
+              "separator_replay_wall_s": 0.0,
+              "wall_s": 0.00038386900268960744
+            },
+            "policy_sha256": "8938eacbff23b0a91acbdb32d2926819542d9e7ba7277f48ffd8b4a32e08d452",
+            "query_budget": 2,
+            "replay_requirement": [
+              1,
+              2
+            ],
+            "satellite_budget": 2,
+            "solvable": true,
+            "status": "EXACT",
+            "witness_requirement": [
+              1,
+              2
+            ]
+          },
+          {
+            "metrics": {
+              "domain_comparisons": 251,
+              "domain_hits": 0,
+              "exact_hits": 32,
+              "expanded": 154,
+              "memo_entries": 13838,
+              "negative_domain_hits": 0,
+              "recursive_calls": 229,
+              "separator_comparisons": 0,
+              "separator_hits": 0,
+              "separator_replay_checks": 0,
+              "separator_replay_failures": 0,
+              "separator_replay_wall_s": 0.0,
+              "wall_s": 0.00867856200056849
+            },
+            "query_budget": 3,
+            "satellite_budget": 0,
+            "solvable": false,
+            "status": "EXACT",
+            "witness_requirement": null
+          },
+          {
+            "metrics": {
+              "domain_comparisons": 5602,
+              "domain_hits": 19,
+              "exact_hits": 1023,
+              "expanded": 3953,
+              "memo_entries": 17966,
+              "negative_domain_hits": 0,
+              "recursive_calls": 6043,
+              "separator_comparisons": 0,
+              "separator_hits": 0,
+              "separator_replay_checks": 0,
+              "separator_replay_failures": 0,
+              "separator_replay_wall_s": 0.0,
+              "wall_s": 0.22275652700045612
+            },
+            "query_budget": 3,
+            "satellite_budget": 1,
+            "solvable": false,
+            "status": "EXACT",
+            "witness_requirement": null
+          },
+          {
+            "metrics": {
+              "domain_comparisons": 1,
+              "domain_hits": 1,
+              "exact_hits": 0,
+              "expanded": 0,
+              "memo_entries": 17966,
+              "negative_domain_hits": 0,
+              "recursive_calls": 1,
+              "separator_comparisons": 0,
+              "separator_hits": 0,
+              "separator_replay_checks": 0,
+              "separator_replay_failures": 0,
+              "separator_replay_wall_s": 0.0,
+              "wall_s": 0.00040922000334830955
+            },
+            "policy_sha256": "8938eacbff23b0a91acbdb32d2926819542d9e7ba7277f48ffd8b4a32e08d452",
+            "query_budget": 3,
+            "replay_requirement": [
+              1,
+              2
+            ],
+            "satellite_budget": 2,
+            "solvable": true,
+            "status": "EXACT",
+            "witness_requirement": [
+              1,
+              2
+            ]
+          }
+        ],
+        "context": {
+          "can_stop_acquiring_for_feasibility": false,
+          "completeness": "complete over the declared integer Q/B rectangle only",
+          "minimum_query_budget_for_any_success": 1,
+          "minimum_satellite_budget_with_query_allowed": 2,
+          "minimum_satellite_budget_without_paid_query": null,
+          "satellite_budget_released_by_allowing_query": null
+        },
+        "evidence_gain_type": "INFORMATION_FEASIBILITY_GAIN",
+        "frontier_points": [
+          {
+            "certified_witness_requirement": [
+              1,
+              2
+            ],
+            "policy_sha256": "8938eacbff23b0a91acbdb32d2926819542d9e7ba7277f48ffd8b4a32e08d452",
+            "query_budget": 1,
+            "satellite_budget": 2,
+            "validity_domain": {
+              "boundary_condition": "same causal execution/evidence boundary; later reuse requires certificate validation",
+              "query_budget_at_least": 1,
+              "satellite_budget_at_least": 2
+            }
+          }
+        ],
+        "recipe_id": "T1R-740f6be67bd019",
+        "resource_rectangle": {
+          "query_budget": [
+            0,
+            3
+          ],
+          "satellite_budget": [
+            0,
+            2
+          ]
+        },
+        "rules": [
+          "Q is an analysis/selection bound, not a source SLA.",
+          "Every positive frontier witness is replayed in its target resource cell.",
+          "Feasibility gain and resource gain are reported separately; no weighted scalar reward is introduced.",
+          "A query-free feasible point means evidence acquisition can stop for feasibility, not that more evidence can never improve another unmodeled cost."
+        ],
+        "schema_version": "0.1",
+        "status": "EXACT_BOUNDED_CONDITIONAL_FRONTIER"
+      },
+      "index": 5,
+      "process": "FINITE_CROSSING_WINDOWS",
+      "recipe_id": "T1R-740f6be67bd019",
+      "signature": "b87d843ab89fe57ce883c23cbf1713921d36ed632684040515e82b7635e89289"
+    },
+    {
+      "frontier": {
+        "bundle_id": "T1B-58e80235d475fa08",
+        "cells": [
+          {
+            "metrics": {
+              "domain_comparisons": 0,
+              "domain_hits": 0,
+              "exact_hits": 0,
+              "expanded": 36,
+              "memo_entries": 39,
+              "negative_domain_hits": 0,
+              "recursive_calls": 39,
+              "separator_comparisons": 0,
+              "separator_hits": 0,
+              "separator_replay_checks": 0,
+              "separator_replay_failures": 0,
+              "separator_replay_wall_s": 0.0,
+              "wall_s": 0.0017545660011819564
+            },
+            "query_budget": 0,
+            "satellite_budget": 0,
+            "solvable": false,
+            "status": "EXACT",
+            "witness_requirement": null
+          },
+          {
+            "metrics": {
+              "domain_comparisons": 39,
+              "domain_hits": 0,
+              "exact_hits": 30,
+              "expanded": 565,
+              "memo_entries": 636,
+              "negative_domain_hits": 0,
+              "recursive_calls": 627,
+              "separator_comparisons": 0,
+              "separator_hits": 0,
+              "separator_replay_checks": 0,
+              "separator_replay_failures": 0,
+              "separator_replay_wall_s": 0.0,
+              "wall_s": 0.03296913200028939
+            },
+            "query_budget": 0,
+            "satellite_budget": 1,
+            "solvable": false,
+            "status": "EXACT",
+            "witness_requirement": null
+          },
+          {
+            "metrics": {
+              "domain_comparisons": 597,
+              "domain_hits": 0,
+              "exact_hits": 135,
+              "expanded": 2787,
+              "memo_entries": 3650,
+              "negative_domain_hits": 0,
+              "recursive_calls": 3149,
+              "separator_comparisons": 0,
+              "separator_hits": 0,
+              "separator_replay_checks": 0,
+              "separator_replay_failures": 0,
+              "separator_replay_wall_s": 0.0,
+              "wall_s": 0.2900777510003536
+            },
+            "query_budget": 0,
+            "satellite_budget": 2,
+            "solvable": false,
+            "status": "EXACT",
+            "witness_requirement": null
+          },
+          {
+            "metrics": {
+              "domain_comparisons": 3014,
+              "domain_hits": 0,
+              "exact_hits": 389,
+              "expanded": 10273,
+              "memo_entries": 14648,
+              "negative_domain_hits": 0,
+              "recursive_calls": 11387,
+              "separator_comparisons": 0,
+              "separator_hits": 0,
+              "separator_replay_checks": 0,
+              "separator_replay_failures": 0,
+              "separator_replay_wall_s": 0.0,
+              "wall_s": 0.8164016110022203
+            },
+            "query_budget": 0,
+            "satellite_budget": 3,
+            "solvable": false,
+            "status": "EXACT",
+            "witness_requirement": null
+          },
+          {
+            "metrics": {
+              "domain_comparisons": 39,
+              "domain_hits": 0,
+              "exact_hits": 31,
+              "expanded": 154,
+              "memo_entries": 14812,
+              "negative_domain_hits": 0,
+              "recursive_calls": 228,
+              "separator_comparisons": 0,
+              "separator_hits": 0,
+              "separator_replay_checks": 0,
+              "separator_replay_failures": 0,
+              "separator_replay_wall_s": 0.0,
+              "wall_s": 0.009976578003261238
+            },
+            "query_budget": 1,
+            "satellite_budget": 0,
+            "solvable": false,
+            "status": "EXACT",
+            "witness_requirement": null
+          },
+          {
+            "metrics": {
+              "domain_comparisons": 756,
+              "domain_hits": 0,
+              "exact_hits": 630,
+              "expanded": 3063,
+              "memo_entries": 17999,
+              "negative_domain_hits": 0,
+              "recursive_calls": 4359,
+              "separator_comparisons": 0,
+              "separator_hits": 0,
+              "separator_replay_checks": 0,
+              "separator_replay_failures": 0,
+              "separator_replay_wall_s": 0.0,
+              "wall_s": 0.24356628699752036
+            },
+            "query_budget": 1,
+            "satellite_budget": 1,
+            "solvable": false,
+            "status": "EXACT",
+            "witness_requirement": null
+          },
+          {
+            "metrics": {
+              "domain_comparisons": 768,
+              "domain_hits": 1,
+              "exact_hits": 182,
+              "expanded": 3018,
+              "memo_entries": 21249,
+              "negative_domain_hits": 0,
+              "recursive_calls": 3482,
+              "separator_comparisons": 0,
+              "separator_hits": 0,
+              "separator_replay_checks": 0,
+              "separator_replay_failures": 0,
+              "separator_replay_wall_s": 0.0,
+              "wall_s": 0.255296613999235
+            },
+            "policy_sha256": "35e25a3febab120ce482de1065be252d5c823d1e1b392698ac06d45557cf7688",
+            "query_budget": 1,
+            "replay_requirement": [
+              1,
+              2
+            ],
+            "satellite_budget": 2,
+            "solvable": true,
+            "status": "EXACT",
+            "witness_requirement": [
+              1,
+              2
+            ]
+          },
+          {
+            "metrics": {
+              "domain_comparisons": 1,
+              "domain_hits": 1,
+              "exact_hits": 0,
+              "expanded": 0,
+              "memo_entries": 21249,
+              "negative_domain_hits": 0,
+              "recursive_calls": 1,
+              "separator_comparisons": 0,
+              "separator_hits": 0,
+              "separator_replay_checks": 0,
+              "separator_replay_failures": 0,
+              "separator_replay_wall_s": 0.0,
+              "wall_s": 0.0005938030008110218
+            },
+            "policy_sha256": "35e25a3febab120ce482de1065be252d5c823d1e1b392698ac06d45557cf7688",
+            "query_budget": 1,
+            "replay_requirement": [
+              1,
+              2
+            ],
+            "satellite_budget": 3,
+            "solvable": true,
+            "status": "EXACT",
+            "witness_requirement": [
+              1,
+              2
+            ]
+          },
+          {
+            "metrics": {
+              "domain_comparisons": 209,
+              "domain_hits": 0,
+              "exact_hits": 32,
+              "expanded": 154,
+              "memo_entries": 21413,
+              "negative_domain_hits": 0,
+              "recursive_calls": 229,
+              "separator_comparisons": 0,
+              "separator_hits": 0,
+              "separator_replay_checks": 0,
+              "separator_replay_failures": 0,
+              "separator_replay_wall_s": 0.0,
+              "wall_s": 0.01009152799815638
+            },
+            "query_budget": 2,
+            "satellite_budget": 0,
+            "solvable": false,
+            "status": "EXACT",
+            "witness_requirement": null
+          },
+          {
+            "metrics": {
+              "domain_comparisons": 3708,
+              "domain_hits": 19,
+              "exact_hits": 1008,
+              "expanded": 3953,
+              "memo_entries": 25541,
+              "negative_domain_hits": 0,
+              "recursive_calls": 6028,
+              "separator_comparisons": 0,
+              "separator_hits": 0,
+              "separator_replay_checks": 0,
+              "separator_replay_failures": 0,
+              "separator_replay_wall_s": 0.0,
+              "wall_s": 0.3120310169979348
+            },
+            "query_budget": 2,
+            "satellite_budget": 1,
+            "solvable": false,
+            "status": "EXACT",
+            "witness_requirement": null
+          },
+          {
+            "metrics": {
+              "domain_comparisons": 1,
+              "domain_hits": 1,
+              "exact_hits": 0,
+              "expanded": 0,
+              "memo_entries": 25541,
+              "negative_domain_hits": 0,
+              "recursive_calls": 1,
+              "separator_comparisons": 0,
+              "separator_hits": 0,
+              "separator_replay_checks": 0,
+              "separator_replay_failures": 0,
+              "separator_replay_wall_s": 0.0,
+              "wall_s": 0.0008796910042292438
+            },
+            "policy_sha256": "35e25a3febab120ce482de1065be252d5c823d1e1b392698ac06d45557cf7688",
+            "query_budget": 2,
+            "replay_requirement": [
+              1,
+              2
+            ],
+            "satellite_budget": 2,
+            "solvable": true,
+            "status": "EXACT",
+            "witness_requirement": [
+              1,
+              2
+            ]
+          },
+          {
+            "metrics": {
+              "domain_comparisons": 1,
+              "domain_hits": 1,
+              "exact_hits": 0,
+              "expanded": 0,
+              "memo_entries": 25541,
+              "negative_domain_hits": 0,
+              "recursive_calls": 1,
+              "separator_comparisons": 0,
+              "separator_hits": 0,
+              "separator_replay_checks": 0,
+              "separator_replay_failures": 0,
+              "separator_replay_wall_s": 0.0,
+              "wall_s": 0.000550678996660281
+            },
+            "policy_sha256": "35e25a3febab120ce482de1065be252d5c823d1e1b392698ac06d45557cf7688",
+            "query_budget": 2,
+            "replay_requirement": [
+              1,
+              2
+            ],
+            "satellite_budget": 3,
+            "solvable": true,
+            "status": "EXACT",
+            "witness_requirement": [
+              1,
+              2
+            ]
+          },
+          {
+            "metrics": {
+              "domain_comparisons": 251,
+              "domain_hits": 0,
+              "exact_hits": 32,
+              "expanded": 154,
+              "memo_entries": 25705,
+              "negative_domain_hits": 0,
+              "recursive_calls": 229,
+              "separator_comparisons": 0,
+              "separator_hits": 0,
+              "separator_replay_checks": 0,
+              "separator_replay_failures": 0,
+              "separator_replay_wall_s": 0.0,
+              "wall_s": 0.01008058799925493
+            },
+            "query_budget": 3,
+            "satellite_budget": 0,
+            "solvable": false,
+            "status": "EXACT",
+            "witness_requirement": null
+          },
+          {
+            "metrics": {
+              "domain_comparisons": 5615,
+              "domain_hits": 19,
+              "exact_hits": 1023,
+              "expanded": 3953,
+              "memo_entries": 29833,
+              "negative_domain_hits": 0,
+              "recursive_calls": 6043,
+              "separator_comparisons": 0,
+              "separator_hits": 0,
+              "separator_replay_checks": 0,
+              "separator_replay_failures": 0,
+              "separator_replay_wall_s": 0.0,
+              "wall_s": 0.27960541599895805
+            },
+            "query_budget": 3,
+            "satellite_budget": 1,
+            "solvable": false,
+            "status": "EXACT",
+            "witness_requirement": null
+          },
+          {
+            "metrics": {
+              "domain_comparisons": 1,
+              "domain_hits": 1,
+              "exact_hits": 0,
+              "expanded": 0,
+              "memo_entries": 29833,
+              "negative_domain_hits": 0,
+              "recursive_calls": 1,
+              "separator_comparisons": 0,
+              "separator_hits": 0,
+              "separator_replay_checks": 0,
+              "separator_replay_failures": 0,
+              "separator_replay_wall_s": 0.0,
+              "wall_s": 0.0005956129971309565
+            },
+            "policy_sha256": "35e25a3febab120ce482de1065be252d5c823d1e1b392698ac06d45557cf7688",
+            "query_budget": 3,
+            "replay_requirement": [
+              1,
+              2
+            ],
+            "satellite_budget": 2,
+            "solvable": true,
+            "status": "EXACT",
+            "witness_requirement": [
+              1,
+              2
+            ]
+          },
+          {
+            "metrics": {
+              "domain_comparisons": 1,
+              "domain_hits": 1,
+              "exact_hits": 0,
+              "expanded": 0,
+              "memo_entries": 29833,
+              "negative_domain_hits": 0,
+              "recursive_calls": 1,
+              "separator_comparisons": 0,
+              "separator_hits": 0,
+              "separator_replay_checks": 0,
+              "separator_replay_failures": 0,
+              "separator_replay_wall_s": 0.0,
+              "wall_s": 0.0005273600036161952
+            },
+            "policy_sha256": "35e25a3febab120ce482de1065be252d5c823d1e1b392698ac06d45557cf7688",
+            "query_budget": 3,
+            "replay_requirement": [
+              1,
+              2
+            ],
+            "satellite_budget": 3,
+            "solvable": true,
+            "status": "EXACT",
+            "witness_requirement": [
+              1,
+              2
+            ]
+          },
+          {
+            "metrics": {
+              "domain_comparisons": 251,
+              "domain_hits": 0,
+              "exact_hits": 32,
+              "expanded": 154,
+              "memo_entries": 29997,
+              "negative_domain_hits": 0,
+              "recursive_calls": 229,
+              "separator_comparisons": 0,
+              "separator_hits": 0,
+              "separator_replay_checks": 0,
+              "separator_replay_failures": 0,
+              "separator_replay_wall_s": 0.0,
+              "wall_s": 0.010697018005885184
+            },
+            "query_budget": 4,
+            "satellite_budget": 0,
+            "solvable": false,
+            "status": "EXACT",
+            "witness_requirement": null
+          },
+          {
+            "metrics": {
+              "domain_comparisons": 5615,
+              "domain_hits": 19,
+              "exact_hits": 1023,
+              "expanded": 3953,
+              "memo_entries": 34125,
+              "negative_domain_hits": 0,
+              "recursive_calls": 6043,
+              "separator_comparisons": 0,
+              "separator_hits": 0,
+              "separator_replay_checks": 0,
+              "separator_replay_failures": 0,
+              "separator_replay_wall_s": 0.0,
+              "wall_s": 0.34375443199678557
+            },
+            "query_budget": 4,
+            "satellite_budget": 1,
+            "solvable": false,
+            "status": "EXACT",
+            "witness_requirement": null
+          },
+          {
+            "metrics": {
+              "domain_comparisons": 1,
+              "domain_hits": 1,
+              "exact_hits": 0,
+              "expanded": 0,
+              "memo_entries": 34125,
+              "negative_domain_hits": 0,
+              "recursive_calls": 1,
+              "separator_comparisons": 0,
+              "separator_hits": 0,
+              "separator_replay_checks": 0,
+              "separator_replay_failures": 0,
+              "separator_replay_wall_s": 0.0,
+              "wall_s": 0.0005843129983986728
+            },
+            "policy_sha256": "35e25a3febab120ce482de1065be252d5c823d1e1b392698ac06d45557cf7688",
+            "query_budget": 4,
+            "replay_requirement": [
+              1,
+              2
+            ],
+            "satellite_budget": 2,
+            "solvable": true,
+            "status": "EXACT",
+            "witness_requirement": [
+              1,
+              2
+            ]
+          },
+          {
+            "metrics": {
+              "domain_comparisons": 1,
+              "domain_hits": 1,
+              "exact_hits": 0,
+              "expanded": 0,
+              "memo_entries": 34125,
+              "negative_domain_hits": 0,
+              "recursive_calls": 1,
+              "separator_comparisons": 0,
+              "separator_hits": 0,
+              "separator_replay_checks": 0,
+              "separator_replay_failures": 0,
+              "separator_replay_wall_s": 0.0,
+              "wall_s": 0.00048778700147522613
+            },
+            "policy_sha256": "35e25a3febab120ce482de1065be252d5c823d1e1b392698ac06d45557cf7688",
+            "query_budget": 4,
+            "replay_requirement": [
+              1,
+              2
+            ],
+            "satellite_budget": 3,
+            "solvable": true,
+            "status": "EXACT",
+            "witness_requirement": [
+              1,
+              2
+            ]
+          }
+        ],
+        "context": {
+          "can_stop_acquiring_for_feasibility": false,
+          "completeness": "complete over the declared integer Q/B rectangle only",
+          "minimum_query_budget_for_any_success": 1,
+          "minimum_satellite_budget_with_query_allowed": 2,
+          "minimum_satellite_budget_without_paid_query": null,
+          "satellite_budget_released_by_allowing_query": null
+        },
+        "evidence_gain_type": "INFORMATION_FEASIBILITY_GAIN",
+        "frontier_points": [
+          {
+            "certified_witness_requirement": [
+              1,
+              2
+            ],
+            "policy_sha256": "35e25a3febab120ce482de1065be252d5c823d1e1b392698ac06d45557cf7688",
+            "query_budget": 1,
+            "satellite_budget": 2,
+            "validity_domain": {
+              "boundary_condition": "same causal execution/evidence boundary; later reuse requires certificate validation",
+              "query_budget_at_least": 1,
+              "satellite_budget_at_least": 2
+            }
+          }
+        ],
+        "recipe_id": "T1R-55ff9330743b23",
+        "resource_rectangle": {
+          "query_budget": [
+            0,
+            4
+          ],
+          "satellite_budget": [
+            0,
+            3
+          ]
+        },
+        "rules": [
+          "Q is an analysis/selection bound, not a source SLA.",
+          "Every positive frontier witness is replayed in its target resource cell.",
+          "Feasibility gain and resource gain are reported separately; no weighted scalar reward is introduced.",
+          "A query-free feasible point means evidence acquisition can stop for feasibility, not that more evidence can never improve another unmodeled cost."
+        ],
+        "schema_version": "0.1",
+        "status": "EXACT_BOUNDED_CONDITIONAL_FRONTIER"
+      },
+      "index": 6,
+      "process": "FINITE_CROSSING_WINDOWS",
+      "recipe_id": "T1R-55ff9330743b23",
+      "signature": "17c76f39f91cede5e38b7753c8b98fb7348556c68a71f129979b531d96ba408b"
+    },
+    {
+      "frontier": {
+        "bundle_id": "T1B-ac150953648559aa",
+        "cells": [
+          {
+            "metrics": {
+              "domain_comparisons": 0,
+              "domain_hits": 0,
+              "exact_hits": 0,
+              "expanded": 38,
+              "memo_entries": 38,
+              "negative_domain_hits": 0,
+              "recursive_calls": 39,
+              "separator_comparisons": 0,
+              "separator_hits": 0,
+              "separator_replay_checks": 0,
+              "separator_replay_failures": 0,
+              "separator_replay_wall_s": 0.0,
+              "wall_s": 0.0012509679945651442
+            },
+            "policy_sha256": "80d2a3523101be8daed349e3b2cfa818266d63749dc0a9b005736e4aa5954e52",
+            "query_budget": 0,
+            "replay_requirement": [
+              0,
+              0
+            ],
+            "satellite_budget": 0,
+            "solvable": true,
+            "status": "EXACT",
+            "witness_requirement": [
+              0,
+              0
+            ]
+          },
+          {
+            "metrics": {
+              "domain_comparisons": 1,
+              "domain_hits": 1,
+              "exact_hits": 0,
+              "expanded": 0,
+              "memo_entries": 38,
+              "negative_domain_hits": 0,
+              "recursive_calls": 1,
+              "separator_comparisons": 0,
+              "separator_hits": 0,
+              "separator_replay_checks": 0,
+              "separator_replay_failures": 0,
+              "separator_replay_wall_s": 0.0,
+              "wall_s": 0.00010486199607839808
+            },
+            "policy_sha256": "80d2a3523101be8daed349e3b2cfa818266d63749dc0a9b005736e4aa5954e52",
+            "query_budget": 0,
+            "replay_requirement": [
+              0,
+              0
+            ],
+            "satellite_budget": 1,
+            "solvable": true,
+            "status": "EXACT",
+            "witness_requirement": [
+              0,
+              0
+            ]
+          },
+          {
+            "metrics": {
+              "domain_comparisons": 1,
+              "domain_hits": 1,
+              "exact_hits": 0,
+              "expanded": 0,
+              "memo_entries": 38,
+              "negative_domain_hits": 0,
+              "recursive_calls": 1,
+              "separator_comparisons": 0,
+              "separator_hits": 0,
+              "separator_replay_checks": 0,
+              "separator_replay_failures": 0,
+              "separator_replay_wall_s": 0.0,
+              "wall_s": 9.059900185093284e-05
+            },
+            "policy_sha256": "80d2a3523101be8daed349e3b2cfa818266d63749dc0a9b005736e4aa5954e52",
+            "query_budget": 1,
+            "replay_requirement": [
+              0,
+              0
+            ],
+            "satellite_budget": 0,
+            "solvable": true,
+            "status": "EXACT",
+            "witness_requirement": [
+              0,
+              0
+            ]
+          },
+          {
+            "metrics": {
+              "domain_comparisons": 1,
+              "domain_hits": 1,
+              "exact_hits": 0,
+              "expanded": 0,
+              "memo_entries": 38,
+              "negative_domain_hits": 0,
+              "recursive_calls": 1,
+              "separator_comparisons": 0,
+              "separator_hits": 0,
+              "separator_replay_checks": 0,
+              "separator_replay_failures": 0,
+              "separator_replay_wall_s": 0.0,
+              "wall_s": 9.063100151252002e-05
+            },
+            "policy_sha256": "80d2a3523101be8daed349e3b2cfa818266d63749dc0a9b005736e4aa5954e52",
+            "query_budget": 1,
+            "replay_requirement": [
+              0,
+              0
+            ],
+            "satellite_budget": 1,
+            "solvable": true,
+            "status": "EXACT",
+            "witness_requirement": [
+              0,
+              0
+            ]
+          },
+          {
+            "metrics": {
+              "domain_comparisons": 1,
+              "domain_hits": 1,
+              "exact_hits": 0,
+              "expanded": 0,
+              "memo_entries": 38,
+              "negative_domain_hits": 0,
+              "recursive_calls": 1,
+              "separator_comparisons": 0,
+              "separator_hits": 0,
+              "separator_replay_checks": 0,
+              "separator_replay_failures": 0,
+              "separator_replay_wall_s": 0.0,
+              "wall_s": 0.00010256499808747321
+            },
+            "policy_sha256": "80d2a3523101be8daed349e3b2cfa818266d63749dc0a9b005736e4aa5954e52",
+            "query_budget": 2,
+            "replay_requirement": [
+              0,
+              0
+            ],
+            "satellite_budget": 0,
+            "solvable": true,
+            "status": "EXACT",
+            "witness_requirement": [
+              0,
+              0
+            ]
+          },
+          {
+            "metrics": {
+              "domain_comparisons": 1,
+              "domain_hits": 1,
+              "exact_hits": 0,
+              "expanded": 0,
+              "memo_entries": 38,
+              "negative_domain_hits": 0,
+              "recursive_calls": 1,
+              "separator_comparisons": 0,
+              "separator_hits": 0,
+              "separator_replay_checks": 0,
+              "separator_replay_failures": 0,
+              "separator_replay_wall_s": 0.0,
+              "wall_s": 0.00014669200027128682
+            },
+            "policy_sha256": "80d2a3523101be8daed349e3b2cfa818266d63749dc0a9b005736e4aa5954e52",
+            "query_budget": 2,
+            "replay_requirement": [
+              0,
+              0
+            ],
+            "satellite_budget": 1,
+            "solvable": true,
+            "status": "EXACT",
+            "witness_requirement": [
+              0,
+              0
+            ]
+          }
+        ],
+        "context": {
+          "can_stop_acquiring_for_feasibility": true,
+          "completeness": "complete over the declared integer Q/B rectangle only",
+          "minimum_query_budget_for_any_success": 0,
+          "minimum_satellite_budget_with_query_allowed": 0,
+          "minimum_satellite_budget_without_paid_query": 0,
+          "satellite_budget_released_by_allowing_query": 0
+        },
+        "evidence_gain_type": "NO_INFORMATION_GAIN_IN_Q_B_RECTANGLE",
+        "frontier_points": [
+          {
+            "certified_witness_requirement": [
+              0,
+              0
+            ],
+            "policy_sha256": "80d2a3523101be8daed349e3b2cfa818266d63749dc0a9b005736e4aa5954e52",
+            "query_budget": 0,
+            "satellite_budget": 0,
+            "validity_domain": {
+              "boundary_condition": "same causal execution/evidence boundary; later reuse requires certificate validation",
+              "query_budget_at_least": 0,
+              "satellite_budget_at_least": 0
+            }
+          }
+        ],
+        "recipe_id": "T1R-05d4eda97f06c3",
+        "resource_rectangle": {
+          "query_budget": [
+            0,
+            2
+          ],
+          "satellite_budget": [
+            0,
+            1
+          ]
+        },
+        "rules": [
+          "Q is an analysis/selection bound, not a source SLA.",
+          "Every positive frontier witness is replayed in its target resource cell.",
+          "Feasibility gain and resource gain are reported separately; no weighted scalar reward is introduced.",
+          "A query-free feasible point means evidence acquisition can stop for feasibility, not that more evidence can never improve another unmodeled cost."
+        ],
+        "schema_version": "0.1",
+        "status": "EXACT_BOUNDED_CONDITIONAL_FRONTIER"
+      },
+      "index": 7,
+      "process": "MULTI_WINDOW_DYNAMIC",
+      "recipe_id": "T1R-05d4eda97f06c3",
+      "signature": "da9cb6a63a1c9e4748f5cd0ce9b0d695a67652b6159730a27eea3ba2f11d1411"
+    },
+    {
+      "frontier": {
+        "bundle_id": "T1B-121e08b3bde964ee",
+        "cells": [
+          {
+            "metrics": {
+              "domain_comparisons": 0,
+              "domain_hits": 0,
+              "exact_hits": 1,
+              "expanded": 114,
+              "memo_entries": 123,
+              "negative_domain_hits": 0,
+              "recursive_calls": 124,
+              "separator_comparisons": 0,
+              "separator_hits": 0,
+              "separator_replay_checks": 0,
+              "separator_replay_failures": 0,
+              "separator_replay_wall_s": 0.0,
+              "wall_s": 0.0056428090028930455
+            },
+            "query_budget": 0,
+            "satellite_budget": 0,
+            "solvable": false,
+            "status": "EXACT",
+            "witness_requirement": null
+          },
+          {
+            "metrics": {
+              "domain_comparisons": 123,
+              "domain_hits": 0,
+              "exact_hits": 46,
+              "expanded": 1216,
+              "memo_entries": 1416,
+              "negative_domain_hits": 0,
+              "recursive_calls": 1339,
+              "separator_comparisons": 0,
+              "separator_hits": 0,
+              "separator_replay_checks": 0,
+              "separator_replay_failures": 0,
+              "separator_replay_wall_s": 0.0,
+              "wall_s": 0.06822512600047048
+            },
+            "query_budget": 0,
+            "satellite_budget": 1,
+            "solvable": false,
+            "status": "EXACT",
+            "witness_requirement": null
+          },
+          {
+            "metrics": {
+              "domain_comparisons": 1293,
+              "domain_hits": 0,
+              "exact_hits": 151,
+              "expanded": 4003,
+              "memo_entries": 5704,
+              "negative_domain_hits": 0,
+              "recursive_calls": 4439,
+              "separator_comparisons": 0,
+              "separator_hits": 0,
+              "separator_replay_checks": 0,
+              "separator_replay_failures": 0,
+              "separator_replay_wall_s": 0.0,
+              "wall_s": 0.24831939700379735
+            },
+            "query_budget": 0,
+            "satellite_budget": 2,
+            "solvable": false,
+            "status": "EXACT",
+            "witness_requirement": null
+          },
+          {
+            "metrics": {
+              "domain_comparisons": 29,
+              "domain_hits": 0,
+              "exact_hits": 25,
+              "expanded": 289,
+              "memo_entries": 6005,
+              "negative_domain_hits": 0,
+              "recursive_calls": 355,
+              "separator_comparisons": 0,
+              "separator_hits": 0,
+              "separator_replay_checks": 0,
+              "separator_replay_failures": 0,
+              "separator_replay_wall_s": 0.0,
+              "wall_s": 0.014740960999915842
+            },
+            "policy_sha256": "e4de6367ed83e331082b75043fe0ae4e5970d0e18c87202f246b537274706cf8",
+            "query_budget": 1,
+            "replay_requirement": [
+              1,
+              0
+            ],
+            "satellite_budget": 0,
+            "solvable": true,
+            "status": "EXACT",
+            "witness_requirement": [
+              1,
+              0
+            ]
+          },
+          {
+            "metrics": {
+              "domain_comparisons": 1,
+              "domain_hits": 1,
+              "exact_hits": 0,
+              "expanded": 0,
+              "memo_entries": 6005,
+              "negative_domain_hits": 0,
+              "recursive_calls": 1,
+              "separator_comparisons": 0,
+              "separator_hits": 0,
+              "separator_replay_checks": 0,
+              "separator_replay_failures": 0,
+              "separator_replay_wall_s": 0.0,
+              "wall_s": 0.00045051299821352586
+            },
+            "policy_sha256": "e4de6367ed83e331082b75043fe0ae4e5970d0e18c87202f246b537274706cf8",
+            "query_budget": 1,
+            "replay_requirement": [
+              1,
+              0
+            ],
+            "satellite_budget": 1,
+            "solvable": true,
+            "status": "EXACT",
+            "witness_requirement": [
+              1,
+              0
+            ]
+          },
+          {
+            "metrics": {
+              "domain_comparisons": 1,
+              "domain_hits": 1,
+              "exact_hits": 0,
+              "expanded": 0,
+              "memo_entries": 6005,
+              "negative_domain_hits": 0,
+              "recursive_calls": 1,
+              "separator_comparisons": 0,
+              "separator_hits": 0,
+              "separator_replay_checks": 0,
+              "separator_replay_failures": 0,
+              "separator_replay_wall_s": 0.0,
+              "wall_s": 0.0008484480058541521
+            },
+            "policy_sha256": "e4de6367ed83e331082b75043fe0ae4e5970d0e18c87202f246b537274706cf8",
+            "query_budget": 1,
+            "replay_requirement": [
+              1,
+              0
+            ],
+            "satellite_budget": 2,
+            "solvable": true,
+            "status": "EXACT",
+            "witness_requirement": [
+              1,
+              0
+            ]
+          },
+          {
+            "metrics": {
+              "domain_comparisons": 1,
+              "domain_hits": 1,
+              "exact_hits": 0,
+              "expanded": 0,
+              "memo_entries": 6005,
+              "negative_domain_hits": 0,
+              "recursive_calls": 1,
+              "separator_comparisons": 0,
+              "separator_hits": 0,
+              "separator_replay_checks": 0,
+              "separator_replay_failures": 0,
+              "separator_replay_wall_s": 0.0,
+              "wall_s": 0.0006796620000386611
+            },
+            "policy_sha256": "e4de6367ed83e331082b75043fe0ae4e5970d0e18c87202f246b537274706cf8",
+            "query_budget": 2,
+            "replay_requirement": [
+              1,
+              0
+            ],
+            "satellite_budget": 0,
+            "solvable": true,
+            "status": "EXACT",
+            "witness_requirement": [
+              1,
+              0
+            ]
+          },
+          {
+            "metrics": {
+              "domain_comparisons": 1,
+              "domain_hits": 1,
+              "exact_hits": 0,
+              "expanded": 0,
+              "memo_entries": 6005,
+              "negative_domain_hits": 0,
+              "recursive_calls": 1,
+              "separator_comparisons": 0,
+              "separator_hits": 0,
+              "separator_replay_checks": 0,
+              "separator_replay_failures": 0,
+              "separator_replay_wall_s": 0.0,
+              "wall_s": 0.0004490450010052882
+            },
+            "policy_sha256": "e4de6367ed83e331082b75043fe0ae4e5970d0e18c87202f246b537274706cf8",
+            "query_budget": 2,
+            "replay_requirement": [
+              1,
+              0
+            ],
+            "satellite_budget": 1,
+            "solvable": true,
+            "status": "EXACT",
+            "witness_requirement": [
+              1,
+              0
+            ]
+          },
+          {
+            "metrics": {
+              "domain_comparisons": 1,
+              "domain_hits": 1,
+              "exact_hits": 0,
+              "expanded": 0,
+              "memo_entries": 6005,
+              "negative_domain_hits": 0,
+              "recursive_calls": 1,
+              "separator_comparisons": 0,
+              "separator_hits": 0,
+              "separator_replay_checks": 0,
+              "separator_replay_failures": 0,
+              "separator_replay_wall_s": 0.0,
+              "wall_s": 0.00041400799818802625
+            },
+            "policy_sha256": "e4de6367ed83e331082b75043fe0ae4e5970d0e18c87202f246b537274706cf8",
+            "query_budget": 2,
+            "replay_requirement": [
+              1,
+              0
+            ],
+            "satellite_budget": 2,
+            "solvable": true,
+            "status": "EXACT",
+            "witness_requirement": [
+              1,
+              0
+            ]
+          },
+          {
+            "metrics": {
+              "domain_comparisons": 1,
+              "domain_hits": 1,
+              "exact_hits": 0,
+              "expanded": 0,
+              "memo_entries": 6005,
+              "negative_domain_hits": 0,
+              "recursive_calls": 1,
+              "separator_comparisons": 0,
+              "separator_hits": 0,
+              "separator_replay_checks": 0,
+              "separator_replay_failures": 0,
+              "separator_replay_wall_s": 0.0,
+              "wall_s": 0.00040823799645295367
+            },
+            "policy_sha256": "e4de6367ed83e331082b75043fe0ae4e5970d0e18c87202f246b537274706cf8",
+            "query_budget": 3,
+            "replay_requirement": [
+              1,
+              0
+            ],
+            "satellite_budget": 0,
+            "solvable": true,
+            "status": "EXACT",
+            "witness_requirement": [
+              1,
+              0
+            ]
+          },
+          {
+            "metrics": {
+              "domain_comparisons": 1,
+              "domain_hits": 1,
+              "exact_hits": 0,
+              "expanded": 0,
+              "memo_entries": 6005,
+              "negative_domain_hits": 0,
+              "recursive_calls": 1,
+              "separator_comparisons": 0,
+              "separator_hits": 0,
+              "separator_replay_checks": 0,
+              "separator_replay_failures": 0,
+              "separator_replay_wall_s": 0.0,
+              "wall_s": 0.0005464970017783344
+            },
+            "policy_sha256": "e4de6367ed83e331082b75043fe0ae4e5970d0e18c87202f246b537274706cf8",
+            "query_budget": 3,
+            "replay_requirement": [
+              1,
+              0
+            ],
+            "satellite_budget": 1,
+            "solvable": true,
+            "status": "EXACT",
+            "witness_requirement": [
+              1,
+              0
+            ]
+          },
+          {
+            "metrics": {
+              "domain_comparisons": 1,
+              "domain_hits": 1,
+              "exact_hits": 0,
+              "expanded": 0,
+              "memo_entries": 6005,
+              "negative_domain_hits": 0,
+              "recursive_calls": 1,
+              "separator_comparisons": 0,
+              "separator_hits": 0,
+              "separator_replay_checks": 0,
+              "separator_replay_failures": 0,
+              "separator_replay_wall_s": 0.0,
+              "wall_s": 0.00040758699469733983
+            },
+            "policy_sha256": "e4de6367ed83e331082b75043fe0ae4e5970d0e18c87202f246b537274706cf8",
+            "query_budget": 3,
+            "replay_requirement": [
+              1,
+              0
+            ],
+            "satellite_budget": 2,
+            "solvable": true,
+            "status": "EXACT",
+            "witness_requirement": [
+              1,
+              0
+            ]
+          }
+        ],
+        "context": {
+          "can_stop_acquiring_for_feasibility": false,
+          "completeness": "complete over the declared integer Q/B rectangle only",
+          "minimum_query_budget_for_any_success": 1,
+          "minimum_satellite_budget_with_query_allowed": 0,
+          "minimum_satellite_budget_without_paid_query": null,
+          "satellite_budget_released_by_allowing_query": null
+        },
+        "evidence_gain_type": "INFORMATION_FEASIBILITY_GAIN",
+        "frontier_points": [
+          {
+            "certified_witness_requirement": [
+              1,
+              0
+            ],
+            "policy_sha256": "e4de6367ed83e331082b75043fe0ae4e5970d0e18c87202f246b537274706cf8",
+            "query_budget": 1,
+            "satellite_budget": 0,
+            "validity_domain": {
+              "boundary_condition": "same causal execution/evidence boundary; later reuse requires certificate validation",
+              "query_budget_at_least": 1,
+              "satellite_budget_at_least": 0
+            }
+          }
+        ],
+        "recipe_id": "T1R-3df3584ae2b835",
+        "resource_rectangle": {
+          "query_budget": [
+            0,
+            3
+          ],
+          "satellite_budget": [
+            0,
+            2
+          ]
+        },
+        "rules": [
+          "Q is an analysis/selection bound, not a source SLA.",
+          "Every positive frontier witness is replayed in its target resource cell.",
+          "Feasibility gain and resource gain are reported separately; no weighted scalar reward is introduced.",
+          "A query-free feasible point means evidence acquisition can stop for feasibility, not that more evidence can never improve another unmodeled cost."
+        ],
+        "schema_version": "0.1",
+        "status": "EXACT_BOUNDED_CONDITIONAL_FRONTIER"
+      },
+      "index": 8,
+      "process": "MULTI_WINDOW_DYNAMIC",
+      "recipe_id": "T1R-3df3584ae2b835",
+      "signature": "86cca705db402ff1eef4bbde7ff111eec5c7151e99d392b291c650599d59c02e"
+    },
+    {
+      "frontier": {
+        "bundle_id": "T1B-2a9f77ebe94c8377",
+        "cells": [
+          {
+            "metrics": {
+              "domain_comparisons": 0,
+              "domain_hits": 0,
+              "exact_hits": 1,
+              "expanded": 114,
+              "memo_entries": 123,
+              "negative_domain_hits": 0,
+              "recursive_calls": 124,
+              "separator_comparisons": 0,
+              "separator_hits": 0,
+              "separator_replay_checks": 0,
+              "separator_replay_failures": 0,
+              "separator_replay_wall_s": 0.0,
+              "wall_s": 0.006695340001897421
+            },
+            "query_budget": 0,
+            "satellite_budget": 0,
+            "solvable": false,
+            "status": "EXACT",
+            "witness_requirement": null
+          },
+          {
+            "metrics": {
+              "domain_comparisons": 123,
+              "domain_hits": 0,
+              "exact_hits": 46,
+              "expanded": 1216,
+              "memo_entries": 1416,
+              "negative_domain_hits": 0,
+              "recursive_calls": 1339,
+              "separator_comparisons": 0,
+              "separator_hits": 0,
+              "separator_replay_checks": 0,
+              "separator_replay_failures": 0,
+              "separator_replay_wall_s": 0.0,
+              "wall_s": 0.08421321399509907
+            },
+            "query_budget": 0,
+            "satellite_budget": 1,
+            "solvable": false,
+            "status": "EXACT",
+            "witness_requirement": null
+          },
+          {
+            "metrics": {
+              "domain_comparisons": 1293,
+              "domain_hits": 0,
+              "exact_hits": 178,
+              "expanded": 5758,
+              "memo_entries": 7675,
+              "negative_domain_hits": 0,
+              "recursive_calls": 6437,
+              "separator_comparisons": 0,
+              "separator_hits": 0,
+              "separator_replay_checks": 0,
+              "separator_replay_failures": 0,
+              "separator_replay_wall_s": 0.0,
+              "wall_s": 0.6016139310013386
+            },
+            "query_budget": 0,
+            "satellite_budget": 2,
+            "solvable": false,
+            "status": "EXACT",
+            "witness_requirement": null
+          },
+          {
+            "metrics": {
+              "domain_comparisons": 6259,
+              "domain_hits": 0,
+              "exact_hits": 432,
+              "expanded": 16656,
+              "memo_entries": 25550,
+              "negative_domain_hits": 0,
+              "recursive_calls": 18307,
+              "separator_comparisons": 0,
+              "separator_hits": 0,
+              "separator_replay_checks": 0,
+              "separator_replay_failures": 0,
+              "separator_replay_wall_s": 0.0,
+              "wall_s": 1.260549724996963
+            },
+            "query_budget": 0,
+            "satellite_budget": 3,
+            "solvable": false,
+            "status": "EXACT",
+            "witness_requirement": null
+          },
+          {
+            "metrics": {
+              "domain_comparisons": 29,
+              "domain_hits": 0,
+              "exact_hits": 25,
+              "expanded": 349,
+              "memo_entries": 25912,
+              "negative_domain_hits": 0,
+              "recursive_calls": 416,
+              "separator_comparisons": 0,
+              "separator_hits": 0,
+              "separator_replay_checks": 0,
+              "separator_replay_failures": 0,
+              "separator_replay_wall_s": 0.0,
+              "wall_s": 0.06640092599991476
+            },
+            "policy_sha256": "d0e6813a45352b69881e339e9be38d448a59206066f90929b8962c39a8e809f9",
+            "query_budget": 1,
+            "replay_requirement": [
+              1,
+              0
+            ],
+            "satellite_budget": 0,
+            "solvable": true,
+            "status": "EXACT",
+            "witness_requirement": [
+              1,
+              0
+            ]
+          },
+          {
+            "metrics": {
+              "domain_comparisons": 1,
+              "domain_hits": 1,
+              "exact_hits": 0,
+              "expanded": 0,
+              "memo_entries": 25912,
+              "negative_domain_hits": 0,
+              "recursive_calls": 1,
+              "separator_comparisons": 0,
+              "separator_hits": 0,
+              "separator_replay_checks": 0,
+              "separator_replay_failures": 0,
+              "separator_replay_wall_s": 0.0,
+              "wall_s": 0.0006105200009187683
+            },
+            "policy_sha256": "d0e6813a45352b69881e339e9be38d448a59206066f90929b8962c39a8e809f9",
+            "query_budget": 1,
+            "replay_requirement": [
+              1,
+              0
+            ],
+            "satellite_budget": 1,
+            "solvable": true,
+            "status": "EXACT",
+            "witness_requirement": [
+              1,
+              0
+            ]
+          },
+          {
+            "metrics": {
+              "domain_comparisons": 1,
+              "domain_hits": 1,
+              "exact_hits": 0,
+              "expanded": 0,
+              "memo_entries": 25912,
+              "negative_domain_hits": 0,
+              "recursive_calls": 1,
+              "separator_comparisons": 0,
+              "separator_hits": 0,
+              "separator_replay_checks": 0,
+              "separator_replay_failures": 0,
+              "separator_replay_wall_s": 0.0,
+              "wall_s": 0.0005822719977004454
+            },
+            "policy_sha256": "d0e6813a45352b69881e339e9be38d448a59206066f90929b8962c39a8e809f9",
+            "query_budget": 1,
+            "replay_requirement": [
+              1,
+              0
+            ],
+            "satellite_budget": 2,
+            "solvable": true,
+            "status": "EXACT",
+            "witness_requirement": [
+              1,
+              0
+            ]
+          },
+          {
+            "metrics": {
+              "domain_comparisons": 1,
+              "domain_hits": 1,
+              "exact_hits": 0,
+              "expanded": 0,
+              "memo_entries": 25912,
+              "negative_domain_hits": 0,
+              "recursive_calls": 1,
+              "separator_comparisons": 0,
+              "separator_hits": 0,
+              "separator_replay_checks": 0,
+              "separator_replay_failures": 0,
+              "separator_replay_wall_s": 0.0,
+              "wall_s": 0.0005535099990083836
+            },
+            "policy_sha256": "d0e6813a45352b69881e339e9be38d448a59206066f90929b8962c39a8e809f9",
+            "query_budget": 1,
+            "replay_requirement": [
+              1,
+              0
+            ],
+            "satellite_budget": 3,
+            "solvable": true,
+            "status": "EXACT",
+            "witness_requirement": [
+              1,
+              0
+            ]
+          },
+          {
+            "metrics": {
+              "domain_comparisons": 1,
+              "domain_hits": 1,
+              "exact_hits": 0,
+              "expanded": 0,
+              "memo_entries": 25912,
+              "negative_domain_hits": 0,
+              "recursive_calls": 1,
+              "separator_comparisons": 0,
+              "separator_hits": 0,
+              "separator_replay_checks": 0,
+              "separator_replay_failures": 0,
+              "separator_replay_wall_s": 0.0,
+              "wall_s": 0.0005301409983076155
+            },
+            "policy_sha256": "d0e6813a45352b69881e339e9be38d448a59206066f90929b8962c39a8e809f9",
+            "query_budget": 2,
+            "replay_requirement": [
+              1,
+              0
+            ],
+            "satellite_budget": 0,
+            "solvable": true,
+            "status": "EXACT",
+            "witness_requirement": [
+              1,
+              0
+            ]
+          },
+          {
+            "metrics": {
+              "domain_comparisons": 1,
+              "domain_hits": 1,
+              "exact_hits": 0,
+              "expanded": 0,
+              "memo_entries": 25912,
+              "negative_domain_hits": 0,
+              "recursive_calls": 1,
+              "separator_comparisons": 0,
+              "separator_hits": 0,
+              "separator_replay_checks": 0,
+              "separator_replay_failures": 0,
+              "separator_replay_wall_s": 0.0,
+              "wall_s": 0.0006567029995494522
+            },
+            "policy_sha256": "d0e6813a45352b69881e339e9be38d448a59206066f90929b8962c39a8e809f9",
+            "query_budget": 2,
+            "replay_requirement": [
+              1,
+              0
+            ],
+            "satellite_budget": 1,
+            "solvable": true,
+            "status": "EXACT",
+            "witness_requirement": [
+              1,
+              0
+            ]
+          },
+          {
+            "metrics": {
+              "domain_comparisons": 1,
+              "domain_hits": 1,
+              "exact_hits": 0,
+              "expanded": 0,
+              "memo_entries": 25912,
+              "negative_domain_hits": 0,
+              "recursive_calls": 1,
+              "separator_comparisons": 0,
+              "separator_hits": 0,
+              "separator_replay_checks": 0,
+              "separator_replay_failures": 0,
+              "separator_replay_wall_s": 0.0,
+              "wall_s": 0.0005330000058165751
+            },
+            "policy_sha256": "d0e6813a45352b69881e339e9be38d448a59206066f90929b8962c39a8e809f9",
+            "query_budget": 2,
+            "replay_requirement": [
+              1,
+              0
+            ],
+            "satellite_budget": 2,
+            "solvable": true,
+            "status": "EXACT",
+            "witness_requirement": [
+              1,
+              0
+            ]
+          },
+          {
+            "metrics": {
+              "domain_comparisons": 1,
+              "domain_hits": 1,
+              "exact_hits": 0,
+              "expanded": 0,
+              "memo_entries": 25912,
+              "negative_domain_hits": 0,
+              "recursive_calls": 1,
+              "separator_comparisons": 0,
+              "separator_hits": 0,
+              "separator_replay_checks": 0,
+              "separator_replay_failures": 0,
+              "separator_replay_wall_s": 0.0,
+              "wall_s": 0.0005179680010769516
+            },
+            "policy_sha256": "d0e6813a45352b69881e339e9be38d448a59206066f90929b8962c39a8e809f9",
+            "query_budget": 2,
+            "replay_requirement": [
+              1,
+              0
+            ],
+            "satellite_budget": 3,
+            "solvable": true,
+            "status": "EXACT",
+            "witness_requirement": [
+              1,
+              0
+            ]
+          },
+          {
+            "metrics": {
+              "domain_comparisons": 1,
+              "domain_hits": 1,
+              "exact_hits": 0,
+              "expanded": 0,
+              "memo_entries": 25912,
+              "negative_domain_hits": 0,
+              "recursive_calls": 1,
+              "separator_comparisons": 0,
+              "separator_hits": 0,
+              "separator_replay_checks": 0,
+              "separator_replay_failures": 0,
+              "separator_replay_wall_s": 0.0,
+              "wall_s": 0.0005637549984385259
+            },
+            "policy_sha256": "d0e6813a45352b69881e339e9be38d448a59206066f90929b8962c39a8e809f9",
+            "query_budget": 3,
+            "replay_requirement": [
+              1,
+              0
+            ],
+            "satellite_budget": 0,
+            "solvable": true,
+            "status": "EXACT",
+            "witness_requirement": [
+              1,
+              0
+            ]
+          },
+          {
+            "metrics": {
+              "domain_comparisons": 1,
+              "domain_hits": 1,
+              "exact_hits": 0,
+              "expanded": 0,
+              "memo_entries": 25912,
+              "negative_domain_hits": 0,
+              "recursive_calls": 1,
+              "separator_comparisons": 0,
+              "separator_hits": 0,
+              "separator_replay_checks": 0,
+              "separator_replay_failures": 0,
+              "separator_replay_wall_s": 0.0,
+              "wall_s": 0.0006079679951653816
+            },
+            "policy_sha256": "d0e6813a45352b69881e339e9be38d448a59206066f90929b8962c39a8e809f9",
+            "query_budget": 3,
+            "replay_requirement": [
+              1,
+              0
+            ],
+            "satellite_budget": 1,
+            "solvable": true,
+            "status": "EXACT",
+            "witness_requirement": [
+              1,
+              0
+            ]
+          },
+          {
+            "metrics": {
+              "domain_comparisons": 1,
+              "domain_hits": 1,
+              "exact_hits": 0,
+              "expanded": 0,
+              "memo_entries": 25912,
+              "negative_domain_hits": 0,
+              "recursive_calls": 1,
+              "separator_comparisons": 0,
+              "separator_hits": 0,
+              "separator_replay_checks": 0,
+              "separator_replay_failures": 0,
+              "separator_replay_wall_s": 0.0,
+              "wall_s": 0.0005737109968322329
+            },
+            "policy_sha256": "d0e6813a45352b69881e339e9be38d448a59206066f90929b8962c39a8e809f9",
+            "query_budget": 3,
+            "replay_requirement": [
+              1,
+              0
+            ],
+            "satellite_budget": 2,
+            "solvable": true,
+            "status": "EXACT",
+            "witness_requirement": [
+              1,
+              0
+            ]
+          },
+          {
+            "metrics": {
+              "domain_comparisons": 1,
+              "domain_hits": 1,
+              "exact_hits": 0,
+              "expanded": 0,
+              "memo_entries": 25912,
+              "negative_domain_hits": 0,
+              "recursive_calls": 1,
+              "separator_comparisons": 0,
+              "separator_hits": 0,
+              "separator_replay_checks": 0,
+              "separator_replay_failures": 0,
+              "separator_replay_wall_s": 0.0,
+              "wall_s": 0.0005746680035372265
+            },
+            "policy_sha256": "d0e6813a45352b69881e339e9be38d448a59206066f90929b8962c39a8e809f9",
+            "query_budget": 3,
+            "replay_requirement": [
+              1,
+              0
+            ],
+            "satellite_budget": 3,
+            "solvable": true,
+            "status": "EXACT",
+            "witness_requirement": [
+              1,
+              0
+            ]
+          },
+          {
+            "metrics": {
+              "domain_comparisons": 1,
+              "domain_hits": 1,
+              "exact_hits": 0,
+              "expanded": 0,
+              "memo_entries": 25912,
+              "negative_domain_hits": 0,
+              "recursive_calls": 1,
+              "separator_comparisons": 0,
+              "separator_hits": 0,
+              "separator_replay_checks": 0,
+              "separator_replay_failures": 0,
+              "separator_replay_wall_s": 0.0,
+              "wall_s": 0.0006252340026549064
+            },
+            "policy_sha256": "d0e6813a45352b69881e339e9be38d448a59206066f90929b8962c39a8e809f9",
+            "query_budget": 4,
+            "replay_requirement": [
+              1,
+              0
+            ],
+            "satellite_budget": 0,
+            "solvable": true,
+            "status": "EXACT",
+            "witness_requirement": [
+              1,
+              0
+            ]
+          },
+          {
+            "metrics": {
+              "domain_comparisons": 1,
+              "domain_hits": 1,
+              "exact_hits": 0,
+              "expanded": 0,
+              "memo_entries": 25912,
+              "negative_domain_hits": 0,
+              "recursive_calls": 1,
+              "separator_comparisons": 0,
+              "separator_hits": 0,
+              "separator_replay_checks": 0,
+              "separator_replay_failures": 0,
+              "separator_replay_wall_s": 0.0,
+              "wall_s": 0.0005555149982683361
+            },
+            "policy_sha256": "d0e6813a45352b69881e339e9be38d448a59206066f90929b8962c39a8e809f9",
+            "query_budget": 4,
+            "replay_requirement": [
+              1,
+              0
+            ],
+            "satellite_budget": 1,
+            "solvable": true,
+            "status": "EXACT",
+            "witness_requirement": [
+              1,
+              0
+            ]
+          },
+          {
+            "metrics": {
+              "domain_comparisons": 1,
+              "domain_hits": 1,
+              "exact_hits": 0,
+              "expanded": 0,
+              "memo_entries": 25912,
+              "negative_domain_hits": 0,
+              "recursive_calls": 1,
+              "separator_comparisons": 0,
+              "separator_hits": 0,
+              "separator_replay_checks": 0,
+              "separator_replay_failures": 0,
+              "separator_replay_wall_s": 0.0,
+              "wall_s": 0.000635094998870045
+            },
+            "policy_sha256": "d0e6813a45352b69881e339e9be38d448a59206066f90929b8962c39a8e809f9",
+            "query_budget": 4,
+            "replay_requirement": [
+              1,
+              0
+            ],
+            "satellite_budget": 2,
+            "solvable": true,
+            "status": "EXACT",
+            "witness_requirement": [
+              1,
+              0
+            ]
+          },
+          {
+            "metrics": {
+              "domain_comparisons": 1,
+              "domain_hits": 1,
+              "exact_hits": 0,
+              "expanded": 0,
+              "memo_entries": 25912,
+              "negative_domain_hits": 0,
+              "recursive_calls": 1,
+              "separator_comparisons": 0,
+              "separator_hits": 0,
+              "separator_replay_checks": 0,
+              "separator_replay_failures": 0,
+              "separator_replay_wall_s": 0.0,
+              "wall_s": 0.0006150660046841949
+            },
+            "policy_sha256": "d0e6813a45352b69881e339e9be38d448a59206066f90929b8962c39a8e809f9",
+            "query_budget": 4,
+            "replay_requirement": [
+              1,
+              0
+            ],
+            "satellite_budget": 3,
+            "solvable": true,
+            "status": "EXACT",
+            "witness_requirement": [
+              1,
+              0
+            ]
+          }
+        ],
+        "context": {
+          "can_stop_acquiring_for_feasibility": false,
+          "completeness": "complete over the declared integer Q/B rectangle only",
+          "minimum_query_budget_for_any_success": 1,
+          "minimum_satellite_budget_with_query_allowed": 0,
+          "minimum_satellite_budget_without_paid_query": null,
+          "satellite_budget_released_by_allowing_query": null
+        },
+        "evidence_gain_type": "INFORMATION_FEASIBILITY_GAIN",
+        "frontier_points": [
+          {
+            "certified_witness_requirement": [
+              1,
+              0
+            ],
+            "policy_sha256": "d0e6813a45352b69881e339e9be38d448a59206066f90929b8962c39a8e809f9",
+            "query_budget": 1,
+            "satellite_budget": 0,
+            "validity_domain": {
+              "boundary_condition": "same causal execution/evidence boundary; later reuse requires certificate validation",
+              "query_budget_at_least": 1,
+              "satellite_budget_at_least": 0
+            }
+          }
+        ],
+        "recipe_id": "T1R-5fe91fd0393d43",
+        "resource_rectangle": {
+          "query_budget": [
+            0,
+            4
+          ],
+          "satellite_budget": [
+            0,
+            3
+          ]
+        },
+        "rules": [
+          "Q is an analysis/selection bound, not a source SLA.",
+          "Every positive frontier witness is replayed in its target resource cell.",
+          "Feasibility gain and resource gain are reported separately; no weighted scalar reward is introduced.",
+          "A query-free feasible point means evidence acquisition can stop for feasibility, not that more evidence can never improve another unmodeled cost."
+        ],
+        "schema_version": "0.1",
+        "status": "EXACT_BOUNDED_CONDITIONAL_FRONTIER"
+      },
+      "index": 9,
+      "process": "MULTI_WINDOW_DYNAMIC",
+      "recipe_id": "T1R-5fe91fd0393d43",
+      "signature": "510bcc4862e948e4f15a8c04a452f513e0925897b955397ba90e57fc690db2d0"
+    },
+    {
+      "frontier": {
+        "bundle_id": "T1B-8c82ce0d5ac69647",
+        "cells": [
+          {
+            "metrics": {
+              "domain_comparisons": 0,
+              "domain_hits": 0,
+              "exact_hits": 0,
+              "expanded": 35,
+              "memo_entries": 38,
+              "negative_domain_hits": 0,
+              "recursive_calls": 38,
+              "separator_comparisons": 0,
+              "separator_hits": 0,
+              "separator_replay_checks": 0,
+              "separator_replay_failures": 0,
+              "separator_replay_wall_s": 0.0,
+              "wall_s": 0.0024315980044775642
+            },
+            "query_budget": 0,
+            "satellite_budget": 0,
+            "solvable": false,
+            "status": "EXACT",
+            "witness_requirement": null
+          },
+          {
+            "metrics": {
+              "domain_comparisons": 38,
+              "domain_hits": 0,
+              "exact_hits": 0,
+              "expanded": 464,
+              "memo_entries": 534,
+              "negative_domain_hits": 0,
+              "recursive_calls": 496,
+              "separator_comparisons": 0,
+              "separator_hits": 0,
+              "separator_replay_checks": 0,
+              "separator_replay_failures": 0,
+              "separator_replay_wall_s": 0.0,
+              "wall_s": 0.019244903000071645
+            },
+            "query_budget": 0,
+            "satellite_budget": 1,
+            "solvable": false,
+            "status": "EXACT",
+            "witness_requirement": null
+          },
+          {
+            "metrics": {
+              "domain_comparisons": 496,
+              "domain_hits": 0,
+              "exact_hits": 1,
+              "expanded": 2337,
+              "memo_entries": 3074,
+              "negative_domain_hits": 0,
+              "recursive_calls": 2541,
+              "separator_comparisons": 0,
+              "separator_hits": 0,
+              "separator_replay_checks": 0,
+              "separator_replay_failures": 0,
+              "separator_replay_wall_s": 0.0,
+              "wall_s": 0.12124014499568148
+            },
+            "query_budget": 0,
+            "satellite_budget": 2,
+            "solvable": false,
+            "status": "EXACT",
+            "witness_requirement": null
+          },
+          {
+            "metrics": {
+              "domain_comparisons": 38,
+              "domain_hits": 0,
+              "exact_hits": 30,
+              "expanded": 150,
+              "memo_entries": 3234,
+              "negative_domain_hits": 0,
+              "recursive_calls": 222,
+              "separator_comparisons": 0,
+              "separator_hits": 0,
+              "separator_replay_checks": 0,
+              "separator_replay_failures": 0,
+              "separator_replay_wall_s": 0.0,
+              "wall_s": 0.008009972996660508
+            },
+            "query_budget": 1,
+            "satellite_budget": 0,
+            "solvable": false,
+            "status": "EXACT",
+            "witness_requirement": null
+          },
+          {
+            "metrics": {
+              "domain_comparisons": 651,
+              "domain_hits": 0,
+              "exact_hits": 439,
+              "expanded": 2446,
+              "memo_entries": 5804,
+              "negative_domain_hits": 0,
+              "recursive_calls": 3450,
+              "separator_comparisons": 0,
+              "separator_hits": 0,
+              "separator_replay_checks": 0,
+              "separator_replay_failures": 0,
+              "separator_replay_wall_s": 0.0,
+              "wall_s": 0.1248873980002827
+            },
+            "query_budget": 1,
+            "satellite_budget": 1,
+            "solvable": false,
+            "status": "EXACT",
+            "witness_requirement": null
+          },
+          {
+            "metrics": {
+              "domain_comparisons": 690,
+              "domain_hits": 1,
+              "exact_hits": 61,
+              "expanded": 2574,
+              "memo_entries": 8589,
+              "negative_domain_hits": 0,
+              "recursive_calls": 2911,
+              "separator_comparisons": 0,
+              "separator_hits": 0,
+              "separator_replay_checks": 0,
+              "separator_replay_failures": 0,
+              "separator_replay_wall_s": 0.0,
+              "wall_s": 0.2721739990010974
+            },
+            "policy_sha256": "642b7976ea3bdd085a4e44259c6517b803ef595f4a05ebe8d629deded1ba1b7c",
+            "query_budget": 1,
+            "replay_requirement": [
+              1,
+              2
+            ],
+            "satellite_budget": 2,
+            "solvable": true,
+            "status": "EXACT",
+            "witness_requirement": [
+              1,
+              2
+            ]
+          },
+          {
+            "metrics": {
+              "domain_comparisons": 203,
+              "domain_hits": 0,
+              "exact_hits": 31,
+              "expanded": 150,
+              "memo_entries": 8749,
+              "negative_domain_hits": 0,
+              "recursive_calls": 223,
+              "separator_comparisons": 0,
+              "separator_hits": 0,
+              "separator_replay_checks": 0,
+              "separator_replay_failures": 0,
+              "separator_replay_wall_s": 0.0,
+              "wall_s": 0.008384183995076455
+            },
+            "query_budget": 2,
+            "satellite_budget": 0,
+            "solvable": false,
+            "status": "EXACT",
+            "witness_requirement": null
+          },
+          {
+            "metrics": {
+              "domain_comparisons": 3048,
+              "domain_hits": 9,
+              "exact_hits": 707,
+              "expanded": 3159,
+              "memo_entries": 12083,
+              "negative_domain_hits": 0,
+              "recursive_calls": 4742,
+              "separator_comparisons": 0,
+              "separator_hits": 0,
+              "separator_replay_checks": 0,
+              "separator_replay_failures": 0,
+              "separator_replay_wall_s": 0.0,
+              "wall_s": 0.16940890100522665
+            },
+            "query_budget": 2,
+            "satellite_budget": 1,
+            "solvable": false,
+            "status": "EXACT",
+            "witness_requirement": null
+          },
+          {
+            "metrics": {
+              "domain_comparisons": 1,
+              "domain_hits": 1,
+              "exact_hits": 0,
+              "expanded": 0,
+              "memo_entries": 12083,
+              "negative_domain_hits": 0,
+              "recursive_calls": 1,
+              "separator_comparisons": 0,
+              "separator_hits": 0,
+              "separator_replay_checks": 0,
+              "separator_replay_failures": 0,
+              "separator_replay_wall_s": 0.0,
+              "wall_s": 0.000368630004231818
+            },
+            "policy_sha256": "642b7976ea3bdd085a4e44259c6517b803ef595f4a05ebe8d629deded1ba1b7c",
+            "query_budget": 2,
+            "replay_requirement": [
+              1,
+              2
+            ],
+            "satellite_budget": 2,
+            "solvable": true,
+            "status": "EXACT",
+            "witness_requirement": [
+              1,
+              2
+            ]
+          },
+          {
+            "metrics": {
+              "domain_comparisons": 242,
+              "domain_hits": 0,
+              "exact_hits": 31,
+              "expanded": 150,
+              "memo_entries": 12243,
+              "negative_domain_hits": 0,
+              "recursive_calls": 223,
+              "separator_comparisons": 0,
+              "separator_hits": 0,
+              "separator_replay_checks": 0,
+              "separator_replay_failures": 0,
+              "separator_replay_wall_s": 0.0,
+              "wall_s": 0.008194043002731632
+            },
+            "query_budget": 3,
+            "satellite_budget": 0,
+            "solvable": false,
+            "status": "EXACT",
+            "witness_requirement": null
+          },
+          {
+            "metrics": {
+              "domain_comparisons": 4599,
+              "domain_hits": 9,
+              "exact_hits": 712,
+              "expanded": 3159,
+              "memo_entries": 15577,
+              "negative_domain_hits": 0,
+              "recursive_calls": 4747,
+              "separator_comparisons": 0,
+              "separator_hits": 0,
+              "separator_replay_checks": 0,
+              "separator_replay_failures": 0,
+              "separator_replay_wall_s": 0.0,
+              "wall_s": 0.19582542600255692
+            },
+            "query_budget": 3,
+            "satellite_budget": 1,
+            "solvable": false,
+            "status": "EXACT",
+            "witness_requirement": null
+          },
+          {
+            "metrics": {
+              "domain_comparisons": 1,
+              "domain_hits": 1,
+              "exact_hits": 0,
+              "expanded": 0,
+              "memo_entries": 15577,
+              "negative_domain_hits": 0,
+              "recursive_calls": 1,
+              "separator_comparisons": 0,
+              "separator_hits": 0,
+              "separator_replay_checks": 0,
+              "separator_replay_failures": 0,
+              "separator_replay_wall_s": 0.0,
+              "wall_s": 0.0003624439996201545
+            },
+            "policy_sha256": "642b7976ea3bdd085a4e44259c6517b803ef595f4a05ebe8d629deded1ba1b7c",
+            "query_budget": 3,
+            "replay_requirement": [
+              1,
+              2
+            ],
+            "satellite_budget": 2,
+            "solvable": true,
+            "status": "EXACT",
+            "witness_requirement": [
+              1,
+              2
+            ]
+          }
+        ],
+        "context": {
+          "can_stop_acquiring_for_feasibility": false,
+          "completeness": "complete over the declared integer Q/B rectangle only",
+          "minimum_query_budget_for_any_success": 1,
+          "minimum_satellite_budget_with_query_allowed": 2,
+          "minimum_satellite_budget_without_paid_query": null,
+          "satellite_budget_released_by_allowing_query": null
+        },
+        "evidence_gain_type": "INFORMATION_FEASIBILITY_GAIN",
+        "frontier_points": [
+          {
+            "certified_witness_requirement": [
+              1,
+              2
+            ],
+            "policy_sha256": "642b7976ea3bdd085a4e44259c6517b803ef595f4a05ebe8d629deded1ba1b7c",
+            "query_budget": 1,
+            "satellite_budget": 2,
+            "validity_domain": {
+              "boundary_condition": "same causal execution/evidence boundary; later reuse requires certificate validation",
+              "query_budget_at_least": 1,
+              "satellite_budget_at_least": 2
+            }
+          }
+        ],
+        "recipe_id": "T1R-ff799931fee10a",
+        "resource_rectangle": {
+          "query_budget": [
+            0,
+            3
+          ],
+          "satellite_budget": [
+            0,
+            2
+          ]
+        },
+        "rules": [
+          "Q is an analysis/selection bound, not a source SLA.",
+          "Every positive frontier witness is replayed in its target resource cell.",
+          "Feasibility gain and resource gain are reported separately; no weighted scalar reward is introduced.",
+          "A query-free feasible point means evidence acquisition can stop for feasibility, not that more evidence can never improve another unmodeled cost."
+        ],
+        "schema_version": "0.1",
+        "status": "EXACT_BOUNDED_CONDITIONAL_FRONTIER"
+      },
+      "index": 10,
+      "process": "FINITE_CROSSING_WINDOWS",
+      "recipe_id": "T1R-ff799931fee10a",
+      "signature": "ad5d6e20a7790760d71f4664617c68b676c3fd90cd3fa389de3916ea3cc3fb62"
+    },
+    {
+      "frontier": {
+        "bundle_id": "T1B-160ad099da1027ea",
+        "cells": [
+          {
+            "metrics": {
+              "domain_comparisons": 0,
+              "domain_hits": 0,
+              "exact_hits": 0,
+              "expanded": 35,
+              "memo_entries": 38,
+              "negative_domain_hits": 0,
+              "recursive_calls": 38,
+              "separator_comparisons": 0,
+              "separator_hits": 0,
+              "separator_replay_checks": 0,
+              "separator_replay_failures": 0,
+              "separator_replay_wall_s": 0.0,
+              "wall_s": 0.0016479760015499778
+            },
+            "query_budget": 0,
+            "satellite_budget": 0,
+            "solvable": false,
+            "status": "EXACT",
+            "witness_requirement": null
+          },
+          {
+            "metrics": {
+              "domain_comparisons": 38,
+              "domain_hits": 0,
+              "exact_hits": 0,
+              "expanded": 464,
+              "memo_entries": 534,
+              "negative_domain_hits": 0,
+              "recursive_calls": 496,
+              "separator_comparisons": 0,
+              "separator_hits": 0,
+              "separator_replay_checks": 0,
+              "separator_replay_failures": 0,
+              "separator_replay_wall_s": 0.0,
+              "wall_s": 0.02312606300256448
+            },
+            "query_budget": 0,
+            "satellite_budget": 1,
+            "solvable": false,
+            "status": "EXACT",
+            "witness_requirement": null
+          },
+          {
+            "metrics": {
+              "domain_comparisons": 496,
+              "domain_hits": 0,
+              "exact_hits": 1,
+              "expanded": 2721,
+              "memo_entries": 3522,
+              "negative_domain_hits": 0,
+              "recursive_calls": 2989,
+              "separator_comparisons": 0,
+              "separator_hits": 0,
+              "separator_replay_checks": 0,
+              "separator_replay_failures": 0,
+              "separator_replay_wall_s": 0.0,
+              "wall_s": 0.18744798000261653
+            },
+            "query_budget": 0,
+            "satellite_budget": 2,
+            "solvable": false,
+            "status": "EXACT",
+            "witness_requirement": null
+          },
+          {
+            "metrics": {
+              "domain_comparisons": 2988,
+              "domain_hits": 0,
+              "exact_hits": 168,
+              "expanded": 9347,
+              "memo_entries": 13583,
+              "negative_domain_hits": 0,
+              "recursive_calls": 10229,
+              "separator_comparisons": 0,
+              "separator_hits": 0,
+              "separator_replay_checks": 0,
+              "separator_replay_failures": 0,
+              "separator_replay_wall_s": 0.0,
+              "wall_s": 0.7432583369954955
+            },
+            "query_budget": 0,
+            "satellite_budget": 3,
+            "solvable": false,
+            "status": "EXACT",
+            "witness_requirement": null
+          },
+          {
+            "metrics": {
+              "domain_comparisons": 38,
+              "domain_hits": 0,
+              "exact_hits": 30,
+              "expanded": 150,
+              "memo_entries": 13743,
+              "negative_domain_hits": 0,
+              "recursive_calls": 222,
+              "separator_comparisons": 0,
+              "separator_hits": 0,
+              "separator_replay_checks": 0,
+              "separator_replay_failures": 0,
+              "separator_replay_wall_s": 0.0,
+              "wall_s": 0.010563796997303143
+            },
+            "query_budget": 1,
+            "satellite_budget": 0,
+            "solvable": false,
+            "status": "EXACT",
+            "witness_requirement": null
+          },
+          {
+            "metrics": {
+              "domain_comparisons": 651,
+              "domain_hits": 0,
+              "exact_hits": 439,
+              "expanded": 2527,
+              "memo_entries": 16394,
+              "negative_domain_hits": 0,
+              "recursive_calls": 3531,
+              "separator_comparisons": 0,
+              "separator_hits": 0,
+              "separator_replay_checks": 0,
+              "separator_replay_failures": 0,
+              "separator_replay_wall_s": 0.0,
+              "wall_s": 0.20185347100050421
+            },
+            "query_budget": 1,
+            "satellite_budget": 1,
+            "solvable": false,
+            "status": "EXACT",
+            "witness_requirement": null
+          },
+          {
+            "metrics": {
+              "domain_comparisons": 690,
+              "domain_hits": 1,
+              "exact_hits": 61,
+              "expanded": 3020,
+              "memo_entries": 19689,
+              "negative_domain_hits": 0,
+              "recursive_calls": 3421,
+              "separator_comparisons": 0,
+              "separator_hits": 0,
+              "separator_replay_checks": 0,
+              "separator_replay_failures": 0,
+              "separator_replay_wall_s": 0.0,
+              "wall_s": 0.25396372400427936
+            },
+            "policy_sha256": "873457b48e5e89f7a09418ba2a649aa3fb2453b2ad12d257efbcc32928621132",
+            "query_budget": 1,
+            "replay_requirement": [
+              1,
+              2
+            ],
+            "satellite_budget": 2,
+            "solvable": true,
+            "status": "EXACT",
+            "witness_requirement": [
+              1,
+              2
+            ]
+          },
+          {
+            "metrics": {
+              "domain_comparisons": 1,
+              "domain_hits": 1,
+              "exact_hits": 0,
+              "expanded": 0,
+              "memo_entries": 19689,
+              "negative_domain_hits": 0,
+              "recursive_calls": 1,
+              "separator_comparisons": 0,
+              "separator_hits": 0,
+              "separator_replay_checks": 0,
+              "separator_replay_failures": 0,
+              "separator_replay_wall_s": 0.0,
+              "wall_s": 0.0005146120020071976
+            },
+            "policy_sha256": "873457b48e5e89f7a09418ba2a649aa3fb2453b2ad12d257efbcc32928621132",
+            "query_budget": 1,
+            "replay_requirement": [
+              1,
+              2
+            ],
+            "satellite_budget": 3,
+            "solvable": true,
+            "status": "EXACT",
+            "witness_requirement": [
+              1,
+              2
+            ]
+          },
+          {
+            "metrics": {
+              "domain_comparisons": 203,
+              "domain_hits": 0,
+              "exact_hits": 31,
+              "expanded": 150,
+              "memo_entries": 19849,
+              "negative_domain_hits": 0,
+              "recursive_calls": 223,
+              "separator_comparisons": 0,
+              "separator_hits": 0,
+              "separator_replay_checks": 0,
+              "separator_replay_failures": 0,
+              "separator_replay_wall_s": 0.0,
+              "wall_s": 0.010142325998458546
+            },
+            "query_budget": 2,
+            "satellite_budget": 0,
+            "solvable": false,
+            "status": "EXACT",
+            "witness_requirement": null
+          },
+          {
+            "metrics": {
+              "domain_comparisons": 3061,
+              "domain_hits": 9,
+              "exact_hits": 707,
+              "expanded": 3159,
+              "memo_entries": 23183,
+              "negative_domain_hits": 0,
+              "recursive_calls": 4742,
+              "separator_comparisons": 0,
+              "separator_hits": 0,
+              "separator_replay_checks": 0,
+              "separator_replay_failures": 0,
+              "separator_replay_wall_s": 0.0,
+              "wall_s": 0.21041528900241246
+            },
+            "query_budget": 2,
+            "satellite_budget": 1,
+            "solvable": false,
+            "status": "EXACT",
+            "witness_requirement": null
+          },
+          {
+            "metrics": {
+              "domain_comparisons": 1,
+              "domain_hits": 1,
+              "exact_hits": 0,
+              "expanded": 0,
+              "memo_entries": 23183,
+              "negative_domain_hits": 0,
+              "recursive_calls": 1,
+              "separator_comparisons": 0,
+              "separator_hits": 0,
+              "separator_replay_checks": 0,
+              "separator_replay_failures": 0,
+              "separator_replay_wall_s": 0.0,
+              "wall_s": 0.0005480149993672967
+            },
+            "policy_sha256": "873457b48e5e89f7a09418ba2a649aa3fb2453b2ad12d257efbcc32928621132",
+            "query_budget": 2,
+            "replay_requirement": [
+              1,
+              2
+            ],
+            "satellite_budget": 2,
+            "solvable": true,
+            "status": "EXACT",
+            "witness_requirement": [
+              1,
+              2
+            ]
+          },
+          {
+            "metrics": {
+              "domain_comparisons": 1,
+              "domain_hits": 1,
+              "exact_hits": 0,
+              "expanded": 0,
+              "memo_entries": 23183,
+              "negative_domain_hits": 0,
+              "recursive_calls": 1,
+              "separator_comparisons": 0,
+              "separator_hits": 0,
+              "separator_replay_checks": 0,
+              "separator_replay_failures": 0,
+              "separator_replay_wall_s": 0.0,
+              "wall_s": 0.0006852700025774539
+            },
+            "policy_sha256": "873457b48e5e89f7a09418ba2a649aa3fb2453b2ad12d257efbcc32928621132",
+            "query_budget": 2,
+            "replay_requirement": [
+              1,
+              2
+            ],
+            "satellite_budget": 3,
+            "solvable": true,
+            "status": "EXACT",
+            "witness_requirement": [
+              1,
+              2
+            ]
+          },
+          {
+            "metrics": {
+              "domain_comparisons": 242,
+              "domain_hits": 0,
+              "exact_hits": 31,
+              "expanded": 150,
+              "memo_entries": 23343,
+              "negative_domain_hits": 0,
+              "recursive_calls": 223,
+              "separator_comparisons": 0,
+              "separator_hits": 0,
+              "separator_replay_checks": 0,
+              "separator_replay_failures": 0,
+              "separator_replay_wall_s": 0.0,
+              "wall_s": 0.010534941000514664
+            },
+            "query_budget": 3,
+            "satellite_budget": 0,
+            "solvable": false,
+            "status": "EXACT",
+            "witness_requirement": null
+          },
+          {
+            "metrics": {
+              "domain_comparisons": 4612,
+              "domain_hits": 9,
+              "exact_hits": 712,
+              "expanded": 3159,
+              "memo_entries": 26677,
+              "negative_domain_hits": 0,
+              "recursive_calls": 4747,
+              "separator_comparisons": 0,
+              "separator_hits": 0,
+              "separator_replay_checks": 0,
+              "separator_replay_failures": 0,
+              "separator_replay_wall_s": 0.0,
+              "wall_s": 0.27618608999910066
+            },
+            "query_budget": 3,
+            "satellite_budget": 1,
+            "solvable": false,
+            "status": "EXACT",
+            "witness_requirement": null
+          },
+          {
+            "metrics": {
+              "domain_comparisons": 1,
+              "domain_hits": 1,
+              "exact_hits": 0,
+              "expanded": 0,
+              "memo_entries": 26677,
+              "negative_domain_hits": 0,
+              "recursive_calls": 1,
+              "separator_comparisons": 0,
+              "separator_hits": 0,
+              "separator_replay_checks": 0,
+              "separator_replay_failures": 0,
+              "separator_replay_wall_s": 0.0,
+              "wall_s": 0.0005809750000480562
+            },
+            "policy_sha256": "873457b48e5e89f7a09418ba2a649aa3fb2453b2ad12d257efbcc32928621132",
+            "query_budget": 3,
+            "replay_requirement": [
+              1,
+              2
+            ],
+            "satellite_budget": 2,
+            "solvable": true,
+            "status": "EXACT",
+            "witness_requirement": [
+              1,
+              2
+            ]
+          },
+          {
+            "metrics": {
+              "domain_comparisons": 1,
+              "domain_hits": 1,
+              "exact_hits": 0,
+              "expanded": 0,
+              "memo_entries": 26677,
+              "negative_domain_hits": 0,
+              "recursive_calls": 1,
+              "separator_comparisons": 0,
+              "separator_hits": 0,
+              "separator_replay_checks": 0,
+              "separator_replay_failures": 0,
+              "separator_replay_wall_s": 0.0,
+              "wall_s": 0.0007052860019030049
+            },
+            "policy_sha256": "873457b48e5e89f7a09418ba2a649aa3fb2453b2ad12d257efbcc32928621132",
+            "query_budget": 3,
+            "replay_requirement": [
+              1,
+              2
+            ],
+            "satellite_budget": 3,
+            "solvable": true,
+            "status": "EXACT",
+            "witness_requirement": [
+              1,
+              2
+            ]
+          },
+          {
+            "metrics": {
+              "domain_comparisons": 242,
+              "domain_hits": 0,
+              "exact_hits": 31,
+              "expanded": 150,
+              "memo_entries": 26837,
+              "negative_domain_hits": 0,
+              "recursive_calls": 223,
+              "separator_comparisons": 0,
+              "separator_hits": 0,
+              "separator_replay_checks": 0,
+              "separator_replay_failures": 0,
+              "separator_replay_wall_s": 0.0,
+              "wall_s": 0.009858532997895963
+            },
+            "query_budget": 4,
+            "satellite_budget": 0,
+            "solvable": false,
+            "status": "EXACT",
+            "witness_requirement": null
+          },
+          {
+            "metrics": {
+              "domain_comparisons": 4612,
+              "domain_hits": 9,
+              "exact_hits": 712,
+              "expanded": 3159,
+              "memo_entries": 30171,
+              "negative_domain_hits": 0,
+              "recursive_calls": 4747,
+              "separator_comparisons": 0,
+              "separator_hits": 0,
+              "separator_replay_checks": 0,
+              "separator_replay_failures": 0,
+              "separator_replay_wall_s": 0.0,
+              "wall_s": 0.22516808199725347
+            },
+            "query_budget": 4,
+            "satellite_budget": 1,
+            "solvable": false,
+            "status": "EXACT",
+            "witness_requirement": null
+          },
+          {
+            "metrics": {
+              "domain_comparisons": 1,
+              "domain_hits": 1,
+              "exact_hits": 0,
+              "expanded": 0,
+              "memo_entries": 30171,
+              "negative_domain_hits": 0,
+              "recursive_calls": 1,
+              "separator_comparisons": 0,
+              "separator_hits": 0,
+              "separator_replay_checks": 0,
+              "separator_replay_failures": 0,
+              "separator_replay_wall_s": 0.0,
+              "wall_s": 0.000821094996354077
+            },
+            "policy_sha256": "873457b48e5e89f7a09418ba2a649aa3fb2453b2ad12d257efbcc32928621132",
+            "query_budget": 4,
+            "replay_requirement": [
+              1,
+              2
+            ],
+            "satellite_budget": 2,
+            "solvable": true,
+            "status": "EXACT",
+            "witness_requirement": [
+              1,
+              2
+            ]
+          },
+          {
+            "metrics": {
+              "domain_comparisons": 1,
+              "domain_hits": 1,
+              "exact_hits": 0,
+              "expanded": 0,
+              "memo_entries": 30171,
+              "negative_domain_hits": 0,
+              "recursive_calls": 1,
+              "separator_comparisons": 0,
+              "separator_hits": 0,
+              "separator_replay_checks": 0,
+              "separator_replay_failures": 0,
+              "separator_replay_wall_s": 0.0,
+              "wall_s": 0.0004781239986186847
+            },
+            "policy_sha256": "873457b48e5e89f7a09418ba2a649aa3fb2453b2ad12d257efbcc32928621132",
+            "query_budget": 4,
+            "replay_requirement": [
+              1,
+              2
+            ],
+            "satellite_budget": 3,
+            "solvable": true,
+            "status": "EXACT",
+            "witness_requirement": [
+              1,
+              2
+            ]
+          }
+        ],
+        "context": {
+          "can_stop_acquiring_for_feasibility": false,
+          "completeness": "complete over the declared integer Q/B rectangle only",
+          "minimum_query_budget_for_any_success": 1,
+          "minimum_satellite_budget_with_query_allowed": 2,
+          "minimum_satellite_budget_without_paid_query": null,
+          "satellite_budget_released_by_allowing_query": null
+        },
+        "evidence_gain_type": "INFORMATION_FEASIBILITY_GAIN",
+        "frontier_points": [
+          {
+            "certified_witness_requirement": [
+              1,
+              2
+            ],
+            "policy_sha256": "873457b48e5e89f7a09418ba2a649aa3fb2453b2ad12d257efbcc32928621132",
+            "query_budget": 1,
+            "satellite_budget": 2,
+            "validity_domain": {
+              "boundary_condition": "same causal execution/evidence boundary; later reuse requires certificate validation",
+              "query_budget_at_least": 1,
+              "satellite_budget_at_least": 2
+            }
+          }
+        ],
+        "recipe_id": "T1R-6f552cceffd06c",
+        "resource_rectangle": {
+          "query_budget": [
+            0,
+            4
+          ],
+          "satellite_budget": [
+            0,
+            3
+          ]
+        },
+        "rules": [
+          "Q is an analysis/selection bound, not a source SLA.",
+          "Every positive frontier witness is replayed in its target resource cell.",
+          "Feasibility gain and resource gain are reported separately; no weighted scalar reward is introduced.",
+          "A query-free feasible point means evidence acquisition can stop for feasibility, not that more evidence can never improve another unmodeled cost."
+        ],
+        "schema_version": "0.1",
+        "status": "EXACT_BOUNDED_CONDITIONAL_FRONTIER"
+      },
+      "index": 11,
+      "process": "FINITE_CROSSING_WINDOWS",
+      "recipe_id": "T1R-6f552cceffd06c",
+      "signature": "9f09526db7534d46fe8d8f8bd6ac0235041935e38ff367d04fdcfba6b91a4761"
+    }
+  ],
+  "schema_version": "0.1",
+  "selection": "first six distinct corrected PAID_EVIDENCE_REQUIRED solver signatures per process class in generator order; selected before ablation",
+  "status": "FROZEN_SAMPLE_CONDITIONAL_FRONTIER_DIAGNOSTIC"
+}
