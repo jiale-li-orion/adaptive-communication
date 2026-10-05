@@ -118,6 +118,44 @@ planning.  It is whether communication structure supplies cheap, reusable
 certificates that keep the future-choice set correct while reducing exact
 planning and unnecessary acquisition.
 
+## Validity / invalidation diagnostic
+
+The first explicit validity audit uses 18 development hard signatures and 414
+adjacent exact-policy-prefix transitions.  Context truth includes both the
+legal-action surface and the certified future-choice set.  It changes on 129
+transitions.  The conservative dependency separator invalidates on every
+observed transition, so 285 invalidations occur without any change in Context
+truth.
+
+A deliberately cheaper candidate key was then tested, rather than assumed: it
+removed absolute time while retaining future obligation/window membership,
+resource coordinates, pending operations and evidence state.  This candidate
+is **not sound**.  Among 117 natural equal-key collision groups, 69 contain more
+than one exact Context truth.  Examples include states with the same future
+object membership where opportunity phase changes make new send/query actions
+legal or alter the certified set.
+
+A second candidate retains obligation phase (`FUTURE/ACTIVE`) and communication
+opportunity phase (`FUTURE/OPEN`) while still removing absolute time.  On the
+observed development collisions it is sound: 15/15 equal-key groups have one
+Context truth.  Its additional reuse is small, however.  Conservative
+invalidation-without-truth-change falls only from 285 to 270 transitions.  This
+candidate is therefore retained as a correctness clue, not promoted as the
+computational method.
+
+The exact Context remains stable for meaningful intervals: truth-stable runs
+average 2.94 boundaries / 2,061 s and reach 11 boundaries / 13,380 s.  Yet WAIT
+is a genuine decision in this hard subset—no recorded hard-prefix boundary has
+`WAIT` as the sole legal action.  Among WAIT transitions that do change Context
+truth, the destination is always a communication-opportunity phase boundary in
+this development audit (`TERR_START`, `SAT_START`, or `SAT_END`).
+
+Therefore the next validity object cannot be a generic TTL-free cache key or a
+free WAIT contraction.  The target is proof-relative **valid-until / slack
+domain** semantics tied to the temporal/resource inequalities actually used by
+the certificate.  Phase-aware state is necessary evidence, but its observed
+reuse gain is not yet large enough to claim an algorithmic advantage.
+
 ## Claim boundary
 
 All Layer-2 numbers above come from twelve frozen corrected-source cases and

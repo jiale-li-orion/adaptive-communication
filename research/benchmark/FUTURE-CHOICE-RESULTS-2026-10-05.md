@@ -136,3 +136,26 @@ cases.
 4. For later algorithm work, target cheaper proof objects or learned scheduling
    only after a fresh evaluation split is frozen. Do not keep increasing proof
    depth on the current test set.
+
+### Validity result added after the checkpoint
+
+An 18-signature development audit tested whether future-choice context could be
+reused by dropping absolute time from the dependency separator while preserving
+future obligation/window membership and execution/resource state.  Context
+truth here includes both legal and certified action sets.  The timeless key is
+not sound: 69 of 117 natural collision groups contain different exact Context
+truth.
+
+The opposite extreme is also wasteful.  Across 414 adjacent prefix transitions,
+exact Context truth changes 129 times, while the current conservative separator
+invalidates on all 414 transitions.  A phase-aware candidate that preserves
+`FUTURE/ACTIVE` obligation phase and `FUTURE/OPEN` communication-window phase is
+sound on all 15 observed collision groups, but saves only 15 otherwise-redundant
+invalidations.  Truth-stable runs still average 2.94 boundaries / 2,061 seconds
+and reach 11 boundaries / 13,380 seconds, leaving real validity headroom.
+
+The next validity target is therefore proof-relative slack / `valid_until`
+conditions.  In this audit every truth-changing WAIT lands on a communication
+opportunity phase boundary (`TERR_START`, `SAT_START`, or `SAT_END`), while WAIT
+is never the only legal action.  This rules out both timeless reuse and free
+WAIT contraction as shortcuts.
