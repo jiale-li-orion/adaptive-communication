@@ -189,6 +189,22 @@ Layer 2 v1 **已经完成并冻结为第一版**。已有正式证据包括：
 
 Layer-1 v0.2 现在已经修复了这个前置条件。因此下一步是 **重验 Layer 2 v1，而不是先重写它**：在新 hard subset 上重跑 frozen v1 matrix，确认哪些机制仍成立，并把真正的 v1 failure 与表示/绑定问题分开。continuation/frontier/certificate 等 post-reset 探索分支只保留为 research lineage，目前不拥有 Layer-2 主方法。
 
+但 post-reset 的方法线并没有被否掉。`cache06.md` 最终保留下来的 Layer-2 v2 假设是：只有当 v1 重验真正暴露 C 类 decision-semantic failure 时，才启动 **“保留未来可行选择”的通信 Context**。信息价值不由字段本身、freshness 或 uncertainty 单独决定，而由这条证据会不会改变后续可行计划、共享机会、剩余资源与执行承诺决定。query 一方面增加信息，另一方面也可能消耗时间和链路机会，因此信息收益与物理行动空间损失必须放在同一个 causal transition 里计算。
+
+对应的核心算法骨架仍然是动态剩余可行性 / 冲突前沿上的行动上下界：
+
+```text
+L_t(a) <= V*(h_t, a) <= U_t(a)
+
+L_t(a) = 1：已有真正可执行的 causal continuation 证明该行动仍可完成任务
+U_t(a) = 0：即使使用乐观结构松弛，该行动也不可能保住后续完成性
+L_t(a) = 0, U_t(a) = 1：尚未判定，需要取证、继续规划或 exact fallback
+```
+
+这里的方法目标**不是**为每个 action 重新跑一次昂贵的 depth-bounded proof planner。正确实现应利用通信任务结构，持续维护 obligation、共享机会、剩余资源、evidence、pending execution 的有效域；ACK、发送承诺、窗口关闭、新义务和 evidence 更新只在安全条件下局部失效和重算。依赖无法隔离或上下界重叠时退回 exact。任何 v2 实现都必须满足 non-anticipativity、界可靠性、剪枝保持性、每个合法前缀上的 incremental/full-rebuild 等价，以及端到端计算成本核算。
+
+最终论文目标也不是“少几个 query / 少几个 memo node”，而是 **结构发现 + 算法性质 + 系统结果**：解释什么证据/资源耦合会让 ordinary rule 失效；证明什么时候 future-choice context 可以复用、局部更新或必须重算；最后把 task quality—acquisition cost—computation frontier 推向更低通信、更低在线计算的一侧。只降低内部搜索计数、却没有改善端到端成本，只算原型信号。
+
 ## 5. 历史底座证据与冻结 claim 台账
 
 下面的 `C*` / `A*` 仍是可复现资产和重要对照，**但已经不再拥有当前研究方向**。它们属于早期系统/runtime 与 Agentic paper 谱系；当前 Layer 1 由 benchmark authority 拥有，当前 Layer 2 则由已冻结的 Compiler/Runtime v1 与其新 Benchmark 重验状态共同定义。`results/CLAIMS.md` 继续作为这些历史/冻结结果族的 claim ledger。
@@ -267,6 +283,8 @@ policy / learning
 三笔账始终分开：**信息/取证成本、任务/通信结果、planner computation**。exact 能解不等于信息问题消失；无查询策略存在不等于资源/计算问题消失；closed-loop 成功也不能替代算法计算优势。
 
 post-reset 探索已经在新 benchmark 上观察到 legal-but-harmful acquisition 与非平凡 continuation 等现象。这些结果保留为探索谱系，但在 v0.2→v1 重验完成之前，不提升为取代 frozen v1 的主方法。
+
+如果 v1 重验最终确认真正的 decision-semantic failure，v2 的研究对象已经收敛为：**面向任务可行性的自主信息构造**。Agent 自主决定还缺什么事实、通过 owner query / normal-send feedback / passive ACK/telemetry / wait 中哪种方式获得、什么时候信息已经足够可以停止取证并行动，以及资源和执行状态变化后旧 evidence 是否仍然对当前决策有效。确定性的 feasibility/L-U 层负责可靠支撑与剪枝；后续 learning 可以学习 search order、evidence ranking 或紧凑 context，但不能重新定义 legality、evidence ownership 或 task success。
 
 learning 仍然只是 solver choice，不是问题定义。已有 Layer-2 v1 在新 benchmark 上的能力边界没有重新测清之前，不开启新的 Layer-3 learning claim。
 

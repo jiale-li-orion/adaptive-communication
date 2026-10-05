@@ -204,6 +204,22 @@ The reason research returned to Layer 1 was **insufficient benchmark decision he
 
 Layer-1 v0.2 now fixes that precondition. The next Layer-2 work is therefore **revalidation**, not redesign: run the frozen v1 evaluation matrix on the new hard subset, identify where v1 remains valid, and isolate any failures that persist after lossless task/capability representation. Exploratory continuation/frontier/certificate branches are research lineage only; they do not currently replace Layer-2 v1 or own the main method claim.
 
+The post-reset method work is **not discarded**, however. `cache06.md` converged on a retained Layer-2 v2 hypothesis that should be activated only if the v1 revalidation exposes a genuine category-C failure: **construct and maintain a communication context that preserves future feasible choices, rather than merely answering the current action.** In this view, evidence value is determined by which downstream plans remain feasible under shared opportunities, deadlines, execution history and resource commitments. Querying can increase information while simultaneously consuming time or communication opportunities, so information gain and action-space loss must be evaluated in the same causal state transition.
+
+The corresponding algorithmic skeleton is a dynamic residual-feasibility / conflict frontier with action-wise bounds
+
+```text
+L_t(a) <= V*(h_t, a) <= U_t(a)
+
+L_t(a) = 1 : an actually executable causal continuation already proves success
+U_t(a) = 0 : even an optimistic structural relaxation proves the action cannot preserve completion
+L_t(a) = 0, U_t(a) = 1 : unresolved; acquire evidence, expand planning, or fall back to exact search
+```
+
+The intended contribution is **not** a generic bounded planner that recomputes a deep proof for every action. The retained design uses communication structure to maintain reusable validity domains over obligations, shared opportunities, remaining resources, evidence and pending execution; ACKs, sends, window loss, new obligations and evidence updates should invalidate only the affected frontier when this is sound. Exact search remains the fallback when dependencies cannot be isolated or bounds overlap. Any v2 implementation must satisfy non-anticipativity, bound soundness, pruning preservation, incremental-vs-full-rebuild equivalence on legal prefixes, and honest end-to-end computation accounting.
+
+The target research claim is therefore stronger than “fewer queries” or “fewer memo nodes”: **structure discovery + algorithmic property + system result**. The method must explain which evidence/resource coupling defeats ordinary rules, establish when future-choice context can be reused or locally recomputed, and finally move the task-quality / acquisition-cost / computation frontier toward lower communication and lower online computation. A result that only reduces internal search counters without improving end-to-end cost is treated as an implementation signal, not the final contribution.
+
 ## 5. Historical substrate evidence and frozen claim ledger
 
 The `C*` and `A*` claims below are retained because they are still reproducible evidence and useful controls, **not because they define the current research direction**. They belong to the systems/runtime and earlier Agentic-paper lineage. Current Layer-1 state is owned by the benchmark authority; current Layer-2 state is the frozen Compiler/Runtime v1 plus its post-benchmark revalidation status described above. `results/CLAIMS.md` remains the historical/current claim ledger for these older result families.
@@ -283,6 +299,8 @@ policy / learning
 The three accounting ledgers remain separate: **information/acquisition cost**, **task/communication outcome**, and **planner computation**. Exact success does not erase an information problem; a no-query successful policy does not erase resource or computation questions; a closed-loop task-success result does not by itself establish a computational method advantage.
 
 Exploratory post-reset studies have already shown useful phenomena on the new benchmark, including legal-but-harmful acquisition choices and non-trivial continuation structure. They are retained as exploratory lineage, not promoted over the frozen v1 method before the v0.2→v1 revalidation is complete.
+
+If the v1 revalidation isolates a genuine decision-semantic failure, the retained v2 research target is already defined: **autonomous information construction for task feasibility**. The Agent decides what it still needs to know, whether to obtain it through owner queries, normal-send feedback, passive ACK/telemetry or waiting, when the current information is sufficient to act, and when previous evidence remains decision-valid after resources and execution state change. The deterministic feasibility/L-U layer may supply verified support and pruning; learning may later guide search order, evidence ranking or compact context construction, but it must not redefine legality, evidence ownership or task success.
 
 Learning remains a solver choice, not the problem definition. No Layer-3 learning claim is opened until the existing Layer-2 v1 stack has been tested fairly on the new benchmark and any genuine v1 failure mode is isolated.
 
