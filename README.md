@@ -2,7 +2,7 @@ English | [中文](README.zh.md)
 
 # Agentic Communication under Intermittent Connectivity: Source-Grounded Decision Benchmark and Decision-Semantic Runtime
 
-> **Current research architecture: Layer-1 Decision Benchmark v0.2 → revalidate frozen Layer-2 Compiler/Runtime v1 → only then decide Layer-2 v2 or Layer-3 policy/learning.** Layer 2 v1 was already completed before the benchmark reset: Task/Evidence/Capability/Execution ownership, multi-round EvidenceNeed acquisition, candidate-action Context, persistent execution, replay/attribution, CR/CF/CS, WirelessOpsAgent-style comparison, and query-positive A10/A11 evidence are frozen results. The later reset happened because the old Layer-1 tasks were frequently compiled into `unique-ready` decisions, leaving too little genuine policy freedom to evaluate Layer 2. Layer 1 has now been rebuilt and technically frozen on `v0.2-retry-legality`: 58,752 recipes, 41 hard signatures / 174 pre-admission recipes, and a 3,804-case frozen public test. **The active task is therefore not to invent another Layer 2. It is to rerun the existing Layer-2 v1 stack on the new Layer-1 v0.2 decision surface, separate representation/binding incompatibilities from genuine method failures, and open v2 only if the latter remain.**
+> **Current research architecture: Layer-1 Decision Benchmark v0.2 → thin lossless binding into frozen Layer-2 v1 contracts → Layer-2 v2 future-choice / L-U method → Layer-3 policy/learning.** Layer 2 v1 was already completed before the benchmark reset: Task/Evidence/Capability/Execution ownership, multi-round EvidenceNeed acquisition, candidate-action Context, persistent execution, replay/attribution, CR/CF/CS, WirelessOpsAgent-style comparison, and query-positive A10/A11 evidence are frozen results. The benchmark reset was required because older tasks frequently collapsed into `unique-ready` decisions. On the new v0.2 hard surface, the revalidation has now separated two failure classes: the old O1–O6 binding is **lossy on 41/41 hard signatures**, while an isolated counterfactual of the frozen v1 acquisition trigger shows a genuine decision-semantic failure even under a lossless-binding assumption. That is sufficient to open the v2 method line; the remaining compatibility work is a thin evaluation binding, not a reason to redesign Layer 1.
 
 **Layer-1 current state:** T1 `Monitoring Information Continuity` is the main Family; T2 `Warning Delivery & Response Handoff` remains a boundary extension with an explicit simulator gap. v0.2 exact labels are 55,008 no-paid-query / 2,106 paid-evidence / 630 information-infeasible / 1,008 mixed-world-solvability recipes. V0–V7 leaves 1,423 pass signatures; V8 leaves 41 signatures / 174 recipes, all `FINITE_CROSSING_WINDOWS + GATEWAY_SUMMARY_QUERY + overlap 3/4`. The structure-aware split contains 30,180 pre-admission recipes with hard train/dev/test signatures 16/18/7 and zero cross-split solver-signature leakage; public test identity is frozen at 3,804 cases. **Research freeze: yes. Public release admission: not yet.** The v0.2 release refresh is now **12 PASS / 1 BLOCKED**: Q6 DeepSeek Flash frozen-test baseline is complete (0/7 hard signatures succeed; 0 invalid actions; all failures are `DEADLINE_EXPIRED`), the agentic-reducibility and communication-attribution release audits both pass 41/41 hard signatures, and only Q11 real human/source review remains before `BENCHMARK_ADMIT`. See [Layer-1 Authority](research/benchmark/LAYER1-AUTHORITY.md) and the machine-readable [current state](research/benchmark/LAYER1-CURRENT-STATE.v0.1.json).
 
@@ -16,7 +16,7 @@ This repository studies battery/solar mountain geohazard monitoring: LoRaWAN Cla
 
 **Historical systems-paper stage:** that stage produced component-level positive results and narrowed configuration leasing, single-node stopping and retention-horizon tuning into scoped-negative boundaries. The systems-paper compatibility copies, immutable archive, `CLAIMS`, Git and withdrawn-result snapshots preserve those design choices, negative results and open questions as part of the research lineage.
 
-**Current research line:** Layer 1 is no longer being expanded to manufacture method headroom, and Layer 2 is not being redesigned pre-emptively. The immediate research step is a **post-benchmark revalidation of frozen Layer-2 v1** on the 41 hard signatures exposed by Layer-1 v0.2. The evaluation must answer whether v1 already handles the new decision surface, whether any failures are merely task/capability representation mismatches, or whether the new benchmark reveals a true EvidenceNeed / Context / acquisition / execution limitation that justifies Layer-2 v2. Layer 3 starts only after that distinction is established.
+**Current research line:** Layer 1 is frozen for method work. Layer-2 v1 revalidation has already established both a compatibility gap and a genuine method gap. The old compiler/registry/selector cannot represent the new overlapping-obligation surface losslessly (`0/41` hard signatures are lossless as-is), but after isolating that binding issue, frozen v1 still over-triggers owner evidence acquisition. Across the 41 hard signatures, 808 query-legal pre-query boundaries were checked; only 64 preserve causal completion after forcing the query, while **744/808 are legal-but-harmful**. In **41/41** signatures the first query-legal boundary is harmful and the exact minimal-resource policy waits until a later query time. The current method task is therefore to implement the retained future-choice/L-U line from `cache06.md`, while using a thin lossless binding to keep v1/v2 comparisons fair. Layer 3 follows from this concrete failure surface rather than replacing it.
 
 ## 0. External positioning and current claim boundary
 
@@ -129,21 +129,21 @@ Layer 2 v1 is already a completed mechanism line, not an unfinished placeholder.
 
 The benchmark reset does **not** invalidate those mechanisms. It changes the question asked of them. Earlier O1–O6 tasks often collapsed to a single ready action after compilation; the new Layer-1 v0.2 hard subset deliberately retains obligation-level deadlines, uncertain service, finite backup resources and multiple legal next actions. The current cross-layer evaluation therefore asks whether the frozen v1 compiler/runtime can still represent and solve that richer decision surface without hidden-truth leakage.
 
-The correct order is:
+The revalidation result is now:
 
 ```text
 Layer-1 v0.2 public task/evidence/capability/execution state
     -> existing Layer-2 v1 Task/Evidence/Context/Capability contracts
-    -> existing v1 deterministic / compiled / evidence-aware / action-conditioned / model baselines
-    -> physical and task outcome
-
-then classify failures as:
-    A. v1 already solves the new task family;
-    B. lossless representation/capability binding is missing;
-    C. inputs are represented correctly but v1 decision semantics fail.
+    -> B: as-is O1-O6 binding is lossy on 41/41 hard signatures
+    -> thin lossless Layer-1-to-v1 binding (evaluation infrastructure only)
+    -> C: frozen v1 acquisition trigger is unsafe on the new physical decision surface
+       808 legal pre-query boundaries checked
+       64 certified / 744 harmful
+       41/41 first legal query boundaries harmful
+    -> open Layer-2 v2 future-choice / L-U method
 ```
 
-Only category C is evidence for opening a Layer-2 v2 research problem. Category B is compatibility engineering and must not be renamed as a new algorithmic contribution.
+Category B remains compatibility engineering and is not an algorithmic contribution. Category C is now established for the acquisition trigger: v1 can recognize that owner evidence is unresolved, but it does not reason about whether acquiring that evidence **now** preserves future obligation feasibility. This is the concrete v2 problem.
 
 **The two meanings of Task are frozen separately.** An Operational Task is benchmark/business semantics: what this mountain monitoring system must accomplish. A Runtime TaskContract is one Agent-harness execution instance: its targets, evidence contract, effect ceiling, temporal contract, and completion predicate. Each layer owns a stable schema and revision.
 
@@ -202,9 +202,9 @@ Layer 2 v1 is **frozen-complete as a first version**. Its established evidence i
 
 The reason research returned to Layer 1 was **insufficient benchmark decision headroom**, not an unfinished Layer 2. The old benchmark/compiler combination frequently produced `unique-ready` tasks, so additional Agent reasoning could not be meaningfully separated from ordinary compilation.
 
-Layer-1 v0.2 now fixes that precondition. The next Layer-2 work is therefore **revalidation**, not redesign: run the frozen v1 evaluation matrix on the new hard subset, identify where v1 remains valid, and isolate any failures that persist after lossless task/capability representation. Exploratory continuation/frontier/certificate branches are research lineage only; they do not currently replace Layer-2 v1 or own the main method claim.
+Layer-1 v0.2 now fixes that precondition, and the first v1 revalidation has exposed a real method boundary. The old binding remains lossy, so a thin lossless task/action/capability adapter is still required for end-to-end comparison. But the acquisition-trigger counterfactual already shows that compatibility alone cannot rescue v1: even when an owner query is legal and genuinely relevant, taking it too early can consume the communication opportunity required by later obligations. This is the first confirmed category-C failure on the new benchmark.
 
-The post-reset method work is **not discarded**, however. `cache06.md` converged on a retained Layer-2 v2 hypothesis that should be activated only if the v1 revalidation exposes a genuine category-C failure: **construct and maintain a communication context that preserves future feasible choices, rather than merely answering the current action.** In this view, evidence value is determined by which downstream plans remain feasible under shared opportunities, deadlines, execution history and resource commitments. Querying can increase information while simultaneously consuming time or communication opportunities, so information gain and action-space loss must be evaluated in the same causal state transition.
+The post-reset method work is **not discarded**. `cache06.md` converged on a retained Layer-2 v2 hypothesis, and the new acquisition-trigger audit now supplies the category-C failure needed to activate it: **construct and maintain a communication context that preserves future feasible choices, rather than merely answering the current action.** In this view, evidence value is determined by which downstream plans remain feasible under shared opportunities, deadlines, execution history and resource commitments. Querying can increase information while simultaneously consuming time or communication opportunities, so information gain and action-space loss must be evaluated in the same causal state transition.
 
 The corresponding algorithmic skeleton is a dynamic residual-feasibility / conflict frontier with action-wise bounds
 
@@ -285,22 +285,29 @@ Decision-Semantic Compiler / Runtime v1
 
 Current bridge
 Layer-1 v0.2 -> Layer-2 v1 revalidation
-    -> test existing v1 on genuinely open decision tasks
-    -> separate compatibility gaps from decision-semantic failures
-    -> open Layer-2 v2 only for the latter
+    -> B compatibility gap confirmed: 0/41 as-is lossless
+    -> C acquisition-trigger failure confirmed on 41/41 hard signatures
+    -> thin lossless binding remains required for end-to-end comparison
+
+Layer 2 v2
+future-choice / L-U context
+    -> action-relative evidence sufficiency
+    -> preserve future feasible choices
+    -> conditional validity / local invalidation
+    -> exact fallback when bounds or dependencies remain unresolved
 
 Layer 3
 policy / learning
-    -> deferred until the v0.2 -> v1 revalidation is complete
+    -> deferred until v2 semantics and fair v1/v2 end-to-end comparison are stable
     -> then compare deterministic / search / LLM / learned / hybrid policies
     -> keep task outcome, acquisition cost and computation separately accounted
 ```
 
 The three accounting ledgers remain separate: **information/acquisition cost**, **task/communication outcome**, and **planner computation**. Exact success does not erase an information problem; a no-query successful policy does not erase resource or computation questions; a closed-loop task-success result does not by itself establish a computational method advantage.
 
-Exploratory post-reset studies have already shown useful phenomena on the new benchmark, including legal-but-harmful acquisition choices and non-trivial continuation structure. They are retained as exploratory lineage, not promoted over the frozen v1 method before the v0.2→v1 revalidation is complete.
+Post-reset studies have now moved beyond exploratory signal at one specific boundary: legal-but-harmful acquisition is a confirmed frozen-v1 failure mode on all 41 hard signatures under the acquisition-trigger counterfactual. Earlier continuation/frontier/cache experiments remain research lineage; they are inputs to v2 design, not automatically promoted as the final v2 algorithm.
 
-If the v1 revalidation isolates a genuine decision-semantic failure, the retained v2 research target is already defined: **autonomous information construction for task feasibility**. The Agent decides what it still needs to know, whether to obtain it through owner queries, normal-send feedback, passive ACK/telemetry or waiting, when the current information is sufficient to act, and when previous evidence remains decision-valid after resources and execution state change. The deterministic feasibility/L-U layer may supply verified support and pruning; learning may later guide search order, evidence ranking or compact context construction, but it must not redefine legality, evidence ownership or task success.
+The v1 revalidation has now isolated such a decision-semantic failure, so the retained v2 research target is active: **autonomous information construction for task feasibility**. The Agent must decide what it still needs to know, whether to obtain it through owner queries, normal-send feedback, passive ACK/telemetry or waiting, whether acquisition at the current time still preserves future choices, when the current information is sufficient to act, and when previous evidence remains decision-valid after resources and execution state change. The deterministic feasibility/L-U layer supplies verified support and pruning; learning may later guide search order, evidence ranking or compact context construction, but it must not redefine legality, evidence ownership or task success.
 
 Learning remains a solver choice, not the problem definition. No Layer-3 learning claim is opened until the existing Layer-2 v1 stack has been tested fairly on the new benchmark and any genuine v1 failure mode is isolated.
 

@@ -5,3 +5,30 @@
 Canonical contracts 见 `RUNTIME-DOMAIN-OWNERSHIP-v1.md`；方法关系见 `PLAN-EVIDENCE-EXECUTION-v1.md`；capability/task registry 见 `COMMUNICATION-DOMAIN-REGISTRY.v0.1.json`；prior-art/claim ceiling 见 `NOVELTY-BOUNDARY-v1.md`。
 
 当前稳定对象包括 audit/control/model/persistent-execution surfaces、plan–evidence dependency、dependency liveness、Decision Sufficiency、EvidenceNeed、semantic plan selection、persistent execution intent 与 semantic-state replanning。ordinary dependency construction 能解释当前正式 workload 时，不为了算法复杂度追加 solver。
+
+## 当前 v0.2 重验状态
+
+Layer 2 v1 仍然冻结为第一版 runtime/compiler 机制，但新的 Layer-1 v0.2 已经暴露出两个需要严格分开的结果。
+
+**第一，as-is compatibility 不成立。** `audit_layer1_v02_layer2_v1_representability.py` 在 41 个 frozen hard signatures 上得到 `0/41` lossless。原因是旧 O1–O6 compiler/registry/selector 仍围绕单 phase profile/fallback candidate family：它不能保留 3/4 个 overlapping obligation identity，也没有 per-obligation `WAIT / SEND_TERR / SEND_SAT / gateway_state_summary` binding。这个结果属于 **B 类兼容工程**，不能当方法贡献。
+
+机器结果：[`results/agentic/layer1-v02-layer2-v1-representability.json`](../../results/agentic/layer1-v02-layer2-v1-representability.json)。
+
+**第二，v1 acquisition trigger 本身存在 C 类 decision-semantic failure。** 在一个 lossless binding 假设下，直接调用 frozen `ActionConditionedReferencePlannerConsumer` 可以确认：当 owner dependency unresolved 且 capability visible 时，v1 会先发起 query。随后使用 Layer-1 v0.2 的 frozen transition semantics，在 41 个 hard signatures 的 exact minimal-resource policy 首次 query 之前做 counterfactual：
+
+- query-legal boundaries：808；
+- query 后仍有 exact causal continuation：64；
+- legal-but-harmful queries：744；
+- 41/41 signatures 都存在 harmful boundary；
+- 41/41 signatures 的第一次 query-legal boundary 都 harmful；
+- 41/41 signatures 的 exact minimal-resource policy 都把 query 推迟到更晚时刻。
+
+机器结果：[`results/agentic/layer1-v02-layer2-v1-acquisition-trigger.json`](../../results/agentic/layer1-v02-layer2-v1-acquisition-trigger.json)。该 artifact 同时包含对 frozen `ActionConditionedReferencePlannerConsumer` 的 protocol check，确认 unresolved active owner dependency 会真实触发 query，而不是审计脚本自行假设这一规则。
+
+因此当前问题已经从“EvidenceNeed 能否指出缺什么事实”推进到：
+
+> **当前这份证据值得取得，但现在取得它是否仍保留后续任务选择？**
+
+这使 `cache06.md` 保留的 future-choice / L-U 方法线正式成为 Layer-2 v2 主线。v2 应维护剩余 obligation、共享 opportunity/resource、evidence 与 pending execution 的动态可行前沿；`L_t(a)=1` 由可执行 causal continuation 支撑，`U_t(a)=0` 由 sound structural relaxation 排除，未决部分才继续取证、规划或 exact fallback。旧的“为每个 action 重新跑昂贵 depth-bounded proof stack”不代表这条方法线本身。
+
+下一步仍要先补一层**薄的 lossless benchmark→v1 contract binding**，用于端到端 v1/v2 对照；这层 adapter 只表达 public obligation/action/capability，不读取 hidden world、future feasibility、oracle witness 或 recommended action。随后才比较 v1、future-choice/L-U v2、strong ordinary planning 与 exact reference 的 task quality、真实 acquisition cost 和 online computation。
