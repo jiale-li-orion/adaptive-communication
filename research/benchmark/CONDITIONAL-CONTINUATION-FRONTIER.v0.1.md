@@ -94,9 +94,42 @@ pretending that cache reuse itself is the contribution.
 
 ## Next dynamic test
 
-v0.1 is evaluated at the initial boundary.  The next test must recompute the
-frontier on real execution prefixes and check whether normal sends, query
-responses or ACK-like events change:
+The initial-frontier result has now been extended along the real exact-policy
+prefix before its first paid query.  At every decision time where a query is
+legal, the audit forces exactly one query and then asks whether exact
+continuation succeeds with zero additional queries.  Every positive continuation
+is replayed.
+
+The twelve-case timing result is:
+
+| timing class | cases |
+|---|---:|
+| `STOP_FROM_INITIAL_BOUNDARY` | 2 |
+| `SINGLE_CRITICAL_QUERY_TIME` | 7 |
+| `DISCONNECTED_SUFFICIENT_QUERY_TIMES` | 3 |
+
+For all ten evidence-required cases, no-query continuation remains infeasible at
+every exact-policy prefix before the first query.  Ordinary send/wait execution
+does not silently erase the evidence requirement.  The exact minimal-resource
+policy issues its query at the **latest sufficient query time** in all ten cases.
+
+The three disconnected cases are more important than a generic "query later"
+story.  Their sufficient times are respectively:
+
+```text
+16800, 27600
+15000, 25800
+14100, 24900
+```
+
+Many intermediate decision times expose a legal owner query, but forcing the
+query there makes exact zero-additional-query continuation fail.  Query legality
+therefore does not imply query sufficiency, and sufficiency is not monotone in
+time.  The reason is structural: the query consumes the same terrestrial
+opportunity capacity needed by later report execution, while its sampled result
+and future resource state also change with execution history.
+
+This yields the dynamic context transition the method should eventually maintain:
 
 ```text
 must acquire evidence
@@ -104,12 +137,19 @@ must acquire evidence
 can stop acquiring
 ```
 
-The desired method property is not that the label changes often.  It is that
-the maintained context changes **exactly when its supported future-choice set
-changes**, while unaffected certificates remain valid and exact fallback agrees.
+In the current ten hard examples the transition does **not** occur before the
+first query; in the two retry-resolved examples it has already occurred at the
+initial boundary.  The desired method property is not that the label changes
+often.  It is that the maintained context changes **exactly when its supported
+future-choice set changes**, while unaffected certificates remain valid and exact
+fallback agrees.  The acquisition-timing frontier additionally shows that the
+context must represent *when* a query remains feasibility-preserving, not merely
+whether the query is relevant.
 
 Artifacts:
 
 - `code/evaluation/benchmark/conditional_continuation_frontier_v0_1.py`
 - `code/evaluation/benchmark/audit_conditional_continuation_frontier_v0_1.py`
+- `code/evaluation/benchmark/audit_conditional_acquisition_timing_v0_1.py`
 - `results/benchmark/layer2-conditional-continuation-frontier-v0.1.json`
+- `results/benchmark/layer2-conditional-acquisition-timing-v0.1.json`
