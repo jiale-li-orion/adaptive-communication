@@ -175,6 +175,7 @@ def build_receipt_race_bundle(*,phase_index:int=1) -> Bundle:
     A gateway receipt-summary read between local receipt and final ACK reveals
     only executed history.  It does not reveal future service directly.
     """
+    start,_=phase_groups(4,phase_index+1)[phase_index]
     sats=tuple(t for t in _slots() if start<=t<=start+8*3600)
     if phase_index!=1:
         # v0.1 mechanism is frozen on the first geometry phase that supplies
