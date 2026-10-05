@@ -54,7 +54,7 @@ and after taking one of them, which future obligations remain feasible?
 
 This positioning also fixes the benchmark comparison. α³-Bench already provides interactive wireless-Agent control; 6G-Bench provides standards-derived network reasoning and oracle decisions; RAMSemCom already provides active information acquisition with wireless cost. The Layer-1 benchmark is therefore justified by the **combination** of source-traceable operational obligations, partial observation, costly acquisition, asynchronous physical state transitions, obligation-feasibility transitions, long intermittent connectivity / recovery, and an external exact oracle—not by “interaction”, “active sensing” or “physical communication” alone.
 
-## 1. Current paper, historical manuscripts, and authority entry points
+## 1. Manuscript lineage and authority entry points
 
 | Material | Entry |
 |---|---|
@@ -197,7 +197,9 @@ The retry-corrected diagnostic line has established the following without changi
 
 The remaining Layer-2 proof target is **not another cache or deeper bounded planner**. It is to show that communication structure yields a reusable context with explicit validity / invalidation conditions and a net computational advantage against a strong same-information, same-predicate generic exact baseline. On the present small held-out hard cases, generic exact is still faster than the current L/U proof stack; this is recorded as a result, not hidden. The next fair computation test therefore uses controlled structural scaling of coupled obligation/conflict width while keeping the T1 semantics, information contract and decision predicate fixed.
 
-## 5. Current reproducible evidence and claim projection
+## 5. Historical substrate evidence and frozen claim ledger
+
+The `C*` and `A*` claims below are retained because they are still reproducible evidence and useful controls, **not because they define the current research direction**. They belong to the systems/runtime and earlier Agentic-paper lineage. Current Layer-1/Layer-2 state is owned by the benchmark authority and future-choice artifacts above; `results/CLAIMS.md` remains the historical/current claim ledger for these older result families.
 
 - **Source expiry:** under the corrected gateway deadline boundary, standard per-record expiry remains a supported cross-segment placement result in the tested cache model. Numeric effect sizes and paired intervals are owned by the frozen result / generated paper table rather than this entry page. [C3 data](results/communication-substrate/claims/r37e_full_seeds.json)
 - **Configuration termination:** a fixed TTL covers the candidate's survival and yellow-delivery operating points in the two tested phases. The energy-derived candidate collapses to the ordinary mechanism frontier, and ordinary combinations match the same-information exact stopping reference across the declared risk-weight sweep. [Matrix](results/communication-substrate/claims/c5_matrix.json) · [Reference](results/communication-substrate/claims/c5_seqref.json)
@@ -206,7 +208,7 @@ The remaining Layer-2 proof target is **not another cache or deeper bounded plan
 
 Resource relaxations characterise capacity and energy pressure within the tested strategy family. C10 records the expiry-boundary implementation correction. Subsequent comparisons use corrected ordinary expiry.
 
-Current states below are a checked projection of [CLAIMS](results/CLAIMS.md); that file remains the ledger of record.
+The frozen states below are a checked projection of [CLAIMS](results/CLAIMS.md); that file remains the ledger of record.
 
 | Claim | Scope | Status |
 |---|---|---|
@@ -233,7 +235,7 @@ Current states below are a checked projection of [CLAIMS](results/CLAIMS.md); th
 | A10 | decision-conditioned evidence acquisition | supported |
 | A11 | query-positive model transfer | supported |
 
-The `A*` namespace now contains deterministic/infrastructure claims plus narrowly scoped A7–A11 model-effect claims. A7 covers query-negative development tasks; A8 shows the same-interface WirelessOpsAgent-style reliability tie with 35.804% higher total model-token cost than the Method; A9 adds held-out Qili/NASA-POWER-2024 transfer across DeepSeek Flash and MiMo v2.6 Flash. A10 closes the previously missing query-positive loop on one gateway-backup family with DeepSeek Flash. A11 repeats the same frozen acquisition loop with MiMo v2.6 Flash: 5/5 episodes preserve the deterministic query-positive physical reference and improve TDR/AoI versus no acquisition. These claims establish a two-model witness for one acquisition family, not globally optimal or universal evidence acquisition.
+The `A*` namespace contains deterministic/runtime evidence plus narrowly scoped historical model-effect claims. A7–A11 remain valid only within their frozen task/interface/model coordinates. They are retained as baselines and provenance for the current program; they do not establish the present benchmark, future-choice method, or any universal acquisition policy.
 
 ## 6. Historical Agentic paper lineage versus current research program
 

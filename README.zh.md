@@ -14,7 +14,33 @@
 
 **当前研究主线：Benchmark 已进入研究冻结，方法主线转向 future-choice context。** 给定 operational obligations、合法 evidence、capability、剩余资源与 execution state，我们研究哪些动作仍能保持未来义务可完成，哪些缺失证据会改变这个集合，以及什么时候值得为取证支付真实通信成本。Policy / learning 只有在这个决策对象已经被清楚定义、可以由外部 oracle 检查之后才进入比较。
 
-## 1. 当前论文、历史稿与权威入口
+## 0. 横向定位与当前 claim 边界
+
+本仓库位于 Agentic Semantic Communication / Agentic Communication Networks 的研究坐标内，但当前贡献不再建立在“把 Agent 接进通信闭环”这一宽泛叙事上。2026 年近邻工作已经覆盖任务感知传输、主动补信息、通信代价下的 probing/feedback、Context 生命周期、跨步骤 memory、VoI send/no-send、world-model 预测、长期物理闭环、freshness-aware value 与在线链路自适应等机制。
+
+RAMSemCom、Reasoning-Native Agentic Communication、Wireless Context Engineering、SkillComm、WM-CDT、GOSC / SVoI、imperfect-CSIT agentic link adaptation、Agentic TokenCom、AAMTSC、A2SSC 等均按 prior art 处理，不能重新包装成我们的 novelty。
+
+当前可守的研究对象更窄：
+
+```text
+source-grounded operational obligation
+    + action-relative evidence sufficiency
+    + heterogeneous capability for evidence acquisition
+    + intermittent long-horizon obligation feasibility
+    + external oracle for action / completion validity
+```
+
+核心区别是 **action validity 与 future obligation feasibility**。已有系统常问“信息够不够回答问题”“现在值不值得传”“信息是否新鲜”“对长期 reward 是否有价值”；这里问的是：
+
+```text
+在当前真实义务与资源状态下，
+哪些通信动作已经拥有充分证据支持，
+执行动作后，哪些未来义务仍然存在合法完成路径？
+```
+
+Benchmark 的横向对照也固定下来：α³-Bench 已覆盖交互式无线 Agent 控制；6G-Bench 已覆盖标准驱动网络推理与 oracle decision；RAMSemCom 已覆盖带无线成本的主动信息获取。因此 Layer 1 的独立性来自 **source-traceable operational obligations + partial observation + costly acquisition + asynchronous physical transitions + obligation-feasibility transitions + intermittent connectivity/recovery + external exact oracle** 的组合，而不是“有交互”“有主动感知”或“有物理通信”本身。
+
+## 1. 稿件谱系与权威入口
 
 | 内容 | 入口 |
 |---|---|
@@ -64,7 +90,7 @@
 
 系统由成熟原语组成。新的系统价值通过组合、执行位置和实际业务后果来验证；模块统一、对象规范与 Agent 接口则承担工程复用价值。
 
-## 4. Decision-Semantic Compiler 与当前 Conformance Suite
+## 4. Decision-Semantic Compiler 与 Future-Choice Context
 
 Decision-Semantic Compiler 继续使用同一个山区灾前监测 physical/data plane，把合法的 Task/Evidence/Capability/Execution 状态编译成模型可消费的 live decision surface：
 
@@ -80,6 +106,26 @@ Physical/Data Plane
     -> existing communication simulator
     -> Communication metrics + Agent/runtime trace
 ```
+
+当前 Layer 2 的方法对象已经从“把更多信息塞进 Context”收敛为 **future-choice context**：在当前义务、证据、资源和执行状态下，哪些下一步动作仍然保持至少一条合法因果续接路径。
+
+```text
+legal_actions(t)
+    -> certified_actions(t, Q, B)
+    -> future-choice context
+```
+
+`legal(a)` 只表示动作此刻可执行；`certified(a)` 表示强制执行 `a` 后，仍然存在完成全部剩余义务的合法因果策略。两者已经在 retry-corrected workload 中出现真实分离：某些 query 仍然合法，却会消耗任务后续所需的 terrestrial opportunity，从而退出 certified future-choice set；同一 query 之后还可能重新进入该集合。
+
+exact frontier 只承担 reference，不是计划中的在线算法。当前结构化方法把 action feasibility 分成两个可审计界：
+
+```text
+L_t(a) = 1  -> 已有可重放 causal witness 证明该动作安全
+U_t(a) = 0  -> 结构松弛已经证明该动作不可能保住后续完成性
+L_t(a) = 0, U_t(a) = 1 -> 尚未判定，需要 exact fallback 或 learned guidance
+```
+
+资源有效域与 dependency separator 已经证明是 sound primitive，但在当前小规模 hard cases 上只带来有限的额外计算收益。当前真正保留的方法对象是 **action-conditioned future-choice frontier、它的有效条件，以及何时需要重新证明**。
 
 **两层 Task 明确分开。** Operational Task 是 benchmark/业务语义，回答“这个山区监测系统现在要完成什么”；Runtime TaskContract 是一次 Agent harness 执行实例的程序语义，回答“本次 run 的 target、evidence contract、effect ceiling、temporal contract、completion predicate 是什么”。两层对象各自拥有稳定 schema 与 revision。
 
@@ -124,7 +170,21 @@ device tool 直接复用既有物理模型。`gateway_backup` 作用于现有 `J
 
 Gold replacement 已覆盖 upstream `Task / EvidenceNeed / Percept / Context` 与 planner `selection / order / arguments / policy`；attribution protocol 先用受控 corruption 自检，再用于未来真实模型 failure decomposition。
 
-## 5. 当前可复现结果与 claim 投影
+### 4.5 当前 Layer 2 证据与尚未完成的证明目标
+
+retry-corrected 诊断线已经建立以下事实，而且没有反向修改 Layer 1 task semantics：
+
+- resource-domain certificate 正确，但相对普通资源单调缓存只有很小的额外复用收益；
+- dependency separator 的自然 collision 能保持 correctness 与 witness replay，但索引开销吃掉了小幅 expansion 收益；
+- exact conditional frontier 可以把“合法动作”和“仍保持未来义务可完成的动作”分开；
+- query sufficiency 可以随时间非单调变化，真实前缀中出现 `certified -> uncertified -> certified`；
+- held-out closed-loop 结果已经显示 future-choice-aware control 能避开 legal-but-harmful query，而 no-query / earliest-legal-query 等普通策略可以失败。
+
+Layer 2 尚未毕业的关键门不是继续加深 bounded planner。真正需要证明的是：通信结构能否形成带有明确 validity / invalidation 条件的可复用 Context，并在同信息、同 predicate、同任务质量下，相对强 generic exact baseline 获得净计算收益。当前小规模 held-out hard cases 上 generic exact 仍然更快；这一负结果保留为方法边界。下一步公平计算实验使用受控结构规模轴，而不回头修改 benchmark 来制造 headroom。
+
+## 5. 历史底座证据与冻结 claim 台账
+
+下面的 `C*` / `A*` 仍是可复现资产和重要对照，**但已经不再拥有当前研究方向**。它们属于早期系统/runtime 与 Agentic paper 谱系；当前 Layer 1 / Layer 2 状态分别由 benchmark authority 与 future-choice 实验产物拥有。`results/CLAIMS.md` 继续作为这些历史/冻结结果族的 claim ledger。
 
 - **源端到期**：修正网关 deadline 边界后，标准逐记录 expiry 仍是所测缓存模型中受支持的跨段 placement 结果。具体 effect size 与 paired interval 只由冻结 result / 自动生成论文表持有，入口页不再复制数字。[C3 结果](results/communication-substrate/claims/r37e_full_seeds.json)
 - **配置终止**：固定 TTL 在两个受检相位覆盖候选的存活与黄级交付工作点。候选能量门没有独立收益；单节点声明模型中的普通组合也追平所扫风险权重下的同信息精确停止参照。[配置矩阵](results/communication-substrate/claims/c5_matrix.json) · [序列参照](results/communication-substrate/claims/c5_seqref.json)
@@ -160,17 +220,41 @@ Gold replacement 已覆盖 upstream `Task / EvidenceNeed / Percept / Context` �
 | A10 | decision-conditioned evidence acquisition | supported |
 | A11 | query-positive model transfer | supported |
 
-`A*` 现在包含 deterministic / infrastructure 主张与窄范围的 A7–A11 model-effect 主张。A7 覆盖 query-negative 开发任务；A8 证明同接口 WirelessOpsAgent-style 可以追平可靠性，但 Method 总模型 token 少 35.804%；A9 覆盖 Qili/NASA POWER 2024 held-out task/source 与 DeepSeek/MiMo 双模型。A10 补上此前缺失的 query-positive 闭环：在一个 gateway-backup family 上，DeepSeek 五个种子都真实查询 blocking owner evidence，证据返回后闭合 plan feasibility、提交 backup，并相对 no-acquisition 改善 TDR/AoI。A11 在完全相同的 frozen 坐标上用 MiMo v2.6 Flash 重复该闭环，5/5 episode 直接保持 deterministic query-positive physical reference，并同样提升 TDR/AoI。A10/A11 支持一个 acquisition family 的双模型见证，不宣称全局最优或普适取证策略。
+`A*` 包含 deterministic/runtime 证据与窄范围历史 model-effect 主张。A7–A11 只在各自冻结的 task/interface/model 坐标下成立，当前保留为 baseline 与 provenance；它们不拥有现在的 benchmark、future-choice 方法，也不支持普适 evidence-acquisition claim。
 
-## 6. Agentic 论文冻结状态
+## 6. 历史 Agentic 稿件与当前研究程序
 
-pre-API 基础设施继续承担 deterministic/fairness substrate，但当前论文状态已经进入 A7–A11 正式冻结阶段：v6 五种子主表、同接口 WirelessOpsAgent-style 强对照、Qili/NASA-POWER-2024 held-out transfer，以及 DeepSeek Flash / MiMo v2.6 Flash 双模型 query-positive gateway-backup acquisition loop 均已有正式 claim。论文四张主表的 compact 数值 authority 为 `results/agentic/paper-v1/paper-results.json`；完整 claim ceiling 仍以 `results/CLAIMS.md` 为唯一 authority。
+A7–A11 live-model 结果继续作为冻结证据存在，不再承担研究控制面。它们覆盖历史 v6 主表、同接口 WirelessOpsAgent-style 对照、held-out source/model transfer，以及一个由 DeepSeek Flash / MiMo v2.6 Flash 复现的 query-positive gateway-backup acquisition family。compact 数字 authority 仍为 `results/agentic/paper-v1/paper-results.json`，claim ceiling 仍由 `results/CLAIMS.md` 持有。
 
-无需 API 的正式入口统一为 `make agentic-preapi`。该入口覆盖 catalog conformance、O2 global/localized、五臂 Agent baseline、传统通信 baseline、source-period、robustness、task transfer、attribution infrastructure 与 frozen model inputs，并在最后运行生成物/manifest/check。当前完整 repository gate 与 JointControlPlane anchor gate 均通过。
+`make agentic-preapi` 继续复现 credential-free runtime/conformance substrate；`results/agentic/model-context-inputs-v1/` 中三种 frozen model input 继续用于历史模型对照。这些资产保留，但已经从“下一篇论文主线”降级为 **受控历史 baseline 与 runtime evidence**。
 
-当前三种真实模型输入已经冻结在 `results/agentic/model-context-inputs-v1/`：task-conditioned、FullDump、generic-ReAct 共用同一 Operational Task、capability surface 与 paired physical reference。generic-ReAct 不暴露 EvidenceNeed / InvestigationState harness artifacts；这使后续模型比较能隔离 harness cognition，而不是把不同 tool surface 混在一起。
+当前研究程序固定为：
 
-下一阶段是 paper freeze / writing / repository release，不再继续发散模型或 acquisition family。novelty 边界已收窄到 dynamic plan/dependency liveness、audit/control/model surface 分离、persistent semantic commitment、communication-constrained owner acquisition 与异步 physical execution/replay。decision-aware acquisition、action sufficiency、certificate/minimum witness、VoI/freshness 等均按 prior art 处理；frozen-input basis-selection headroom audit 没有发现真实 alternative-proof choice，因此该 side study 已终止。
+```text
+Layer 1
+source-grounded benchmark
+    -> operational obligation
+    -> partial observation / causal execution
+    -> exact oracle / hardness / frozen split
+
+Layer 2
+future-choice context / decision-semantic compiler
+    -> action-relative evidence sufficiency
+    -> certified future choices
+    -> context validity / invalidation
+    -> structural lower / upper feasibility certificates
+
+Layer 3
+policy / learning
+    -> 使用 Layer 2 对象做 decision input、supervision 或 search guidance
+    -> 分开统计 task outcome、acquisition cost 与 online computation
+```
+
+三笔账始终分开：**信息/取证成本、任务/通信结果、planner computation**。exact 能解不等于信息问题消失；无查询策略存在不等于资源/计算问题消失；closed-loop 成功也不能替代算法计算优势。
+
+当前 Layer 2 已经出现明确的语义收益：future-choice-aware control 能在 held-out hard signatures 上避开 legal-but-harmful query，而 naive no-query 与 earliest-legal-query 可以失败。同时，当前小规模 hard cases 上强 generic exact 仍快于现有 L/U proof stack。后续方法工作因此只允许围绕 context validity、受控结构规模、learned bound/search guidance 展开；不再通过加深 ad-hoc bound search 或修改 benchmark 取得“方法优势”。
+
+learning 是 solver choice，不是问题定义。若 deterministic future-choice certificate 在结构 scaling 上仍无法超过 generic exact，它仍可以作为 learned bound target、search guidance 或 policy supervision；任何 learning 扩展都必须保持冻结 task semantics、evidence contract 与 evaluator 不变。
 
 ## 7. 场景、物理模型与外推边界
 
