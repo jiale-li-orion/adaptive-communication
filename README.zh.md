@@ -1,8 +1,8 @@
 中文 | [English](README.md)
 
-> **当前研究结构：Benchmark → Decision-Semantic Compiler → Policy。** Layer 1 从山区灾前监测的原始现实需求出发，构造 source-grounded Emergency Communication Benchmark，并要求任务在不确定性、资源冲突和时间约束下存在真实 policy choice；Layer 2 将 `Task + Evidence + Capability + Execution` 编译成 typed live decision surface、EvidenceNeed、semantic commitment 与 persistent execution；Layer 3 只有在 Layer 1 通过 validity / hardness gate 后，才比较 deterministic/search、LLM、GNN、offline RL 或 hybrid policy。当前主瓶颈仍在 **Layer 1**。Layer 1 当前状态由 [LAYER1-AUTHORITY](research/benchmark/LAYER1-AUTHORITY.md) 唯一拥有；[CLAIMS](results/CLAIMS.md) 仍是 claim-state authority。58,752 个 candidate recipes 已完成 world/causal materialization、full-universe exact labels、V0–V9 自动过滤与 structure-aware held-out split；2,304 个 V0–V7-pass solver signatures 经 placement-preserving V8 ladder 后剩 73 个 hard signatures，对应 435 个 pre-admission recipes。Q0–Q12 当前为 **12 PASS / 1 BLOCKED**，唯一 release blocker 是 23 条真实人工 source/task/oracle/evaluator 审计。
+# 间歇连接下的智能体通信：基于真实来源的决策基准与未来选择上下文
 
-# 间歇回传下灾前监测的本地通信控制
+> **当前研究结构：来源约束 Benchmark → Future-Choice Context / Decision-Semantic Compiler → Policy / Learning。** Layer 1 已在修正后的 `v0.2-retry-legality` 谱系上完成技术冻结：DB44/T 2457-2024 使用滑坡表 11，retry legality 允许“可能已经交付”后的合法重试，exact→V0–V9→结构化切分→public test 已重新生成。固定 universe 保持 58,752 个 recipes；V8 最终留下 **41 个 hard signatures / 174 个 pre-admission recipes**，冻结 public test 为 **3,804 cases**。Layer 1 现在是后续方法研究的可信底座，不再为制造方法 headroom 反向修改。正式 `BENCHMARK_ADMIT` 仍需完成 v0.2 的人工 source audit 与 release gate 刷新。
 
 研究电池与光伏供电的山区地灾监测网：LoRaWAN Class A 节点接入现场网关，蜂窝主回传配北斗短报文备用；备用仅上行，控制下行会随主回传中断。任务与预警等级由外部授权，系统负责监测要求的通信执行。
 
@@ -12,7 +12,7 @@
 
 **原系统论文阶段（历史状态）：系统论文工作稿。** 这一阶段已经得到组件级正结果，并把配置租约、单节点停止、保留视界等候选收敛为 scoped-negative 边界；完整 runtime 增量、迁移验证与匹配能力 Agent 验证则留给后续阶段。该阶段的设计取舍、负结果和开放问题继续保存在 [论文闭环计划](paper/RESEARCH_PLAN.md) 与 [CLAIMS](results/CLAIMS.md) 中，作为研究谱系的一部分长期保留。
 
-**当前研究主线：先重建 source-grounded Decision Benchmark。** Task 定义 mission constraint，而不是预先指定唯一动作；只有当同一 evidence/capability/execution boundary 下存在多个合法策略，并且策略差异真实进入 physical outcome，才继续比较 Decision-Semantic Compiler 之上的 deterministic/search/LLM/GNN/offline-RL policy。
+**当前研究主线：Benchmark 已进入研究冻结，方法主线转向 future-choice context。** 给定 operational obligations、合法 evidence、capability、剩余资源与 execution state，我们研究哪些动作仍能保持未来义务可完成，哪些缺失证据会改变这个集合，以及什么时候值得为取证支付真实通信成本。Policy / learning 只有在这个决策对象已经被清楚定义、可以由外部 oracle 检查之后才进入比较。
 
 ## 1. 当前论文、历史稿与权威入口
 
