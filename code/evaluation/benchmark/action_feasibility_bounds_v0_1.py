@@ -118,10 +118,108 @@ def causal_upper(bundle: Mapping[str, Any], process: Mapping[str, Any], at_s: in
     return False
 
 
+def causal_lower_certificate(
+    bundle: Mapping[str, Any],
+    process: Mapping[str, Any],
+    at_s: int,
+    states: Mapping[str, LocalState],
+    query_budget: int,
+    depth: int,
+    *,
+    metrics: dict[str, int] | None = None,
+    memo=None,
+) -> dict[str, Any] | None:
+    """Sound depth-k causal lower bound with replayable structural leaves.
+
+    OR nodes choose one legal action; observation nodes require a certificate
+    for every compatible branch.  Leaves accept only the existing satellite or
+    common-opportunity completion certificates.  Failure to find a certificate
+    is unresolved, never an infeasibility claim.
+    """
+    if memo is None:
+        memo = {}
+    branches = _normalize(bundle, process, at_s, states)
+    if len(branches) != 1 or next(iter(branches)) != "same":
+        children = []
+        for observation, child in sorted(branches.items()):
+            sub = causal_lower_certificate(
+                bundle, process, at_s, child, query_budget, depth,
+                metrics=metrics, memo=memo,
+            )
+            if sub is None:
+                return None
+            children.append({
+                "observation": observation,
+                "worlds": sorted(child),
+                "subpolicy": sub,
+            })
+        return {"time_s": at_s, "event": "OBSERVATION", "children": children}
+
+    support = next(iter(branches.values()))
+    key = (at_s, query_budget, depth, tuple(sorted(support.items())))
+    if key in memo:
+        return deepcopy(memo[key])
+    if metrics is not None:
+        metrics["lower_nodes"] = metrics.get("lower_nodes", 0) + 1
+    if any(_expired(bundle, st, at_s) for st in support.values()):
+        memo[key] = None
+        return None
+    if all(_success(bundle, st) for st in support.values()):
+        policy = {"terminal": True}
+        memo[key] = policy
+        return deepcopy(policy)
+
+    # Cheap complete-tail certificates are valid at every depth, including 0.
+    for leaf_name, leaf_fn in (
+        ("satellite", satellite_only_certificate),
+        ("common", common_opportunity_certificate),
+    ):
+        if metrics is not None:
+            metrics[f"lower_{leaf_name}_attempts"] = metrics.get(f"lower_{leaf_name}_attempts", 0) + 1
+        policy = leaf_fn(bundle, at_s, support)
+        if policy is not None:
+            if metrics is not None:
+                metrics[f"lower_{leaf_name}_hits"] = metrics.get(f"lower_{leaf_name}_hits", 0) + 1
+            memo[key] = policy
+            return deepcopy(policy)
+
+    if depth <= 0:
+        memo[key] = None
+        return None
+
+    for action in _legal_actions(bundle, process, support, at_s):
+        dq = int(action[0] == "ISSUE_QUERY")
+        if dq > query_budget:
+            continue
+        stepped = _step(bundle, process, support, at_s, action)
+        if stepped is None:
+            continue
+        child, next_t = stepped
+        sub = causal_lower_certificate(
+            bundle, process, next_t, child, query_budget - dq, depth - 1,
+            metrics=metrics, memo=memo,
+        )
+        if sub is None:
+            continue
+        policy = {
+            "time_s": at_s,
+            "action": action[0],
+            "arg": action[1],
+            "worlds": sorted(support),
+            "subpolicy": sub,
+        }
+        memo[key] = policy
+        return deepcopy(policy)
+
+    memo[key] = None
+    return None
+
+
 class LazyActionFeasibility:
     def __init__(self, bundle: Mapping[str, Any], *, mode: str = "witness_domain",
                  use_upper: bool = True, use_lower: bool = False,
-                 use_common_lower: bool = False, upper_depth: int = 0):
+                 use_common_lower: bool = False, upper_depth: int = 0,
+                 causal_lower_depth: int | None = None):
         self.bundle = deepcopy(bundle)
         self.planner = ContinuationPlanner(self.bundle, mode=mode)
         self.mode = mode
@@ -129,12 +227,15 @@ class LazyActionFeasibility:
         self.use_lower = use_lower
         self.use_common_lower = use_common_lower
         self.upper_depth = upper_depth
+        self.causal_lower_depth = causal_lower_depth
         self.counts = {
             "classified_actions": 0,
             "upper_prunes": 0,
             "upper_nodes": 0,
             "structural_lower_hits": 0,
             "common_lower_hits": 0,
+            "causal_lower_hits": 0,
+            "lower_nodes": 0,
             "certificate_hits": 0,
             "known_failure_hits": 0,
             "exact_fallback_calls": 0,
@@ -181,6 +282,21 @@ class LazyActionFeasibility:
                 verify_witness(self.bundle, next_t, deepcopy(child), policy, query_budget=remaining_q)
                 self.counts["common_lower_hits"] += 1
                 return {"lower": 1, "upper": 1, "solvable": True, "source": "STRUCTURAL_LOWER_COMMON_OPPORTUNITY"}
+
+        if self.causal_lower_depth is not None:
+            lower_metrics: dict[str, int] = {}
+            policy = causal_lower_certificate(
+                self.bundle, self.planner.process, next_t, child, remaining_q,
+                self.causal_lower_depth, metrics=lower_metrics,
+            )
+            self.counts["lower_nodes"] += lower_metrics.get("lower_nodes", 0)
+            if policy is not None:
+                verify_witness(self.bundle, next_t, deepcopy(child), policy, query_budget=remaining_q)
+                self.counts["causal_lower_hits"] += 1
+                return {
+                    "lower": 1, "upper": 1, "solvable": True,
+                    "source": f"CAUSAL_LOWER_D{self.causal_lower_depth}",
+                }
 
         probe = self.planner.solve(next_t, deepcopy(child), query_budget=remaining_q, max_expansions=0)
         if probe["solvable"] is True:

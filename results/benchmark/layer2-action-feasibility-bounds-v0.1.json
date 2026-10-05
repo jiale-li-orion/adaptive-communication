@@ -7,6 +7,14 @@
     "This measures repeated classification on the same twelve frozen cases and exact-policy-prefix boundaries, not benchmark-wide speedup."
   ],
   "incremental_value": {
+    "causal_lower_d1_vs_upper_d0_expansion_delta": -6,
+    "causal_lower_d1_vs_upper_d0_fallback_call_delta": -2,
+    "causal_lower_d2_vs_d1_expansion_delta": -110,
+    "causal_lower_d2_vs_d1_fallback_call_delta": -2,
+    "causal_lower_d4_vs_d2_expansion_delta": 0,
+    "causal_lower_d4_vs_d2_fallback_call_delta": 0,
+    "causal_lower_d6_vs_d4_expansion_delta": 0,
+    "causal_lower_d6_vs_d4_fallback_call_delta": 0,
     "common_lower_vs_satellite_lower_expansion_delta": 0,
     "common_lower_vs_satellite_lower_fallback_call_delta": 0,
     "lower_vs_upper_expansion_delta": 0,
@@ -31,6 +39,7 @@
   "variants": {
     "exact_memo": {
       "all_certified_action_sets_match_reference": true,
+      "causal_lower_depth": null,
       "classification_source_count": {
         "CERTIFICATE_HIT": 286,
         "EXACT_FALLBACK_FAILURE": 45,
@@ -43,6 +52,7 @@
       "exact_fallback_calls": 74,
       "exact_fallback_expanded": 36942,
       "exact_fallback_fraction": 0.115625,
+      "lower_nodes": 0,
       "mode": "exact_memo",
       "rows": [],
       "search_limit_count": 0,
@@ -54,6 +64,7 @@
     },
     "monotone_memo": {
       "all_certified_action_sets_match_reference": true,
+      "causal_lower_depth": null,
       "classification_source_count": {
         "CERTIFICATE_HIT": 286,
         "EXACT_FALLBACK_FAILURE": 45,
@@ -66,6 +77,7 @@
       "exact_fallback_calls": 74,
       "exact_fallback_expanded": 36942,
       "exact_fallback_fraction": 0.115625,
+      "lower_nodes": 0,
       "mode": "monotone_memo",
       "rows": [],
       "search_limit_count": 0,
@@ -77,6 +89,7 @@
     },
     "witness_domain": {
       "all_certified_action_sets_match_reference": true,
+      "causal_lower_depth": null,
       "classification_source_count": {
         "CERTIFICATE_HIT": 286,
         "EXACT_FALLBACK_FAILURE": 45,
@@ -89,6 +102,7 @@
       "exact_fallback_calls": 74,
       "exact_fallback_expanded": 36942,
       "exact_fallback_fraction": 0.115625,
+      "lower_nodes": 0,
       "mode": "witness_domain",
       "rows": [],
       "search_limit_count": 0,
@@ -98,22 +112,78 @@
       "use_lower": false,
       "use_upper": false
     },
-    "witness_domain_plus_common_lower_upper": {
+    "witness_domain_plus_causal_lower_d1_upper_d0": {
       "all_certified_action_sets_match_reference": true,
+      "causal_lower_depth": 1,
       "classification_source_count": {
-        "CERTIFICATE_HIT": 280,
+        "CAUSAL_LOWER_D1": 15,
+        "CERTIFICATE_HIT": 273,
         "EXACT_FALLBACK_FAILURE": 31,
-        "EXACT_FALLBACK_SUCCESS": 29,
+        "EXACT_FALLBACK_SUCCESS": 27,
         "KNOWN_FAILURE_HIT": 204,
         "QUERY_BUDGET_EXHAUSTED": 76,
-        "STRUCTURAL_LOWER_SATELLITE": 6,
         "STRUCTURAL_UPPER_PRUNE_D0": 14
       },
       "classified_action_count": 640,
-      "exact_calls_avoided_after_zero_expansion_probe": 580,
-      "exact_fallback_calls": 60,
-      "exact_fallback_expanded": 35300,
-      "exact_fallback_fraction": 0.09375,
+      "exact_calls_avoided_after_zero_expansion_probe": 582,
+      "exact_fallback_calls": 58,
+      "exact_fallback_expanded": 35294,
+      "exact_fallback_fraction": 0.090625,
+      "lower_nodes": 1436,
+      "mode": "witness_domain",
+      "rows": [],
+      "search_limit_count": 0,
+      "upper_depth": 0,
+      "upper_nodes": 564,
+      "use_common_lower": false,
+      "use_lower": false,
+      "use_upper": true
+    },
+    "witness_domain_plus_causal_lower_d2_upper_d0": {
+      "all_certified_action_sets_match_reference": true,
+      "causal_lower_depth": 2,
+      "classification_source_count": {
+        "CAUSAL_LOWER_D2": 24,
+        "CERTIFICATE_HIT": 266,
+        "EXACT_FALLBACK_FAILURE": 31,
+        "EXACT_FALLBACK_SUCCESS": 25,
+        "KNOWN_FAILURE_HIT": 204,
+        "QUERY_BUDGET_EXHAUSTED": 76,
+        "STRUCTURAL_UPPER_PRUNE_D0": 14
+      },
+      "classified_action_count": 640,
+      "exact_calls_avoided_after_zero_expansion_probe": 584,
+      "exact_fallback_calls": 56,
+      "exact_fallback_expanded": 35184,
+      "exact_fallback_fraction": 0.0875,
+      "lower_nodes": 2676,
+      "mode": "witness_domain",
+      "rows": [],
+      "search_limit_count": 0,
+      "upper_depth": 0,
+      "upper_nodes": 564,
+      "use_common_lower": false,
+      "use_lower": false,
+      "use_upper": true
+    },
+    "witness_domain_plus_causal_lower_d4_upper_d0": {
+      "all_certified_action_sets_match_reference": true,
+      "causal_lower_depth": 4,
+      "classification_source_count": {
+        "CAUSAL_LOWER_D4": 38,
+        "CERTIFICATE_HIT": 252,
+        "EXACT_FALLBACK_FAILURE": 31,
+        "EXACT_FALLBACK_SUCCESS": 25,
+        "KNOWN_FAILURE_HIT": 204,
+        "QUERY_BUDGET_EXHAUSTED": 76,
+        "STRUCTURAL_UPPER_PRUNE_D0": 14
+      },
+      "classified_action_count": 640,
+      "exact_calls_avoided_after_zero_expansion_probe": 584,
+      "exact_fallback_calls": 56,
+      "exact_fallback_expanded": 35184,
+      "exact_fallback_fraction": 0.0875,
+      "lower_nodes": 6444,
       "mode": "witness_domain",
       "rows": [
         {
@@ -722,7 +792,7 @@
                   "action_key": "WAIT:-",
                   "lower": 1,
                   "solvable": true,
-                  "source": "CERTIFICATE_HIT",
+                  "source": "CAUSAL_LOWER_D4",
                   "upper": 1
                 }
               ],
@@ -755,7 +825,7 @@
                   "action_key": "WAIT:-",
                   "lower": 1,
                   "solvable": true,
-                  "source": "CERTIFICATE_HIT",
+                  "source": "CAUSAL_LOWER_D4",
                   "upper": 1
                 }
               ],
@@ -781,7 +851,7 @@
                   "action_key": "WAIT:-",
                   "lower": 1,
                   "solvable": true,
-                  "source": "CERTIFICATE_HIT",
+                  "source": "CAUSAL_LOWER_D4",
                   "upper": 1
                 }
               ],
@@ -807,14 +877,14 @@
                   "action_key": "ISSUE_QUERY:gateway_state_summary",
                   "lower": 1,
                   "solvable": true,
-                  "source": "CERTIFICATE_HIT",
+                  "source": "CAUSAL_LOWER_D4",
                   "upper": 1
                 },
                 {
                   "action_key": "WAIT:-",
-                  "lower": 0,
+                  "lower": 1,
                   "solvable": true,
-                  "source": "EXACT_FALLBACK_SUCCESS",
+                  "source": "CAUSAL_LOWER_D4",
                   "upper": 1
                 }
               ],
@@ -832,12 +902,14 @@
           ],
           "boundary_count": 26,
           "lazy_counts": {
-            "certificate_hits": 25,
+            "causal_lower_hits": 5,
+            "certificate_hits": 21,
             "classified_actions": 56,
             "common_lower_hits": 0,
-            "exact_fallback_calls": 7,
-            "exact_fallback_expanded": 4950,
+            "exact_fallback_calls": 6,
+            "exact_fallback_expanded": 4895,
             "known_failure_hits": 24,
+            "lower_nodes": 696,
             "search_limits": 0,
             "structural_lower_hits": 0,
             "upper_nodes": 56,
@@ -1560,12 +1632,14 @@
           ],
           "boundary_count": 26,
           "lazy_counts": {
+            "causal_lower_hits": 0,
             "certificate_hits": 25,
             "classified_actions": 56,
             "common_lower_hits": 0,
             "exact_fallback_calls": 7,
             "exact_fallback_expanded": 6559,
             "known_failure_hits": 24,
+            "lower_nodes": 778,
             "search_limits": 0,
             "structural_lower_hits": 0,
             "upper_nodes": 56,
@@ -2426,7 +2500,7 @@
                   "action_key": "WAIT:-",
                   "lower": 1,
                   "solvable": true,
-                  "source": "CERTIFICATE_HIT",
+                  "source": "CAUSAL_LOWER_D4",
                   "upper": 1
                 }
               ],
@@ -2452,7 +2526,7 @@
                   "action_key": "WAIT:-",
                   "lower": 1,
                   "solvable": true,
-                  "source": "CERTIFICATE_HIT",
+                  "source": "CAUSAL_LOWER_D4",
                   "upper": 1
                 }
               ],
@@ -2478,7 +2552,7 @@
                   "action_key": "WAIT:-",
                   "lower": 1,
                   "solvable": true,
-                  "source": "CERTIFICATE_HIT",
+                  "source": "CAUSAL_LOWER_D4",
                   "upper": 1
                 }
               ],
@@ -2504,7 +2578,7 @@
                   "action_key": "WAIT:-",
                   "lower": 1,
                   "solvable": true,
-                  "source": "CERTIFICATE_HIT",
+                  "source": "CAUSAL_LOWER_D4",
                   "upper": 1
                 }
               ],
@@ -2523,7 +2597,7 @@
                   "action_key": "SEND_TERR:T1R-7be713bad733ea::report::01",
                   "lower": 1,
                   "solvable": true,
-                  "source": "STRUCTURAL_LOWER_SATELLITE",
+                  "source": "CAUSAL_LOWER_D4",
                   "upper": 1
                 },
                 {
@@ -2535,9 +2609,9 @@
                 },
                 {
                   "action_key": "WAIT:-",
-                  "lower": 0,
+                  "lower": 1,
                   "solvable": true,
-                  "source": "EXACT_FALLBACK_SUCCESS",
+                  "source": "CAUSAL_LOWER_D4",
                   "upper": 1
                 }
               ],
@@ -2565,7 +2639,7 @@
                   "action_key": "WAIT:-",
                   "lower": 1,
                   "solvable": true,
-                  "source": "STRUCTURAL_LOWER_SATELLITE",
+                  "source": "CAUSAL_LOWER_D4",
                   "upper": 1
                 }
               ],
@@ -2591,7 +2665,7 @@
                   "action_key": "WAIT:-",
                   "lower": 1,
                   "solvable": true,
-                  "source": "STRUCTURAL_LOWER_SATELLITE",
+                  "source": "CAUSAL_LOWER_D4",
                   "upper": 1
                 }
               ],
@@ -2607,14 +2681,16 @@
           ],
           "boundary_count": 38,
           "lazy_counts": {
-            "certificate_hits": 34,
+            "causal_lower_hits": 8,
+            "certificate_hits": 30,
             "classified_actions": 81,
             "common_lower_hits": 0,
-            "exact_fallback_calls": 3,
-            "exact_fallback_expanded": 49,
+            "exact_fallback_calls": 2,
+            "exact_fallback_expanded": 46,
             "known_failure_hits": 0,
+            "lower_nodes": 227,
             "search_limits": 0,
-            "structural_lower_hits": 3,
+            "structural_lower_hits": 0,
             "upper_nodes": 43,
             "upper_prunes": 3
           },
@@ -2956,7 +3032,7 @@
                   "action_key": "WAIT:-",
                   "lower": 1,
                   "solvable": true,
-                  "source": "CERTIFICATE_HIT",
+                  "source": "CAUSAL_LOWER_D4",
                   "upper": 1
                 }
               ],
@@ -2982,7 +3058,7 @@
                   "action_key": "WAIT:-",
                   "lower": 1,
                   "solvable": true,
-                  "source": "CERTIFICATE_HIT",
+                  "source": "CAUSAL_LOWER_D4",
                   "upper": 1
                 }
               ],
@@ -3008,7 +3084,7 @@
                   "action_key": "WAIT:-",
                   "lower": 1,
                   "solvable": true,
-                  "source": "CERTIFICATE_HIT",
+                  "source": "CAUSAL_LOWER_D4",
                   "upper": 1
                 }
               ],
@@ -3034,7 +3110,7 @@
                   "action_key": "ISSUE_QUERY:gateway_state_summary",
                   "lower": 1,
                   "solvable": true,
-                  "source": "CERTIFICATE_HIT",
+                  "source": "CAUSAL_LOWER_D4",
                   "upper": 1
                 },
                 {
@@ -3057,12 +3133,14 @@
           ],
           "boundary_count": 16,
           "lazy_counts": {
-            "certificate_hits": 15,
+            "causal_lower_hits": 4,
+            "certificate_hits": 11,
             "classified_actions": 34,
             "common_lower_hits": 0,
             "exact_fallback_calls": 3,
             "exact_fallback_expanded": 350,
             "known_failure_hits": 14,
+            "lower_nodes": 365,
             "search_limits": 0,
             "structural_lower_hits": 0,
             "upper_nodes": 34,
@@ -3507,12 +3585,14 @@
           ],
           "boundary_count": 16,
           "lazy_counts": {
+            "causal_lower_hits": 0,
             "certificate_hits": 15,
             "classified_actions": 34,
             "common_lower_hits": 0,
             "exact_fallback_calls": 3,
             "exact_fallback_expanded": 410,
             "known_failure_hits": 14,
+            "lower_nodes": 396,
             "search_limits": 0,
             "structural_lower_hits": 0,
             "upper_nodes": 34,
@@ -4127,7 +4207,7 @@
                   "action_key": "WAIT:-",
                   "lower": 1,
                   "solvable": true,
-                  "source": "CERTIFICATE_HIT",
+                  "source": "CAUSAL_LOWER_D4",
                   "upper": 1
                 }
               ],
@@ -4160,7 +4240,7 @@
                   "action_key": "WAIT:-",
                   "lower": 1,
                   "solvable": true,
-                  "source": "CERTIFICATE_HIT",
+                  "source": "CAUSAL_LOWER_D4",
                   "upper": 1
                 }
               ],
@@ -4186,7 +4266,7 @@
                   "action_key": "WAIT:-",
                   "lower": 1,
                   "solvable": true,
-                  "source": "CERTIFICATE_HIT",
+                  "source": "CAUSAL_LOWER_D4",
                   "upper": 1
                 }
               ],
@@ -4212,14 +4292,14 @@
                   "action_key": "ISSUE_QUERY:gateway_state_summary",
                   "lower": 1,
                   "solvable": true,
-                  "source": "CERTIFICATE_HIT",
+                  "source": "CAUSAL_LOWER_D4",
                   "upper": 1
                 },
                 {
                   "action_key": "WAIT:-",
-                  "lower": 0,
+                  "lower": 1,
                   "solvable": true,
-                  "source": "EXACT_FALLBACK_SUCCESS",
+                  "source": "CAUSAL_LOWER_D4",
                   "upper": 1
                 }
               ],
@@ -4237,12 +4317,14 @@
           ],
           "boundary_count": 26,
           "lazy_counts": {
-            "certificate_hits": 25,
+            "causal_lower_hits": 5,
+            "certificate_hits": 21,
             "classified_actions": 56,
             "common_lower_hits": 0,
-            "exact_fallback_calls": 7,
-            "exact_fallback_expanded": 4950,
+            "exact_fallback_calls": 6,
+            "exact_fallback_expanded": 4895,
             "known_failure_hits": 24,
+            "lower_nodes": 696,
             "search_limits": 0,
             "structural_lower_hits": 0,
             "upper_nodes": 56,
@@ -4965,12 +5047,14 @@
           ],
           "boundary_count": 26,
           "lazy_counts": {
+            "causal_lower_hits": 0,
             "certificate_hits": 25,
             "classified_actions": 56,
             "common_lower_hits": 0,
             "exact_fallback_calls": 7,
             "exact_fallback_expanded": 6559,
             "known_failure_hits": 24,
+            "lower_nodes": 778,
             "search_limits": 0,
             "structural_lower_hits": 0,
             "upper_nodes": 56,
@@ -5831,7 +5915,7 @@
                   "action_key": "WAIT:-",
                   "lower": 1,
                   "solvable": true,
-                  "source": "CERTIFICATE_HIT",
+                  "source": "CAUSAL_LOWER_D4",
                   "upper": 1
                 }
               ],
@@ -5857,7 +5941,7 @@
                   "action_key": "WAIT:-",
                   "lower": 1,
                   "solvable": true,
-                  "source": "CERTIFICATE_HIT",
+                  "source": "CAUSAL_LOWER_D4",
                   "upper": 1
                 }
               ],
@@ -5883,7 +5967,7 @@
                   "action_key": "WAIT:-",
                   "lower": 1,
                   "solvable": true,
-                  "source": "CERTIFICATE_HIT",
+                  "source": "CAUSAL_LOWER_D4",
                   "upper": 1
                 }
               ],
@@ -5909,7 +5993,7 @@
                   "action_key": "WAIT:-",
                   "lower": 1,
                   "solvable": true,
-                  "source": "CERTIFICATE_HIT",
+                  "source": "CAUSAL_LOWER_D4",
                   "upper": 1
                 }
               ],
@@ -5928,7 +6012,7 @@
                   "action_key": "SEND_TERR:T1R-05d4eda97f06c3::report::01",
                   "lower": 1,
                   "solvable": true,
-                  "source": "STRUCTURAL_LOWER_SATELLITE",
+                  "source": "CAUSAL_LOWER_D4",
                   "upper": 1
                 },
                 {
@@ -5940,9 +6024,9 @@
                 },
                 {
                   "action_key": "WAIT:-",
-                  "lower": 0,
+                  "lower": 1,
                   "solvable": true,
-                  "source": "EXACT_FALLBACK_SUCCESS",
+                  "source": "CAUSAL_LOWER_D4",
                   "upper": 1
                 }
               ],
@@ -5970,7 +6054,7 @@
                   "action_key": "WAIT:-",
                   "lower": 1,
                   "solvable": true,
-                  "source": "STRUCTURAL_LOWER_SATELLITE",
+                  "source": "CAUSAL_LOWER_D4",
                   "upper": 1
                 }
               ],
@@ -5996,7 +6080,7 @@
                   "action_key": "WAIT:-",
                   "lower": 1,
                   "solvable": true,
-                  "source": "STRUCTURAL_LOWER_SATELLITE",
+                  "source": "CAUSAL_LOWER_D4",
                   "upper": 1
                 }
               ],
@@ -6012,14 +6096,16 @@
           ],
           "boundary_count": 38,
           "lazy_counts": {
-            "certificate_hits": 34,
+            "causal_lower_hits": 8,
+            "certificate_hits": 30,
             "classified_actions": 81,
             "common_lower_hits": 0,
-            "exact_fallback_calls": 3,
-            "exact_fallback_expanded": 49,
+            "exact_fallback_calls": 2,
+            "exact_fallback_expanded": 46,
             "known_failure_hits": 0,
+            "lower_nodes": 227,
             "search_limits": 0,
-            "structural_lower_hits": 3,
+            "structural_lower_hits": 0,
             "upper_nodes": 43,
             "upper_prunes": 3
           },
@@ -6361,7 +6447,7 @@
                   "action_key": "WAIT:-",
                   "lower": 1,
                   "solvable": true,
-                  "source": "CERTIFICATE_HIT",
+                  "source": "CAUSAL_LOWER_D4",
                   "upper": 1
                 }
               ],
@@ -6387,7 +6473,7 @@
                   "action_key": "WAIT:-",
                   "lower": 1,
                   "solvable": true,
-                  "source": "CERTIFICATE_HIT",
+                  "source": "CAUSAL_LOWER_D4",
                   "upper": 1
                 }
               ],
@@ -6413,7 +6499,7 @@
                   "action_key": "WAIT:-",
                   "lower": 1,
                   "solvable": true,
-                  "source": "CERTIFICATE_HIT",
+                  "source": "CAUSAL_LOWER_D4",
                   "upper": 1
                 }
               ],
@@ -6439,7 +6525,7 @@
                   "action_key": "ISSUE_QUERY:gateway_state_summary",
                   "lower": 1,
                   "solvable": true,
-                  "source": "CERTIFICATE_HIT",
+                  "source": "CAUSAL_LOWER_D4",
                   "upper": 1
                 },
                 {
@@ -6462,12 +6548,14 @@
           ],
           "boundary_count": 16,
           "lazy_counts": {
-            "certificate_hits": 15,
+            "causal_lower_hits": 4,
+            "certificate_hits": 11,
             "classified_actions": 34,
             "common_lower_hits": 0,
             "exact_fallback_calls": 3,
             "exact_fallback_expanded": 350,
             "known_failure_hits": 14,
+            "lower_nodes": 365,
             "search_limits": 0,
             "structural_lower_hits": 0,
             "upper_nodes": 34,
@@ -6912,12 +7000,14 @@
           ],
           "boundary_count": 16,
           "lazy_counts": {
+            "causal_lower_hits": 0,
             "certificate_hits": 15,
             "classified_actions": 34,
             "common_lower_hits": 0,
             "exact_fallback_calls": 3,
             "exact_fallback_expanded": 410,
             "known_failure_hits": 14,
+            "lower_nodes": 396,
             "search_limits": 0,
             "structural_lower_hits": 0,
             "upper_nodes": 34,
@@ -7565,7 +7655,7 @@
                   "action_key": "WAIT:-",
                   "lower": 1,
                   "solvable": true,
-                  "source": "CERTIFICATE_HIT",
+                  "source": "CAUSAL_LOWER_D4",
                   "upper": 1
                 }
               ],
@@ -7598,7 +7688,7 @@
                   "action_key": "WAIT:-",
                   "lower": 1,
                   "solvable": true,
-                  "source": "CERTIFICATE_HIT",
+                  "source": "CAUSAL_LOWER_D4",
                   "upper": 1
                 }
               ],
@@ -7624,7 +7714,7 @@
                   "action_key": "WAIT:-",
                   "lower": 1,
                   "solvable": true,
-                  "source": "CERTIFICATE_HIT",
+                  "source": "CAUSAL_LOWER_D4",
                   "upper": 1
                 }
               ],
@@ -7650,7 +7740,7 @@
                   "action_key": "ISSUE_QUERY:gateway_state_summary",
                   "lower": 1,
                   "solvable": true,
-                  "source": "CERTIFICATE_HIT",
+                  "source": "CAUSAL_LOWER_D4",
                   "upper": 1
                 },
                 {
@@ -7673,12 +7763,14 @@
           ],
           "boundary_count": 27,
           "lazy_counts": {
-            "certificate_hits": 26,
+            "causal_lower_hits": 4,
+            "certificate_hits": 22,
             "classified_actions": 59,
             "common_lower_hits": 0,
             "exact_fallback_calls": 7,
             "exact_fallback_expanded": 4537,
             "known_failure_hits": 26,
+            "lower_nodes": 745,
             "search_limits": 0,
             "structural_lower_hits": 0,
             "upper_nodes": 59,
@@ -8432,12 +8524,14 @@
           ],
           "boundary_count": 27,
           "lazy_counts": {
+            "causal_lower_hits": 0,
             "certificate_hits": 26,
             "classified_actions": 59,
             "common_lower_hits": 0,
             "exact_fallback_calls": 7,
             "exact_fallback_expanded": 6127,
             "known_failure_hits": 26,
+            "lower_nodes": 775,
             "search_limits": 0,
             "structural_lower_hits": 0,
             "upper_nodes": 59,
@@ -8450,12 +8544,40 @@
       "search_limit_count": 0,
       "upper_depth": 0,
       "upper_nodes": 564,
-      "use_common_lower": true,
-      "use_lower": true,
+      "use_common_lower": false,
+      "use_lower": false,
       "use_upper": true
     },
-    "witness_domain_plus_lower_upper": {
+    "witness_domain_plus_causal_lower_d6_upper_d0": {
       "all_certified_action_sets_match_reference": true,
+      "causal_lower_depth": 6,
+      "classification_source_count": {
+        "CAUSAL_LOWER_D6": 52,
+        "CERTIFICATE_HIT": 238,
+        "EXACT_FALLBACK_FAILURE": 31,
+        "EXACT_FALLBACK_SUCCESS": 25,
+        "KNOWN_FAILURE_HIT": 204,
+        "QUERY_BUDGET_EXHAUSTED": 76,
+        "STRUCTURAL_UPPER_PRUNE_D0": 14
+      },
+      "classified_action_count": 640,
+      "exact_calls_avoided_after_zero_expansion_probe": 584,
+      "exact_fallback_calls": 56,
+      "exact_fallback_expanded": 35184,
+      "exact_fallback_fraction": 0.0875,
+      "lower_nodes": 11946,
+      "mode": "witness_domain",
+      "rows": [],
+      "search_limit_count": 0,
+      "upper_depth": 0,
+      "upper_nodes": 564,
+      "use_common_lower": false,
+      "use_lower": false,
+      "use_upper": true
+    },
+    "witness_domain_plus_common_lower_upper": {
+      "all_certified_action_sets_match_reference": true,
+      "causal_lower_depth": null,
       "classification_source_count": {
         "CERTIFICATE_HIT": 280,
         "EXACT_FALLBACK_FAILURE": 31,
@@ -8470,6 +8592,34 @@
       "exact_fallback_calls": 60,
       "exact_fallback_expanded": 35300,
       "exact_fallback_fraction": 0.09375,
+      "lower_nodes": 0,
+      "mode": "witness_domain",
+      "rows": [],
+      "search_limit_count": 0,
+      "upper_depth": 0,
+      "upper_nodes": 564,
+      "use_common_lower": true,
+      "use_lower": true,
+      "use_upper": true
+    },
+    "witness_domain_plus_lower_upper": {
+      "all_certified_action_sets_match_reference": true,
+      "causal_lower_depth": null,
+      "classification_source_count": {
+        "CERTIFICATE_HIT": 280,
+        "EXACT_FALLBACK_FAILURE": 31,
+        "EXACT_FALLBACK_SUCCESS": 29,
+        "KNOWN_FAILURE_HIT": 204,
+        "QUERY_BUDGET_EXHAUSTED": 76,
+        "STRUCTURAL_LOWER_SATELLITE": 6,
+        "STRUCTURAL_UPPER_PRUNE_D0": 14
+      },
+      "classified_action_count": 640,
+      "exact_calls_avoided_after_zero_expansion_probe": 580,
+      "exact_fallback_calls": 60,
+      "exact_fallback_expanded": 35300,
+      "exact_fallback_fraction": 0.09375,
+      "lower_nodes": 0,
       "mode": "witness_domain",
       "rows": [],
       "search_limit_count": 0,
@@ -8481,6 +8631,7 @@
     },
     "witness_domain_plus_upper_d0": {
       "all_certified_action_sets_match_reference": true,
+      "causal_lower_depth": null,
       "classification_source_count": {
         "CERTIFICATE_HIT": 286,
         "EXACT_FALLBACK_FAILURE": 31,
@@ -8494,6 +8645,7 @@
       "exact_fallback_calls": 60,
       "exact_fallback_expanded": 35300,
       "exact_fallback_fraction": 0.09375,
+      "lower_nodes": 0,
       "mode": "witness_domain",
       "rows": [],
       "search_limit_count": 0,
@@ -8505,6 +8657,7 @@
     },
     "witness_domain_plus_upper_d1": {
       "all_certified_action_sets_match_reference": true,
+      "causal_lower_depth": null,
       "classification_source_count": {
         "CERTIFICATE_HIT": 286,
         "EXACT_FALLBACK_FAILURE": 31,
@@ -8518,6 +8671,7 @@
       "exact_fallback_calls": 60,
       "exact_fallback_expanded": 35300,
       "exact_fallback_fraction": 0.09375,
+      "lower_nodes": 0,
       "mode": "witness_domain",
       "rows": [],
       "search_limit_count": 0,
@@ -8529,6 +8683,7 @@
     },
     "witness_domain_plus_upper_d2": {
       "all_certified_action_sets_match_reference": true,
+      "causal_lower_depth": null,
       "classification_source_count": {
         "CERTIFICATE_HIT": 286,
         "EXACT_FALLBACK_FAILURE": 31,
@@ -8542,6 +8697,7 @@
       "exact_fallback_calls": 60,
       "exact_fallback_expanded": 35300,
       "exact_fallback_fraction": 0.09375,
+      "lower_nodes": 0,
       "mode": "witness_domain",
       "rows": [],
       "search_limit_count": 0,
@@ -8553,6 +8709,7 @@
     },
     "witness_domain_plus_upper_d4": {
       "all_certified_action_sets_match_reference": true,
+      "causal_lower_depth": null,
       "classification_source_count": {
         "CERTIFICATE_HIT": 286,
         "EXACT_FALLBACK_FAILURE": 27,
@@ -8566,6 +8723,7 @@
       "exact_fallback_calls": 56,
       "exact_fallback_expanded": 35052,
       "exact_fallback_fraction": 0.0875,
+      "lower_nodes": 0,
       "mode": "witness_domain",
       "rows": [],
       "search_limit_count": 0,
@@ -8577,6 +8735,7 @@
     },
     "witness_domain_plus_upper_d6": {
       "all_certified_action_sets_match_reference": true,
+      "causal_lower_depth": null,
       "classification_source_count": {
         "CERTIFICATE_HIT": 286,
         "EXACT_FALLBACK_FAILURE": 27,
@@ -8590,6 +8749,7 @@
       "exact_fallback_calls": 56,
       "exact_fallback_expanded": 35052,
       "exact_fallback_fraction": 0.0875,
+      "lower_nodes": 0,
       "mode": "witness_domain",
       "rows": [],
       "search_limit_count": 0,
