@@ -1,6 +1,6 @@
 # Layer-2 v2 — Future-Choice / L-U
 
-状态：**DEV PASS / HELD-OUT PASS**
+状态：**PLANNING KERNEL DEV+HELD-OUT PASS / FULL METHOD CONTRACT PENDING**
 
 Layer-2 v2 针对 frozen v1 已确认的 category-C failure：v1 能识别 unresolved owner evidence，却不会判断“此刻取证以后，未来 obligation feasibility 是否仍成立”。Layer-1 v0.2 中 query 是真实通信 action，会消耗时间和通信机会，因此 evidence relevance 与 acquisition timing 必须在同一 causal state transition 内评估。
 
@@ -80,7 +80,23 @@ dev ablation 比较了 `root_query / query_recursive / all_recursive / none`。�
 - 18 / 18 expansions 更低；
 - 15 / 18 wall 更低。
 
-因此 dev 阶段已经满足 `cache06.md` 要求的最低系统门：结果不再只是“少 memo node”，而是在相同 task quality / 相同资源点下同时降低 search expansion 与真实 wall time。
+因此 dev/held-out 已经证明这套 future-choice L/U kernel 不只是“少 memo node”：相对仓库 generic exact，它在相同 task quality / 相同资源点下同时降低 search expansion 与真实 wall time。但这只是 `cache06.md` 完整方法合同中的 **planning-kernel gate**，不能等价成 Layer-2 v2 已毕业。
+
+## 4.1 Gap to the original cache06 method contract
+
+原始 `cache06.md` 对 v0.5/Layer-2 v2 的要求高于当前 kernel。以下项目仍然是正式 open gate：
+
+- **动态条件前沿**：显式维护哪些后续方案仍可行、依赖哪些 evidence/resource/pending-execution 条件，而不只在一次 exact search 内做 memo；
+- **证书有效域与局部失效**：证书应在一段资源/机会条件上复用，并由 ACK、发送承诺、窗口关闭、新 obligation、证据老化等事件精确失效；
+- **incremental/full-rebuild 等价**：对每条合法事件前缀核对保留的可行行动、成本前沿和证书有效性，而不只比较最终成功或 minimal resource point；
+- **完整 correctness gates**：non-anticipativity、bound soundness、pruning preservation、历史事实/当前推断分离都需要全前缀机器审计；当前 soundness test 只是代表性 smoke + 端到端 exact outcome 对账；
+- **强基线 ladder**：补 gateway local autonomy、passive-only、normal-send-as-probe、fixed periodic/batch evidence、真正 depth-k belief/receding-horizon、普通 incremental AND-OR/dependency-tracking 等原文指定对照；
+- **方法归因**：当前 same-order exact 在 held-out wall time 上仍快于 v2（0.041 s vs 0.050 s），所以“L/U 相对强同序实现的净计算优势”尚未通过；
+- **结构留出**：当前 held-out 是 frozen solver-signature split，仍需按冲突宽度/重叠结构/事件交错做 method-level structural holdout；
+- **三笔账与系统前沿**：分别落盘 gateway-local evidence、remote acquisition、planner computation，并最终比较 task-quality / acquisition-cost / computation frontier；当前主要完成 planner compute；
+- **ASC system claim**：当前 hard family 只有 `gateway_state_summary` 这一类 owner query，尚未证明异构 evidence acquisition、evidence ageing/revalidation 与 layered recovery 组成的完整 autonomous-information-construction 闭环。
+
+在这些门关闭前，Layer 3 learning 只能作为 search/context 的辅助实验，不能替代 Layer-2 v2 方法验收。
 
 ## 5. Held-out result
 
