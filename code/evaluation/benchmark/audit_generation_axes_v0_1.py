@@ -17,6 +17,8 @@ AXES = ROOT / "research/benchmark/GENERATION-AXES.v0.1.json"
 SOURCE = ROOT / "research/benchmark/profiles/v0.1/SOURCE-PROFILE-REGISTRY.v0.1.json"
 CAPS = ROOT / "research/benchmark/profiles/v0.1/CAPABILITY-PROFILE-REGISTRY.v0.1.json"
 MANIFEST = ROOT / "research/benchmark/PROFILE-BUNDLE-MANIFEST.v0.1.json"
+TRACE_REGISTRY = ROOT / "research/benchmark/profiles/v0.1/TRACE-PROFILE-REGISTRY.v0.1.json"
+TRACE_REGISTRY = ROOT / "research/benchmark/profiles/v0.1/TRACE-PROFILE-REGISTRY.v0.1.json"
 
 
 def _load(path: Path):
@@ -36,6 +38,8 @@ def main() -> int:
     src = _load(SOURCE)
     caps = _load(CAPS)
     manifest = _load(MANIFEST)
+    trace_registry = _load(TRACE_REGISTRY)
+    trace_registry = _load(TRACE_REGISTRY)
 
     assert axes["status"] == "FROZEN_FOR_LAYER1_REBUILD"
     assert axes["scope"]["family"] == "T1_MONITORING_INFORMATION_CONTINUITY"
@@ -69,6 +73,16 @@ def main() -> int:
     manifest_row = next(row for row in manifest["files"] if row["path"] == rel)
     digest = hashlib.sha256(trace.read_bytes()).hexdigest()
     assert digest == manifest_row["sha256"], "public geometry trace drifted from frozen profile bundle"
+    trace_profile = next(
+        row for row in trace_registry["profiles"]
+        if row["trace_profile_id"] == axes["model_derived"]["satellite_geometry"]["trace_profile"]
+    )
+    assert axes["model_derived"]["satellite_geometry"]["elevation_mask_deg"] == trace_profile["variables"]["elevation_mask_deg"]["values"]
+    trace_profile = next(
+        row for row in trace_registry["profiles"]
+        if row["trace_profile_id"] == axes["model_derived"]["satellite_geometry"]["trace_profile"]
+    )
+    assert axes["model_derived"]["satellite_geometry"]["elevation_mask_deg"] == trace_profile["variables"]["elevation_mask_deg"]["values"]
 
     cs = axes["controlled_stress"]
     assert cs["obligation_composition"]["stream_count"] == 2
@@ -77,6 +91,8 @@ def main() -> int:
     assert cs["terrestrial_service_process"]["probability_model"] is None
     assert cs["terrestrial_opportunities"]["phase_ratios"] == [0.25, 0.75]
     assert set(cs["terrestrial_opportunities"]["capacity_units"]) == {1, 2}
+    assert cs["satellite_window_capacity_units"] == 1
+    assert cs["satellite_window_capacity_units"] == 1
 
     for row in cs["feedback_timing_profiles"]:
         r = float(row["gateway_receipt_delay_over_deadline"])
