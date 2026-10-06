@@ -1,0 +1,129 @@
+{
+  "root_cause": {
+    "control_check": "FULL_BINARY_SUPPORT retains ALL_DOWN and TIGHT=n collapse under unchanged resource/evidence axes",
+    "logical_chain": [
+      "v0.6 recovery-named candidate supports include ALL_DOWN",
+      "all-world-physical admission requires ALL_DOWN to be individually solvable",
+      "TIGHT is max per-world minimum backup demand",
+      "ALL_DOWN therefore forces TIGHT to equal obligation count",
+      "satellite opportunity schedule is public and world-invariant",
+      "ALL_DOWN physical feasibility certifies a satellite-only completion schedule",
+      "the same public schedule is consequently blind and common-safe across every compatible world"
+    ],
+    "not_root_causes": [
+      "query payload",
+      "ACK timing",
+      "learned method weakness/strength",
+      "ordinary baseline implementation",
+      "Connecta geometry selection"
+    ],
+    "v07_correction": "candidate process support semantics only"
+  },
+  "schema_version": "0.1",
+  "stage": "V06_V07_ROOT_CAUSE_AUDIT",
+  "v06": {
+    "all_world_physical_bases": 46770,
+    "by_family": {
+      "FULL_BINARY_SUPPORT": {
+        "bases": 15590,
+        "contains_all_down": 15590,
+        "contains_all_up": 15590,
+        "role::V06_UNTYPED": 15590,
+        "tight_equals_obligation_count": 15590,
+        "tight_less_than_obligation_count": 0
+      },
+      "REINTERRUPTIBLE": {
+        "bases": 15590,
+        "contains_all_down": 15590,
+        "contains_all_up": 15590,
+        "role::V06_UNTYPED": 15590,
+        "tight_equals_obligation_count": 15590,
+        "tight_less_than_obligation_count": 0
+      },
+      "SINGLE_RECOVERY": {
+        "bases": 15590,
+        "contains_all_down": 15590,
+        "contains_all_up": 15590,
+        "role::V06_UNTYPED": 15590,
+        "tight_equals_obligation_count": 15590,
+        "tight_less_than_obligation_count": 0
+      }
+    },
+    "run": "layer1-v0.6-preoracle-r4",
+    "tight_distribution_by_family": {
+      "FULL_BINARY_SUPPORT": {
+        "n=4,tight=4": 6394,
+        "n=6,tight=6": 9196
+      },
+      "REINTERRUPTIBLE": {
+        "n=4,tight=4": 6394,
+        "n=6,tight=6": 9196
+      },
+      "SINGLE_RECOVERY": {
+        "n=4,tight=4": 6394,
+        "n=6,tight=6": 9196
+      }
+    },
+    "version": "v0.6"
+  },
+  "v07": {
+    "all_world_physical_bases": 74952,
+    "by_family": {
+      "FULL_BINARY_SUPPORT": {
+        "bases": 15590,
+        "contains_all_down": 15590,
+        "contains_all_up": 15590,
+        "role::DIAGNOSTIC_CONTROL": 15590,
+        "tight_equals_obligation_count": 15590,
+        "tight_less_than_obligation_count": 0
+      },
+      "REINTERRUPTIBLE": {
+        "bases": 15738,
+        "contains_all_down": 0,
+        "contains_all_up": 0,
+        "role::CANDIDATE": 15738,
+        "tight_equals_obligation_count": 0,
+        "tight_less_than_obligation_count": 15738
+      },
+      "SINGLE_RECOVERY": {
+        "bases": 17772,
+        "contains_all_down": 0,
+        "contains_all_up": 0,
+        "role::CANDIDATE": 17772,
+        "tight_equals_obligation_count": 0,
+        "tight_less_than_obligation_count": 17772
+      },
+      "STEADY_AVAILABLE_CONTROL": {
+        "bases": 25852,
+        "contains_all_down": 0,
+        "contains_all_up": 25852,
+        "role::CONTROL": 25852,
+        "tight_equals_obligation_count": 0,
+        "tight_less_than_obligation_count": 25852
+      }
+    },
+    "run": "layer1-v0.7-preoracle-r1",
+    "tight_distribution_by_family": {
+      "FULL_BINARY_SUPPORT": {
+        "n=4,tight=4": 6394,
+        "n=6,tight=6": 9196
+      },
+      "REINTERRUPTIBLE": {
+        "n=4,tight=2": 3262,
+        "n=4,tight=3": 3262,
+        "n=6,tight=4": 7061,
+        "n=6,tight=5": 2153
+      },
+      "SINGLE_RECOVERY": {
+        "n=4,tight=2": 7450,
+        "n=6,tight=4": 10322
+      },
+      "STEADY_AVAILABLE_CONTROL": {
+        "n=4,tight=0": 9162,
+        "n=6,tight=0": 16690
+      }
+    },
+    "version": "v0.7"
+  },
+  "verdict": "V06_INVALIDATION_CAUSE_IS_PROCESS_SUPPORT_X_WORST_WORLD_PROVISIONING_INTERACTION"
+}
