@@ -1,0 +1,230 @@
+{
+  "authority": {
+    "freeze_rule": "After this file enters git history, values may change only for source/correctness defects or an explicitly versioned new benchmark generation; baseline/proposed-method outcomes are not a valid reason.",
+    "human_context": [
+      "/home/orion/Communications/调研cache.md",
+      "/home/orion/Communications/cache06.md#v0.5-process-contract-and-admission-gates"
+    ],
+    "lineage_reason": "v0.6 global V3 failure exposed a semantic mismatch: process families named recovery/reinterruptible admitted ALL_DOWN no-recovery trajectories; v0.7 corrects support predicates only and preserves every other generation axis.",
+    "parent_generation_axes": "research/benchmark/GENERATION-AXES.v0.1.json",
+    "repository_contract": "research/benchmark/ENVIRONMENT-GENERATION-CONTRACT.v0.1.md"
+  },
+  "controlled_stress": {
+    "evidence_capabilities": {
+      "dedicated_query": {
+        "id": "receipt_summary",
+        "owner": "gateway",
+        "proposition": "communication.gateway.receipt_summary",
+        "value_rule": "sample only gateway receipts that have actually occurred by the owner-read time; never encode current/future service state or future opportunity identity"
+      },
+      "final_ack_or_timeout": true,
+      "normal_send_as_probe": true
+    },
+    "fallback_budget_modes": [
+      {
+        "id": "TIGHT",
+        "rule": "derive from the maximum per-world minimum backup demand under full current-state knowledge"
+      },
+      {
+        "id": "BALANCED",
+        "rule": "TIGHT + 1 normalized backup unit, capped at obligation count"
+      },
+      {
+        "id": "SLACK_CONTROL",
+        "rule": "enough normalized backup units to cover every obligation"
+      }
+    ],
+    "feedback_timing_profiles": [
+      {
+        "final_ack_delay_over_deadline": 0.0,
+        "gateway_receipt_delay_over_deadline": 0.0,
+        "id": "IMMEDIATE_CONTROL"
+      },
+      {
+        "final_ack_delay_over_deadline": 0.5,
+        "gateway_receipt_delay_over_deadline": 0.125,
+        "id": "EARLY_RECEIPT_MID_ACK"
+      },
+      {
+        "final_ack_delay_over_deadline": 1.0,
+        "gateway_receipt_delay_over_deadline": 0.125,
+        "id": "EARLY_RECEIPT_LATE_ACK"
+      }
+    ],
+    "obligation_composition": {
+      "minimum_dynamic_release_stages": 3,
+      "minimum_dynamic_release_stages_rule": "compositions with fewer than three distinct release stages are not materialized into dynamic candidate families; this is frozen from cache06 v0.5 process contract, not a hardness filter",
+      "obligations_per_stream": [
+        2,
+        3
+      ],
+      "rationale": "cache06 v0.5 requires two existing report streams, four to six obligations and at least three decision stages. Phase is a declared composition stress because the source fixes cadence but not cross-node synchronization.",
+      "stream_count": 2,
+      "stream_phase_modes": [
+        "ALIGNED",
+        "HALF_PERIOD_OFFSET"
+      ]
+    },
+    "remote_query_response_delay_over_deadline": [
+      0.0,
+      0.25,
+      0.5
+    ],
+    "remote_query_transport": {
+      "center_placement": "uses the same terrestrial opportunity/capacity ledger as data delivery; if the required path is unavailable the request/response may timeout",
+      "future_state_access": false,
+      "gateway_placement": "owner-local read; no remote request is charged and no center return-path delay is inherited"
+    },
+    "satellite_window_capacity_units": 1,
+    "terrestrial_opportunities": {
+      "capacity_units": [
+        1,
+        2
+      ],
+      "claim_boundary": "not bytes, airtime or field throughput",
+      "per_reporting_interval": 2,
+      "phase_ratios": [
+        0.25,
+        0.75
+      ],
+      "unit_semantics": "normalized opportunity capacity; one SEND_TERR or center-side remote query consumes one unit when they share the same path"
+    },
+    "terrestrial_service_process": {
+      "probability_model": null,
+      "rationale": "cache06 requires a finite-state opportunity process that can recover and reinterrupt. v0.6 incorrectly allowed ALL_DOWN to satisfy recovery-family predicates; v0.7 makes family names semantically true while retaining FULL_BINARY_SUPPORT as the explicit long-outage diagnostic control.",
+      "state_space": [
+        "UP",
+        "DOWN"
+      ],
+      "support_families": [
+        {
+          "definition": "singleton support containing the all-UP stage sequence; retained as an easy conformance/control family",
+          "id": "STEADY_AVAILABLE_CONTROL",
+          "role": "CONTROL"
+        },
+        {
+          "definition": "all stage-state sequences with exactly one contiguous DOWN run and at least one later UP stage, so an outage actually occurs and recovers within the declared horizon",
+          "id": "SINGLE_RECOVERY",
+          "role": "CANDIDATE"
+        },
+        {
+          "definition": "all stage-state sequences with one or two DOWN runs, at least one DOWN-to-UP recovery within the declared horizon, and support containing trajectories that can enter a second DOWN run after recovery when the stage count permits",
+          "id": "REINTERRUPTIBLE",
+          "role": "CANDIDATE"
+        },
+        {
+          "definition": "all UP/DOWN stage-state sequences for the declared finite stage set; retained as an upper-support diagnostic and expected to expose worst-case provisioning shortcuts",
+          "id": "FULL_BINARY_SUPPORT",
+          "role": "DIAGNOSTIC_CONTROL"
+        }
+      ]
+    }
+  },
+  "evaluation_coordinates_not_generator_targets": [
+    "gateway placement vs center placement",
+    "no-paid-query",
+    "perfect-current-observation",
+    "remove-shared-resource-conflict",
+    "instant-ACK",
+    "relaxed-window/deadline",
+    "ordinary baseline ladder"
+  ],
+  "forbidden_generator_dependencies": [
+    "Layer-2 future-choice method score",
+    "Layer-3 learner score",
+    "any baseline success/failure result",
+    "handpicked ACK/query delay chosen after observing an evaluated policy",
+    "hidden future opportunity encoded into evidence values",
+    "selective deletion of source/model-derived communication opportunities",
+    "invented source priority or sacrifice weights"
+  ],
+  "model_derived": {
+    "satellite_geometry": {
+      "elevation_mask_deg": [
+        0,
+        5,
+        10,
+        20,
+        30
+      ],
+      "rule": "Preserve every eligible model-derived opportunity inside each selected public geometry slice; do not selectively hide or delete windows for hardness.",
+      "signature_rule": "For each obligation horizon, enumerate every 1800-s start whose horizon fits the frozen 48h trace; preserve all window starts inside the slice; deduplicate only exact/300-s-rounded relative timing shapes, never by baseline outcome.",
+      "slice_start_stride_s": 1800,
+      "trace_path": "research/benchmark/traces/v0.1/CONNECTA_20260922_SIHUI_GEOMETRY_48H.json",
+      "trace_profile": "CONNECTA_20260922_SIHUI_GEOMETRY_48H"
+    }
+  },
+  "natural_feedback_always_enabled": [
+    "normal SEND_TERR as probe",
+    "gateway receipt",
+    "final ACK or timeout",
+    "execution trace visible at its lawful owner",
+    "passive telemetry if provided by the source/profile"
+  ],
+  "required_output_partitions": [
+    "PHYSICAL_INVALID",
+    "INFORMATION_INFEASIBLE",
+    "EASY_OR_COMMON_SAFE",
+    "SHORTCUT_SOLVED",
+    "HARD_SURVIVOR"
+  ],
+  "schema_version": "0.2",
+  "scope": {
+    "excluded_for_v0_6": [
+      "battery dynamics",
+      "cache overflow",
+      "random warning-state transitions",
+      "T2 actor-chain warning handoff",
+      "unresolved backlog-vs-fresh priority"
+    ],
+    "family": "T1_MONITORING_INFORMATION_CONTINUITY",
+    "phase": "pre-disaster monitoring",
+    "primary_task_profile": "DB44T2457_2024_warning_reporting",
+    "supporting_operational_profiles": [
+      "DZT0450_2023_disconnect_recovery",
+      "JIAOZUO_2024_geohazard_monitoring_deployment"
+    ]
+  },
+  "source_owned": {
+    "cache_recovery_semantics": {
+      "forbidden_inference": "do not invent backlog-vs-fresh priority",
+      "minimum_cache_days": 7,
+      "profile": "DZT0450_2023_disconnect_recovery",
+      "reconnect_rule": "cached monitoring records remain recoverable after communication restoration"
+    },
+    "communication_capability": {
+      "block_read_local_history": true,
+      "profile": "JIAOZUO_2024_geohazard_monitoring_deployment",
+      "remote_state_read": true,
+      "source_priority": [
+        "NB",
+        "4G/5G",
+        "BeiDou"
+      ]
+    },
+    "completion_predicate": "timely_complete_report",
+    "task_contract_rule": "Enumerate every DB44/T 2457-2024 landslide grade×warning-state reporting cell whose source-resolved interval fits the frozen geometry horizon for the requested obligation composition. No cadence value is invented or interpolated."
+  },
+  "status": "FROZEN_FOR_LAYER1_V07_REBUILD",
+  "structural_split_keys": [
+    "source task cell",
+    "obligation count and phase mode",
+    "terrestrial process support family",
+    "opportunity-capacity topology",
+    "satellite geometry signature",
+    "feedback timing profile",
+    "evidence/placement topology",
+    "fallback-headroom mode"
+  ],
+  "v07_change_scope": {
+    "changed_axes": [
+      "controlled_stress.terrestrial_service_process.support_families",
+      "controlled_stress.obligation_composition.minimum_dynamic_release_stages"
+    ],
+    "fallback_budget_derivation_changed": false,
+    "feedback_or_query_timing_changed": false,
+    "satellite_geometry_changed": false,
+    "source_task_contract_changed": false,
+    "unchanged_axes_requirement": "all source-owned, model-derived, geometry, terrestrial capacity, feedback timing, query timing, evidence, and fallback-budget rules must byte/semantic-match v0.1 except for version/lineage metadata"
+  }
+}
