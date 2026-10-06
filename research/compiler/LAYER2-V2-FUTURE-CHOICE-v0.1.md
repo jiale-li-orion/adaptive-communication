@@ -1,6 +1,6 @@
 # Layer-2 v2 — Future-Choice / L-U
 
-状态：**DETERMINISTIC DEV FREEZE CANDIDATE / STRONG WALL GATE OPEN / INDEPENDENT STRUCTURAL HOLDOUT UNRESOLVED**
+状态：**DETERMINISTIC CORE FROZEN ON DEV / STRONG WALL GATE OPEN_NEGATIVE / INDEPENDENT STRUCTURAL HOLDOUT UNRESOLVED**
 
 Layer-2 v2 针对 frozen v1 已确认的 category-C failure：v1 能识别 unresolved owner evidence，却不会判断“此刻取证以后，未来 obligation feasibility 是否仍成立”。Layer-1 v0.2 中 query 是真实通信 action，会消耗时间和通信机会，因此 evidence relevance 与 acquisition timing 必须在同一 causal state transition 内评估。
 
