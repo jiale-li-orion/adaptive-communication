@@ -99,7 +99,7 @@ Generator 枚举完整 support，不附加现场概率。证据不能读取未�
 2. 以 1800s stride 枚举所有 horizon-fitting slices；
 3. 保留 slice 内全部 window starts；
 4. 以 300s-rounded relative `(start,end)` shape 去重；
-5. 相同 shape 只保存最早 representative slice，并记录等价 slice 数；
+5. 相同 shape 只保存最早 representative slice，并记录等价 slice 数与全部 `equivalent_slice_starts_s`，确保 signature 可反查原始 trace 切片；
 6. 不读取任何 policy / baseline 结果。
 
 每个 visible window 的 v0.6 normalized capacity 固定为 1；这只是可审计的 opportunity unit，不声称 PHY throughput 或历史部署服务可用性。

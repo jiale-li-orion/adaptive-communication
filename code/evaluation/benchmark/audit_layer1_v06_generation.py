@@ -83,6 +83,9 @@ def audit(out_dir: Path) -> dict[str, Any]:
         })
         assert row["geometry_signature_id"] == expected
         assert row["elevation_mask_deg"] in axes["model_derived"]["satellite_geometry"]["elevation_mask_deg"]
+        assert row["equivalent_slice_count"] == len(row["equivalent_slice_starts_s"])
+        assert row["equivalent_slice_starts_s"] == sorted(row["equivalent_slice_starts_s"])
+        assert row["representative_slice_start_s"] == row["equivalent_slice_starts_s"][0]
         geometry_ids.add(expected)
         geometry_shapes[expected] = row["rounded_shape_s"]
 
@@ -179,7 +182,9 @@ def main() -> int:
     args = parser.parse_args()
     result = audit(args.out)
     if args.reproduce:
-        with tempfile.TemporaryDirectory(prefix="layer1-v06-repro-") as td:
+        repro_parent = ROOT / "local_research/current/benchmark/generated"
+        repro_parent.mkdir(parents=True, exist_ok=True)
+        with tempfile.TemporaryDirectory(prefix="layer1-v06-repro-", dir=repro_parent) as td:
             repro = Path(td)
             generated = generate(repro)
             original = _read_json(args.out.resolve() / "MANIFEST.json")

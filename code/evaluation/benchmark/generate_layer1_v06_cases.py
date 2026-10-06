@@ -211,10 +211,12 @@ def _geometry_catalog(trace: dict[str, Any], axes: dict[str, Any], horizon_s: in
                     "horizon_s": horizon_s,
                     "representative_slice_start_s": start,
                     "equivalent_slice_count": 0,
+                    "equivalent_slice_starts_s": [],
                     "relative_windows_s": [[a, b] for a, b in rel],
                     "rounded_shape_s": [[a, b] for a, b in rounded],
                 }
             by_shape[key]["equivalent_slice_count"] += 1
+            by_shape[key]["equivalent_slice_starts_s"].append(start)
     rows = []
     for (_mask, _shape), row in sorted(by_shape.items(), key=lambda kv: (kv[0][0], kv[1]["representative_slice_start_s"], kv[0][1])):
         payload = {
