@@ -319,7 +319,18 @@ receipt-race、overlapping receipt chain、joint query–satellite Pareto、reso
 
 ## 13. 当前唯一主工程
 
-当前 Layer 1 的机器侧 construction / release evidence 已完成；公开 `BENCHMARK_ADMIT` 只剩不可自动代签的 Q11 human/source review。执行顺序固定为：
+**2026-10-06 correction：此前“机器侧 construction 已完成、Q11 是唯一 blocker”的判断撤回。** 该判断只检查了既有 generator 内部的 release checklist，没有检查 V8 survivors 是否真正覆盖 `cache06.md` 冻结的 dynamic-process mechanism space。最新 hard-survivor audit 发现：174 hard recipes / 41 signatures 全部坍缩到同一 `FINITE_CROSSING_WINDOWS + GATEWAY_SUMMARY_QUERY + H2×H3×H4` mechanism family；`PASSIVE_ACK_ONLY`、`MIXED_PASSIVE_QUERY_PROBE` 与 `MULTI_WINDOW_DYNAMIC` 均被 cheap / finite-horizon baselines 饱和。旧 7-signature test 又已经在 `fdc0846` 暴露。
+
+因此 Layer 1 当前状态改为：
+
+> **MECHANISM_DISCOVERY_READY / HARD_MECHANISM_COVERAGE_REOPENED / NOT_BENCHMARK_ADMIT**
+
+Q11 human/source review 仍然是 release blocker，但**不再是唯一 blocker**。新增两个 research-readiness blockers：
+
+1. `HARD_MECHANISM_COVERAGE_REOPENED`：主 generator 尚未把 `cache06.md` 要求的 dynamic sufficiency、passive/query/probe competition、重复取证与 action-dependent evidence lifecycle 形成可通过 strong-baseline gate 的独立结构覆盖；
+2. `PRISTINE_STRUCTURAL_GENERALIZATION_OPEN`：旧 test 已暴露，最终方法 claim 需要在方法冻结前重新 preregister structural cohort / protocol。
+
+当前执行顺序固定为：
 
 ```text
 DB44/T 2457-2024 source correction               [DONE]
@@ -334,9 +345,13 @@ DB44/T 2457-2024 source correction               [DONE]
 → agentic-reducibility / communication attribution       [DONE 41/41]
 → rebuild Q11 human/source audit package                 [DONE]
 → machine preaudit                                       [DONE 23/23]
-→ rerun Q0–Q12                                           [DONE 12 PASS / 1 BLOCKED]
+→ rerun legacy Q0–Q12 machine checklist                  [DONE 12 PASS / 1 BLOCKED; HISTORICAL CHECKLIST ONLY]
+→ hard-survivor failure / coverage audit                 [DONE; COVERAGE REOPENED]
+→ dynamic-process generator reconstruction               [IN PROGRESS]
+→ mechanism gates + strong-baseline red-team             [PENDING]
+→ preregister pristine structural-generalization cohort  [PENDING]
 → real Q11 reviewer signoff                              [PENDING]
-→ frozen BENCHMARK_ADMIT release                         [AFTER Q11]
+→ frozen BENCHMARK_ADMIT release                         [AFTER ALL ABOVE]
 ```
 
 ### 13.1 2026-10-05 source correction
@@ -359,18 +374,23 @@ V9 structural audit 已在 216 个 `VALIDITY_PENDING` 结构代表上通过：�
 
 structure-aware split v0.2 已冻结到 `results/benchmark/layer1-structure-aware-split-v0.2-retry-legality.json`：pre-admission pool 为 **30,180 recipes**，train/dev/test = 15,108 / 11,268 / 3,804；hard survivors 为 60 / 90 / 24 recipes，对应 **16 / 18 / 7 signatures**。exact solver-signature cross-split overlap 为 0，component split violation 为 0。public-test identity v0.2 当前冻结 3,804 个 test cases。
 
-旧 Q6 DeepSeek frozen-test baseline 与旧 Q0–Q12 gate 状态均属于 pre-retry lineage，继续只作历史证据。当前 v0.2 已重新运行 DeepSeek Flash frozen-test baseline：7/7 hard signatures 均失败，181 次 API 调用中 0 invalid action，失败全部为 `DEADLINE_EXPIRED`。agentic-reducibility 与 communication-attribution release audit 均在 41/41 hard signatures 上 PASS；Q11 sample 已基于 v0.2 split 重建，machine preaudit 为 23/23 PASS。Q0–Q12 当前为 **12 PASS / 1 BLOCKED**，唯一 blocker 是必须由真实 reviewer 完成的 Q11 source/task/oracle/evaluator 核查。`BENCHMARK_ADMIT` 在此之前保持关闭。
+旧 Q6 DeepSeek frozen-test baseline 与旧 Q0–Q12 gate 状态均属于 pre-retry lineage，继续只作历史证据。当前 v0.2 已重新运行 DeepSeek Flash frozen-test baseline：7/7 hard signatures 均失败，181 次 API 调用中 0 invalid action，失败全部为 `DEADLINE_EXPIRED`。agentic-reducibility 与 communication-attribution release audit 均在 41/41 hard signatures 上 PASS；Q11 sample 已基于 v0.2 split 重建，machine preaudit 为 23/23 PASS。旧 machine checklist 的结果仍是 **12 PASS / 1 BLOCKED**，但它没有编码最新发现的 hard-mechanism coverage collapse 与 test-exposure provenance，不能再解释成“Q11-only release readiness”。`BENCHMARK_ADMIT` 继续关闭。
+
+最新解释见 `HARD-SURVIVOR-FAILURE-ATLAS.v0.1.md`。机器审计在 41/41 survivors 上为 9 类 ordinary policies 找到明确 first irreversible loss：错误动作既包括 `ISSUE_QUERY`，也包括 `SEND_TERR`、`SEND_SAT` 与 `WAIT`；在同一 prefix 上 exact frontier 存在 preserving alternatives。当前最有价值的结构发现因此是 **premature communication commitment can destroy future completion continuations**，而不是窄化成 query timing。但该结论目前只在 H2×H3×H4 survivor family 上成立，必须由下一版 dynamic generator 扩展/证伪。
 
 V8 的 baseline 分类与否决边界见 `V8-BASELINE-CONTRACT.v0.1.md`。generic exact / memo / dependency-cache / incremental AND–OR 属于 computation reference：它们取得 exact 任务质量是预期结果，不能因为“确定性算法能解”再次否定 benchmark；当前 16-cell computation reference 中 generic exact 平均约 54.6 ms、最大约 280.7 ms，no-paid-query 平均约 503.8 ms、最大约 4.0 s。这些数值只作为后续方法公平计算基线。
 
 ## 14. Layer 2/3 的下一步边界
 
-Layer 1 不再替 Layer 2 指定某个 frontier / certificate / cache 算法。当前版本关系是：**Layer 2 v1 已先完成一版并有 A7–A11 等机制证据；旧 Layer 1 因 decision headroom 不足而被重做；现在 Layer 1 v0.2 已 research-freeze。**
+Layer 2 已有 deterministic mechanism / correctness 资产继续保留，但**暂停以当前 41-signature survivor set 继续驱动 Layer 3 learning 或 search-ranking 优化**。当前优先级重新服从 `cache06.md`：先让 Layer 1 的动态过程与结构覆盖闭合，再讨论 learning。
 
-下一步先把 frozen Layer-2 v1 放到新 Layer-1 v0.2 hard decision surface 上重验。失败必须先分成：
+Layer 1 generator 的修改只能由 source/task contract、已声明的 process semantics、failure analysis 与 benchmark validity 触发；不得读取 proposed method outcome 反向挑 case。Layer 2/3 也不得修改 source-owned deadline、合法能力、public geometry、authority 或 observation ownership 来制造 headroom。
 
-1. v1 已能解决；
-2. task/capability representation 或 binding 不完整；
-3. 输入已无损表达，但 v1 的 EvidenceNeed / Context / acquisition / execution decision semantics 真正失败。
+下一版 generator 完成后，Layer 2 必须重新回答：
 
-只有第 3 类才构成 Layer-2 v2 的研究问题。Layer 3 的 deterministic/search/LLM/learning 比较随后建立在这个真实 failure surface 上。任何 Layer 2/3 方法都不得反向修改 Layer 1 generator 以制造方法 headroom。
+1. 哪些 ordinary baseline failure 可以由统一的 future-choice / option-destruction structure 解释；
+2. 哪些结构其实被 passive feedback、send-as-probe、短 horizon 或 local autonomy 解决，应当降级为 control；
+3. 哪些新的 dynamic-process states 需要 deterministic feasibility representation；
+4. 该 representation 在未见 conflict topology / event interleaving 上是否仍有效。
+
+只有这些问题闭合后，Layer 3 才允许重新启动。

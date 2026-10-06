@@ -156,7 +156,7 @@
     "stage": "PRE_WORLD_PRE_ORACLE"
   },
   "main_family": "T1_MONITORING_INFORMATION_CONTINUITY",
-  "next_stage": "V02_Q11_HUMAN_REVIEW_ONLY_BEFORE_BENCHMARK_ADMIT",
+  "next_stage": "DYNAMIC_PROCESS_GENERATOR_RECONSTRUCTION_BEFORE_LAYER3",
   "quality_gates": {
     "agentic_reducibility": "PASS_41_OF_41_HARD_SIGNATURES",
     "agentic_reducibility_ref": "results/benchmark/layer1-agentic-reducibility-v0.2-retry-legality.json",
@@ -169,6 +169,7 @@
     "human_source_audit": "MACHINE_PREAUDIT_23_OF_23_PASS_HUMAN_REVIEW_PENDING",
     "human_source_audit_ref": "results/benchmark/layer1-human-source-audit-v0.2-retry-legality.json",
     "human_source_preaudit_ref": "results/benchmark/layer1-human-source-machine-preaudit-v0.2-retry-legality.json",
+    "interpretation_warning": "The 12 PASS / 1 BLOCKED snapshot does not encode the 2026-10-06 hard-mechanism coverage reopening or exposed-test provenance. Q11 is not the only current blocker.",
     "llm_baseline": "PASS_DEEPSEEK_FLASH_0_OF_7_HARD_SIGNATURES",
     "llm_baseline_ref": "results/benchmark/layer1-llm-baseline-v0.2-retry-legality.json",
     "quality_gate_ref": "results/benchmark/layer1-quality-gates-v0.2-retry-legality.json",
@@ -176,9 +177,36 @@
     "release_status": "NOT_BENCHMARK_ADMIT",
     "reproducibility": "PASS_PRE_RELEASE_MANIFEST_DIGEST_VALIDATION",
     "reproduction_entry": "code/evaluation/benchmark/reproduce_layer1_v0_2_retry_legality.py",
-    "status": "V02_RELEASE_GATES_REFRESHED_Q11_ONLY_BLOCKER"
+    "status": "LEGACY_MACHINE_CHECKLIST_12_PASS_1_BLOCKED_NOT_SUFFICIENT_FOR_CURRENT_RESEARCH_READINESS"
   },
   "release_status": "NOT_BENCHMARK_ADMIT",
+  "research_readiness": {
+    "authority_ref": "research/benchmark/HARD-SURVIVOR-FAILURE-ATLAS.v0.1.md",
+    "blockers": [
+      {
+        "id": "HARD_MECHANISM_COVERAGE_REOPENED",
+        "reason": "All 41 current hard signatures collapse to FINITE_CROSSING_WINDOWS + GATEWAY_SUMMARY_QUERY; PASSIVE_ACK_ONLY, MIXED_PASSIVE_QUERY_PROBE/H5 and MULTI_WINDOW_DYNAMIC do not survive the current strong-baseline ladder."
+      },
+      {
+        "id": "PRISTINE_STRUCTURAL_GENERALIZATION_OPEN",
+        "reason": "The historical 7-signature test was accessed at fdc0846 and is regression evidence, not a pristine method-level structural holdout."
+      },
+      {
+        "id": "Q11_HUMAN_SOURCE_REVIEW_PENDING",
+        "reason": "Machine preaudit cannot replace real reviewer source/task/oracle/evaluator signoff."
+      }
+    ],
+    "established": [
+      "T1 source/task contract and provenance discipline",
+      "causal observation/evidence process and non-anticipative exact reference",
+      "V0-V9 validity/evaluator infrastructure",
+      "174 hard recipes / 41 exact hard signatures expose a stable H2xH3xH4 mechanism family",
+      "first irreversible loss is observable across query/send/wait/satellite commitments on all 41 signatures for the audited ordinary baselines"
+    ],
+    "hard_survivor_failure_atlas_ref": "results/benchmark/layer1-hard-survivor-failure-atlas-v0.1.json",
+    "layer3_status": "PAUSED_UNTIL_LAYER1_DYNAMIC_PROCESS_COVERAGE_CLOSES",
+    "status": "REOPENED"
+  },
   "schema_version": "0.1",
   "scope": {
     "boundary_family": "T2_WARNING_DELIVERY_RESPONSE_HANDOFF",
@@ -443,7 +471,7 @@
     "source_contract_count": 27,
     "status": "MACHINE_REGENERATION_COMPLETE"
   },
-  "status": "LAYER1_CONSTRUCTION_IN_PROGRESS",
+  "status": "MECHANISM_DISCOVERY_READY_HARD_MECHANISM_COVERAGE_REOPENED",
   "structure_aware_split": {
     "audit_ref": "results/benchmark/layer1-structure-aware-split-v0.2-retry-legality.json",
     "by_split": {
@@ -507,7 +535,11 @@
     "V8 v0.2 leaves 41 paid-evidence signatures / 174 pre-admission recipes, all finite-crossing gateway-summary-query overlap 3/4.",
     "Frozen public test v0.2 contains 3,804 cases. DeepSeek Flash frozen-test reasoning baseline has been rerun: 0/7 hard signatures succeed, all failures are DEADLINE_EXPIRED, with 0 invalid actions.",
     "Q0-Q12 machine refresh is complete at 12 PASS / 1 BLOCKED; only Q11 real human/source review remains before BENCHMARK_ADMIT.",
-    "T2 remains SIMULATOR_GAP until actor-chain environment support exists."
+    "T2 remains SIMULATOR_GAP until actor-chain environment support exists.",
+    "2026-10-06 hard-survivor audit reopens scientific coverage: all 41 hard signatures collapse to FINITE_CROSSING_WINDOWS + GATEWAY_SUMMARY_QUERY + H2/H3/H4.",
+    "PASSIVE_ACK_ONLY, MIXED_PASSIVE_QUERY_PROBE/H5 and MULTI_WINDOW_DYNAMIC have no current V8 hard survivors; parameter diversity must not be reported as mechanism diversity.",
+    "Layer 3 learning/search-ranking is paused until a cache06-compliant dynamic-process generator passes mechanism and strong-baseline gates.",
+    "The 7-signature historical test was exposed at fdc0846 and cannot support a pristine method-level structural-generalization claim."
   ],
   "world_materialization": {
     "bundle_count": 58752,
