@@ -350,8 +350,15 @@ DB44/T 2457-2024 source correction               [DONE]
 → freeze method-independent environment/generation contract [DONE v0.1]
 → freeze generation axes before generator execution      [DONE v0.1]
 → dynamic-process generator reconstruction               [DONE v0.6 PRE-ORACLE; r4 reproducible]
-→ non-anticipative oracle + validity/mechanism admission [NEXT]
-→ strong-baseline red-team                               [PENDING]
+→ v0.6 non-anticipative oracle / shortcut admission     [DONE; GLOBAL V3 FAIL]
+   ↳ 486/486 stratified pilot cells blind-open-loop solvable
+   ↳ 46,770/46,770 physical bases contain ALL_DOWN support
+   ↳ TIGHT budget = obligation count on 46,770/46,770 bases
+   ↳ 1,262,790/1,262,790 cases inherit full fallback budget
+→ freeze corrected v0.7 process-support contract        [NEXT]
+→ v0.7 method-independent generator                     [PENDING]
+→ v0.7 oracle / validity / mechanism admission          [PENDING]
+→ strong-baseline red-team                              [PENDING]
 → preregister pristine structural-generalization cohort  [PENDING]
 → real Q11 reviewer signoff                              [PENDING]
 → frozen BENCHMARK_ADMIT release                         [AFTER ALL ABOVE]
@@ -386,6 +393,24 @@ structure-aware split v0.2 已冻结到 `results/benchmark/layer1-structure-awar
 v0.6 method-independent generator 已完成 official clean-tree pre-oracle run r4。生成器从 27 个 DB44 source task cells 出发，51 个合法两流/4–6 obligation compositions 通过 preflight；公开 Connecta trace 在冻结 mask/slice/signature 规则下形成 6,045 个实际 geometry signatures；全量生成 77,556 个 base scenarios，其中 46,770 个 `ALL_WORLD_PHYSICAL`、30,786 个 `MIXED_WORLD_PHYSICAL`。物理全可解 base 按冻结 feedback/query/headroom 轴展开为 **1,262,790 dynamic cases / 499,608 pre-oracle structure IDs**。这些数字是 generation coverage，不是 hard-case count。r2/r3/r4 三次独立生成的 artifact bytes、raw SHA、canonical SHA 与 rows 全部逐项一致；clean r4 manifest 绑定 commit `0ad64380b82ab940bf2ba0cd8c6570583d20d776`。机器证据见 `results/benchmark/layer1-v0.6-preoracle-generation-r4.json`，过程 ledger 见 `GENERATION-RUN-LEDGER.v0.1.md`。
 
 因此 `METHOD_INDEPENDENT_GENERATOR_REBUILD_PENDING` 已关闭；下一门只允许消费 frozen r4 universe 做 oracle / validity / mechanism admission。任何 downstream 结果不得回写 v0.6 generator axes。
+
+### 13.2 v0.6 global shortcut collapse
+
+v0.6 的 generation engineering / reproducibility 通过，但 benchmark validity **失败**。这不是某个 proposed method 的结果，而是 V3/common-safe-action gate 对 frozen r4 的全量构造证明：
+
+1. 46,770 / 46,770 个 `ALL_WORLD_PHYSICAL` base 的声明 support 都包含 `ALL_DOWN` terrestrial world；
+2. `TIGHT = max_w(min backup demand)`，而 `ALL_DOWN` 只能靠 satellite 完成，因此 46,770 / 46,770 个 base 都有 `TIGHT = obligation_count`；
+3. `BALANCED` 被 cap 到 obligation count，`SLACK_CONTROL` 本身也等于 obligation count，因此 **1,262,790 / 1,262,790 cases** 三种 fallback mode 最终都拥有完整 backup budget；
+4. `ALL_DOWN` 被标记为 physically feasible，又意味着 public satellite opportunities 单独就可以调度全部 obligations；
+5. satellite geometry / opportunities 跨 worlds 公开且不变，因此同一个 satellite-only schedule 自动成为整个 support 上的 blind open-loop policy。
+
+机器证明：`results/benchmark/layer1-v0.6-shortcut-collapse-r4.json`。独立 486-cell exact pilot 覆盖 composition × service process × capacity × feedback × query-delay × fallback，结果为 **486 / 486 `BLIND_OPEN_LOOP_SOLVED`**，无 search-limit，见 `results/benchmark/layer1-v0.6-oracle-pilot-r4.json`。
+
+因此 v0.6 disposition 固定为：
+
+> **GENERATION_REPRODUCIBILITY_PASS / BENCHMARK_VALIDITY_FAIL / RETAIN_AS_NEGATIVE_LINEAGE**
+
+这个失败不允许通过修改 r4 budget、删除 satellite windows 或手挑 baseline-failure cases 修补。下一版另开 v0.7，只修 `cache06.md` process contract 已经能够证明的语义错误：`SINGLE_RECOVERY` 不再允许“全程 DOWN、从未恢复”冒充 recovery；`REINTERRUPTIBLE` 必须真的含“恢复后再次中断”的支持轨迹；`FULL_BINARY_SUPPORT` 继续保留为 diagnostic upper-support control。fallback budget derivation 保持不变，让 shortcut 是否消失由新 support contract 自然决定。
 
 V8 的 baseline 分类与否决边界见 `V8-BASELINE-CONTRACT.v0.1.md`。generic exact / memo / dependency-cache / incremental AND–OR 属于 computation reference：它们取得 exact 任务质量是预期结果，不能因为“确定性算法能解”再次否定 benchmark；当前 16-cell computation reference 中 generic exact 平均约 54.6 ms、最大约 280.7 ms，no-paid-query 平均约 503.8 ms、最大约 4.0 s。这些数值只作为后续方法公平计算基线。
 

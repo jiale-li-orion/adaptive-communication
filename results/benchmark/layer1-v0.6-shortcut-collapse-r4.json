@@ -1,0 +1,85 @@
+{
+  "all_down_support_bases": 46770,
+  "all_world_physical_bases": 46770,
+  "audit_git_commit": "fe79ac72b5b965885b93332c9ba2efe789cf9e51",
+  "base_counts_by_obligation_count": {
+    "4": 19182,
+    "6": 27588
+  },
+  "base_counts_by_service_family": {
+    "FULL_BINARY_SUPPORT": 15590,
+    "REINTERRUPTIBLE": 15590,
+    "SINGLE_RECOVERY": 15590
+  },
+  "case_base_outside_all_world_physical": 0,
+  "case_counts_by_fallback_mode": {
+    "BALANCED": 420930,
+    "SLACK_CONTROL": 420930,
+    "TIGHT": 420930
+  },
+  "cases_with_fallback_budget_equal_obligation_count": 1262790,
+  "claim_boundary": [
+    "This does not invalidate source grounding or generation reproducibility.",
+    "It invalidates v0.6 as a decision-hardness benchmark because V3/common-safe open-loop policy is guaranteed by construction.",
+    "The next generation must be versioned; r4 axes/artifacts remain frozen and are not edited in place."
+  ],
+  "disposition": "V06_BENCHMARK_VALIDITY_FAIL_GLOBAL_BLIND_SATELLITE_SHORTCUT",
+  "dynamic_cases": 1262790,
+  "fallback_budget_value_counts": [
+    {
+      "budget": 4,
+      "count": 172638,
+      "mode": "BALANCED",
+      "obligation_count": 4
+    },
+    {
+      "budget": 6,
+      "count": 248292,
+      "mode": "BALANCED",
+      "obligation_count": 6
+    },
+    {
+      "budget": 4,
+      "count": 172638,
+      "mode": "SLACK_CONTROL",
+      "obligation_count": 4
+    },
+    {
+      "budget": 6,
+      "count": 248292,
+      "mode": "SLACK_CONTROL",
+      "obligation_count": 6
+    },
+    {
+      "budget": 4,
+      "count": 172638,
+      "mode": "TIGHT",
+      "obligation_count": 4
+    },
+    {
+      "budget": 6,
+      "count": 248292,
+      "mode": "TIGHT",
+      "obligation_count": 6
+    }
+  ],
+  "generation_manifest_sha256": "5e7d4c1888977332513c18dc7d0ed8426747c2d59b43553b45e357957e82f13b",
+  "generator_disposition": "RETAIN_AS_REPRODUCIBLE_NEGATIVE_LINEAGE_AND_SHORTCUT_REGRESSION",
+  "official_generation_run": "layer1-v0.6-preoracle-r4",
+  "oracle_pilot": {
+    "artifact": "results/benchmark/layer1-v0.6-oracle-pilot-r4.json",
+    "axis_cells": 486,
+    "blind_open_loop_solved": 486
+  },
+  "proof": [
+    "Every admitted physical support contains an ALL_DOWN terrestrial world.",
+    "In ALL_DOWN, every successful plan uses satellite for every obligation; hence TIGHT=max_w(min backup demand)=obligation_count.",
+    "BALANCED is capped at obligation_count and SLACK_CONTROL equals obligation_count, so all three materialized fallback modes expose the same full backup budget.",
+    "ALL_DOWN physical feasibility certifies that the public satellite opportunities alone schedule every obligation.",
+    "Satellite opportunities are public and world-invariant, so that same satellite-only schedule is a blind open-loop policy over the entire support."
+  ],
+  "public_satellite_only_feasible_bases": 46770,
+  "schema_version": "0.1",
+  "stage": "V06_GLOBAL_SHORTCUT_VALIDITY_AUDIT",
+  "tight_budget_equals_obligation_count_bases": 46770
+}

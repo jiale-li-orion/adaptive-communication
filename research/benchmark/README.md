@@ -252,11 +252,15 @@ v0.1–v0.5、receipt-race、receipt-chain、joint query–satellite Pareto 和 
 - 499,608 pre-oracle structure IDs；
 - 每个 physical base 27 个 feedback/query/fallback variants。
 
-这些数字**不是 hard-case 数量**。正式筛选顺序固定为：
+这些数字**不是 hard-case 数量**。v0.6 已完成第一轮正式筛选，并在 common-safe/open-loop gate 上全局失败：46,770 / 46,770 个 all-world-physical bases 都含 `ALL_DOWN` support，且 `TIGHT = obligation count`；因此全部 1,262,790 variants 都有公开 satellite-only blind policy。486-cell exact pilot 为 486 / 486 `BLIND_OPEN_LOOP_SOLVED`。
+
+v0.6 当前 disposition：**generation reproducibility PASS / benchmark validity FAIL / negative lineage**。正式筛选顺序因此转入 versioned v0.7：
 
 ```text
-official r4 generation
-→ non-anticipative exact oracle
+official r4 generation                          [DONE]
+→ non-anticipative exact/open-loop admission   [DONE; GLOBAL V3 FAIL]
+→ freeze v0.7 corrected process support        [NEXT]
+→ v0.7 generation
 → information-feasibility / no-paid-query / open-loop references
 → shortcut and fixed-policy gates
 → mechanism interventions / independent mechanism coverage
@@ -281,7 +285,9 @@ official r4 generation
     → hard-survivor failure / coverage audit           [DONE; COVERAGE REOPENED]
     → freeze environment / generation contract         [DONE v0.1]
     → rebuild method-independent generator              [DONE v0.6; official r4 reproducible]
-    → non-anticipative oracle / validity admission      [IN PROGRESS]
+    → v0.6 non-anticipative oracle / shortcut admission [DONE; GLOBAL V3 FAIL]
+    → freeze v0.7 process-support contract               [NEXT]
+    → v0.7 method-independent generator                  [PENDING]
     → mechanism gates + ordinary-baseline red-team     [PENDING]
     → preregister pristine structural holdout           [PENDING]
     → real Q11 reviewer signoff                        [PENDING]

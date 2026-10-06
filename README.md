@@ -286,7 +286,7 @@ The strong baseline floor includes local EDF/reserve, passive-only planning, nor
 
 ### 3.6 Current v0.6 generation status
 
-Layer 1 has now closed the **method-independent case-generation** gate for the next benchmark iteration. The official clean-tree generation run is `layer1-v0.6-preoracle-r4`; its input is the frozen environment/generation contract and generation axes, not any Layer-2/Layer-3 or baseline result.
+Layer 1 has closed the **method-independent case-generation** gate for v0.6, but v0.6 subsequently failed the benchmark-validity shortcut gate. The official clean-tree generation run remains `layer1-v0.6-preoracle-r4`; its reproducibility result is retained as a negative lineage rather than promoted into a benchmark release.
 
 The official pre-oracle universe contains:
 
@@ -302,7 +302,9 @@ The official pre-oracle universe contains:
 | dynamic case variants | 1,262,790 |
 | pre-oracle structure IDs | 499,608 |
 
-These counts describe a **generation universe, not benchmark hardness**. A case becomes a benchmark decision case only after non-anticipative exact oracle, information-feasibility, shortcut, mechanism and ordinary-baseline admission. The generator is frozen while these downstream filters run.
+These counts describe a **generation universe, not benchmark hardness**. Downstream admission found a global common-safe shortcut: every all-world-physical support contains an `ALL_DOWN` terrestrial world, so worst-world `TIGHT` fallback provisioning equals the obligation count; all three fallback modes therefore expose enough public satellite budget to complete every obligation without using observations. A 486-cell exact pilot confirms `BLIND_OPEN_LOOP_SOLVED` in every sampled declared-axis cell, and a full construction audit proves the same shortcut for all 1,262,790 v0.6 variants.
+
+v0.6 is therefore frozen as **generation-reproducibility PASS / benchmark-validity FAIL**. The next construction lineage is v0.7; it will correct only process-support semantics already required by `cache06.md`, not tune resources against a proposed method.
 
 Generation is auditable and byte-reproducible. Independent full runs r2/r3/r4 match on row counts, raw gzip SHA-256 and canonical-uncompressed SHA-256 for geometry, base-scenario and case artifacts. Every case ID is deterministically derived from source task, composition, geometry and frozen stress coordinates; geometry signatures retain reverse mappings to all equivalent trace slices; fallback headroom is derived from full-state physical matching rather than hand-picked after observing policy results.
 
@@ -457,7 +459,7 @@ The current three-layer split continues the old repo: the substrate carries phys
 
 | Owner | Frozen / active boundary |
 |---|---|
-| Layer 1 | v0.6 method-independent pre-oracle generation is complete and reproducible on official clean-tree run r4. The active work is now non-anticipative oracle / information-feasibility / shortcut / mechanism admission on that frozen universe. v0.2's 41 hard signatures remain discovery/regression evidence only; final release still requires independent hard-mechanism coverage, a pristine structural holdout, and Q11 human/source review. |
+| Layer 1 | v0.6 method-independent generation is complete/reproducible but fails V3 globally because worst-world fallback provisioning plus `ALL_DOWN` support guarantees a blind satellite-only policy. r4 is retained as negative/shortcut regression evidence. Active work has moved to a versioned v0.7 process-support correction grounded in `cache06.md`; final release still requires independent hard-mechanism coverage, a pristine structural holdout, and Q11 human/source review. |
 | Layer 2 | v1 remains the historical runtime/compiler baseline. v2 deterministic future-choice semantics are frozen after dev correctness and strong-control audits. |
 | Layer 3 | paused. The previous learned search-ranking baseline is a negative historical result, not the current research line; no new Layer-3 method may shape Layer-1 generation. |
 | Generalization | the historical seven-signature test was exposed during earlier Layer-2 work and now serves regression evidence. A new structural-generalization claim requires a preregistered holdout. |
