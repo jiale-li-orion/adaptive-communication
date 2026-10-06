@@ -1,0 +1,187 @@
+{
+  "schema_version": "0.1",
+  "status": "FROZEN_FOR_LAYER1_REBUILD",
+  "authority": {
+    "human_context": [
+      "/home/orion/Communications/调研cache.md",
+      "/home/orion/Communications/cache06.md#v0.5-process-contract-and-admission-gates"
+    ],
+    "repository_contract": "research/benchmark/ENVIRONMENT-GENERATION-CONTRACT.v0.1.md",
+    "freeze_rule": "After this file enters git history, values may change only for source/correctness defects or an explicitly versioned new benchmark generation; baseline/proposed-method outcomes are not a valid reason."
+  },
+  "scope": {
+    "family": "T1_MONITORING_INFORMATION_CONTINUITY",
+    "phase": "pre-disaster monitoring",
+    "primary_task_profile": "DB44T2457_2024_warning_reporting",
+    "supporting_operational_profiles": [
+      "DZT0450_2023_disconnect_recovery",
+      "JIAOZUO_2024_geohazard_monitoring_deployment"
+    ],
+    "excluded_for_v0_6": [
+      "battery dynamics",
+      "cache overflow",
+      "random warning-state transitions",
+      "T2 actor-chain warning handoff",
+      "unresolved backlog-vs-fresh priority"
+    ]
+  },
+  "source_owned": {
+    "task_contract_rule": "Enumerate every DB44/T 2457-2024 landslide grade×warning-state reporting cell whose source-resolved interval fits the frozen geometry horizon for the requested obligation composition. No cadence value is invented or interpolated.",
+    "completion_predicate": "timely_complete_report",
+    "cache_recovery_semantics": {
+      "profile": "DZT0450_2023_disconnect_recovery",
+      "minimum_cache_days": 7,
+      "reconnect_rule": "cached monitoring records remain recoverable after communication restoration",
+      "forbidden_inference": "do not invent backlog-vs-fresh priority"
+    },
+    "communication_capability": {
+      "profile": "JIAOZUO_2024_geohazard_monitoring_deployment",
+      "source_priority": [
+        "NB",
+        "4G/5G",
+        "BeiDou"
+      ],
+      "remote_state_read": true,
+      "block_read_local_history": true
+    }
+  },
+  "model_derived": {
+    "satellite_geometry": {
+      "trace_profile": "CONNECTA_20260922_SIHUI_GEOMETRY_48H",
+      "trace_path": "research/benchmark/traces/v0.1/CONNECTA_20260922_SIHUI_GEOMETRY_48H.json",
+      "rule": "Preserve every eligible model-derived opportunity inside each selected public geometry slice; do not selectively hide or delete windows for hardness."
+    }
+  },
+  "controlled_stress": {
+    "obligation_composition": {
+      "stream_count": 2,
+      "obligations_per_stream": [
+        2,
+        3
+      ],
+      "stream_phase_modes": [
+        "ALIGNED",
+        "HALF_PERIOD_OFFSET"
+      ],
+      "rationale": "cache06 v0.5 requires two existing report streams, four to six obligations and at least three decision stages. Phase is a declared composition stress because the source fixes cadence but not cross-node synchronization."
+    },
+    "terrestrial_service_process": {
+      "state_space": [
+        "UP",
+        "DOWN"
+      ],
+      "support_families": [
+        {
+          "id": "SINGLE_RECOVERY",
+          "definition": "all stage-state sequences containing at most one contiguous DOWN run; recovery may occur and service may remain UP before/after"
+        },
+        {
+          "id": "REINTERRUPTIBLE",
+          "definition": "all stage-state sequences containing at most two DOWN runs; a recovered service may fail again"
+        },
+        {
+          "id": "FULL_BINARY_SUPPORT",
+          "definition": "all UP/DOWN stage-state sequences for the declared finite stage set; diagnostic upper-support control"
+        }
+      ],
+      "probability_model": null,
+      "rationale": "finite-state support is used for robust causal feasibility, not as a field outage-frequency claim"
+    },
+    "terrestrial_opportunities": {
+      "per_reporting_interval": 2,
+      "phase_ratios": [
+        0.25,
+        0.75
+      ],
+      "capacity_units": [
+        1,
+        2
+      ],
+      "unit_semantics": "normalized opportunity capacity; one SEND_TERR or center-side remote query consumes one unit when they share the same path",
+      "claim_boundary": "not bytes, airtime or field throughput"
+    },
+    "feedback_timing_profiles": [
+      {
+        "id": "IMMEDIATE_CONTROL",
+        "gateway_receipt_delay_over_deadline": 0.0,
+        "final_ack_delay_over_deadline": 0.0
+      },
+      {
+        "id": "EARLY_RECEIPT_MID_ACK",
+        "gateway_receipt_delay_over_deadline": 0.125,
+        "final_ack_delay_over_deadline": 0.5
+      },
+      {
+        "id": "EARLY_RECEIPT_LATE_ACK",
+        "gateway_receipt_delay_over_deadline": 0.125,
+        "final_ack_delay_over_deadline": 1.0
+      }
+    ],
+    "remote_query_response_delay_over_deadline": [
+      0.0,
+      0.25,
+      0.5
+    ],
+    "remote_query_transport": {
+      "center_placement": "uses the same terrestrial opportunity/capacity ledger as data delivery; if the required path is unavailable the request/response may timeout",
+      "gateway_placement": "owner-local read; no remote request is charged and no center return-path delay is inherited",
+      "future_state_access": false
+    },
+    "fallback_budget_modes": [
+      {
+        "id": "TIGHT",
+        "rule": "derive from the maximum per-world minimum backup demand under full current-state knowledge"
+      },
+      {
+        "id": "BALANCED",
+        "rule": "TIGHT + 1 normalized backup unit, capped at obligation count"
+      },
+      {
+        "id": "SLACK_CONTROL",
+        "rule": "enough normalized backup units to cover every obligation"
+      }
+    ]
+  },
+  "natural_feedback_always_enabled": [
+    "normal SEND_TERR as probe",
+    "gateway receipt",
+    "final ACK or timeout",
+    "execution trace visible at its lawful owner",
+    "passive telemetry if provided by the source/profile"
+  ],
+  "evaluation_coordinates_not_generator_targets": [
+    "gateway placement vs center placement",
+    "no-paid-query",
+    "perfect-current-observation",
+    "remove-shared-resource-conflict",
+    "instant-ACK",
+    "relaxed-window/deadline",
+    "ordinary baseline ladder"
+  ],
+  "forbidden_generator_dependencies": [
+    "Layer-2 future-choice method score",
+    "Layer-3 learner score",
+    "any baseline success/failure result",
+    "handpicked ACK/query delay chosen after observing an evaluated policy",
+    "hidden future opportunity encoded into evidence values",
+    "selective deletion of source/model-derived communication opportunities",
+    "invented source priority or sacrifice weights"
+  ],
+  "required_output_partitions": [
+    "PHYSICAL_INVALID",
+    "INFORMATION_INFEASIBLE",
+    "EASY_OR_COMMON_SAFE",
+    "SHORTCUT_SOLVED",
+    "HARD_SURVIVOR"
+  ],
+  "structural_split_keys": [
+    "source task cell",
+    "obligation count and phase mode",
+    "terrestrial process support family",
+    "opportunity-capacity topology",
+    "satellite geometry signature",
+    "feedback timing profile",
+    "evidence/placement topology",
+    "fallback-headroom mode"
+  ]
+}

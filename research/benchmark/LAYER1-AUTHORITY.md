@@ -347,6 +347,8 @@ DB44/T 2457-2024 source correction               [DONE]
 → machine preaudit                                       [DONE 23/23]
 → rerun legacy Q0–Q12 machine checklist                  [DONE 12 PASS / 1 BLOCKED; HISTORICAL CHECKLIST ONLY]
 → hard-survivor failure / coverage audit                 [DONE; COVERAGE REOPENED]
+→ freeze method-independent environment/generation contract [DONE v0.1]
+→ freeze generation axes before generator execution      [DONE v0.1]
 → dynamic-process generator reconstruction               [IN PROGRESS]
 → mechanism gates + strong-baseline red-team             [PENDING]
 → preregister pristine structural-generalization cohort  [PENDING]
@@ -377,6 +379,8 @@ structure-aware split v0.2 已冻结到 `results/benchmark/layer1-structure-awar
 旧 Q6 DeepSeek frozen-test baseline 与旧 Q0–Q12 gate 状态均属于 pre-retry lineage，继续只作历史证据。当前 v0.2 已重新运行 DeepSeek Flash frozen-test baseline：7/7 hard signatures 均失败，181 次 API 调用中 0 invalid action，失败全部为 `DEADLINE_EXPIRED`。agentic-reducibility 与 communication-attribution release audit 均在 41/41 hard signatures 上 PASS；Q11 sample 已基于 v0.2 split 重建，machine preaudit 为 23/23 PASS。旧 machine checklist 的结果仍是 **12 PASS / 1 BLOCKED**，但它没有编码最新发现的 hard-mechanism coverage collapse 与 test-exposure provenance，不能再解释成“Q11-only release readiness”。`BENCHMARK_ADMIT` 继续关闭。
 
 最新解释见 `HARD-SURVIVOR-FAILURE-ATLAS.v0.1.md`。机器审计在 41/41 survivors 上为 9 类 ordinary policies 找到明确 first irreversible loss：错误动作既包括 `ISSUE_QUERY`，也包括 `SEND_TERR`、`SEND_SAT` 与 `WAIT`；在同一 prefix 上 exact frontier 存在 preserving alternatives。当前最有价值的结构发现因此是 **premature communication commitment can destroy future completion continuations**，而不是窄化成 query timing。但该结论目前只在 H2×H3×H4 survivor family 上成立，必须由下一版 dynamic generator 扩展/证伪。
+
+下一版 generator 的合法输入空间由 [`ENVIRONMENT-GENERATION-CONTRACT.v0.1.md`](ENVIRONMENT-GENERATION-CONTRACT.v0.1.md) 与 [`GENERATION-AXES.v0.1.json`](GENERATION-AXES.v0.1.json) 先于 generator 实现冻结。`GENERATION-AXES.v0.1.json` 只消费 source/profile/public-trace authority 与 `cache06.md` 既有 v0.5 process contract；baseline / Layer-2 / Layer-3 结果被显式列为 forbidden generator dependencies。该冻结用于恢复 benchmark construction independence，不代表 v0.6 已通过 hardness / coverage / release gate。
 
 V8 的 baseline 分类与否决边界见 `V8-BASELINE-CONTRACT.v0.1.md`。generic exact / memo / dependency-cache / incremental AND–OR 属于 computation reference：它们取得 exact 任务质量是预期结果，不能因为“确定性算法能解”再次否定 benchmark；当前 16-cell computation reference 中 generic exact 平均约 54.6 ms、最大约 280.7 ms，no-paid-query 平均约 503.8 ms、最大约 4.0 s。这些数值只作为后续方法公平计算基线。
 

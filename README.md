@@ -4,7 +4,7 @@ English | [中文](README.zh.md)
 
 Source-grounded decision benchmark, decision-semantic runtime, and learning-guided exact search for pre-disaster mountain monitoring under limited power and intermittent communication.
 
-> **Current control plane:** Layer 1 benchmark semantics are research-frozen; Layer 2 v2 deterministic future-choice semantics are frozen on dev; Layer 3 is the active method line and learns search guidance inside the fixed Layer-2 correctness boundary. Current ownership lives in [`research/`](research/README.md).
+> **Current control plane:** Layer 1 has reopened hard-mechanism coverage and is rebuilding its method-independent environment/generation contract; Layer 2 v2 deterministic assets remain available as historical/current correctness infrastructure; Layer 3 method work is paused until the benchmark closes coverage and pristine-generalization blockers. Current ownership lives in [`research/`](research/README.md).
 
 ## 1. Architecture at a glance
 
@@ -30,7 +30,7 @@ External operational sources / field requirement
 ┌──────────────────────────────────────────────────────────────┐
 │ Layer 3 · Policy                                             │
 │ deterministic / search / LLM / learned guidance             │
-│ current focus: unresolved-action ranking and search order   │
+│ current status: paused pending Layer-1 benchmark closure     │
 └──────────────────────────────┬───────────────────────────────┘
                                │ selected communication action
                                ▼
@@ -48,9 +48,9 @@ Layer 1 owns the problem. Layer 2 owns deterministic correctness and the legal d
 | Module | Owns | Current state | Entry |
 |---|---|---|---|
 | **Shared substrate** | communication physics, energy, cache, opportunity, fallback, execution lifecycle, mathematical model | stable shared base | [`research/substrate/`](research/substrate/README.md) |
-| **Layer 1 · Benchmark** | source-grounded obligations, task construction, observation/action/oracle contract, validity/hardness, split/release | **research-frozen**; formal admission awaits Q11 human/source review | [`research/benchmark/`](research/benchmark/README.md) |
+| **Layer 1 · Benchmark** | source-grounded obligations, task construction, observation/action/oracle contract, validity/hardness, split/release | **mechanism-discovery ready; hard-mechanism coverage reopened; NOT_BENCHMARK_ADMIT** | [`research/benchmark/`](research/benchmark/README.md) |
 | **Layer 2 · Compiler** | Task/Evidence/Capability/Execution semantics, L/U future-choice frontier, evidence lifecycle, incremental update, exact fallback | **v2 deterministic core frozen on dev** | [`research/compiler/`](research/compiler/README.md) |
-| **Layer 3 · Policy** | ordering and selection among legal / unresolved actions | **active**; learned search guidance under evaluation | [`research/policy/`](research/policy/README.md) |
+| **Layer 3 · Policy** | ordering and selection among legal / unresolved actions | **paused**; previous learned-ranking line retained only as negative/history until Layer 1 closes | [`research/policy/`](research/policy/README.md) |
 | **Evaluation** | replay, attribution, ablation, baseline fairness, cross-layer audits | cross-cutting | [`research/evaluation/`](research/evaluation/README.md) |
 | **Literature** | related work, source registry, claim boundary | cross-cutting | [`research/literature/`](research/literature/README.md) |
 | **History** | superseded tracked research authority / roadmap | provenance | [`research/history/`](research/history/README.md) |
@@ -427,9 +427,9 @@ The current three-layer split continues the old repo: the substrate carries phys
 
 | Owner | Frozen / active boundary |
 |---|---|
-| Layer 1 | v0.2 research semantics, exact oracle, validity/hardness ladder, structure-aware split and paper-facing statistics are frozen. Formal `BENCHMARK_ADMIT` waits for Q11 real human/source review. |
+| Layer 1 | source/task/oracle/validity infrastructure remains reusable, but v0.2 hard-mechanism coverage is reopened: 41/41 hard signatures collapse to one H2×H3×H4 family. Final benchmark construction now waits on the environment/generation contract, independent mechanism coverage, a pristine structural holdout, and Q11 human/source review. |
 | Layer 2 | v1 remains the historical runtime/compiler baseline. v2 deterministic future-choice semantics are frozen after dev correctness and strong-control audits. |
-| Layer 3 | learned search guidance is active under the frozen Layer-2 contract. Current linear ranking baseline preserves correctness; its wall-time disposition is negative and its search gain is small. |
+| Layer 3 | paused. The previous learned search-ranking baseline is a negative historical result, not the current research line; no new Layer-3 method may shape Layer-1 generation. |
 | Generalization | the historical seven-signature test was exposed during earlier Layer-2 work and now serves regression evidence. A new structural-generalization claim requires a preregistered holdout. |
 | Deployment claims | benchmark guarantees apply to the declared model/process. Site-level reliability, bytes/airtime/energy savings and cross-site generalization require corresponding measurements or calibrated models. |
 

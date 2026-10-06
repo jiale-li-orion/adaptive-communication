@@ -124,16 +124,20 @@ def main()->int:
     assert state['quality_gates']['agentic_reducibility']=='PASS_41_OF_41_HARD_SIGNATURES'
     assert state['quality_gates']['communication_attribution']=='PASS_41_OF_41_HARD_SIGNATURES'
     assert state['quality_gates']['human_source_audit']=='MACHINE_PREAUDIT_23_OF_23_PASS_HUMAN_REVIEW_PENDING'
-    assert state['next_stage']=='DYNAMIC_PROCESS_GENERATOR_RECONSTRUCTION_BEFORE_LAYER3'
+    assert state['next_stage']=='METHOD_INDEPENDENT_DYNAMIC_GENERATOR_REBUILD'
     readiness=state['research_readiness']
     assert readiness['status']=='REOPENED'
     assert readiness['layer3_status']=='PAUSED_UNTIL_LAYER1_DYNAMIC_PROCESS_COVERAGE_CLOSES'
     blocker_ids={row['id'] for row in readiness['blockers']}
     assert blocker_ids=={
         'HARD_MECHANISM_COVERAGE_REOPENED',
+        'METHOD_INDEPENDENT_GENERATOR_REBUILD_PENDING',
         'PRISTINE_STRUCTURAL_GENERALIZATION_OPEN',
         'Q11_HUMAN_SOURCE_REVIEW_PENDING',
     }
+    assert readiness['generation_axes_status']=='FROZEN_FOR_LAYER1_REBUILD'
+    assert readiness['environment_generation_contract_ref']=='research/benchmark/ENVIRONMENT-GENERATION-CONTRACT.v0.1.md'
+    assert readiness['generation_axes_ref']=='research/benchmark/GENERATION-AXES.v0.1.json'
 
     authority=AUTH.read_text(encoding='utf-8')
     assert '58,752 个 recipe 不是 benchmark cases' in authority
@@ -148,6 +152,7 @@ def main()->int:
     assert 'frozen-split LLM baseline                              [DONE v0.2; DeepSeek 0/7]' in authority
     assert 'MECHANISM_DISCOVERY_READY / HARD_MECHANISM_COVERAGE_REOPENED / NOT_BENCHMARK_ADMIT' in authority
     assert 'Q11 human/source review 仍然是 release blocker，但**不再是唯一 blocker**' in authority
+    assert 'GENERATION-AXES.v0.1.json' in authority
     assert WORLD_DOC.exists()
     assert WORLD_SCHEMA.exists()
     assert CAUSAL_DOC.exists()

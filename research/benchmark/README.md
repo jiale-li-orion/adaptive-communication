@@ -18,6 +18,42 @@
 
 一个 Decision Benchmark task 至少要能回答以下问题：来源是否支持这个 operational need；是否存在真实选择而非唯一已知写入；观测/不确定性是否可能改变选择；资源或时序约束是否实际 binding；不同合法策略是否产生 materially different physical outcomes；强 ordinary mechanism 是否仍留下需要决策的空间。增加节点数、seed 或窗口数量本身不增加 decision richness。
 
+## Benchmark-construction precedents
+
+本层采用的不是“现场日志逐条切 train/test”单一范式，而是 **source-grounded synthetic / simulation benchmark**：现实来源定义合法问题空间，generator 在预先声明的范围内系统实例化，simulator 因果执行，独立 evaluator/oracle 判定结果。该范式在通信、自动驾驶和 embodied AI 中有成熟先例；详细 ownership 与生成纪律见 [`ENVIRONMENT-GENERATION-CONTRACT.v0.1.md`](ENVIRONMENT-GENERATION-CONTRACT.v0.1.md)。
+
+| Benchmark / platform | 现实 grounding | case / episode 来源 | 与本项目的对应关系 |
+|---|---|---|---|
+| **DeepMIMO** | 具体 3D 环境 + Wireless InSite ray tracing | 参数化生成 channel dataset | 物理/场景模型先于 synthetic samples；scenario + 参数集合可完整复现。https://arxiv.org/abs/1902.06435 |
+| **CARLA Leaderboard** | NHTSA pre-crash typology | 交通 scenario template 在道路/天气/位置中参数化实例化 | 现实 taxonomy 定义“什么问题值得测”，具体危险 episode 由 simulator 系统生成。https://leaderboard.carla.org/scenarios/ |
+| **ScenarioNet** | Waymo、nuScenes、Lyft L5、nuPlan 真实轨迹 | canonical scenario → MetaDrive closed-loop simulation | `real trace → canonical scenario → simulator` 是未来通信 trace-grounded 版本的直接参照。https://proceedings.neurips.cc/paper_files/paper/2023/hash/0c26a501df8fb919a0350e2df06b5d39-Abstract-Datasets_and_Benchmarks.html |
+| **Waymax / Waymo CAT** | Waymo Open Motion Dataset；road/test-track/crash data + ODD expert knowledge | logged scenario replay、counterfactual perturbation、fully synthetic hazardous scenario | controlled stress 可以合法存在，但必须由 coverage / ODD 驱动，不得由某个算法输赢驱动。https://waymo-research.github.io/waymax/docs/ · https://waymo.com/blog/2022/12/waymos-collision-avoidance-testing/ |
+| **Habitat Challenge** | Gibson / Matterport3D 等真实扫描环境 | unseen scene 中自动采样起点、方向和目标，simulator 闭环执行 | `real environment + synthetic episode + hidden test scene` 是成熟范式。https://aihabitat.org/challenge/2021/ |
+| **ALFWorld** | ALFRED household task semantics | task 映射到 TextWorld simulator 生成交互 episode | task semantics 可以真实、episode 可以合成；claim 必须限制在 simulator contract。https://arxiv.org/abs/2010.03768 |
+| **6G-Bench** | 3GPP/IETF/ETSI/ITU-T/O-RAN 标准化活动 | 30 类任务；113,475 scenarios → 自动筛选 / expert validation → 3,722 题 | 与本项目最近的通信 provenance 先例：标准定义问题空间，具体题目由 benchmark designer 大规模生成。https://arxiv.org/abs/2602.08675 |
+| **DORA** | 45 个真实灾害事件 + 真实异构地理数据 | 515 expert-authored operational tasks + verified trajectories | 灾害 benchmark 中“真实事件/data grounding + 人工/程序化任务构造”同样成立。https://arxiv.org/abs/2605.11633 |
+
+这里的合法性边界固定为：**synthetic 不是问题，method-conditioned generation 才是问题。** 正式 generator 的轴、范围与环境 transition 必须在 proposed method 评测前冻结；baseline 只负责测量 hardness / shortcut，不负责反向塑造 benchmark。
+
+## 2026-10-06 status correction
+
+此前 README 将当前 v0.2 描述成“research-frozen / Q11-only blocker”，并把最早目标写成 `PASS / strong`。该判断已经撤回。
+
+最新 [`HARD-SURVIVOR-FAILURE-ATLAS.v0.1.md`](HARD-SURVIVOR-FAILURE-ATLAS.v0.1.md) 显示：174 hard recipes 只对应 41 个 exact hard signatures，而且 41 / 41 全部坍缩到同一个 `FINITE_CROSSING_WINDOWS + GATEWAY_SUMMARY_QUERY + H2×H3×H4` mechanism family。当前结果足够做 mechanism discovery，不足以把 continuous interaction、active acquisition、physical resource coupling、recovery coverage 全部写成 benchmark-wide `Strong`。
+
+因此当前状态固定为：
+
+```text
+MECHANISM_DISCOVERY_READY
++ HARD_MECHANISM_COVERAGE_REOPENED
++ ENVIRONMENT/GENERATION CONTRACT REBUILD
++ PRISTINE STRUCTURAL GENERALIZATION OPEN
++ Q11 HUMAN SOURCE REVIEW PENDING
+= NOT_BENCHMARK_ADMIT
+```
+
+Layer 3 在这些 blocker 关闭前暂停。后续任何 `Strong` 都必须满足 [`ENVIRONMENT-GENERATION-CONTRACT.v0.1.md §6`](ENVIRONMENT-GENERATION-CONTRACT.v0.1.md) 的显式证据门，而不是由 README 文案授予。
+
 ## Paper-facing benchmark landscape and statistics
 
 <!-- BEGIN GENERATED:LAYER1_PAPER_ASSETS -->
@@ -75,19 +111,19 @@ source-grounded operational obligation
 
 Hard-survivor recovery coverage：`train`=['NO_RECOVERY_STATE', 'OUTAGE_CACHE_RETAIN', 'RECONNECT_RECONCILE_OBJECTIVE_CHECK']；`dev`=['NO_RECOVERY_STATE', 'OUTAGE_CACHE_RETAIN', 'RECONNECT_RECONCILE_OBJECTIVE_CHECK']；`test`=['NO_RECOVERY_STATE', 'OUTAGE_CACHE_RETAIN', 'RECONNECT_RECONCILE_OBJECTIVE_CHECK']。该项负责验证 train/dev/test 均覆盖声明的 recovery 轴；现场 outage 分布由外部 deployment evidence 单独负责。
 
-### Construct coverage acceptance
+### Construct evidence and reopened strong targets
 
-这张表把最早 `调研cache.md §4.7` 的“强×7”目标映射到当前 v0.2。其 authority 范围是 construct-level research freeze；独立 novelty 由 related-work/claim ledger 管理，正式 `BENCHMARK_ADMIT` 由 quality gate 管理。
+这张表不再把最早 `调研cache.md §4.7` 的“强×7”目标直接判成已完成。2026-10-06 hard-survivor audit 发现 41 个 hard signatures 全部坍缩到同一 `FINITE_CROSSING_WINDOWS + GATEWAY_SUMMARY_QUERY + H2×H3×H4` mechanism family，因此除 exact-oracle 基础外，paper-facing `Strong` claim 重新打开。完整验收条件见 `ENVIRONMENT-GENERATION-CONTRACT.v0.1.md §6`。
 
-| 原始 construct 维度 | v0.2 验收 | 自动化证据摘要 |
+| 原始 construct 维度 | 当前证据状态 | 自动化证据摘要 / blocker |
 |---|---|---|
-| 连续交互 | **PASS / strong** | hard survivors=41；blind open-loop audit 由 release gate 单独验证 |
-| 主动补信息 | **PASS / strong** | hard evidence regimes=["GATEWAY_SUMMARY_QUERY"] |
-| 物理通信资源 | **PASS / declared-model strong** | hard service processes=["FINITE_CROSSING_WINDOWS"]；query/send resource transition 由规范与 attribution gate 验证 |
-| 动作改变后续状态 | **PASS / strong** | send/wait/query/retry/ACK 进入统一 execution/obligation transition contract |
-| 长期失效 / 恢复 | **PASS / benchmark-semantics strong** | recovery coverage by split={"train": ["NO_RECOVERY_STATE", "OUTAGE_CACHE_RETAIN", "RECONNECT_RECONCILE_OBJECTIVE_CHECK"], "dev": ["NO_RECOVERY_STATE", "OUTAGE_CACHE_RETAIN", "RECONNECT_RECONCILE_OBJECTIVE_CHECK"], "test": ["NO_RECOVERY_STATE", "OUTAGE_CACHE_RETAIN", "RECONNECT_RECONCILE_OBJECTIVE_CHECK"]} |
-| 外部需求可追溯 | **PASS / research freeze; release audit pending** | source/profile/provenance machine closure 已完成；Q11 human review 仍为 release blocker |
-| 可计算最优策略 | **PASS / strong** | hindsight / full-current / observation-matched / no-paid-query exact references |
+| 连续交互 | **SUPPORTED-SCOPED / STRONG OPEN** | 现有 41 survivors 具有 causal multi-step interaction，但只覆盖一个 hard mechanism family；需要跨独立 process family + fixed/open-loop non-saturation |
+| 主动补信息 | **PARTIAL / STRONG OPEN** | 当前 hard evidence regimes=["GATEWAY_SUMMARY_QUERY"]；PASSIVE_ACK_ONLY / MIXED_PASSIVE_QUERY_PROBE 没有独立 hard survivors，conditional-acquisition gate 未闭合 |
+| 物理通信资源 | **SUPPORTED-SCOPED / STRONG OPEN** | 当前 hard service processes=["FINITE_CROSSING_WINDOWS"]；共享机会/资源已有 intervention 证据，但 mechanism coverage 过窄 |
+| 动作改变后续状态 | **SUPPORTED-SCOPED / STRONG OPEN** | first-irreversible-loss audit 已在 query/send/wait/satellite commitment 上定位 option destruction；仍需新 generator family 与 mutation/holdout 复验 |
+| 长期失效 / 恢复 | **PARTIAL / STRONG OPEN** | split 中 recovery labels={"train": ["NO_RECOVERY_STATE", "OUTAGE_CACHE_RETAIN", "RECONNECT_RECONCILE_OBJECTIVE_CHECK"], "dev": ["NO_RECOVERY_STATE", "OUTAGE_CACHE_RETAIN", "RECONNECT_RECONCILE_OBJECTIVE_CHECK"], "test": ["NO_RECOVERY_STATE", "OUTAGE_CACHE_RETAIN", "RECONNECT_RECONCILE_OBJECTIVE_CHECK"]}，但参数覆盖不等价于独立 recovery hard mechanism |
+| 外部需求可追溯 | **SUPPORTED-SCOPED / STRONG OPEN** | source/profile/provenance machine closure 已有；真实 Q11 human/source review 尚未完成 |
+| 可计算最优策略 | **SUPPORTED / strongest current component** | hindsight / full-current / observation-matched / no-paid-query exact references 已实现；最终 Strong 仍要求独立 brute-force/mutation/retry-legality release audit 全部绑定 |
 
 ### Regeneration discipline
 
@@ -167,20 +203,23 @@ Benchmark 必须证明“难点来自 communication/information structure”，�
 
 | Graduation requirement | v0.2 current state | Disposition |
 |---|---|---|
-| Source-grounded operational obligation / Family Identity | T1 source correction、profile/provenance、Family merge discipline 已闭合 | **PASS / research freeze** |
-| Partial observability + causal evidence | alias worlds、owner query、passive ACK、normal send-as-probe、non-anticipative history 已实现 | **PASS / research freeze** |
-| Real acquisition/execution cost changes future feasibility | query 消耗真实 terrestrial opportunity；send/wait/retry/ACK 进入同一 execution ledger | **PASS / research freeze** |
-| External exact oracle | hindsight / full-current / observation-matched / no-paid-query 参照与 `INFORMATION_INFEASIBLE` 已实现 | **PASS / research freeze** |
-| Strong baseline / shortcut audit | V8 ladder 已完成，最终保留 41 hard signatures / 174 recipes | **PASS / research freeze** |
-| Structure-aware held-out split | hard train/dev/test signatures 16/18/7，solver-signature 与近邻 leakage 审计通过 | **PASS / research freeze** |
+| Source-grounded operational obligation / Family Identity | T1 source correction、profile/provenance、Family merge discipline 已闭合；Q11 真人审计尚未签字 | **SUPPORTED-SCOPED / HUMAN REVIEW OPEN** |
+| Partial observability + causal evidence | alias worlds、owner query、passive ACK、normal send-as-probe、non-anticipative history 已实现；hard surface 只剩单一 evidence regime | **SUPPORTED-SCOPED / COVERAGE OPEN** |
+| Real acquisition/execution cost changes future feasibility | 当前 v0.2 query/send/wait/retry/ACK 在统一 transition 中；first-loss audit 可定位 option destruction | **SUPPORTED-SCOPED / COVERAGE OPEN** |
+| External exact oracle | hindsight / full-current / observation-matched / no-paid-query 参照与 `INFORMATION_INFEASIBLE` 已实现 | **SUPPORTED / RELEASE AUDIT CONTINUES** |
+| Strong baseline / shortcut audit | V8 ladder 已完成，保留 41 signatures / 174 recipes；但全部属于同一 H2×H3×H4 mechanism family | **FAIL AS COVERAGE CLAIM / DISCOVERY EVIDENCE ONLY** |
+| Structure-aware held-out split | 历史 split 的 solver-signature/近邻 leakage 审计通过，但 7-signature test 已在 `fdc0846` 暴露 | **REGRESSION ONLY / PRISTINE HOLDOUT OPEN** |
 | Single-shot / open-loop reducibility as a named release audit | 41/41 hard signatures：observation-matched exact 成功；no-paid-query 与 blind open-loop 均不能保证任务；full-current-state 可解 | **PASS / release evidence** |
 | Communication-attribution intervention matrix | 41/41 hard signatures 通过；41/41 source deadline + controlled capacity binding，17/41 另有 satellite-budget binding | **PASS / release evidence** |
 | Frozen-split LLM/reasoning baseline | DeepSeek Flash：7/7 hard signatures 失败，181 API calls，0 invalid action，全部 `DEADLINE_EXPIRED` | **PASS / baseline complete** |
 | Q10 reproducibility / release manifest | v0.2 pre-release manifest 绑定 31+ artifacts；one-command digest validation PASS | **PASS** |
-| Q11 human/source audit | v0.2 stratified sample 已重建；machine preaudit 23/23 PASS；真实 reviewer 尚未签五项 | **BLOCKED / human review only** |
-| Q0–Q12 + formal `BENCHMARK_ADMIT` | 当前 12 PASS / 1 BLOCKED，仅 Q11 未通过 | **PENDING Q11 ONLY** |
+| Q11 human/source audit | v0.2 stratified sample 已重建；machine preaudit 23/23 PASS；真实 reviewer 尚未签五项 | **BLOCKED** |
+| Environment/generator method-independence contract | 已建立 v0.1 authority；下一版正式 generator 尚未按该 contract 重建 | **BLOCKED / REBUILD** |
+| Hard-mechanism coverage | 当前只覆盖单一 survivor family；H1/H5/MULTI_WINDOW 等未形成独立 hard mechanism | **BLOCKED / REOPENED** |
+| Pristine structural generalization | 历史 test 已暴露；新 cohort 尚未 preregister/freeze | **BLOCKED / REOPENED** |
+| Q0–Q12 + formal `BENCHMARK_ADMIT` | 历史 machine checklist 仍为 12 PASS / 1 BLOCKED，但不编码本次 coverage/test-provenance blocker | **NOT SUFFICIENT FOR RELEASE** |
 
-因此当前判断固定为：**Layer 1 已满足继续做 Layer 2/3 研究所需的 research freeze；机器侧 benchmark graduation/release evidence 已闭合，只剩不能自动完成的 Q11 真人 source/task/oracle/evaluator review。这个 blocker 不构成继续改 generator 或继续占用主研究线的理由。**
+因此当前判断固定为：**Layer 1 已拥有可复现的 source/oracle/validity/failure-discovery 基础，但最终 benchmark 尚未做好。下一阶段只允许按 frozen environment/generation contract 补 coverage、机制门和 pristine holdout；不允许 Layer 2/3 结果反向塑造 case distribution。**
 
 ## Current authority and disposition
 
@@ -206,9 +245,14 @@ v0.1–v0.5、receipt-race、receipt-chain、joint query–satellite Pareto 和 
     → frozen-split LLM baseline                       [DONE v0.2]
     → agentic-reducibility / attribution audits       [DONE 41/41]
     → rebuild Q11 package + machine preaudit           [DONE 23/23 MACHINE_PASS]
-    → Q0–Q12 refresh                                   [DONE 12 PASS / 1 BLOCKED]
+    → Q0–Q12 refresh                                   [HISTORICAL 12 PASS / 1 BLOCKED]
+    → hard-survivor failure / coverage audit           [DONE; COVERAGE REOPENED]
+    → freeze environment / generation contract         [IN PROGRESS v0.1]
+    → rebuild method-independent generator              [PENDING]
+    → mechanism gates + ordinary-baseline red-team     [PENDING]
+    → preregister pristine structural holdout           [PENDING]
     → real Q11 reviewer signoff                        [PENDING]
-    → frozen BENCHMARK_ADMIT release                   [AFTER Q11]
+    → frozen BENCHMARK_ADMIT release                   [AFTER ALL ABOVE]
 
 除 correctness/source/simulator blocker 外，默认不继续扩局部 receipt fixture，不先训练 RL/LLM，不让 Layer 2/3 方法反向塑造 Layer 1 分布。
 

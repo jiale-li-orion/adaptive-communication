@@ -156,7 +156,7 @@
     "stage": "PRE_WORLD_PRE_ORACLE"
   },
   "main_family": "T1_MONITORING_INFORMATION_CONTINUITY",
-  "next_stage": "DYNAMIC_PROCESS_GENERATOR_RECONSTRUCTION_BEFORE_LAYER3",
+  "next_stage": "METHOD_INDEPENDENT_DYNAMIC_GENERATOR_REBUILD",
   "quality_gates": {
     "agentic_reducibility": "PASS_41_OF_41_HARD_SIGNATURES",
     "agentic_reducibility_ref": "results/benchmark/layer1-agentic-reducibility-v0.2-retry-legality.json",
@@ -188,6 +188,10 @@
         "reason": "All 41 current hard signatures collapse to FINITE_CROSSING_WINDOWS + GATEWAY_SUMMARY_QUERY; PASSIVE_ACK_ONLY, MIXED_PASSIVE_QUERY_PROBE/H5 and MULTI_WINDOW_DYNAMIC do not survive the current strong-baseline ladder."
       },
       {
+        "id": "METHOD_INDEPENDENT_GENERATOR_REBUILD_PENDING",
+        "reason": "The v0.1 environment/generation contract and axes are frozen, but the next executable generator/oracle universe has not yet been rebuilt and admitted against the cache06 mechanism gates."
+      },
+      {
         "id": "PRISTINE_STRUCTURAL_GENERALIZATION_OPEN",
         "reason": "The historical 7-signature test was accessed at fdc0846 and is regression evidence, not a pristine method-level structural holdout."
       },
@@ -196,13 +200,17 @@
         "reason": "Machine preaudit cannot replace real reviewer source/task/oracle/evaluator signoff."
       }
     ],
+    "environment_generation_contract_ref": "research/benchmark/ENVIRONMENT-GENERATION-CONTRACT.v0.1.md",
     "established": [
       "T1 source/task contract and provenance discipline",
       "causal observation/evidence process and non-anticipative exact reference",
       "V0-V9 validity/evaluator infrastructure",
       "174 hard recipes / 41 exact hard signatures expose a stable H2xH3xH4 mechanism family",
-      "first irreversible loss is observable across query/send/wait/satellite commitments on all 41 signatures for the audited ordinary baselines"
+      "first irreversible loss is observable across query/send/wait/satellite commitments on all 41 signatures for the audited ordinary baselines",
+      "method-independent environment/generation contract and generation axes are frozen before v0.6 generator execution"
     ],
+    "generation_axes_ref": "research/benchmark/GENERATION-AXES.v0.1.json",
+    "generation_axes_status": "FROZEN_FOR_LAYER1_REBUILD",
     "hard_survivor_failure_atlas_ref": "results/benchmark/layer1-hard-survivor-failure-atlas-v0.1.json",
     "layer3_status": "PAUSED_UNTIL_LAYER1_DYNAMIC_PROCESS_COVERAGE_CLOSES",
     "status": "REOPENED"

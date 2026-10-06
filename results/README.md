@@ -6,7 +6,7 @@
 
 | Path | Owner / purpose |
 |---|---|
-| `benchmark/` | **Layer 1**：exact labels、validity/hardness、split/freeze、release audit、LLM/reducibility/attribution evidence |
+| `benchmark/` | **Layer 1**：exact labels、validity/hardness、failure atlas、historical split/freeze、release audit；当前 benchmark coverage 已重开，旧 freeze 只作 regression/provenance |
 | `agentic/` | **Layer 2 / Layer 3**：compiler/runtime、future-choice/L-U、incremental frontier、policy/search evaluation，以及历史 A7–A11 Agentic evidence |
 | `communication-substrate/` | shared substrate：C* claims、calibration、physics outputs |
 | `reference/` | frozen comparator / reproduction reference plane |

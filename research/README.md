@@ -21,22 +21,22 @@ shared communication substrate + scorer
 | Owner | 持有语义 | 当前状态 | Authority / entry |
 |---|---|---|---|
 | `substrate/` | 通信物理、能量、缓存、机会、fallback、执行生命周期、system model | 稳定共享底座 | [`substrate/README.md`](substrate/README.md) · [`substrate/SYSTEM-MODEL-v1.md`](substrate/SYSTEM-MODEL-v1.md) |
-| `benchmark/` | **Layer 1**：source-grounded operational obligation、task construction、observation/action/oracle、validity/hardness、split/release | **research-frozen**；formal admission 等待 Q11 human/source review | [`benchmark/LAYER1-AUTHORITY.md`](benchmark/LAYER1-AUTHORITY.md) · [`benchmark/README.md`](benchmark/README.md) |
+| `benchmark/` | **Layer 1**：source-grounded operational obligation、task construction、observation/action/oracle、validity/hardness、split/release | **hard-mechanism coverage reopened**；environment/generation contract 重建；formal admission 关闭 | [`benchmark/LAYER1-AUTHORITY.md`](benchmark/LAYER1-AUTHORITY.md) · [`benchmark/README.md`](benchmark/README.md) |
 | `compiler/` | **Layer 2**：Task/Evidence/Capability/Execution、legality、evidence lifecycle、future-choice L/U、incremental frontier、exact fallback | **v2 deterministic core frozen on dev** | [`compiler/README.md`](compiler/README.md) · [`compiler/RUNTIME-DOMAIN-OWNERSHIP-v1.md`](compiler/RUNTIME-DOMAIN-OWNERSHIP-v1.md) |
-| `policy/` | **Layer 3**：合法 / unresolved action 的排序、search guidance、LLM / learned policy | **active**；当前聚焦 learned unresolved-action ranking | [`policy/README.md`](policy/README.md) |
+| `policy/` | **Layer 3**：合法 / unresolved action 的排序、search guidance、LLM / learned policy | **paused**；等待 Layer-1 benchmark coverage / holdout 闭合 | [`policy/README.md`](policy/README.md) |
 | `evaluation/` | replay、attribution、ablation、baseline fairness、跨层 audit contract | 横切三层 | [`evaluation/README.md`](evaluation/README.md) |
 | `literature/` | related work、source registry、claim boundary | 横切三层 | [`literature/README.md`](literature/README.md) |
 | `history/` | 被当前设计取代的 tracked research authority / roadmap | provenance only | [`history/README.md`](history/README.md) |
 
 ## Current research line
 
-Layer 1 已完成当前研究所需的 benchmark freeze。Layer 2 v1 保留为第一版 runtime/compiler baseline；v0.2 重验暴露 acquisition timing failure 后，Layer 2 v2 建立 future-choice / L-U deterministic core，并在 dev correctness 与强对照审计后冻结。当前主线进入 Layer 3：在固定 legality、evidence ownership、L/U 与 exact fallback 下学习 unresolved-action ordering / search guidance。
+Layer 1 当前拥有可复现的 source/task/oracle/validity/failure-discovery 基础，但 **benchmark freeze 已撤回**。2026-10-06 survivor audit 发现 41/41 hard signatures 全部坍缩到同一 H2×H3×H4 family；因此主线回到 Layer 1：先冻结 method-independent environment/generation contract，再补独立 hard mechanism coverage 与 pristine structural holdout。Layer 2 v1/v2 继续作为 deterministic/reference 资产保留；Layer 3 暂停。
 
 当前边界：
 
-- Layer 1 只因 source/correctness/evaluator defect 重开；方法结果不反向修改 generator。
+- Layer 1 当前因 hard-mechanism coverage 与 test provenance 正式重开；方法结果不得反向修改 generator。
 - Layer 2 deterministic semantics 只因 correctness defect 重开；performance temptation 不改变 frozen contract。
-- Layer 3 可以学习排序、search order、compact context；它消费 Layer-2 decision surface，不接管 protocol legality 或 oracle。
+- Layer 3 当前暂停；未来重新启动时仍只能消费 frozen Layer-1/2 contract，不接管 protocol legality、oracle 或 benchmark generation。
 - 历史 7-signature test 已暴露，承担 regression evidence；新的 structural-generalization claim 需要重新 preregister holdout。
 - task quality、acquisition/communication cost、planner compute 三账分别记录。
 
