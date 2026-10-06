@@ -1,31 +1,51 @@
 # Research Ownership
 
-状态：2026-10-05 ownership freeze。
+状态：2026-10-06 current ownership。
 
-本目录按研究对象分层，不再按实验轮次或某一版论文状态组织。`results/CLAIMS.md` 仍是 claim-state authority；Layer 1 当前方向与状态由 [`benchmark/LAYER1-AUTHORITY.md`](benchmark/LAYER1-AUTHORITY.md) 唯一拥有；本文件只定义谁拥有哪类语义。
+`research/` 只按研究对象组织。实验轮次进入 `results/` 或本地 `local_research/episodes/`；当前 claim state 由 `results/CLAIMS.md` 持有。
 
-| Owner | 负责对象 | 当前状态 | 入口 |
+## Architecture
+
+```text
+source / field requirement
+        ↓
+Layer 1 · benchmark
+        ↓ public task/evidence/action/oracle contract
+Layer 2 · decision-semantic compiler
+        ↓ legal structured decision surface
+Layer 3 · policy
+        ↓ selected action
+shared communication substrate + scorer
+```
+
+| Owner | 持有语义 | 当前状态 | Authority / entry |
 |---|---|---|---|
-| `substrate/` | 山区灾前监测通信物理、能量、缓存、机会、回传、fallback、执行生命周期与数学系统模型 | 稳定底座 | `substrate/README.md` |
-| `benchmark/` | Layer 1：source-grounded operational needs、Task construction、validity/hardness、conformance/decision benchmark | **research freeze 已完成**；v0.2 release evidence 已刷新为 **12 PASS / 1 BLOCKED**，Q6 LLM、agentic reducibility、communication attribution、Q10 reproducibility 均已闭合；formal `BENCHMARK_ADMIT` 只剩 Q11 真实 human/source review | `benchmark/LAYER1-AUTHORITY.md` · `benchmark/README.md` · `../spec/benchmark/LAYER1-DECISION-BENCHMARK-v0.2.md` |
-| `compiler/` | Layer 2：Task/Evidence/Capability/Execution 到 live decision surface、EvidenceNeed、commitment、persistent execution | 已有 A7–A11 机制证据，接口冻结 | `compiler/README.md` |
-| `policy/` | Layer 3：deterministic/search、LLM、未来 GNN/offline RL/hybrid policy；只在合法 decision surface 上做选择 | LLM/规则已有，learned policy 尚未实现 | `policy/README.md` |
-| `evaluation/` | replay、attribution、ablation、baseline fairness、生成结果摘要 | 横切三层 | `evaluation/README.md` |
-| `literature/` | 当前 related work 与来源登记 | 横切三层 | `literature/README.md` |
-| `history/` | 被后续决策取代的混合 authority、旧 roadmap | provenance only | `history/README.md` |
+| `substrate/` | 通信物理、能量、缓存、机会、fallback、执行生命周期、system model | 稳定共享底座 | [`substrate/README.md`](substrate/README.md) · [`substrate/SYSTEM-MODEL-v1.md`](substrate/SYSTEM-MODEL-v1.md) |
+| `benchmark/` | **Layer 1**：source-grounded operational obligation、task construction、observation/action/oracle、validity/hardness、split/release | **research-frozen**；formal admission 等待 Q11 human/source review | [`benchmark/LAYER1-AUTHORITY.md`](benchmark/LAYER1-AUTHORITY.md) · [`benchmark/README.md`](benchmark/README.md) |
+| `compiler/` | **Layer 2**：Task/Evidence/Capability/Execution、legality、evidence lifecycle、future-choice L/U、incremental frontier、exact fallback | **v2 deterministic core frozen on dev** | [`compiler/README.md`](compiler/README.md) · [`compiler/RUNTIME-DOMAIN-OWNERSHIP-v1.md`](compiler/RUNTIME-DOMAIN-OWNERSHIP-v1.md) |
+| `policy/` | **Layer 3**：合法 / unresolved action 的排序、search guidance、LLM / learned policy | **active**；当前聚焦 learned unresolved-action ranking | [`policy/README.md`](policy/README.md) |
+| `evaluation/` | replay、attribution、ablation、baseline fairness、跨层 audit contract | 横切三层 | [`evaluation/README.md`](evaluation/README.md) |
+| `literature/` | related work、source registry、claim boundary | 横切三层 | [`literature/README.md`](literature/README.md) |
+| `history/` | 被当前设计取代的 tracked research authority / roadmap | provenance only | [`history/README.md`](history/README.md) |
 
-## Research line
+## Current research line
 
-Layer 1 从原始山区灾前需求和可核查来源构造 Operational Task，并要求 task 在物理系统中激活真实 policy choice、partial evidence、resource conflict 或 temporal dependence。Layer 2 将合法 Task、Evidence、Capability 与 Execution 编译成 typed live decision surface。Layer 3 在该合法空间内选择 commit/query/wait/fallback/replan 等策略。通信结果由独立 physical scorer 评价。
+Layer 1 已完成当前研究所需的 benchmark freeze。Layer 2 v1 保留为第一版 runtime/compiler baseline；v0.2 重验暴露 acquisition timing failure 后，Layer 2 v2 建立 future-choice / L-U deterministic core，并在 dev correctness 与强对照审计后冻结。当前主线进入 Layer 3：在固定 legality、evidence ownership、L/U 与 exact fallback 下学习 unresolved-action ordering / search guidance。
 
-当前版本关系固定为：**Layer 2 v1 已先完成一版机制并由 A7–A11 等结果冻结；由于旧 Layer 1 大量任务在 compilation 后退化为 `unique-ready`，研究随后回到 Layer 1 重做 Decision Benchmark；Layer 1 v0.2 现已 research-freeze。当前主线是用新 Layer-1 v0.2 重验 frozen Layer-2 v1，而不是预先重写 Layer 2。** 只有在 task/capability 已无损表达后，v1 仍出现真正 EvidenceNeed / Context / acquisition / execution 决策失败，才开启 Layer-2 v2；Layer 3 的新 policy/learning claim 随后再展开。
+当前边界：
 
-O1–O6 继续作为 T1 Runtime/semantic conformance/regime assets；A7–A11 继续作为 Layer-2 v1 的机制与执行证据。Layer-1 v0.2 的毕业标准与 release 状态见 `benchmark/README.md` 和 `../spec/benchmark/LAYER1-DECISION-BENCHMARK-v0.2.md`。
+- Layer 1 只因 source/correctness/evaluator defect 重开；方法结果不反向修改 generator。
+- Layer 2 deterministic semantics 只因 correctness defect 重开；performance temptation 不改变 frozen contract。
+- Layer 3 可以学习排序、search order、compact context；它消费 Layer-2 decision surface，不接管 protocol legality 或 oracle。
+- 历史 7-signature test 已暴露，承担 regression evidence；新的 structural-generalization claim 需要重新 preregister holdout。
+- task quality、acquisition/communication cost、planner compute 三账分别记录。
 
 ## Ownership invariants
 
-1. 现实来源定义 operational need、能力边界和可辩护参数范围；simulator 中的研究参数不得反向伪装成现场事实。
-2. shared substrate 不为某个 policy 改物理语义；policy 比较共享同一 Task、信息边界、action legality 与 scorer。
-3. protocol legality、authority、owner、freshness、execution lifecycle 由 deterministic semantics 持有；learning 只优化合法选择空间。
-4. conformance correctness 与 decision quality 分开报告。唯一 ready action 的任务可以验证 Runtime，但不能单独证明 planning/learning 能力。
-5. 历史负结果、撤回结果和被普通机制覆盖的 candidate 保留 provenance，不回到 current owner。
+1. 外部来源持有 operational need、authority boundary 与可辩护参数范围。
+2. `substrate/` 持有共享物理语义；benchmark/compiler/policy 使用同一 physical transition 与 scorer。
+3. `benchmark/` 持有问题定义和 exact evaluation contract。
+4. `compiler/` 持有 deterministic correctness：legality、evidence lifecycle、L/U、incremental validity 与 exact fallback。
+5. `policy/` 持有合法空间内的选择与搜索顺序。
+6. 数字进入论文前经过 `results -> generator -> generated artifact` 链；README 不建立第二份数字 authority。
+7. superseded 结果进入 history/lineage/provenance，不回写 current owner。

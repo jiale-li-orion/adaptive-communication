@@ -1,8 +1,21 @@
 # Agentic experiment evidence catalog
 
-本目录不是“运行输出垃圾桶”，而是 Agentic Communication 的实验资产库。实验目录名一旦进入
-cache、runner、claim 或论文引用，就保持路径稳定；后续通过本索引改变它的**研究地位**，不靠搬目录
-改写历史。
+本目录持有 Agentic Communication 的实验资产与长期稳定路径。实验目录一旦进入 cache、runner、claim 或论文引用，其路径保持稳定；本索引负责更新每组资产的**研究地位**与允许用途。
+
+
+## 0. Current control-plane evidence
+
+当前主线证据按 Layer owner 读取；下表优先于后面的 A7–A11 historical paper catalog。
+
+| Family | Role | Current disposition |
+|---|---|---|
+| `layer1-v02-*` | Layer-1 → Layer-2 v1 representability / binding / acquisition-trigger bridge | frozen bridge evidence |
+| `layer2-v2-*` | future-choice L/U、conditional query timing、conflict/evidence frontier、correctness、three-ledger、strong controls | deterministic core frozen on dev；wall-time boundary 保留 |
+| `layer3-rank-dataset-*` | unresolved-action offline ranking dataset | train/dev complete |
+| `layer3-linear-ranker-*` | train-only first learned ranker | v0.1 baseline |
+| `layer3-learned-ranking-*` | learned search-order audit under frozen Layer 2 | frontier correctness PASS；search gain small；wall-time negative |
+
+这些 family 持有当前 Layer-2/3 machine state。A7–A11 继续承担历史 runtime/model baseline 与论文谱系证据。
 
 ## 1. 两个正交维度
 
@@ -12,7 +25,7 @@ cache、runner、claim 或论文引用，就保持路径稳定；后续通过本
 |---|---|---|
 | **F — formal** | 当前 claim / 主表 / held-out / 强对照的正式证据 | 正文主表、claim、artifact verdict |
 | **S — supporting** | 已验证机制、消融、上下界、敏感性或公平性证据 | 正文机制表、appendix、答审、后续重组表格 |
-| **D — development-diagnosis** | 被后续版本 supersede，但保留真实失败与方法演进信息 | failure analysis、历史消融、附录诊断；不得直接冒充当前 main result |
+| **D — development-diagnosis** | 被后续版本 supersede，但保留真实失败与方法演进信息 | failure analysis、历史消融、附录诊断；进入当前 main result 需要重新完成 promotion / claim gate |
 | **B — substrate/baseline** | pre-API、普通通信基线、source/robustness/attribution 基础设施 | 公平性、benchmark validity、通信底座表格 |
 
 ### Artifact role inside one experiment
@@ -28,7 +41,7 @@ cache、runner、claim 或论文引用，就保持路径稳定；后续通过本
 因此，“不进入远端”只描述 storage policy，不代表“不可复用”。论文数字仍遵守
 `result -> generator -> paper/generated -> manuscript` 单一来源链。
 
-## 2. F — 当前正式论文证据
+## 2. F — 历史 A7–A11 正式论文证据
 
 | Experiment | 当前用途 | 远端保存粒度 |
 |---|---|---|
@@ -38,7 +51,7 @@ cache、runner、claim 或论文引用，就保持路径稳定；后续通过本
 | `query-positive-gateway-backup-v1/` | A10/A11；owner query -> guard closure -> backup -> physical gain | deterministic gate、aggregate/audit/manifests、DeepSeek/MiMo summaries；raw trace 本地 |
 | `paper-v1/` | 四张正式论文表的 compact numeric authority | `paper-results.json` + human-readable table projection |
 
-这五组是当前正文数字的第一来源。formal 目录中的大 trace 仍是 replay payload，不需要和 compact
+这五组是 A7–A11 历史稿件正文数字的第一来源。formal 目录中的大 trace 仍是 replay payload，不需要和 compact
 authority 一起进 Git。
 
 ## 3. S — 可复用的机制 / 消融 / 后续填表证据
@@ -88,8 +101,7 @@ authority 一起进 Git。
 | `model-context-inputs-v1/` | task-conditioned / FullDump / generic-ReAct frozen-input fairness；后续模型表仍可复用 |
 | `catalog-smoke-v1.json` | task catalog smoke / schema conformance |
 
-这些结果不是“旧了就没用”。它们承担 formal model comparison 的公平性与 benchmark validity；A7–A11
-是在这层之上成立。
+这些结果承担 formal model comparison 的公平性与 benchmark validity；A7–A11 的历史结论建立在这层 substrate 上。
 
 ## 5. D — development diagnosis / superseded iteration
 
@@ -117,12 +129,11 @@ authority 一起进 Git。
 - `o5-transition-context-model-probe-v1/`、`o5-transition-context-model-probe-v2-decision-sufficient/`。
 - `o5-saved-stopping-ablation-r3-readback-v1/`、`o5-saved-model-one-shot-continuation-v2-decision-sufficient/`、`o5-saved-model-backhaul-sensitivity-v1/`。
 
-这些目录最有价值的不是“再拿来做主结果”，而是回答：某个设计为什么被引入、哪个 failure 是真实
-模型 failure、哪个只是旧接口暴露了无关状态。需要写方法演进图或答审时，优先从这里取证。
+这些目录承担 failure provenance：记录某个设计为何被引入、哪些 failure 属于真实模型行为、哪些现象来自旧接口暴露的无关状态。方法演进图与答审优先从这里取证。
 
 ## 6. Storage / promotion rule
 
-`results/agentic/*` 默认本地保留，是为了阻止新实验自动把大 trace 推入 Git；它不是删除规则。
+`results/agentic/*` 的 raw payload 默认留在本地，compact evidence 按 promotion rule 进入 Git。
 
 一次实验满足以下任一条件时，promotion compact evidence：
 

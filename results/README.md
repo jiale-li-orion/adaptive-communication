@@ -1,23 +1,40 @@
 # Results Ownership
 
-results/ stores machine-readable evidence and frozen comparisons. Claim state is owned only by CLAIMS.md.
+`results/` 持有可提交、可引用、可重建的机器证据。`results/CLAIMS.md` 持有 claim state；模块 README 只解释证据归属与用途。
 
-- agentic/: Layer-2 / policy evaluation runs, including A7–A11 live-model evidence and supporting Agentic experiments.
-- benchmark/: Layer-1 mechanism audits; not automatically promoted to paper claims. `receipt-continuation-v0.5.json` is reproduced by `code/evaluation/benchmark/audit_receipt_continuation_v0_5.py`; scope and support assumptions are in `research/benchmark/RECEIPT-CONTINUATION-REVIEW.v0.5.md`.
-- communication-substrate/claims/: current C1–C11 communication-substrate evidence referenced by CLAIMS.md.
-- communication-substrate/calibration/: source-derived link/outage/energy calibration artifacts.
-- communication-substrate/physics/: terrain, coverage, ITM/LoRa and physical-substrate outputs used by the shared simulator.
-- reference/: frozen comparison snapshots used by reproduction audits; this remains a separate immutable comparison plane.
-- legacy-communication/: historical instance sweeps, joint-control searches, old Agent traces and method probes that no longer define current claims.
-- history/withdrawn/: explicitly withdrawn or superseded result material.
-- history/registries/: historical result registries whose narrative/paths were valid for an earlier repository layout.
+## Current result planes
 
-A file under legacy-communication/ is provenance, not a current claim. A current claim must appear in CLAIMS.md and point to an existing result.
+| Path | Owner / purpose |
+|---|---|
+| `benchmark/` | **Layer 1**：exact labels、validity/hardness、split/freeze、release audit、LLM/reducibility/attribution evidence |
+| `agentic/` | **Layer 2 / Layer 3**：compiler/runtime、future-choice/L-U、incremental frontier、policy/search evaluation，以及历史 A7–A11 Agentic evidence |
+| `communication-substrate/` | shared substrate：C* claims、calibration、physics outputs |
+| `reference/` | frozen comparator / reproduction reference plane |
+| `history/` | withdrawn、superseded、historical registries |
+| `legacy-communication/` | 历史 communication method runs 与旧 instance/probe evidence |
 
-2026-10-05 retry-semantics diagnostic: `benchmark/layer1-retry-review-inputs.json`
-freezes twelve DB44 landslide-corrected paid-evidence signatures before the retry
-mask repair; `benchmark/layer1-retry-review.json` records historical-mask,
-duplicate-free repair and deduplicating-receiver comparisons. These are bounded
-diagnostics, not replacement universe labels. Reproduce with
-`code/evaluation/benchmark/audit_retry_action_mask_v0_1.py`; see
-`research/benchmark/LAYER1-RETRY-SEMANTICS-REVIEW-2026-10-05.md` for scope and handoff.
+当前数字进入 README / paper / figure 的路径固定为：
+
+```text
+machine result
+    -> generator / audit
+    -> generated compact artifact
+    -> README / paper / figure projection
+```
+
+README 与 manuscript 不单独维护实验数字。
+
+## Agentic result index
+
+[`agentic/README.md`](agentic/README.md) 按 research role 管理长期稳定的实验路径。目录路径保持稳定，研究地位由 index / claim ledger 更新：
+
+- current Layer-2 v2 artifacts：`layer2-v2-*`；
+- current Layer-1→Layer-2 bridge audits：`layer1-v02-*`；
+- Layer-3 artifacts：统一使用 `layer3-*` 前缀；
+- A7–A11 与 O1–O6-era experiments：作为 formal historical baseline、supporting evidence 或 development diagnosis 保留。
+
+大型 raw trace 默认留在本地 research storage；远端优先提交 aggregate / audit / summary / manifest 与论文所需 compact payload。
+
+## History and provenance
+
+`history/withdrawn/` 保存明确撤回或被修正的结果；`history/registries/` 保存早期布局下的 registry。`legacy-communication/` 保存旧通信方法证据。三者均承担 provenance，当前 claim 只有在 `CLAIMS.md` 登记后成立。
