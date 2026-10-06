@@ -1,0 +1,65 @@
+{
+  "exact_projected_labels": {
+    "INFORMATION_INFEASIBLE": 630,
+    "MIXED_WORLD_SOLVABILITY": 1008,
+    "NO_PAID_QUERY_REQUIRED": 55008,
+    "PAID_EVIDENCE_REQUIRED": 2106
+  },
+  "hard_evidence_regimes": [
+    "GATEWAY_SUMMARY_QUERY"
+  ],
+  "hard_recovery_regime_coverage": {
+    "dev": [
+      "NO_RECOVERY_STATE",
+      "OUTAGE_CACHE_RETAIN",
+      "RECONNECT_RECONCILE_OBJECTIVE_CHECK"
+    ],
+    "test": [
+      "NO_RECOVERY_STATE",
+      "OUTAGE_CACHE_RETAIN",
+      "RECONNECT_RECONCILE_OBJECTIVE_CHECK"
+    ],
+    "train": [
+      "NO_RECOVERY_STATE",
+      "OUTAGE_CACHE_RETAIN",
+      "RECONNECT_RECONCILE_OBJECTIVE_CHECK"
+    ]
+  },
+  "hard_service_processes": [
+    "FINITE_CROSSING_WINDOWS"
+  ],
+  "hard_split": {
+    "dev": {
+      "recipes": 90,
+      "signatures": 18
+    },
+    "test": {
+      "recipes": 24,
+      "signatures": 7
+    },
+    "train": {
+      "recipes": 60,
+      "signatures": 16
+    }
+  },
+  "lineage": {
+    "exact_summary": "results/benchmark/layer1-exact-labels-v0.2-retry-legality.json",
+    "public_test_freeze": "results/benchmark/layer1-public-test-freeze-v0.2-retry-legality.json",
+    "structure_aware_split": "results/benchmark/layer1-structure-aware-split-v0.2-retry-legality.json",
+    "v8_summary": "results/benchmark/layer1-v8-all-pass-v0.2-retry-legality.json"
+  },
+  "notes": {
+    "generator_universe_recipes": 58752,
+    "hard_survivor_recipes": 174,
+    "hard_survivor_signatures": 41,
+    "public_test_cases": 3804,
+    "public_test_sha256": "23307c06ed7c9f9d992db4bcc5cee12b1703e38d997a293b3d1677cc1b91b6f5",
+    "v8_input_signatures": 1423
+  },
+  "v8_signature_outcomes": {
+    "CHEAP_POLICY_RULE": 1346,
+    "DEEP_HORIZON": 13,
+    "FINITE_HORIZON": 23,
+    "SURVIVES_V8_LADDER_V0_1": 41
+  }
+}

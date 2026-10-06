@@ -44,6 +44,7 @@ help:
 check:
 	$(PY) code/run_checks.py
 	$(PY) code/substrate/joint/test_joint.py
+	$(PY) scripts/make_layer1_paper_figures.py --check
 
 # 论文产物。中文稿走 XeTeX，英文稿走 pdflatex，细节见 paper/build.sh。
 paper:
