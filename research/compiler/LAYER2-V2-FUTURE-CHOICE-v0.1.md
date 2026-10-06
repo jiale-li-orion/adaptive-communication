@@ -1,6 +1,6 @@
 # Layer-2 v2 — Future-Choice / L-U
 
-状态：**PLANNING KERNEL DEV+HELD-OUT PASS / FULL METHOD CONTRACT PENDING**
+状态：**DETERMINISTIC DEV FREEZE CANDIDATE / STRONG WALL GATE OPEN / INDEPENDENT STRUCTURAL HOLDOUT UNRESOLVED**
 
 Layer-2 v2 针对 frozen v1 已确认的 category-C failure：v1 能识别 unresolved owner evidence，却不会判断“此刻取证以后，未来 obligation feasibility 是否仍成立”。Layer-1 v0.2 中 query 是真实通信 action，会消耗时间和通信机会，因此 evidence relevance 与 acquisition timing 必须在同一 causal state transition 内评估。
 
@@ -92,7 +92,7 @@ dev ablation 比较了 `root_query / query_recursive / all_recursive / none`。�
 - **完整 correctness gates**：non-anticipativity、bound soundness、pruning preservation、历史事实/当前推断分离都需要全前缀机器审计；当前 soundness test 只是代表性 smoke + 端到端 exact outcome 对账；
 - **强基线 ladder**：补 gateway local autonomy、passive-only、normal-send-as-probe、fixed periodic/batch evidence、真正 depth-k belief/receding-horizon、普通 incremental AND-OR/dependency-tracking 等原文指定对照；
 - **方法归因**：当前 same-order exact 在 held-out wall time 上仍快于 v2（0.041 s vs 0.050 s），所以“L/U 相对强同序实现的净计算优势”尚未通过；
-- **结构留出**：当前 held-out 是 frozen solver-signature split，仍需按冲突宽度/重叠结构/事件交错做 method-level structural holdout；
+- **结构泛化 provenance**：7-signature held-out/test 已在 planning-kernel checkpoint `fdc0846` 暴露；后续 full-v2 开发发生在该结果已知之后，因此它只能作为 regression evidence。train/dev-only structural descriptor 可做 coverage 诊断，但不能把旧 test 重新包装成 pristine method-level structural holdout；独立 generalization claim 需要新的 preregistered protocol/cohort。
 - **三笔账与系统前沿**：分别落盘 gateway-local evidence、remote acquisition、planner computation，并最终比较 task-quality / acquisition-cost / computation frontier；当前主要完成 planner compute；
 - **ASC system claim**：当前 hard family 只有 `gateway_state_summary` 这一类 owner query，尚未证明异构 evidence acquisition、evidence ageing/revalidation 与 layered recovery 组成的完整 autonomous-information-construction 闭环。
 

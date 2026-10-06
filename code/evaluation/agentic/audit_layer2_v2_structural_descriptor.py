@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Freeze the Layer-2 v2 structural-holdout descriptor without reading test.
+"""Freeze the Layer-2 v2 structural descriptor using train/dev only.
 
 The descriptor follows the dimensions named in cache06.md rather than IDs or
 random seeds:
@@ -9,10 +9,12 @@ random seeds:
 * a normalized event-interleaving skeleton over execution, asynchronous
   feedback, and owner-query observations.
 
-This audit intentionally reads only train/dev artifacts.  It is a descriptor
-freeze and coverage diagnostic, **not** the final structural-holdout result.
-The frozen test split may be evaluated once after the deterministic method is
-declared frozen.
+This audit itself intentionally reads only train/dev artifacts.  However, the
+repository's seven hard ``test`` signatures were already evaluated at the
+earlier planning-kernel checkpoint ``fdc0846``.  Therefore this descriptor is a
+coverage/structure diagnostic only: it must not relabel that previously
+exposed split as a pristine unseen structural holdout for the later full v2
+method.
 """
 from __future__ import annotations
 
@@ -124,7 +126,7 @@ def main() -> int:
     unseen_dev = [row for row in dev if row["structural_key"] not in train_keys]
     artifact = {
         "schema_version": "0.1",
-        "status": "DESCRIPTOR_FROZEN_TEST_UNREAD",
+        "status": "DESCRIPTOR_FROZEN_AFTER_PRIOR_TEST_EXPOSURE",
         "descriptor_contract": {
             "dimensions": [
                 "obligation_count",
@@ -135,8 +137,11 @@ def main() -> int:
                 "compressed_event_skeleton",
             ],
             "forbidden_holdout_keys": ["recipe_id", "signature", "seed", "start_phase_only"],
-            "test_accessed": False,
-            "final_rule": "after deterministic method freeze, evaluate the frozen test signatures once and report results separately for structural keys absent from train/dev coverage",
+            "this_audit_reads_test": False,
+            "repository_test_accessed_previously": True,
+            "prior_test_exposure_commit": "fdc0846",
+            "prior_test_artifact": "results/agentic/layer2-v2-matrix-test-all-recursive.json",
+            "final_rule": "the existing seven-signature test split is regression evidence only; any claim of independent structural generalization requires a separately preregistered cohort/protocol that is not selected using current method outcomes",
         },
         "coverage": {
             "train_signature_count": len(train),

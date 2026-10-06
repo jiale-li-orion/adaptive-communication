@@ -35,7 +35,7 @@ lossless-binding audit：41/41 hard signatures PASS；沿 exact policy tree 共�
 
 完整 v1 revalidation matrix 见 [`LAYER2-V1-REVALIDATION-v0.2.md`](LAYER2-V1-REVALIDATION-v0.2.md)：10 个机制项最终为 **A=4 / B=5 / C=1**。唯一确认的 C 类 failure 是 acquisition timing；B 类只表示旧 O1–O6 task binding 不能直接迁移，不能包装成方法失败。
 
-Layer-2 v2 当前已经形成 **dev-complete deterministic mechanism core / final method freeze pending**。planning kernel、persistent action-feasibility frontier、flow/min-cut conflict frontier、event-local invalidation、versioned evidence lifecycle、L/U soundness、完整 baseline ladder、three-ledger accounting、structural descriptor、acquisition-mode competition 与 controlled intervention 都已经有 full-dev machine artifact。conditional `Q×B` frontier 在 query-timing scope 上 432/432 与 exact 一致，并在 1,947 个 resource-cell 请求中由 validity domain 直接回答 960 个。当前 deterministic freeze 前的主要 open correctness gate 已收敛为 **bounded off-policy non-anticipativity / bound-pruning / incremental-equivalence audit**；strong-baseline net-compute / system-frontier 仍独立保持 OPEN。final structural test 在 freeze 前继续封存，Layer 3 不进入主结果。
+Layer-2 v2 当前已经形成 **dev-complete deterministic mechanism core / code-and-claim freeze candidate**。planning kernel、persistent action-feasibility frontier、flow/min-cut conflict frontier、event-local invalidation、versioned evidence lifecycle、L/U soundness、完整 baseline ladder、three-ledger accounting、acquisition-mode competition、controlled intervention 与 depth-6 bounded off-policy correctness 都已经有 full-dev machine artifact。bounded off-policy audit 覆盖 18 signatures、**900 decision prefixes / 1,347 forced legal actions / 144 observation branches**，0 truncation；L/U、conditional `Q×B`、incremental/full-rebuild 与 realization-leakage 四项全部通过。planner-expansion budget frontier 在 18/18 cases 上严格低于 ordinary persistent/dependency-cache exact，并在全部 16 个 observed breakpoints 上从不落后；strong wall-time gate仍为 negative/open。**Provenance correction：seven hard test signatures 已在 `fdc0846` planning-kernel checkpoint 暴露，不能再充当当前 full-v2 的 pristine final structural holdout。** 下一步是冻结 deterministic code/claim boundary；独立 structural generalization 需要另行 preregister protocol/cohort，不能洗白旧 test。
 
 ## Baseline ladder audit
 
@@ -122,9 +122,9 @@ model-facing context graph 现在显式包含 State / Obligation / OpportunityRe
 
 ### Structural holdout freeze
 
-结构留出 descriptor 已在 **不读取 test split** 的前提下冻结到 `results/agentic/layer2-v2-structural-descriptor-freeze.json`。固定维度来自 `cache06.md`：obligation count、maximum temporal overlap、maximum conflict width、event classes、first-occurrence ordering 与 compressed event-interleaving skeleton；明确禁止使用 recipe ID、solver signature、seed 或仅起始相位充当结构键。
+结构 descriptor 的**计算过程本身**只读取 train/dev，固定维度来自 `cache06.md`：obligation count、maximum temporal overlap、maximum conflict width、event classes、first-occurrence ordering 与 compressed event-interleaving skeleton；明确禁止 recipe ID、solver signature、seed 或仅起始相位作为结构键。但 repo-level provenance 已确认：7 个 hard test signatures 在更早的 `fdc0846` planning-kernel checkpoint 已经运行并落 `results/agentic/layer2-v2-matrix-test-all-recursive.json`。因此当前 descriptor 只能承担 structure coverage / grouping 诊断，**不能把旧 test 重新标成 unseen holdout**。
 
-当前 coverage 诊断只读 train/dev：train 16 signatures / 3 structural keys，dev 18 / 4 structural keys，按冻结 descriptor **dev 18/18 均属于 train 未覆盖结构**。这说明 dev 的结构迁移压力真实存在，但因为 dev 已经参与方法开发，不能把它包装成最终 structural holdout。**test 仍未读取；只有 deterministic method freeze 后才允许一次性运行 test，并单独报告 train/dev 未覆盖 structural keys。**
+当前 coverage 诊断只读 train/dev：train 16 signatures / 3 structural keys，dev 18 / 4 structural keys，按冻结 descriptor **dev 18/18 均属于 train 未覆盖结构**。这说明 dev 的结构迁移压力真实存在，但 dev 已参与方法开发；旧 test 又已被 planning-kernel 阶段暴露。因此两者都不能包装成当前 full-v2 的 pristine structural holdout。独立 generalization claim 保持 OPEN，后续若补必须先注册一个不由当前 method outcome 选择的评价协议/cohort，并单独说明其来源与选择规则。
 
 这一门现在已经扩展到完整 dev split，并且结果进一步分成两层：
 
@@ -137,6 +137,6 @@ model-facing context graph 现在显式包含 State / Obligation / OpportunityRe
 
 完整 baseline ladder artifact 已落在 `results/agentic/layer2-v2-baseline-ladder-dev.json`。18 个 hard-dev signatures 上：gateway-local autonomy = **18/18**；generic exact = **18/18**；no-paid-query exact = **0/18**；normal-send-as-probe、fixed owner read、四种 fixed query schedule、myopic VoI、shallow rule、true depth-2/3、flow-terminal receding horizon 2/3/4 均为 **0/18**。因此当前困难不是物理不可达：本地 placement 可完成；困难来自 center placement 下 evidence acquisition、shared opportunity 和跨阶段 future-choice 耦合。该 hard set 是 Layer-1 在 v2 方法形成前冻结的 structural survivor，不允许因这些结果再反改 generator。
 
-后续顺序固定为：**bounded off-policy correctness / non-anticipativity audit → deterministic method freeze → 只读一次 final test / structural holdout → 系统前沿汇总 → 再决定 Layer-3 learned ranking 是否进入主结果**。acquisition-mode 与 controlled-intervention Gate 8/9 已在 dev 关闭；strong ordinary persistent exact 的净 wall-time 门继续独立记为 `OPEN`，不通过 Python 微优化冒充算法贡献。
+后续顺序固定为：**deterministic code/claim freeze → 把旧 7-signature test 固定为 previously-exposed regression evidence → preregister 独立 structural-generalization protocol/cohort（若论文需要该 claim）→ 再决定 Layer-3 learned ranking 是否进入主结果并尝试关闭 strong wall gate**。bounded off-policy correctness 已在 depth-6 dev 上关闭；acquisition/intervention Gate 8/9 已关闭。strong ordinary persistent exact 的净 wall-time 门继续独立记为 `OPEN`，不通过 Python 微优化冒充算法贡献。
 
 ordinary incremental AND–OR 与 replay-gated dependency/cache exact 的 full-dev 四臂归因已经完成并冻结：1,053/1,053 action frontiers 与 fresh exact 一致；v2 为 **21,432 expansions**，ordinary persistent exact **51,264**，dependency-cache exact **44,343**，fresh exact-per-action **365,295**。v2 wall 明显优于 dependency-cache control，但仍慢于 lean ordinary persistent exact，因此结构收益已排除“只是 dead-history cache”的解释，净 wall gate 仍保持 OPEN。
