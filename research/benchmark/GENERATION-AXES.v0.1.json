@@ -49,10 +49,22 @@
     "satellite_geometry": {
       "trace_profile": "CONNECTA_20260922_SIHUI_GEOMETRY_48H",
       "trace_path": "research/benchmark/traces/v0.1/CONNECTA_20260922_SIHUI_GEOMETRY_48H.json",
-      "rule": "Preserve every eligible model-derived opportunity inside each selected public geometry slice; do not selectively hide or delete windows for hardness."
+      "rule": "Preserve every eligible model-derived opportunity inside each selected public geometry slice; do not selectively hide or delete windows for hardness.",
+      "slice_start_stride_s": 1800,
+      "signature_rule": "For each obligation horizon, enumerate every 1800-s start whose horizon fits the frozen 48h trace; preserve all window starts inside the slice; deduplicate only exact/300-s-rounded relative timing shapes, never by baseline outcome."
     }
   },
   "controlled_stress": {
+    "evidence_capabilities": {
+      "dedicated_query": {
+        "id": "receipt_summary",
+        "proposition": "communication.gateway.receipt_summary",
+        "owner": "gateway",
+        "value_rule": "sample only gateway receipts that have actually occurred by the owner-read time; never encode current/future service state or future opportunity identity"
+      },
+      "normal_send_as_probe": true,
+      "final_ack_or_timeout": true
+    },
     "obligation_composition": {
       "stream_count": 2,
       "obligations_per_stream": [
