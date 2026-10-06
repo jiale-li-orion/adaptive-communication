@@ -259,6 +259,74 @@ def _process_map(process: Mapping[str, Any]) -> dict[str, Mapping[str, Any]]:
     return {str(w["world_id"]): w for w in process["world_owner_processes"]}
 
 
+def _query_rule(process: Mapping[str, Any]) -> Mapping[str, Any] | None:
+    rows = list(process.get("query_capabilities", []))
+    return rows[0] if rows else None
+
+
+def _passive_rule(process: Mapping[str, Any]) -> Mapping[str, Any] | None:
+    rows = list(process.get("passive_observation_rules", []))
+    return rows[0] if rows else None
+
+
+def _receipt_summary(state: LocalState) -> dict[str, Any]:
+    """Owner-side receipt facts that have actually occurred by the prefix.
+
+    Delivered obligations imply an earlier accepted gateway receipt. Pending
+    deliveries contribute only after their gateway receipt has been observed by
+    the execution kernel. No future service state or opportunity is exposed.
+    """
+
+    received = set(state.delivered)
+    for d in state.pending_deliveries:
+        if d.gateway_receipt_seen:
+            received.add(d.obligation_id)
+    return {"gateway_received": sorted(received)}
+
+
+def _query_payload(
+    process: Mapping[str, Any],
+    proc_world: Mapping[str, Any],
+    state: LocalState,
+    at_s: int,
+) -> dict[str, Any]:
+    q = _query_rule(process)
+    kind = str((q or {}).get("payload_kind", "GATEWAY_STATE_SUMMARY"))
+    if kind == "RECEIPT_SUMMARY":
+        return _receipt_summary(state)
+    return gateway_snapshot(proc_world, at_s)
+
+
+def _query_response_delay(process: Mapping[str, Any]) -> int:
+    q = _query_rule(process)
+    return int((q or {}).get("response_delay_s", QUERY_RESPONSE_DELAY_S))
+
+
+def _query_timeout_delay(process: Mapping[str, Any]) -> int:
+    q = _query_rule(process)
+    return int((q or {}).get("timeout_s", _query_response_delay(process)))
+
+
+def _gateway_receipt_delay(process: Mapping[str, Any]) -> int:
+    rule = _passive_rule(process)
+    return int((rule or {}).get("gateway_receipt_delay_s", GATEWAY_RECEIPT_DELAY_S))
+
+
+def _final_ack_delay(process: Mapping[str, Any]) -> int:
+    rule = _passive_rule(process)
+    return int((rule or {}).get("final_ack_delay_s", FINAL_ACK_DELAY_S))
+
+
+def _negative_observation_delay(process: Mapping[str, Any]) -> int:
+    rule = _passive_rule(process)
+    return int((rule or {}).get("negative_observation_after_s", ACK_TIMEOUT_S))
+
+
+def _satellite_completion_delay(process: Mapping[str, Any]) -> int:
+    resource = dict(process.get("resource_contract", {}))
+    return int(resource.get("satellite_completion_delay_s", SATELLITE_COMPLETION_DELAY_S))
+
+
 def _matching_terrestrial_window(
     world: Mapping[str, Any],
     state: LocalState,
@@ -510,9 +578,11 @@ def solve_observation_matched(
         world = wm[wid]
         proc_world = pm[wid]
         reachable = _matching_terrestrial_window(world, st, at_s) is not None
+        q = _query_rule(process)
+        qid = str((q or {}).get("query_id", "gateway_state_summary"))
         if not reachable:
-            return "query:gateway_state_summary=__TIMEOUT__"
-        return "query:gateway_state_summary=" + jsonable(gateway_snapshot(proc_world, at_s))
+            return f"query:{qid}=__TIMEOUT__"
+        return f"query:{qid}=" + jsonable(_query_payload(process, proc_world, st, at_s))
 
     def query_can_change_history(states: Mapping[str, LocalState], at_s: int) -> bool:
         # Reissuing the same owner read while every compatible world's sampled
@@ -582,7 +652,8 @@ def solve_observation_matched(
             and all(st.pending_query is None for st in states.values())
             and query_can_change_history(states, at_s)
         ):
-            actions.append(("ISSUE_QUERY", "gateway_state_summary"))
+            q = _query_rule(process)
+            actions.append(("ISSUE_QUERY", str((q or {}).get("query_id", "gateway_state_summary"))))
         actions.append(("WAIT", None))
 
         for action, arg in actions:
@@ -604,18 +675,21 @@ def solve_observation_matched(
                     used = st.terrestrial_used
                     if window is not None:
                         used = _with_used(st, str(window["window_id"]))
-                    payload = gateway_snapshot(proc_world, at_s) if reachable else None
+                    payload = _query_payload(process, proc_world, st, at_s) if reachable else None
+                    q = _query_rule(process)
+                    qid = str((q or {}).get("query_id", "gateway_state_summary"))
                     signature = (
-                        "query:gateway_state_summary="
+                        f"query:{qid}="
                         + (jsonable(payload) if reachable else "__TIMEOUT__")
                     )
                     obs = signature + f":sampled@{at_s}"
+                    arrive_delay = _query_response_delay(process) if reachable else _query_timeout_delay(process)
                     child_states[wid] = LocalState(
                         delivered=st.delivered,
                         terrestrial_used=used,
                         satellite_used=st.satellite_used,
                         satellite_budget=st.satellite_budget,
-                        pending_query=PendingQuery(at_s + QUERY_RESPONSE_DELAY_S, obs),
+                        pending_query=PendingQuery(at_s + arrive_delay, obs),
                         last_query_signature=signature,
                         last_direct_signature=st.last_direct_signature,
                         pending_deliveries=st.pending_deliveries,
@@ -634,9 +708,9 @@ def solve_observation_matched(
                     pd = PendingDelivery(
                         obligation_id=oid,
                         accepted=accepted,
-                        gateway_receipt_at_s=(at_s + GATEWAY_RECEIPT_DELAY_S if accepted else None),
-                        final_ack_at_s=(at_s + FINAL_ACK_DELAY_S if accepted else None),
-                        negative_observation_at_s=(None if accepted else at_s + ACK_TIMEOUT_S),
+                        gateway_receipt_at_s=(at_s + _gateway_receipt_delay(process) if accepted else None),
+                        final_ack_at_s=(at_s + _final_ack_delay(process) if accepted else None),
+                        negative_observation_at_s=(None if accepted else at_s + _negative_observation_delay(process)),
                     )
                     child_states[wid] = LocalState(
                         delivered=st.delivered,
@@ -660,7 +734,7 @@ def solve_observation_matched(
                         obligation_id=oid,
                         accepted=True,
                         gateway_receipt_at_s=None,
-                        final_ack_at_s=at_s + SATELLITE_COMPLETION_DELAY_S,
+                        final_ack_at_s=at_s + _satellite_completion_delay(process),
                         negative_observation_at_s=None,
                     )
                     child_states[wid] = LocalState(
