@@ -60,7 +60,14 @@ def _artifact_check(root: Path, meta: dict[str, Any]) -> None:
 
 def audit(out_dir: Path) -> dict[str, Any]:
     out_dir = out_dir.resolve()
+    complete_path = out_dir / "COMPLETE.json"
+    assert complete_path.exists(), "official generation run is incomplete: COMPLETE.json missing"
+    complete = _read_json(complete_path)
+    assert complete["status"] == "COMPLETE"
     manifest = _read_json(out_dir / "MANIFEST.json")
+    assert complete["manifest_sha256"] == _sha_file(out_dir / "MANIFEST.json")
+    assert complete["generator_code_sha256"] == manifest["inputs"]["generator_code_sha256"]
+    assert complete["generation_axes_sha256"] == manifest["inputs"]["generation_axes_sha256"]
     axes = _read_json(AXES_PATH)
     inputs = manifest["inputs"]
     assert inputs["generation_axes_sha256"] == _sha_file(AXES_PATH)
@@ -83,6 +90,9 @@ def audit(out_dir: Path) -> dict[str, Any]:
         })
         assert row["geometry_signature_id"] == expected
         assert row["elevation_mask_deg"] in axes["model_derived"]["satellite_geometry"]["elevation_mask_deg"]
+        assert row["equivalent_slice_count"] == len(row["equivalent_slice_starts_s"])
+        assert row["equivalent_slice_starts_s"] == sorted(row["equivalent_slice_starts_s"])
+        assert row["representative_slice_start_s"] == row["equivalent_slice_starts_s"][0]
         assert row["equivalent_slice_count"] == len(row["equivalent_slice_starts_s"])
         assert row["equivalent_slice_starts_s"] == sorted(row["equivalent_slice_starts_s"])
         assert row["representative_slice_start_s"] == row["equivalent_slice_starts_s"][0]

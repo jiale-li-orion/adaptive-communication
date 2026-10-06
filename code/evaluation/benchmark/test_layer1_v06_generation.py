@@ -41,6 +41,8 @@ def main() -> int:
     assert sa == sb
     assert [row["geometry_signature_id"] for row in a] == [row["geometry_signature_id"] for row in b]
     assert [row["rounded_shape_s"] for row in a] == [row["rounded_shape_s"] for row in b]
+    assert all(row["equivalent_slice_count"] == len(row["equivalent_slice_starts_s"]) for row in a)
+    assert all(row["representative_slice_start_s"] == row["equivalent_slice_starts_s"][0] for row in a)
 
     print("PASS Layer-1 v0.6 generator semantic regressions")
     return 0

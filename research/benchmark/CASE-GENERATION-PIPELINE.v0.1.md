@@ -149,6 +149,8 @@ local_research/current/benchmark/generated/layer1-v0.6-preoracle/
 
 Git 中保存 generator/schema/audit 和 manifest 摘要；大体积 case universe 留在 ignored `local_research/`。
 
+正式 run 采用**不可覆盖的单写者目录**：CLI 在生成前用 `O_EXCL` 获取 sibling lock；目标目录已存在则直接拒绝覆盖。只有全部 artifact 与 `MANIFEST.json` 关闭后才写 `COMPLETE.json`。执行器重放、并发写或中途崩溃留下的目录因为缺少 `COMPLETE.json`，不得进入后续 oracle/admission。
+
 `MANIFEST.json` 至少记录：
 
 - generator code SHA-256；

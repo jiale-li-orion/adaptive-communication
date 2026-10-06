@@ -19,6 +19,7 @@ import gzip
 import hashlib
 import io
 import json
+import os
 from pathlib import Path
 import subprocess
 from typing import Any, Iterable
@@ -599,12 +600,56 @@ def generate(out_dir: Path) -> dict[str, Any]:
     return manifest
 
 
+def generate_exclusive(out_dir: Path) -> dict[str, Any]:
+    """Generate one immutable run with a single-writer lock.
+
+    Large generation commands may be replayed by an outer execution harness.
+    Replaying into the same directory can interleave otherwise deterministic
+    gzip artifacts and their manifest.  Official runs therefore refuse an
+    existing target, acquire an O_EXCL sibling lock, and write COMPLETE.json
+    only after MANIFEST.json and all artifacts are closed.
+    """
+
+    out_dir = out_dir.resolve()
+    out_dir.parent.mkdir(parents=True, exist_ok=True)
+    if out_dir.exists():
+        raise FileExistsError(f"refusing to overwrite existing generation run: {out_dir}")
+    lock = out_dir.parent / f".{out_dir.name}.lock"
+    fd: int | None = None
+    try:
+        fd = os.open(lock, os.O_CREAT | os.O_EXCL | os.O_WRONLY, 0o644)
+        os.write(fd, f"pid={os.getpid()}\n".encode("utf-8"))
+        os.close(fd)
+        fd = None
+        manifest = generate(out_dir)
+        manifest_path = out_dir / "MANIFEST.json"
+        complete = {
+            "schema_version": "0.1",
+            "status": "COMPLETE",
+            "manifest_sha256": _sha_file(manifest_path),
+            "generator_code_sha256": manifest["inputs"]["generator_code_sha256"],
+            "generation_axes_sha256": manifest["inputs"]["generation_axes_sha256"],
+            "git_commit": manifest["inputs"]["git_commit"],
+        }
+        (out_dir / "COMPLETE.json").write_bytes(_canonical(complete))
+        return manifest
+    except Exception:
+        # A partial directory is intentionally left in place for forensic
+        # inspection.  The absence of COMPLETE.json prevents admission.
+        raise
+    finally:
+        if fd is not None:
+            os.close(fd)
+        if lock.exists():
+            lock.unlink()
+
+
 def main() -> int:
     parser = argparse.ArgumentParser()
     parser.add_argument("--out", type=Path, default=DEFAULT_OUT)
     parser.add_argument("--print-manifest", action="store_true")
     args = parser.parse_args()
-    manifest = generate(args.out.resolve())
+    manifest = generate_exclusive(args.out.resolve())
     if args.print_manifest:
         print(json.dumps(manifest, ensure_ascii=False, indent=2, sort_keys=True))
     else:
