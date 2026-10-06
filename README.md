@@ -284,6 +284,36 @@ Hardness is carried by information and communication structure: observation spar
 
 The strong baseline floor includes local EDF/reserve, passive-only planning, normal-send-as-probe, fixed/periodic/batch reads, myopic VoI, shallow rule combiners, true depth-k belief planning, receding-horizon planning, generic/incremental exact search and ordinary dependency/cache optimization.
 
+### 3.6 Current v0.6 generation status
+
+Layer 1 has now closed the **method-independent case-generation** gate for the next benchmark iteration. The official clean-tree generation run is `layer1-v0.6-preoracle-r4`; its input is the frozen environment/generation contract and generation axes, not any Layer-2/Layer-3 or baseline result.
+
+The official pre-oracle universe contains:
+
+| Object | Count |
+|---|---:|
+| source-grounded task cells | 27 |
+| eligible obligation compositions | 51 |
+| deduplicated Connecta geometry signatures | 6,045 |
+| base scenarios | 77,556 |
+| base structural signatures | 36,270 |
+| `ALL_WORLD_PHYSICAL` bases | 46,770 |
+| `MIXED_WORLD_PHYSICAL` bases | 30,786 |
+| dynamic case variants | 1,262,790 |
+| pre-oracle structure IDs | 499,608 |
+
+These counts describe a **generation universe, not benchmark hardness**. A case becomes a benchmark decision case only after non-anticipative exact oracle, information-feasibility, shortcut, mechanism and ordinary-baseline admission. The generator is frozen while these downstream filters run.
+
+Generation is auditable and byte-reproducible. Independent full runs r2/r3/r4 match on row counts, raw gzip SHA-256 and canonical-uncompressed SHA-256 for geometry, base-scenario and case artifacts. Every case ID is deterministically derived from source task, composition, geometry and frozen stress coordinates; geometry signatures retain reverse mappings to all equivalent trace slices; fallback headroom is derived from full-state physical matching rather than hand-picked after observing policy results.
+
+The current generation authority is:
+
+- [`research/benchmark/ENVIRONMENT-GENERATION-CONTRACT.v0.1.md`](research/benchmark/ENVIRONMENT-GENERATION-CONTRACT.v0.1.md)
+- [`research/benchmark/GENERATION-AXES.v0.1.json`](research/benchmark/GENERATION-AXES.v0.1.json)
+- [`research/benchmark/CASE-GENERATION-PIPELINE.v0.1.md`](research/benchmark/CASE-GENERATION-PIPELINE.v0.1.md)
+- [`research/benchmark/GENERATION-RUN-LEDGER.v0.1.md`](research/benchmark/GENERATION-RUN-LEDGER.v0.1.md)
+- [`results/benchmark/layer1-v0.6-preoracle-generation-r4.json`](results/benchmark/layer1-v0.6-preoracle-generation-r4.json)
+
 Current paper-facing comparison, construct coverage and frozen v0.2 distribution are generated in the module README:
 
 - [Related benchmark landscape and links](research/benchmark/README.md#paper-facing-benchmark-landscape-and-statistics)
@@ -427,7 +457,7 @@ The current three-layer split continues the old repo: the substrate carries phys
 
 | Owner | Frozen / active boundary |
 |---|---|
-| Layer 1 | source/task/oracle/validity infrastructure remains reusable, but v0.2 hard-mechanism coverage is reopened: 41/41 hard signatures collapse to one H2×H3×H4 family. Final benchmark construction now waits on the environment/generation contract, independent mechanism coverage, a pristine structural holdout, and Q11 human/source review. |
+| Layer 1 | v0.6 method-independent pre-oracle generation is complete and reproducible on official clean-tree run r4. The active work is now non-anticipative oracle / information-feasibility / shortcut / mechanism admission on that frozen universe. v0.2's 41 hard signatures remain discovery/regression evidence only; final release still requires independent hard-mechanism coverage, a pristine structural holdout, and Q11 human/source review. |
 | Layer 2 | v1 remains the historical runtime/compiler baseline. v2 deterministic future-choice semantics are frozen after dev correctness and strong-control audits. |
 | Layer 3 | paused. The previous learned search-ranking baseline is a negative historical result, not the current research line; no new Layer-3 method may shape Layer-1 generation. |
 | Generalization | the historical seven-signature test was exposed during earlier Layer-2 work and now serves regression evidence. A new structural-generalization claim requires a preregistered holdout. |

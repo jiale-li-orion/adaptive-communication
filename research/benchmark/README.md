@@ -236,6 +236,38 @@ Q11 source review 于 2026-10-05 发现 DB44/T 2457-2024 profile 的 pre-release
 
 v0.1–v0.5、receipt-race、receipt-chain、joint query–satellite Pareto 和 continuation frontier 继续保留，但它们的角色是 generator/mechanism regression、exact-reference 与 shortcut audit。尤其 188-cell receipt grid **不是 benchmark case count**；当前普通 reserve/fixed-read/wait-ACK family 仍覆盖 frozen receipt-chain 的 exact cost frontier。
 
+### v0.6 official pre-oracle generation snapshot
+
+`v0.6` 已关闭“method-independent generation + reproducibility”门。官方 clean-tree run 为 `layer1-v0.6-preoracle-r4`；r2/r3/r4 三次独立全量生成在 geometry/base/case 三个 artifact 上 raw gzip SHA-256、canonical-uncompressed SHA-256、rows 与 counts 全部 exact match。
+
+当前 frozen universe：
+
+- 27 source task cells；
+- 51 eligible obligation compositions；
+- 6,045 deduplicated geometry signatures；
+- 77,556 base scenarios / 36,270 base structures；
+- 46,770 `ALL_WORLD_PHYSICAL` bases / 18,504 all-world-physical base structures；
+- 30,786 `MIXED_WORLD_PHYSICAL` bases；
+- 1,262,790 dynamic case variants；
+- 499,608 pre-oracle structure IDs；
+- 每个 physical base 27 个 feedback/query/fallback variants。
+
+这些数字**不是 hard-case 数量**。正式筛选顺序固定为：
+
+```text
+official r4 generation
+→ non-anticipative exact oracle
+→ information-feasibility / no-paid-query / open-loop references
+→ shortcut and fixed-policy gates
+→ mechanism interventions / independent mechanism coverage
+→ ordinary strong-baseline ladder
+→ pristine structural split
+→ Q11 human/source review
+→ BENCHMARK_ADMIT
+```
+
+下游筛选不得修改 `GENERATION-AXES.v0.1.json` 或 r4 generator。任何新 source/correctness defect 都必须版本化成新的 generation lineage，而不能在当前 universe 上“调题”。
+
 当前唯一主工程：
 
     DB44 landslide source correction                 [DONE]
@@ -247,9 +279,9 @@ v0.1–v0.5、receipt-race、receipt-chain、joint query–satellite Pareto 和 
     → rebuild Q11 package + machine preaudit           [DONE 23/23 MACHINE_PASS]
     → Q0–Q12 refresh                                   [HISTORICAL 12 PASS / 1 BLOCKED]
     → hard-survivor failure / coverage audit           [DONE; COVERAGE REOPENED]
-    → freeze environment / generation contract         [IN PROGRESS v0.1]
+    → freeze environment / generation contract         [DONE v0.1]
     → rebuild method-independent generator              [DONE v0.6; official r4 reproducible]
-    → non-anticipative oracle / validity admission      [NEXT]
+    → non-anticipative oracle / validity admission      [IN PROGRESS]
     → mechanism gates + ordinary-baseline red-team     [PENDING]
     → preregister pristine structural holdout           [PENDING]
     → real Q11 reviewer signoff                        [PENDING]
