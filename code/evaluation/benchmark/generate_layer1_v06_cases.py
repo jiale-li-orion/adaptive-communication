@@ -227,77 +227,74 @@ def _geometry_catalog(trace: dict[str, Any], axes: dict[str, Any], horizon_s: in
     return rows, {"raw_slice_count": raw_slices, "signature_count": len(rows)}
 
 
-class _Edge:
-    __slots__ = ("to", "rev", "cap", "cost")
-    def __init__(self, to: int, rev: int, cap: int, cost: int):
-        self.to = to
-        self.rev = rev
-        self.cap = cap
-        self.cost = cost
+def _edf_feasible(obligations: list[Obligation], selected: tuple[int, ...], opportunities: list[dict[str, Any]]) -> bool:
+    """Exact feasibility for unit jobs on discrete opportunities with capacities.
 
-
-def _add_edge(graph: list[list[_Edge]], u: int, v: int, cap: int, cost: int) -> None:
-    graph[u].append(_Edge(v, len(graph[v]), cap, cost))
-    graph[v].append(_Edge(u, len(graph[u]) - 1, 0, -cost))
+    For release/deadline interval jobs, scheduling the available job with the
+    earliest deadline at each discrete capacity unit is feasibility-optimal.
+    """
+    pending = {i for i in selected}
+    for opportunity in sorted(opportunities, key=lambda row: int(row["time_s"])):
+        t = int(opportunity["time_s"])
+        if any(obligations[i].deadline_s < t for i in pending if obligations[i].release_s <= t):
+            return False
+        for _ in range(int(opportunity["capacity_units"])):
+            ready = [
+                i for i in pending
+                if obligations[i].release_s <= t <= obligations[i].deadline_s
+            ]
+            if not ready:
+                break
+            pick = min(ready, key=lambda i: (obligations[i].deadline_s, obligations[i].release_s, obligations[i].oid))
+            pending.remove(pick)
+    return not pending
 
 
 def _min_backup_demand(obligations: list[Obligation], terr: list[dict[str, Any]], sat: list[dict[str, Any]], service_bits: tuple[bool, ...]) -> int | None:
-    active = [
-        {**row, "kind": "terr", "cost": 0}
-        for row in terr
+    active_terr = [
+        row for row in terr
         if service_bits[int(row["service_stage_index"])]
-    ] + [
-        {**row, "kind": "sat", "cost": 1}
-        for row in sat
     ]
-    n_o = len(obligations)
-    source = 0
-    o0 = 1
-    p0 = o0 + n_o
-    sink = p0 + len(active)
-    graph: list[list[_Edge]] = [[] for _ in range(sink + 1)]
-    for i, o in enumerate(obligations):
-        _add_edge(graph, source, o0 + i, 1, 0)
-        for j, p in enumerate(active):
-            t = int(p["time_s"])
-            if o.release_s <= t <= o.deadline_s:
-                _add_edge(graph, o0 + i, p0 + j, 1, int(p["cost"]))
-    for j, p in enumerate(active):
-        _add_edge(graph, p0 + j, sink, int(p["capacity_units"]), 0)
+    n = len(obligations)
+    all_idx = tuple(range(n))
+    # At most six obligations by contract: enumerate satellite-assignment
+    # subsets in ascending cardinality.  The first feasible partition is the
+    # exact minimum backup demand.
+    for sat_count in range(n + 1):
+        from itertools import combinations
+        for sat_idx in combinations(all_idx, sat_count):
+            sat_set = set(sat_idx)
+            terr_idx = tuple(i for i in all_idx if i not in sat_set)
+            if _edf_feasible(obligations, terr_idx, active_terr) and _edf_feasible(obligations, tuple(sat_idx), sat):
+                return sat_count
+    return None
 
-    flow = 0
-    cost = 0
-    n = len(graph)
-    while flow < n_o:
-        inf = 10**9
-        dist = [inf] * n
-        parent: list[tuple[int, int] | None] = [None] * n
-        dist[source] = 0
-        # Bellman-Ford is fine here: <= 6 obligations and a small opportunity graph.
-        for _ in range(n - 1):
-            changed = False
-            for u in range(n):
-                if dist[u] == inf:
-                    continue
-                for ei, e in enumerate(graph[u]):
-                    if e.cap > 0 and dist[e.to] > dist[u] + e.cost:
-                        dist[e.to] = dist[u] + e.cost
-                        parent[e.to] = (u, ei)
-                        changed = True
-            if not changed:
-                break
-        if dist[sink] == inf:
-            return None
-        v = sink
-        while v != source:
-            u, ei = parent[v]  # type: ignore[misc]
-            e = graph[u][ei]
-            e.cap -= 1
-            graph[v][e.rev].cap += 1
-            v = u
-        flow += 1
-        cost += dist[sink]
-    return cost
+
+class _GzipJsonlWriter:
+    def __init__(self, path: Path):
+        self.path = path
+        self.path.parent.mkdir(parents=True, exist_ok=True)
+        self.raw = self.path.open("wb")
+        self.gz = gzip.GzipFile(filename="", mode="wb", fileobj=self.raw, mtime=0, compresslevel=9)
+        self.hasher = hashlib.sha256()
+        self.count = 0
+
+    def write(self, row: dict[str, Any]) -> None:
+        line = _canonical(row)
+        self.hasher.update(line)
+        self.gz.write(line)
+        self.count += 1
+
+    def close(self) -> dict[str, Any]:
+        self.gz.close()
+        self.raw.close()
+        return {
+            "path": str(self.path.relative_to(ROOT)),
+            "rows": self.count,
+            "bytes": self.path.stat().st_size,
+            "sha256": _sha_file(self.path),
+            "canonical_uncompressed_sha256": self.hasher.hexdigest(),
+        }
 
 
 def _world_rows(obligations: list[Obligation], terr: list[dict[str, Any]], sat: list[dict[str, Any]], support: list[tuple[bool, ...]]) -> tuple[list[dict[str, Any]], str, int | None]:
@@ -369,12 +366,17 @@ def generate(out_dir: Path) -> dict[str, Any]:
 
     geometry_cache: dict[int, tuple[list[dict[str, Any]], dict[str, int]]] = {}
     geometry_rows_by_id: dict[str, dict[str, Any]] = {}
-    base_rows: list[dict[str, Any]] = []
-    case_rows: list[dict[str, Any]] = []
     base_status = Counter()
     axis_counts = Counter()
     physical_cache: dict[tuple[Any, ...], tuple[list[dict[str, Any]], str, int | None, list[dict[str, Any]]]] = {}
     support_cache: dict[tuple[int, str], list[tuple[bool, ...]]] = {}
+    base_structure_ids: set[str] = set()
+    physical_base_structure_ids: set[str] = set()
+    physical_base_count = 0
+
+    out_dir.mkdir(parents=True, exist_ok=True)
+    base_writer = _GzipJsonlWriter(out_dir / "base-scenarios.jsonl.gz")
+    case_writer = _GzipJsonlWriter(out_dir / "cases.jsonl.gz")
 
     for cell, per_stream, phase_mode, obs, stages, horizon in composition_rows:
         if horizon not in geometry_cache:
@@ -471,7 +473,8 @@ def generate(out_dir: Path) -> dict[str, Any]:
                         "elevation_mask_deg": geo["elevation_mask_deg"],
                     }
                     base_payload["base_structure_id"] = _id("T1V06BS", structure_payload)
-                    base_rows.append(base_payload)
+                    base_structure_ids.add(base_payload["base_structure_id"])
+                    base_writer.write(base_payload)
                     base_status[physical_status] += 1
                     axis_counts[f"service::{family['id']}"] += 1
                     axis_counts[f"phase::{phase_mode}"] += 1
@@ -481,6 +484,8 @@ def generate(out_dir: Path) -> dict[str, Any]:
 
                     if physical_status != "ALL_WORLD_PHYSICAL":
                         continue
+                    physical_base_count += 1
+                    physical_base_structure_ids.add(base_payload["base_structure_id"])
                     n_obligations = len(obs)
                     for feedback in cs["feedback_timing_profiles"]:
                         receipt_delay = int(round(float(feedback["gateway_receipt_delay_over_deadline"]) * int(cell["report_interval_s"])))
@@ -531,20 +536,23 @@ def generate(out_dir: Path) -> dict[str, Any]:
                                     "query_ratio": float(query_ratio),
                                     "fallback_budget_mode": mode["id"],
                                 })
-                                case_rows.append(variant)
+                                case_writer.write(variant)
 
-    base_rows.sort(key=lambda r: r["base_id"])
-    case_rows.sort(key=lambda r: r["case_id"])
+    base_artifact = base_writer.close()
+    case_artifact = case_writer.close()
     geometry_rows = sorted(geometry_rows_by_id.values(), key=lambda r: r["geometry_signature_id"])
-
-    out_dir.mkdir(parents=True, exist_ok=True)
     artifacts = {
         "geometry_signatures": _write_gzip_jsonl(out_dir / "geometry-signatures.jsonl.gz", geometry_rows),
-        "base_scenarios": _write_gzip_jsonl(out_dir / "base-scenarios.jsonl.gz", base_rows),
-        "cases": _write_gzip_jsonl(out_dir / "cases.jsonl.gz", case_rows),
+        "base_scenarios": base_artifact,
+        "cases": case_artifact,
     }
-    structure_count = len({row["structure_id"] for row in case_rows})
-    base_structure_count = len({row["base_structure_id"] for row in base_rows})
+    variant_count = (
+        len(cs["feedback_timing_profiles"])
+        * len(cs["remote_query_response_delay_over_deadline"])
+        * len(cs["fallback_budget_modes"])
+    )
+    structure_count = len(physical_base_structure_ids) * variant_count
+    base_structure_count = len(base_structure_ids)
     geometry_stats = {
         str(h): stats for h, (_rows, stats) in sorted(geometry_cache.items())
     }
@@ -558,10 +566,13 @@ def generate(out_dir: Path) -> dict[str, Any]:
             "source_task_cells": len(source_cells),
             "eligible_compositions": len(composition_rows),
             "geometry_signatures": len(geometry_rows),
-            "base_scenarios": len(base_rows),
+            "base_scenarios": base_artifact["rows"],
             "base_structures": base_structure_count,
-            "cases": len(case_rows),
+            "cases": case_artifact["rows"],
             "structures": structure_count,
+            "all_world_physical_bases": physical_base_count,
+            "all_world_physical_base_structures": len(physical_base_structure_ids),
+            "variants_per_physical_base": variant_count,
         },
         "preflight_counts": dict(sorted(preflight.items())),
         "base_physical_status": dict(sorted(base_status.items())),
