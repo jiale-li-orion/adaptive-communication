@@ -349,8 +349,9 @@ DB44/T 2457-2024 source correction               [DONE]
 → hard-survivor failure / coverage audit                 [DONE; COVERAGE REOPENED]
 → freeze method-independent environment/generation contract [DONE v0.1]
 → freeze generation axes before generator execution      [DONE v0.1]
-→ dynamic-process generator reconstruction               [IN PROGRESS]
-→ mechanism gates + strong-baseline red-team             [PENDING]
+→ dynamic-process generator reconstruction               [DONE v0.6 PRE-ORACLE; r4 reproducible]
+→ non-anticipative oracle + validity/mechanism admission [NEXT]
+→ strong-baseline red-team                               [PENDING]
 → preregister pristine structural-generalization cohort  [PENDING]
 → real Q11 reviewer signoff                              [PENDING]
 → frozen BENCHMARK_ADMIT release                         [AFTER ALL ABOVE]
@@ -381,6 +382,10 @@ structure-aware split v0.2 已冻结到 `results/benchmark/layer1-structure-awar
 最新解释见 `HARD-SURVIVOR-FAILURE-ATLAS.v0.1.md`。机器审计在 41/41 survivors 上为 9 类 ordinary policies 找到明确 first irreversible loss：错误动作既包括 `ISSUE_QUERY`，也包括 `SEND_TERR`、`SEND_SAT` 与 `WAIT`；在同一 prefix 上 exact frontier 存在 preserving alternatives。当前最有价值的结构发现因此是 **premature communication commitment can destroy future completion continuations**，而不是窄化成 query timing。但该结论目前只在 H2×H3×H4 survivor family 上成立，必须由下一版 dynamic generator 扩展/证伪。
 
 下一版 generator 的合法输入空间由 [`ENVIRONMENT-GENERATION-CONTRACT.v0.1.md`](ENVIRONMENT-GENERATION-CONTRACT.v0.1.md) 与 [`GENERATION-AXES.v0.1.json`](GENERATION-AXES.v0.1.json) 先于 generator 实现冻结。`GENERATION-AXES.v0.1.json` 只消费 source/profile/public-trace authority 与 `cache06.md` 既有 v0.5 process contract；baseline / Layer-2 / Layer-3 结果被显式列为 forbidden generator dependencies。该冻结用于恢复 benchmark construction independence，不代表 v0.6 已通过 hardness / coverage / release gate。
+
+v0.6 method-independent generator 已完成 official clean-tree pre-oracle run r4。生成器从 27 个 DB44 source task cells 出发，51 个合法两流/4–6 obligation compositions 通过 preflight；公开 Connecta trace 在冻结 mask/slice/signature 规则下形成 6,045 个实际 geometry signatures；全量生成 77,556 个 base scenarios，其中 46,770 个 `ALL_WORLD_PHYSICAL`、30,786 个 `MIXED_WORLD_PHYSICAL`。物理全可解 base 按冻结 feedback/query/headroom 轴展开为 **1,262,790 dynamic cases / 499,608 pre-oracle structure IDs**。这些数字是 generation coverage，不是 hard-case count。r2/r3/r4 三次独立生成的 artifact bytes、raw SHA、canonical SHA 与 rows 全部逐项一致；clean r4 manifest 绑定 commit `0ad64380b82ab940bf2ba0cd8c6570583d20d776`。机器证据见 `results/benchmark/layer1-v0.6-preoracle-generation-r4.json`，过程 ledger 见 `GENERATION-RUN-LEDGER.v0.1.md`。
+
+因此 `METHOD_INDEPENDENT_GENERATOR_REBUILD_PENDING` 已关闭；下一门只允许消费 frozen r4 universe 做 oracle / validity / mechanism admission。任何 downstream 结果不得回写 v0.6 generator axes。
 
 V8 的 baseline 分类与否决边界见 `V8-BASELINE-CONTRACT.v0.1.md`。generic exact / memo / dependency-cache / incremental AND–OR 属于 computation reference：它们取得 exact 任务质量是预期结果，不能因为“确定性算法能解”再次否定 benchmark；当前 16-cell computation reference 中 generic exact 平均约 54.6 ms、最大约 280.7 ms，no-paid-query 平均约 503.8 ms、最大约 4.0 s。这些数值只作为后续方法公平计算基线。
 

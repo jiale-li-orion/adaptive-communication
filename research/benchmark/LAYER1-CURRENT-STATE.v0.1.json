@@ -156,7 +156,7 @@
     "stage": "PRE_WORLD_PRE_ORACLE"
   },
   "main_family": "T1_MONITORING_INFORMATION_CONTINUITY",
-  "next_stage": "METHOD_INDEPENDENT_DYNAMIC_GENERATOR_REBUILD",
+  "next_stage": "V06_NON_ANTICIPATIVE_ORACLE_AND_MECHANISM_ADMISSION",
   "quality_gates": {
     "agentic_reducibility": "PASS_41_OF_41_HARD_SIGNATURES",
     "agentic_reducibility_ref": "results/benchmark/layer1-agentic-reducibility-v0.2-retry-legality.json",
@@ -188,8 +188,8 @@
         "reason": "All 41 current hard signatures collapse to FINITE_CROSSING_WINDOWS + GATEWAY_SUMMARY_QUERY; PASSIVE_ACK_ONLY, MIXED_PASSIVE_QUERY_PROBE/H5 and MULTI_WINDOW_DYNAMIC do not survive the current strong-baseline ladder."
       },
       {
-        "id": "METHOD_INDEPENDENT_GENERATOR_REBUILD_PENDING",
-        "reason": "The v0.1 environment/generation contract and axes are frozen, but the next executable generator/oracle universe has not yet been rebuilt and admitted against the cache06 mechanism gates."
+        "id": "V06_ORACLE_ADMISSION_PENDING",
+        "reason": "The official clean-tree v0.6 pre-oracle universe is reproducibly generated, but non-anticipative oracle labels, information-feasibility/shortcut gates, mechanism interventions and strong-baseline admission have not yet been run on the frozen r4 universe."
       },
       {
         "id": "PRISTINE_STRUCTURAL_GENERALIZATION_OPEN",
@@ -207,13 +207,27 @@
       "V0-V9 validity/evaluator infrastructure",
       "174 hard recipes / 41 exact hard signatures expose a stable H2xH3xH4 mechanism family",
       "first irreversible loss is observable across query/send/wait/satellite commitments on all 41 signatures for the audited ordinary baselines",
-      "method-independent environment/generation contract and generation axes are frozen before v0.6 generator execution"
+      "method-independent environment/generation contract and generation axes are frozen before v0.6 generator execution",
+      "v0.6 official clean-tree pre-oracle generation r4 is reproducible across r2/r3/r4 with exact raw/canonical artifact hashes; generation is closed and downstream oracle/admission may not rewrite generator axes"
     ],
     "generation_axes_ref": "research/benchmark/GENERATION-AXES.v0.1.json",
-    "generation_axes_status": "FROZEN_FOR_LAYER1_REBUILD",
+    "generation_axes_status": "FROZEN_AND_CONSUMED_BY_V06_OFFICIAL_R4",
     "hard_survivor_failure_atlas_ref": "results/benchmark/layer1-hard-survivor-failure-atlas-v0.1.json",
     "layer3_status": "PAUSED_UNTIL_LAYER1_DYNAMIC_PROCESS_COVERAGE_CLOSES",
-    "status": "REOPENED"
+    "status": "V06_PREORACLE_GENERATION_COMPLETE_RESEARCH_READINESS_OPEN",
+    "v06_generation_counts": {
+      "all_world_physical_bases": 46770,
+      "base_scenarios": 77556,
+      "dynamic_cases": 1262790,
+      "eligible_compositions": 51,
+      "geometry_signatures": 6045,
+      "mixed_world_physical_bases": 30786,
+      "preoracle_structure_ids": 499608,
+      "source_task_cells": 27
+    },
+    "v06_generation_official_run": "layer1-v0.6-preoracle-r4",
+    "v06_generation_ref": "results/benchmark/layer1-v0.6-preoracle-generation-r4.json",
+    "v06_generation_run_ledger_ref": "research/benchmark/GENERATION-RUN-LEDGER.v0.1.md"
   },
   "schema_version": "0.1",
   "scope": {
@@ -479,7 +493,7 @@
     "source_contract_count": 27,
     "status": "MACHINE_REGENERATION_COMPLETE"
   },
-  "status": "MECHANISM_DISCOVERY_READY_HARD_MECHANISM_COVERAGE_REOPENED",
+  "status": "V06_PREORACLE_GENERATION_COMPLETE_HARD_MECHANISM_COVERAGE_REOPENED",
   "structure_aware_split": {
     "audit_ref": "results/benchmark/layer1-structure-aware-split-v0.2-retry-legality.json",
     "by_split": {

@@ -46,7 +46,7 @@
 ```text
 MECHANISM_DISCOVERY_READY
 + HARD_MECHANISM_COVERAGE_REOPENED
-+ ENVIRONMENT/GENERATION CONTRACT REBUILD
++ V0.6 PRE-ORACLE GENERATION COMPLETE / ORACLE ADMISSION NEXT
 + PRISTINE STRUCTURAL GENERALIZATION OPEN
 + Q11 HUMAN SOURCE REVIEW PENDING
 = NOT_BENCHMARK_ADMIT
@@ -248,7 +248,8 @@ v0.1–v0.5、receipt-race、receipt-chain、joint query–satellite Pareto 和 
     → Q0–Q12 refresh                                   [HISTORICAL 12 PASS / 1 BLOCKED]
     → hard-survivor failure / coverage audit           [DONE; COVERAGE REOPENED]
     → freeze environment / generation contract         [IN PROGRESS v0.1]
-    → rebuild method-independent generator              [PENDING]
+    → rebuild method-independent generator              [DONE v0.6; official r4 reproducible]
+    → non-anticipative oracle / validity admission      [NEXT]
     → mechanism gates + ordinary-baseline red-team     [PENDING]
     → preregister pristine structural holdout           [PENDING]
     → real Q11 reviewer signoff                        [PENDING]

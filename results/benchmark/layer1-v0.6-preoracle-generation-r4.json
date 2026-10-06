@@ -1,0 +1,99 @@
+{
+  "artifacts": {
+    "base_scenarios": {
+      "bytes": 11949009,
+      "canonical_uncompressed_sha256": "5104a68276095a82ea3fcc78918dbfcc6a8bfec387b60a6c69f3b4e0ab09b287",
+      "path": "local_research/current/benchmark/generated/layer1-v0.6-preoracle-r4/base-scenarios.jsonl.gz",
+      "rows": 77556,
+      "sha256": "5f4f5530ba9b039d99ba0ae43d57c30be4f706b5f55326b8906da549858c94bf"
+    },
+    "cases": {
+      "bytes": 38618173,
+      "canonical_uncompressed_sha256": "670a148aa9c71f5afbbce6da2029457e9d780522a192c1a1286a9c99cca8878e",
+      "path": "local_research/current/benchmark/generated/layer1-v0.6-preoracle-r4/cases.jsonl.gz",
+      "rows": 1262790,
+      "sha256": "7fa88e7e883f008a03705ac960635c205caafaae9972f56904fd6f7cfd6eff1f"
+    },
+    "geometry_signatures": {
+      "bytes": 671684,
+      "canonical_uncompressed_sha256": "25bf52ee6457cdf7ff6cb68272935a8185a8dcca718bdbfc27bd31a74d86dbee",
+      "path": "local_research/current/benchmark/generated/layer1-v0.6-preoracle-r4/geometry-signatures.jsonl.gz",
+      "rows": 6045,
+      "sha256": "dca0e39504b2ac87e974296ceef4234a44fede196d530238a075232157b773a3"
+    }
+  },
+  "base_axis_counts": {
+    "mask::0": 16230,
+    "mask::10": 15576,
+    "mask::20": 14898,
+    "mask::30": 14850,
+    "mask::5": 16002,
+    "per_stream::2": 27486,
+    "per_stream::3": 50070,
+    "phase::ALIGNED": 25884,
+    "phase::HALF_PERIOD_OFFSET": 51672,
+    "service::FULL_BINARY_SUPPORT": 25852,
+    "service::REINTERRUPTIBLE": 25852,
+    "service::SINGLE_RECOVERY": 25852,
+    "terr_capacity::1": 38778,
+    "terr_capacity::2": 38778
+  },
+  "base_physical_status": {
+    "ALL_WORLD_PHYSICAL": 46770,
+    "MIXED_WORLD_PHYSICAL": 30786
+  },
+  "claim_boundary": [
+    "This artifact proves method-independent generation and reproducibility, not benchmark hardness.",
+    "1,262,790 cases are generated variants, not 1,262,790 independent hard structures.",
+    "499,608 structure IDs are pre-oracle structural identities; hard-mechanism coverage remains unmeasured.",
+    "Only downstream non-anticipative oracle, shortcut/baseline gates, mechanism interventions, pristine split and Q11 can support BENCHMARK_ADMIT."
+  ],
+  "counts": {
+    "all_world_physical_base_structures": 18504,
+    "all_world_physical_bases": 46770,
+    "base_scenarios": 77556,
+    "base_structures": 36270,
+    "cases": 1262790,
+    "eligible_compositions": 51,
+    "geometry_signatures": 6045,
+    "source_task_cells": 27,
+    "structures": 499608,
+    "variants_per_physical_base": 27
+  },
+  "generator_id": "LAYER1_T1_DYNAMIC_PREORACLE_V06",
+  "git_commit": "0ad64380b82ab940bf2ba0cd8c6570583d20d776",
+  "inputs": {
+    "environment_contract": "research/benchmark/ENVIRONMENT-GENERATION-CONTRACT.v0.1.md",
+    "environment_contract_sha256": "b2085e732ea59962fa240b704c777b6f78180c2c06cf90a9fadf14476f5eca20",
+    "generation_axes": "research/benchmark/GENERATION-AXES.v0.1.json",
+    "generation_axes_sha256": "39b23d8cad7a3215a06d4ae8e8ec7aadeca1ed548c53d8008fb608018b387f89",
+    "generator_code": "code/evaluation/benchmark/generate_layer1_v06_cases.py",
+    "generator_code_sha256": "7c9d87fa6390e4860ad132e5166405306ab51d3cc9ab15a6ff2c79d026c36ad3",
+    "git_commit": "0ad64380b82ab940bf2ba0cd8c6570583d20d776",
+    "profile_bundle_manifest": "research/benchmark/PROFILE-BUNDLE-MANIFEST.v0.1.json",
+    "profile_bundle_manifest_sha256": "4365106eddddd1b2962a8acaab813e44511f992c861d8f735c13e435c5e01a34",
+    "trace": "research/benchmark/traces/v0.1/CONNECTA_20260922_SIHUI_GEOMETRY_48H.json",
+    "trace_sha256": "10eae5e143c1ac50fcdfa600c4189600caaee11b64029f50a152291cf04a5842"
+  },
+  "official_run": "layer1-v0.6-preoracle-r4",
+  "preflight_counts": {
+    "ELIGIBLE_COMPOSITION": 51,
+    "EXCLUDED_GEOMETRY_HORIZON": 30,
+    "EXCLUDED_LT3_RELEASE_STAGES": 27
+  },
+  "reproduction": {
+    "artifact_bytes_exact_match": true,
+    "artifact_canonical_sha_exact_match": true,
+    "artifact_raw_sha_exact_match": true,
+    "counts_exact_match": true,
+    "generator_code_sha_exact_match": true,
+    "official_run_clean_commit": true,
+    "runs_compared": [
+      "layer1-v0.6-preoracle-r2",
+      "layer1-v0.6-preoracle-r3",
+      "layer1-v0.6-preoracle-r4"
+    ]
+  },
+  "schema_version": "0.1",
+  "status": "V06_PREORACLE_GENERATION_REPRODUCIBLE"
+}

@@ -4,7 +4,7 @@ English | [中文](README.zh.md)
 
 Source-grounded decision benchmark, decision-semantic runtime, and learning-guided exact search for pre-disaster mountain monitoring under limited power and intermittent communication.
 
-> **Current control plane:** Layer 1 has reopened hard-mechanism coverage and is rebuilding its method-independent environment/generation contract; Layer 2 v2 deterministic assets remain available as historical/current correctness infrastructure; Layer 3 method work is paused until the benchmark closes coverage and pristine-generalization blockers. Current ownership lives in [`research/`](research/README.md).
+> **Current control plane:** Layer 1 v0.6 has completed a reproducible method-independent pre-oracle generation run; the active work is non-anticipative oracle / validity / mechanism admission on the frozen r4 universe. Layer 2 v2 deterministic assets remain available as historical/current correctness infrastructure; Layer 3 method work is paused until benchmark coverage and pristine-generalization blockers close. Current ownership lives in [`research/`](research/README.md).
 
 ## 1. Architecture at a glance
 

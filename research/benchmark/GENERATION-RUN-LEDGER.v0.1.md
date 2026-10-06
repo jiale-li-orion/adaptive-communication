@@ -83,7 +83,46 @@ r3 在相同 generator/source/trace/axes 内容下独立生成。与 r2 对账�
 
 ## Official clean-tree run r4
 
-状态：`PENDING_CLEAN_COMMIT_GENERATION`
+状态：`PASS_OFFICIAL_CLEAN_TREE_GENERATION`
+
+目录：`local_research/current/benchmark/generated/layer1-v0.6-preoracle-r4/`
+
+生成时 clean HEAD：`0ad64380b82ab940bf2ba0cd8c6570583d20d776`。
+
+r4 自身流式 audit：PASS。结果与 r2/r3 完全一致：
+
+- source task cells: 27
+- eligible compositions: 51
+- geometry signatures: 6,045
+- base scenarios: 77,556
+- base structures: 36,270
+- `ALL_WORLD_PHYSICAL` bases: 46,770
+- `ALL_WORLD_PHYSICAL` base structures: 18,504
+- `MIXED_WORLD_PHYSICAL` bases: 30,786
+- dynamic cases: 1,262,790
+- pre-oracle structure IDs: 499,608
+- variants / physical base: 27
+
+三次 run 的 generator code SHA 完全一致：`7c9d87fa6390e4860ad132e5166405306ab51d3cc9ab15a6ff2c79d026c36ad3`。
+
+r2/r3/r4 三方对账：
+
+- counts exact match；
+- artifact byte sizes exact match；
+- artifact raw SHA-256 3/3 exact match；
+- canonical uncompressed SHA-256 3/3 exact match；
+- row counts 3/3 exact match。
+
+正式 artifact hashes：
+
+- base raw: `5f4f5530ba9b039d99ba0ae43d57c30be4f706b5f55326b8906da549858c94bf`
+- base canonical: `5104a68276095a82ea3fcc78918dbfcc6a8bfec387b60a6c69f3b4e0ab09b287`
+- cases raw: `7fa88e7e883f008a03705ac960635c205caafaae9972f56904fd6f7cfd6eff1f`
+- cases canonical: `670a148aa9c71f5afbbce6da2029457e9d780522a192c1a1286a9c99cca8878e`
+- geometry raw: `dca0e39504b2ac87e974296ceef4234a44fede196d530238a075232157b773a3`
+- geometry canonical: `25bf52ee6457cdf7ff6cb68272935a8185a8dcca718bdbfc27bd31a74d86dbee`
+
+**Disposition：OFFICIAL_PRE_ORACLE_GENERATION_RUN。** 该状态只关闭“method-independent generation + reproducibility”门，不产生 hardness / EvidenceNeed / benchmark-admit 主张。
 
 Admission 条件：
 
@@ -96,4 +135,6 @@ Admission 条件：
 7. frozen-axis membership 全部通过；
 8. artifact raw/canonical hashes 与 r2/r3 完全一致；
 9. `MANIFEST.inputs.git_commit` 必须等于生成时 clean HEAD。
+
+以上 9 项全部通过。
 
