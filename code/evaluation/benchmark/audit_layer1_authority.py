@@ -22,6 +22,7 @@ ROOT=HERE.parents[2]
 AUTH=ROOT/'research/benchmark/LAYER1-AUTHORITY.md'
 STATE=ROOT/'research/benchmark/LAYER1-CURRENT-STATE.v0.1.json'
 README=ROOT/'README.md'
+README_ZH=ROOT/'README.zh.md'
 RESEARCH=ROOT/'research/README.md'
 BENCH=ROOT/'research/benchmark/README.md'
 WORLD_MANIFEST=ROOT/'results/benchmark/layer1-world-materialization-v0.1.json'
@@ -56,7 +57,7 @@ def main()->int:
     assert len(t2)==3, len(t2)
 
     state=json.loads(STATE.read_text(encoding='utf-8'))
-    assert state['status']=='V07_SUPPORT_CORRECTION_ONLY_DYNAMIC_MECHANISM_REOPENED'
+    assert state['status']=='V07_PLACEMENT_VISIBILITY_BLOCKS_ORACLE_ADMISSION'
     assert state['release_status']=='NOT_BENCHMARK_ADMIT'
     assert state['main_family']=='T1_MONITORING_INFORMATION_CONTINUITY'
     assert state['boundary_family']=='T2_WARNING_DELIVERY_RESPONSE_HANDOFF'
@@ -124,14 +125,15 @@ def main()->int:
     assert state['quality_gates']['agentic_reducibility']=='PASS_41_OF_41_HARD_SIGNATURES'
     assert state['quality_gates']['communication_attribution']=='PASS_41_OF_41_HARD_SIGNATURES'
     assert state['quality_gates']['human_source_audit']=='MACHINE_PREAUDIT_23_OF_23_PASS_HUMAN_REVIEW_PENDING'
-    assert state['next_stage']=='V07_DYNAMIC_MECHANISM_WITNESS_AND_STAGED_ORACLE_ADMISSION'
+    assert state['next_stage']=='FREEZE_PLACEMENT_VISIBILITY_AND_CONTROL_PATH_CONTRACT'
     readiness=state['research_readiness']
-    assert readiness['status']=='V07_SUPPORT_CORRECTION_AUDITED_MECHANISM_AND_ORACLE_ADMISSION_OPEN'
-    assert readiness['layer3_status']=='PAUSED_UNTIL_LAYER1_DYNAMIC_MECHANISM_AND_STRUCTURAL_HOLDOUT_CLOSE'
+    assert readiness['status']=='V07_GENERATION_AUDITED_PLACEMENT_VISIBILITY_BLOCKED'
+    assert readiness['layer3_status']=='PAUSED_UNTIL_LAYER1_PLACEMENT_DYNAMIC_MECHANISM_AND_STRUCTURAL_HOLDOUT_CLOSE'
     blocker_ids={row['id'] for row in readiness['blockers']}
     assert blocker_ids=={
+        'PLACEMENT_VISIBILITY_CONTRACT_OPEN',
         'DYNAMIC_PROCESS_MECHANISM_OPEN',
-        'STAGED_EXACT_ADMISSION_OPEN',
+        'STAGED_EXACT_ADMISSION_BLOCKED',
         'HARD_MECHANISM_COVERAGE_REOPENED',
         'PRISTINE_STRUCTURAL_GENERALIZATION_OPEN',
         'Q11_HUMAN_SOURCE_REVIEW_PENDING',
@@ -152,6 +154,10 @@ def main()->int:
     assert readiness['v07_generation_counts']['preoracle_structure_ids']==863460
     assert readiness['v07_shortcut_preflight_disposition']=='PASS_NO_V06_STYLE_TIGHT_SATELLITE_SHORTCUT'
     assert readiness['v07_candidate_tight_public_satellite_only_shortcut_count']==0
+    assert readiness['v07_placement_visibility_disposition']=='BLOCK_ORACLE_ADMISSION_PLACEMENT_VISIBILITY_UNRESOLVED'
+    assert readiness['v07_placement_visibility_ref']=='results/benchmark/layer1-v0.7-placement-visibility-review.json'
+    assert readiness['v07_exact_admission_status']=='BLOCKED_NO_VALID_PLACEMENT_CONTRACT'
+    assert readiness['v07_active_oracle_pilot_code']=='REMOVED_FROM_ACTIVE_TREE'
 
     authority=AUTH.read_text(encoding='utf-8')
     assert '58,752 个 recipe 不是 benchmark cases' in authority
@@ -164,7 +170,7 @@ def main()->int:
     assert '41 个 signatures / 174 个 pre-admission recipes' in authority
     assert 'public-test identity v0.2 当前冻结 3,804 个 test cases' in authority
     assert 'frozen-split LLM baseline                              [DONE v0.2; DeepSeek 0/7]' in authority
-    assert 'SOURCE/ORACLE INFRASTRUCTURE READY / DYNAMIC MECHANISM AND ADMISSION OPEN / NOT_BENCHMARK_ADMIT' in authority
+    assert 'SOURCE/GENERATION INFRASTRUCTURE READY / PLACEMENT-VISIBILITY CONTRACT OPEN / NOT_BENCHMARK_ADMIT' in authority
     assert 'Q11 human/source review 仍然是 release blocker，但**不再是唯一 blocker**' in authority
     assert 'GENERATION-AXES.v0.1.json' in authority
     assert '1,262,790 dynamic cases / 499,608 pre-oracle structure IDs' in authority
@@ -172,6 +178,7 @@ def main()->int:
     assert '486 / 486 `BLIND_OPEN_LOOP_SOLVED`' in authority
     assert 'v0.7 scoped verdict' in authority
     assert '任一层 SEARCH_LIMIT → UNRESOLVED_COMPUTATION' in authority
+    assert 'BLOCK_ORACLE_ADMISSION_PLACEMENT_VISIBILITY_UNRESOLVED' in authority or 'placement/visibility 审计' in authority
     assert WORLD_DOC.exists()
     assert WORLD_SCHEMA.exists()
     assert CAUSAL_DOC.exists()
@@ -179,11 +186,14 @@ def main()->int:
     assert EXACT_DOC.exists()
     assert EXACT_LABEL_MATERIALIZER.exists()
 
-    for path in (README,RESEARCH,BENCH):
+    for path in (README,README_ZH,RESEARCH,BENCH):
         text=path.read_text(encoding='utf-8')
         assert 'LAYER1-AUTHORITY.md' in text, f'{path} no longer points to Layer-1 authority'
+    zh=README_ZH.read_text(encoding='utf-8')
+    assert 'placement/visibility contract open' in zh
+    assert '**paused**；learned-ranking v0.1 只保留为 negative/history' in zh
 
-    print('PASS Layer-1 authority: v0.6 is negative lineage; v0.7 only corrects process support; dynamic mechanisms, staged exact admission, structural generalization and Q11 remain open; Layer-3 is paused')
+    print('PASS Layer-1 authority: v0.6 is negative lineage; v0.7 generation is pre-oracle only; placement/visibility blocks exact admission; dynamic mechanisms, structural generalization and Q11 remain open; Layer-3 is paused')
     return 0
 
 

@@ -4,7 +4,7 @@
 
 面向山区灾前长期监测的 source-grounded 决策基准、决策语义运行时与 learning-guided exact search。场景长期存在供电受限、回传间歇中断、缓存压力和恢复过程；任务义务由外部来源定义，系统负责通信执行。
 
-> **当前控制面：** Layer 1 benchmark 语义已 research freeze；Layer 2 v2 deterministic future-choice core 已在 dev 冻结；Layer 3 是当前活跃方法线，在固定 Layer-2 correctness boundary 内学习 search guidance。当前 ownership 统一由 [`research/`](research/README.md) 持有。
+> **当前控制面：** Layer 1 当前保留 v0.2 scoped failure atlas、v0.6 可复现判废 lineage 与 v0.7 process-support correction，三者都不是 released benchmark。v0.7 exact admission 目前被 gateway/center placement、visibility 与 control-path contract 阻塞；Layer 2 继续承担 deterministic/reference infrastructure，Layer 3 暂停。当前 ownership 统一由 [`research/`](research/README.md) 持有。
 
 ## 1. 架构总览
 
@@ -30,7 +30,7 @@
 ┌──────────────────────────────────────────────────────────────┐
 │ Layer 3 · Policy                                             │
 │ deterministic / search / LLM / learned guidance             │
-│ 当前对象：unresolved-action ranking 与 search order          │
+│ 当前状态：等待 Layer-1 placement / benchmark closure         │
 └──────────────────────────────┬───────────────────────────────┘
                                │ selected communication action
                                ▼
@@ -48,9 +48,9 @@ Layer 1 定义问题；Layer 2 持有 deterministic correctness 与合法 decisi
 | 模块 | 持有对象 | 当前状态 | 入口 |
 |---|---|---|---|
 | **Shared substrate** | 通信物理、能量、缓存、机会、fallback、执行生命周期、数学系统模型 | 稳定共享底座 | [`research/substrate/`](research/substrate/README.md) |
-| **Layer 1 · Benchmark** | source-grounded obligations、task construction、observation/action/oracle contract、validity/hardness、split/release | **research-frozen**；formal admission 等待 Q11 human/source review | [`research/benchmark/`](research/benchmark/README.md) |
+| **Layer 1 · Benchmark** | source-grounded obligations、task construction、observation/action/oracle contract、validity/hardness、split/release | **source/generation infrastructure ready；placement/visibility contract open；NOT_BENCHMARK_ADMIT** | [`research/benchmark/`](research/benchmark/README.md) |
 | **Layer 2 · Compiler** | Task/Evidence/Capability/Execution 语义、L/U future-choice frontier、evidence lifecycle、incremental update、exact fallback | **v2 deterministic core frozen on dev** | [`research/compiler/`](research/compiler/README.md) |
-| **Layer 3 · Policy** | 合法 / unresolved action 的排序与选择 | **active**；learned search guidance 正在评测 | [`research/policy/`](research/policy/README.md) |
+| **Layer 3 · Policy** | 合法 / unresolved action 的排序与选择 | **paused**；learned-ranking v0.1 只保留为 negative/history | [`research/policy/`](research/policy/README.md) |
 | **Evaluation** | replay、attribution、ablation、baseline fairness、跨层 audit | 横切 | [`research/evaluation/`](research/evaluation/README.md) |
 | **Literature** | related work、source registry、claim boundary | 横切 | [`research/literature/`](research/literature/README.md) |
 | **History** | superseded tracked research authority / roadmap | provenance | [`research/history/`](research/history/README.md) |
@@ -284,6 +284,27 @@ Hardness 来自真实信息与通信结构：observation sparsity、staleness、
 
 强 baseline floor 包括 gateway-local EDF/reserve、passive-only、normal-send-as-probe、fixed/periodic/batch read、myopic VoI、shallow rule、true depth-k belief planning、receding-horizon planning、generic/incremental exact，以及 ordinary dependency/cache optimization。
 
+### 3.6 当前 construction 与 admission 状态
+
+当前保留三条 lineage，各自承担不同证据角色：
+
+| Lineage | 已建立 | 尚未建立 |
+|---|---|---|
+| v0.2 | 一个 scoped H2×H3×H4 failure family 与 first-irreversible-commitment atlas | benchmark-wide mechanism coverage、pristine generalization |
+| v0.6 | source/trace-driven generation 的可审计与 byte-level reproducibility | decision validity；1,262,790 variants 全部存在 blind public satellite-only policy |
+| v0.7 | recovery/reinterruptible process-support 语义修正；candidate `TIGHT` 已消除 v0.6 的特定 satellite-only shortcut | placement-valid exact semantics、dynamic sufficiency、paid-evidence value、ordinary-baseline headroom、hard-case count |
+
+本地 audited v0.7 pre-oracle universe 有 103,408 个 base scenarios，其中 74,952 个为 `ALL_WORLD_PHYSICAL`，展开成 2,023,704 variants / 863,460 pre-oracle structure IDs。这些数字只表示 generation coverage；当前 admitted hard case 数仍为 0。
+
+当前 blocker 已定位到 oracle contract：旧 adapter 一边按 center-side remote query 收取 terrestrial opportunity/capacity，一边把 gateway receipt 免费暴露给同一 policy，并且没有 center send/control command transport。`cache06.md` 已冻结 owner 边界：gateway queue/send/receipt state 在 gateway 本地可读；center 只能使用已经到达的 telemetry 或合法 query。Gateway 与 center 必须分开建模，不能把两种语义混成一个 oracle。
+
+当前 authority：
+
+- [`research/benchmark/LAYER1-AUTHORITY.md`](research/benchmark/LAYER1-AUTHORITY.md)
+- [`research/benchmark/GENERATION-AXES.v0.2.json`](research/benchmark/GENERATION-AXES.v0.2.json)
+- [`research/benchmark/V07-PLACEMENT-VISIBILITY-REVIEW.v0.1.md`](research/benchmark/V07-PLACEMENT-VISIBILITY-REVIEW.v0.1.md)
+- [`results/benchmark/layer1-v0.7-placement-visibility-review.json`](results/benchmark/layer1-v0.7-placement-visibility-review.json)
+
 论文候选 benchmark 对比图、同类链接、construct coverage 与冻结 v0.2 数据分布由 Layer-1 模块自动生成：
 
 - [Related benchmark landscape and links](research/benchmark/README.md#paper-facing-benchmark-landscape-and-statistics)
@@ -343,11 +364,11 @@ Layer 3 只消费 Layer 2 输出的合法结构化 surface。当前 unresolved s
 A_u(s) = { a | L(s,a)=0, U(s,a)=1 }
 ```
 
-v0.1 当前学习 exact search 的 action ordering。训练 preference 分两层：exact-feasible unresolved action 优先；同 feasibility 类别内 downstream exact proof/search cost 更低的 action 优先。
+历史 v0.1 学习 exact search 的 action ordering。训练 preference 分两层：exact-feasible unresolved action 优先；同 feasibility 类别内 downstream exact proof/search cost 更低的 action 优先。
 
 Learned model 只改变 unresolved-action exploration order。Legality、evidence truth、oracle semantics 和 hard pruning 继续由 deterministic layer 持有；ranking error 影响效率，exact fallback 维持 correctness contract。
 
-当前 v0.1 的 disposition 是：full-dev frontier correctness 保持一致；linear ranker 的 expansion reduction 很小；total wall time 劣于 ordinary persistent-exact control。下一方法对象聚焦 solver state / conflict structure 条件下的 marginal search value，静态 local-action feature scoring 保留为 v0.1 reference。
+v0.1 的 disposition 是：full-dev frontier correctness 保持一致；linear ranker 的 expansion reduction 很小；total wall time 劣于 ordinary persistent-exact control。该结果只保留为 negative/history。Layer 1 的 placement、mechanism coverage 与 pristine holdout 闭合前，不继续训练新的 Layer-3 policy，也不允许 Layer-3 结果反向塑造 generator。
 
 详细状态与 machine artifact 见 [`research/policy/README.md`](research/policy/README.md) 和 [`results/agentic/README.md`](results/agentic/README.md)。
 
@@ -427,9 +448,9 @@ Layer 1 source-grounded decision benchmark
 
 | Owner | 当前冻结 / 活跃边界 |
 |---|---|
-| Layer 1 | v0.2 research semantics、exact oracle、validity/hardness ladder、structure-aware split 与 paper-facing statistics 已冻结。正式 `BENCHMARK_ADMIT` 等待 Q11 真人 source review。 |
+| Layer 1 | v0.6 保留为 reproducible negative lineage。v0.7 只修正 process-support 语义并通过特定 `TIGHT` satellite-shortcut preflight；exact admission 被 gateway/center placement、visibility 与 control transport contract 阻塞。当前没有 lineage 达到 `BENCHMARK_ADMIT`。 |
 | Layer 2 | v1 保留为历史 runtime/compiler baseline。v2 deterministic future-choice semantics 完成 dev correctness 与强对照后冻结。 |
-| Layer 3 | learned search guidance active。当前 linear ranking baseline correctness 保持成立，systems win 尚未出现。 |
+| Layer 3 | paused。历史 linear ranking baseline correctness 保持成立，但 search/wall-time gain 未出现；它不再驱动当前研究方向。 |
 | Generalization | 历史 7-signature test 已在早期 Layer-2 工作中暴露，当前归入 regression evidence；新的 structural-generalization claim 需要 preregistered holdout。 |
 | Deployment claim | benchmark guarantee 只覆盖声明模型 / process。site-level reliability、bytes/airtime/energy 节省与跨站点泛化需要独立 measurement / calibration。 |
 

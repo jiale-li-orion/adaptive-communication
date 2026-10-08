@@ -242,7 +242,7 @@ v0.1–v0.5、receipt-race、receipt-chain、joint query–satellite Pareto 和 
 |---|---|
 | v0.2 | scoped mechanism-discovery/regression asset: 41 exact signatures / 174 recipes in one H2×H3×H4 family; historical test is exposed |
 | v0.6 | generation reproducibility PASS; benchmark validity FAIL because every admitted case has a blind public satellite-only completion policy |
-| v0.7 | process-support correction implemented and locally audited; specific v0.6-style candidate-TIGHT shortcut removed; no hard case is admitted |
+| v0.7 | process-support correction implemented and locally audited; specific v0.6-style candidate-TIGHT shortcut removed; placement/visibility contract remains open; no exact or hard case is admitted |
 
 v0.7 local pre-oracle r1 contains 103,408 base scenarios, 74,952 `ALL_WORLD_PHYSICAL` bases and 2,023,704 variants / 863,460 pre-oracle structure IDs. These counts are construction coverage only. They cannot be used as task count, hard-case count or paper performance denominator.
 
@@ -250,11 +250,12 @@ The next gate follows `cache06.md`, not another version bump:
 
 ```text
 frozen v0.7 universe
-→ non-separable cross-stage witness
+→ freeze gateway/center placement, visibility and control transport
+→ gateway-local non-separable cross-stage witness
 → dynamic sufficiency after later observations
-→ dedicated query / passive feedback / send-as-probe competition
+→ dedicated query / passive feedback / send-as-probe competition（only where transport is legal）
 → causal intervention attribution
-→ staged exact admission
+→ staged exact admission per placement
      blind
      → full-current
      → no-paid-query with natural feedback
@@ -265,7 +266,7 @@ frozen v0.7 universe
 → BENCHMARK_ADMIT
 ```
 
-Any `SEARCH_LIMIT` remains `UNRESOLVED_COMPUTATION`. It is never counted as hard, information-infeasible or algorithm failure. The discarded partial v0.7 pilots have no claim status.
+The current placement audit is `BLOCK_ORACLE_ADMISSION_PLACEMENT_VISIBILITY_UNRESOLVED`: the discarded adapter charged a center-side remote query while also exposing gateway receipt passively and omitted center control-command transport. Any `SEARCH_LIMIT` remains `UNRESOLVED_COMPUTATION`. The discarded partial v0.7 pilots and active pilot code have been removed and have no claim status.
 
 Current execution ledger:
 
@@ -276,8 +277,9 @@ Current execution ledger:
     → v0.7 process-support correction                     [DONE]
     → v0.7 pre-oracle generation + schema audit          [DONE LOCAL R1]
     → v0.7 specific TIGHT satellite-shortcut preflight   [DONE; 0 candidate shortcut cells]
-    → dynamic mechanism witnesses                         [CURRENT]
-    → staged exact admission                              [CURRENT]
+    → placement / visibility / control-path contract      [CURRENT BLOCKER]
+    → gateway-local dynamic mechanism witnesses           [PENDING]
+    → staged exact admission per placement                [BLOCKED]
     → ordinary-baseline red-team                         [PENDING]
     → pristine structural holdout                        [PENDING]
     → Q11 human review                                    [PENDING]

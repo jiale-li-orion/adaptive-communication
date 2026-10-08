@@ -1,0 +1,38 @@
+{
+  "claim_boundary": [
+    "The v0.7 generated universe remains valid as a pre-oracle construction artifact.",
+    "No v0.7 paid-evidence, no-query, or exact-admission statistic is valid until placement and visibility are explicit.",
+    "This audit does not request a generator-axis change and does not select cases by method outcome."
+  ],
+  "disposition": "BLOCK_ORACLE_ADMISSION_PLACEMENT_VISIBILITY_UNRESOLVED",
+  "facts": {
+    "base_schema_has_policy_placement": false,
+    "case_schema_has_policy_placement": false,
+    "passive_gateway_receipt_enabled": true,
+    "placement_is_declared_evaluation_coordinate": true,
+    "process_schema_has_policy_placement": false,
+    "query_owner": "gateway",
+    "query_payload_kind": "RECEIPT_SUMMARY",
+    "query_uses_real_opportunity": true,
+    "send_control_transport_declared": false
+  },
+  "official_generation_run": "layer1-v0.7-preoracle-r1",
+  "required_resolution": {
+    "center_placement": [
+      "gateway receipt is hidden until declared telemetry or legal query arrives",
+      "query request/response and send-control command obey declared path and timing",
+      "center and gateway placements are reported as separate evaluation coordinates"
+    ],
+    "gateway_placement": [
+      "gateway queue/send/receipt state is owner-local",
+      "receipt-summary local read is not charged as remote acquisition",
+      "gateway-local autonomy is the primary deployment baseline"
+    ]
+  },
+  "schema_version": "0.1",
+  "stage": "V07_PLACEMENT_VISIBILITY_AUDIT",
+  "violations": {
+    "center_query_cost_without_send_control_transport": true,
+    "mixed_center_query_and_gateway_local_visibility": true
+  }
+}

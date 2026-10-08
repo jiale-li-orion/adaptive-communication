@@ -4,7 +4,7 @@ English | [中文](README.zh.md)
 
 Source-grounded decision benchmark, decision-semantic runtime, and learning-guided exact search for pre-disaster mountain monitoring under limited power and intermittent communication.
 
-> **Current control plane:** Layer 1 retains three scoped assets: the v0.2 failure atlas, the reproducible-but-invalid v0.6 negative construction lineage, and the v0.7 process-support correction. None is a released benchmark. Active work is limited to dynamic mechanism witnesses and staged exact admission on the frozen v0.7 universe; Layer 2 remains reference/correctness infrastructure and Layer 3 is paused. Current ownership lives in [`research/`](research/README.md).
+> **Current control plane:** Layer 1 retains three scoped assets: the v0.2 failure atlas, the reproducible-but-invalid v0.6 negative construction lineage, and the v0.7 process-support correction. None is a released benchmark. v0.7 exact admission is currently blocked by an unresolved gateway/center placement, visibility and control-path contract; Layer 2 remains reference/correctness infrastructure and Layer 3 is paused. Current ownership lives in [`research/`](research/README.md).
 
 ## 1. Architecture at a glance
 
@@ -48,7 +48,7 @@ Layer 1 owns the problem. Layer 2 owns deterministic correctness and the legal d
 | Module | Owns | Current state | Entry |
 |---|---|---|---|
 | **Shared substrate** | communication physics, energy, cache, opportunity, fallback, execution lifecycle, mathematical model | stable shared base | [`research/substrate/`](research/substrate/README.md) |
-| **Layer 1 · Benchmark** | source-grounded obligations, task construction, observation/action/oracle contract, validity/hardness, split/release | **source/oracle infrastructure ready; dynamic mechanism and exact admission open; NOT_BENCHMARK_ADMIT** | [`research/benchmark/`](research/benchmark/README.md) |
+| **Layer 1 · Benchmark** | source-grounded obligations, task construction, observation/action/oracle contract, validity/hardness, split/release | **source/generation infrastructure ready; placement/visibility contract open; NOT_BENCHMARK_ADMIT** | [`research/benchmark/`](research/benchmark/README.md) |
 | **Layer 2 · Compiler** | Task/Evidence/Capability/Execution semantics, L/U future-choice frontier, evidence lifecycle, incremental update, exact fallback | **v2 deterministic core frozen on dev** | [`research/compiler/`](research/compiler/README.md) |
 | **Layer 3 · Policy** | ordering and selection among legal / unresolved actions | **paused**; previous learned-ranking line retained only as negative/history until Layer 1 closes | [`research/policy/`](research/policy/README.md) |
 | **Evaluation** | replay, attribution, ablation, baseline fairness, cross-layer audits | cross-cutting | [`research/evaluation/`](research/evaluation/README.md) |
@@ -292,11 +292,11 @@ Three lineages are retained for different reasons:
 |---|---|---|
 | v0.2 | one scoped H2×H3×H4 failure family and a first-irreversible-commitment atlas | benchmark-wide mechanism coverage or pristine generalization |
 | v0.6 | auditable, byte-reproducible source/trace-driven generation | decision validity; all 1,262,790 variants collapse to a blind public satellite-only policy |
-| v0.7 | corrected recovery/reinterruptible support semantics; candidate `TIGHT` removes the specific v0.6 satellite-only shortcut | dynamic sufficiency, paid-evidence value, ordinary-baseline headroom or hard-case count |
+| v0.7 | corrected recovery/reinterruptible support semantics; candidate `TIGHT` removes the specific v0.6 satellite-only shortcut | placement-valid exact semantics, dynamic sufficiency, paid-evidence value, ordinary-baseline headroom or hard-case count |
 
 The local audited v0.7 pre-oracle universe contains 103,408 base scenarios, of which 74,952 are `ALL_WORLD_PHYSICAL`; these expand to 2,023,704 variants / 863,460 pre-oracle structure IDs. These are generation counts only. No v0.7 case is currently admitted as hard.
 
-The next gate is not another generator version or a full two-million-case exact sweep. The frozen v0.7 universe must first expose four mechanism witnesses required by `cache06.md`: non-separable cross-stage commitment, later-observation dynamic sufficiency, dedicated-query/passive/send-as-probe competition, and causal intervention attribution. Exact classification then proceeds stage-by-stage—blind, full-current, no-paid-query, observation-matched acquisition—with every `SEARCH_LIMIT` kept unresolved.
+The next gate is not another generator version or a full two-million-case exact sweep. The frozen v0.7 universe first needs an explicit gateway/center placement, visibility and control-path contract. The previous adapter charged a center-side remote query while exposing gateway receipts for free and omitted center control transport, so its pilots were discarded. Once placement is valid, the universe must expose the four `cache06.md` mechanism witnesses before staged exact classification.
 
 Current authority:
 
@@ -304,6 +304,7 @@ Current authority:
 - [`research/benchmark/ENVIRONMENT-GENERATION-CONTRACT.v0.1.md`](research/benchmark/ENVIRONMENT-GENERATION-CONTRACT.v0.1.md)
 - [`research/benchmark/GENERATION-AXES.v0.2.json`](research/benchmark/GENERATION-AXES.v0.2.json)
 - [`results/benchmark/layer1-v0.7-shortcut-preflight.json`](results/benchmark/layer1-v0.7-shortcut-preflight.json)
+- [`research/benchmark/V07-PLACEMENT-VISIBILITY-REVIEW.v0.1.md`](research/benchmark/V07-PLACEMENT-VISIBILITY-REVIEW.v0.1.md)
 
 Current paper-facing comparison, construct coverage and frozen v0.2 distribution are generated in the module README:
 
@@ -448,7 +449,7 @@ The current three-layer split continues the old repo: the substrate carries phys
 
 | Owner | Frozen / active boundary |
 |---|---|
-| Layer 1 | v0.6 is retained as reproducible negative lineage. v0.7 corrects only process-support semantics and passes the specific TIGHT satellite-shortcut preflight; dynamic mechanism witnesses and staged exact admission remain open. No current lineage is `BENCHMARK_ADMIT`. |
+| Layer 1 | v0.6 is retained as reproducible negative lineage. v0.7 corrects only process-support semantics and passes the specific TIGHT satellite-shortcut preflight; exact admission is blocked until gateway/center placement, visibility and control transport are explicit. No current lineage is `BENCHMARK_ADMIT`. |
 | Layer 2 | v1 remains the historical runtime/compiler baseline. v2 deterministic future-choice semantics are frozen after dev correctness and strong-control audits. |
 | Layer 3 | paused. The previous learned search-ranking baseline is a negative historical result, not the current research line; no new Layer-3 method may shape Layer-1 generation. |
 | Generalization | the historical seven-signature test was exposed during earlier Layer-2 work and now serves regression evidence. A new structural-generalization claim requires a preregistered holdout. |
