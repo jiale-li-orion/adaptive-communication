@@ -4,7 +4,7 @@
 
 面向山区灾前长期监测的 source-grounded 决策基准、决策语义运行时与 learning-guided exact search。场景长期存在供电受限、回传间歇中断、缓存压力和恢复过程；任务义务由外部来源定义，系统负责通信执行。
 
-> **当前控制面：** Layer 1 当前保留 v0.2 scoped failure atlas、v0.6 可复现判废 lineage 与 v0.7 process-support correction，三者都不是 released benchmark。gateway 仍是主 policy placement，gateway receipt 仍属于 owner-local state；但 gateway exact admission 重新被更深的 data-location/action-ownership correctness defect 阻塞：当前 adapter 把原本跨越 `SEND_TERR → gateway receipt → center ACK` 的端到端动作直接解释成 gateway-local execution。36-cell gateway pilot 因此降级为 diagnostic。center remote control 继续保持独立 transport `SIMULATOR_GAP`；Layer 2 继续承担 deterministic/reference infrastructure，Layer 3 暂停。
+> **当前控制面：** Layer 1 现在按三个论文-facing track 组织：Operational-Conformance、Interactive-Decision、Future-Choice-Stress。gateway data-location/action ownership 已完成修正并闭合；旧 36-cell gateway pilot 继续只作 diagnostic lineage。benchmark release validity 与 Layer-2 method hardness 已正式分账：前两条 track 可以继续推进 release，即使 Future-Choice-Stress 暂时为空。当前 benchmark blocker 是 track-specific release artifact、execution-evaluator audit、fresh generalization split 与真实 Q11 human/source review。Layer 3 只因 method-stress 线继续暂停。
 
 ## 1. 架构总览
 

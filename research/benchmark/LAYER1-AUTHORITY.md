@@ -319,20 +319,25 @@ receipt-race、overlapping receipt chain、joint query–satellite Pareto、reso
 
 ## 13. 当前唯一主工程
 
-**2026-10-06 correction：此前“机器侧 construction 已完成、Q11 是唯一 blocker”的判断撤回。** 该判断只检查了既有 generator 内部的 release checklist，没有检查 V8 survivors 是否真正覆盖 `cache06.md` 冻结的 dynamic-process mechanism space。最新 hard-survivor audit 发现：174 hard recipes / 41 signatures 全部坍缩到同一 `FINITE_CROSSING_WINDOWS + GATEWAY_SUMMARY_QUERY + H2×H3×H4` mechanism family；`PASSIVE_ACK_ONLY`、`MIXED_PASSIVE_QUERY_PROBE` 与 `MULTI_WINDOW_DYNAMIC` 均被 cheap / finite-horizon baselines 饱和。旧 7-signature test 又已经在 `fdc0846` 暴露。
+**2026-10-09 paper-framing correction：benchmark release validity 与 method-stress headroom 正式分账。** 2026-10-06 的 hard-survivor audit 仍然成立：174 hard recipes / 41 signatures 全部坍缩到同一 `FINITE_CROSSING_WINDOWS + GATEWAY_SUMMARY_QUERY + H2×H3×H4` mechanism family，且旧 7-signature test 已暴露；但这一事实只否定“benchmark-wide hard-mechanism coverage / Layer-2 method readiness”，不再否定 source-grounded benchmark 的 Operational-Conformance / Interactive-Decision release 价值。同行 benchmark 的成熟做法也是先冻结 task/environment/evaluator/coverage，再把 hardest capability 作为分层 subset，而不是要求每个 task 都让作者方法取得 headroom。
 
 因此 Layer 1 当前状态改为：
 
-> **SOURCE/GENERATION INFRASTRUCTURE READY / GATEWAY POLICY PLACEMENT RETAINED / DATA-LOCATION + ACTION-OWNERSHIP OPEN / NOT_BENCHMARK_ADMIT**
+> **SOURCE/TASK/EVALUATOR INFRASTRUCTURE ACTIVE / RELEASE-TRACK ASSEMBLY OPEN / FUTURE-CHOICE STRESS SEPARATE / NOT_BENCHMARK_ADMIT**
 
-Q11 human/source review 仍然是 release blocker，但**不再是唯一 blocker**。当前 research-readiness blockers 固定为：
+Gateway action/data-location ownership 已由 `T1-GATEWAY-DATA-LIFECYCLE-CONTRACT.v0.1.md` 与 corrected gateway-backhaul adapter 闭合；它不再是当前 blocker。Q11 human/source review 仍然是 release blocker，但**不再是唯一 release blocker**。当前 benchmark-release blockers 固定为：
 
-1. `DATA_LOCATION_ACTION_OWNERSHIP_OPEN`：`SYSTEM-MODEL-v1` 分离 node uplink、gateway queue/backhaul 与 center delivery；历史 v0.5 `SEND_TERR` 先产生 gateway receipt、再产生 center final ACK；当前 gateway adapter 却把同一个 `SEND_TERR` 当 gateway-local execution。必须先冻结 report location 与 action owner；
-2. `DYNAMIC_PROCESS_MECHANISM_OPEN`：当前 36-cell/bifurcation 结果只属于 provisional abstract kernel；修正 action/data-location contract 后仍需重新验证 non-separable cross-stage choice、dynamic sufficiency 与 ordinary baseline headroom；
-3. `GATEWAY_STAGED_EXACT_ADMISSION_BLOCKED`：gateway exact 在 action/data-location contract 闭合前关闭；旧 36-cell pilot 不能作为 deployment-faithful admission；
-4. `HARD_MECHANISM_COVERAGE_REOPENED`：v0.2 的 41 个 survivors 只支持一个 scoped H2×H3×H4 family；
-5. `PRISTINE_STRUCTURAL_GENERALIZATION_OPEN`：旧 test 已暴露，最终方法 claim 需要在方法冻结前重新 preregister structural cohort / protocol；
-6. `Q11_HUMAN_SOURCE_REVIEW_PENDING`：machine preaudit 不能替代真实 reviewer。
+1. `TRACK_SPECIFIC_RELEASE_ARTIFACT_OPEN`：现有 11 个 canonical surfaces 已分配到 Operational-Conformance / Interactive-Decision / Future-Choice-Stress / blocker，但正式 track-specific case/split manifest 尚未冻结；
+2. `EXECUTION_EVALUATOR_RELEASE_AUDIT_OPEN`：历史 exact/V9 继续做 regression，新的 conformance / interactive release 还要完成针对当前 full-sim contract 的 execution-evaluator mutation/replay audit；
+3. `FRESH_BENCHMARK_GENERALIZATION_SPLIT_OPEN`：旧 v0.2 test 已暴露，新的 benchmark-wide generalization claim 需要按 source/site/regime/trace 冻结 fresh split；
+4. `Q11_HUMAN_SOURCE_REVIEW_PENDING`：machine preaudit 不能替代真实 reviewer。
+
+方法线单独保留：
+
+- `FUTURE_CHOICE_STRESS_EMPTY`：当前 Layer 1 尚无通过 strong ordinary-baseline headroom 的 stress subset；
+- `METHOD_STRUCTURAL_HOLDOUT_OPEN`：未来 Layer-2/3 claim 仍需 pristine structural cohort。
+
+这两项只阻塞 future-choice method claim，不再阻塞 A 作为 benchmark paper 的 release construction。
 
 当前执行顺序固定为：
 
@@ -366,14 +371,18 @@ DB44/T 2457-2024 source correction               [DONE]
 → gateway-local bounded 36-cell mechanism pilot         [DONE; DIAGNOSTIC ONLY]
 → easy / causal-infeasible bifurcation attribution      [DONE SCOPED DIAGNOSTIC]
 → gateway action/data-location ownership audit          [DONE; CORRECTNESS BLOCKER FOUND]
-→ freeze report/data-location + gateway legal actions   [CURRENT]
-→ gateway-local dynamic mechanism witnesses             [BLOCKED UNTIL ABOVE]
-→ center-placement transport extension                  [OPTIONAL; REQUIRES CONTRACT]
-→ staged exact / validity admission per placement       [BLOCKED]
-→ strong-baseline red-team                              [PENDING]
-→ preregister pristine structural-generalization cohort  [PENDING]
-→ real Q11 reviewer signoff                              [PENDING]
-→ frozen BENCHMARK_ADMIT release                         [AFTER ALL ABOVE]
+→ freeze report/data-location + gateway legal actions   [DONE; 53af145]
+→ define three paper-facing release tracks              [DONE; 7b7a2d6]
+→ assemble immutable track-specific case/split manifest [CURRENT]
+→ execution-evaluator mutation/replay audit             [PENDING]
+→ freeze fresh benchmark generalization split           [PENDING]
+→ real Q11 reviewer signoff                             [PENDING]
+→ frozen BENCHMARK_ADMIT release                        [AFTER RELEASE BLOCKERS]
+
+Parallel method line (not a benchmark-release prerequisite):
+→ discover Future-Choice Stress subset                  [OPEN]
+→ preregister pristine method structural cohort         [AFTER STRESS CONTRACT]
+→ Layer 3 policy/search learning                        [PAUSED]
 ```
 
 ### 13.1 2026-10-05 source correction

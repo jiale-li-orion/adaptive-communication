@@ -156,7 +156,7 @@
     "stage": "PRE_WORLD_PRE_ORACLE"
   },
   "main_family": "T1_MONITORING_INFORMATION_CONTINUITY",
-  "next_stage": "FREEZE_GATEWAY_DATA_LOCATION_AND_ACTION_OWNERSHIP",
+  "next_stage": "ASSEMBLE_TRACK_SPECIFIC_RELEASE_AND_Q11_AUDIT",
   "quality_gates": {
     "agentic_reducibility": "PASS_41_OF_41_HARD_SIGNATURES",
     "agentic_reducibility_ref": "results/benchmark/layer1-agentic-reducibility-v0.2-retry-legality.json",
@@ -169,7 +169,7 @@
     "human_source_audit": "MACHINE_PREAUDIT_23_OF_23_PASS_HUMAN_REVIEW_PENDING",
     "human_source_audit_ref": "results/benchmark/layer1-human-source-audit-v0.2-retry-legality.json",
     "human_source_preaudit_ref": "results/benchmark/layer1-human-source-machine-preaudit-v0.2-retry-legality.json",
-    "interpretation_warning": "The 12 PASS / 1 BLOCKED snapshot does not encode the 2026-10-06 hard-mechanism coverage reopening or exposed-test provenance. Q11 is not the only current blocker.",
+    "interpretation_warning": "The 12 PASS / 1 BLOCKED snapshot is historical and does not encode the current three-track benchmark release framing, fresh-split requirement, or separate Future-Choice Stress method gate.",
     "llm_baseline": "PASS_DEEPSEEK_FLASH_0_OF_7_HARD_SIGNATURES",
     "llm_baseline_ref": "results/benchmark/layer1-llm-baseline-v0.2-retry-legality.json",
     "quality_gate_ref": "results/benchmark/layer1-quality-gates-v0.2-retry-legality.json",
@@ -181,27 +181,19 @@
   },
   "release_status": "NOT_BENCHMARK_ADMIT",
   "research_readiness": {
-    "authority_ref": "research/benchmark/HARD-SURVIVOR-FAILURE-ATLAS.v0.1.md",
+    "authority_ref": "research/benchmark/LAYER1-AUTHORITY.md",
     "blockers": [
       {
-        "id": "DATA_LOCATION_ACTION_OWNERSHIP_OPEN",
-        "reason": "SYSTEM-MODEL-v1 separates node uplink, gateway queue/backhaul and center delivery, while the provisional gateway adapter reuses the historical end-to-end SEND_TERR -> gateway receipt -> center ACK transition as an instantaneous gateway-local action. Report location and legal action ownership must be frozen before gateway exact can resume."
+        "id": "TRACK_SPECIFIC_RELEASE_ARTIFACT_OPEN",
+        "reason": "The current task-surface registry has been assigned to Operational-Conformance, Interactive-Decision, Future-Choice-Stress or explicit blockers, but immutable track-specific case/split manifests have not yet been frozen."
       },
       {
-        "id": "DYNAMIC_PROCESS_MECHANISM_OPEN",
-        "reason": "The 36-cell gateway pilot and second-outage bifurcation are provisional-kernel diagnostics only. Dynamic mechanism, sufficiency and ordinary-baseline headroom must be rerun after the data-location/action-owner contract is corrected."
+        "id": "EXECUTION_EVALUATOR_RELEASE_AUDIT_OPEN",
+        "reason": "Historical V9/exact evaluator audits remain useful regression evidence, but the release-facing Operational-Conformance and Interactive-Decision tracks still need a frozen execution-evaluator mutation/replay audit over their current full-simulator contracts."
       },
       {
-        "id": "GATEWAY_STAGED_EXACT_ADMISSION_BLOCKED",
-        "reason": "Gateway exact admission is closed until the data-location/action-owner lifecycle is frozen and audited. The existing bounded pilot cannot be interpreted as deployment-faithful gateway admission."
-      },
-      {
-        "id": "HARD_MECHANISM_COVERAGE_REOPENED",
-        "reason": "The historical v0.2 survivors expose one scoped H2xH3xH4 family; independent dynamic mechanism families have not yet passed the frozen ordinary-baseline ladder."
-      },
-      {
-        "id": "PRISTINE_STRUCTURAL_GENERALIZATION_OPEN",
-        "reason": "The historical 7-signature test was accessed at fdc0846 and is regression evidence, not a pristine method-level structural holdout."
+        "id": "FRESH_BENCHMARK_GENERALIZATION_SPLIT_OPEN",
+        "reason": "The historical v0.2 test cohort was exposed and cannot support a new paper-facing generalization claim. A fresh track-specific source/site/regime/trace split must be frozen independently of method outcomes."
       },
       {
         "id": "Q11_HUMAN_SOURCE_REVIEW_PENDING",
@@ -221,13 +213,25 @@
       "gateway remains the primary policy placement and gateway receipt remains owner-local; center remote control remains a transport SIMULATOR_GAP",
       "the provisional bounded 36-cell gateway kernel yields 18 blind-open-loop controls, 8 full-current causal-infeasible diagnostics, 2 ordinary-baseline shortcuts and 8 unresolved cells; it is diagnostic rather than admission evidence",
       "the gateway bifurcation audit shows SINGLE_RECOVERY has a common final-UP stage while REINTERRUPTIBLE has no common UP stage for observed pilot stage counts, and removing only second-outage worlds makes all eight TIGHT causal-infeasible pilot cells blind-solvable",
-      "the gateway action-ownership audit blocks exact admission because the provisional adapter conflates end-to-end report send, gateway receipt and gateway-local action execution"
+      "the gateway action-ownership audit identified an end-to-end SEND_TERR/gateway-receipt conflation; T1-GATEWAY-DATA-LIFECYCLE-CONTRACT and the corrected gateway-backhaul adapter now separate gateway-ready data, primary/fallback forwarding and center ACK/timeout",
+      "paper-facing task surfaces are explicitly assigned to Operational-Conformance, Interactive-Decision, Future-Choice-Stress or blockers; benchmark release validity no longer depends on finding a Layer-2 hard survivor"
     ],
     "generation_axes_ref": "research/benchmark/GENERATION-AXES.v0.2.json",
     "generation_axes_status": "FROZEN_FOR_V07_SUPPORT_CORRECTION_ONLY",
     "hard_survivor_failure_atlas_ref": "results/benchmark/layer1-hard-survivor-failure-atlas-v0.1.json",
-    "layer3_status": "PAUSED_UNTIL_LAYER1_DYNAMIC_MECHANISM_AND_STRUCTURAL_HOLDOUT_CLOSE",
-    "status": "V07_GATEWAY_POLICY_PLACEMENT_RETAINED_ACTION_OWNERSHIP_BLOCKED",
+    "layer3_status": "PAUSED_FOR_METHOD_STRESS_ONLY_BENCHMARK_RELEASE_INDEPENDENT",
+    "method_stress_blockers": [
+      {
+        "id": "FUTURE_CHOICE_STRESS_EMPTY",
+        "reason": "No current Layer-1 surface has passed the strong ordinary-baseline and structural-generalization requirements for the Future-Choice Stress track. This blocks Layer-2/3 method claims, not benchmark release."
+      },
+      {
+        "id": "METHOD_STRUCTURAL_HOLDOUT_OPEN",
+        "reason": "The historical seven-signature method test was exposed; any future method claim needs a pristine structural cohort frozen after the stress-track contract is fixed."
+      }
+    ],
+    "release_tracks_ref": "research/benchmark/LAYER1-RELEASE-TRACKS.json",
+    "status": "BENCHMARK_RELEASE_TRACK_ASSEMBLY_OPEN_METHOD_STRESS_SEPARATE",
     "v06_all_world_physical_bases_with_all_down_support": 46770,
     "v06_cases_with_full_fallback_budget": 1262790,
     "v06_generation_counts": {
@@ -251,7 +255,7 @@
     "v06_validity_disposition": "GLOBAL_BLIND_SATELLITE_SHORTCUT",
     "v07_active_oracle_pilot_code": "GATEWAY_LOCAL_INDEXED_BOUNDED_PILOT_DIAGNOSTIC_ONLY",
     "v07_candidate_tight_public_satellite_only_shortcut_count": 0,
-    "v07_exact_admission_status": "BLOCKED_GATEWAY_ACTION_OWNERSHIP_AND_CENTER_TRANSPORT",
+    "v07_exact_admission_status": "GATEWAY_BACKHAUL_CORRECTNESS_CLOSED_BOUNDED_DIAGNOSTIC_ONLY_CENTER_TRANSPORT_GAP",
     "v07_generation_counts": {
       "all_world_physical_bases": 74952,
       "base_scenarios": 103408,
@@ -275,7 +279,7 @@
     },
     "v07_gateway_pilot_ref": "results/benchmark/layer1-v0.7-gateway-pilot-v0.1.json",
     "v07_gateway_bifurcation_ref": "results/benchmark/layer1-v0.7-gateway-bifurcation-v0.1.json",
-    "v07_gateway_action_ownership_disposition": "BLOCK_GATEWAY_EXACT_ADMISSION_DATA_LOCATION_ACTION_OWNERSHIP_OPEN",
+    "v07_gateway_action_ownership_disposition": "CLOSED_BY_T1_GATEWAY_DATA_LIFECYCLE_CONTRACT",
     "v07_gateway_action_ownership_ref": "results/benchmark/layer1-v0.7-gateway-action-ownership-review.json",
     "v07_gateway_action_ownership_review_ref": "research/benchmark/V07-GATEWAY-ACTION-OWNERSHIP-REVIEW.v0.1.md",
     "v07_placement_contract_ref": "research/benchmark/PLACEMENT-VISIBILITY-CONTRACT.v0.1.json",
@@ -549,7 +553,7 @@
     "source_contract_count": 27,
     "status": "MACHINE_REGENERATION_COMPLETE"
   },
-  "status": "V07_GATEWAY_POLICY_PLACEMENT_RETAINED_ACTION_OWNERSHIP_BLOCKED",
+  "status": "BENCHMARK_RELEASE_TRACK_ASSEMBLY_OPEN_METHOD_STRESS_SEPARATE",
   "structure_aware_split": {
     "audit_ref": "results/benchmark/layer1-structure-aware-split-v0.2-retry-legality.json",
     "by_split": {
@@ -608,13 +612,14 @@
     }
   },
   "warnings": [
-    "Current main research state is NOT_BENCHMARK_ADMIT; historical v0.2 Q0-Q12 and public-test artifacts are regression/provenance only.",
+    "Current main research state is NOT_BENCHMARK_ADMIT; historical v0.2 Q0-Q12 and public-test artifacts are regression/provenance only, while the new paper-facing benchmark is assembled by explicit release tracks.",
     "The historical 7-signature test was exposed at fdc0846 and cannot support a pristine structural-generalization claim.",
     "v0.2 hard survivors are scoped evidence from one FINITE_CROSSING_WINDOWS + GATEWAY_SUMMARY_QUERY + H2/H3/H4 family, not benchmark-wide mechanism coverage.",
     "v0.6 generation is reproducible but globally shortcut-invalid; its 1,262,790 variants are negative construction lineage, not benchmark cases.",
     "v0.7 only corrects process-support semantics. Passing the TIGHT blind-satellite preflight is necessary but does not establish dynamic sufficiency, EvidenceNeed, hard-case count or algorithm headroom.",
     "SEARCH_LIMIT is unresolved computation status and may never be counted as information-infeasible, hard, or method failure.",
-    "Layer 3 remains paused. Layer-2/3 outcomes may not modify source-owned fields, public geometry, generator axes or case selection.",
+    "Layer 3 remains paused for method-stress work only. Benchmark release construction may continue independently; Layer-2/3 outcomes may not modify source-owned fields, public geometry, generator axes or case selection.",
+    "An empty Future-Choice Stress track blocks future-choice method claims but does not by itself invalidate Operational-Conformance or Interactive-Decision benchmark tracks.",
     "T2 remains SIMULATOR_GAP until actor-chain environment support exists.",
     "Gateway-local and center-remote visibility/cost semantics are evaluated separately. Gateway-local autonomy is the frozen primary v0.7 placement; center remote control remains a transport SIMULATOR_GAP.",
     "The 36-cell gateway bounded pilot has no resolved ordinary-baseline survivor and 8 UNRESOLVED_COMPUTATION cells; it is not a benchmark distribution estimate or hard-case count.",
