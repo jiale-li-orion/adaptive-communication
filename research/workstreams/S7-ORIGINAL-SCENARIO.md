@@ -100,3 +100,23 @@ warning authority announces denser monitoring requirement
 3. `resource_guard + backup EDF/maxcov + bounded MPC` 作为下一轮首要否决基线；
 4. 只有普通单资源 admission / flow / finite horizon 均无法概括时，才把 Layer-2 conditional frontier 接回主实验；
 5. 扩到预注册 weather/year/seed 后才讨论 benchmark-wide hardness。
+
+## T2 boundary candidate: source-valid, method mechanism not closed
+
+原始灾前场景还有一个 source 更强的边界方向：`T2_WARNING_DELIVERY_RESPONSE_HANDOFF`。Yining profile 直接固定 municipal→township `15 min`、township→village `15 min`、village→public `30 min`，并规定 phone 优先、WeChat/SMS 冗余与 missed-call retry；Baoshan profile固定 progressive 12/6/2h call-response 以及 30/50min feedback deadline。
+
+但 `code/evaluation/benchmark/audit_t2_future_choice_source_preflight.py` 的 source-only 审计给出限定负结果：
+
+- 两份 profile 都是 `DIRECT_TASK_AUTHORITY`，因此 **task legitimacy supported**；
+- actor/deadline/ACK/retry workflow 完整；
+- capability `constraints` 当前均为空；
+- source-fixed variables 中没有 cross-stage capacity/quota/contact-duration/energy/concurrency resource；
+- T2 三个 surface 仍全部是 `SIMULATOR_GAP`。
+
+因此当前 disposition 是：
+
+> `SOURCE_VALID_TASK_BUT_FUTURE_CHOICE_RESOURCE_NOT_CLOSED`
+
+也就是说 T2 可以继续作为真实 benchmark extension，但**不能因为有 15/15/30 或 30/50 分钟 deadline 就声称 future-choice hardness**。若把电话/WeChat/SMS 视作零时长且彼此独立，workflow 会退化成普通 deadline-aware retry / handoff。只有在 recipient/channel reachability trace 或事先冻结的 `CONTROLLED_STRESS` capacity model 独立于方法结果闭合以后，才允许重新打开 T2 future-choice 机制。
+
+明确禁止：事后发明电话配额、联系时长或并发限制来制造方法空间。
