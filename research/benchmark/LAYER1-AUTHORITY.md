@@ -327,7 +327,7 @@ receipt-race、overlapping receipt chain、joint query–satellite Pareto、reso
 
 Gateway action/data-location ownership 已由 `T1-GATEWAY-DATA-LIFECYCLE-CONTRACT.v0.1.md` 与 corrected gateway-backhaul adapter 闭合；它不再是当前 blocker。2026-10-09 的 assistant-led internal source/task/evaluator audit 已完成 23/23 stratified samples × 5 review dimensions；它明确不是 independent expert validation。当前 benchmark-release blockers 固定为：
 
-1. `BASELINE_PROTOCOL_AND_TEST_EVALUATION_OPEN`：新的 150-coordinate test execution cohort 已冻结但 outcome 保持锁定；digest-bound pre-release candidate manifest 已完成。必须先冻结 paper baseline/policy protocol，再允许执行 test 与生成最终 result/release manifest。
+1. `LOCKED_TEST_EVALUATION_AND_FINAL_RELEASE_OPEN`：新的 150-coordinate test execution cohort、digest-bound pre-release candidate manifest 与 paper baseline/policy protocol 均已冻结。剩余工作只有按协议执行 test、生成统计/失败分析并冻结最终 result/release manifest。
 
 已关闭：
 
@@ -381,8 +381,8 @@ DB44/T 2457-2024 source correction               [DONE]
 → freeze fresh benchmark execution split                [DONE; 200/200/150; test locked]
 → internal source/task/evaluator audit                  [DONE; 23/23 × 5 PASS]
 → freeze total pre-release candidate manifest           [DONE]
-→ freeze paper baseline/policy protocol                 [PENDING]
-→ execute locked test cohort + statistical report       [AFTER PROTOCOL FREEZE]
+→ freeze paper baseline/policy protocol                 [DONE]
+→ execute locked test cohort + statistical report       [CURRENT]
 → frozen BENCHMARK_ADMIT release                        [AFTER RESULT/RELEASE BLOCKERS]
 
 Parallel method line (not a benchmark-release prerequisite):

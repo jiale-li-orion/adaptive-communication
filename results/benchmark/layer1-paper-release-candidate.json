@@ -19,7 +19,7 @@
       "status": "INTERNAL_ASSISTANT_AUDIT_PASS"
     }
   },
-  "base_git_commit": "ae3e04b2272a0f4e8d5898b2414f28a5a821f4c3",
+  "base_git_commit": "1dfe4e7b13b5e5d6828567532d17666d58521718",
   "benchmark_scope": {
     "blocked_surface_count": 4,
     "main_family": "T1_MONITORING_INFORMATION_CONTINUITY",
@@ -49,6 +49,8 @@
     }
   },
   "checks": {
+    "baseline_protocol_forbids_test_tuning": true,
+    "baseline_protocol_frozen": true,
     "evaluator_covers_all_release_candidate_surfaces": true,
     "execution_split_200_200_150": true,
     "fresh_test_identity_audit_pass": true,
@@ -100,6 +102,11 @@
     }
   },
   "files": {
+    "baseline_protocol": {
+      "bytes": 1644,
+      "path": "research/benchmark/PAPER-BASELINE-PROTOCOL.json",
+      "sha256": "556d1414b8cdbbed836508f96a4cdfcb62b9dae90c1eaf4fe6b8ceb3bf57d528"
+    },
     "execution_split": {
       "bytes": 547701,
       "path": "results/benchmark/layer1-paper-split.json",
@@ -153,7 +160,7 @@
   },
   "limitations": [
     "No independent external domain-expert review was performed; the completed source/task/evaluator review is assistant-led internal audit.",
-    "The test cohort identities are frozen but outcomes are intentionally unavailable at this stage.",
+    "The test cohort identities and baseline protocol are frozen; test outcomes remain unavailable until the frozen runner is executed.",
     "Future-Choice Stress is currently empty; Layer-2/3 method claims require a separate future hard subset and pristine method holdout."
   ],
   "method_stress_state": {
@@ -162,10 +169,9 @@
     "future_choice_stress_surface_count": 0
   },
   "remaining_release_blockers": [
-    "Freeze paper baseline/policy protocol before executing the locked test cohort.",
     "Execute the 150 locked test coordinates under the frozen protocol and produce statistical/failure reporting.",
     "Freeze the final release/result manifest after test execution."
   ],
   "stage": "LAYER1_PAPER_PRE_RELEASE_CANDIDATE",
-  "status": "PRE_RELEASE_BASELINE_PROTOCOL_PENDING_TEST_LOCKED"
+  "status": "PRE_RELEASE_TEST_EXECUTION_UNLOCKED_NOT_YET_RUN"
 }

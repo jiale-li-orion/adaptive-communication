@@ -32,6 +32,7 @@ FILES = {
     "quality_gate": ROOT / "research/benchmark/BENCHMARK-QUALITY-GATE.v0.1.md",
     "system_model": ROOT / "research/substrate/SYSTEM-MODEL-v1.md",
     "paper_positioning": ROOT / "research/benchmark/BENCHMARK-PAPER-POSITIONING.md",
+    "baseline_protocol": ROOT / "research/benchmark/PAPER-BASELINE-PROTOCOL.json",
 }
 
 
@@ -49,6 +50,7 @@ def main() -> int:
     evaluator = json.loads(FILES["fullsim_evaluator_audit"].read_text(encoding="utf-8"))
     internal = json.loads(FILES["internal_source_audit"].read_text(encoding="utf-8"))
     tracks = json.loads(FILES["release_tracks"].read_text(encoding="utf-8"))
+    baseline_protocol = json.loads(FILES["baseline_protocol"].read_text(encoding="utf-8"))
 
     release_surfaces = sorted(
         row["surface_id"] for row in inv["surfaces"] if row["paper_release_candidate"]
@@ -66,12 +68,14 @@ def main() -> int:
         "fresh_test_identity_audit_pass": bool(split["contamination_audit"]["passed"]),
         "test_outcomes_locked": bool(split["access_policy"]["test_outcomes_locked"]),
         "future_choice_stress_separate_from_release": stress_surfaces == [],
+        "baseline_protocol_frozen": baseline_protocol["status"] == "FROZEN_BEFORE_TEST_EXECUTION",
+        "baseline_protocol_forbids_test_tuning": bool(baseline_protocol["test_tuning_forbidden"]),
     }
     assert all(checks.values()), checks
 
     payload = {
         "stage": "LAYER1_PAPER_PRE_RELEASE_CANDIDATE",
-        "status": "PRE_RELEASE_BASELINE_PROTOCOL_PENDING_TEST_LOCKED",
+        "status": "PRE_RELEASE_TEST_EXECUTION_UNLOCKED_NOT_YET_RUN",
         "base_git_commit": _head(),
         "benchmark_scope": {
             "main_family": "T1_MONITORING_INFORMATION_CONTINUITY",
@@ -106,7 +110,6 @@ def main() -> int:
         },
         "checks": checks,
         "remaining_release_blockers": [
-            "Freeze paper baseline/policy protocol before executing the locked test cohort.",
             "Execute the 150 locked test coordinates under the frozen protocol and produce statistical/failure reporting.",
             "Freeze the final release/result manifest after test execution."
         ],
@@ -117,7 +120,7 @@ def main() -> int:
         },
         "limitations": [
             "No independent external domain-expert review was performed; the completed source/task/evaluator review is assistant-led internal audit.",
-            "The test cohort identities are frozen but outcomes are intentionally unavailable at this stage.",
+            "The test cohort identities and baseline protocol are frozen; test outcomes remain unavailable until the frozen runner is executed.",
             "Future-Choice Stress is currently empty; Layer-2/3 method claims require a separate future hard subset and pristine method holdout."
         ],
     }
