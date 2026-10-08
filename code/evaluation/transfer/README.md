@@ -17,3 +17,7 @@
 - `run_uav_attention_continuation_shield.py`：evaluator-only exact continuation shield upper bound。
 - `run_uav_attention_future_choice_lu.py`：L/U + replayable route certificate + exact fallback future-choice prototype。
 - `summarize_uav_attention_future_choice_robustness.py`：200/1000-seed compact robustness artifact。
+- `run_uav_attention_receding_baselines.py`：depth-k optimistic receding strong baseline。
+- `summarize_uav_attention_receding_headroom.py`：N=5 depth4 saturation boundary。
+- `select_uav_attention_constructive_cohort.py`：不使用 method/exact 的 N=10 constructive hard-feasible cohort selector。
+- `summarize_uav_attention_n10_headroom.py`：N=10 L/U vs depth4/exact compact headroom artifact。

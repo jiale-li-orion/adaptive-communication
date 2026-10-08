@@ -171,3 +171,42 @@ depth4 已经关闭全部 zero-tardiness gap，因此 **N=5 不能支撑“futur
 compact artifact：`results/transfer/uav-attention-receding-headroom-summary.json`。
 
 这条 red-team 把下一门槛钉死为论文原生 N=10+ setting：此时 depth4 才是真正局部 horizon。N=10 exact/L-U scaling 必须在严格内存护栏下做；如果 depth4 仍饱和且更便宜，C 只保留 external continuation-value evidence，不承担方法 superiority。
+
+### N=10 paper setting: depth-4 no longer closes the gap
+
+N=10 使用外部论文自己的 setting：`mission_time=30, deadline=5–25, one charger`。为避免用 proposed method / exact oracle挑有利 case，先运行 `select_uav_attention_constructive_cohort.py` 扫 seeds 0..199：一个 seed 只有在**至少一条官方 heuristic 原生完成 10/10、回 depot、zero-tardiness、zero infeasible**时才进入 cohort。
+
+得到 21 个 method-independent constructive hard-feasible seeds：
+
+`[21,23,39,40,74,78,79,84,86,91,95,96,110,113,122,124,145,167,171,177,186]`
+
+其中 Greedy Deadline-Battery 原生就能解 20/21，NN / BatteryAware 各 10/21，NearestDeadline 1/21。因此这个 cohort **偏向 ordinary baseline，而不是偏向 future-choice**。
+
+在这 21 个 seeds 上：
+
+| Policy | depth4 zero-tardy | depth4 completed / infeasible | L/U future-choice |
+|---|---:|---:|---:|
+| NN | 17/21 | 21 / 0 | **21/21, 21/21, 0** |
+| Battery-Aware NN | 17/21 | 21 / 0 | **21/21, 21/21, 0** |
+| Nearest Deadline | 11/21 | 14 / 8 | **21/21, 21/21, 0** |
+| Greedy Deadline-Battery | 20/21 | 21 / 0 | **21/21, 21/21, 0** |
+
+L/U correctness：**924 reached action frontiers / 0 mismatch** against independent exact mask。
+
+search decomposition：
+
+- pure exact mask new states：约 `33.9k–46.0k / policy`；
+- L/U exact fallback new states：约 `14.3k–25.2k`，即 pure exact 的约 **42–55%**；
+- 加 bounded constructive lower search 后 total search-work proxy约 pure exact 的 **66–78%**；
+- carried route certificates `210` hits / policy；sound U=0 直接剪 `424–568` actions。
+
+这和 N=5 的 scoped-negative 形成了干净 scaling boundary：N=5 depth4 几乎是 full horizon；N=10 depth4 仍是局部 horizon，因此不能稳定保住 full mission continuation，而 L/U + exact fallback 仍与 exact frontier 完全一致。
+
+tracked artifacts：
+
+- `results/transfer/uav-attention-n10-constructive-cohort.json`
+- `results/transfer/uav-attention-n10-future-choice-summary.json`
+
+raw 21-seed LU / receding rows继续保留在 `local_research/current/transfer/`，summary 记录 SHA 与重跑命令。
+
+仍然不能越界：Greedy depth4 已经 20/21，future-choice 不是“所有普通方法都失败”的万能层；它更合理的定位是 **selective hard-feasibility / safety layer**。search-work count 也不是 wall-time theorem。下一步优先做 N=10+ 更广 constructive cohort / learned PPO paired shield，而不是继续调 N=5。

@@ -297,7 +297,7 @@ def summary(rows:list[dict[str,Any]])->dict[str,Any]:
 
 
 def main()->int:
-    ap=argparse.ArgumentParser(); ap.add_argument("--seeds",type=int,default=200); ap.add_argument("--customers",type=int,default=5,choices=sorted(N_SETTINGS)); ap.add_argument("--lower-search-limit",type=int,default=24)
+    ap=argparse.ArgumentParser(); ap.add_argument("--seeds",type=int,default=200); ap.add_argument("--seed-list",default=None); ap.add_argument("--customers",type=int,default=5,choices=sorted(N_SETTINGS)); ap.add_argument("--lower-search-limit",type=int,default=24)
     ap.add_argument("--out",type=Path,default=ROOT/"results/transfer/uav-attention-future-choice-lu-n5-200.json"); args=ap.parse_args()
     os.environ.setdefault("OPENBLAS_NUM_THREADS","1"); os.environ.setdefault("OMP_NUM_THREADS","1"); os.environ.setdefault("MKL_NUM_THREADS","1")
     _install_gymnasium_shim(); sys.path.insert(0,str(EXT))
@@ -307,8 +307,9 @@ def main()->int:
     heuristics={"nearest_neighbour":NearestNeighbourHeuristic,"nearest_deadline":NearestDeadlineFirstHeuristic,"greedy_deadline_battery":GreedyDeadlineBatteryHeuristic,"battery_aware_nn":BatteryAwareNearestNeighbour}
     mission_time,deadline_min,deadline_max=N_SETTINGS[args.customers]
     def cfg(): return SingleUAVConfig(num_customers=args.customers,num_chargers=1,mission_time=mission_time,deadline_min=deadline_min,deadline_max=deadline_max,reward_mode="completion_ratio")
+    seed_values=[int(x) for x in args.seed_list.split(",") if x.strip()] if args.seed_list else list(range(args.seeds))
     rows=[]; frontier_match_checks=0
-    for seed in range(args.seeds):
+    for seed in seed_values:
         probe=SingleUAVEnv(cfg()); probe.reset(seed=seed); pfront=FutureChoiceRouteFrontier(probe,lower_search_limit=args.lower_search_limit)
         start=pfront.state(probe); start_route,_=pfront.exact_with_delta(start); hard=start_route is not None
         for pname,pcls in heuristics.items():
@@ -360,7 +361,7 @@ def main()->int:
             "upper_impossible":sum(r["upper_impossible"] for r in hardrows),
             "lower_search_expanded":sum(r["lower_search_expanded"] for r in hardrows),
         }
-    payload={"stage":"UAV_ATTENTION_FUTURE_CHOICE_LU","external_repo":"mdehghani86/uav-attention-routing","external_commit":_git_head(EXT),"setting":{"num_customers":args.customers,"mission_time":mission_time,"deadline_min":deadline_min,"deadline_max":deadline_max,"seeds":[0,args.seeds-1],"lower_search_limit":args.lower_search_limit},"correctness":{"reached_frontier_match_checks":frontier_match_checks,"frontier_mismatch":sum(r["frontier_mismatch"] for r in rows)},"summaries":summaries,"paired_hard_feasible":paired,"rows":rows,"claim_boundary":["L=1 is always a replayable complete route; U=0 uses only sound optimistic necessary conditions; unresolved actions fall back to exact continuation.","The reached L/U action mask is checked against exact continuation at every hard-feasible decision boundary.","This transfer measures search-work decomposition; wall-time superiority is not inferred from state/expansion counts.","The route certificate object is domain-specific transfer code; integration with the frozen generic Layer-2 conditional frontier remains separate work."]}
+    payload={"stage":"UAV_ATTENTION_FUTURE_CHOICE_LU","external_repo":"mdehghani86/uav-attention-routing","external_commit":_git_head(EXT),"setting":{"num_customers":args.customers,"mission_time":mission_time,"deadline_min":deadline_min,"deadline_max":deadline_max,"seed_values":seed_values,"lower_search_limit":args.lower_search_limit},"correctness":{"reached_frontier_match_checks":frontier_match_checks,"frontier_mismatch":sum(r["frontier_mismatch"] for r in rows)},"summaries":summaries,"paired_hard_feasible":paired,"rows":rows,"claim_boundary":["L=1 is always a replayable complete route; U=0 uses only sound optimistic necessary conditions; unresolved actions fall back to exact continuation.","The reached L/U action mask is checked against exact continuation at every hard-feasible decision boundary.","This transfer measures search-work decomposition; wall-time superiority is not inferred from state/expansion counts.","The route certificate object is domain-specific transfer code; integration with the frozen generic Layer-2 conditional frontier remains separate work."]}
     assert payload["correctness"]["frontier_mismatch"]==0
     args.out.parent.mkdir(parents=True,exist_ok=True); args.out.write_text(json.dumps(payload,ensure_ascii=False,indent=2,sort_keys=True)+"\n",encoding="utf-8")
     print(json.dumps({"out":str(args.out),"correctness":payload["correctness"],"paired_hard_feasible":paired},sort_keys=True)); return 0

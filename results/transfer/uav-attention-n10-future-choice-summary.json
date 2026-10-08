@@ -1,0 +1,166 @@
+{
+  "checks": {
+    "cohort_count_21": true,
+    "depth4_leaves_quality_gap_for_at_least_three_policies": true,
+    "lu_all_policies_21_of_21_completed": true,
+    "lu_all_policies_21_of_21_zero_tardiness": true,
+    "lu_all_policies_zero_infeasible": true,
+    "lu_frontier_checks_924": true,
+    "lu_frontier_exact_match": true,
+    "lu_reduces_exact_fallback_states_for_all": true,
+    "method_independent_constructive_cohort": true
+  },
+  "claim_boundary": [
+    "The 21-seed cohort is a constructive lower-bound subset of hard-feasible N=10 seeds, selected without the proposed method or exact oracle.",
+    "Search-work counts are not CPU-equivalent operations; wall-time superiority is not claimed.",
+    "The L/U route adapter is domain-specific transfer code; generic Layer-2 integration remains separate."
+  ],
+  "cohort": [
+    21,
+    23,
+    39,
+    40,
+    74,
+    78,
+    79,
+    84,
+    86,
+    91,
+    95,
+    96,
+    110,
+    113,
+    122,
+    124,
+    145,
+    167,
+    171,
+    177,
+    186
+  ],
+  "cohort_ref": "results/transfer/uav-attention-n10-constructive-cohort.json",
+  "raw_hashes": {
+    "lu_local": "b1800e9b9c22a0d65f5941d16eeffa93301ba020830081583a6155da3b54ffd8",
+    "receding_local": "aac5ce9368e060f318bff99c90e6e917c3a81d5e1d5958b696157d4a8a32c4a8"
+  },
+  "rerun_commands": {
+    "lu": "OPENBLAS_NUM_THREADS=1 OMP_NUM_THREADS=1 MKL_NUM_THREADS=1 python3 code/evaluation/transfer/run_uav_attention_future_choice_lu.py --customers 10 --seed-list <cohort_csv> --lower-search-limit 96 --out <path>",
+    "receding": "OPENBLAS_NUM_THREADS=1 OMP_NUM_THREADS=1 MKL_NUM_THREADS=1 python3 code/evaluation/transfer/run_uav_attention_receding_baselines.py --customers 10 --seed-list <cohort_csv> --depths 2,3,4 --out <path>"
+  },
+  "rows": {
+    "battery_aware_nn": {
+      "cohort_count": 21,
+      "depth4_receding": {
+        "completed": 21,
+        "infeasible": 0,
+        "mean_tardiness": 1.419795429149078,
+        "partial_states_expanded": 2080,
+        "zero_tardiness": 17
+      },
+      "future_choice_lu": {
+        "carried_certificate": 210,
+        "completed": 21,
+        "exact_fallback_calls": 138,
+        "exact_fallback_new_states": 14310,
+        "exact_mask_new_states": 33867,
+        "fallback_state_ratio_over_exact": 0.4225352112676056,
+        "infeasible": 0,
+        "lower_search_expanded": 8057,
+        "total_search_proxy": 22367,
+        "total_search_proxy_ratio_over_exact": 0.6604364130274308,
+        "upper_impossible": 568,
+        "zero_tardiness": 21
+      },
+      "infeasible_reduction_vs_depth4": 0,
+      "strict_completion_gain_vs_depth4": 0,
+      "strict_zero_tardiness_gain_vs_depth4": 4
+    },
+    "greedy_deadline_battery": {
+      "cohort_count": 21,
+      "depth4_receding": {
+        "completed": 21,
+        "infeasible": 0,
+        "mean_tardiness": 0.08979667887863976,
+        "partial_states_expanded": 2723,
+        "zero_tardiness": 20
+      },
+      "future_choice_lu": {
+        "carried_certificate": 210,
+        "completed": 21,
+        "exact_fallback_calls": 220,
+        "exact_fallback_new_states": 23212,
+        "exact_mask_new_states": 44237,
+        "fallback_state_ratio_over_exact": 0.5247191265230463,
+        "infeasible": 0,
+        "lower_search_expanded": 10623,
+        "total_search_proxy": 33835,
+        "total_search_proxy_ratio_over_exact": 0.764857472251735,
+        "upper_impossible": 424,
+        "zero_tardiness": 21
+      },
+      "infeasible_reduction_vs_depth4": 0,
+      "strict_completion_gain_vs_depth4": 0,
+      "strict_zero_tardiness_gain_vs_depth4": 1
+    },
+    "nearest_deadline": {
+      "cohort_count": 21,
+      "depth4_receding": {
+        "completed": 14,
+        "infeasible": 8,
+        "mean_tardiness": 2.68753163083214,
+        "partial_states_expanded": 2349,
+        "zero_tardiness": 11
+      },
+      "future_choice_lu": {
+        "carried_certificate": 210,
+        "completed": 21,
+        "exact_fallback_calls": 268,
+        "exact_fallback_new_states": 25201,
+        "exact_mask_new_states": 46019,
+        "fallback_state_ratio_over_exact": 0.5476216345422543,
+        "infeasible": 0,
+        "lower_search_expanded": 10801,
+        "total_search_proxy": 36002,
+        "total_search_proxy_ratio_over_exact": 0.782329038006041,
+        "upper_impossible": 502,
+        "zero_tardiness": 21
+      },
+      "infeasible_reduction_vs_depth4": 8,
+      "strict_completion_gain_vs_depth4": 7,
+      "strict_zero_tardiness_gain_vs_depth4": 10
+    },
+    "nearest_neighbour": {
+      "cohort_count": 21,
+      "depth4_receding": {
+        "completed": 21,
+        "infeasible": 0,
+        "mean_tardiness": 1.419795429149078,
+        "partial_states_expanded": 2080,
+        "zero_tardiness": 17
+      },
+      "future_choice_lu": {
+        "carried_certificate": 210,
+        "completed": 21,
+        "exact_fallback_calls": 138,
+        "exact_fallback_new_states": 14310,
+        "exact_mask_new_states": 33867,
+        "fallback_state_ratio_over_exact": 0.4225352112676056,
+        "infeasible": 0,
+        "lower_search_expanded": 8057,
+        "total_search_proxy": 22367,
+        "total_search_proxy_ratio_over_exact": 0.6604364130274308,
+        "upper_impossible": 568,
+        "zero_tardiness": 21
+      },
+      "infeasible_reduction_vs_depth4": 0,
+      "strict_completion_gain_vs_depth4": 0,
+      "strict_zero_tardiness_gain_vs_depth4": 4
+    }
+  },
+  "scientific_interpretation": {
+    "boundary": "Greedy Deadline-Battery already solves 20/21 seeds with depth4, so future-choice is not universally necessary. This is a selective correctness layer, not a blanket claim that ordinary receding planning fails.",
+    "compute": "L/U reduces exact-fallback new-state search to roughly 42-55% of pure exact-mask search; including constructive lower search, the total search-work proxy is roughly 66-78% of pure exact. Depth4 is cheaper but not exact-correct and leaves task-quality gaps.",
+    "positive": "On a method-independent cohort already solvable by at least one official heuristic, full future-choice feasibility closes residual deadline/completion failures that depth4 receding lookahead leaves on three of four policy families, while matching exact action frontiers at 924 reached boundaries."
+  },
+  "stage": "UAV_ATTENTION_N10_FUTURE_CHOICE_HEADROOM"
+}

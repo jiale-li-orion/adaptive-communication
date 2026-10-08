@@ -95,6 +95,7 @@ def mean(rows, key):
 def main() -> int:
     ap = argparse.ArgumentParser()
     ap.add_argument("--seeds", type=int, default=1000)
+    ap.add_argument("--seed-list", default=None)
     ap.add_argument("--customers", type=int, default=5, choices=sorted(N_SETTINGS))
     ap.add_argument("--depths", default="1,2,3")
     ap.add_argument(
@@ -137,8 +138,9 @@ def main() -> int:
             reward_mode="completion_ratio",
         )
 
+    seed_values=[int(x) for x in args.seed_list.split(",") if x.strip()] if args.seed_list else list(range(args.seeds))
     rows = []
-    for seed in range(args.seeds):
+    for seed in seed_values:
         probe = SingleUAVEnv(cfg())
         probe.reset(seed=seed)
         oracle = FutureChoiceRouteFrontier(probe, lower_search_limit=0)
@@ -220,7 +222,7 @@ def main() -> int:
             "mission_time": mission_time,
             "deadline_min": deadline_min,
             "deadline_max": deadline_max,
-            "seed_range": [0, args.seeds - 1],
+            "seed_values": seed_values,
             "depths": depths,
         },
         "summary": summary,
