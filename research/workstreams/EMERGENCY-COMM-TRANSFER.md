@@ -67,3 +67,39 @@ same allocator + operational-obligation feasibility layer
 - **DRL-EC³**：emergency-communication system/resource transfer anchor；
 - **uav-attention-routing**：hard-deadline mission-level future-choice red-team；
 - 若能找到同时具备 emergency-communication domain + native hard obligations 的公开环境，再替换二者的组合，不为凑 domain 自造环境。
+
+### Continuation-aware shield: 200-seed paired result
+
+`code/evaluation/transfer/run_uav_attention_continuation_shield.py` 进一步把 evaluator-only exact continuation 从“反例解释器”变成 action shield：
+
+```text
+official heuristic ranking
+    ↓
+released native one-step action mask
+    ↓ intersect
+exact zero-tardiness full-continuation mask
+    ↓
+same official heuristic ranking
+```
+
+环境 transition、deadline、battery、charger、mission time 和 heuristic ranking 都不改；shield 只屏蔽“执行后不再存在全客户 zero-tardiness + depot-return continuation”的动作。
+
+论文 N=5 setting 上扫描 seeds `0..199`。其中 **18/200** initial states 本身存在 hard-feasible full continuation；统计只在这 18 个可兑现 episodes 上做 paired comparison：
+
+| Official heuristic | zero-tardiness | completed | infeasible episodes | mean tardiness Δ (shield-native) |
+|---|---:|---:|---:|---:|
+| Nearest Neighbour | 9/18 → **18/18** | 18/18 → 18/18 | 0 → 0 | **-1.148** |
+| Nearest Deadline | 9/18 → **18/18** | 16/18 → **18/18** | 6 → **0** | **-1.437** |
+| Greedy Deadline-Battery | 11/18 → **18/18** | 18/18 → 18/18 | 3 → **0** | **-0.534** |
+| Battery-Aware NN | 10/18 → **18/18** | 15/18 → **18/18** | 3 → **0** | **-0.963** |
+
+四条 heuristic 都没有出现 `native zero-tardiness → shielded tardy` 的反向伤害。NearestDeadline / Greedy / NN 的平均 energy 同时下降；Battery-Aware NN 的 shielded energy 平均增加约 1.58，但 completion 与 zero-tardiness 同时改善，因此 energy 不是单调优势 claim。
+
+这个结果已经超出“native mask 存在理论漏洞”：在 hard-feasible cohort 上，continuation-aware masking 可以系统性修复原生 heuristic 的 avoidable tardiness / incomplete / infeasible failure。
+
+边界仍然必须保持：
+
+- 18/200 是 **hard-feasible prevalence**，不能把 200 当成方法成功分母；
+- shield 当前使用 evaluator-side exact DFS，是效果上界/transfer oracle，不是高效 deployable Layer-2 implementation；
+- 原环境的 `completed` 允许 tardiness，zero-tardiness hard obligation 是 transfer interpretation；
+- learned PPO checkpoint 尚未做相同 paired shield 评测。
