@@ -1,0 +1,171 @@
+{
+  "audit_state": {
+    "fullsim_evaluator": {
+      "all_current_release_candidate_t1_surfaces_covered": true,
+      "all_episode_mutation_checks_pass": true,
+      "multiple_legal_success_execution_times_accepted": true,
+      "policy_text_or_model_output_not_evaluator_input": true
+    },
+    "internal_source_audit": {
+      "independent_external_expert_review": false,
+      "review_fields": [
+        "source_extraction_semantics",
+        "authority_priority_time_semantics",
+        "task_family_identity",
+        "oracle_success_set",
+        "evaluator_trace"
+      ],
+      "sample_count": 23,
+      "status": "INTERNAL_ASSISTANT_AUDIT_PASS"
+    }
+  },
+  "base_git_commit": "ae3e04b2272a0f4e8d5898b2414f28a5a821f4c3",
+  "benchmark_scope": {
+    "blocked_surface_count": 4,
+    "main_family": "T1_MONITORING_INFORMATION_CONTINUITY",
+    "release_candidate_surface_count": 7,
+    "release_candidate_surfaces": [
+      "T1.S0_STEADY_MONITORING",
+      "T1.S1_WARNING_CADENCE_TRANSITION",
+      "T1.S2_INTERMITTENT_BACKHAUL_FALLBACK",
+      "T1.S3_ENERGY_CONSTRAINED_CONTINUITY",
+      "T1.S4_OUTAGE_CACHE_RETENTION",
+      "T1.S6_HETEROGENEOUS_PATH_PRIORITY",
+      "T1.S7_COMPOUND_CONTINUITY"
+    ],
+    "tracks": {
+      "FUTURE_CHOICE_STRESS": [],
+      "INTERACTIVE_DECISION": [
+        "T1.S2_INTERMITTENT_BACKHAUL_FALLBACK",
+        "T1.S3_ENERGY_CONSTRAINED_CONTINUITY",
+        "T1.S7_COMPOUND_CONTINUITY"
+      ],
+      "OPERATIONAL_CONFORMANCE": [
+        "T1.S0_STEADY_MONITORING",
+        "T1.S1_WARNING_CADENCE_TRANSITION",
+        "T1.S4_OUTAGE_CACHE_RETENTION",
+        "T1.S6_HETEROGENEOUS_PATH_PRIORITY"
+      ]
+    }
+  },
+  "checks": {
+    "evaluator_covers_all_release_candidate_surfaces": true,
+    "execution_split_200_200_150": true,
+    "fresh_test_identity_audit_pass": true,
+    "fullsim_evaluator_audit_pass": true,
+    "future_choice_stress_separate_from_release": true,
+    "independent_external_review_not_falsely_claimed": true,
+    "internal_source_audit_pass": true,
+    "seven_release_candidate_surfaces": true,
+    "test_outcomes_locked": true
+  },
+  "execution_split": {
+    "access_policy": {
+      "allowed_before_policy_freeze": "identity/digest/coverage audits only; no simulator execution or policy scoring",
+      "method_holdout_note": "This benchmark execution cohort is not a substitute for a future pristine Future-Choice-Stress method holdout.",
+      "test_outcomes_locked": true,
+      "unlock_condition": "paper baseline/policy protocol frozen and recorded in git"
+    },
+    "counts": {
+      "dev": 200,
+      "test": 150,
+      "train": 200
+    },
+    "test_rule": {
+      "seeds": [
+        100,
+        101,
+        102,
+        103,
+        104,
+        105,
+        106,
+        107,
+        108,
+        109
+      ],
+      "task_templates": [
+        "O1",
+        "O2",
+        "O3",
+        "O4",
+        "O6"
+      ],
+      "windows": [
+        "w0",
+        "w2",
+        "w3"
+      ],
+      "year": 2024
+    }
+  },
+  "files": {
+    "execution_split": {
+      "bytes": 547701,
+      "path": "results/benchmark/layer1-paper-split.json",
+      "sha256": "8604d6a6d832784b188f747c19ecc8bf52cc58235cf961f8fe547633dc631000"
+    },
+    "fullsim_evaluator_audit": {
+      "bytes": 17636,
+      "path": "results/benchmark/layer1-fullsim-evaluator-release-audit.json",
+      "sha256": "b719c0b76dc39d5355620aa8849d83586388cd33ed1d7337fd62a824d9725014"
+    },
+    "internal_source_audit": {
+      "bytes": 30634,
+      "path": "results/benchmark/layer1-internal-source-audit-2026-10-09.json",
+      "sha256": "5a70ebcd4decbe0e78ecb7b1414b4f12494ac968a512372dc442270ad4315c0e"
+    },
+    "paper_positioning": {
+      "bytes": 9140,
+      "path": "research/benchmark/BENCHMARK-PAPER-POSITIONING.md",
+      "sha256": "77d0dfe71802ad13d900db81da95edbb4c2b4370c0414f4781bfa81ea901e4fe"
+    },
+    "quality_gate": {
+      "bytes": 9948,
+      "path": "research/benchmark/BENCHMARK-QUALITY-GATE.v0.1.md",
+      "sha256": "76f131d39dfb7f2456087701b572fedae515e0ac024298d059e10004fec2dc68"
+    },
+    "release_tracks": {
+      "bytes": 3558,
+      "path": "research/benchmark/LAYER1-RELEASE-TRACKS.json",
+      "sha256": "bc65b4fe6f78a3727c28253f7e333aa24c804e5511030d0f294779446eca6878"
+    },
+    "semantic_inventory": {
+      "bytes": 28547,
+      "path": "results/benchmark/layer1-paper-track-inventory.json",
+      "sha256": "d889c80c44e1286a06d259c57d3fa991a297738c8f5faec04c2cd47f87719a4f"
+    },
+    "source_registry": {
+      "bytes": 27262,
+      "path": "research/benchmark/profiles/v0.1/SOURCE-PROFILE-REGISTRY.v0.1.json",
+      "sha256": "63d655952531acd97018bc5999bcd94b61619b8ba128c2fe1bccad812a0e758d"
+    },
+    "system_model": {
+      "bytes": 15188,
+      "path": "research/substrate/SYSTEM-MODEL-v1.md",
+      "sha256": "b484e42c7d13473e7c386cf758c4ee5e5e026352341d6af45941178a375b988a"
+    },
+    "task_registry": {
+      "bytes": 9611,
+      "path": "research/benchmark/TASK-SURFACE-REGISTRY.v0.1.json",
+      "sha256": "e13da4cf23a0307cdad29f2c33ba7899e333df0e213552735474a8758efce907"
+    }
+  },
+  "limitations": [
+    "No independent external domain-expert review was performed; the completed source/task/evaluator review is assistant-led internal audit.",
+    "The test cohort identities are frozen but outcomes are intentionally unavailable at this stage.",
+    "Future-Choice Stress is currently empty; Layer-2/3 method claims require a separate future hard subset and pristine method holdout."
+  ],
+  "method_stress_state": {
+    "blocks_benchmark_release": false,
+    "blocks_future_choice_method_claim": true,
+    "future_choice_stress_surface_count": 0
+  },
+  "remaining_release_blockers": [
+    "Freeze paper baseline/policy protocol before executing the locked test cohort.",
+    "Execute the 150 locked test coordinates under the frozen protocol and produce statistical/failure reporting.",
+    "Freeze the final release/result manifest after test execution."
+  ],
+  "stage": "LAYER1_PAPER_PRE_RELEASE_CANDIDATE",
+  "status": "PRE_RELEASE_BASELINE_PROTOCOL_PENDING_TEST_LOCKED"
+}

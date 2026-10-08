@@ -57,7 +57,7 @@ def main()->int:
     assert len(t2)==3, len(t2)
 
     state=json.loads(STATE.read_text(encoding='utf-8'))
-    assert state['status']=='PAPER_PRE_RELEASE_MANIFEST_AND_BASELINE_PROTOCOL_OPEN_METHOD_STRESS_SEPARATE'
+    assert state['status']=='PAPER_BASELINE_PROTOCOL_OPEN_METHOD_STRESS_SEPARATE'
     assert state['release_status']=='NOT_BENCHMARK_ADMIT'
     assert state['main_family']=='T1_MONITORING_INFORMATION_CONTINUITY'
     assert state['boundary_family']=='T2_WARNING_DELIVERY_RESPONSE_HANDOFF'
@@ -126,13 +126,12 @@ def main()->int:
     assert state['quality_gates']['communication_attribution']=='PASS_41_OF_41_HARD_SIGNATURES'
     assert state['quality_gates']['human_source_audit']=='INTERNAL_ASSISTANT_AUDIT_23_OF_23_X5_PASS_EXTERNAL_EXPERT_REVIEW_NOT_PERFORMED'
     assert state['quality_gates']['human_source_audit_ref']=='results/benchmark/layer1-internal-source-audit-2026-10-09.json'
-    assert state['next_stage']=='FREEZE_PAPER_PRE_RELEASE_MANIFEST_AND_BASELINE_PROTOCOL'
+    assert state['next_stage']=='FREEZE_PAPER_BASELINE_PROTOCOL'
     readiness=state['research_readiness']
-    assert readiness['status']=='PAPER_PRE_RELEASE_MANIFEST_AND_BASELINE_PROTOCOL_OPEN_METHOD_STRESS_SEPARATE'
+    assert readiness['status']=='PAPER_BASELINE_PROTOCOL_OPEN_METHOD_STRESS_SEPARATE'
     assert readiness['layer3_status']=='PAUSED_FOR_METHOD_STRESS_ONLY_BENCHMARK_RELEASE_INDEPENDENT'
     blocker_ids={row['id'] for row in readiness['blockers']}
     assert blocker_ids=={
-        'TRACK_SPECIFIC_RELEASE_ARTIFACT_OPEN',
         'BASELINE_PROTOCOL_AND_TEST_EVALUATION_OPEN',
     }
     method_blocker_ids={row['id'] for row in readiness['method_stress_blockers']}
@@ -141,6 +140,8 @@ def main()->int:
         'METHOD_STRUCTURAL_HOLDOUT_OPEN',
     }
     assert readiness['release_tracks_ref']=='research/benchmark/LAYER1-RELEASE-TRACKS.json'
+    assert readiness['paper_release_candidate_ref']=='results/benchmark/layer1-paper-release-candidate.json'
+    assert readiness['paper_release_candidate_status']=='PRE_RELEASE_BASELINE_PROTOCOL_PENDING_TEST_LOCKED'
     assert readiness['generation_axes_status']=='FROZEN_FOR_V07_SUPPORT_CORRECTION_ONLY'
     assert readiness['environment_generation_contract_ref']=='research/benchmark/ENVIRONMENT-GENERATION-CONTRACT.v0.1.md'
     assert readiness['generation_axes_ref']=='research/benchmark/GENERATION-AXES.v0.2.json'
@@ -193,6 +194,7 @@ def main()->int:
     assert '53af145' in authority
     assert '23/23 × 5 PASS' in authority
     assert 'external independent expert review' in authority
+    assert 'freeze total pre-release candidate manifest           [DONE]' in authority
     assert 'GENERATION-AXES.v0.1.json' in authority
     assert '1,262,790 dynamic cases / 499,608 pre-oracle structure IDs' in authority
     assert 'GENERATION_REPRODUCIBILITY_PASS / BENCHMARK_VALIDITY_FAIL / RETAIN_AS_NEGATIVE_LINEAGE' in authority
@@ -217,7 +219,7 @@ def main()->int:
     research=RESEARCH.read_text(encoding='utf-8')
     assert 'Future-Choice-Stress' in research
 
-    print('PASS Layer-1 authority: gateway backhaul ownership is corrected; benchmark release is organized by explicit conformance/interactive/stress tracks; fresh split/full-sim evaluator/internal source audit are closed; remaining release work is pre-release manifest + frozen baseline protocol/test evaluation; Layer-3 is paused only for method-stress work')
+    print('PASS Layer-1 authority: gateway backhaul ownership is corrected; benchmark release is organized by explicit conformance/interactive/stress tracks; fresh split/full-sim evaluator/internal source audit/pre-release manifest are closed; remaining release work is frozen baseline protocol + locked test evaluation; Layer-3 is paused only for method-stress work')
     return 0
 
 
