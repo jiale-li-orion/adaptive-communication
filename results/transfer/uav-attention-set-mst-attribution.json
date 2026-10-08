@@ -1,0 +1,223 @@
+{
+  "checks": {
+    "n10_quality_unchanged_21_of_21": true,
+    "n10_set_mst_924_frontier_checks": true,
+    "n10_set_mst_frontier_exact_match": true,
+    "n10_total_search_proxy_reduced_all_policies": true,
+    "n15_seed1_set_mst_frontier_exact_match": true,
+    "n15_seed1_set_mst_reduces_fallback_all_policies": true
+  },
+  "claim_boundary": [
+    "The N=10 quality comparison is on the same frozen 21-seed method-independent constructive cohort used before this bound was introduced.",
+    "The N=15 result is a single bounded scaling probe and is not a distribution-level claim.",
+    "Search-state counts are not CPU-equivalent to depth-k partial expansions; the method is not claimed faster than depth4 receding planning.",
+    "The new bound is a C-domain instantiation of B's set-level future-obligation conflict idea, not evidence that the two physical domains share identical constraints."
+  ],
+  "method_change": "Replace C's basic individual-deadline + global-MST optimistic U with a set-valued deadline-threshold MST U. For every deadline d, all still-unserved customers due by d must fit inside the optimistic MST travel lower bound before d.",
+  "n10": {
+    "cohort": [
+      21,
+      23,
+      39,
+      40,
+      74,
+      78,
+      79,
+      84,
+      86,
+      91,
+      95,
+      96,
+      110,
+      113,
+      122,
+      124,
+      145,
+      167,
+      171,
+      177,
+      186
+    ],
+    "rows": {
+      "battery_aware_nn": {
+        "n10_compute": {
+          "basic_fallback_ratio_over_exact": 0.4225352112676056,
+          "basic_total_ratio_over_exact": 0.6604364130274308,
+          "basic_u_exact_fallback_new_states": 14310,
+          "basic_u_total_search_proxy": 22367,
+          "depth4_partial_states_expanded": 2080,
+          "pure_exact_mask_new_states": 33867,
+          "set_mst_exact_fallback_new_states": 3827,
+          "set_mst_fallback_ratio_over_exact": 0.11300085629078455,
+          "set_mst_proxy_over_depth4": 4.2057692307692305,
+          "set_mst_total_ratio_over_exact": 0.25830454424661176,
+          "set_mst_total_reduction_vs_basic": 0.6088880940671525,
+          "set_mst_total_search_proxy": 8748
+        },
+        "n10_quality": {
+          "depth4_completed": 21,
+          "depth4_infeasible": 0,
+          "depth4_zero_tardiness": 17,
+          "set_mst_lu_completed": 21,
+          "set_mst_lu_infeasible": 0,
+          "set_mst_lu_zero_tardiness": 21
+        }
+      },
+      "greedy_deadline_battery": {
+        "n10_compute": {
+          "basic_fallback_ratio_over_exact": 0.5247191265230463,
+          "basic_total_ratio_over_exact": 0.764857472251735,
+          "basic_u_exact_fallback_new_states": 23212,
+          "basic_u_total_search_proxy": 33835,
+          "depth4_partial_states_expanded": 2723,
+          "pure_exact_mask_new_states": 44237,
+          "set_mst_exact_fallback_new_states": 7349,
+          "set_mst_fallback_ratio_over_exact": 0.16612790198250332,
+          "set_mst_proxy_over_depth4": 4.936834373852369,
+          "set_mst_total_ratio_over_exact": 0.3038858873793431,
+          "set_mst_total_reduction_vs_basic": 0.6026895226836116,
+          "set_mst_total_search_proxy": 13443
+        },
+        "n10_quality": {
+          "depth4_completed": 21,
+          "depth4_infeasible": 0,
+          "depth4_zero_tardiness": 20,
+          "set_mst_lu_completed": 21,
+          "set_mst_lu_infeasible": 0,
+          "set_mst_lu_zero_tardiness": 21
+        }
+      },
+      "nearest_deadline": {
+        "n10_compute": {
+          "basic_fallback_ratio_over_exact": 0.5476216345422543,
+          "basic_total_ratio_over_exact": 0.782329038006041,
+          "basic_u_exact_fallback_new_states": 25201,
+          "basic_u_total_search_proxy": 36002,
+          "depth4_partial_states_expanded": 2349,
+          "pure_exact_mask_new_states": 46019,
+          "set_mst_exact_fallback_new_states": 8330,
+          "set_mst_fallback_ratio_over_exact": 0.1810121906169191,
+          "set_mst_proxy_over_depth4": 6.046828437633035,
+          "set_mst_total_ratio_over_exact": 0.30865512071101064,
+          "set_mst_total_reduction_vs_basic": 0.6054663629798345,
+          "set_mst_total_search_proxy": 14204
+        },
+        "n10_quality": {
+          "depth4_completed": 14,
+          "depth4_infeasible": 8,
+          "depth4_zero_tardiness": 11,
+          "set_mst_lu_completed": 21,
+          "set_mst_lu_infeasible": 0,
+          "set_mst_lu_zero_tardiness": 21
+        }
+      },
+      "nearest_neighbour": {
+        "n10_compute": {
+          "basic_fallback_ratio_over_exact": 0.4225352112676056,
+          "basic_total_ratio_over_exact": 0.6604364130274308,
+          "basic_u_exact_fallback_new_states": 14310,
+          "basic_u_total_search_proxy": 22367,
+          "depth4_partial_states_expanded": 2080,
+          "pure_exact_mask_new_states": 33867,
+          "set_mst_exact_fallback_new_states": 3827,
+          "set_mst_fallback_ratio_over_exact": 0.11300085629078455,
+          "set_mst_proxy_over_depth4": 4.2057692307692305,
+          "set_mst_total_ratio_over_exact": 0.25830454424661176,
+          "set_mst_total_reduction_vs_basic": 0.6088880940671525,
+          "set_mst_total_search_proxy": 8748
+        },
+        "n10_quality": {
+          "depth4_completed": 21,
+          "depth4_infeasible": 0,
+          "depth4_zero_tardiness": 17,
+          "set_mst_lu_completed": 21,
+          "set_mst_lu_infeasible": 0,
+          "set_mst_lu_zero_tardiness": 21
+        }
+      }
+    }
+  },
+  "n15_seed1": {
+    "battery_aware_nn": {
+      "compute": {
+        "basic_u_fallback_new_states": 121819,
+        "basic_u_lower_search_expanded": 9223,
+        "exact_mask_new_states": 131988,
+        "set_mst_fallback_new_states": 7693,
+        "set_mst_fallback_ratio_over_exact": 0.05828560172136861,
+        "set_mst_lower_search_expanded": 3270
+      },
+      "quality": {
+        "depth4_completed": 1,
+        "depth4_infeasible": 0,
+        "depth4_zero_tardiness": 0,
+        "lu_completed": 1,
+        "lu_infeasible": 0,
+        "lu_zero_tardiness": 1
+      }
+    },
+    "greedy_deadline_battery": {
+      "compute": {
+        "basic_u_fallback_new_states": 239541,
+        "basic_u_lower_search_expanded": 12606,
+        "exact_mask_new_states": 251304,
+        "set_mst_fallback_new_states": 17307,
+        "set_mst_fallback_ratio_over_exact": 0.06886878044121861,
+        "set_mst_lower_search_expanded": 5310
+      },
+      "quality": {
+        "depth4_completed": 1,
+        "depth4_infeasible": 0,
+        "depth4_zero_tardiness": 1,
+        "lu_completed": 1,
+        "lu_infeasible": 0,
+        "lu_zero_tardiness": 1
+      }
+    },
+    "nearest_deadline": {
+      "compute": {
+        "basic_u_fallback_new_states": 220862,
+        "basic_u_lower_search_expanded": 10692,
+        "exact_mask_new_states": 229730,
+        "set_mst_fallback_new_states": 18534,
+        "set_mst_fallback_ratio_over_exact": 0.08067731685021547,
+        "set_mst_lower_search_expanded": 4761
+      },
+      "quality": {
+        "depth4_completed": 0,
+        "depth4_infeasible": 1,
+        "depth4_zero_tardiness": 0,
+        "lu_completed": 1,
+        "lu_infeasible": 0,
+        "lu_zero_tardiness": 1
+      }
+    },
+    "nearest_neighbour": {
+      "compute": {
+        "basic_u_fallback_new_states": 121819,
+        "basic_u_lower_search_expanded": 9223,
+        "exact_mask_new_states": 131988,
+        "set_mst_fallback_new_states": 7693,
+        "set_mst_fallback_ratio_over_exact": 0.05828560172136861,
+        "set_mst_lower_search_expanded": 3270
+      },
+      "quality": {
+        "depth4_completed": 1,
+        "depth4_infeasible": 0,
+        "depth4_zero_tardiness": 0,
+        "lu_completed": 1,
+        "lu_infeasible": 0,
+        "lu_zero_tardiness": 1
+      }
+    }
+  },
+  "raw_hashes": {
+    "n15_basic_local": "9b3ebd40d6d1fe546218dc8eefd4bb25d84332bd0dd94e32488048e3b4cedbc6",
+    "n15_depth4_local": "7ffdf2a2390ee5441cd2b55e99b109c512e9abd996a3c61dd8fe1d7e5dc591ce",
+    "n15_set_mst_local": "2cbddbfbe6d5d34f4b374f6513445274d8f58c4b50e508ae611a6cf2269d70b9",
+    "new_n10_set_mst_local": "f90e2167cf559481fc7280760b112a96bb2bd0380c3d7c167e3b8290a78c9318",
+    "old_n10_summary": "eb828375f2f5b9515a150792e40d0a1baec4a8ed72dc1f808222cab05721d9d1"
+  },
+  "soundness_note": "Any real route prefix serving all customers due by d is a connected walk spanning current plus that due-set, whose distance is at least the Euclidean MST. Battery, depot return and charger detours are ignored, so False remains a sound U=0 proof.",
+  "stage": "UAV_ATTENTION_SET_MST_CONFLICT_ATTRIBUTION"
+}

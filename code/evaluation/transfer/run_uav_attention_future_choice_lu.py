@@ -75,7 +75,7 @@ class RouteState:
 
 
 class FutureChoiceRouteFrontier:
-    def __init__(self, env, *, lower_search_limit: int = 24):
+    def __init__(self, env, *, lower_search_limit: int = 24, upper_mode: str = "basic"):
         self.cfg=env.config
         self.pos=env.node_positions.copy()
         self.deadlines={nid:float(node.deadline) for nid,node in env.service_nodes.items()}
@@ -83,6 +83,9 @@ class FutureChoiceRouteFrontier:
         self.n=int(self.cfg.num_customers)
         self.all_mask=(1<<self.n)-1
         self.lower_search_limit=int(lower_search_limit)
+        if upper_mode not in {"basic", "deadline_set_mst"}:
+            raise ValueError(f"unknown upper_mode {upper_mode!r}")
+        self.upper_mode=upper_mode
         self.metrics={
             "frontier_calls":0,
             "actions_checked":0,
@@ -134,9 +137,8 @@ class FutureChoiceRouteFrontier:
         else: return None
         return RouteState(action,nv,self.q(nb),self.q(nt))
 
-    def _mst_lower_bound_distance(self,state:RouteState)->float:
-        """Euclidean MST over current + unvisited + depot: sound route lower bound."""
-        nodes=[state.current,0]+[1+i for i in range(self.n) if not(state.visited&(1<<i))]
+    def _mst_distance_nodes(self,nodes:list[int])->float:
+        """Euclidean MST distance over a node set."""
         # unique while retaining deterministic order
         nodes=list(dict.fromkeys(nodes))
         if len(nodes)<=1: return 0.0
@@ -151,6 +153,33 @@ class FutureChoiceRouteFrontier:
             assert best is not None
             total+=best[0]; seen.add(best[1])
         return total
+
+    def _mst_lower_bound_distance(self,state:RouteState)->float:
+        """Euclidean MST over current + unvisited + depot: sound route lower bound."""
+        nodes=[state.current,0]+[1+i for i in range(self.n) if not(state.visited&(1<<i))]
+        return self._mst_distance_nodes(nodes)
+
+    def _deadline_set_mst_possible(self,state:RouteState)->bool:
+        """Hall-like set deadline relaxation using MST lower bounds.
+
+        For every deadline threshold d, let S_d be all unvisited customers that
+        must be served no later than d. Any real route prefix that serves S_d
+        is a connected walk spanning current ∪ S_d, so its traveled distance is
+        at least the Euclidean MST distance of that set.  If even this optimistic
+        lower bound cannot fit before d, completion is impossible.
+
+        Depot return, battery and charger detours are ignored here, so False is
+        a sound U=0 certificate while True remains only unresolved.
+        """
+
+        elapsed=float(state.elapsed_q)
+        remaining=[1+i for i in range(self.n) if not(state.visited&(1<<i))]
+        for deadline in sorted({self.deadlines[nid] for nid in remaining}):
+            due=[nid for nid in remaining if self.deadlines[nid] <= deadline+1e-12]
+            lb=self._mst_distance_nodes([state.current,*due])/self.cfg.drone_speed
+            if elapsed+lb>deadline+1e-9:
+                return False
+        return True
 
     def upper_possible(self,state:RouteState)->bool:
         """Sound necessary conditions only; False is a valid impossibility proof."""
@@ -168,6 +197,8 @@ class FutureChoiceRouteFrontier:
         # bound even if chargers are optionally visited.
         remaining=self.cfg.mission_time-elapsed
         if self._mst_lower_bound_distance(state)/self.cfg.drone_speed>remaining+1e-9:
+            return False
+        if self.upper_mode=="deadline_set_mst" and not self._deadline_set_mst_possible(state):
             return False
         return True
 
@@ -297,7 +328,7 @@ def summary(rows:list[dict[str,Any]])->dict[str,Any]:
 
 
 def main()->int:
-    ap=argparse.ArgumentParser(); ap.add_argument("--seeds",type=int,default=200); ap.add_argument("--seed-list",default=None); ap.add_argument("--customers",type=int,default=5,choices=sorted(N_SETTINGS)); ap.add_argument("--lower-search-limit",type=int,default=24)
+    ap=argparse.ArgumentParser(); ap.add_argument("--seeds",type=int,default=200); ap.add_argument("--seed-list",default=None); ap.add_argument("--customers",type=int,default=5,choices=sorted(N_SETTINGS)); ap.add_argument("--lower-search-limit",type=int,default=24); ap.add_argument("--upper-mode",choices=("basic","deadline_set_mst"),default="basic")
     ap.add_argument("--out",type=Path,default=ROOT/"results/transfer/uav-attention-future-choice-lu-n5-200.json"); args=ap.parse_args()
     os.environ.setdefault("OPENBLAS_NUM_THREADS","1"); os.environ.setdefault("OMP_NUM_THREADS","1"); os.environ.setdefault("MKL_NUM_THREADS","1")
     _install_gymnasium_shim(); sys.path.insert(0,str(EXT))
@@ -310,11 +341,14 @@ def main()->int:
     seed_values=[int(x) for x in args.seed_list.split(",") if x.strip()] if args.seed_list else list(range(args.seeds))
     rows=[]; frontier_match_checks=0
     for seed in seed_values:
-        probe=SingleUAVEnv(cfg()); probe.reset(seed=seed); pfront=FutureChoiceRouteFrontier(probe,lower_search_limit=args.lower_search_limit)
+        probe=SingleUAVEnv(cfg()); probe.reset(seed=seed); pfront=FutureChoiceRouteFrontier(probe,lower_search_limit=args.lower_search_limit,upper_mode="basic")
         start=pfront.state(probe); start_route,_=pfront.exact_with_delta(start); hard=start_route is not None
         for pname,pcls in heuristics.items():
-            env=SingleUAVEnv(cfg()); obs,info=env.reset(seed=seed); policy=pcls(); front=FutureChoiceRouteFrontier(env,lower_search_limit=args.lower_search_limit)
-            audit=FutureChoiceRouteFrontier(env,lower_search_limit=args.lower_search_limit)
+            env=SingleUAVEnv(cfg()); obs,info=env.reset(seed=seed); policy=pcls(); front=FutureChoiceRouteFrontier(env,lower_search_limit=args.lower_search_limit,upper_mode=args.upper_mode)
+            # Correctness authority deliberately keeps the older/basic sound
+            # relaxation so a new U-bound cannot validate itself by sharing the
+            # same pruning rule.
+            audit=FutureChoiceRouteFrontier(env,lower_search_limit=args.lower_search_limit,upper_mode="basic")
             interventions=0; total_return=0.0
             audit_exact_new_states=0
             while True:
@@ -361,7 +395,7 @@ def main()->int:
             "upper_impossible":sum(r["upper_impossible"] for r in hardrows),
             "lower_search_expanded":sum(r["lower_search_expanded"] for r in hardrows),
         }
-    payload={"stage":"UAV_ATTENTION_FUTURE_CHOICE_LU","external_repo":"mdehghani86/uav-attention-routing","external_commit":_git_head(EXT),"setting":{"num_customers":args.customers,"mission_time":mission_time,"deadline_min":deadline_min,"deadline_max":deadline_max,"seed_values":seed_values,"lower_search_limit":args.lower_search_limit},"correctness":{"reached_frontier_match_checks":frontier_match_checks,"frontier_mismatch":sum(r["frontier_mismatch"] for r in rows)},"summaries":summaries,"paired_hard_feasible":paired,"rows":rows,"claim_boundary":["L=1 is always a replayable complete route; U=0 uses only sound optimistic necessary conditions; unresolved actions fall back to exact continuation.","The reached L/U action mask is checked against exact continuation at every hard-feasible decision boundary.","This transfer measures search-work decomposition; wall-time superiority is not inferred from state/expansion counts.","The route certificate object is domain-specific transfer code; integration with the frozen generic Layer-2 conditional frontier remains separate work."]}
+    payload={"stage":"UAV_ATTENTION_FUTURE_CHOICE_LU","external_repo":"mdehghani86/uav-attention-routing","external_commit":_git_head(EXT),"setting":{"num_customers":args.customers,"mission_time":mission_time,"deadline_min":deadline_min,"deadline_max":deadline_max,"seed_values":seed_values,"lower_search_limit":args.lower_search_limit,"upper_mode":args.upper_mode},"correctness":{"reference_upper_mode":"basic","reached_frontier_match_checks":frontier_match_checks,"frontier_mismatch":sum(r["frontier_mismatch"] for r in rows)},"summaries":summaries,"paired_hard_feasible":paired,"rows":rows,"claim_boundary":["L=1 is always a replayable complete route; U=0 uses only sound optimistic necessary conditions; unresolved actions fall back to exact continuation.","When upper_mode=deadline_set_mst, every reached action mask is checked against an independent exact reference that retains the older/basic upper bound; the new U-bound therefore does not self-certify.","This transfer measures search-work decomposition; wall-time superiority is not inferred from state/expansion counts.","The route certificate object is domain-specific transfer code; integration with the frozen generic Layer-2 conditional frontier remains separate work."]}
     assert payload["correctness"]["frontier_mismatch"]==0
     args.out.parent.mkdir(parents=True,exist_ok=True); args.out.write_text(json.dumps(payload,ensure_ascii=False,indent=2,sort_keys=True)+"\n",encoding="utf-8")
     print(json.dumps({"out":str(args.out),"correctness":payload["correctness"],"paired_hard_feasible":paired},sort_keys=True)); return 0

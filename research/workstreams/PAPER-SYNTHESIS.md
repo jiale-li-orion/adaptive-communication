@@ -81,10 +81,11 @@ C 不承担 emergency-communication domain claim；它负责证明 future-choice
 5. **N=10 scaling**：用完全 method-independent 的 constructive selector 扫 seeds0..199，得到 21 个“至少一条官方 heuristic 原生 zero-tardiness 完成”的 hard-feasible cohort。Greedy 本身已能解 20/21，因此 cohort 对 proposed method 是保守的。
 6. N=10 / 21 seeds：L/U future-choice 对四条 heuristic 均 **21/21 zero-tardiness、21/21 completed、0 infeasible**，924 reached frontiers / 0 mismatch；depth4 只有 NN 17/21、BatteryAware 17/21、NearestDeadline 11/21、Greedy 20/21。
 7. N=10 search：L/U exact-fallback new-state search约 pure exact mask 的 42–55%；加 bounded constructive search 后 total proxy约 66–78%。
+8. **B→C set-level conflict transfer**：把 B 的 obligation-set conflict 思想实例化为 C 的 deadline-threshold MST optimistic U。N=10 同一 frozen 21-seed cohort、924/924 exact frontier match、任务质量完全不变时，exact fallback ratio进一步压到 **11–18%**，total search proxy压到 **25.8–30.9%** of pure exact；相对旧 basic-U total proxy下降约 **60%**。N=15 seed1 bounded scaling 上，basic-U fallback已退化到 pure exact的约92–96%，set-MST降到约 **5.8–8.1%**，同时 66/66 frontier exact match。
 
 C 已经支持的最强 claim：
 
-> **A locally legal short-horizon action can destroy an otherwise feasible full mission continuation; an exact-correct L/U future-choice layer can selectively eliminate these failures beyond depth-4 receding lookahead on longer native tasks.**
+> **A locally legal short-horizon action can destroy an otherwise feasible full mission continuation; an exact-correct L/U future-choice layer can selectively eliminate these failures beyond depth-4 receding lookahead on longer native tasks, while set-level future-conflict certificates transferred from the ASC formulation materially reduce the exact-correct search burden.**
 
 边界：route adapter 仍是 domain-specific；search-work count 不是 wall-time theorem；learned PPO checkpoint 尚未做 paired shield。
 
@@ -141,16 +142,20 @@ certificate 带 validity domain：compatible support、resource interval、execu
 
 ### Claim C — Method correctness
 
-**Supported on B/C adapters; generic core integration still open.**
+**Supported on B/C adapters and shared orchestration core.**
 
 > Replayable L certificates + sound optimistic U bounds + exact fallback preserve exact action feasibility while allowing persistent certificate reuse and selective pruning.
+
+Cross-domain attribution is now stronger than orchestration reuse alone: B's set-level obligation-conflict principle directly strengthens C's sound U-bound without changing task outcomes or the exact correctness authority.
 
 ### Claim D — Method efficiency
 
 **Partially supported, not final.**
 
 - B dynamic-domain build count: up to 192→32 builds (`1/6`) under observation-only narrowing；
-- C N=10 exact-fallback state search: about 42–55% of pure exact mask；total search proxy 66–78%；
+- B active-branch component events: at C=16, pending send recomputes 1/16 components, gateway receipt/final ACK recompute 0/16, while ordinary persistent/dependency exact still perform 7–14 expansions on those changed histories；
+- C N=10 **set-MST** exact-fallback state search: about **11–18%** of pure exact mask；total search proxy **25.8–30.9%**；relative to the earlier basic-U implementation this cuts total search proxy by ~60%；
+- C N=15 seed1 bounded probe: exact fallback约 **5.8–8.1%** of pure exact after set-MST, but this is not yet a distribution-level result；
 - historical Layer-2 v2: strong expansion reduction but ordinary persistent exact still had better Python wall time。
 
 Final claim must be phrased as structured-search / recomputation reduction unless generic implementation clears a wall-time gate.
@@ -187,8 +192,8 @@ C: independent environment shows the same failure mode causes real outcome loss,
 ## 6. Remaining hard gates before paper freeze
 
 1. **Generic method core**：**orchestration gate 已关闭**。`FutureChoiceEngine` 已让 B/C 走同一 `carried → U=0 → L=1 → exact fallback` correctness protocol，且跨域审计/full UAV episode PASS。剩余工作是继续收敛 domain-specific certificate construction，而不是再造第三套 core。
-2. **B component-level invalidation**：active branch 内加入 time/resource/pending-feedback event，对比 ordinary dependency-cache / persistent exact / branch-aware flow。
-3. **C stronger scale/control**：扩 N=10 constructive cohort 或 N=15 bounded probes；可选 learned PPO paired shield；不再花时间美化 N=5。
+2. **B component-level invalidation**：**gate 已关闭**。active branch 的 send/pending/receipt/ACK/time/resource event 已与 fresh rebuild 对账，并补 ordinary persistent exact / dependency-cache strong ladder。下一步主要是把该 structural layer 接入最终 generic engine/论文实验接口，不再扩 synthetic axis。
+3. **C stronger scale/control**：N=10 gate 已关闭；N=15 只保留 bounded scaling probe，不一把梭 exact。公开 repo 未随代码提供 PPO checkpoint，因此 learned PPO paired shield 降为 optional；下一方法重点是把 set-level conflict certificate 泛化到 generic core，而不是重训 RL。
 4. **A final release**：执行 frozen 150-coordinate deterministic test + 30-coordinate LLM subset，做统计/失败 taxonomy，冻结 final manifest。
 5. **Paper claim table**：最终每句话绑定 tracked artifact；wall-time 没过就绝不写“faster”。
 

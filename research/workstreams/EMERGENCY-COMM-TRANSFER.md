@@ -210,3 +210,45 @@ tracked artifacts：
 raw 21-seed LU / receding rows继续保留在 `local_research/current/transfer/`，summary 记录 SHA 与重跑命令。
 
 仍然不能越界：Greedy depth4 已经 20/21，future-choice 不是“所有普通方法都失败”的万能层；它更合理的定位是 **selective hard-feasibility / safety layer**。search-work count 也不是 wall-time theorem。下一步优先做 N=10+ 更广 constructive cohort / learned PPO paired shield，而不是继续调 N=5。
+
+### B → C attribution: set-level deadline conflict strengthens the U bound
+
+N=15 bounded probe 暴露了 current C adapter 的真正 scaling bottleneck，而不是 task headroom 消失。论文原生 `N=15 / mission_time=50 / deadline=8–40` setting 上，先用官方 heuristic 原生 zero-tardiness completion 规则扫描 seeds0..199，得到 **35 个 method-independent constructive hard-feasible seeds**。这里只先审 seed1，避免 exact correctness audit 把机器拖爆。
+
+seed1 的 basic U/L 仍保持 66/66 reached frontier 与 independent exact mask 一致，四条 policy 均 zero-tardiness / completed / 0 infeasible；但 basic optimistic U 太弱，exact fallback 已退化到 pure exact search 的约 92–96%，单 seed约 507 MiB / 86.5s。depth4 则明显便宜，但 NN/BatteryAware 各有约 6.89 tardiness，NearestDeadline 直接 incomplete + infeasible，只有 Greedy zero-tardiness。
+
+这促成了一个真正来自 B 的方法迁移：将 B 的“单个 obligation 可行不等于 obligation set 可行”改写成 C 的 **deadline-set MST optimistic certificate**。对每个 deadline threshold `d`，令 `S_d` 为仍未服务且 deadline≤d 的所有客户；任何真实 route prefix 若要在 d 前完成 `S_d`，其路径至少需要连接 `current ∪ S_d`，因此 Euclidean MST 是严格 optimistic lower bound。若
+
+```text
+elapsed + MST(current ∪ S_d) / speed > d
+```
+
+则可以 sound 地置 `U=0`。battery、charger detour、depot return 都被乐观忽略，因此该 bound 不会把真实可行 continuation 误剪。
+
+实现位于 `run_uav_attention_future_choice_lu.py --upper-mode deadline_set_mst`；correctness audit 故意仍使用旧/basic U 的 independent exact reference，避免新 U-bound 自我认证。
+
+**N=10 / frozen 21-seed cohort：**
+
+- 924/924 reached frontiers，0 mismatch；
+- 四条 policy 仍全部 21/21 zero-tardiness / completed / 0 infeasible；
+- exact fallback / pure exact mask 从旧 basic-U 的约 **42–55%** 降到：NN/BatteryAware **11.3%**、Greedy **16.6%**、NearestDeadline **18.1%**；
+- `fallback + constructive lower search` total proxy / pure exact 从旧的 **66–78%** 降到 **25.8–30.9%**；
+- 相对旧 basic-U total proxy，四条 policy 均下降约 **60.3–60.9%**。
+
+**N=15 / seed1 bounded scaling probe：**
+
+- 66/66 frontier，0 mismatch；
+- quality 保持四条 policy zero-tardiness / completed / 0 infeasible；
+- NN/BatteryAware fallback `121,819 → 7,693`，约 pure exact 的 **5.8%**；
+- Greedy `239,541 → 17,307`，约 **6.9%**；
+- NearestDeadline `220,862 → 18,534`，约 **8.1%**。
+
+tracked attribution：`results/transfer/uav-attention-set-mst-attribution.json`。
+
+这条结果是目前 B/C 综合最重要的方法证据之一：**set-level future-conflict representation 不是 ASC synthetic family 的专用技巧，它可以转译成外部 route/deadline domain 的 sound optimistic certificate，并显著减少 exact-correct fallback search。**
+
+边界仍然很硬：
+
+- depth4 search proxy 在 N=10 仍比 exact-correct L/U 低约 4.2–6.0×；future-choice 买的是 residual hard-feasibility correctness，不是全面 compute dominance；
+- N=15 目前只有 seed1 exact-audited scaling witness，不能写成 N=15 distribution result；
+- MST/route certificate 是 C-domain实例，不意味着 ASC 和 UAV 的物理约束完全相同；共享的是 `set-level future obligation conflict → sound L/U certificate` 这一抽象。
