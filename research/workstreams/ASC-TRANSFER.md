@@ -72,7 +72,7 @@ hard operational query goals 明确标为 transfer extension。结果：
 
 ## Next
 
-当前 query/AoI replay 已完成。下一步固定三组对照：unconstrained/value-only、ordinary scheduling-aware constrained DP、future-choice incremental frontier；只在加入 shared communication opportunity、dynamic task revision 或 delayed feedback 后仍出现 ordinary certificate 无法局部概括的结构时，才保留为 method contribution。
+当前 query/AoI replay、conditional-obligation family 与 shared-opportunity family 已完成。下一步不再扩大静态 K/D，而是加入**多次 observation / delayed feedback / shared-resource commit**，比较：fresh exact、ordinary persistent exact、branch-aware flow/receding、dependency-cache exact、persistent conditional frontier。只有 event-local reuse / conditional component update 在这一强 ladder 下仍保留增量，才升级为最终 method contribution。
 
 ### Conditional frontier probe
 
@@ -94,3 +94,27 @@ exact causal 结果：
 这条结果第一次真正击中当前 Layer-2 的 representation insight：**future choices 必须按未来 observation 条件化，而不能把所有可能 obligation 静态并集化。**
 
 边界仍然严格：exact belief-space AND-OR solver 同样能表示该结构，因此当前证明的是 representation necessity / static-reserve failure，不是 wall-time 或算法 novelty。下一步必须在更大的 shared-resource / delayed-feedback formulation 上比较 incremental conditional frontier 与 strong exact/receding solver。
+
+### Scaling boundary: pure query-chain family
+
+`code/evaluation/transfer/asc_pull_query_conditional_family.py` 把上述结构扩成 `K∈{1,2,4,8,16}` hidden branches × `D∈{1,2,3,4}` branch-specific future query goals。20/20 cells 的 conditional action frontier 与 fresh/persistent exact 完全一致；K>1 的 16/16 cells 都触发 static-union false negative。
+
+但这组结果同时给出一个重要负边界：纯 unit-query chain 太简单。比如 `K=16,D=4`：fresh exact 130 expansions、persistent exact 66、conditional branch certificate 64 steps。strong persistent exact 已经近似线性，因此继续扩大 K/D 只会重复“static union 错”这一 representation 结论，不会形成有说服力的算法 headroom。
+
+### Shared-opportunity conditional frontier
+
+因此 B 继续引入真正的 Layer-2 conflict object，但仍保持 Pull-Based query interface：`QUERY_H` 揭示一个 mutually-exclusive future branch；每个 branch 激活 D 个 hard operational reports，它们共享 `D-1` 个 terrestrial opportunities + `1` 个 backup unit。
+
+实现：`code/evaluation/transfer/asc_pull_query_shared_opportunity_frontier.py`。branch 内部不另写 matching 算法，直接复用仓库冻结的 `ConditionalFeasibilityFrontier` max-flow/min-cut conflict certificate；小 cell 再由 independent exact scenario-tree solver 对账。
+
+当前网格：`K∈{1,2,4,8,16,32}` × `D∈{2,4,8}`，共 18 cells。
+
+- K>1 的 **15/15** cells：query observation 后每个 branch exact-solvable；
+- K>1 的 **15/15** cells：static union reserve false-negative；
+- 每个真实 branch 的 minimum backup requirement 始终是 **1**；
+- static union 把 mutually-exclusive future obligations 同时计入，最坏把 minimum backup 放大到 **249** (`K=32,D=8`)；
+- `D=8` 时 exact branch solver 每 branch 约 778 memo states；同一 branch 的 max-flow/min-cut graph 只有 71 个 forward edges。聚合到 `K=32,D=8` 是 24,896 exact memo states vs 2,272 deterministic flow-graph edges，约 **10.96×** search-vs-structure work proxy。
+
+这一步比纯 query chain 更接近当前 method insight：future obligations 不仅 observation-conditioned，而且在每个 branch 内存在共享 future opportunities / Hall conflict。
+
+边界：memo-state count 与 flow-edge count 不是同一 CPU 操作，10.96× 只能作为 deterministic work proxy，不能写成 runtime speedup。ordinary branch-aware max-flow planner 也是强 baseline；真正的方法增量仍需来自 **多次 observation / delayed feedback 下 conditional component 的 persistent reuse 与 event-local invalidation**，而不是一次 query 后重新建 branch flow。

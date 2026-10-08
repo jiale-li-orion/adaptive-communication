@@ -1,0 +1,4707 @@
+{
+  "cells": [
+    {
+      "branches": 1,
+      "budget": 2,
+      "compute": {
+        "conditional_certificate_steps": 0,
+        "conditional_over_fresh_expansion_proxy": 0.0,
+        "conditional_over_persistent_expansion_proxy": 0.0,
+        "fresh_expanded": 4,
+        "persistent_expanded": 3
+      },
+      "conditional_frontier": {
+        "actions": {
+          "QUERY_A": true,
+          "QUERY_G0_0": true,
+          "QUERY_H": true,
+          "WAIT": true
+        },
+        "metrics": {
+          "branch_certificate_steps": 0,
+          "exact_fallback_calls": 0,
+          "root_actions_classified": 4
+        },
+        "reasons": {
+          "QUERY_A": {
+            "L": 1,
+            "U": 1,
+            "reason": "single-world no-aliasing control; D future goals remain schedulable"
+          },
+          "QUERY_G0_0": {
+            "L": 1,
+            "U": 1,
+            "reason": "single-world no-aliasing control; D future goals remain schedulable"
+          },
+          "QUERY_H": {
+            "L": 1,
+            "U": 1,
+            "reason": "single-world no-aliasing control; D future goals remain schedulable"
+          },
+          "WAIT": {
+            "L": 1,
+            "U": 1,
+            "reason": "single-world no-aliasing control; D future goals remain schedulable"
+          }
+        }
+      },
+      "depth": 1,
+      "fresh_exact": {
+        "actions": {
+          "QUERY_A": true,
+          "QUERY_G0_0": true,
+          "QUERY_H": true,
+          "WAIT": true
+        },
+        "metrics": {
+          "action_steps": 15,
+          "expanded": 4,
+          "memo_hits": 0,
+          "observation_branches": 4,
+          "recursive_calls": 23,
+          "wall_s": 5.3485000535147265e-05
+        }
+      },
+      "persistent_exact": {
+        "actions": {
+          "QUERY_A": true,
+          "QUERY_G0_0": true,
+          "QUERY_H": true,
+          "WAIT": true
+        },
+        "memo_entries": 14,
+        "metrics": {
+          "action_steps": 11,
+          "expanded": 3,
+          "frontier_wall_s": 4.0146000173990615e-05,
+          "memo_hits": 4,
+          "observation_branches": 3,
+          "recursive_calls": 18,
+          "wall_s": 2.5469998945482075e-05
+        }
+      },
+      "root_action_count": 4,
+      "static_union_reserve": {
+        "false_negative": false,
+        "query_h_declared_feasible": true,
+        "remaining_budget_after_h": 1,
+        "union_future_goal_count": 1
+      }
+    },
+    {
+      "branches": 1,
+      "budget": 3,
+      "compute": {
+        "conditional_certificate_steps": 0,
+        "conditional_over_fresh_expansion_proxy": 0.0,
+        "conditional_over_persistent_expansion_proxy": 0.0,
+        "fresh_expanded": 10,
+        "persistent_expanded": 6
+      },
+      "conditional_frontier": {
+        "actions": {
+          "QUERY_A": true,
+          "QUERY_G0_0": true,
+          "QUERY_G0_1": true,
+          "QUERY_H": true,
+          "WAIT": true
+        },
+        "metrics": {
+          "branch_certificate_steps": 0,
+          "exact_fallback_calls": 0,
+          "root_actions_classified": 5
+        },
+        "reasons": {
+          "QUERY_A": {
+            "L": 1,
+            "U": 1,
+            "reason": "single-world no-aliasing control; D future goals remain schedulable"
+          },
+          "QUERY_G0_0": {
+            "L": 1,
+            "U": 1,
+            "reason": "single-world no-aliasing control; D future goals remain schedulable"
+          },
+          "QUERY_G0_1": {
+            "L": 1,
+            "U": 1,
+            "reason": "single-world no-aliasing control; D future goals remain schedulable"
+          },
+          "QUERY_H": {
+            "L": 1,
+            "U": 1,
+            "reason": "single-world no-aliasing control; D future goals remain schedulable"
+          },
+          "WAIT": {
+            "L": 1,
+            "U": 1,
+            "reason": "single-world no-aliasing control; D future goals remain schedulable"
+          }
+        }
+      },
+      "depth": 2,
+      "fresh_exact": {
+        "actions": {
+          "QUERY_A": true,
+          "QUERY_G0_0": true,
+          "QUERY_G0_1": true,
+          "QUERY_H": true,
+          "WAIT": true
+        },
+        "metrics": {
+          "action_steps": 43,
+          "expanded": 10,
+          "memo_hits": 5,
+          "observation_branches": 9,
+          "recursive_calls": 57,
+          "wall_s": 0.0007578559980174759
+        }
+      },
+      "persistent_exact": {
+        "actions": {
+          "QUERY_A": true,
+          "QUERY_G0_0": true,
+          "QUERY_G0_1": true,
+          "QUERY_H": true,
+          "WAIT": true
+        },
+        "memo_entries": 24,
+        "metrics": {
+          "action_steps": 25,
+          "expanded": 6,
+          "frontier_wall_s": 5.856700045114849e-05,
+          "memo_hits": 11,
+          "observation_branches": 5,
+          "recursive_calls": 35,
+          "wall_s": 4.138300209888257e-05
+        }
+      },
+      "root_action_count": 5,
+      "static_union_reserve": {
+        "false_negative": false,
+        "query_h_declared_feasible": true,
+        "remaining_budget_after_h": 2,
+        "union_future_goal_count": 2
+      }
+    },
+    {
+      "branches": 1,
+      "budget": 4,
+      "compute": {
+        "conditional_certificate_steps": 0,
+        "conditional_over_fresh_expansion_proxy": 0.0,
+        "conditional_over_persistent_expansion_proxy": 0.0,
+        "fresh_expanded": 18,
+        "persistent_expanded": 9
+      },
+      "conditional_frontier": {
+        "actions": {
+          "QUERY_A": true,
+          "QUERY_G0_0": true,
+          "QUERY_G0_1": true,
+          "QUERY_G0_2": true,
+          "QUERY_H": true,
+          "WAIT": true
+        },
+        "metrics": {
+          "branch_certificate_steps": 0,
+          "exact_fallback_calls": 0,
+          "root_actions_classified": 6
+        },
+        "reasons": {
+          "QUERY_A": {
+            "L": 1,
+            "U": 1,
+            "reason": "single-world no-aliasing control; D future goals remain schedulable"
+          },
+          "QUERY_G0_0": {
+            "L": 1,
+            "U": 1,
+            "reason": "single-world no-aliasing control; D future goals remain schedulable"
+          },
+          "QUERY_G0_1": {
+            "L": 1,
+            "U": 1,
+            "reason": "single-world no-aliasing control; D future goals remain schedulable"
+          },
+          "QUERY_G0_2": {
+            "L": 1,
+            "U": 1,
+            "reason": "single-world no-aliasing control; D future goals remain schedulable"
+          },
+          "QUERY_H": {
+            "L": 1,
+            "U": 1,
+            "reason": "single-world no-aliasing control; D future goals remain schedulable"
+          },
+          "WAIT": {
+            "L": 1,
+            "U": 1,
+            "reason": "single-world no-aliasing control; D future goals remain schedulable"
+          }
+        }
+      },
+      "depth": 3,
+      "fresh_exact": {
+        "actions": {
+          "QUERY_A": true,
+          "QUERY_G0_0": true,
+          "QUERY_G0_1": true,
+          "QUERY_G0_2": true,
+          "QUERY_H": true,
+          "WAIT": true
+        },
+        "metrics": {
+          "action_steps": 87,
+          "expanded": 18,
+          "memo_hits": 18,
+          "observation_branches": 16,
+          "recursive_calls": 109,
+          "wall_s": 0.00013874000069336034
+        }
+      },
+      "persistent_exact": {
+        "actions": {
+          "QUERY_A": true,
+          "QUERY_G0_0": true,
+          "QUERY_G0_1": true,
+          "QUERY_G0_2": true,
+          "QUERY_H": true,
+          "WAIT": true
+        },
+        "memo_entries": 34,
+        "metrics": {
+          "action_steps": 42,
+          "expanded": 9,
+          "frontier_wall_s": 9.132499872066546e-05,
+          "memo_hits": 21,
+          "observation_branches": 7,
+          "recursive_calls": 55,
+          "wall_s": 7.244799598993268e-05
+        }
+      },
+      "root_action_count": 6,
+      "static_union_reserve": {
+        "false_negative": false,
+        "query_h_declared_feasible": true,
+        "remaining_budget_after_h": 3,
+        "union_future_goal_count": 3
+      }
+    },
+    {
+      "branches": 1,
+      "budget": 5,
+      "compute": {
+        "conditional_certificate_steps": 0,
+        "conditional_over_fresh_expansion_proxy": 0.0,
+        "conditional_over_persistent_expansion_proxy": 0.0,
+        "fresh_expanded": 28,
+        "persistent_expanded": 12
+      },
+      "conditional_frontier": {
+        "actions": {
+          "QUERY_A": true,
+          "QUERY_G0_0": true,
+          "QUERY_G0_1": true,
+          "QUERY_G0_2": true,
+          "QUERY_G0_3": true,
+          "QUERY_H": true,
+          "WAIT": true
+        },
+        "metrics": {
+          "branch_certificate_steps": 0,
+          "exact_fallback_calls": 0,
+          "root_actions_classified": 7
+        },
+        "reasons": {
+          "QUERY_A": {
+            "L": 1,
+            "U": 1,
+            "reason": "single-world no-aliasing control; D future goals remain schedulable"
+          },
+          "QUERY_G0_0": {
+            "L": 1,
+            "U": 1,
+            "reason": "single-world no-aliasing control; D future goals remain schedulable"
+          },
+          "QUERY_G0_1": {
+            "L": 1,
+            "U": 1,
+            "reason": "single-world no-aliasing control; D future goals remain schedulable"
+          },
+          "QUERY_G0_2": {
+            "L": 1,
+            "U": 1,
+            "reason": "single-world no-aliasing control; D future goals remain schedulable"
+          },
+          "QUERY_G0_3": {
+            "L": 1,
+            "U": 1,
+            "reason": "single-world no-aliasing control; D future goals remain schedulable"
+          },
+          "QUERY_H": {
+            "L": 1,
+            "U": 1,
+            "reason": "single-world no-aliasing control; D future goals remain schedulable"
+          },
+          "WAIT": {
+            "L": 1,
+            "U": 1,
+            "reason": "single-world no-aliasing control; D future goals remain schedulable"
+          }
+        }
+      },
+      "depth": 4,
+      "fresh_exact": {
+        "actions": {
+          "QUERY_A": true,
+          "QUERY_G0_0": true,
+          "QUERY_G0_1": true,
+          "QUERY_G0_2": true,
+          "QUERY_G0_3": true,
+          "QUERY_H": true,
+          "WAIT": true
+        },
+        "metrics": {
+          "action_steps": 150,
+          "expanded": 28,
+          "memo_hits": 42,
+          "observation_branches": 25,
+          "recursive_calls": 182,
+          "wall_s": 0.00028008899971609935
+        }
+      },
+      "persistent_exact": {
+        "actions": {
+          "QUERY_A": true,
+          "QUERY_G0_0": true,
+          "QUERY_G0_1": true,
+          "QUERY_G0_2": true,
+          "QUERY_G0_3": true,
+          "QUERY_H": true,
+          "WAIT": true
+        },
+        "memo_entries": 44,
+        "metrics": {
+          "action_steps": 62,
+          "expanded": 12,
+          "frontier_wall_s": 0.00013190400022722315,
+          "memo_hits": 34,
+          "observation_branches": 9,
+          "recursive_calls": 78,
+          "wall_s": 0.00010821700016094837
+        }
+      },
+      "root_action_count": 7,
+      "static_union_reserve": {
+        "false_negative": false,
+        "query_h_declared_feasible": true,
+        "remaining_budget_after_h": 4,
+        "union_future_goal_count": 4
+      }
+    },
+    {
+      "branches": 2,
+      "budget": 2,
+      "compute": {
+        "conditional_certificate_steps": 2,
+        "conditional_over_fresh_expansion_proxy": 0.3333333333333333,
+        "conditional_over_persistent_expansion_proxy": 0.5,
+        "fresh_expanded": 6,
+        "persistent_expanded": 4
+      },
+      "conditional_frontier": {
+        "actions": {
+          "QUERY_A": false,
+          "QUERY_G0_0": false,
+          "QUERY_G1_0": false,
+          "QUERY_H": true,
+          "WAIT": false
+        },
+        "metrics": {
+          "branch_certificate_steps": 2,
+          "exact_fallback_calls": 0,
+          "root_actions_classified": 5
+        },
+        "reasons": {
+          "QUERY_A": {
+            "L": 0,
+            "U": 0,
+            "reason": "insufficient budget for H plus branch chain"
+          },
+          "QUERY_G0_0": {
+            "L": 0,
+            "U": 0,
+            "reason": "insufficient budget for H plus branch chain"
+          },
+          "QUERY_G1_0": {
+            "L": 0,
+            "U": 0,
+            "reason": "insufficient budget for H plus branch chain"
+          },
+          "QUERY_H": {
+            "L": 1,
+            "U": 1,
+            "certificate": {
+              "H=0": [
+                "QUERY_G0_0"
+              ],
+              "H=1": [
+                "QUERY_G1_0"
+              ]
+            },
+            "remaining_budget": 1,
+            "worst_branch_query_requirement": 1
+          },
+          "WAIT": {
+            "L": 0,
+            "U": 0,
+            "reason": "reveal arrives after first branch deadline"
+          }
+        }
+      },
+      "depth": 1,
+      "fresh_exact": {
+        "actions": {
+          "QUERY_A": false,
+          "QUERY_G0_0": false,
+          "QUERY_G1_0": false,
+          "QUERY_H": true,
+          "WAIT": false
+        },
+        "metrics": {
+          "action_steps": 27,
+          "expanded": 6,
+          "memo_hits": 1,
+          "observation_branches": 6,
+          "recursive_calls": 38,
+          "wall_s": 4.9376001697964966e-05
+        }
+      },
+      "persistent_exact": {
+        "actions": {
+          "QUERY_A": false,
+          "QUERY_G0_0": false,
+          "QUERY_G1_0": false,
+          "QUERY_H": true,
+          "WAIT": false
+        },
+        "memo_entries": 20,
+        "metrics": {
+          "action_steps": 17,
+          "expanded": 4,
+          "frontier_wall_s": 4.8904999857768416e-05,
+          "memo_hits": 6,
+          "observation_branches": 4,
+          "recursive_calls": 26,
+          "wall_s": 3.27240013575647e-05
+        }
+      },
+      "root_action_count": 5,
+      "static_union_reserve": {
+        "false_negative": true,
+        "query_h_declared_feasible": false,
+        "remaining_budget_after_h": 1,
+        "union_future_goal_count": 2
+      }
+    },
+    {
+      "branches": 2,
+      "budget": 3,
+      "compute": {
+        "conditional_certificate_steps": 4,
+        "conditional_over_fresh_expansion_proxy": 0.4,
+        "conditional_over_persistent_expansion_proxy": 0.6666666666666666,
+        "fresh_expanded": 10,
+        "persistent_expanded": 6
+      },
+      "conditional_frontier": {
+        "actions": {
+          "QUERY_A": false,
+          "QUERY_G0_0": false,
+          "QUERY_G0_1": false,
+          "QUERY_G1_0": false,
+          "QUERY_G1_1": false,
+          "QUERY_H": true,
+          "WAIT": false
+        },
+        "metrics": {
+          "branch_certificate_steps": 4,
+          "exact_fallback_calls": 0,
+          "root_actions_classified": 7
+        },
+        "reasons": {
+          "QUERY_A": {
+            "L": 0,
+            "U": 0,
+            "reason": "insufficient budget for H plus branch chain"
+          },
+          "QUERY_G0_0": {
+            "L": 0,
+            "U": 0,
+            "reason": "insufficient budget for H plus branch chain"
+          },
+          "QUERY_G0_1": {
+            "L": 0,
+            "U": 0,
+            "reason": "insufficient budget for H plus branch chain"
+          },
+          "QUERY_G1_0": {
+            "L": 0,
+            "U": 0,
+            "reason": "insufficient budget for H plus branch chain"
+          },
+          "QUERY_G1_1": {
+            "L": 0,
+            "U": 0,
+            "reason": "insufficient budget for H plus branch chain"
+          },
+          "QUERY_H": {
+            "L": 1,
+            "U": 1,
+            "certificate": {
+              "H=0": [
+                "QUERY_G0_0",
+                "QUERY_G0_1"
+              ],
+              "H=1": [
+                "QUERY_G1_0",
+                "QUERY_G1_1"
+              ]
+            },
+            "remaining_budget": 2,
+            "worst_branch_query_requirement": 2
+          },
+          "WAIT": {
+            "L": 0,
+            "U": 0,
+            "reason": "reveal arrives after first branch deadline"
+          }
+        }
+      },
+      "depth": 2,
+      "fresh_exact": {
+        "actions": {
+          "QUERY_A": false,
+          "QUERY_G0_0": false,
+          "QUERY_G0_1": false,
+          "QUERY_G1_0": false,
+          "QUERY_G1_1": false,
+          "QUERY_H": true,
+          "WAIT": false
+        },
+        "metrics": {
+          "action_steps": 60,
+          "expanded": 10,
+          "memo_hits": 18,
+          "observation_branches": 8,
+          "recursive_calls": 75,
+          "wall_s": 0.0001062359988281969
+        }
+      },
+      "persistent_exact": {
+        "actions": {
+          "QUERY_A": false,
+          "QUERY_G0_0": false,
+          "QUERY_G0_1": false,
+          "QUERY_G1_0": false,
+          "QUERY_G1_1": false,
+          "QUERY_H": true,
+          "WAIT": false
+        },
+        "memo_entries": 26,
+        "metrics": {
+          "action_steps": 32,
+          "expanded": 6,
+          "frontier_wall_s": 8.268799865618348e-05,
+          "memo_hits": 17,
+          "observation_branches": 4,
+          "recursive_calls": 43,
+          "wall_s": 6.225800098036416e-05
+        }
+      },
+      "root_action_count": 7,
+      "static_union_reserve": {
+        "false_negative": true,
+        "query_h_declared_feasible": false,
+        "remaining_budget_after_h": 2,
+        "union_future_goal_count": 4
+      }
+    },
+    {
+      "branches": 2,
+      "budget": 4,
+      "compute": {
+        "conditional_certificate_steps": 6,
+        "conditional_over_fresh_expansion_proxy": 0.42857142857142855,
+        "conditional_over_persistent_expansion_proxy": 0.75,
+        "fresh_expanded": 14,
+        "persistent_expanded": 8
+      },
+      "conditional_frontier": {
+        "actions": {
+          "QUERY_A": false,
+          "QUERY_G0_0": false,
+          "QUERY_G0_1": false,
+          "QUERY_G0_2": false,
+          "QUERY_G1_0": false,
+          "QUERY_G1_1": false,
+          "QUERY_G1_2": false,
+          "QUERY_H": true,
+          "WAIT": false
+        },
+        "metrics": {
+          "branch_certificate_steps": 6,
+          "exact_fallback_calls": 0,
+          "root_actions_classified": 9
+        },
+        "reasons": {
+          "QUERY_A": {
+            "L": 0,
+            "U": 0,
+            "reason": "insufficient budget for H plus branch chain"
+          },
+          "QUERY_G0_0": {
+            "L": 0,
+            "U": 0,
+            "reason": "insufficient budget for H plus branch chain"
+          },
+          "QUERY_G0_1": {
+            "L": 0,
+            "U": 0,
+            "reason": "insufficient budget for H plus branch chain"
+          },
+          "QUERY_G0_2": {
+            "L": 0,
+            "U": 0,
+            "reason": "insufficient budget for H plus branch chain"
+          },
+          "QUERY_G1_0": {
+            "L": 0,
+            "U": 0,
+            "reason": "insufficient budget for H plus branch chain"
+          },
+          "QUERY_G1_1": {
+            "L": 0,
+            "U": 0,
+            "reason": "insufficient budget for H plus branch chain"
+          },
+          "QUERY_G1_2": {
+            "L": 0,
+            "U": 0,
+            "reason": "insufficient budget for H plus branch chain"
+          },
+          "QUERY_H": {
+            "L": 1,
+            "U": 1,
+            "certificate": {
+              "H=0": [
+                "QUERY_G0_0",
+                "QUERY_G0_1",
+                "QUERY_G0_2"
+              ],
+              "H=1": [
+                "QUERY_G1_0",
+                "QUERY_G1_1",
+                "QUERY_G1_2"
+              ]
+            },
+            "remaining_budget": 3,
+            "worst_branch_query_requirement": 3
+          },
+          "WAIT": {
+            "L": 0,
+            "U": 0,
+            "reason": "reveal arrives after first branch deadline"
+          }
+        }
+      },
+      "depth": 3,
+      "fresh_exact": {
+        "actions": {
+          "QUERY_A": false,
+          "QUERY_G0_0": false,
+          "QUERY_G0_1": false,
+          "QUERY_G0_2": false,
+          "QUERY_G1_0": false,
+          "QUERY_G1_1": false,
+          "QUERY_G1_2": false,
+          "QUERY_H": true,
+          "WAIT": false
+        },
+        "metrics": {
+          "action_steps": 105,
+          "expanded": 14,
+          "memo_hits": 47,
+          "observation_branches": 10,
+          "recursive_calls": 124,
+          "wall_s": 0.0002792790000967216
+        }
+      },
+      "persistent_exact": {
+        "actions": {
+          "QUERY_A": false,
+          "QUERY_G0_0": false,
+          "QUERY_G0_1": false,
+          "QUERY_G0_2": false,
+          "QUERY_G1_0": false,
+          "QUERY_G1_1": false,
+          "QUERY_G1_2": false,
+          "QUERY_H": true,
+          "WAIT": false
+        },
+        "memo_entries": 32,
+        "metrics": {
+          "action_steps": 51,
+          "expanded": 8,
+          "frontier_wall_s": 0.00012419800077623222,
+          "memo_hits": 32,
+          "observation_branches": 4,
+          "recursive_calls": 64,
+          "wall_s": 9.714900261315051e-05
+        }
+      },
+      "root_action_count": 9,
+      "static_union_reserve": {
+        "false_negative": true,
+        "query_h_declared_feasible": false,
+        "remaining_budget_after_h": 3,
+        "union_future_goal_count": 6
+      }
+    },
+    {
+      "branches": 2,
+      "budget": 5,
+      "compute": {
+        "conditional_certificate_steps": 8,
+        "conditional_over_fresh_expansion_proxy": 0.4444444444444444,
+        "conditional_over_persistent_expansion_proxy": 0.8,
+        "fresh_expanded": 18,
+        "persistent_expanded": 10
+      },
+      "conditional_frontier": {
+        "actions": {
+          "QUERY_A": false,
+          "QUERY_G0_0": false,
+          "QUERY_G0_1": false,
+          "QUERY_G0_2": false,
+          "QUERY_G0_3": false,
+          "QUERY_G1_0": false,
+          "QUERY_G1_1": false,
+          "QUERY_G1_2": false,
+          "QUERY_G1_3": false,
+          "QUERY_H": true,
+          "WAIT": false
+        },
+        "metrics": {
+          "branch_certificate_steps": 8,
+          "exact_fallback_calls": 0,
+          "root_actions_classified": 11
+        },
+        "reasons": {
+          "QUERY_A": {
+            "L": 0,
+            "U": 0,
+            "reason": "insufficient budget for H plus branch chain"
+          },
+          "QUERY_G0_0": {
+            "L": 0,
+            "U": 0,
+            "reason": "insufficient budget for H plus branch chain"
+          },
+          "QUERY_G0_1": {
+            "L": 0,
+            "U": 0,
+            "reason": "insufficient budget for H plus branch chain"
+          },
+          "QUERY_G0_2": {
+            "L": 0,
+            "U": 0,
+            "reason": "insufficient budget for H plus branch chain"
+          },
+          "QUERY_G0_3": {
+            "L": 0,
+            "U": 0,
+            "reason": "insufficient budget for H plus branch chain"
+          },
+          "QUERY_G1_0": {
+            "L": 0,
+            "U": 0,
+            "reason": "insufficient budget for H plus branch chain"
+          },
+          "QUERY_G1_1": {
+            "L": 0,
+            "U": 0,
+            "reason": "insufficient budget for H plus branch chain"
+          },
+          "QUERY_G1_2": {
+            "L": 0,
+            "U": 0,
+            "reason": "insufficient budget for H plus branch chain"
+          },
+          "QUERY_G1_3": {
+            "L": 0,
+            "U": 0,
+            "reason": "insufficient budget for H plus branch chain"
+          },
+          "QUERY_H": {
+            "L": 1,
+            "U": 1,
+            "certificate": {
+              "H=0": [
+                "QUERY_G0_0",
+                "QUERY_G0_1",
+                "QUERY_G0_2",
+                "QUERY_G0_3"
+              ],
+              "H=1": [
+                "QUERY_G1_0",
+                "QUERY_G1_1",
+                "QUERY_G1_2",
+                "QUERY_G1_3"
+              ]
+            },
+            "remaining_budget": 4,
+            "worst_branch_query_requirement": 4
+          },
+          "WAIT": {
+            "L": 0,
+            "U": 0,
+            "reason": "reveal arrives after first branch deadline"
+          }
+        }
+      },
+      "depth": 4,
+      "fresh_exact": {
+        "actions": {
+          "QUERY_A": false,
+          "QUERY_G0_0": false,
+          "QUERY_G0_1": false,
+          "QUERY_G0_2": false,
+          "QUERY_G0_3": false,
+          "QUERY_G1_0": false,
+          "QUERY_G1_1": false,
+          "QUERY_G1_2": false,
+          "QUERY_G1_3": false,
+          "QUERY_H": true,
+          "WAIT": false
+        },
+        "metrics": {
+          "action_steps": 162,
+          "expanded": 18,
+          "memo_hits": 88,
+          "observation_branches": 12,
+          "recursive_calls": 185,
+          "wall_s": 0.0002893249984481372
+        }
+      },
+      "persistent_exact": {
+        "actions": {
+          "QUERY_A": false,
+          "QUERY_G0_0": false,
+          "QUERY_G0_1": false,
+          "QUERY_G0_2": false,
+          "QUERY_G0_3": false,
+          "QUERY_G1_0": false,
+          "QUERY_G1_1": false,
+          "QUERY_G1_2": false,
+          "QUERY_G1_3": false,
+          "QUERY_H": true,
+          "WAIT": false
+        },
+        "memo_entries": 38,
+        "metrics": {
+          "action_steps": 74,
+          "expanded": 10,
+          "frontier_wall_s": 0.00017365100029564928,
+          "memo_hits": 51,
+          "observation_branches": 4,
+          "recursive_calls": 89,
+          "wall_s": 0.00014241499775380362
+        }
+      },
+      "root_action_count": 11,
+      "static_union_reserve": {
+        "false_negative": true,
+        "query_h_declared_feasible": false,
+        "remaining_budget_after_h": 4,
+        "union_future_goal_count": 8
+      }
+    },
+    {
+      "branches": 4,
+      "budget": 2,
+      "compute": {
+        "conditional_certificate_steps": 4,
+        "conditional_over_fresh_expansion_proxy": 0.4,
+        "conditional_over_persistent_expansion_proxy": 0.6666666666666666,
+        "fresh_expanded": 10,
+        "persistent_expanded": 6
+      },
+      "conditional_frontier": {
+        "actions": {
+          "QUERY_A": false,
+          "QUERY_G0_0": false,
+          "QUERY_G1_0": false,
+          "QUERY_G2_0": false,
+          "QUERY_G3_0": false,
+          "QUERY_H": true,
+          "WAIT": false
+        },
+        "metrics": {
+          "branch_certificate_steps": 4,
+          "exact_fallback_calls": 0,
+          "root_actions_classified": 7
+        },
+        "reasons": {
+          "QUERY_A": {
+            "L": 0,
+            "U": 0,
+            "reason": "insufficient budget for H plus branch chain"
+          },
+          "QUERY_G0_0": {
+            "L": 0,
+            "U": 0,
+            "reason": "insufficient budget for H plus branch chain"
+          },
+          "QUERY_G1_0": {
+            "L": 0,
+            "U": 0,
+            "reason": "insufficient budget for H plus branch chain"
+          },
+          "QUERY_G2_0": {
+            "L": 0,
+            "U": 0,
+            "reason": "insufficient budget for H plus branch chain"
+          },
+          "QUERY_G3_0": {
+            "L": 0,
+            "U": 0,
+            "reason": "insufficient budget for H plus branch chain"
+          },
+          "QUERY_H": {
+            "L": 1,
+            "U": 1,
+            "certificate": {
+              "H=0": [
+                "QUERY_G0_0"
+              ],
+              "H=1": [
+                "QUERY_G1_0"
+              ],
+              "H=2": [
+                "QUERY_G2_0"
+              ],
+              "H=3": [
+                "QUERY_G3_0"
+              ]
+            },
+            "remaining_budget": 1,
+            "worst_branch_query_requirement": 1
+          },
+          "WAIT": {
+            "L": 0,
+            "U": 0,
+            "reason": "reveal arrives after first branch deadline"
+          }
+        }
+      },
+      "depth": 1,
+      "fresh_exact": {
+        "actions": {
+          "QUERY_A": false,
+          "QUERY_G0_0": false,
+          "QUERY_G1_0": false,
+          "QUERY_G2_0": false,
+          "QUERY_G3_0": false,
+          "QUERY_H": true,
+          "WAIT": false
+        },
+        "metrics": {
+          "action_steps": 60,
+          "expanded": 10,
+          "memo_hits": 6,
+          "observation_branches": 10,
+          "recursive_calls": 77,
+          "wall_s": 0.00011561400060600135
+        }
+      },
+      "persistent_exact": {
+        "actions": {
+          "QUERY_A": false,
+          "QUERY_G0_0": false,
+          "QUERY_G1_0": false,
+          "QUERY_G2_0": false,
+          "QUERY_G3_0": false,
+          "QUERY_H": true,
+          "WAIT": false
+        },
+        "memo_entries": 32,
+        "metrics": {
+          "action_steps": 32,
+          "expanded": 6,
+          "frontier_wall_s": 0.0001848619995143963,
+          "memo_hits": 13,
+          "observation_branches": 6,
+          "recursive_calls": 45,
+          "wall_s": 6.709599801979493e-05
+        }
+      },
+      "root_action_count": 7,
+      "static_union_reserve": {
+        "false_negative": true,
+        "query_h_declared_feasible": false,
+        "remaining_budget_after_h": 1,
+        "union_future_goal_count": 4
+      }
+    },
+    {
+      "branches": 4,
+      "budget": 3,
+      "compute": {
+        "conditional_certificate_steps": 8,
+        "conditional_over_fresh_expansion_proxy": 0.4444444444444444,
+        "conditional_over_persistent_expansion_proxy": 0.8,
+        "fresh_expanded": 18,
+        "persistent_expanded": 10
+      },
+      "conditional_frontier": {
+        "actions": {
+          "QUERY_A": false,
+          "QUERY_G0_0": false,
+          "QUERY_G0_1": false,
+          "QUERY_G1_0": false,
+          "QUERY_G1_1": false,
+          "QUERY_G2_0": false,
+          "QUERY_G2_1": false,
+          "QUERY_G3_0": false,
+          "QUERY_G3_1": false,
+          "QUERY_H": true,
+          "WAIT": false
+        },
+        "metrics": {
+          "branch_certificate_steps": 8,
+          "exact_fallback_calls": 0,
+          "root_actions_classified": 11
+        },
+        "reasons": {
+          "QUERY_A": {
+            "L": 0,
+            "U": 0,
+            "reason": "insufficient budget for H plus branch chain"
+          },
+          "QUERY_G0_0": {
+            "L": 0,
+            "U": 0,
+            "reason": "insufficient budget for H plus branch chain"
+          },
+          "QUERY_G0_1": {
+            "L": 0,
+            "U": 0,
+            "reason": "insufficient budget for H plus branch chain"
+          },
+          "QUERY_G1_0": {
+            "L": 0,
+            "U": 0,
+            "reason": "insufficient budget for H plus branch chain"
+          },
+          "QUERY_G1_1": {
+            "L": 0,
+            "U": 0,
+            "reason": "insufficient budget for H plus branch chain"
+          },
+          "QUERY_G2_0": {
+            "L": 0,
+            "U": 0,
+            "reason": "insufficient budget for H plus branch chain"
+          },
+          "QUERY_G2_1": {
+            "L": 0,
+            "U": 0,
+            "reason": "insufficient budget for H plus branch chain"
+          },
+          "QUERY_G3_0": {
+            "L": 0,
+            "U": 0,
+            "reason": "insufficient budget for H plus branch chain"
+          },
+          "QUERY_G3_1": {
+            "L": 0,
+            "U": 0,
+            "reason": "insufficient budget for H plus branch chain"
+          },
+          "QUERY_H": {
+            "L": 1,
+            "U": 1,
+            "certificate": {
+              "H=0": [
+                "QUERY_G0_0",
+                "QUERY_G0_1"
+              ],
+              "H=1": [
+                "QUERY_G1_0",
+                "QUERY_G1_1"
+              ],
+              "H=2": [
+                "QUERY_G2_0",
+                "QUERY_G2_1"
+              ],
+              "H=3": [
+                "QUERY_G3_0",
+                "QUERY_G3_1"
+              ]
+            },
+            "remaining_budget": 2,
+            "worst_branch_query_requirement": 2
+          },
+          "WAIT": {
+            "L": 0,
+            "U": 0,
+            "reason": "reveal arrives after first branch deadline"
+          }
+        }
+      },
+      "depth": 2,
+      "fresh_exact": {
+        "actions": {
+          "QUERY_A": false,
+          "QUERY_G0_0": false,
+          "QUERY_G0_1": false,
+          "QUERY_G1_0": false,
+          "QUERY_G1_1": false,
+          "QUERY_G2_0": false,
+          "QUERY_G2_1": false,
+          "QUERY_G3_0": false,
+          "QUERY_G3_1": false,
+          "QUERY_H": true,
+          "WAIT": false
+        },
+        "metrics": {
+          "action_steps": 162,
+          "expanded": 18,
+          "memo_hits": 68,
+          "observation_branches": 14,
+          "recursive_calls": 187,
+          "wall_s": 0.00037183800122875255
+        }
+      },
+      "persistent_exact": {
+        "actions": {
+          "QUERY_A": false,
+          "QUERY_G0_0": false,
+          "QUERY_G0_1": false,
+          "QUERY_G1_0": false,
+          "QUERY_G1_1": false,
+          "QUERY_G2_0": false,
+          "QUERY_G2_1": false,
+          "QUERY_G3_0": false,
+          "QUERY_G3_1": false,
+          "QUERY_H": true,
+          "WAIT": false
+        },
+        "memo_entries": 44,
+        "metrics": {
+          "action_steps": 74,
+          "expanded": 10,
+          "frontier_wall_s": 0.00020508600027824286,
+          "memo_hits": 47,
+          "observation_branches": 6,
+          "recursive_calls": 91,
+          "wall_s": 0.00017227600073965732
+        }
+      },
+      "root_action_count": 11,
+      "static_union_reserve": {
+        "false_negative": true,
+        "query_h_declared_feasible": false,
+        "remaining_budget_after_h": 2,
+        "union_future_goal_count": 8
+      }
+    },
+    {
+      "branches": 4,
+      "budget": 4,
+      "compute": {
+        "conditional_certificate_steps": 12,
+        "conditional_over_fresh_expansion_proxy": 0.46153846153846156,
+        "conditional_over_persistent_expansion_proxy": 0.8571428571428571,
+        "fresh_expanded": 26,
+        "persistent_expanded": 14
+      },
+      "conditional_frontier": {
+        "actions": {
+          "QUERY_A": false,
+          "QUERY_G0_0": false,
+          "QUERY_G0_1": false,
+          "QUERY_G0_2": false,
+          "QUERY_G1_0": false,
+          "QUERY_G1_1": false,
+          "QUERY_G1_2": false,
+          "QUERY_G2_0": false,
+          "QUERY_G2_1": false,
+          "QUERY_G2_2": false,
+          "QUERY_G3_0": false,
+          "QUERY_G3_1": false,
+          "QUERY_G3_2": false,
+          "QUERY_H": true,
+          "WAIT": false
+        },
+        "metrics": {
+          "branch_certificate_steps": 12,
+          "exact_fallback_calls": 0,
+          "root_actions_classified": 15
+        },
+        "reasons": {
+          "QUERY_A": {
+            "L": 0,
+            "U": 0,
+            "reason": "insufficient budget for H plus branch chain"
+          },
+          "QUERY_G0_0": {
+            "L": 0,
+            "U": 0,
+            "reason": "insufficient budget for H plus branch chain"
+          },
+          "QUERY_G0_1": {
+            "L": 0,
+            "U": 0,
+            "reason": "insufficient budget for H plus branch chain"
+          },
+          "QUERY_G0_2": {
+            "L": 0,
+            "U": 0,
+            "reason": "insufficient budget for H plus branch chain"
+          },
+          "QUERY_G1_0": {
+            "L": 0,
+            "U": 0,
+            "reason": "insufficient budget for H plus branch chain"
+          },
+          "QUERY_G1_1": {
+            "L": 0,
+            "U": 0,
+            "reason": "insufficient budget for H plus branch chain"
+          },
+          "QUERY_G1_2": {
+            "L": 0,
+            "U": 0,
+            "reason": "insufficient budget for H plus branch chain"
+          },
+          "QUERY_G2_0": {
+            "L": 0,
+            "U": 0,
+            "reason": "insufficient budget for H plus branch chain"
+          },
+          "QUERY_G2_1": {
+            "L": 0,
+            "U": 0,
+            "reason": "insufficient budget for H plus branch chain"
+          },
+          "QUERY_G2_2": {
+            "L": 0,
+            "U": 0,
+            "reason": "insufficient budget for H plus branch chain"
+          },
+          "QUERY_G3_0": {
+            "L": 0,
+            "U": 0,
+            "reason": "insufficient budget for H plus branch chain"
+          },
+          "QUERY_G3_1": {
+            "L": 0,
+            "U": 0,
+            "reason": "insufficient budget for H plus branch chain"
+          },
+          "QUERY_G3_2": {
+            "L": 0,
+            "U": 0,
+            "reason": "insufficient budget for H plus branch chain"
+          },
+          "QUERY_H": {
+            "L": 1,
+            "U": 1,
+            "certificate": {
+              "H=0": [
+                "QUERY_G0_0",
+                "QUERY_G0_1",
+                "QUERY_G0_2"
+              ],
+              "H=1": [
+                "QUERY_G1_0",
+                "QUERY_G1_1",
+                "QUERY_G1_2"
+              ],
+              "H=2": [
+                "QUERY_G2_0",
+                "QUERY_G2_1",
+                "QUERY_G2_2"
+              ],
+              "H=3": [
+                "QUERY_G3_0",
+                "QUERY_G3_1",
+                "QUERY_G3_2"
+              ]
+            },
+            "remaining_budget": 3,
+            "worst_branch_query_requirement": 3
+          },
+          "WAIT": {
+            "L": 0,
+            "U": 0,
+            "reason": "reveal arrives after first branch deadline"
+          }
+        }
+      },
+      "depth": 3,
+      "fresh_exact": {
+        "actions": {
+          "QUERY_A": false,
+          "QUERY_G0_0": false,
+          "QUERY_G0_1": false,
+          "QUERY_G0_2": false,
+          "QUERY_G1_0": false,
+          "QUERY_G1_1": false,
+          "QUERY_G1_2": false,
+          "QUERY_G2_0": false,
+          "QUERY_G2_1": false,
+          "QUERY_G2_2": false,
+          "QUERY_G3_0": false,
+          "QUERY_G3_1": false,
+          "QUERY_G3_2": false,
+          "QUERY_H": true,
+          "WAIT": false
+        },
+        "metrics": {
+          "action_steps": 312,
+          "expanded": 26,
+          "memo_hits": 178,
+          "observation_branches": 18,
+          "recursive_calls": 345,
+          "wall_s": 0.0008108439978968818
+        }
+      },
+      "persistent_exact": {
+        "actions": {
+          "QUERY_A": false,
+          "QUERY_G0_0": false,
+          "QUERY_G0_1": false,
+          "QUERY_G0_2": false,
+          "QUERY_G1_0": false,
+          "QUERY_G1_1": false,
+          "QUERY_G1_2": false,
+          "QUERY_G2_0": false,
+          "QUERY_G2_1": false,
+          "QUERY_G2_2": false,
+          "QUERY_G3_0": false,
+          "QUERY_G3_1": false,
+          "QUERY_G3_2": false,
+          "QUERY_H": true,
+          "WAIT": false
+        },
+        "memo_entries": 56,
+        "metrics": {
+          "action_steps": 132,
+          "expanded": 14,
+          "frontier_wall_s": 0.0003193699994881172,
+          "memo_hits": 97,
+          "observation_branches": 6,
+          "recursive_calls": 153,
+          "wall_s": 0.0002743679960985901
+        }
+      },
+      "root_action_count": 15,
+      "static_union_reserve": {
+        "false_negative": true,
+        "query_h_declared_feasible": false,
+        "remaining_budget_after_h": 3,
+        "union_future_goal_count": 12
+      }
+    },
+    {
+      "branches": 4,
+      "budget": 5,
+      "compute": {
+        "conditional_certificate_steps": 16,
+        "conditional_over_fresh_expansion_proxy": 0.47058823529411764,
+        "conditional_over_persistent_expansion_proxy": 0.8888888888888888,
+        "fresh_expanded": 34,
+        "persistent_expanded": 18
+      },
+      "conditional_frontier": {
+        "actions": {
+          "QUERY_A": false,
+          "QUERY_G0_0": false,
+          "QUERY_G0_1": false,
+          "QUERY_G0_2": false,
+          "QUERY_G0_3": false,
+          "QUERY_G1_0": false,
+          "QUERY_G1_1": false,
+          "QUERY_G1_2": false,
+          "QUERY_G1_3": false,
+          "QUERY_G2_0": false,
+          "QUERY_G2_1": false,
+          "QUERY_G2_2": false,
+          "QUERY_G2_3": false,
+          "QUERY_G3_0": false,
+          "QUERY_G3_1": false,
+          "QUERY_G3_2": false,
+          "QUERY_G3_3": false,
+          "QUERY_H": true,
+          "WAIT": false
+        },
+        "metrics": {
+          "branch_certificate_steps": 16,
+          "exact_fallback_calls": 0,
+          "root_actions_classified": 19
+        },
+        "reasons": {
+          "QUERY_A": {
+            "L": 0,
+            "U": 0,
+            "reason": "insufficient budget for H plus branch chain"
+          },
+          "QUERY_G0_0": {
+            "L": 0,
+            "U": 0,
+            "reason": "insufficient budget for H plus branch chain"
+          },
+          "QUERY_G0_1": {
+            "L": 0,
+            "U": 0,
+            "reason": "insufficient budget for H plus branch chain"
+          },
+          "QUERY_G0_2": {
+            "L": 0,
+            "U": 0,
+            "reason": "insufficient budget for H plus branch chain"
+          },
+          "QUERY_G0_3": {
+            "L": 0,
+            "U": 0,
+            "reason": "insufficient budget for H plus branch chain"
+          },
+          "QUERY_G1_0": {
+            "L": 0,
+            "U": 0,
+            "reason": "insufficient budget for H plus branch chain"
+          },
+          "QUERY_G1_1": {
+            "L": 0,
+            "U": 0,
+            "reason": "insufficient budget for H plus branch chain"
+          },
+          "QUERY_G1_2": {
+            "L": 0,
+            "U": 0,
+            "reason": "insufficient budget for H plus branch chain"
+          },
+          "QUERY_G1_3": {
+            "L": 0,
+            "U": 0,
+            "reason": "insufficient budget for H plus branch chain"
+          },
+          "QUERY_G2_0": {
+            "L": 0,
+            "U": 0,
+            "reason": "insufficient budget for H plus branch chain"
+          },
+          "QUERY_G2_1": {
+            "L": 0,
+            "U": 0,
+            "reason": "insufficient budget for H plus branch chain"
+          },
+          "QUERY_G2_2": {
+            "L": 0,
+            "U": 0,
+            "reason": "insufficient budget for H plus branch chain"
+          },
+          "QUERY_G2_3": {
+            "L": 0,
+            "U": 0,
+            "reason": "insufficient budget for H plus branch chain"
+          },
+          "QUERY_G3_0": {
+            "L": 0,
+            "U": 0,
+            "reason": "insufficient budget for H plus branch chain"
+          },
+          "QUERY_G3_1": {
+            "L": 0,
+            "U": 0,
+            "reason": "insufficient budget for H plus branch chain"
+          },
+          "QUERY_G3_2": {
+            "L": 0,
+            "U": 0,
+            "reason": "insufficient budget for H plus branch chain"
+          },
+          "QUERY_G3_3": {
+            "L": 0,
+            "U": 0,
+            "reason": "insufficient budget for H plus branch chain"
+          },
+          "QUERY_H": {
+            "L": 1,
+            "U": 1,
+            "certificate": {
+              "H=0": [
+                "QUERY_G0_0",
+                "QUERY_G0_1",
+                "QUERY_G0_2",
+                "QUERY_G0_3"
+              ],
+              "H=1": [
+                "QUERY_G1_0",
+                "QUERY_G1_1",
+                "QUERY_G1_2",
+                "QUERY_G1_3"
+              ],
+              "H=2": [
+                "QUERY_G2_0",
+                "QUERY_G2_1",
+                "QUERY_G2_2",
+                "QUERY_G2_3"
+              ],
+              "H=3": [
+                "QUERY_G3_0",
+                "QUERY_G3_1",
+                "QUERY_G3_2",
+                "QUERY_G3_3"
+              ]
+            },
+            "remaining_budget": 4,
+            "worst_branch_query_requirement": 4
+          },
+          "WAIT": {
+            "L": 0,
+            "U": 0,
+            "reason": "reveal arrives after first branch deadline"
+          }
+        }
+      },
+      "depth": 4,
+      "fresh_exact": {
+        "actions": {
+          "QUERY_A": false,
+          "QUERY_G0_0": false,
+          "QUERY_G0_1": false,
+          "QUERY_G0_2": false,
+          "QUERY_G0_3": false,
+          "QUERY_G1_0": false,
+          "QUERY_G1_1": false,
+          "QUERY_G1_2": false,
+          "QUERY_G1_3": false,
+          "QUERY_G2_0": false,
+          "QUERY_G2_1": false,
+          "QUERY_G2_2": false,
+          "QUERY_G2_3": false,
+          "QUERY_G3_0": false,
+          "QUERY_G3_1": false,
+          "QUERY_G3_2": false,
+          "QUERY_G3_3": false,
+          "QUERY_H": true,
+          "WAIT": false
+        },
+        "metrics": {
+          "action_steps": 510,
+          "expanded": 34,
+          "memo_hits": 336,
+          "observation_branches": 22,
+          "recursive_calls": 551,
+          "wall_s": 0.0012505089998740004
+        }
+      },
+      "persistent_exact": {
+        "actions": {
+          "QUERY_A": false,
+          "QUERY_G0_0": false,
+          "QUERY_G0_1": false,
+          "QUERY_G0_2": false,
+          "QUERY_G0_3": false,
+          "QUERY_G1_0": false,
+          "QUERY_G1_1": false,
+          "QUERY_G1_2": false,
+          "QUERY_G1_3": false,
+          "QUERY_G2_0": false,
+          "QUERY_G2_1": false,
+          "QUERY_G2_2": false,
+          "QUERY_G2_3": false,
+          "QUERY_G3_0": false,
+          "QUERY_G3_1": false,
+          "QUERY_G3_2": false,
+          "QUERY_G3_3": false,
+          "QUERY_H": true,
+          "WAIT": false
+        },
+        "memo_entries": 68,
+        "metrics": {
+          "action_steps": 206,
+          "expanded": 18,
+          "frontier_wall_s": 0.0005165539987501688,
+          "memo_hits": 163,
+          "observation_branches": 6,
+          "recursive_calls": 231,
+          "wall_s": 0.00045966100151417777
+        }
+      },
+      "root_action_count": 19,
+      "static_union_reserve": {
+        "false_negative": true,
+        "query_h_declared_feasible": false,
+        "remaining_budget_after_h": 4,
+        "union_future_goal_count": 16
+      }
+    },
+    {
+      "branches": 8,
+      "budget": 2,
+      "compute": {
+        "conditional_certificate_steps": 8,
+        "conditional_over_fresh_expansion_proxy": 0.4444444444444444,
+        "conditional_over_persistent_expansion_proxy": 0.8,
+        "fresh_expanded": 18,
+        "persistent_expanded": 10
+      },
+      "conditional_frontier": {
+        "actions": {
+          "QUERY_A": false,
+          "QUERY_G0_0": false,
+          "QUERY_G1_0": false,
+          "QUERY_G2_0": false,
+          "QUERY_G3_0": false,
+          "QUERY_G4_0": false,
+          "QUERY_G5_0": false,
+          "QUERY_G6_0": false,
+          "QUERY_G7_0": false,
+          "QUERY_H": true,
+          "WAIT": false
+        },
+        "metrics": {
+          "branch_certificate_steps": 8,
+          "exact_fallback_calls": 0,
+          "root_actions_classified": 11
+        },
+        "reasons": {
+          "QUERY_A": {
+            "L": 0,
+            "U": 0,
+            "reason": "insufficient budget for H plus branch chain"
+          },
+          "QUERY_G0_0": {
+            "L": 0,
+            "U": 0,
+            "reason": "insufficient budget for H plus branch chain"
+          },
+          "QUERY_G1_0": {
+            "L": 0,
+            "U": 0,
+            "reason": "insufficient budget for H plus branch chain"
+          },
+          "QUERY_G2_0": {
+            "L": 0,
+            "U": 0,
+            "reason": "insufficient budget for H plus branch chain"
+          },
+          "QUERY_G3_0": {
+            "L": 0,
+            "U": 0,
+            "reason": "insufficient budget for H plus branch chain"
+          },
+          "QUERY_G4_0": {
+            "L": 0,
+            "U": 0,
+            "reason": "insufficient budget for H plus branch chain"
+          },
+          "QUERY_G5_0": {
+            "L": 0,
+            "U": 0,
+            "reason": "insufficient budget for H plus branch chain"
+          },
+          "QUERY_G6_0": {
+            "L": 0,
+            "U": 0,
+            "reason": "insufficient budget for H plus branch chain"
+          },
+          "QUERY_G7_0": {
+            "L": 0,
+            "U": 0,
+            "reason": "insufficient budget for H plus branch chain"
+          },
+          "QUERY_H": {
+            "L": 1,
+            "U": 1,
+            "certificate": {
+              "H=0": [
+                "QUERY_G0_0"
+              ],
+              "H=1": [
+                "QUERY_G1_0"
+              ],
+              "H=2": [
+                "QUERY_G2_0"
+              ],
+              "H=3": [
+                "QUERY_G3_0"
+              ],
+              "H=4": [
+                "QUERY_G4_0"
+              ],
+              "H=5": [
+                "QUERY_G5_0"
+              ],
+              "H=6": [
+                "QUERY_G6_0"
+              ],
+              "H=7": [
+                "QUERY_G7_0"
+              ]
+            },
+            "remaining_budget": 1,
+            "worst_branch_query_requirement": 1
+          },
+          "WAIT": {
+            "L": 0,
+            "U": 0,
+            "reason": "reveal arrives after first branch deadline"
+          }
+        }
+      },
+      "depth": 1,
+      "fresh_exact": {
+        "actions": {
+          "QUERY_A": false,
+          "QUERY_G0_0": false,
+          "QUERY_G1_0": false,
+          "QUERY_G2_0": false,
+          "QUERY_G3_0": false,
+          "QUERY_G4_0": false,
+          "QUERY_G5_0": false,
+          "QUERY_G6_0": false,
+          "QUERY_G7_0": false,
+          "QUERY_H": true,
+          "WAIT": false
+        },
+        "metrics": {
+          "action_steps": 162,
+          "expanded": 18,
+          "memo_hits": 28,
+          "observation_branches": 18,
+          "recursive_calls": 191,
+          "wall_s": 0.0005421639962150948
+        }
+      },
+      "persistent_exact": {
+        "actions": {
+          "QUERY_A": false,
+          "QUERY_G0_0": false,
+          "QUERY_G1_0": false,
+          "QUERY_G2_0": false,
+          "QUERY_G3_0": false,
+          "QUERY_G4_0": false,
+          "QUERY_G5_0": false,
+          "QUERY_G6_0": false,
+          "QUERY_G7_0": false,
+          "QUERY_H": true,
+          "WAIT": false
+        },
+        "memo_entries": 56,
+        "metrics": {
+          "action_steps": 74,
+          "expanded": 10,
+          "frontier_wall_s": 0.00023585100097989198,
+          "memo_hits": 39,
+          "observation_branches": 10,
+          "recursive_calls": 95,
+          "wall_s": 0.0001974359984160401
+        }
+      },
+      "root_action_count": 11,
+      "static_union_reserve": {
+        "false_negative": true,
+        "query_h_declared_feasible": false,
+        "remaining_budget_after_h": 1,
+        "union_future_goal_count": 8
+      }
+    },
+    {
+      "branches": 8,
+      "budget": 3,
+      "compute": {
+        "conditional_certificate_steps": 16,
+        "conditional_over_fresh_expansion_proxy": 0.47058823529411764,
+        "conditional_over_persistent_expansion_proxy": 0.8888888888888888,
+        "fresh_expanded": 34,
+        "persistent_expanded": 18
+      },
+      "conditional_frontier": {
+        "actions": {
+          "QUERY_A": false,
+          "QUERY_G0_0": false,
+          "QUERY_G0_1": false,
+          "QUERY_G1_0": false,
+          "QUERY_G1_1": false,
+          "QUERY_G2_0": false,
+          "QUERY_G2_1": false,
+          "QUERY_G3_0": false,
+          "QUERY_G3_1": false,
+          "QUERY_G4_0": false,
+          "QUERY_G4_1": false,
+          "QUERY_G5_0": false,
+          "QUERY_G5_1": false,
+          "QUERY_G6_0": false,
+          "QUERY_G6_1": false,
+          "QUERY_G7_0": false,
+          "QUERY_G7_1": false,
+          "QUERY_H": true,
+          "WAIT": false
+        },
+        "metrics": {
+          "branch_certificate_steps": 16,
+          "exact_fallback_calls": 0,
+          "root_actions_classified": 19
+        },
+        "reasons": {
+          "QUERY_A": {
+            "L": 0,
+            "U": 0,
+            "reason": "insufficient budget for H plus branch chain"
+          },
+          "QUERY_G0_0": {
+            "L": 0,
+            "U": 0,
+            "reason": "insufficient budget for H plus branch chain"
+          },
+          "QUERY_G0_1": {
+            "L": 0,
+            "U": 0,
+            "reason": "insufficient budget for H plus branch chain"
+          },
+          "QUERY_G1_0": {
+            "L": 0,
+            "U": 0,
+            "reason": "insufficient budget for H plus branch chain"
+          },
+          "QUERY_G1_1": {
+            "L": 0,
+            "U": 0,
+            "reason": "insufficient budget for H plus branch chain"
+          },
+          "QUERY_G2_0": {
+            "L": 0,
+            "U": 0,
+            "reason": "insufficient budget for H plus branch chain"
+          },
+          "QUERY_G2_1": {
+            "L": 0,
+            "U": 0,
+            "reason": "insufficient budget for H plus branch chain"
+          },
+          "QUERY_G3_0": {
+            "L": 0,
+            "U": 0,
+            "reason": "insufficient budget for H plus branch chain"
+          },
+          "QUERY_G3_1": {
+            "L": 0,
+            "U": 0,
+            "reason": "insufficient budget for H plus branch chain"
+          },
+          "QUERY_G4_0": {
+            "L": 0,
+            "U": 0,
+            "reason": "insufficient budget for H plus branch chain"
+          },
+          "QUERY_G4_1": {
+            "L": 0,
+            "U": 0,
+            "reason": "insufficient budget for H plus branch chain"
+          },
+          "QUERY_G5_0": {
+            "L": 0,
+            "U": 0,
+            "reason": "insufficient budget for H plus branch chain"
+          },
+          "QUERY_G5_1": {
+            "L": 0,
+            "U": 0,
+            "reason": "insufficient budget for H plus branch chain"
+          },
+          "QUERY_G6_0": {
+            "L": 0,
+            "U": 0,
+            "reason": "insufficient budget for H plus branch chain"
+          },
+          "QUERY_G6_1": {
+            "L": 0,
+            "U": 0,
+            "reason": "insufficient budget for H plus branch chain"
+          },
+          "QUERY_G7_0": {
+            "L": 0,
+            "U": 0,
+            "reason": "insufficient budget for H plus branch chain"
+          },
+          "QUERY_G7_1": {
+            "L": 0,
+            "U": 0,
+            "reason": "insufficient budget for H plus branch chain"
+          },
+          "QUERY_H": {
+            "L": 1,
+            "U": 1,
+            "certificate": {
+              "H=0": [
+                "QUERY_G0_0",
+                "QUERY_G0_1"
+              ],
+              "H=1": [
+                "QUERY_G1_0",
+                "QUERY_G1_1"
+              ],
+              "H=2": [
+                "QUERY_G2_0",
+                "QUERY_G2_1"
+              ],
+              "H=3": [
+                "QUERY_G3_0",
+                "QUERY_G3_1"
+              ],
+              "H=4": [
+                "QUERY_G4_0",
+                "QUERY_G4_1"
+              ],
+              "H=5": [
+                "QUERY_G5_0",
+                "QUERY_G5_1"
+              ],
+              "H=6": [
+                "QUERY_G6_0",
+                "QUERY_G6_1"
+              ],
+              "H=7": [
+                "QUERY_G7_0",
+                "QUERY_G7_1"
+              ]
+            },
+            "remaining_budget": 2,
+            "worst_branch_query_requirement": 2
+          },
+          "WAIT": {
+            "L": 0,
+            "U": 0,
+            "reason": "reveal arrives after first branch deadline"
+          }
+        }
+      },
+      "depth": 2,
+      "fresh_exact": {
+        "actions": {
+          "QUERY_A": false,
+          "QUERY_G0_0": false,
+          "QUERY_G0_1": false,
+          "QUERY_G1_0": false,
+          "QUERY_G1_1": false,
+          "QUERY_G2_0": false,
+          "QUERY_G2_1": false,
+          "QUERY_G3_0": false,
+          "QUERY_G3_1": false,
+          "QUERY_G4_0": false,
+          "QUERY_G4_1": false,
+          "QUERY_G5_0": false,
+          "QUERY_G5_1": false,
+          "QUERY_G6_0": false,
+          "QUERY_G6_1": false,
+          "QUERY_G7_0": false,
+          "QUERY_G7_1": false,
+          "QUERY_H": true,
+          "WAIT": false
+        },
+        "metrics": {
+          "action_steps": 510,
+          "expanded": 34,
+          "memo_hits": 264,
+          "observation_branches": 26,
+          "recursive_calls": 555,
+          "wall_s": 0.0016074190025392454
+        }
+      },
+      "persistent_exact": {
+        "actions": {
+          "QUERY_A": false,
+          "QUERY_G0_0": false,
+          "QUERY_G0_1": false,
+          "QUERY_G1_0": false,
+          "QUERY_G1_1": false,
+          "QUERY_G2_0": false,
+          "QUERY_G2_1": false,
+          "QUERY_G3_0": false,
+          "QUERY_G3_1": false,
+          "QUERY_G4_0": false,
+          "QUERY_G4_1": false,
+          "QUERY_G5_0": false,
+          "QUERY_G5_1": false,
+          "QUERY_G6_0": false,
+          "QUERY_G6_1": false,
+          "QUERY_G7_0": false,
+          "QUERY_G7_1": false,
+          "QUERY_H": true,
+          "WAIT": false
+        },
+        "memo_entries": 80,
+        "metrics": {
+          "action_steps": 206,
+          "expanded": 18,
+          "frontier_wall_s": 0.0006375049997586757,
+          "memo_hits": 155,
+          "observation_branches": 10,
+          "recursive_calls": 235,
+          "wall_s": 0.0005725300015910761
+        }
+      },
+      "root_action_count": 19,
+      "static_union_reserve": {
+        "false_negative": true,
+        "query_h_declared_feasible": false,
+        "remaining_budget_after_h": 2,
+        "union_future_goal_count": 16
+      }
+    },
+    {
+      "branches": 8,
+      "budget": 4,
+      "compute": {
+        "conditional_certificate_steps": 24,
+        "conditional_over_fresh_expansion_proxy": 0.48,
+        "conditional_over_persistent_expansion_proxy": 0.9230769230769231,
+        "fresh_expanded": 50,
+        "persistent_expanded": 26
+      },
+      "conditional_frontier": {
+        "actions": {
+          "QUERY_A": false,
+          "QUERY_G0_0": false,
+          "QUERY_G0_1": false,
+          "QUERY_G0_2": false,
+          "QUERY_G1_0": false,
+          "QUERY_G1_1": false,
+          "QUERY_G1_2": false,
+          "QUERY_G2_0": false,
+          "QUERY_G2_1": false,
+          "QUERY_G2_2": false,
+          "QUERY_G3_0": false,
+          "QUERY_G3_1": false,
+          "QUERY_G3_2": false,
+          "QUERY_G4_0": false,
+          "QUERY_G4_1": false,
+          "QUERY_G4_2": false,
+          "QUERY_G5_0": false,
+          "QUERY_G5_1": false,
+          "QUERY_G5_2": false,
+          "QUERY_G6_0": false,
+          "QUERY_G6_1": false,
+          "QUERY_G6_2": false,
+          "QUERY_G7_0": false,
+          "QUERY_G7_1": false,
+          "QUERY_G7_2": false,
+          "QUERY_H": true,
+          "WAIT": false
+        },
+        "metrics": {
+          "branch_certificate_steps": 24,
+          "exact_fallback_calls": 0,
+          "root_actions_classified": 27
+        },
+        "reasons": {
+          "QUERY_A": {
+            "L": 0,
+            "U": 0,
+            "reason": "insufficient budget for H plus branch chain"
+          },
+          "QUERY_G0_0": {
+            "L": 0,
+            "U": 0,
+            "reason": "insufficient budget for H plus branch chain"
+          },
+          "QUERY_G0_1": {
+            "L": 0,
+            "U": 0,
+            "reason": "insufficient budget for H plus branch chain"
+          },
+          "QUERY_G0_2": {
+            "L": 0,
+            "U": 0,
+            "reason": "insufficient budget for H plus branch chain"
+          },
+          "QUERY_G1_0": {
+            "L": 0,
+            "U": 0,
+            "reason": "insufficient budget for H plus branch chain"
+          },
+          "QUERY_G1_1": {
+            "L": 0,
+            "U": 0,
+            "reason": "insufficient budget for H plus branch chain"
+          },
+          "QUERY_G1_2": {
+            "L": 0,
+            "U": 0,
+            "reason": "insufficient budget for H plus branch chain"
+          },
+          "QUERY_G2_0": {
+            "L": 0,
+            "U": 0,
+            "reason": "insufficient budget for H plus branch chain"
+          },
+          "QUERY_G2_1": {
+            "L": 0,
+            "U": 0,
+            "reason": "insufficient budget for H plus branch chain"
+          },
+          "QUERY_G2_2": {
+            "L": 0,
+            "U": 0,
+            "reason": "insufficient budget for H plus branch chain"
+          },
+          "QUERY_G3_0": {
+            "L": 0,
+            "U": 0,
+            "reason": "insufficient budget for H plus branch chain"
+          },
+          "QUERY_G3_1": {
+            "L": 0,
+            "U": 0,
+            "reason": "insufficient budget for H plus branch chain"
+          },
+          "QUERY_G3_2": {
+            "L": 0,
+            "U": 0,
+            "reason": "insufficient budget for H plus branch chain"
+          },
+          "QUERY_G4_0": {
+            "L": 0,
+            "U": 0,
+            "reason": "insufficient budget for H plus branch chain"
+          },
+          "QUERY_G4_1": {
+            "L": 0,
+            "U": 0,
+            "reason": "insufficient budget for H plus branch chain"
+          },
+          "QUERY_G4_2": {
+            "L": 0,
+            "U": 0,
+            "reason": "insufficient budget for H plus branch chain"
+          },
+          "QUERY_G5_0": {
+            "L": 0,
+            "U": 0,
+            "reason": "insufficient budget for H plus branch chain"
+          },
+          "QUERY_G5_1": {
+            "L": 0,
+            "U": 0,
+            "reason": "insufficient budget for H plus branch chain"
+          },
+          "QUERY_G5_2": {
+            "L": 0,
+            "U": 0,
+            "reason": "insufficient budget for H plus branch chain"
+          },
+          "QUERY_G6_0": {
+            "L": 0,
+            "U": 0,
+            "reason": "insufficient budget for H plus branch chain"
+          },
+          "QUERY_G6_1": {
+            "L": 0,
+            "U": 0,
+            "reason": "insufficient budget for H plus branch chain"
+          },
+          "QUERY_G6_2": {
+            "L": 0,
+            "U": 0,
+            "reason": "insufficient budget for H plus branch chain"
+          },
+          "QUERY_G7_0": {
+            "L": 0,
+            "U": 0,
+            "reason": "insufficient budget for H plus branch chain"
+          },
+          "QUERY_G7_1": {
+            "L": 0,
+            "U": 0,
+            "reason": "insufficient budget for H plus branch chain"
+          },
+          "QUERY_G7_2": {
+            "L": 0,
+            "U": 0,
+            "reason": "insufficient budget for H plus branch chain"
+          },
+          "QUERY_H": {
+            "L": 1,
+            "U": 1,
+            "certificate": {
+              "H=0": [
+                "QUERY_G0_0",
+                "QUERY_G0_1",
+                "QUERY_G0_2"
+              ],
+              "H=1": [
+                "QUERY_G1_0",
+                "QUERY_G1_1",
+                "QUERY_G1_2"
+              ],
+              "H=2": [
+                "QUERY_G2_0",
+                "QUERY_G2_1",
+                "QUERY_G2_2"
+              ],
+              "H=3": [
+                "QUERY_G3_0",
+                "QUERY_G3_1",
+                "QUERY_G3_2"
+              ],
+              "H=4": [
+                "QUERY_G4_0",
+                "QUERY_G4_1",
+                "QUERY_G4_2"
+              ],
+              "H=5": [
+                "QUERY_G5_0",
+                "QUERY_G5_1",
+                "QUERY_G5_2"
+              ],
+              "H=6": [
+                "QUERY_G6_0",
+                "QUERY_G6_1",
+                "QUERY_G6_2"
+              ],
+              "H=7": [
+                "QUERY_G7_0",
+                "QUERY_G7_1",
+                "QUERY_G7_2"
+              ]
+            },
+            "remaining_budget": 3,
+            "worst_branch_query_requirement": 3
+          },
+          "WAIT": {
+            "L": 0,
+            "U": 0,
+            "reason": "reveal arrives after first branch deadline"
+          }
+        }
+      },
+      "depth": 3,
+      "fresh_exact": {
+        "actions": {
+          "QUERY_A": false,
+          "QUERY_G0_0": false,
+          "QUERY_G0_1": false,
+          "QUERY_G0_2": false,
+          "QUERY_G1_0": false,
+          "QUERY_G1_1": false,
+          "QUERY_G1_2": false,
+          "QUERY_G2_0": false,
+          "QUERY_G2_1": false,
+          "QUERY_G2_2": false,
+          "QUERY_G3_0": false,
+          "QUERY_G3_1": false,
+          "QUERY_G3_2": false,
+          "QUERY_G4_0": false,
+          "QUERY_G4_1": false,
+          "QUERY_G4_2": false,
+          "QUERY_G5_0": false,
+          "QUERY_G5_1": false,
+          "QUERY_G5_2": false,
+          "QUERY_G6_0": false,
+          "QUERY_G6_1": false,
+          "QUERY_G6_2": false,
+          "QUERY_G7_0": false,
+          "QUERY_G7_1": false,
+          "QUERY_G7_2": false,
+          "QUERY_H": true,
+          "WAIT": false
+        },
+        "metrics": {
+          "action_steps": 1050,
+          "expanded": 50,
+          "memo_hits": 692,
+          "observation_branches": 34,
+          "recursive_calls": 1111,
+          "wall_s": 0.00688878700202622
+        }
+      },
+      "persistent_exact": {
+        "actions": {
+          "QUERY_A": false,
+          "QUERY_G0_0": false,
+          "QUERY_G0_1": false,
+          "QUERY_G0_2": false,
+          "QUERY_G1_0": false,
+          "QUERY_G1_1": false,
+          "QUERY_G1_2": false,
+          "QUERY_G2_0": false,
+          "QUERY_G2_1": false,
+          "QUERY_G2_2": false,
+          "QUERY_G3_0": false,
+          "QUERY_G3_1": false,
+          "QUERY_G3_2": false,
+          "QUERY_G4_0": false,
+          "QUERY_G4_1": false,
+          "QUERY_G4_2": false,
+          "QUERY_G5_0": false,
+          "QUERY_G5_1": false,
+          "QUERY_G5_2": false,
+          "QUERY_G6_0": false,
+          "QUERY_G6_1": false,
+          "QUERY_G6_2": false,
+          "QUERY_G7_0": false,
+          "QUERY_G7_1": false,
+          "QUERY_G7_2": false,
+          "QUERY_H": true,
+          "WAIT": false
+        },
+        "memo_entries": 104,
+        "metrics": {
+          "action_steps": 402,
+          "expanded": 26,
+          "frontier_wall_s": 0.000985999999102205,
+          "memo_hits": 335,
+          "observation_branches": 10,
+          "recursive_calls": 439,
+          "wall_s": 0.0008972590039775241
+        }
+      },
+      "root_action_count": 27,
+      "static_union_reserve": {
+        "false_negative": true,
+        "query_h_declared_feasible": false,
+        "remaining_budget_after_h": 3,
+        "union_future_goal_count": 24
+      }
+    },
+    {
+      "branches": 8,
+      "budget": 5,
+      "compute": {
+        "conditional_certificate_steps": 32,
+        "conditional_over_fresh_expansion_proxy": 0.48484848484848486,
+        "conditional_over_persistent_expansion_proxy": 0.9411764705882353,
+        "fresh_expanded": 66,
+        "persistent_expanded": 34
+      },
+      "conditional_frontier": {
+        "actions": {
+          "QUERY_A": false,
+          "QUERY_G0_0": false,
+          "QUERY_G0_1": false,
+          "QUERY_G0_2": false,
+          "QUERY_G0_3": false,
+          "QUERY_G1_0": false,
+          "QUERY_G1_1": false,
+          "QUERY_G1_2": false,
+          "QUERY_G1_3": false,
+          "QUERY_G2_0": false,
+          "QUERY_G2_1": false,
+          "QUERY_G2_2": false,
+          "QUERY_G2_3": false,
+          "QUERY_G3_0": false,
+          "QUERY_G3_1": false,
+          "QUERY_G3_2": false,
+          "QUERY_G3_3": false,
+          "QUERY_G4_0": false,
+          "QUERY_G4_1": false,
+          "QUERY_G4_2": false,
+          "QUERY_G4_3": false,
+          "QUERY_G5_0": false,
+          "QUERY_G5_1": false,
+          "QUERY_G5_2": false,
+          "QUERY_G5_3": false,
+          "QUERY_G6_0": false,
+          "QUERY_G6_1": false,
+          "QUERY_G6_2": false,
+          "QUERY_G6_3": false,
+          "QUERY_G7_0": false,
+          "QUERY_G7_1": false,
+          "QUERY_G7_2": false,
+          "QUERY_G7_3": false,
+          "QUERY_H": true,
+          "WAIT": false
+        },
+        "metrics": {
+          "branch_certificate_steps": 32,
+          "exact_fallback_calls": 0,
+          "root_actions_classified": 35
+        },
+        "reasons": {
+          "QUERY_A": {
+            "L": 0,
+            "U": 0,
+            "reason": "insufficient budget for H plus branch chain"
+          },
+          "QUERY_G0_0": {
+            "L": 0,
+            "U": 0,
+            "reason": "insufficient budget for H plus branch chain"
+          },
+          "QUERY_G0_1": {
+            "L": 0,
+            "U": 0,
+            "reason": "insufficient budget for H plus branch chain"
+          },
+          "QUERY_G0_2": {
+            "L": 0,
+            "U": 0,
+            "reason": "insufficient budget for H plus branch chain"
+          },
+          "QUERY_G0_3": {
+            "L": 0,
+            "U": 0,
+            "reason": "insufficient budget for H plus branch chain"
+          },
+          "QUERY_G1_0": {
+            "L": 0,
+            "U": 0,
+            "reason": "insufficient budget for H plus branch chain"
+          },
+          "QUERY_G1_1": {
+            "L": 0,
+            "U": 0,
+            "reason": "insufficient budget for H plus branch chain"
+          },
+          "QUERY_G1_2": {
+            "L": 0,
+            "U": 0,
+            "reason": "insufficient budget for H plus branch chain"
+          },
+          "QUERY_G1_3": {
+            "L": 0,
+            "U": 0,
+            "reason": "insufficient budget for H plus branch chain"
+          },
+          "QUERY_G2_0": {
+            "L": 0,
+            "U": 0,
+            "reason": "insufficient budget for H plus branch chain"
+          },
+          "QUERY_G2_1": {
+            "L": 0,
+            "U": 0,
+            "reason": "insufficient budget for H plus branch chain"
+          },
+          "QUERY_G2_2": {
+            "L": 0,
+            "U": 0,
+            "reason": "insufficient budget for H plus branch chain"
+          },
+          "QUERY_G2_3": {
+            "L": 0,
+            "U": 0,
+            "reason": "insufficient budget for H plus branch chain"
+          },
+          "QUERY_G3_0": {
+            "L": 0,
+            "U": 0,
+            "reason": "insufficient budget for H plus branch chain"
+          },
+          "QUERY_G3_1": {
+            "L": 0,
+            "U": 0,
+            "reason": "insufficient budget for H plus branch chain"
+          },
+          "QUERY_G3_2": {
+            "L": 0,
+            "U": 0,
+            "reason": "insufficient budget for H plus branch chain"
+          },
+          "QUERY_G3_3": {
+            "L": 0,
+            "U": 0,
+            "reason": "insufficient budget for H plus branch chain"
+          },
+          "QUERY_G4_0": {
+            "L": 0,
+            "U": 0,
+            "reason": "insufficient budget for H plus branch chain"
+          },
+          "QUERY_G4_1": {
+            "L": 0,
+            "U": 0,
+            "reason": "insufficient budget for H plus branch chain"
+          },
+          "QUERY_G4_2": {
+            "L": 0,
+            "U": 0,
+            "reason": "insufficient budget for H plus branch chain"
+          },
+          "QUERY_G4_3": {
+            "L": 0,
+            "U": 0,
+            "reason": "insufficient budget for H plus branch chain"
+          },
+          "QUERY_G5_0": {
+            "L": 0,
+            "U": 0,
+            "reason": "insufficient budget for H plus branch chain"
+          },
+          "QUERY_G5_1": {
+            "L": 0,
+            "U": 0,
+            "reason": "insufficient budget for H plus branch chain"
+          },
+          "QUERY_G5_2": {
+            "L": 0,
+            "U": 0,
+            "reason": "insufficient budget for H plus branch chain"
+          },
+          "QUERY_G5_3": {
+            "L": 0,
+            "U": 0,
+            "reason": "insufficient budget for H plus branch chain"
+          },
+          "QUERY_G6_0": {
+            "L": 0,
+            "U": 0,
+            "reason": "insufficient budget for H plus branch chain"
+          },
+          "QUERY_G6_1": {
+            "L": 0,
+            "U": 0,
+            "reason": "insufficient budget for H plus branch chain"
+          },
+          "QUERY_G6_2": {
+            "L": 0,
+            "U": 0,
+            "reason": "insufficient budget for H plus branch chain"
+          },
+          "QUERY_G6_3": {
+            "L": 0,
+            "U": 0,
+            "reason": "insufficient budget for H plus branch chain"
+          },
+          "QUERY_G7_0": {
+            "L": 0,
+            "U": 0,
+            "reason": "insufficient budget for H plus branch chain"
+          },
+          "QUERY_G7_1": {
+            "L": 0,
+            "U": 0,
+            "reason": "insufficient budget for H plus branch chain"
+          },
+          "QUERY_G7_2": {
+            "L": 0,
+            "U": 0,
+            "reason": "insufficient budget for H plus branch chain"
+          },
+          "QUERY_G7_3": {
+            "L": 0,
+            "U": 0,
+            "reason": "insufficient budget for H plus branch chain"
+          },
+          "QUERY_H": {
+            "L": 1,
+            "U": 1,
+            "certificate": {
+              "H=0": [
+                "QUERY_G0_0",
+                "QUERY_G0_1",
+                "QUERY_G0_2",
+                "QUERY_G0_3"
+              ],
+              "H=1": [
+                "QUERY_G1_0",
+                "QUERY_G1_1",
+                "QUERY_G1_2",
+                "QUERY_G1_3"
+              ],
+              "H=2": [
+                "QUERY_G2_0",
+                "QUERY_G2_1",
+                "QUERY_G2_2",
+                "QUERY_G2_3"
+              ],
+              "H=3": [
+                "QUERY_G3_0",
+                "QUERY_G3_1",
+                "QUERY_G3_2",
+                "QUERY_G3_3"
+              ],
+              "H=4": [
+                "QUERY_G4_0",
+                "QUERY_G4_1",
+                "QUERY_G4_2",
+                "QUERY_G4_3"
+              ],
+              "H=5": [
+                "QUERY_G5_0",
+                "QUERY_G5_1",
+                "QUERY_G5_2",
+                "QUERY_G5_3"
+              ],
+              "H=6": [
+                "QUERY_G6_0",
+                "QUERY_G6_1",
+                "QUERY_G6_2",
+                "QUERY_G6_3"
+              ],
+              "H=7": [
+                "QUERY_G7_0",
+                "QUERY_G7_1",
+                "QUERY_G7_2",
+                "QUERY_G7_3"
+              ]
+            },
+            "remaining_budget": 4,
+            "worst_branch_query_requirement": 4
+          },
+          "WAIT": {
+            "L": 0,
+            "U": 0,
+            "reason": "reveal arrives after first branch deadline"
+          }
+        }
+      },
+      "depth": 4,
+      "fresh_exact": {
+        "actions": {
+          "QUERY_A": false,
+          "QUERY_G0_0": false,
+          "QUERY_G0_1": false,
+          "QUERY_G0_2": false,
+          "QUERY_G0_3": false,
+          "QUERY_G1_0": false,
+          "QUERY_G1_1": false,
+          "QUERY_G1_2": false,
+          "QUERY_G1_3": false,
+          "QUERY_G2_0": false,
+          "QUERY_G2_1": false,
+          "QUERY_G2_2": false,
+          "QUERY_G2_3": false,
+          "QUERY_G3_0": false,
+          "QUERY_G3_1": false,
+          "QUERY_G3_2": false,
+          "QUERY_G3_3": false,
+          "QUERY_G4_0": false,
+          "QUERY_G4_1": false,
+          "QUERY_G4_2": false,
+          "QUERY_G4_3": false,
+          "QUERY_G5_0": false,
+          "QUERY_G5_1": false,
+          "QUERY_G5_2": false,
+          "QUERY_G5_3": false,
+          "QUERY_G6_0": false,
+          "QUERY_G6_1": false,
+          "QUERY_G6_2": false,
+          "QUERY_G6_3": false,
+          "QUERY_G7_0": false,
+          "QUERY_G7_1": false,
+          "QUERY_G7_2": false,
+          "QUERY_G7_3": false,
+          "QUERY_H": true,
+          "WAIT": false
+        },
+        "metrics": {
+          "action_steps": 1782,
+          "expanded": 66,
+          "memo_hits": 1312,
+          "observation_branches": 42,
+          "recursive_calls": 1859,
+          "wall_s": 0.007055629004753428
+        }
+      },
+      "persistent_exact": {
+        "actions": {
+          "QUERY_A": false,
+          "QUERY_G0_0": false,
+          "QUERY_G0_1": false,
+          "QUERY_G0_2": false,
+          "QUERY_G0_3": false,
+          "QUERY_G1_0": false,
+          "QUERY_G1_1": false,
+          "QUERY_G1_2": false,
+          "QUERY_G1_3": false,
+          "QUERY_G2_0": false,
+          "QUERY_G2_1": false,
+          "QUERY_G2_2": false,
+          "QUERY_G2_3": false,
+          "QUERY_G3_0": false,
+          "QUERY_G3_1": false,
+          "QUERY_G3_2": false,
+          "QUERY_G3_3": false,
+          "QUERY_G4_0": false,
+          "QUERY_G4_1": false,
+          "QUERY_G4_2": false,
+          "QUERY_G4_3": false,
+          "QUERY_G5_0": false,
+          "QUERY_G5_1": false,
+          "QUERY_G5_2": false,
+          "QUERY_G5_3": false,
+          "QUERY_G6_0": false,
+          "QUERY_G6_1": false,
+          "QUERY_G6_2": false,
+          "QUERY_G6_3": false,
+          "QUERY_G7_0": false,
+          "QUERY_G7_1": false,
+          "QUERY_G7_2": false,
+          "QUERY_G7_3": false,
+          "QUERY_H": true,
+          "WAIT": false
+        },
+        "memo_entries": 128,
+        "metrics": {
+          "action_steps": 662,
+          "expanded": 34,
+          "frontier_wall_s": 0.0015711680007370887,
+          "memo_hits": 579,
+          "observation_branches": 10,
+          "recursive_calls": 707,
+          "wall_s": 0.0014477540044026682
+        }
+      },
+      "root_action_count": 35,
+      "static_union_reserve": {
+        "false_negative": true,
+        "query_h_declared_feasible": false,
+        "remaining_budget_after_h": 4,
+        "union_future_goal_count": 32
+      }
+    },
+    {
+      "branches": 16,
+      "budget": 2,
+      "compute": {
+        "conditional_certificate_steps": 16,
+        "conditional_over_fresh_expansion_proxy": 0.47058823529411764,
+        "conditional_over_persistent_expansion_proxy": 0.8888888888888888,
+        "fresh_expanded": 34,
+        "persistent_expanded": 18
+      },
+      "conditional_frontier": {
+        "actions": {
+          "QUERY_A": false,
+          "QUERY_G0_0": false,
+          "QUERY_G10_0": false,
+          "QUERY_G11_0": false,
+          "QUERY_G12_0": false,
+          "QUERY_G13_0": false,
+          "QUERY_G14_0": false,
+          "QUERY_G15_0": false,
+          "QUERY_G1_0": false,
+          "QUERY_G2_0": false,
+          "QUERY_G3_0": false,
+          "QUERY_G4_0": false,
+          "QUERY_G5_0": false,
+          "QUERY_G6_0": false,
+          "QUERY_G7_0": false,
+          "QUERY_G8_0": false,
+          "QUERY_G9_0": false,
+          "QUERY_H": true,
+          "WAIT": false
+        },
+        "metrics": {
+          "branch_certificate_steps": 16,
+          "exact_fallback_calls": 0,
+          "root_actions_classified": 19
+        },
+        "reasons": {
+          "QUERY_A": {
+            "L": 0,
+            "U": 0,
+            "reason": "insufficient budget for H plus branch chain"
+          },
+          "QUERY_G0_0": {
+            "L": 0,
+            "U": 0,
+            "reason": "insufficient budget for H plus branch chain"
+          },
+          "QUERY_G10_0": {
+            "L": 0,
+            "U": 0,
+            "reason": "insufficient budget for H plus branch chain"
+          },
+          "QUERY_G11_0": {
+            "L": 0,
+            "U": 0,
+            "reason": "insufficient budget for H plus branch chain"
+          },
+          "QUERY_G12_0": {
+            "L": 0,
+            "U": 0,
+            "reason": "insufficient budget for H plus branch chain"
+          },
+          "QUERY_G13_0": {
+            "L": 0,
+            "U": 0,
+            "reason": "insufficient budget for H plus branch chain"
+          },
+          "QUERY_G14_0": {
+            "L": 0,
+            "U": 0,
+            "reason": "insufficient budget for H plus branch chain"
+          },
+          "QUERY_G15_0": {
+            "L": 0,
+            "U": 0,
+            "reason": "insufficient budget for H plus branch chain"
+          },
+          "QUERY_G1_0": {
+            "L": 0,
+            "U": 0,
+            "reason": "insufficient budget for H plus branch chain"
+          },
+          "QUERY_G2_0": {
+            "L": 0,
+            "U": 0,
+            "reason": "insufficient budget for H plus branch chain"
+          },
+          "QUERY_G3_0": {
+            "L": 0,
+            "U": 0,
+            "reason": "insufficient budget for H plus branch chain"
+          },
+          "QUERY_G4_0": {
+            "L": 0,
+            "U": 0,
+            "reason": "insufficient budget for H plus branch chain"
+          },
+          "QUERY_G5_0": {
+            "L": 0,
+            "U": 0,
+            "reason": "insufficient budget for H plus branch chain"
+          },
+          "QUERY_G6_0": {
+            "L": 0,
+            "U": 0,
+            "reason": "insufficient budget for H plus branch chain"
+          },
+          "QUERY_G7_0": {
+            "L": 0,
+            "U": 0,
+            "reason": "insufficient budget for H plus branch chain"
+          },
+          "QUERY_G8_0": {
+            "L": 0,
+            "U": 0,
+            "reason": "insufficient budget for H plus branch chain"
+          },
+          "QUERY_G9_0": {
+            "L": 0,
+            "U": 0,
+            "reason": "insufficient budget for H plus branch chain"
+          },
+          "QUERY_H": {
+            "L": 1,
+            "U": 1,
+            "certificate": {
+              "H=0": [
+                "QUERY_G0_0"
+              ],
+              "H=1": [
+                "QUERY_G1_0"
+              ],
+              "H=10": [
+                "QUERY_G10_0"
+              ],
+              "H=11": [
+                "QUERY_G11_0"
+              ],
+              "H=12": [
+                "QUERY_G12_0"
+              ],
+              "H=13": [
+                "QUERY_G13_0"
+              ],
+              "H=14": [
+                "QUERY_G14_0"
+              ],
+              "H=15": [
+                "QUERY_G15_0"
+              ],
+              "H=2": [
+                "QUERY_G2_0"
+              ],
+              "H=3": [
+                "QUERY_G3_0"
+              ],
+              "H=4": [
+                "QUERY_G4_0"
+              ],
+              "H=5": [
+                "QUERY_G5_0"
+              ],
+              "H=6": [
+                "QUERY_G6_0"
+              ],
+              "H=7": [
+                "QUERY_G7_0"
+              ],
+              "H=8": [
+                "QUERY_G8_0"
+              ],
+              "H=9": [
+                "QUERY_G9_0"
+              ]
+            },
+            "remaining_budget": 1,
+            "worst_branch_query_requirement": 1
+          },
+          "WAIT": {
+            "L": 0,
+            "U": 0,
+            "reason": "reveal arrives after first branch deadline"
+          }
+        }
+      },
+      "depth": 1,
+      "fresh_exact": {
+        "actions": {
+          "QUERY_A": false,
+          "QUERY_G0_0": false,
+          "QUERY_G10_0": false,
+          "QUERY_G11_0": false,
+          "QUERY_G12_0": false,
+          "QUERY_G13_0": false,
+          "QUERY_G14_0": false,
+          "QUERY_G15_0": false,
+          "QUERY_G1_0": false,
+          "QUERY_G2_0": false,
+          "QUERY_G3_0": false,
+          "QUERY_G4_0": false,
+          "QUERY_G5_0": false,
+          "QUERY_G6_0": false,
+          "QUERY_G7_0": false,
+          "QUERY_G8_0": false,
+          "QUERY_G9_0": false,
+          "QUERY_H": true,
+          "WAIT": false
+        },
+        "metrics": {
+          "action_steps": 510,
+          "expanded": 34,
+          "memo_hits": 120,
+          "observation_branches": 34,
+          "recursive_calls": 563,
+          "wall_s": 0.0019847519979521167
+        }
+      },
+      "persistent_exact": {
+        "actions": {
+          "QUERY_A": false,
+          "QUERY_G0_0": false,
+          "QUERY_G10_0": false,
+          "QUERY_G11_0": false,
+          "QUERY_G12_0": false,
+          "QUERY_G13_0": false,
+          "QUERY_G14_0": false,
+          "QUERY_G15_0": false,
+          "QUERY_G1_0": false,
+          "QUERY_G2_0": false,
+          "QUERY_G3_0": false,
+          "QUERY_G4_0": false,
+          "QUERY_G5_0": false,
+          "QUERY_G6_0": false,
+          "QUERY_G7_0": false,
+          "QUERY_G8_0": false,
+          "QUERY_G9_0": false,
+          "QUERY_H": true,
+          "WAIT": false
+        },
+        "memo_entries": 104,
+        "metrics": {
+          "action_steps": 206,
+          "expanded": 18,
+          "frontier_wall_s": 0.0004926809997414239,
+          "memo_hits": 139,
+          "observation_branches": 18,
+          "recursive_calls": 243,
+          "wall_s": 0.0004288220006856136
+        }
+      },
+      "root_action_count": 19,
+      "static_union_reserve": {
+        "false_negative": true,
+        "query_h_declared_feasible": false,
+        "remaining_budget_after_h": 1,
+        "union_future_goal_count": 16
+      }
+    },
+    {
+      "branches": 16,
+      "budget": 3,
+      "compute": {
+        "conditional_certificate_steps": 32,
+        "conditional_over_fresh_expansion_proxy": 0.48484848484848486,
+        "conditional_over_persistent_expansion_proxy": 0.9411764705882353,
+        "fresh_expanded": 66,
+        "persistent_expanded": 34
+      },
+      "conditional_frontier": {
+        "actions": {
+          "QUERY_A": false,
+          "QUERY_G0_0": false,
+          "QUERY_G0_1": false,
+          "QUERY_G10_0": false,
+          "QUERY_G10_1": false,
+          "QUERY_G11_0": false,
+          "QUERY_G11_1": false,
+          "QUERY_G12_0": false,
+          "QUERY_G12_1": false,
+          "QUERY_G13_0": false,
+          "QUERY_G13_1": false,
+          "QUERY_G14_0": false,
+          "QUERY_G14_1": false,
+          "QUERY_G15_0": false,
+          "QUERY_G15_1": false,
+          "QUERY_G1_0": false,
+          "QUERY_G1_1": false,
+          "QUERY_G2_0": false,
+          "QUERY_G2_1": false,
+          "QUERY_G3_0": false,
+          "QUERY_G3_1": false,
+          "QUERY_G4_0": false,
+          "QUERY_G4_1": false,
+          "QUERY_G5_0": false,
+          "QUERY_G5_1": false,
+          "QUERY_G6_0": false,
+          "QUERY_G6_1": false,
+          "QUERY_G7_0": false,
+          "QUERY_G7_1": false,
+          "QUERY_G8_0": false,
+          "QUERY_G8_1": false,
+          "QUERY_G9_0": false,
+          "QUERY_G9_1": false,
+          "QUERY_H": true,
+          "WAIT": false
+        },
+        "metrics": {
+          "branch_certificate_steps": 32,
+          "exact_fallback_calls": 0,
+          "root_actions_classified": 35
+        },
+        "reasons": {
+          "QUERY_A": {
+            "L": 0,
+            "U": 0,
+            "reason": "insufficient budget for H plus branch chain"
+          },
+          "QUERY_G0_0": {
+            "L": 0,
+            "U": 0,
+            "reason": "insufficient budget for H plus branch chain"
+          },
+          "QUERY_G0_1": {
+            "L": 0,
+            "U": 0,
+            "reason": "insufficient budget for H plus branch chain"
+          },
+          "QUERY_G10_0": {
+            "L": 0,
+            "U": 0,
+            "reason": "insufficient budget for H plus branch chain"
+          },
+          "QUERY_G10_1": {
+            "L": 0,
+            "U": 0,
+            "reason": "insufficient budget for H plus branch chain"
+          },
+          "QUERY_G11_0": {
+            "L": 0,
+            "U": 0,
+            "reason": "insufficient budget for H plus branch chain"
+          },
+          "QUERY_G11_1": {
+            "L": 0,
+            "U": 0,
+            "reason": "insufficient budget for H plus branch chain"
+          },
+          "QUERY_G12_0": {
+            "L": 0,
+            "U": 0,
+            "reason": "insufficient budget for H plus branch chain"
+          },
+          "QUERY_G12_1": {
+            "L": 0,
+            "U": 0,
+            "reason": "insufficient budget for H plus branch chain"
+          },
+          "QUERY_G13_0": {
+            "L": 0,
+            "U": 0,
+            "reason": "insufficient budget for H plus branch chain"
+          },
+          "QUERY_G13_1": {
+            "L": 0,
+            "U": 0,
+            "reason": "insufficient budget for H plus branch chain"
+          },
+          "QUERY_G14_0": {
+            "L": 0,
+            "U": 0,
+            "reason": "insufficient budget for H plus branch chain"
+          },
+          "QUERY_G14_1": {
+            "L": 0,
+            "U": 0,
+            "reason": "insufficient budget for H plus branch chain"
+          },
+          "QUERY_G15_0": {
+            "L": 0,
+            "U": 0,
+            "reason": "insufficient budget for H plus branch chain"
+          },
+          "QUERY_G15_1": {
+            "L": 0,
+            "U": 0,
+            "reason": "insufficient budget for H plus branch chain"
+          },
+          "QUERY_G1_0": {
+            "L": 0,
+            "U": 0,
+            "reason": "insufficient budget for H plus branch chain"
+          },
+          "QUERY_G1_1": {
+            "L": 0,
+            "U": 0,
+            "reason": "insufficient budget for H plus branch chain"
+          },
+          "QUERY_G2_0": {
+            "L": 0,
+            "U": 0,
+            "reason": "insufficient budget for H plus branch chain"
+          },
+          "QUERY_G2_1": {
+            "L": 0,
+            "U": 0,
+            "reason": "insufficient budget for H plus branch chain"
+          },
+          "QUERY_G3_0": {
+            "L": 0,
+            "U": 0,
+            "reason": "insufficient budget for H plus branch chain"
+          },
+          "QUERY_G3_1": {
+            "L": 0,
+            "U": 0,
+            "reason": "insufficient budget for H plus branch chain"
+          },
+          "QUERY_G4_0": {
+            "L": 0,
+            "U": 0,
+            "reason": "insufficient budget for H plus branch chain"
+          },
+          "QUERY_G4_1": {
+            "L": 0,
+            "U": 0,
+            "reason": "insufficient budget for H plus branch chain"
+          },
+          "QUERY_G5_0": {
+            "L": 0,
+            "U": 0,
+            "reason": "insufficient budget for H plus branch chain"
+          },
+          "QUERY_G5_1": {
+            "L": 0,
+            "U": 0,
+            "reason": "insufficient budget for H plus branch chain"
+          },
+          "QUERY_G6_0": {
+            "L": 0,
+            "U": 0,
+            "reason": "insufficient budget for H plus branch chain"
+          },
+          "QUERY_G6_1": {
+            "L": 0,
+            "U": 0,
+            "reason": "insufficient budget for H plus branch chain"
+          },
+          "QUERY_G7_0": {
+            "L": 0,
+            "U": 0,
+            "reason": "insufficient budget for H plus branch chain"
+          },
+          "QUERY_G7_1": {
+            "L": 0,
+            "U": 0,
+            "reason": "insufficient budget for H plus branch chain"
+          },
+          "QUERY_G8_0": {
+            "L": 0,
+            "U": 0,
+            "reason": "insufficient budget for H plus branch chain"
+          },
+          "QUERY_G8_1": {
+            "L": 0,
+            "U": 0,
+            "reason": "insufficient budget for H plus branch chain"
+          },
+          "QUERY_G9_0": {
+            "L": 0,
+            "U": 0,
+            "reason": "insufficient budget for H plus branch chain"
+          },
+          "QUERY_G9_1": {
+            "L": 0,
+            "U": 0,
+            "reason": "insufficient budget for H plus branch chain"
+          },
+          "QUERY_H": {
+            "L": 1,
+            "U": 1,
+            "certificate": {
+              "H=0": [
+                "QUERY_G0_0",
+                "QUERY_G0_1"
+              ],
+              "H=1": [
+                "QUERY_G1_0",
+                "QUERY_G1_1"
+              ],
+              "H=10": [
+                "QUERY_G10_0",
+                "QUERY_G10_1"
+              ],
+              "H=11": [
+                "QUERY_G11_0",
+                "QUERY_G11_1"
+              ],
+              "H=12": [
+                "QUERY_G12_0",
+                "QUERY_G12_1"
+              ],
+              "H=13": [
+                "QUERY_G13_0",
+                "QUERY_G13_1"
+              ],
+              "H=14": [
+                "QUERY_G14_0",
+                "QUERY_G14_1"
+              ],
+              "H=15": [
+                "QUERY_G15_0",
+                "QUERY_G15_1"
+              ],
+              "H=2": [
+                "QUERY_G2_0",
+                "QUERY_G2_1"
+              ],
+              "H=3": [
+                "QUERY_G3_0",
+                "QUERY_G3_1"
+              ],
+              "H=4": [
+                "QUERY_G4_0",
+                "QUERY_G4_1"
+              ],
+              "H=5": [
+                "QUERY_G5_0",
+                "QUERY_G5_1"
+              ],
+              "H=6": [
+                "QUERY_G6_0",
+                "QUERY_G6_1"
+              ],
+              "H=7": [
+                "QUERY_G7_0",
+                "QUERY_G7_1"
+              ],
+              "H=8": [
+                "QUERY_G8_0",
+                "QUERY_G8_1"
+              ],
+              "H=9": [
+                "QUERY_G9_0",
+                "QUERY_G9_1"
+              ]
+            },
+            "remaining_budget": 2,
+            "worst_branch_query_requirement": 2
+          },
+          "WAIT": {
+            "L": 0,
+            "U": 0,
+            "reason": "reveal arrives after first branch deadline"
+          }
+        }
+      },
+      "depth": 2,
+      "fresh_exact": {
+        "actions": {
+          "QUERY_A": false,
+          "QUERY_G0_0": false,
+          "QUERY_G0_1": false,
+          "QUERY_G10_0": false,
+          "QUERY_G10_1": false,
+          "QUERY_G11_0": false,
+          "QUERY_G11_1": false,
+          "QUERY_G12_0": false,
+          "QUERY_G12_1": false,
+          "QUERY_G13_0": false,
+          "QUERY_G13_1": false,
+          "QUERY_G14_0": false,
+          "QUERY_G14_1": false,
+          "QUERY_G15_0": false,
+          "QUERY_G15_1": false,
+          "QUERY_G1_0": false,
+          "QUERY_G1_1": false,
+          "QUERY_G2_0": false,
+          "QUERY_G2_1": false,
+          "QUERY_G3_0": false,
+          "QUERY_G3_1": false,
+          "QUERY_G4_0": false,
+          "QUERY_G4_1": false,
+          "QUERY_G5_0": false,
+          "QUERY_G5_1": false,
+          "QUERY_G6_0": false,
+          "QUERY_G6_1": false,
+          "QUERY_G7_0": false,
+          "QUERY_G7_1": false,
+          "QUERY_G8_0": false,
+          "QUERY_G8_1": false,
+          "QUERY_G9_0": false,
+          "QUERY_G9_1": false,
+          "QUERY_H": true,
+          "WAIT": false
+        },
+        "metrics": {
+          "action_steps": 1782,
+          "expanded": 66,
+          "memo_hits": 1040,
+          "observation_branches": 50,
+          "recursive_calls": 1867,
+          "wall_s": 0.007972222008902463
+        }
+      },
+      "persistent_exact": {
+        "actions": {
+          "QUERY_A": false,
+          "QUERY_G0_0": false,
+          "QUERY_G0_1": false,
+          "QUERY_G10_0": false,
+          "QUERY_G10_1": false,
+          "QUERY_G11_0": false,
+          "QUERY_G11_1": false,
+          "QUERY_G12_0": false,
+          "QUERY_G12_1": false,
+          "QUERY_G13_0": false,
+          "QUERY_G13_1": false,
+          "QUERY_G14_0": false,
+          "QUERY_G14_1": false,
+          "QUERY_G15_0": false,
+          "QUERY_G15_1": false,
+          "QUERY_G1_0": false,
+          "QUERY_G1_1": false,
+          "QUERY_G2_0": false,
+          "QUERY_G2_1": false,
+          "QUERY_G3_0": false,
+          "QUERY_G3_1": false,
+          "QUERY_G4_0": false,
+          "QUERY_G4_1": false,
+          "QUERY_G5_0": false,
+          "QUERY_G5_1": false,
+          "QUERY_G6_0": false,
+          "QUERY_G6_1": false,
+          "QUERY_G7_0": false,
+          "QUERY_G7_1": false,
+          "QUERY_G8_0": false,
+          "QUERY_G8_1": false,
+          "QUERY_G9_0": false,
+          "QUERY_G9_1": false,
+          "QUERY_H": true,
+          "WAIT": false
+        },
+        "memo_entries": 152,
+        "metrics": {
+          "action_steps": 662,
+          "expanded": 34,
+          "frontier_wall_s": 0.001692828000159352,
+          "memo_hits": 563,
+          "observation_branches": 18,
+          "recursive_calls": 715,
+          "wall_s": 0.001562829998874804
+        }
+      },
+      "root_action_count": 35,
+      "static_union_reserve": {
+        "false_negative": true,
+        "query_h_declared_feasible": false,
+        "remaining_budget_after_h": 2,
+        "union_future_goal_count": 32
+      }
+    },
+    {
+      "branches": 16,
+      "budget": 4,
+      "compute": {
+        "conditional_certificate_steps": 48,
+        "conditional_over_fresh_expansion_proxy": 0.4897959183673469,
+        "conditional_over_persistent_expansion_proxy": 0.96,
+        "fresh_expanded": 98,
+        "persistent_expanded": 50
+      },
+      "conditional_frontier": {
+        "actions": {
+          "QUERY_A": false,
+          "QUERY_G0_0": false,
+          "QUERY_G0_1": false,
+          "QUERY_G0_2": false,
+          "QUERY_G10_0": false,
+          "QUERY_G10_1": false,
+          "QUERY_G10_2": false,
+          "QUERY_G11_0": false,
+          "QUERY_G11_1": false,
+          "QUERY_G11_2": false,
+          "QUERY_G12_0": false,
+          "QUERY_G12_1": false,
+          "QUERY_G12_2": false,
+          "QUERY_G13_0": false,
+          "QUERY_G13_1": false,
+          "QUERY_G13_2": false,
+          "QUERY_G14_0": false,
+          "QUERY_G14_1": false,
+          "QUERY_G14_2": false,
+          "QUERY_G15_0": false,
+          "QUERY_G15_1": false,
+          "QUERY_G15_2": false,
+          "QUERY_G1_0": false,
+          "QUERY_G1_1": false,
+          "QUERY_G1_2": false,
+          "QUERY_G2_0": false,
+          "QUERY_G2_1": false,
+          "QUERY_G2_2": false,
+          "QUERY_G3_0": false,
+          "QUERY_G3_1": false,
+          "QUERY_G3_2": false,
+          "QUERY_G4_0": false,
+          "QUERY_G4_1": false,
+          "QUERY_G4_2": false,
+          "QUERY_G5_0": false,
+          "QUERY_G5_1": false,
+          "QUERY_G5_2": false,
+          "QUERY_G6_0": false,
+          "QUERY_G6_1": false,
+          "QUERY_G6_2": false,
+          "QUERY_G7_0": false,
+          "QUERY_G7_1": false,
+          "QUERY_G7_2": false,
+          "QUERY_G8_0": false,
+          "QUERY_G8_1": false,
+          "QUERY_G8_2": false,
+          "QUERY_G9_0": false,
+          "QUERY_G9_1": false,
+          "QUERY_G9_2": false,
+          "QUERY_H": true,
+          "WAIT": false
+        },
+        "metrics": {
+          "branch_certificate_steps": 48,
+          "exact_fallback_calls": 0,
+          "root_actions_classified": 51
+        },
+        "reasons": {
+          "QUERY_A": {
+            "L": 0,
+            "U": 0,
+            "reason": "insufficient budget for H plus branch chain"
+          },
+          "QUERY_G0_0": {
+            "L": 0,
+            "U": 0,
+            "reason": "insufficient budget for H plus branch chain"
+          },
+          "QUERY_G0_1": {
+            "L": 0,
+            "U": 0,
+            "reason": "insufficient budget for H plus branch chain"
+          },
+          "QUERY_G0_2": {
+            "L": 0,
+            "U": 0,
+            "reason": "insufficient budget for H plus branch chain"
+          },
+          "QUERY_G10_0": {
+            "L": 0,
+            "U": 0,
+            "reason": "insufficient budget for H plus branch chain"
+          },
+          "QUERY_G10_1": {
+            "L": 0,
+            "U": 0,
+            "reason": "insufficient budget for H plus branch chain"
+          },
+          "QUERY_G10_2": {
+            "L": 0,
+            "U": 0,
+            "reason": "insufficient budget for H plus branch chain"
+          },
+          "QUERY_G11_0": {
+            "L": 0,
+            "U": 0,
+            "reason": "insufficient budget for H plus branch chain"
+          },
+          "QUERY_G11_1": {
+            "L": 0,
+            "U": 0,
+            "reason": "insufficient budget for H plus branch chain"
+          },
+          "QUERY_G11_2": {
+            "L": 0,
+            "U": 0,
+            "reason": "insufficient budget for H plus branch chain"
+          },
+          "QUERY_G12_0": {
+            "L": 0,
+            "U": 0,
+            "reason": "insufficient budget for H plus branch chain"
+          },
+          "QUERY_G12_1": {
+            "L": 0,
+            "U": 0,
+            "reason": "insufficient budget for H plus branch chain"
+          },
+          "QUERY_G12_2": {
+            "L": 0,
+            "U": 0,
+            "reason": "insufficient budget for H plus branch chain"
+          },
+          "QUERY_G13_0": {
+            "L": 0,
+            "U": 0,
+            "reason": "insufficient budget for H plus branch chain"
+          },
+          "QUERY_G13_1": {
+            "L": 0,
+            "U": 0,
+            "reason": "insufficient budget for H plus branch chain"
+          },
+          "QUERY_G13_2": {
+            "L": 0,
+            "U": 0,
+            "reason": "insufficient budget for H plus branch chain"
+          },
+          "QUERY_G14_0": {
+            "L": 0,
+            "U": 0,
+            "reason": "insufficient budget for H plus branch chain"
+          },
+          "QUERY_G14_1": {
+            "L": 0,
+            "U": 0,
+            "reason": "insufficient budget for H plus branch chain"
+          },
+          "QUERY_G14_2": {
+            "L": 0,
+            "U": 0,
+            "reason": "insufficient budget for H plus branch chain"
+          },
+          "QUERY_G15_0": {
+            "L": 0,
+            "U": 0,
+            "reason": "insufficient budget for H plus branch chain"
+          },
+          "QUERY_G15_1": {
+            "L": 0,
+            "U": 0,
+            "reason": "insufficient budget for H plus branch chain"
+          },
+          "QUERY_G15_2": {
+            "L": 0,
+            "U": 0,
+            "reason": "insufficient budget for H plus branch chain"
+          },
+          "QUERY_G1_0": {
+            "L": 0,
+            "U": 0,
+            "reason": "insufficient budget for H plus branch chain"
+          },
+          "QUERY_G1_1": {
+            "L": 0,
+            "U": 0,
+            "reason": "insufficient budget for H plus branch chain"
+          },
+          "QUERY_G1_2": {
+            "L": 0,
+            "U": 0,
+            "reason": "insufficient budget for H plus branch chain"
+          },
+          "QUERY_G2_0": {
+            "L": 0,
+            "U": 0,
+            "reason": "insufficient budget for H plus branch chain"
+          },
+          "QUERY_G2_1": {
+            "L": 0,
+            "U": 0,
+            "reason": "insufficient budget for H plus branch chain"
+          },
+          "QUERY_G2_2": {
+            "L": 0,
+            "U": 0,
+            "reason": "insufficient budget for H plus branch chain"
+          },
+          "QUERY_G3_0": {
+            "L": 0,
+            "U": 0,
+            "reason": "insufficient budget for H plus branch chain"
+          },
+          "QUERY_G3_1": {
+            "L": 0,
+            "U": 0,
+            "reason": "insufficient budget for H plus branch chain"
+          },
+          "QUERY_G3_2": {
+            "L": 0,
+            "U": 0,
+            "reason": "insufficient budget for H plus branch chain"
+          },
+          "QUERY_G4_0": {
+            "L": 0,
+            "U": 0,
+            "reason": "insufficient budget for H plus branch chain"
+          },
+          "QUERY_G4_1": {
+            "L": 0,
+            "U": 0,
+            "reason": "insufficient budget for H plus branch chain"
+          },
+          "QUERY_G4_2": {
+            "L": 0,
+            "U": 0,
+            "reason": "insufficient budget for H plus branch chain"
+          },
+          "QUERY_G5_0": {
+            "L": 0,
+            "U": 0,
+            "reason": "insufficient budget for H plus branch chain"
+          },
+          "QUERY_G5_1": {
+            "L": 0,
+            "U": 0,
+            "reason": "insufficient budget for H plus branch chain"
+          },
+          "QUERY_G5_2": {
+            "L": 0,
+            "U": 0,
+            "reason": "insufficient budget for H plus branch chain"
+          },
+          "QUERY_G6_0": {
+            "L": 0,
+            "U": 0,
+            "reason": "insufficient budget for H plus branch chain"
+          },
+          "QUERY_G6_1": {
+            "L": 0,
+            "U": 0,
+            "reason": "insufficient budget for H plus branch chain"
+          },
+          "QUERY_G6_2": {
+            "L": 0,
+            "U": 0,
+            "reason": "insufficient budget for H plus branch chain"
+          },
+          "QUERY_G7_0": {
+            "L": 0,
+            "U": 0,
+            "reason": "insufficient budget for H plus branch chain"
+          },
+          "QUERY_G7_1": {
+            "L": 0,
+            "U": 0,
+            "reason": "insufficient budget for H plus branch chain"
+          },
+          "QUERY_G7_2": {
+            "L": 0,
+            "U": 0,
+            "reason": "insufficient budget for H plus branch chain"
+          },
+          "QUERY_G8_0": {
+            "L": 0,
+            "U": 0,
+            "reason": "insufficient budget for H plus branch chain"
+          },
+          "QUERY_G8_1": {
+            "L": 0,
+            "U": 0,
+            "reason": "insufficient budget for H plus branch chain"
+          },
+          "QUERY_G8_2": {
+            "L": 0,
+            "U": 0,
+            "reason": "insufficient budget for H plus branch chain"
+          },
+          "QUERY_G9_0": {
+            "L": 0,
+            "U": 0,
+            "reason": "insufficient budget for H plus branch chain"
+          },
+          "QUERY_G9_1": {
+            "L": 0,
+            "U": 0,
+            "reason": "insufficient budget for H plus branch chain"
+          },
+          "QUERY_G9_2": {
+            "L": 0,
+            "U": 0,
+            "reason": "insufficient budget for H plus branch chain"
+          },
+          "QUERY_H": {
+            "L": 1,
+            "U": 1,
+            "certificate": {
+              "H=0": [
+                "QUERY_G0_0",
+                "QUERY_G0_1",
+                "QUERY_G0_2"
+              ],
+              "H=1": [
+                "QUERY_G1_0",
+                "QUERY_G1_1",
+                "QUERY_G1_2"
+              ],
+              "H=10": [
+                "QUERY_G10_0",
+                "QUERY_G10_1",
+                "QUERY_G10_2"
+              ],
+              "H=11": [
+                "QUERY_G11_0",
+                "QUERY_G11_1",
+                "QUERY_G11_2"
+              ],
+              "H=12": [
+                "QUERY_G12_0",
+                "QUERY_G12_1",
+                "QUERY_G12_2"
+              ],
+              "H=13": [
+                "QUERY_G13_0",
+                "QUERY_G13_1",
+                "QUERY_G13_2"
+              ],
+              "H=14": [
+                "QUERY_G14_0",
+                "QUERY_G14_1",
+                "QUERY_G14_2"
+              ],
+              "H=15": [
+                "QUERY_G15_0",
+                "QUERY_G15_1",
+                "QUERY_G15_2"
+              ],
+              "H=2": [
+                "QUERY_G2_0",
+                "QUERY_G2_1",
+                "QUERY_G2_2"
+              ],
+              "H=3": [
+                "QUERY_G3_0",
+                "QUERY_G3_1",
+                "QUERY_G3_2"
+              ],
+              "H=4": [
+                "QUERY_G4_0",
+                "QUERY_G4_1",
+                "QUERY_G4_2"
+              ],
+              "H=5": [
+                "QUERY_G5_0",
+                "QUERY_G5_1",
+                "QUERY_G5_2"
+              ],
+              "H=6": [
+                "QUERY_G6_0",
+                "QUERY_G6_1",
+                "QUERY_G6_2"
+              ],
+              "H=7": [
+                "QUERY_G7_0",
+                "QUERY_G7_1",
+                "QUERY_G7_2"
+              ],
+              "H=8": [
+                "QUERY_G8_0",
+                "QUERY_G8_1",
+                "QUERY_G8_2"
+              ],
+              "H=9": [
+                "QUERY_G9_0",
+                "QUERY_G9_1",
+                "QUERY_G9_2"
+              ]
+            },
+            "remaining_budget": 3,
+            "worst_branch_query_requirement": 3
+          },
+          "WAIT": {
+            "L": 0,
+            "U": 0,
+            "reason": "reveal arrives after first branch deadline"
+          }
+        }
+      },
+      "depth": 3,
+      "fresh_exact": {
+        "actions": {
+          "QUERY_A": false,
+          "QUERY_G0_0": false,
+          "QUERY_G0_1": false,
+          "QUERY_G0_2": false,
+          "QUERY_G10_0": false,
+          "QUERY_G10_1": false,
+          "QUERY_G10_2": false,
+          "QUERY_G11_0": false,
+          "QUERY_G11_1": false,
+          "QUERY_G11_2": false,
+          "QUERY_G12_0": false,
+          "QUERY_G12_1": false,
+          "QUERY_G12_2": false,
+          "QUERY_G13_0": false,
+          "QUERY_G13_1": false,
+          "QUERY_G13_2": false,
+          "QUERY_G14_0": false,
+          "QUERY_G14_1": false,
+          "QUERY_G14_2": false,
+          "QUERY_G15_0": false,
+          "QUERY_G15_1": false,
+          "QUERY_G15_2": false,
+          "QUERY_G1_0": false,
+          "QUERY_G1_1": false,
+          "QUERY_G1_2": false,
+          "QUERY_G2_0": false,
+          "QUERY_G2_1": false,
+          "QUERY_G2_2": false,
+          "QUERY_G3_0": false,
+          "QUERY_G3_1": false,
+          "QUERY_G3_2": false,
+          "QUERY_G4_0": false,
+          "QUERY_G4_1": false,
+          "QUERY_G4_2": false,
+          "QUERY_G5_0": false,
+          "QUERY_G5_1": false,
+          "QUERY_G5_2": false,
+          "QUERY_G6_0": false,
+          "QUERY_G6_1": false,
+          "QUERY_G6_2": false,
+          "QUERY_G7_0": false,
+          "QUERY_G7_1": false,
+          "QUERY_G7_2": false,
+          "QUERY_G8_0": false,
+          "QUERY_G8_1": false,
+          "QUERY_G8_2": false,
+          "QUERY_G9_0": false,
+          "QUERY_G9_1": false,
+          "QUERY_G9_2": false,
+          "QUERY_H": true,
+          "WAIT": false
+        },
+        "metrics": {
+          "action_steps": 3822,
+          "expanded": 98,
+          "memo_hits": 2728,
+          "observation_branches": 66,
+          "recursive_calls": 3939,
+          "wall_s": 0.028477865003878833
+        }
+      },
+      "persistent_exact": {
+        "actions": {
+          "QUERY_A": false,
+          "QUERY_G0_0": false,
+          "QUERY_G0_1": false,
+          "QUERY_G0_2": false,
+          "QUERY_G10_0": false,
+          "QUERY_G10_1": false,
+          "QUERY_G10_2": false,
+          "QUERY_G11_0": false,
+          "QUERY_G11_1": false,
+          "QUERY_G11_2": false,
+          "QUERY_G12_0": false,
+          "QUERY_G12_1": false,
+          "QUERY_G12_2": false,
+          "QUERY_G13_0": false,
+          "QUERY_G13_1": false,
+          "QUERY_G13_2": false,
+          "QUERY_G14_0": false,
+          "QUERY_G14_1": false,
+          "QUERY_G14_2": false,
+          "QUERY_G15_0": false,
+          "QUERY_G15_1": false,
+          "QUERY_G15_2": false,
+          "QUERY_G1_0": false,
+          "QUERY_G1_1": false,
+          "QUERY_G1_2": false,
+          "QUERY_G2_0": false,
+          "QUERY_G2_1": false,
+          "QUERY_G2_2": false,
+          "QUERY_G3_0": false,
+          "QUERY_G3_1": false,
+          "QUERY_G3_2": false,
+          "QUERY_G4_0": false,
+          "QUERY_G4_1": false,
+          "QUERY_G4_2": false,
+          "QUERY_G5_0": false,
+          "QUERY_G5_1": false,
+          "QUERY_G5_2": false,
+          "QUERY_G6_0": false,
+          "QUERY_G6_1": false,
+          "QUERY_G6_2": false,
+          "QUERY_G7_0": false,
+          "QUERY_G7_1": false,
+          "QUERY_G7_2": false,
+          "QUERY_G8_0": false,
+          "QUERY_G8_1": false,
+          "QUERY_G8_2": false,
+          "QUERY_G9_0": false,
+          "QUERY_G9_1": false,
+          "QUERY_G9_2": false,
+          "QUERY_H": true,
+          "WAIT": false
+        },
+        "memo_entries": 200,
+        "metrics": {
+          "action_steps": 1374,
+          "expanded": 50,
+          "frontier_wall_s": 0.007651411999177071,
+          "memo_hits": 1243,
+          "observation_branches": 18,
+          "recursive_calls": 1443,
+          "wall_s": 0.0071947249980439665
+        }
+      },
+      "root_action_count": 51,
+      "static_union_reserve": {
+        "false_negative": true,
+        "query_h_declared_feasible": false,
+        "remaining_budget_after_h": 3,
+        "union_future_goal_count": 48
+      }
+    },
+    {
+      "branches": 16,
+      "budget": 5,
+      "compute": {
+        "conditional_certificate_steps": 64,
+        "conditional_over_fresh_expansion_proxy": 0.49230769230769234,
+        "conditional_over_persistent_expansion_proxy": 0.9696969696969697,
+        "fresh_expanded": 130,
+        "persistent_expanded": 66
+      },
+      "conditional_frontier": {
+        "actions": {
+          "QUERY_A": false,
+          "QUERY_G0_0": false,
+          "QUERY_G0_1": false,
+          "QUERY_G0_2": false,
+          "QUERY_G0_3": false,
+          "QUERY_G10_0": false,
+          "QUERY_G10_1": false,
+          "QUERY_G10_2": false,
+          "QUERY_G10_3": false,
+          "QUERY_G11_0": false,
+          "QUERY_G11_1": false,
+          "QUERY_G11_2": false,
+          "QUERY_G11_3": false,
+          "QUERY_G12_0": false,
+          "QUERY_G12_1": false,
+          "QUERY_G12_2": false,
+          "QUERY_G12_3": false,
+          "QUERY_G13_0": false,
+          "QUERY_G13_1": false,
+          "QUERY_G13_2": false,
+          "QUERY_G13_3": false,
+          "QUERY_G14_0": false,
+          "QUERY_G14_1": false,
+          "QUERY_G14_2": false,
+          "QUERY_G14_3": false,
+          "QUERY_G15_0": false,
+          "QUERY_G15_1": false,
+          "QUERY_G15_2": false,
+          "QUERY_G15_3": false,
+          "QUERY_G1_0": false,
+          "QUERY_G1_1": false,
+          "QUERY_G1_2": false,
+          "QUERY_G1_3": false,
+          "QUERY_G2_0": false,
+          "QUERY_G2_1": false,
+          "QUERY_G2_2": false,
+          "QUERY_G2_3": false,
+          "QUERY_G3_0": false,
+          "QUERY_G3_1": false,
+          "QUERY_G3_2": false,
+          "QUERY_G3_3": false,
+          "QUERY_G4_0": false,
+          "QUERY_G4_1": false,
+          "QUERY_G4_2": false,
+          "QUERY_G4_3": false,
+          "QUERY_G5_0": false,
+          "QUERY_G5_1": false,
+          "QUERY_G5_2": false,
+          "QUERY_G5_3": false,
+          "QUERY_G6_0": false,
+          "QUERY_G6_1": false,
+          "QUERY_G6_2": false,
+          "QUERY_G6_3": false,
+          "QUERY_G7_0": false,
+          "QUERY_G7_1": false,
+          "QUERY_G7_2": false,
+          "QUERY_G7_3": false,
+          "QUERY_G8_0": false,
+          "QUERY_G8_1": false,
+          "QUERY_G8_2": false,
+          "QUERY_G8_3": false,
+          "QUERY_G9_0": false,
+          "QUERY_G9_1": false,
+          "QUERY_G9_2": false,
+          "QUERY_G9_3": false,
+          "QUERY_H": true,
+          "WAIT": false
+        },
+        "metrics": {
+          "branch_certificate_steps": 64,
+          "exact_fallback_calls": 0,
+          "root_actions_classified": 67
+        },
+        "reasons": {
+          "QUERY_A": {
+            "L": 0,
+            "U": 0,
+            "reason": "insufficient budget for H plus branch chain"
+          },
+          "QUERY_G0_0": {
+            "L": 0,
+            "U": 0,
+            "reason": "insufficient budget for H plus branch chain"
+          },
+          "QUERY_G0_1": {
+            "L": 0,
+            "U": 0,
+            "reason": "insufficient budget for H plus branch chain"
+          },
+          "QUERY_G0_2": {
+            "L": 0,
+            "U": 0,
+            "reason": "insufficient budget for H plus branch chain"
+          },
+          "QUERY_G0_3": {
+            "L": 0,
+            "U": 0,
+            "reason": "insufficient budget for H plus branch chain"
+          },
+          "QUERY_G10_0": {
+            "L": 0,
+            "U": 0,
+            "reason": "insufficient budget for H plus branch chain"
+          },
+          "QUERY_G10_1": {
+            "L": 0,
+            "U": 0,
+            "reason": "insufficient budget for H plus branch chain"
+          },
+          "QUERY_G10_2": {
+            "L": 0,
+            "U": 0,
+            "reason": "insufficient budget for H plus branch chain"
+          },
+          "QUERY_G10_3": {
+            "L": 0,
+            "U": 0,
+            "reason": "insufficient budget for H plus branch chain"
+          },
+          "QUERY_G11_0": {
+            "L": 0,
+            "U": 0,
+            "reason": "insufficient budget for H plus branch chain"
+          },
+          "QUERY_G11_1": {
+            "L": 0,
+            "U": 0,
+            "reason": "insufficient budget for H plus branch chain"
+          },
+          "QUERY_G11_2": {
+            "L": 0,
+            "U": 0,
+            "reason": "insufficient budget for H plus branch chain"
+          },
+          "QUERY_G11_3": {
+            "L": 0,
+            "U": 0,
+            "reason": "insufficient budget for H plus branch chain"
+          },
+          "QUERY_G12_0": {
+            "L": 0,
+            "U": 0,
+            "reason": "insufficient budget for H plus branch chain"
+          },
+          "QUERY_G12_1": {
+            "L": 0,
+            "U": 0,
+            "reason": "insufficient budget for H plus branch chain"
+          },
+          "QUERY_G12_2": {
+            "L": 0,
+            "U": 0,
+            "reason": "insufficient budget for H plus branch chain"
+          },
+          "QUERY_G12_3": {
+            "L": 0,
+            "U": 0,
+            "reason": "insufficient budget for H plus branch chain"
+          },
+          "QUERY_G13_0": {
+            "L": 0,
+            "U": 0,
+            "reason": "insufficient budget for H plus branch chain"
+          },
+          "QUERY_G13_1": {
+            "L": 0,
+            "U": 0,
+            "reason": "insufficient budget for H plus branch chain"
+          },
+          "QUERY_G13_2": {
+            "L": 0,
+            "U": 0,
+            "reason": "insufficient budget for H plus branch chain"
+          },
+          "QUERY_G13_3": {
+            "L": 0,
+            "U": 0,
+            "reason": "insufficient budget for H plus branch chain"
+          },
+          "QUERY_G14_0": {
+            "L": 0,
+            "U": 0,
+            "reason": "insufficient budget for H plus branch chain"
+          },
+          "QUERY_G14_1": {
+            "L": 0,
+            "U": 0,
+            "reason": "insufficient budget for H plus branch chain"
+          },
+          "QUERY_G14_2": {
+            "L": 0,
+            "U": 0,
+            "reason": "insufficient budget for H plus branch chain"
+          },
+          "QUERY_G14_3": {
+            "L": 0,
+            "U": 0,
+            "reason": "insufficient budget for H plus branch chain"
+          },
+          "QUERY_G15_0": {
+            "L": 0,
+            "U": 0,
+            "reason": "insufficient budget for H plus branch chain"
+          },
+          "QUERY_G15_1": {
+            "L": 0,
+            "U": 0,
+            "reason": "insufficient budget for H plus branch chain"
+          },
+          "QUERY_G15_2": {
+            "L": 0,
+            "U": 0,
+            "reason": "insufficient budget for H plus branch chain"
+          },
+          "QUERY_G15_3": {
+            "L": 0,
+            "U": 0,
+            "reason": "insufficient budget for H plus branch chain"
+          },
+          "QUERY_G1_0": {
+            "L": 0,
+            "U": 0,
+            "reason": "insufficient budget for H plus branch chain"
+          },
+          "QUERY_G1_1": {
+            "L": 0,
+            "U": 0,
+            "reason": "insufficient budget for H plus branch chain"
+          },
+          "QUERY_G1_2": {
+            "L": 0,
+            "U": 0,
+            "reason": "insufficient budget for H plus branch chain"
+          },
+          "QUERY_G1_3": {
+            "L": 0,
+            "U": 0,
+            "reason": "insufficient budget for H plus branch chain"
+          },
+          "QUERY_G2_0": {
+            "L": 0,
+            "U": 0,
+            "reason": "insufficient budget for H plus branch chain"
+          },
+          "QUERY_G2_1": {
+            "L": 0,
+            "U": 0,
+            "reason": "insufficient budget for H plus branch chain"
+          },
+          "QUERY_G2_2": {
+            "L": 0,
+            "U": 0,
+            "reason": "insufficient budget for H plus branch chain"
+          },
+          "QUERY_G2_3": {
+            "L": 0,
+            "U": 0,
+            "reason": "insufficient budget for H plus branch chain"
+          },
+          "QUERY_G3_0": {
+            "L": 0,
+            "U": 0,
+            "reason": "insufficient budget for H plus branch chain"
+          },
+          "QUERY_G3_1": {
+            "L": 0,
+            "U": 0,
+            "reason": "insufficient budget for H plus branch chain"
+          },
+          "QUERY_G3_2": {
+            "L": 0,
+            "U": 0,
+            "reason": "insufficient budget for H plus branch chain"
+          },
+          "QUERY_G3_3": {
+            "L": 0,
+            "U": 0,
+            "reason": "insufficient budget for H plus branch chain"
+          },
+          "QUERY_G4_0": {
+            "L": 0,
+            "U": 0,
+            "reason": "insufficient budget for H plus branch chain"
+          },
+          "QUERY_G4_1": {
+            "L": 0,
+            "U": 0,
+            "reason": "insufficient budget for H plus branch chain"
+          },
+          "QUERY_G4_2": {
+            "L": 0,
+            "U": 0,
+            "reason": "insufficient budget for H plus branch chain"
+          },
+          "QUERY_G4_3": {
+            "L": 0,
+            "U": 0,
+            "reason": "insufficient budget for H plus branch chain"
+          },
+          "QUERY_G5_0": {
+            "L": 0,
+            "U": 0,
+            "reason": "insufficient budget for H plus branch chain"
+          },
+          "QUERY_G5_1": {
+            "L": 0,
+            "U": 0,
+            "reason": "insufficient budget for H plus branch chain"
+          },
+          "QUERY_G5_2": {
+            "L": 0,
+            "U": 0,
+            "reason": "insufficient budget for H plus branch chain"
+          },
+          "QUERY_G5_3": {
+            "L": 0,
+            "U": 0,
+            "reason": "insufficient budget for H plus branch chain"
+          },
+          "QUERY_G6_0": {
+            "L": 0,
+            "U": 0,
+            "reason": "insufficient budget for H plus branch chain"
+          },
+          "QUERY_G6_1": {
+            "L": 0,
+            "U": 0,
+            "reason": "insufficient budget for H plus branch chain"
+          },
+          "QUERY_G6_2": {
+            "L": 0,
+            "U": 0,
+            "reason": "insufficient budget for H plus branch chain"
+          },
+          "QUERY_G6_3": {
+            "L": 0,
+            "U": 0,
+            "reason": "insufficient budget for H plus branch chain"
+          },
+          "QUERY_G7_0": {
+            "L": 0,
+            "U": 0,
+            "reason": "insufficient budget for H plus branch chain"
+          },
+          "QUERY_G7_1": {
+            "L": 0,
+            "U": 0,
+            "reason": "insufficient budget for H plus branch chain"
+          },
+          "QUERY_G7_2": {
+            "L": 0,
+            "U": 0,
+            "reason": "insufficient budget for H plus branch chain"
+          },
+          "QUERY_G7_3": {
+            "L": 0,
+            "U": 0,
+            "reason": "insufficient budget for H plus branch chain"
+          },
+          "QUERY_G8_0": {
+            "L": 0,
+            "U": 0,
+            "reason": "insufficient budget for H plus branch chain"
+          },
+          "QUERY_G8_1": {
+            "L": 0,
+            "U": 0,
+            "reason": "insufficient budget for H plus branch chain"
+          },
+          "QUERY_G8_2": {
+            "L": 0,
+            "U": 0,
+            "reason": "insufficient budget for H plus branch chain"
+          },
+          "QUERY_G8_3": {
+            "L": 0,
+            "U": 0,
+            "reason": "insufficient budget for H plus branch chain"
+          },
+          "QUERY_G9_0": {
+            "L": 0,
+            "U": 0,
+            "reason": "insufficient budget for H plus branch chain"
+          },
+          "QUERY_G9_1": {
+            "L": 0,
+            "U": 0,
+            "reason": "insufficient budget for H plus branch chain"
+          },
+          "QUERY_G9_2": {
+            "L": 0,
+            "U": 0,
+            "reason": "insufficient budget for H plus branch chain"
+          },
+          "QUERY_G9_3": {
+            "L": 0,
+            "U": 0,
+            "reason": "insufficient budget for H plus branch chain"
+          },
+          "QUERY_H": {
+            "L": 1,
+            "U": 1,
+            "certificate": {
+              "H=0": [
+                "QUERY_G0_0",
+                "QUERY_G0_1",
+                "QUERY_G0_2",
+                "QUERY_G0_3"
+              ],
+              "H=1": [
+                "QUERY_G1_0",
+                "QUERY_G1_1",
+                "QUERY_G1_2",
+                "QUERY_G1_3"
+              ],
+              "H=10": [
+                "QUERY_G10_0",
+                "QUERY_G10_1",
+                "QUERY_G10_2",
+                "QUERY_G10_3"
+              ],
+              "H=11": [
+                "QUERY_G11_0",
+                "QUERY_G11_1",
+                "QUERY_G11_2",
+                "QUERY_G11_3"
+              ],
+              "H=12": [
+                "QUERY_G12_0",
+                "QUERY_G12_1",
+                "QUERY_G12_2",
+                "QUERY_G12_3"
+              ],
+              "H=13": [
+                "QUERY_G13_0",
+                "QUERY_G13_1",
+                "QUERY_G13_2",
+                "QUERY_G13_3"
+              ],
+              "H=14": [
+                "QUERY_G14_0",
+                "QUERY_G14_1",
+                "QUERY_G14_2",
+                "QUERY_G14_3"
+              ],
+              "H=15": [
+                "QUERY_G15_0",
+                "QUERY_G15_1",
+                "QUERY_G15_2",
+                "QUERY_G15_3"
+              ],
+              "H=2": [
+                "QUERY_G2_0",
+                "QUERY_G2_1",
+                "QUERY_G2_2",
+                "QUERY_G2_3"
+              ],
+              "H=3": [
+                "QUERY_G3_0",
+                "QUERY_G3_1",
+                "QUERY_G3_2",
+                "QUERY_G3_3"
+              ],
+              "H=4": [
+                "QUERY_G4_0",
+                "QUERY_G4_1",
+                "QUERY_G4_2",
+                "QUERY_G4_3"
+              ],
+              "H=5": [
+                "QUERY_G5_0",
+                "QUERY_G5_1",
+                "QUERY_G5_2",
+                "QUERY_G5_3"
+              ],
+              "H=6": [
+                "QUERY_G6_0",
+                "QUERY_G6_1",
+                "QUERY_G6_2",
+                "QUERY_G6_3"
+              ],
+              "H=7": [
+                "QUERY_G7_0",
+                "QUERY_G7_1",
+                "QUERY_G7_2",
+                "QUERY_G7_3"
+              ],
+              "H=8": [
+                "QUERY_G8_0",
+                "QUERY_G8_1",
+                "QUERY_G8_2",
+                "QUERY_G8_3"
+              ],
+              "H=9": [
+                "QUERY_G9_0",
+                "QUERY_G9_1",
+                "QUERY_G9_2",
+                "QUERY_G9_3"
+              ]
+            },
+            "remaining_budget": 4,
+            "worst_branch_query_requirement": 4
+          },
+          "WAIT": {
+            "L": 0,
+            "U": 0,
+            "reason": "reveal arrives after first branch deadline"
+          }
+        }
+      },
+      "depth": 4,
+      "fresh_exact": {
+        "actions": {
+          "QUERY_A": false,
+          "QUERY_G0_0": false,
+          "QUERY_G0_1": false,
+          "QUERY_G0_2": false,
+          "QUERY_G0_3": false,
+          "QUERY_G10_0": false,
+          "QUERY_G10_1": false,
+          "QUERY_G10_2": false,
+          "QUERY_G10_3": false,
+          "QUERY_G11_0": false,
+          "QUERY_G11_1": false,
+          "QUERY_G11_2": false,
+          "QUERY_G11_3": false,
+          "QUERY_G12_0": false,
+          "QUERY_G12_1": false,
+          "QUERY_G12_2": false,
+          "QUERY_G12_3": false,
+          "QUERY_G13_0": false,
+          "QUERY_G13_1": false,
+          "QUERY_G13_2": false,
+          "QUERY_G13_3": false,
+          "QUERY_G14_0": false,
+          "QUERY_G14_1": false,
+          "QUERY_G14_2": false,
+          "QUERY_G14_3": false,
+          "QUERY_G15_0": false,
+          "QUERY_G15_1": false,
+          "QUERY_G15_2": false,
+          "QUERY_G15_3": false,
+          "QUERY_G1_0": false,
+          "QUERY_G1_1": false,
+          "QUERY_G1_2": false,
+          "QUERY_G1_3": false,
+          "QUERY_G2_0": false,
+          "QUERY_G2_1": false,
+          "QUERY_G2_2": false,
+          "QUERY_G2_3": false,
+          "QUERY_G3_0": false,
+          "QUERY_G3_1": false,
+          "QUERY_G3_2": false,
+          "QUERY_G3_3": false,
+          "QUERY_G4_0": false,
+          "QUERY_G4_1": false,
+          "QUERY_G4_2": false,
+          "QUERY_G4_3": false,
+          "QUERY_G5_0": false,
+          "QUERY_G5_1": false,
+          "QUERY_G5_2": false,
+          "QUERY_G5_3": false,
+          "QUERY_G6_0": false,
+          "QUERY_G6_1": false,
+          "QUERY_G6_2": false,
+          "QUERY_G6_3": false,
+          "QUERY_G7_0": false,
+          "QUERY_G7_1": false,
+          "QUERY_G7_2": false,
+          "QUERY_G7_3": false,
+          "QUERY_G8_0": false,
+          "QUERY_G8_1": false,
+          "QUERY_G8_2": false,
+          "QUERY_G8_3": false,
+          "QUERY_G9_0": false,
+          "QUERY_G9_1": false,
+          "QUERY_G9_2": false,
+          "QUERY_G9_3": false,
+          "QUERY_H": true,
+          "WAIT": false
+        },
+        "metrics": {
+          "action_steps": 6630,
+          "expanded": 130,
+          "memo_hits": 5184,
+          "observation_branches": 82,
+          "recursive_calls": 6779,
+          "wall_s": 0.047042351001437055
+        }
+      },
+      "persistent_exact": {
+        "actions": {
+          "QUERY_A": false,
+          "QUERY_G0_0": false,
+          "QUERY_G0_1": false,
+          "QUERY_G0_2": false,
+          "QUERY_G0_3": false,
+          "QUERY_G10_0": false,
+          "QUERY_G10_1": false,
+          "QUERY_G10_2": false,
+          "QUERY_G10_3": false,
+          "QUERY_G11_0": false,
+          "QUERY_G11_1": false,
+          "QUERY_G11_2": false,
+          "QUERY_G11_3": false,
+          "QUERY_G12_0": false,
+          "QUERY_G12_1": false,
+          "QUERY_G12_2": false,
+          "QUERY_G12_3": false,
+          "QUERY_G13_0": false,
+          "QUERY_G13_1": false,
+          "QUERY_G13_2": false,
+          "QUERY_G13_3": false,
+          "QUERY_G14_0": false,
+          "QUERY_G14_1": false,
+          "QUERY_G14_2": false,
+          "QUERY_G14_3": false,
+          "QUERY_G15_0": false,
+          "QUERY_G15_1": false,
+          "QUERY_G15_2": false,
+          "QUERY_G15_3": false,
+          "QUERY_G1_0": false,
+          "QUERY_G1_1": false,
+          "QUERY_G1_2": false,
+          "QUERY_G1_3": false,
+          "QUERY_G2_0": false,
+          "QUERY_G2_1": false,
+          "QUERY_G2_2": false,
+          "QUERY_G2_3": false,
+          "QUERY_G3_0": false,
+          "QUERY_G3_1": false,
+          "QUERY_G3_2": false,
+          "QUERY_G3_3": false,
+          "QUERY_G4_0": false,
+          "QUERY_G4_1": false,
+          "QUERY_G4_2": false,
+          "QUERY_G4_3": false,
+          "QUERY_G5_0": false,
+          "QUERY_G5_1": false,
+          "QUERY_G5_2": false,
+          "QUERY_G5_3": false,
+          "QUERY_G6_0": false,
+          "QUERY_G6_1": false,
+          "QUERY_G6_2": false,
+          "QUERY_G6_3": false,
+          "QUERY_G7_0": false,
+          "QUERY_G7_1": false,
+          "QUERY_G7_2": false,
+          "QUERY_G7_3": false,
+          "QUERY_G8_0": false,
+          "QUERY_G8_1": false,
+          "QUERY_G8_2": false,
+          "QUERY_G8_3": false,
+          "QUERY_G9_0": false,
+          "QUERY_G9_1": false,
+          "QUERY_G9_2": false,
+          "QUERY_G9_3": false,
+          "QUERY_H": true,
+          "WAIT": false
+        },
+        "memo_entries": 248,
+        "metrics": {
+          "action_steps": 2342,
+          "expanded": 66,
+          "frontier_wall_s": 0.005541665999771794,
+          "memo_hits": 2179,
+          "observation_branches": 18,
+          "recursive_calls": 2427,
+          "wall_s": 0.005163439005627879
+        }
+      },
+      "root_action_count": 67,
+      "static_union_reserve": {
+        "false_negative": true,
+        "query_h_declared_feasible": false,
+        "remaining_budget_after_h": 4,
+        "union_future_goal_count": 64
+      }
+    }
+  ],
+  "claim_boundary": [
+    "This is a controlled transfer stress family, not the source Pull-Based paper's empirical task distribution.",
+    "It validates observation-conditioned future-obligation semantics and static-union failure before extending the frozen Layer-2 v2 implementation.",
+    "Branch-certificate steps and exact state expansions are different operation types; their ratio is a search-work proxy, not a wall-time theorem.",
+    "The current conditional certificate is specialized to unit query goals. Full Layer-2 novelty still requires shared-resource/delayed-feedback structure beyond this family."
+  ],
+  "family_axes": {
+    "branch_goal_depth": [
+      1,
+      2,
+      3,
+      4
+    ],
+    "branches": [
+      1,
+      2,
+      4,
+      8,
+      16
+    ],
+    "budget_rule": "D+1: one H query plus D branch-specific goal queries"
+  },
+  "stage": "ASC_PULL_QUERY_OBSERVATION_CONDITIONED_OBLIGATION_FAMILY",
+  "summary": {
+    "cell_count": 20,
+    "conditional_exact_frontier_match_cells": 20,
+    "max_conditional_certificate_steps": 64,
+    "max_fresh_expanded": 130,
+    "max_persistent_expanded": 66,
+    "mean_conditional_certificate_steps": 15.0,
+    "mean_fresh_expanded": 34.6,
+    "mean_persistent_expanded": 18.1,
+    "nontrivial_multibranch_cells": 16,
+    "static_union_false_negative_cells": 16
+  }
+}
