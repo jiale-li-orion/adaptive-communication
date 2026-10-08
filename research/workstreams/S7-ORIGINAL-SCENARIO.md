@@ -67,6 +67,20 @@ warning authority announces denser monitoring requirement
 
 因此当前不是“一个阈值就修好”的结构。普通规则在 warning 收益与 post-warning continuity 之间形成明显 trade-off；下一步才有资格测试 selective future-choice frontier 是否能拿到更好的 Pareto point。
 
+### Selective headroom red-team
+
+随后增加了一个严格标为 evaluator-only 的 hindsight upper bound：它知道 full-early arm 中哪 6 个节点会因 h4 提前 densify 而在 h10 前失活，只让其余节点 h4 提前配置；这 6 个节点等到 h5 warning 真正生效再进入 dense。任务分母、物理链路、placement 和 scorer 均不变。
+
+结果：
+
+- all-early comply：warning 268 / post-warning 16 / 6 dead；
+- sustain：warning 188 / post-warning 28 / 0 dead；
+- hindsight selective：warning **194** / post-warning **28** / 0 dead。
+
+这证明“选择性 commitment”确实存在 Pareto headroom，但同时也给出一个更重要的否决：现有 `resource_guard` 已经得到 warning **194** / post-warning **28** / 0 dead，基本达到该 hindsight selective 上界。因此当前这个**单一 persistent-energy commitment** 机制不足以支撑 Layer-2 future-choice 方法；普通 horizon energy admission 已经把它概括掉。
+
+下一步不再调 energy threshold，也不再围绕这个单资源 witness 做方法。S7 只有在出现 `ResourceGate` 无法表示的**联合 continuation conflict** 时才继续承担主方法任务，优先检查现有共享 gateway-backup / backhaul opportunity 与 node-energy/task-revision 的耦合：每个节点单独能量可行，但多个当前 commitment 联合消耗共享未来通信机会，使某组后续义务失去唯一 continuation。
+
 ## Hard gate
 
 只有出现下列结构才升级为 paper task：
@@ -81,7 +95,8 @@ warning authority announces denser monitoring requirement
 
 当前已经完成 `out3 → S7 authority-driven commitment` 的第一阶段映射。下一步：
 
-1. 在 h4 合法历史上判断死亡组是否可由当前 evidence 简单区分；当前 SoC 已确认**不能**分开死亡/存活节点；
-2. 把 current belief 下的 future resource domain 接到 Layer-2 conditional frontier，而不是再调一个 energy threshold；
-3. 对 selective future-choice policy 做 EnergyAware / sustain / resource-guard / bounded MPC red-team；
-4. 扩到预注册 weather/year/seed 后才讨论 benchmark-wide hardness。
+1. 保留当前 energy witness 作为 persistent-commitment mechanism/control；不升级为主方法 task；
+2. 在现有 S7 中寻找 `energy-safe individually but shared-opportunity-infeasible jointly` 的 bounded witness；
+3. `resource_guard + backup EDF/maxcov + bounded MPC` 作为下一轮首要否决基线；
+4. 只有普通单资源 admission / flow / finite horizon 均无法概括时，才把 Layer-2 conditional frontier 接回主实验；
+5. 扩到预注册 weather/year/seed 后才讨论 benchmark-wide hardness。
