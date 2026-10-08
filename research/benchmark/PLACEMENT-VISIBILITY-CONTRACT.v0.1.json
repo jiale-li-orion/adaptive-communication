@@ -1,0 +1,119 @@
+{
+  "schema_version": "0.1",
+  "status": "FROZEN_GATEWAY_PRIMARY_CENTER_SIMULATOR_GAP",
+  "authority": {
+    "human_context": [
+      "/home/orion/Communications/cache06.md#v0.5-process-contract",
+      "/home/orion/Communications/cache06.md#observation-and-evidence-contract",
+      "/home/orion/Communications/cache06.md#async-and-cost"
+    ],
+    "repository_contracts": [
+      "research/benchmark/ENVIRONMENT-GENERATION-CONTRACT.v0.1.md",
+      "research/benchmark/GENERATION-AXES.v0.2.json",
+      "research/benchmark/V07-PROCESS-SUPPORT-CONTRACT.v0.1.md"
+    ],
+    "freeze_rule": "Placement, visibility and transport semantics are frozen before gateway-local exact admission. Baseline or proposed-method outcomes are not a valid reason to change them."
+  },
+  "global_invariants": [
+    "A policy may use only observations that have lawfully arrived at its declared placement.",
+    "Gateway queue, send log and gateway receipt are owner-local gateway state, not center-visible facts.",
+    "Future service transitions, future opportunity identities and evaluator world IDs are never query payloads.",
+    "If a center query requires a communication path, center-issued send/control commands require an explicit outbound control path and arrival time.",
+    "Gateway receipt and final center delivery acknowledgement remain distinct events.",
+    "Owner-local state projection does not inherit remote-query delay or communication cost.",
+    "The frozen v0.7 generator is not rewritten by this downstream evaluation coordinate."
+  ],
+  "placements": {
+    "GATEWAY_LOCAL_PRIMARY": {
+      "role": "PRIMARY_EVALUATION",
+      "admission_status": "READY_FOR_GATEWAY_LOCAL_MECHANISM_AUDIT",
+      "policy_owner": "gateway",
+      "action_execution_owner": "gateway",
+      "control_transport": {
+        "mode": "OWNER_LOCAL",
+        "send_command_delay_s": 0,
+        "send_command_resource_cost": 0,
+        "claim_boundary": "This models gateway-local autonomy, not instantaneous remote control."
+      },
+      "public_at_episode_start": [
+        "source task contract",
+        "reporting rules",
+        "declared capabilities and authority",
+        "public model-derived satellite geometry",
+        "declared fallback budget"
+      ],
+      "visible_when_released_or_executed": [
+        "released obligations and deadlines",
+        "gateway-local queue state",
+        "gateway-local send log",
+        "gateway receipt after the declared receipt event",
+        "local terrestrial and fallback resource ledger",
+        "final center acknowledgement or timeout after it arrives"
+      ],
+      "hidden": [
+        "future terrestrial service transitions",
+        "unreleased future obligations",
+        "final center completion before acknowledgement",
+        "evaluator world identity"
+      ],
+      "receipt_summary": {
+        "semantics": "OWNER_LOCAL_STATE_PROJECTION",
+        "action": false,
+        "network_resource_cost": 0,
+        "network_delay_s": 0,
+        "payload": "gateway receipts that have actually occurred by the observation time"
+      },
+      "dedicated_query_actions": [],
+      "natural_feedback": [
+        "normal SEND_TERR as probe",
+        "gateway receipt",
+        "final center acknowledgement or timeout",
+        "local execution result"
+      ],
+      "allowed_claims": [
+        "blind-open-loop versus gateway-natural-feedback feasibility",
+        "send/wait/fallback commitment and future-choice preservation",
+        "asynchronous receipt/ACK dynamic sufficiency",
+        "gateway-local ordinary-baseline headroom"
+      ],
+      "forbidden_claims": [
+        "paid remote receipt-summary EvidenceNeed",
+        "center communication savings",
+        "gateway-versus-center placement gain"
+      ]
+    },
+    "CENTER_REMOTE_CONTROL": {
+      "role": "POSITION_CONTROL",
+      "admission_status": "SIMULATOR_GAP",
+      "policy_owner": "monitoring_center",
+      "action_execution_owner": "gateway_or_terminal",
+      "gateway_local_state_visible_without_transport": false,
+      "required_missing_contracts": [
+        "gateway-to-center telemetry trigger, payload, required path and arrival delay",
+        "center-to-gateway query request transport",
+        "gateway-to-center query response transport",
+        "center-to-gateway send/control command transport and arrival time",
+        "command timeout, deduplication and acknowledgement semantics",
+        "resource sharing between data, telemetry, query and control traffic"
+      ],
+      "admission_rule": "No center-placement exact, no-query or paid-evidence classification may run until every missing transport contract is explicit and audited.",
+      "allowed_current_role": "documented simulator gap and future placement control"
+    }
+  },
+  "downstream_projection": {
+    "gateway_local_irrelevant_case_axes": [
+      "remote_query.response_delay_ratio",
+      "remote_query.response_delay_s"
+    ],
+    "gateway_local_structure_rule": "Deduplicate frozen v0.7 variants by base_structure_id + feedback_profile + fallback_budget_mode; remote-query timing is inactive at gateway placement.",
+    "center_structure_rule": "Undefined until CENTER_REMOTE_CONTROL exits SIMULATOR_GAP."
+  },
+  "next_gates": [
+    "gateway-local non-separable cross-stage witness",
+    "gateway-local natural-feedback dynamic sufficiency",
+    "gateway-local passive feedback versus normal send-as-probe competition",
+    "gateway-local intervention attribution",
+    "staged gateway-local exact admission",
+    "optional center transport extension"
+  ]
+}
