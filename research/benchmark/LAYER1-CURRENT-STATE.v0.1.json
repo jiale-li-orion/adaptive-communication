@@ -156,7 +156,7 @@
     "stage": "PRE_WORLD_PRE_ORACLE"
   },
   "main_family": "T1_MONITORING_INFORMATION_CONTINUITY",
-  "next_stage": "AUDIT_V07_GATEWAY_EASY_CAUSAL_INFEASIBLE_BIFURCATION",
+  "next_stage": "FREEZE_GATEWAY_DATA_LOCATION_AND_ACTION_OWNERSHIP",
   "quality_gates": {
     "agentic_reducibility": "PASS_41_OF_41_HARD_SIGNATURES",
     "agentic_reducibility_ref": "results/benchmark/layer1-agentic-reducibility-v0.2-retry-legality.json",
@@ -184,12 +184,16 @@
     "authority_ref": "research/benchmark/HARD-SURVIVOR-FAILURE-ATLAS.v0.1.md",
     "blockers": [
       {
-        "id": "DYNAMIC_PROCESS_MECHANISM_OPEN",
-        "reason": "Gateway-local placement is frozen, but the 36-cell bounded pilot has no resolved ordinary-baseline survivor. Current evidence bifurcates into blind-easy SINGLE_RECOVERY cells and REINTERRUPTIBLE cells that are causal-infeasible, ordinary-shortcut-solved, or unresolved. The next task is to explain this structure before claiming a dynamic mechanism."
+        "id": "DATA_LOCATION_ACTION_OWNERSHIP_OPEN",
+        "reason": "SYSTEM-MODEL-v1 separates node uplink, gateway queue/backhaul and center delivery, while the provisional gateway adapter reuses the historical end-to-end SEND_TERR -> gateway receipt -> center ACK transition as an instantaneous gateway-local action. Report location and legal action ownership must be frozen before gateway exact can resume."
       },
       {
-        "id": "GATEWAY_STAGED_EXACT_ADMISSION_INCOMPLETE",
-        "reason": "The gateway-local 36-cell pilot has 8 UNRESOLVED_COMPUTATION cells at the frozen 50k memo contract and is only one preselected representative per placement-relevant axis cell, not full-universe admission."
+        "id": "DYNAMIC_PROCESS_MECHANISM_OPEN",
+        "reason": "The 36-cell gateway pilot and second-outage bifurcation are provisional-kernel diagnostics only. Dynamic mechanism, sufficiency and ordinary-baseline headroom must be rerun after the data-location/action-owner contract is corrected."
+      },
+      {
+        "id": "GATEWAY_STAGED_EXACT_ADMISSION_BLOCKED",
+        "reason": "Gateway exact admission is closed until the data-location/action-owner lifecycle is frozen and audited. The existing bounded pilot cannot be interpreted as deployment-faithful gateway admission."
       },
       {
         "id": "HARD_MECHANISM_COVERAGE_REOPENED",
@@ -214,14 +218,16 @@
       "v0.7 changes only process-support semantics plus the predeclared minimum-stage rule; source, geometry, resource, evidence, timing and fallback axes remain invariant",
       "v0.7 candidate TIGHT preflight removes the specific v0.6-style public satellite-only common-safe shortcut; BALANCED/SLACK shortcut cells remain controls for downstream filtering",
       "v0.7 placement audit proves the discarded oracle adapter mixed center remote-query cost with gateway-local receipt visibility and omitted center control transport",
-      "gateway-local autonomy is now the frozen primary v0.7 placement; center remote control remains a transport SIMULATOR_GAP",
-      "the bounded 36-cell gateway pilot yields 18 blind-open-loop controls, 8 full-current causal-infeasible diagnostics, 2 ordinary-baseline shortcuts and 8 unresolved cells; no resolved baseline survivor is admitted"
+      "gateway remains the primary policy placement and gateway receipt remains owner-local; center remote control remains a transport SIMULATOR_GAP",
+      "the provisional bounded 36-cell gateway kernel yields 18 blind-open-loop controls, 8 full-current causal-infeasible diagnostics, 2 ordinary-baseline shortcuts and 8 unresolved cells; it is diagnostic rather than admission evidence",
+      "the gateway bifurcation audit shows SINGLE_RECOVERY has a common final-UP stage while REINTERRUPTIBLE has no common UP stage for observed pilot stage counts, and removing only second-outage worlds makes all eight TIGHT causal-infeasible pilot cells blind-solvable",
+      "the gateway action-ownership audit blocks exact admission because the provisional adapter conflates end-to-end report send, gateway receipt and gateway-local action execution"
     ],
     "generation_axes_ref": "research/benchmark/GENERATION-AXES.v0.2.json",
     "generation_axes_status": "FROZEN_FOR_V07_SUPPORT_CORRECTION_ONLY",
     "hard_survivor_failure_atlas_ref": "results/benchmark/layer1-hard-survivor-failure-atlas-v0.1.json",
     "layer3_status": "PAUSED_UNTIL_LAYER1_DYNAMIC_MECHANISM_AND_STRUCTURAL_HOLDOUT_CLOSE",
-    "status": "V07_GATEWAY_PLACEMENT_FROZEN_DYNAMIC_HARDNESS_OPEN",
+    "status": "V07_GATEWAY_POLICY_PLACEMENT_RETAINED_ACTION_OWNERSHIP_BLOCKED",
     "v06_all_world_physical_bases_with_all_down_support": 46770,
     "v06_cases_with_full_fallback_budget": 1262790,
     "v06_generation_counts": {
@@ -243,9 +249,9 @@
     "v06_oracle_pilot_ref": "results/benchmark/layer1-v0.6-oracle-pilot-r4.json",
     "v06_shortcut_audit_ref": "results/benchmark/layer1-v0.6-shortcut-collapse-r4.json",
     "v06_validity_disposition": "GLOBAL_BLIND_SATELLITE_SHORTCUT",
-    "v07_active_oracle_pilot_code": "GATEWAY_LOCAL_INDEXED_BOUNDED_PILOT_ACTIVE",
+    "v07_active_oracle_pilot_code": "GATEWAY_LOCAL_INDEXED_BOUNDED_PILOT_DIAGNOSTIC_ONLY",
     "v07_candidate_tight_public_satellite_only_shortcut_count": 0,
-    "v07_exact_admission_status": "GATEWAY_BOUNDED_PILOT_COMPLETE_FORMAL_ADMISSION_INCOMPLETE_CENTER_BLOCKED",
+    "v07_exact_admission_status": "BLOCKED_GATEWAY_ACTION_OWNERSHIP_AND_CENTER_TRANSPORT",
     "v07_generation_counts": {
       "all_world_physical_bases": 74952,
       "base_scenarios": 103408,
@@ -268,6 +274,10 @@
       "UNRESOLVED_COMPUTATION": 8
     },
     "v07_gateway_pilot_ref": "results/benchmark/layer1-v0.7-gateway-pilot-v0.1.json",
+    "v07_gateway_bifurcation_ref": "results/benchmark/layer1-v0.7-gateway-bifurcation-v0.1.json",
+    "v07_gateway_action_ownership_disposition": "BLOCK_GATEWAY_EXACT_ADMISSION_DATA_LOCATION_ACTION_OWNERSHIP_OPEN",
+    "v07_gateway_action_ownership_ref": "results/benchmark/layer1-v0.7-gateway-action-ownership-review.json",
+    "v07_gateway_action_ownership_review_ref": "research/benchmark/V07-GATEWAY-ACTION-OWNERSHIP-REVIEW.v0.1.md",
     "v07_placement_contract_ref": "research/benchmark/PLACEMENT-VISIBILITY-CONTRACT.v0.1.json",
     "v07_placement_visibility_disposition": "GATEWAY_PRIMARY_FROZEN_CENTER_SIMULATOR_GAP",
     "v07_placement_visibility_ref": "results/benchmark/layer1-v0.7-placement-visibility-review.json",
@@ -539,7 +549,7 @@
     "source_contract_count": 27,
     "status": "MACHINE_REGENERATION_COMPLETE"
   },
-  "status": "V07_GATEWAY_PLACEMENT_FROZEN_DYNAMIC_HARDNESS_OPEN",
+  "status": "V07_GATEWAY_POLICY_PLACEMENT_RETAINED_ACTION_OWNERSHIP_BLOCKED",
   "structure_aware_split": {
     "audit_ref": "results/benchmark/layer1-structure-aware-split-v0.2-retry-legality.json",
     "by_split": {

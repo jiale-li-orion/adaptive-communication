@@ -242,7 +242,7 @@ v0.1–v0.5、receipt-race、receipt-chain、joint query–satellite Pareto 和 
 |---|---|
 | v0.2 | scoped mechanism-discovery/regression asset: 41 exact signatures / 174 recipes in one H2×H3×H4 family; historical test is exposed |
 | v0.6 | generation reproducibility PASS; benchmark validity FAIL because every admitted case has a blind public satellite-only completion policy |
-| v0.7 | process-support correction implemented and locally audited; gateway-local placement frozen; 36-cell bounded pilot has 0 resolved ordinary-baseline survivors and 8 unresolved; no hard case is admitted |
+| v0.7 | process-support correction retained; gateway owner-local receipt visibility retained; gateway action/data-location ownership reopened after static correctness audit; 36-cell pilot is diagnostic only; no hard case is admitted |
 
 v0.7 local pre-oracle r1 contains 103,408 base scenarios, 74,952 `ALL_WORLD_PHYSICAL` bases and 2,023,704 variants / 863,460 pre-oracle structure IDs. These counts are construction coverage only. They cannot be used as task count, hard-case count or paper performance denominator.
 
@@ -250,10 +250,12 @@ The next gate follows `cache06.md`, not another version bump:
 
 ```text
 frozen v0.7 universe
-→ freeze gateway/center placement, visibility and control transport   [DONE for gateway; center remains SIMULATOR_GAP]
-→ bounded gateway-local staged-exact pilot                           [DONE: 36 cells]
-→ explain easy / causal-infeasible bifurcation                       [CURRENT]
-→ gateway-local non-separable cross-stage witness                    [OPEN]
+→ freeze gateway/center visibility boundary                          [DONE for gateway receipt; center remains SIMULATOR_GAP]
+→ bounded gateway-local staged-exact pilot                           [DONE: DIAGNOSTIC ONLY]
+→ explain easy / causal-infeasible bifurcation                       [DONE: SCOPED DIAGNOSTIC]
+→ audit data-location / action ownership                             [DONE: BLOCKER FOUND]
+→ freeze gateway-local legal action lifecycle                        [CURRENT]
+→ gateway-local non-separable cross-stage witness                    [BLOCKED]
 → dynamic sufficiency after later observations
 → dedicated query / passive feedback / send-as-probe competition（only where transport is legal）
 → causal intervention attribution
@@ -268,7 +270,7 @@ frozen v0.7 universe
 → BENCHMARK_ADMIT
 ```
 
-The historical placement audit is `BLOCK_ORACLE_ADMISSION_PLACEMENT_VISIBILITY_UNRESOLVED`: it invalidated the discarded mixed-placement adapter. The current contract now freezes gateway-local autonomy as the primary placement and keeps center remote control as `SIMULATOR_GAP`. The bounded gateway pilot reports 18 blind controls, 8 causal-infeasible diagnostics, 2 ordinary-baseline shortcuts and 8 unresolved cells; no resolved baseline survivor is admitted. Any `SEARCH_LIMIT` remains `UNRESOLVED_COMPUTATION`.
+The historical placement audit invalidated the discarded center/gateway mixed-visibility adapter. Gateway remains the primary policy placement and gateway receipt remains owner-local, but `V07-GATEWAY-ACTION-OWNERSHIP-REVIEW.v0.1.md` now blocks gateway exact admission: the provisional adapter reused an end-to-end `SEND_TERR → gateway receipt → center ACK` action as gateway-local execution without an explicit report-location/control transition. The 36-cell pilot and bifurcation result therefore remain diagnostic only. Any `SEARCH_LIMIT` remains `UNRESOLVED_COMPUTATION`.
 
 Current execution ledger:
 
@@ -279,11 +281,13 @@ Current execution ledger:
     → v0.7 process-support correction                     [DONE]
     → v0.7 pre-oracle generation + schema audit          [DONE LOCAL R1]
     → v0.7 specific TIGHT satellite-shortcut preflight   [DONE; 0 candidate shortcut cells]
-    → placement / visibility / control-path contract      [DONE GATEWAY / CENTER GAP]
-    → gateway-local bounded 36-cell pilot                 [DONE; 0 resolved baseline survivors]
-    → explain easy / causal-infeasible bifurcation        [CURRENT]
-    → gateway-local dynamic mechanism witnesses           [OPEN]
-    → staged exact admission per placement                [GATEWAY INCOMPLETE / CENTER BLOCKED]
+    → placement / visibility boundary                     [DONE OWNER-LOCAL RECEIPT / CENTER GAP]
+    → gateway-local bounded 36-cell pilot                 [DONE; DIAGNOSTIC ONLY]
+    → easy / causal-infeasible bifurcation attribution    [DONE; DIAGNOSTIC]
+    → gateway action/data-location ownership audit        [DONE; BLOCKER FOUND]
+    → freeze gateway-local legal action lifecycle         [CURRENT]
+    → gateway-local dynamic mechanism witnesses           [BLOCKED]
+    → staged exact admission per placement                [BLOCKED]
     → ordinary-baseline red-team                         [PENDING]
     → pristine structural holdout                        [PENDING]
     → Q11 human review                                    [PENDING]

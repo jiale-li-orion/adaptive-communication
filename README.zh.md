@@ -4,7 +4,7 @@
 
 面向山区灾前长期监测的 source-grounded 决策基准、决策语义运行时与 learning-guided exact search。场景长期存在供电受限、回传间歇中断、缓存压力和恢复过程；任务义务由外部来源定义，系统负责通信执行。
 
-> **当前控制面：** Layer 1 当前保留 v0.2 scoped failure atlas、v0.6 可复现判废 lineage 与 v0.7 process-support correction，三者都不是 released benchmark。gateway-local autonomy 已冻结为 v0.7 主 placement；center remote control 继续保持 transport `SIMULATOR_GAP`。当前 36-cell gateway bounded pilot 中，已解析格没有 ordinary-baseline survivor，另有 8 格保持 computation unresolved。Layer 2 继续承担 deterministic/reference infrastructure，Layer 3 暂停。当前 ownership 统一由 [`research/`](research/README.md) 持有。
+> **当前控制面：** Layer 1 当前保留 v0.2 scoped failure atlas、v0.6 可复现判废 lineage 与 v0.7 process-support correction，三者都不是 released benchmark。gateway 仍是主 policy placement，gateway receipt 仍属于 owner-local state；但 gateway exact admission 重新被更深的 data-location/action-ownership correctness defect 阻塞：当前 adapter 把原本跨越 `SEND_TERR → gateway receipt → center ACK` 的端到端动作直接解释成 gateway-local execution。36-cell gateway pilot 因此降级为 diagnostic。center remote control 继续保持独立 transport `SIMULATOR_GAP`；Layer 2 继续承担 deterministic/reference infrastructure，Layer 3 暂停。
 
 ## 1. 架构总览
 
@@ -48,7 +48,7 @@ Layer 1 定义问题；Layer 2 持有 deterministic correctness 与合法 decisi
 | 模块 | 持有对象 | 当前状态 | 入口 |
 |---|---|---|---|
 | **Shared substrate** | 通信物理、能量、缓存、机会、fallback、执行生命周期、数学系统模型 | 稳定共享底座 | [`research/substrate/`](research/substrate/README.md) |
-| **Layer 1 · Benchmark** | source-grounded obligations、task construction、observation/action/oracle contract、validity/hardness、split/release | **source/generation infrastructure ready；gateway placement frozen；dynamic hardness open；NOT_BENCHMARK_ADMIT** | [`research/benchmark/`](research/benchmark/README.md) |
+| **Layer 1 · Benchmark** | source-grounded obligations、task construction、observation/action/oracle contract、validity/hardness、split/release | **source/generation infrastructure ready；gateway policy placement retained；data-location/action ownership open；NOT_BENCHMARK_ADMIT** | [`research/benchmark/`](research/benchmark/README.md) |
 | **Layer 2 · Compiler** | Task/Evidence/Capability/Execution 语义、L/U future-choice frontier、evidence lifecycle、incremental update、exact fallback | **v2 deterministic core frozen on dev** | [`research/compiler/`](research/compiler/README.md) |
 | **Layer 3 · Policy** | 合法 / unresolved action 的排序与选择 | **paused**；learned-ranking v0.1 只保留为 negative/history | [`research/policy/`](research/policy/README.md) |
 | **Evaluation** | replay、attribution、ablation、baseline fairness、跨层 audit | 横切 | [`research/evaluation/`](research/evaluation/README.md) |

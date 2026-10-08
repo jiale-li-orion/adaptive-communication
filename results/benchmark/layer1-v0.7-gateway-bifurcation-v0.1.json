@@ -1,0 +1,277 @@
+{
+  "claim_boundary": [
+    "SINGLE_RECOVERY having a common final-UP stage follows from its frozen support predicate; this is not an empirical field-frequency claim.",
+    "For the eight TIGHT pilot cells that were full-current causal-infeasible, second-outage worlds are necessary for that pilot disposition: removing only those worlds makes every intervened support blind-solvable.",
+    "The intervention is evaluator-only attribution and does not propose deleting reinterruption from the benchmark; cache06 explicitly requires recover-and-reinterrupt dynamics.",
+    "This result does not prove every REINTERRUPTIBLE case is infeasible, nor that no gateway-local hard case exists outside the bounded pilot.",
+    "The result motivates auditing the process/observation structure before increasing search budgets or tuning generator parameters for hardness."
+  ],
+  "generation_manifest_sha256": "b33b6f257dbb3b91f44bd62a8af7764688983e4887fc69a26a94dc9b758ac19a",
+  "generation_run": "layer1-v0.7-preoracle-r1",
+  "pilot_axis_cell_count": 36,
+  "pilot_disposition_by_service_family": {
+    "REINTERRUPTIBLE": {
+      "FULL_CURRENT_CAUSAL_INFEASIBLE": 8,
+      "ORDINARY_BASELINE_SHORTCUT_SOLVED": 2,
+      "UNRESOLVED_COMPUTATION": 8
+    },
+    "SINGLE_RECOVERY": {
+      "BLIND_OPEN_LOOP_SOLVED": 18
+    }
+  },
+  "pilot_ref": "results/benchmark/layer1-v0.7-gateway-pilot-v0.1.json",
+  "placement": "GATEWAY_LOCAL_PRIMARY",
+  "schema_version": "0.1",
+  "second_outage_intervention": {
+    "all_targets_become_blind_open_loop_solvable": true,
+    "max_memo_nodes_per_reference": 50000,
+    "rows": [
+      {
+        "axis_cell": {
+          "fallback_mode": "TIGHT",
+          "feedback_profile": "EARLY_RECEIPT_LATE_ACK",
+          "obligations_per_stream": 2,
+          "phase_mode": "HALF_PERIOD_OFFSET",
+          "placement": "GATEWAY_LOCAL_PRIMARY",
+          "service_process": "REINTERRUPTIBLE",
+          "terr_capacity": 1
+        },
+        "case_id": "T1V07C-0013764f12142e67",
+        "intervened_blind_reference": {
+          "attempt_lattice_size": 25,
+          "memo_nodes": 96,
+          "solvable": true,
+          "status": "EXACT"
+        },
+        "ordinal": 1,
+        "original_world_count": 11,
+        "removed_second_outage_world_count": 5,
+        "single_down_run_world_count": 6
+      },
+      {
+        "axis_cell": {
+          "fallback_mode": "TIGHT",
+          "feedback_profile": "EARLY_RECEIPT_MID_ACK",
+          "obligations_per_stream": 2,
+          "phase_mode": "HALF_PERIOD_OFFSET",
+          "placement": "GATEWAY_LOCAL_PRIMARY",
+          "service_process": "REINTERRUPTIBLE",
+          "terr_capacity": 2
+        },
+        "case_id": "T1V07C-0025ef49cf9b72ee",
+        "intervened_blind_reference": {
+          "attempt_lattice_size": 36,
+          "memo_nodes": 49,
+          "solvable": true,
+          "status": "EXACT"
+        },
+        "ordinal": 5,
+        "original_world_count": 11,
+        "removed_second_outage_world_count": 5,
+        "single_down_run_world_count": 6
+      },
+      {
+        "axis_cell": {
+          "fallback_mode": "TIGHT",
+          "feedback_profile": "EARLY_RECEIPT_LATE_ACK",
+          "obligations_per_stream": 3,
+          "phase_mode": "ALIGNED",
+          "placement": "GATEWAY_LOCAL_PRIMARY",
+          "service_process": "REINTERRUPTIBLE",
+          "terr_capacity": 1
+        },
+        "case_id": "T1V07C-000313afb3d84ce3",
+        "intervened_blind_reference": {
+          "attempt_lattice_size": 43,
+          "memo_nodes": 66,
+          "solvable": true,
+          "status": "EXACT"
+        },
+        "ordinal": 13,
+        "original_world_count": 4,
+        "removed_second_outage_world_count": 1,
+        "single_down_run_world_count": 3
+      },
+      {
+        "axis_cell": {
+          "fallback_mode": "TIGHT",
+          "feedback_profile": "EARLY_RECEIPT_LATE_ACK",
+          "obligations_per_stream": 3,
+          "phase_mode": "ALIGNED",
+          "placement": "GATEWAY_LOCAL_PRIMARY",
+          "service_process": "REINTERRUPTIBLE",
+          "terr_capacity": 2
+        },
+        "case_id": "T1V07C-00035262c764a3a3",
+        "intervened_blind_reference": {
+          "attempt_lattice_size": 55,
+          "memo_nodes": 159,
+          "solvable": true,
+          "status": "EXACT"
+        },
+        "ordinal": 16,
+        "original_world_count": 4,
+        "removed_second_outage_world_count": 1,
+        "single_down_run_world_count": 3
+      },
+      {
+        "axis_cell": {
+          "fallback_mode": "TIGHT",
+          "feedback_profile": "EARLY_RECEIPT_LATE_ACK",
+          "obligations_per_stream": 3,
+          "phase_mode": "HALF_PERIOD_OFFSET",
+          "placement": "GATEWAY_LOCAL_PRIMARY",
+          "service_process": "REINTERRUPTIBLE",
+          "terr_capacity": 1
+        },
+        "case_id": "T1V07C-00057e555dcba2c4",
+        "intervened_blind_reference": {
+          "attempt_lattice_size": 41,
+          "memo_nodes": 108,
+          "solvable": true,
+          "status": "EXACT"
+        },
+        "ordinal": 25,
+        "original_world_count": 50,
+        "removed_second_outage_world_count": 35,
+        "single_down_run_world_count": 15
+      },
+      {
+        "axis_cell": {
+          "fallback_mode": "TIGHT",
+          "feedback_profile": "EARLY_RECEIPT_MID_ACK",
+          "obligations_per_stream": 3,
+          "phase_mode": "HALF_PERIOD_OFFSET",
+          "placement": "GATEWAY_LOCAL_PRIMARY",
+          "service_process": "REINTERRUPTIBLE",
+          "terr_capacity": 1
+        },
+        "case_id": "T1V07C-0017c4035550b302",
+        "intervened_blind_reference": {
+          "attempt_lattice_size": 51,
+          "memo_nodes": 128,
+          "solvable": true,
+          "status": "EXACT"
+        },
+        "ordinal": 26,
+        "original_world_count": 50,
+        "removed_second_outage_world_count": 35,
+        "single_down_run_world_count": 15
+      },
+      {
+        "axis_cell": {
+          "fallback_mode": "TIGHT",
+          "feedback_profile": "EARLY_RECEIPT_MID_ACK",
+          "obligations_per_stream": 3,
+          "phase_mode": "HALF_PERIOD_OFFSET",
+          "placement": "GATEWAY_LOCAL_PRIMARY",
+          "service_process": "REINTERRUPTIBLE",
+          "terr_capacity": 2
+        },
+        "case_id": "T1V07C-000a81764ceacf94",
+        "intervened_blind_reference": {
+          "attempt_lattice_size": 53,
+          "memo_nodes": 118,
+          "solvable": true,
+          "status": "EXACT"
+        },
+        "ordinal": 29,
+        "original_world_count": 50,
+        "removed_second_outage_world_count": 35,
+        "single_down_run_world_count": 15
+      },
+      {
+        "axis_cell": {
+          "fallback_mode": "TIGHT",
+          "feedback_profile": "IMMEDIATE_CONTROL",
+          "obligations_per_stream": 3,
+          "phase_mode": "HALF_PERIOD_OFFSET",
+          "placement": "GATEWAY_LOCAL_PRIMARY",
+          "service_process": "REINTERRUPTIBLE",
+          "terr_capacity": 2
+        },
+        "case_id": "T1V07C-00012e126378b01c",
+        "intervened_blind_reference": {
+          "attempt_lattice_size": 56,
+          "memo_nodes": 212,
+          "solvable": true,
+          "status": "EXACT"
+        },
+        "ordinal": 30,
+        "original_world_count": 50,
+        "removed_second_outage_world_count": 35,
+        "single_down_run_world_count": 15
+      }
+    ],
+    "selection_rule": "all TIGHT pilot cells with raw FULL_CURRENT_CAUSAL_INFEASIBLE disposition",
+    "target_count": 8
+  },
+  "stage": "V07_GATEWAY_LOCAL_BIFURCATION_ATTRIBUTION",
+  "stage_counts_audited": [
+    3,
+    4,
+    6
+  ],
+  "support_invariants": [
+    {
+      "all_worlds_final_stage_up": true,
+      "common_up_stages": [
+        2
+      ],
+      "contains_two_down_run_world": false,
+      "family": "SINGLE_RECOVERY",
+      "stage_count": 3,
+      "world_count": 3
+    },
+    {
+      "all_worlds_final_stage_up": false,
+      "common_up_stages": [],
+      "contains_two_down_run_world": true,
+      "family": "REINTERRUPTIBLE",
+      "stage_count": 3,
+      "world_count": 4
+    },
+    {
+      "all_worlds_final_stage_up": true,
+      "common_up_stages": [
+        3
+      ],
+      "contains_two_down_run_world": false,
+      "family": "SINGLE_RECOVERY",
+      "stage_count": 4,
+      "world_count": 6
+    },
+    {
+      "all_worlds_final_stage_up": false,
+      "common_up_stages": [],
+      "contains_two_down_run_world": true,
+      "family": "REINTERRUPTIBLE",
+      "stage_count": 4,
+      "world_count": 11
+    },
+    {
+      "all_worlds_final_stage_up": true,
+      "common_up_stages": [
+        5
+      ],
+      "contains_two_down_run_world": false,
+      "family": "SINGLE_RECOVERY",
+      "stage_count": 6,
+      "world_count": 15
+    },
+    {
+      "all_worlds_final_stage_up": false,
+      "common_up_stages": [],
+      "contains_two_down_run_world": true,
+      "family": "REINTERRUPTIBLE",
+      "stage_count": 6,
+      "world_count": 50
+    }
+  ],
+  "support_summary": {
+    "reinterruptible_all_observed_stage_counts_have_no_common_up_stage": true,
+    "reinterruptible_all_observed_stage_counts_include_second_outage_worlds": true,
+    "single_recovery_all_observed_stage_counts_have_common_final_up": true
+  },
+  "verdict": "SUPPORTED_SCOPED_BIFURCATION_ATTRIBUTION"
+}

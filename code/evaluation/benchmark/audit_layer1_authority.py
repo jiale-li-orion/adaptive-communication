@@ -57,7 +57,7 @@ def main()->int:
     assert len(t2)==3, len(t2)
 
     state=json.loads(STATE.read_text(encoding='utf-8'))
-    assert state['status']=='V07_GATEWAY_PLACEMENT_FROZEN_DYNAMIC_HARDNESS_OPEN'
+    assert state['status']=='V07_GATEWAY_POLICY_PLACEMENT_RETAINED_ACTION_OWNERSHIP_BLOCKED'
     assert state['release_status']=='NOT_BENCHMARK_ADMIT'
     assert state['main_family']=='T1_MONITORING_INFORMATION_CONTINUITY'
     assert state['boundary_family']=='T2_WARNING_DELIVERY_RESPONSE_HANDOFF'
@@ -125,14 +125,15 @@ def main()->int:
     assert state['quality_gates']['agentic_reducibility']=='PASS_41_OF_41_HARD_SIGNATURES'
     assert state['quality_gates']['communication_attribution']=='PASS_41_OF_41_HARD_SIGNATURES'
     assert state['quality_gates']['human_source_audit']=='MACHINE_PREAUDIT_23_OF_23_PASS_HUMAN_REVIEW_PENDING'
-    assert state['next_stage']=='AUDIT_V07_GATEWAY_EASY_CAUSAL_INFEASIBLE_BIFURCATION'
+    assert state['next_stage']=='FREEZE_GATEWAY_DATA_LOCATION_AND_ACTION_OWNERSHIP'
     readiness=state['research_readiness']
-    assert readiness['status']=='V07_GATEWAY_PLACEMENT_FROZEN_DYNAMIC_HARDNESS_OPEN'
+    assert readiness['status']=='V07_GATEWAY_POLICY_PLACEMENT_RETAINED_ACTION_OWNERSHIP_BLOCKED'
     assert readiness['layer3_status']=='PAUSED_UNTIL_LAYER1_DYNAMIC_MECHANISM_AND_STRUCTURAL_HOLDOUT_CLOSE'
     blocker_ids={row['id'] for row in readiness['blockers']}
     assert blocker_ids=={
+        'DATA_LOCATION_ACTION_OWNERSHIP_OPEN',
         'DYNAMIC_PROCESS_MECHANISM_OPEN',
-        'GATEWAY_STAGED_EXACT_ADMISSION_INCOMPLETE',
+        'GATEWAY_STAGED_EXACT_ADMISSION_BLOCKED',
         'HARD_MECHANISM_COVERAGE_REOPENED',
         'PRISTINE_STRUCTURAL_GENERALIZATION_OPEN',
         'Q11_HUMAN_SOURCE_REVIEW_PENDING',
@@ -156,8 +157,8 @@ def main()->int:
     assert readiness['v07_placement_visibility_disposition']=='GATEWAY_PRIMARY_FROZEN_CENTER_SIMULATOR_GAP'
     assert readiness['v07_placement_visibility_ref']=='results/benchmark/layer1-v0.7-placement-visibility-review.json'
     assert readiness['v07_placement_contract_ref']=='research/benchmark/PLACEMENT-VISIBILITY-CONTRACT.v0.1.json'
-    assert readiness['v07_exact_admission_status']=='GATEWAY_BOUNDED_PILOT_COMPLETE_FORMAL_ADMISSION_INCOMPLETE_CENTER_BLOCKED'
-    assert readiness['v07_active_oracle_pilot_code']=='GATEWAY_LOCAL_INDEXED_BOUNDED_PILOT_ACTIVE'
+    assert readiness['v07_exact_admission_status']=='BLOCKED_GATEWAY_ACTION_OWNERSHIP_AND_CENTER_TRANSPORT'
+    assert readiness['v07_active_oracle_pilot_code']=='GATEWAY_LOCAL_INDEXED_BOUNDED_PILOT_DIAGNOSTIC_ONLY'
     assert readiness['v07_gateway_pilot_axis_cells']==36
     assert readiness['v07_gateway_pilot_baseline_survivor_count']==0
     assert readiness['v07_gateway_pilot_disposition_counts']=={
@@ -167,6 +168,10 @@ def main()->int:
         'UNRESOLVED_COMPUTATION':8,
     }
     assert readiness['v07_gateway_pilot_ref']=='results/benchmark/layer1-v0.7-gateway-pilot-v0.1.json'
+    assert readiness['v07_gateway_bifurcation_ref']=='results/benchmark/layer1-v0.7-gateway-bifurcation-v0.1.json'
+    assert readiness['v07_gateway_action_ownership_disposition']=='BLOCK_GATEWAY_EXACT_ADMISSION_DATA_LOCATION_ACTION_OWNERSHIP_OPEN'
+    assert readiness['v07_gateway_action_ownership_ref']=='results/benchmark/layer1-v0.7-gateway-action-ownership-review.json'
+    assert readiness['v07_gateway_action_ownership_review_ref']=='research/benchmark/V07-GATEWAY-ACTION-OWNERSHIP-REVIEW.v0.1.md'
 
     authority=AUTH.read_text(encoding='utf-8')
     assert '58,752 个 recipe 不是 benchmark cases' in authority
@@ -179,7 +184,7 @@ def main()->int:
     assert '41 个 signatures / 174 个 pre-admission recipes' in authority
     assert 'public-test identity v0.2 当前冻结 3,804 个 test cases' in authority
     assert 'frozen-split LLM baseline                              [DONE v0.2; DeepSeek 0/7]' in authority
-    assert 'SOURCE/GENERATION INFRASTRUCTURE READY / GATEWAY PLACEMENT FROZEN / DYNAMIC HARDNESS OPEN / NOT_BENCHMARK_ADMIT' in authority
+    assert 'SOURCE/GENERATION INFRASTRUCTURE READY / GATEWAY POLICY PLACEMENT RETAINED / DATA-LOCATION + ACTION-OWNERSHIP OPEN / NOT_BENCHMARK_ADMIT' in authority
     assert 'Q11 human/source review 仍然是 release blocker，但**不再是唯一 blocker**' in authority
     assert 'GENERATION-AXES.v0.1.json' in authority
     assert '1,262,790 dynamic cases / 499,608 pre-oracle structure IDs' in authority
@@ -188,6 +193,7 @@ def main()->int:
     assert 'v0.7 scoped verdict' in authority
     assert '任一层 SEARCH_LIMIT → UNRESOLVED_COMPUTATION' in authority
     assert '36 个 placement-relevant TIGHT axis cells' in authority
+    assert 'V07-GATEWAY-ACTION-OWNERSHIP-REVIEW.v0.1.md' in authority
     assert WORLD_DOC.exists()
     assert WORLD_SCHEMA.exists()
     assert CAUSAL_DOC.exists()
@@ -199,10 +205,10 @@ def main()->int:
         text=path.read_text(encoding='utf-8')
         assert 'LAYER1-AUTHORITY.md' in text, f'{path} no longer points to Layer-1 authority'
     zh=README_ZH.read_text(encoding='utf-8')
-    assert 'gateway placement frozen' in zh
+    assert 'data-location/action ownership open' in zh
     assert '**paused**；learned-ranking v0.1 只保留为 negative/history' in zh
 
-    print('PASS Layer-1 authority: v0.6 is negative lineage; v0.7 gateway placement is frozen; the bounded gateway pilot has no resolved baseline survivor and 8 unresolved cells; dynamic hardness, structural generalization and Q11 remain open; Layer-3 is paused')
+    print('PASS Layer-1 authority: v0.6 is negative lineage; gateway policy placement/receipt ownership are retained but v0.7 gateway exact is blocked on data-location/action ownership; prior gateway pilot is diagnostic only; structural generalization and Q11 remain open; Layer-3 is paused')
     return 0
 
 

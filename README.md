@@ -4,7 +4,7 @@ English | [中文](README.zh.md)
 
 Source-grounded decision benchmark, decision-semantic runtime, and learning-guided exact search for pre-disaster mountain monitoring under limited power and intermittent communication.
 
-> **Current control plane:** Layer 1 retains three scoped assets: the v0.2 failure atlas, the reproducible-but-invalid v0.6 negative construction lineage, and the v0.7 process-support correction. None is a released benchmark. Gateway-local autonomy is now the frozen primary v0.7 placement; center remote control remains a transport `SIMULATOR_GAP`. A bounded 36-cell gateway pilot found no resolved ordinary-baseline survivor, while 8 cells remain computationally unresolved. Layer 2 remains reference/correctness infrastructure and Layer 3 is paused. Current ownership lives in [`research/`](research/README.md).
+> **Current control plane:** Layer 1 retains three scoped assets: the v0.2 failure atlas, the reproducible-but-invalid v0.6 negative construction lineage, and the v0.7 process-support correction. None is a released benchmark. Gateway remains the primary policy placement and gateway receipt remains owner-local, but gateway exact admission is re-blocked on a deeper data-location/action-ownership defect: the current adapter reuses an end-to-end `SEND_TERR → gateway receipt → center ACK` action as if it were executed locally at the gateway. The 36-cell gateway pilot is therefore diagnostic only. Center remote control remains a separate transport `SIMULATOR_GAP`; Layer 2 remains reference/correctness infrastructure and Layer 3 is paused. Current ownership lives in [`research/`](research/README.md).
 
 ## 1. Architecture at a glance
 
@@ -48,7 +48,7 @@ Layer 1 owns the problem. Layer 2 owns deterministic correctness and the legal d
 | Module | Owns | Current state | Entry |
 |---|---|---|---|
 | **Shared substrate** | communication physics, energy, cache, opportunity, fallback, execution lifecycle, mathematical model | stable shared base | [`research/substrate/`](research/substrate/README.md) |
-| **Layer 1 · Benchmark** | source-grounded obligations, task construction, observation/action/oracle contract, validity/hardness, split/release | **source/generation infrastructure ready; gateway placement frozen; dynamic hardness open; NOT_BENCHMARK_ADMIT** | [`research/benchmark/`](research/benchmark/README.md) |
+| **Layer 1 · Benchmark** | source-grounded obligations, task construction, observation/action/oracle contract, validity/hardness, split/release | **source/generation infrastructure ready; gateway policy placement retained; data-location/action ownership open; NOT_BENCHMARK_ADMIT** | [`research/benchmark/`](research/benchmark/README.md) |
 | **Layer 2 · Compiler** | Task/Evidence/Capability/Execution semantics, L/U future-choice frontier, evidence lifecycle, incremental update, exact fallback | **v2 deterministic core frozen on dev** | [`research/compiler/`](research/compiler/README.md) |
 | **Layer 3 · Policy** | ordering and selection among legal / unresolved actions | **paused**; previous learned-ranking line retained only as negative/history until Layer 1 closes | [`research/policy/`](research/policy/README.md) |
 | **Evaluation** | replay, attribution, ablation, baseline fairness, cross-layer audits | cross-cutting | [`research/evaluation/`](research/evaluation/README.md) |

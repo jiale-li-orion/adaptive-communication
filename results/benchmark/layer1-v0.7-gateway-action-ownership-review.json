@@ -1,0 +1,32 @@
+{
+  "claim_boundary": [
+    "This audit does not invalidate the frozen v0.7 source task, geometry or service-support generation lineage.",
+    "It invalidates interpreting the current gateway-local exact adapter as a deployment-faithful admission oracle.",
+    "The existing 36-cell gateway pilot and bifurcation result remain useful diagnostics of the provisional abstract kernel, but not benchmark-admission evidence.",
+    "Center placement remains separately blocked by its previously documented telemetry/query/control transport gap."
+  ],
+  "disposition": "BLOCK_GATEWAY_EXACT_ADMISSION_DATA_LOCATION_ACTION_OWNERSHIP_OPEN",
+  "facts": {
+    "exact_send_terr_creates_future_gateway_receipt": true,
+    "system_model_completion_is_center_arrival": true,
+    "system_model_separates_node_uplink_from_gateway_backhaul": true,
+    "v05_send_precedes_gateway_receipt_then_center_ack": true,
+    "v07_adapter_declares_send_terr_local_at_gateway": true,
+    "v07_gateway_contract_exposes_gateway_receipt_after_event": true,
+    "v07_gateway_policy_and_action_execution_owner_are_gateway": true
+  },
+  "required_closure": [
+    "Represent report/data location explicitly enough to distinguish not-yet-at-gateway, gateway-queued/in-flight, and center-delivered states.",
+    "Define which transitions are exogenous/report-schedule events and which are policy actions at gateway placement.",
+    "If gateway controls node uplink, declare the gateway-to-node command/access transport; otherwise node-to-gateway receipt must not be caused by an instantaneous gateway-local SEND_TERR action.",
+    "Define gateway-to-center primary/fallback forwarding actions separately from the node-to-gateway receipt event.",
+    "Re-run gateway exact/mechanism admission only after the action/data-location contract is frozen and audited."
+  ],
+  "schema_version": "0.1",
+  "stage": "V07_GATEWAY_ACTION_OWNERSHIP_REVIEW",
+  "violations": {
+    "data_location_not_explicit_in_v07_exact_state": true,
+    "gateway_local_send_owner_conflicts_with_receipt_stage": true,
+    "node_to_gateway_and_gateway_to_center_actions_not_separated": true
+  }
+}
