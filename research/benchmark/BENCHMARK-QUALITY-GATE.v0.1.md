@@ -64,7 +64,7 @@
 
 失败：COVERAGE_INSUFFICIENT。
 
-## Q5 Decision validity / hardness
+## Q5 Decision tier / hardness assignment
 
 要求：
 - multiple legal options；
@@ -77,7 +77,13 @@
 - query、probe、wait、send 的 acquisition/execution cost 必须进入同一 physical/resource ledger；
 - 去掉资源竞争、给予完美及时 current evidence、放宽 deadline 后，对应困难应按预期减弱；否则重新检查 construct。
 
-失败：DECISION_DEGENERATE。
+处置：
+
+- 对 `FUTURE_CHOICE_STRESS`：任一核心条件失败 → `DECISION_DEGENERATE_FOR_STRESS`，不得承担 Agentic / future-choice claim；
+- 对 `INTERACTIVE_DECISION`：允许 strong ordinary planner 饱和，但必须保留真实 action→state→feedback→outcome 闭环；
+- 对 `OPERATIONAL_CONFORMANCE`：可单轮/确定性/普通规则解决，只承担 source/evaluator/sanity/coverage 作用。
+
+因此 Q5 是 **track assignment gate**，不是所有 benchmark release item 的全局否决门。
 
 ## Q6 Baseline ladder
 
@@ -98,7 +104,7 @@
 - LLM / reasoning agent；
 - learned policy only when repeated state-dependent choice justifies it。
 
-要求报告 baseline saturation / headroom。
+要求报告 baseline saturation / headroom。**Baseline saturation 是 benchmark finding，不自动使 valid task 失效；只有 Future-Choice Stress track 要求未饱和。**
 
 同时必须有 communication attribution controls，在适用任务上比较 full system 与 no-communication/no-paid-acquisition、oracle/perfect-current-observation、no-active-sensing、no-memory，以及至少一组单因素 resource/deadline/evidence intervention。目标是区分通信/信息困难与模型基础任务能力不足。
 
@@ -190,13 +196,14 @@ release 至少包含：
 只有以下条件全部满足，candidate split 才可标 BENCHMARK_ADMIT：
 
     V0–V9 automatic validity filters = PASS
-    Q0–Q12 quality gates = PASS
+    Q0–Q4, Q6–Q12 release-quality gates = PASS
+    Q5 = explicit track assignment
     source audit = PASS
     task/evaluator audit = PASS
     held-out split frozen
     benchmark version frozen
 
-任何一项 FAIL 都必须保留具体 disposition，不能用 aggregate score 覆盖。
+任何 release-quality gate FAIL 都必须保留具体 disposition，不能用 aggregate score 覆盖。`FUTURE_CHOICE_STRESS` 还必须额外满足 Q5 的 strong decision-hardness 条件；`INTERACTIVE_DECISION` / `OPERATIONAL_CONFORMANCE` 不以方法 headroom 作为 release 合法性的前置条件。
 
 ## Paper-facing reporting template
 

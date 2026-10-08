@@ -12,11 +12,13 @@
 6. `Task specification`：给 goal、hard constraints、resource budgets、authority/effect envelope、time window 与 provenance。
 7. `Simulator mapping`：外部 source 支持而 simulator 缺失的 state/action 记为 SIMULATOR_GAP，不因当前跑不了而删题。
 8. `Case generator + oracle`：从 source-backed profiles 生成大量 case，并构建 external oracle。
-9. `Validity + hardness`：完成 shortcut、ordinary baseline、held-out 与 non-toy coverage 审计后才进入 policy evaluation。
+9. `Validity + tier assignment`：先完成 task/outcome/reproducibility validity；随后按 interaction / hardness 分配到 Operational-Conformance、Interactive-Decision、Future-Choice-Stress 三条 release track。只有最高 stress track 要求 strong ordinary-baseline headroom。
 
 ## Validity / hardness gate
 
-一个 Decision Benchmark task 至少要能回答以下问题：来源是否支持这个 operational need；是否存在真实选择而非唯一已知写入；观测/不确定性是否可能改变选择；资源或时序约束是否实际 binding；不同合法策略是否产生 materially different physical outcomes；强 ordinary mechanism 是否仍留下需要决策的空间。增加节点数、seed 或窗口数量本身不增加 decision richness。
+一个 benchmark task 首先要回答来源、task 与 evaluator 是否有效；interactive track 再要求真实 action→state transition 与多步反馈；Future-Choice Stress 才进一步要求 partial observation、binding continuation conflict 与 strong ordinary-baseline headroom。增加节点数、seed 或窗口数量本身不增加 decision richness。详见 [`BENCHMARK-PAPER-POSITIONING.md`](BENCHMARK-PAPER-POSITIONING.md)。
+
+当前 paper-construction track assignment 见 [`LAYER1-RELEASE-TRACKS.md`](LAYER1-RELEASE-TRACKS.md) / [`LAYER1-RELEASE-TRACKS.json`](LAYER1-RELEASE-TRACKS.json)。该表明确允许 benchmark release 在 Future-Choice Stress 为空时继续推进；只有 Layer-2 方法主张必须等待独立 hard subset。
 
 ## Benchmark-construction precedents
 

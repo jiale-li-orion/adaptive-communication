@@ -23,6 +23,8 @@ ROOT = os.path.dirname(HERE)
 
 CHECKS = {'benchmark': [('evaluation/benchmark/audit_layer1_authority.py',
                          'Layer-1 authority：taxonomy/scope/recipe/world-materialization snapshots/README entry points must not drift'),
+                        ('evaluation/benchmark/audit_layer1_release_tracks.py',
+                         'Layer-1 release tracks：每个 canonical surface 必须唯一归入 conformance、interactive、future-choice stress 或显式 blocker'),
                         ('evaluation/benchmark/audit_layer1_v07_placement_visibility.py',
                          'Layer-1 v0.7 placement/visibility：owner-local receipt 与 center query/control transport 在 exact admission 前必须显式分离'),
                         ('evaluation/benchmark/audit_layer1_v07_placement_contract.py',

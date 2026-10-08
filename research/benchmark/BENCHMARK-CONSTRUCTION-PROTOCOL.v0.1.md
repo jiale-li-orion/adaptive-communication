@@ -226,15 +226,23 @@ Gate 0 在所有 admission gate 之前执行，但它有两个方向完全不同
 
 LLM-as-a-judge 只能评价无法结构化的辅助输出，不能拥有核心 success 判定。
 
-### Gate E — Hardness
+### Gate E — Challenge / method-stress qualification
 
-通过 validity 不代表有研究价值。每个 Family 还必须证明：
+通过 validity 不代表属于最高难度 split。Gate E **不再作为所有 benchmark task 的全局 release veto**；它只决定一个 valid case 能否进入 `FUTURE_CHOICE_STRESS` / method-facing hard split。
+
+要进入最高 stress track，必须证明：
 
 - ordinary deterministic baseline 不饱和；
 - deterministic search / constrained planner 与 learned / LLM policy 有比较空间；
 - difficulty 随信息结构、资源或 horizon 单调或可解释变化；
 - model failure 不只是通信知识缺失、格式错误或工具 schema 不熟；
 - perfect-observation、oracle-communication、no-resource-conflict 等 ablation 能解释困难来源。
+
+若 Gate E 未通过但 Gate A–D/F 与 outcome/reproducibility audit 均通过，则：
+
+- deterministic / single-shot / ordinary-rule-solved case → `OPERATIONAL_CONFORMANCE`；
+- 有真实 action→state interaction、但 ordinary planner 饱和 → `INTERACTIVE_DECISION`；
+- 不得承担 Agentic hardness / Layer-2 method claim，但仍可进入 benchmark release 的对应 track。
 
 ### Gate F — Non-toy / Coverage
 
@@ -306,7 +314,7 @@ H0 可以进入 release 作为 sanity / conformance split，但不能用于证�
 - SIMULATOR_GAP：source-backed contract 需要当前 substrate 尚不存在的 state/action/actor/transition；
 - HISTORICALLY_CLOSED：与旧问题在 obligation + authority + information structure + action set + binding constraint 上语义等价，直接继承旧 verdict；
 - ADMISSION_READY：source、history dedupe、contract、simulator mapping 与 oracle 已闭合，可生成正式 case 做 validity/hardness audit；
-- BENCHMARK_ADMIT：case family 已通过 task/outcome validity、shortcut、hardness 与 non-toy coverage audit。
+- BENCHMARK_ADMIT：case family 已通过 task/outcome validity、coverage、split、reproducibility 与 release audit，并明确 track；只有 `FUTURE_CHOICE_STRESS` 子集额外要求 Gate E strong-headroom。
 
 BENCHMARK_ADMIT 只能由完整 construction pipeline 产生，不能由单次 simulator positive result 产生。
 

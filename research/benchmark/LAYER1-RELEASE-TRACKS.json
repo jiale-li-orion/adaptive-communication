@@ -1,0 +1,49 @@
+{
+  "status": "CURRENT_PAPER_CONSTRUCTION_TRACK_ASSIGNMENT",
+  "principle": "Benchmark validity and method headroom are separate. Valid easy/ordinary-solved tasks remain release assets but cannot support Agentic/future-choice hardness claims.",
+  "tracks": {
+    "OPERATIONAL_CONFORMANCE": {
+      "claim": "source/task/evaluator correctness, operational coverage, regression and attribution",
+      "requires_future_choice_headroom": false,
+      "surfaces": [
+        "T1.S0_STEADY_MONITORING",
+        "T1.S1_WARNING_CADENCE_TRANSITION",
+        "T1.S4_OUTAGE_CACHE_RETENTION",
+        "T1.S6_HETEROGENEOUS_PATH_PRIORITY"
+      ]
+    },
+    "INTERACTIVE_DECISION": {
+      "claim": "action execution changes causal environment / resource / observation state and final obligation outcome",
+      "requires_future_choice_headroom": false,
+      "surfaces": [
+        "T1.S2_INTERMITTENT_BACKHAUL_FALLBACK",
+        "T1.S3_ENERGY_CONSTRAINED_CONTINUITY",
+        "T1.S7_COMPOUND_CONTINUITY"
+      ]
+    },
+    "FUTURE_CHOICE_STRESS": {
+      "claim": "observation-conditioned continuation under binding shared future resources; strong ordinary baselines remain unsaturated",
+      "requires_future_choice_headroom": true,
+      "surfaces": []
+    }
+  },
+  "blocked": {
+    "T1.S5_RECOVERY_RECONCILIATION": "OBJECTIVE_AMBIGUOUS / SOURCE_GAP for backlog-vs-fresh sacrifice priority",
+    "T2.S0_AUTHORITY_GATED_PUBLICATION": "SIMULATOR_GAP",
+    "T2.S1_HIERARCHICAL_WARNING_DELIVERY_ACK": "SIMULATOR_GAP; task source-valid but future-choice resource contract not source-closed",
+    "T2.S2_PROGRESSIVE_CALL_RESPONSE": "SIMULATOR_GAP; task source-valid but future-choice resource contract not source-closed"
+  },
+  "surface_notes": {
+    "T1.S0_STEADY_MONITORING": "Historical O1 is deterministic conformance; useful as source/evaluator sanity anchor.",
+    "T1.S1_WARNING_CADENCE_TRANSITION": "Warning-driven workload change is operationally valid; standalone config installation is ordinary conformance, but the transition remains a compositional workload axis.",
+    "T1.S2_INTERMITTENT_BACKHAUL_FALLBACK": "Corrected gateway/backhaul execution has real ACK/timeout feedback and causal queue/resource state. Current bounded pilots are ordinary-planner solved, so it belongs in Interactive Decision rather than Future-Choice Stress.",
+    "T1.S3_ENERGY_CONSTRAINED_CONTINUITY": "Persistent battery/config state creates real cross-time consequences. Current ResourceGate/sustain baselines absorb the discovered witness, so it is Interactive Decision only.",
+    "T1.S4_OUTAGE_CACHE_RETENTION": "At-least-seven-day retention requirement is source-backed; retention alone is deterministic conformance and cache may not be artificially shrunk for hardness.",
+    "T1.S6_HETEROGENEOUS_PATH_PRIORITY": "Source-backed path/fallback authority is useful coverage/conformance; path choice alone is not a hard decision task.",
+    "T1.S7_COMPOUND_CONTINUITY": "Full-sim warning revision + outage + energy + backup is sequential and outcome-bearing. Existing energy/shared-backup stress is saturated by ordinary mechanisms, so method-stress admission remains open."
+  },
+  "graduation_rule": {
+    "benchmark_release": "At least one validated track may release once its source/task/outcome/coverage/split/reproducibility gates close; release does not wait for a Future-Choice Stress survivor.",
+    "future_choice_method_claim": "Requires at least one independently frozen Future-Choice Stress subset with strong ordinary-baseline headroom and structural holdout."
+  }
+}
