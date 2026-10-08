@@ -4,7 +4,7 @@ English | [中文](README.zh.md)
 
 Source-grounded decision benchmark, decision-semantic runtime, and learning-guided exact search for pre-disaster mountain monitoring under limited power and intermittent communication.
 
-> **Current control plane:** Layer 1 v0.6 has completed a reproducible method-independent pre-oracle generation run; the active work is non-anticipative oracle / validity / mechanism admission on the frozen r4 universe. Layer 2 v2 deterministic assets remain available as historical/current correctness infrastructure; Layer 3 method work is paused until benchmark coverage and pristine-generalization blockers close. Current ownership lives in [`research/`](research/README.md).
+> **Current control plane:** Layer 1 retains three scoped assets: the v0.2 failure atlas, the reproducible-but-invalid v0.6 negative construction lineage, and the v0.7 process-support correction. None is a released benchmark. Active work is limited to dynamic mechanism witnesses and staged exact admission on the frozen v0.7 universe; Layer 2 remains reference/correctness infrastructure and Layer 3 is paused. Current ownership lives in [`research/`](research/README.md).
 
 ## 1. Architecture at a glance
 
@@ -48,7 +48,7 @@ Layer 1 owns the problem. Layer 2 owns deterministic correctness and the legal d
 | Module | Owns | Current state | Entry |
 |---|---|---|---|
 | **Shared substrate** | communication physics, energy, cache, opportunity, fallback, execution lifecycle, mathematical model | stable shared base | [`research/substrate/`](research/substrate/README.md) |
-| **Layer 1 · Benchmark** | source-grounded obligations, task construction, observation/action/oracle contract, validity/hardness, split/release | **mechanism-discovery ready; hard-mechanism coverage reopened; NOT_BENCHMARK_ADMIT** | [`research/benchmark/`](research/benchmark/README.md) |
+| **Layer 1 · Benchmark** | source-grounded obligations, task construction, observation/action/oracle contract, validity/hardness, split/release | **source/oracle infrastructure ready; dynamic mechanism and exact admission open; NOT_BENCHMARK_ADMIT** | [`research/benchmark/`](research/benchmark/README.md) |
 | **Layer 2 · Compiler** | Task/Evidence/Capability/Execution semantics, L/U future-choice frontier, evidence lifecycle, incremental update, exact fallback | **v2 deterministic core frozen on dev** | [`research/compiler/`](research/compiler/README.md) |
 | **Layer 3 · Policy** | ordering and selection among legal / unresolved actions | **paused**; previous learned-ranking line retained only as negative/history until Layer 1 closes | [`research/policy/`](research/policy/README.md) |
 | **Evaluation** | replay, attribution, ablation, baseline fairness, cross-layer audits | cross-cutting | [`research/evaluation/`](research/evaluation/README.md) |
@@ -284,37 +284,26 @@ Hardness is carried by information and communication structure: observation spar
 
 The strong baseline floor includes local EDF/reserve, passive-only planning, normal-send-as-probe, fixed/periodic/batch reads, myopic VoI, shallow rule combiners, true depth-k belief planning, receding-horizon planning, generic/incremental exact search and ordinary dependency/cache optimization.
 
-### 3.6 Current v0.6 generation status
+### 3.6 Current construction and admission status
 
-Layer 1 has closed the **method-independent case-generation** gate for v0.6, but v0.6 subsequently failed the benchmark-validity shortcut gate. The official clean-tree generation run remains `layer1-v0.6-preoracle-r4`; its reproducibility result is retained as a negative lineage rather than promoted into a benchmark release.
+Three lineages are retained for different reasons:
 
-The official pre-oracle universe contains:
+| Lineage | What it establishes | What it does not establish |
+|---|---|---|
+| v0.2 | one scoped H2×H3×H4 failure family and a first-irreversible-commitment atlas | benchmark-wide mechanism coverage or pristine generalization |
+| v0.6 | auditable, byte-reproducible source/trace-driven generation | decision validity; all 1,262,790 variants collapse to a blind public satellite-only policy |
+| v0.7 | corrected recovery/reinterruptible support semantics; candidate `TIGHT` removes the specific v0.6 satellite-only shortcut | dynamic sufficiency, paid-evidence value, ordinary-baseline headroom or hard-case count |
 
-| Object | Count |
-|---|---:|
-| source-grounded task cells | 27 |
-| eligible obligation compositions | 51 |
-| deduplicated Connecta geometry signatures | 6,045 |
-| base scenarios | 77,556 |
-| base structural signatures | 36,270 |
-| `ALL_WORLD_PHYSICAL` bases | 46,770 |
-| `MIXED_WORLD_PHYSICAL` bases | 30,786 |
-| dynamic case variants | 1,262,790 |
-| pre-oracle structure IDs | 499,608 |
+The local audited v0.7 pre-oracle universe contains 103,408 base scenarios, of which 74,952 are `ALL_WORLD_PHYSICAL`; these expand to 2,023,704 variants / 863,460 pre-oracle structure IDs. These are generation counts only. No v0.7 case is currently admitted as hard.
 
-These counts describe a **generation universe, not benchmark hardness**. Downstream admission found a global common-safe shortcut: every all-world-physical support contains an `ALL_DOWN` terrestrial world, so worst-world `TIGHT` fallback provisioning equals the obligation count; all three fallback modes therefore expose enough public satellite budget to complete every obligation without using observations. A 486-cell exact pilot confirms `BLIND_OPEN_LOOP_SOLVED` in every sampled declared-axis cell, and a full construction audit proves the same shortcut for all 1,262,790 v0.6 variants.
+The next gate is not another generator version or a full two-million-case exact sweep. The frozen v0.7 universe must first expose four mechanism witnesses required by `cache06.md`: non-separable cross-stage commitment, later-observation dynamic sufficiency, dedicated-query/passive/send-as-probe competition, and causal intervention attribution. Exact classification then proceeds stage-by-stage—blind, full-current, no-paid-query, observation-matched acquisition—with every `SEARCH_LIMIT` kept unresolved.
 
-v0.6 is therefore frozen as **generation-reproducibility PASS / benchmark-validity FAIL**. The next construction lineage is v0.7; it will correct only process-support semantics already required by `cache06.md`, not tune resources against a proposed method.
+Current authority:
 
-Generation is auditable and byte-reproducible. Independent full runs r2/r3/r4 match on row counts, raw gzip SHA-256 and canonical-uncompressed SHA-256 for geometry, base-scenario and case artifacts. Every case ID is deterministically derived from source task, composition, geometry and frozen stress coordinates; geometry signatures retain reverse mappings to all equivalent trace slices; fallback headroom is derived from full-state physical matching rather than hand-picked after observing policy results.
-
-The current generation authority is:
-
+- [`research/benchmark/LAYER1-AUTHORITY.md`](research/benchmark/LAYER1-AUTHORITY.md)
 - [`research/benchmark/ENVIRONMENT-GENERATION-CONTRACT.v0.1.md`](research/benchmark/ENVIRONMENT-GENERATION-CONTRACT.v0.1.md)
-- [`research/benchmark/GENERATION-AXES.v0.1.json`](research/benchmark/GENERATION-AXES.v0.1.json)
-- [`research/benchmark/CASE-GENERATION-PIPELINE.v0.1.md`](research/benchmark/CASE-GENERATION-PIPELINE.v0.1.md)
-- [`research/benchmark/GENERATION-RUN-LEDGER.v0.1.md`](research/benchmark/GENERATION-RUN-LEDGER.v0.1.md)
-- [`results/benchmark/layer1-v0.6-preoracle-generation-r4.json`](results/benchmark/layer1-v0.6-preoracle-generation-r4.json)
+- [`research/benchmark/GENERATION-AXES.v0.2.json`](research/benchmark/GENERATION-AXES.v0.2.json)
+- [`results/benchmark/layer1-v0.7-shortcut-preflight.json`](results/benchmark/layer1-v0.7-shortcut-preflight.json)
 
 Current paper-facing comparison, construct coverage and frozen v0.2 distribution are generated in the module README:
 
@@ -459,7 +448,7 @@ The current three-layer split continues the old repo: the substrate carries phys
 
 | Owner | Frozen / active boundary |
 |---|---|
-| Layer 1 | v0.6 method-independent generation is complete/reproducible but fails V3 globally because worst-world fallback provisioning plus `ALL_DOWN` support guarantees a blind satellite-only policy. r4 is retained as negative/shortcut regression evidence. Active work has moved to a versioned v0.7 process-support correction grounded in `cache06.md`; final release still requires independent hard-mechanism coverage, a pristine structural holdout, and Q11 human/source review. |
+| Layer 1 | v0.6 is retained as reproducible negative lineage. v0.7 corrects only process-support semantics and passes the specific TIGHT satellite-shortcut preflight; dynamic mechanism witnesses and staged exact admission remain open. No current lineage is `BENCHMARK_ADMIT`. |
 | Layer 2 | v1 remains the historical runtime/compiler baseline. v2 deterministic future-choice semantics are frozen after dev correctness and strong-control audits. |
 | Layer 3 | paused. The previous learned search-ranking baseline is a negative historical result, not the current research line; no new Layer-3 method may shape Layer-1 generation. |
 | Generalization | the historical seven-signature test was exposed during earlier Layer-2 work and now serves regression evidence. A new structural-generalization claim requires a preregistered holdout. |

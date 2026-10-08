@@ -156,7 +156,7 @@
     "stage": "PRE_WORLD_PRE_ORACLE"
   },
   "main_family": "T1_MONITORING_INFORMATION_CONTINUITY",
-  "next_stage": "V07_PROCESS_SUPPORT_CONTRACT_FREEZE_AND_GENERATION",
+  "next_stage": "V07_DYNAMIC_MECHANISM_WITNESS_AND_STAGED_ORACLE_ADMISSION",
   "quality_gates": {
     "agentic_reducibility": "PASS_41_OF_41_HARD_SIGNATURES",
     "agentic_reducibility_ref": "results/benchmark/layer1-agentic-reducibility-v0.2-retry-legality.json",
@@ -184,12 +184,16 @@
     "authority_ref": "research/benchmark/HARD-SURVIVOR-FAILURE-ATLAS.v0.1.md",
     "blockers": [
       {
-        "id": "HARD_MECHANISM_COVERAGE_REOPENED",
-        "reason": "All 41 current hard signatures collapse to FINITE_CROSSING_WINDOWS + GATEWAY_SUMMARY_QUERY; PASSIVE_ACK_ONLY, MIXED_PASSIVE_QUERY_PROBE/H5 and MULTI_WINDOW_DYNAMIC do not survive the current strong-baseline ladder."
+        "id": "DYNAMIC_PROCESS_MECHANISM_OPEN",
+        "reason": "v0.7 corrects recovery/reinterruptible support semantics and removes the v0.6-style TIGHT blind-satellite shortcut, but it has not established cache06 mechanism gates: non-separable cross-stage choice, dynamic sufficiency after later observations, dedicated-query/passive/send-as-probe competition, and causal intervention attribution."
       },
       {
-        "id": "V07_PROCESS_SUPPORT_REBUILD_PENDING",
-        "reason": "v0.6 failed V3 globally: ALL_DOWN support plus worst-world fallback provisioning guarantees a blind public satellite-only policy. v0.7 must version and correct process-support semantics already required by cache06; r4 remains frozen."
+        "id": "STAGED_EXACT_ADMISSION_OPEN",
+        "reason": "No v0.7 exact-classification result is admitted. Partial diagnostic pilots were discarded because they mixed unresolved SEARCH_LIMIT cells with scientific case classification and were produced from uncommitted oracle semantics. Admission must stage blind, full-current, no-paid-query and observation-matched exact references and preserve SEARCH_LIMIT as unresolved."
+      },
+      {
+        "id": "HARD_MECHANISM_COVERAGE_REOPENED",
+        "reason": "The historical v0.2 survivors expose one scoped H2xH3xH4 family; independent dynamic mechanism families have not yet passed the frozen ordinary-baseline ladder."
       },
       {
         "id": "PRISTINE_STRUCTURAL_GENERALIZATION_OPEN",
@@ -203,19 +207,18 @@
     "environment_generation_contract_ref": "research/benchmark/ENVIRONMENT-GENERATION-CONTRACT.v0.1.md",
     "established": [
       "T1 source/task contract and provenance discipline",
-      "causal observation/evidence process and non-anticipative exact reference",
-      "V0-V9 validity/evaluator infrastructure",
-      "174 hard recipes / 41 exact hard signatures expose a stable H2xH3xH4 mechanism family",
-      "first irreversible loss is observable across query/send/wait/satellite commitments on all 41 signatures for the audited ordinary baselines",
-      "method-independent environment/generation contract and generation axes are frozen before v0.6 generator execution",
-      "v0.6 official clean-tree pre-oracle generation r4 is reproducible across r2/r3/r4 with exact raw/canonical artifact hashes; generation is closed and downstream oracle/admission may not rewrite generator axes",
-      "v0.6 validity audit proves a global blind satellite-only common-safe shortcut across all 1,262,790 variants; r4 is retained as reproducible negative lineage and may not be edited in place"
+      "causal observation/evidence process and non-anticipative exact-reference infrastructure",
+      "v0.2 scoped failure atlas: first irreversible query/send/wait/satellite commitments occur inside one H2xH3xH4 survivor family",
+      "v0.6 source/trace/generation engineering is byte-reproducible and retained as negative lineage",
+      "v0.6 full universe is invalid as a decision-hardness benchmark because ALL_DOWN plus worst-world backup provisioning yields a blind public satellite-only policy",
+      "v0.7 changes only process-support semantics plus the predeclared minimum-stage rule; source, geometry, resource, evidence, timing and fallback axes remain invariant",
+      "v0.7 candidate TIGHT preflight removes the specific v0.6-style public satellite-only common-safe shortcut; BALANCED/SLACK shortcut cells remain controls for downstream filtering"
     ],
-    "generation_axes_ref": "research/benchmark/GENERATION-AXES.v0.1.json",
-    "generation_axes_status": "FROZEN_AND_CONSUMED_BY_V06_OFFICIAL_R4",
+    "generation_axes_ref": "research/benchmark/GENERATION-AXES.v0.2.json",
+    "generation_axes_status": "FROZEN_FOR_V07_SUPPORT_CORRECTION_ONLY",
     "hard_survivor_failure_atlas_ref": "results/benchmark/layer1-hard-survivor-failure-atlas-v0.1.json",
-    "layer3_status": "PAUSED_UNTIL_LAYER1_DYNAMIC_PROCESS_COVERAGE_CLOSES",
-    "status": "V06_GENERATION_REPRODUCIBLE_BUT_VALIDITY_FAILED_V07_REBUILD_OPEN",
+    "layer3_status": "PAUSED_UNTIL_LAYER1_DYNAMIC_MECHANISM_AND_STRUCTURAL_HOLDOUT_CLOSE",
+    "status": "V07_SUPPORT_CORRECTION_AUDITED_MECHANISM_AND_ORACLE_ADMISSION_OPEN",
     "v06_all_world_physical_bases_with_all_down_support": 46770,
     "v06_cases_with_full_fallback_budget": 1262790,
     "v06_generation_counts": {
@@ -236,7 +239,23 @@
     "v06_oracle_pilot_blind_open_loop_solved": 486,
     "v06_oracle_pilot_ref": "results/benchmark/layer1-v0.6-oracle-pilot-r4.json",
     "v06_shortcut_audit_ref": "results/benchmark/layer1-v0.6-shortcut-collapse-r4.json",
-    "v06_validity_disposition": "GLOBAL_BLIND_SATELLITE_SHORTCUT"
+    "v06_validity_disposition": "GLOBAL_BLIND_SATELLITE_SHORTCUT",
+    "v07_candidate_tight_public_satellite_only_shortcut_count": 0,
+    "v07_generation_counts": {
+      "all_world_physical_bases": 74952,
+      "base_scenarios": 103408,
+      "dynamic_cases": 2023704,
+      "eligible_compositions": 51,
+      "geometry_signatures": 6045,
+      "mixed_world_physical_bases": 26260,
+      "no_world_physical_bases": 2196,
+      "preoracle_structure_ids": 863460,
+      "source_task_cells": 27
+    },
+    "v07_generation_disposition": "AUDITED_PREORACLE_LINEAGE_NOT_HARDNESS_ADMITTED",
+    "v07_generation_local_run": "layer1-v0.7-preoracle-r1",
+    "v07_shortcut_preflight_disposition": "PASS_NO_V06_STYLE_TIGHT_SATELLITE_SHORTCUT",
+    "v07_shortcut_preflight_ref": "results/benchmark/layer1-v0.7-shortcut-preflight.json"
   },
   "schema_version": "0.1",
   "scope": {
@@ -502,7 +521,7 @@
     "source_contract_count": 27,
     "status": "MACHINE_REGENERATION_COMPLETE"
   },
-  "status": "V06_VALIDITY_FAIL_V07_PROCESS_SUPPORT_REBUILD",
+  "status": "V07_SUPPORT_CORRECTION_ONLY_DYNAMIC_MECHANISM_REOPENED",
   "structure_aware_split": {
     "audit_ref": "results/benchmark/layer1-structure-aware-split-v0.2-retry-legality.json",
     "by_split": {
@@ -561,16 +580,14 @@
     }
   },
   "warnings": [
-    "Current machine lineage is v0.2-retry-legality; pre-retry exact/V8/split/LLM/Q-gate numbers are historical only.",
-    "Retry legality changes full-universe labels: 55,008 no-paid-query, 2,106 paid-evidence, 630 information-infeasible, 1,008 mixed-world-solvability recipes.",
-    "V8 v0.2 leaves 41 paid-evidence signatures / 174 pre-admission recipes, all finite-crossing gateway-summary-query overlap 3/4.",
-    "Frozen public test v0.2 contains 3,804 cases. DeepSeek Flash frozen-test reasoning baseline has been rerun: 0/7 hard signatures succeed, all failures are DEADLINE_EXPIRED, with 0 invalid actions.",
-    "Q0-Q12 machine refresh is complete at 12 PASS / 1 BLOCKED; only Q11 real human/source review remains before BENCHMARK_ADMIT.",
-    "T2 remains SIMULATOR_GAP until actor-chain environment support exists.",
-    "2026-10-06 hard-survivor audit reopens scientific coverage: all 41 hard signatures collapse to FINITE_CROSSING_WINDOWS + GATEWAY_SUMMARY_QUERY + H2/H3/H4.",
-    "PASSIVE_ACK_ONLY, MIXED_PASSIVE_QUERY_PROBE/H5 and MULTI_WINDOW_DYNAMIC have no current V8 hard survivors; parameter diversity must not be reported as mechanism diversity.",
-    "Layer 3 learning/search-ranking is paused until a cache06-compliant dynamic-process generator passes mechanism and strong-baseline gates.",
-    "The 7-signature historical test was exposed at fdc0846 and cannot support a pristine method-level structural-generalization claim."
+    "Current main research state is NOT_BENCHMARK_ADMIT; historical v0.2 Q0-Q12 and public-test artifacts are regression/provenance only.",
+    "The historical 7-signature test was exposed at fdc0846 and cannot support a pristine structural-generalization claim.",
+    "v0.2 hard survivors are scoped evidence from one FINITE_CROSSING_WINDOWS + GATEWAY_SUMMARY_QUERY + H2/H3/H4 family, not benchmark-wide mechanism coverage.",
+    "v0.6 generation is reproducible but globally shortcut-invalid; its 1,262,790 variants are negative construction lineage, not benchmark cases.",
+    "v0.7 only corrects process-support semantics. Passing the TIGHT blind-satellite preflight is necessary but does not establish dynamic sufficiency, EvidenceNeed, hard-case count or algorithm headroom.",
+    "SEARCH_LIMIT is unresolved computation status and may never be counted as information-infeasible, hard, or method failure.",
+    "Layer 3 remains paused. Layer-2/3 outcomes may not modify source-owned fields, public geometry, generator axes or case selection.",
+    "T2 remains SIMULATOR_GAP until actor-chain environment support exists."
   ],
   "world_materialization": {
     "bundle_count": 58752,

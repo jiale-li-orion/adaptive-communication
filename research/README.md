@@ -21,7 +21,7 @@ shared communication substrate + scorer
 | Owner | 持有语义 | 当前状态 | Authority / entry |
 |---|---|---|---|
 | `substrate/` | 通信物理、能量、缓存、机会、fallback、执行生命周期、system model | 稳定共享底座 | [`substrate/README.md`](substrate/README.md) · [`substrate/SYSTEM-MODEL-v1.md`](substrate/SYSTEM-MODEL-v1.md) |
-| `benchmark/` | **Layer 1**：source-grounded operational obligation、task construction、observation/action/oracle、validity/hardness、split/release | **hard-mechanism coverage reopened**；environment/generation contract 重建；formal admission 关闭 | [`benchmark/LAYER1-AUTHORITY.md`](benchmark/LAYER1-AUTHORITY.md) · [`benchmark/README.md`](benchmark/README.md) |
+| `benchmark/` | **Layer 1**：source-grounded operational obligation、task construction、observation/action/oracle、validity/hardness、split/release | source/oracle infrastructure ready；dynamic mechanism witness 与 staged exact admission open；formal admission 关闭 | [`benchmark/LAYER1-AUTHORITY.md`](benchmark/LAYER1-AUTHORITY.md) · [`benchmark/README.md`](benchmark/README.md) |
 | `compiler/` | **Layer 2**：Task/Evidence/Capability/Execution、legality、evidence lifecycle、future-choice L/U、incremental frontier、exact fallback | **v2 deterministic core frozen on dev** | [`compiler/README.md`](compiler/README.md) · [`compiler/RUNTIME-DOMAIN-OWNERSHIP-v1.md`](compiler/RUNTIME-DOMAIN-OWNERSHIP-v1.md) |
 | `policy/` | **Layer 3**：合法 / unresolved action 的排序、search guidance、LLM / learned policy | **paused**；等待 Layer-1 benchmark coverage / holdout 闭合 | [`policy/README.md`](policy/README.md) |
 | `evaluation/` | replay、attribution、ablation、baseline fairness、跨层 audit contract | 横切三层 | [`evaluation/README.md`](evaluation/README.md) |
@@ -30,11 +30,11 @@ shared communication substrate + scorer
 
 ## Current research line
 
-Layer 1 当前拥有可复现的 source/task/oracle/validity/failure-discovery 基础，但 **benchmark freeze 已撤回**。2026-10-06 survivor audit 发现 41/41 hard signatures 全部坍缩到同一 H2×H3×H4 family；因此主线回到 Layer 1：先冻结 method-independent environment/generation contract，再补独立 hard mechanism coverage 与 pristine structural holdout。Layer 2 v1/v2 继续作为 deterministic/reference 资产保留；Layer 3 暂停。
+Layer 1 当前保留三类 scoped 资产：v0.2 failure atlas、v0.6 可复现判废 lineage、v0.7 process-support correction。它们都不等于已完成 benchmark。当前唯一主线是从 frozen v0.7 universe 中验证 `cache06.md` 的四个动态机制见证，并按 blind → full-current → no-paid-query → observation-matched acquisition 分层完成 exact admission；`SEARCH_LIMIT` 保持 unresolved。Layer 2 v1/v2 继续作为 deterministic/reference 资产保留；Layer 3 暂停。
 
 当前边界：
 
-- Layer 1 当前因 hard-mechanism coverage 与 test provenance 正式重开；方法结果不得反向修改 generator。
+- Layer 1 当前因 dynamic mechanism、hard-mechanism coverage 与 test provenance 正式重开；方法结果不得反向修改 generator。
 - Layer 2 deterministic semantics 只因 correctness defect 重开；performance temptation 不改变 frozen contract。
 - Layer 3 当前暂停；未来重新启动时仍只能消费 frozen Layer-1/2 contract，不接管 protocol legality、oracle 或 benchmark generation。
 - 历史 7-signature test 已暴露，承担 regression evidence；新的 structural-generalization claim 需要重新 preregister holdout。

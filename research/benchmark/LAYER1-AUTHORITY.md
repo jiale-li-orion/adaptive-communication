@@ -323,12 +323,15 @@ receipt-race、overlapping receipt chain、joint query–satellite Pareto、reso
 
 因此 Layer 1 当前状态改为：
 
-> **MECHANISM_DISCOVERY_READY / HARD_MECHANISM_COVERAGE_REOPENED / NOT_BENCHMARK_ADMIT**
+> **SOURCE/ORACLE INFRASTRUCTURE READY / DYNAMIC MECHANISM AND ADMISSION OPEN / NOT_BENCHMARK_ADMIT**
 
-Q11 human/source review 仍然是 release blocker，但**不再是唯一 blocker**。新增两个 research-readiness blockers：
+Q11 human/source review 仍然是 release blocker，但**不再是唯一 blocker**。当前 research-readiness blockers 固定为：
 
-1. `HARD_MECHANISM_COVERAGE_REOPENED`：主 generator 尚未把 `cache06.md` 要求的 dynamic sufficiency、passive/query/probe competition、重复取证与 action-dependent evidence lifecycle 形成可通过 strong-baseline gate 的独立结构覆盖；
-2. `PRISTINE_STRUCTURAL_GENERALIZATION_OPEN`：旧 test 已暴露，最终方法 claim 需要在方法冻结前重新 preregister structural cohort / protocol。
+1. `DYNAMIC_PROCESS_MECHANISM_OPEN`：尚未完成 `cache06.md` 冻结的 non-separable cross-stage choice、dynamic sufficiency、query/passive/send-as-probe competition 与 intervention attribution；
+2. `STAGED_EXACT_ADMISSION_OPEN`：v0.7 尚无可接受的 exact classification；`SEARCH_LIMIT` 必须保持 unresolved，不能算 hard / infeasible / method failure；
+3. `HARD_MECHANISM_COVERAGE_REOPENED`：v0.2 的 41 个 survivors 只支持一个 scoped H2×H3×H4 family；
+4. `PRISTINE_STRUCTURAL_GENERALIZATION_OPEN`：旧 test 已暴露，最终方法 claim 需要在方法冻结前重新 preregister structural cohort / protocol；
+5. `Q11_HUMAN_SOURCE_REVIEW_PENDING`：machine preaudit 不能替代真实 reviewer。
 
 当前执行顺序固定为：
 
@@ -355,9 +358,11 @@ DB44/T 2457-2024 source correction               [DONE]
    ↳ 46,770/46,770 physical bases contain ALL_DOWN support
    ↳ TIGHT budget = obligation count on 46,770/46,770 bases
    ↳ 1,262,790/1,262,790 cases inherit full fallback budget
-→ freeze corrected v0.7 process-support contract        [NEXT]
-→ v0.7 method-independent generator                     [PENDING]
-→ v0.7 oracle / validity / mechanism admission          [PENDING]
+→ freeze corrected v0.7 process-support contract        [DONE]
+→ v0.7 method-independent generator                     [DONE PRE-ORACLE; local r1 audited]
+→ v0.7 specific v0.6-style shortcut preflight           [DONE; candidate TIGHT shortcut count = 0]
+→ dynamic mechanism witnesses                           [CURRENT]
+→ staged exact / validity admission                     [CURRENT]
 → strong-baseline red-team                              [PENDING]
 → preregister pristine structural-generalization cohort  [PENDING]
 → real Q11 reviewer signoff                              [PENDING]
@@ -388,7 +393,7 @@ structure-aware split v0.2 已冻结到 `results/benchmark/layer1-structure-awar
 
 最新解释见 `HARD-SURVIVOR-FAILURE-ATLAS.v0.1.md`。机器审计在 41/41 survivors 上为 9 类 ordinary policies 找到明确 first irreversible loss：错误动作既包括 `ISSUE_QUERY`，也包括 `SEND_TERR`、`SEND_SAT` 与 `WAIT`；在同一 prefix 上 exact frontier 存在 preserving alternatives。当前最有价值的结构发现因此是 **premature communication commitment can destroy future completion continuations**，而不是窄化成 query timing。但该结论目前只在 H2×H3×H4 survivor family 上成立，必须由下一版 dynamic generator 扩展/证伪。
 
-下一版 generator 的合法输入空间由 [`ENVIRONMENT-GENERATION-CONTRACT.v0.1.md`](ENVIRONMENT-GENERATION-CONTRACT.v0.1.md) 与 [`GENERATION-AXES.v0.1.json`](GENERATION-AXES.v0.1.json) 先于 generator 实现冻结。`GENERATION-AXES.v0.1.json` 只消费 source/profile/public-trace authority 与 `cache06.md` 既有 v0.5 process contract；baseline / Layer-2 / Layer-3 结果被显式列为 forbidden generator dependencies。该冻结用于恢复 benchmark construction independence，不代表 v0.6 已通过 hardness / coverage / release gate。
+生成器的合法输入空间由 [`ENVIRONMENT-GENERATION-CONTRACT.v0.1.md`](ENVIRONMENT-GENERATION-CONTRACT.v0.1.md) 与 generation axes 在执行前冻结。v0.6 使用 `GENERATION-AXES.v0.1.json`；v0.7 只在 `GENERATION-AXES.v0.2.json` 中修正 process-support 语义和预声明的最小 release-stage 条件。baseline / Layer-2 / Layer-3 结果均为 forbidden generator dependencies。该冻结只保证 construction independence，不代表 hardness / mechanism coverage / release admission。
 
 v0.6 method-independent generator 已完成 official clean-tree pre-oracle run r4。生成器从 27 个 DB44 source task cells 出发，51 个合法两流/4–6 obligation compositions 通过 preflight；公开 Connecta trace 在冻结 mask/slice/signature 规则下形成 6,045 个实际 geometry signatures；全量生成 77,556 个 base scenarios，其中 46,770 个 `ALL_WORLD_PHYSICAL`、30,786 个 `MIXED_WORLD_PHYSICAL`。物理全可解 base 按冻结 feedback/query/headroom 轴展开为 **1,262,790 dynamic cases / 499,608 pre-oracle structure IDs**。这些数字是 generation coverage，不是 hard-case count。r2/r3/r4 三次独立生成的 artifact bytes、raw SHA、canonical SHA 与 rows 全部逐项一致；clean r4 manifest 绑定 commit `0ad64380b82ab940bf2ba0cd8c6570583d20d776`。机器证据见 `results/benchmark/layer1-v0.6-preoracle-generation-r4.json`，过程 ledger 见 `GENERATION-RUN-LEDGER.v0.1.md`。
 
@@ -411,6 +416,44 @@ v0.6 的 generation engineering / reproducibility 通过，但 benchmark validit
 > **GENERATION_REPRODUCIBILITY_PASS / BENCHMARK_VALIDITY_FAIL / RETAIN_AS_NEGATIVE_LINEAGE**
 
 这个失败不允许通过修改 r4 budget、删除 satellite windows 或手挑 baseline-failure cases 修补。下一版另开 v0.7，只修 `cache06.md` process contract 已经能够证明的语义错误：`SINGLE_RECOVERY` 不再允许“全程 DOWN、从未恢复”冒充 recovery；`REINTERRUPTIBLE` 必须真的含“恢复后再次中断”的支持轨迹；`FULL_BINARY_SUPPORT` 继续保留为 diagnostic upper-support control。fallback budget derivation 保持不变，让 shortcut 是否消失由新 support contract 自然决定。
+
+### 13.3 v0.7 scoped verdict
+
+v0.7 已完成上述 **process-support correction**，并保留 v0.6 的 source task、public geometry、capacity、feedback/query timing 与 fallback derivation。当前本地 audited pre-oracle run `layer1-v0.7-preoracle-r1` 包含 103,408 base scenarios；其中 74,952 个 `ALL_WORLD_PHYSICAL`，展开为 2,023,704 variants / 863,460 pre-oracle structure IDs。它们仍然只是 generation universe，不是 admitted benchmark cases。
+
+cheap construction preflight 的结论严格限定为：candidate `TIGHT` cells 中，v0.6 的“完整 fallback budget + public satellite-only schedule”shortcut 数为 0；`BALANCED` 与 `SLACK_CONTROL` 仍产生预期的 shortcut/control cells。这个结果只说明特定 v0.6 collapse 被修掉，**不证明**：
+
+- 存在 paid-evidence-required hard case；
+- query 优于 passive feedback / normal send-as-probe；
+- 早期行动形成 non-separable cross-stage commitment；
+- dynamic evidence freshness / repeated query 已产生有效差额；
+- ordinary baseline 留有任务质量余量。
+
+此前未提交的 pilot 结果已经删除：它们使用未冻结的 oracle placement/visibility 语义，并且将大量 `SEARCH_LIMIT` 混入 case-level classification。它们不得出现在 README、claim ledger 或论文统计中。
+
+后续 exact admission 固定为**分层求解**，避免给所有 case 同时运行四个昂贵 reference：
+
+```text
+blind open-loop exact
+  ├─ success → EASY / COMMON_SAFE_CONTROL
+  └─ fail
+       ↓
+full-current-state exact
+  ├─ fail → CAUSAL_FULL_CURRENT_INFEASIBLE diagnostic
+  └─ success
+       ↓
+no-paid-query exact（保留 passive ACK / send-as-probe）
+  ├─ success → NATURAL_FEEDBACK_SUFFICIENT
+  └─ fail
+       ↓
+observation-matched exact with legal acquisition
+  ├─ success → PAID_EVIDENCE_REQUIRED candidate
+  └─ fail → INFORMATION_INFEASIBLE diagnostic
+
+任一层 SEARCH_LIMIT → UNRESOLVED_COMPUTATION
+```
+
+在扩大 exact sweep 前，必须先从同一个 frozen v0.7 universe 验证四个 mechanism witness：non-separable cross-stage choice、later-observation dynamic sufficiency、dedicated query / passive / send-as-probe competition、以及对应 intervention attribution。若这些 witness 不存在，v0.7 降级为 process-support regression，不再继续增加版本或 horizon 制造难度。
 
 V8 的 baseline 分类与否决边界见 `V8-BASELINE-CONTRACT.v0.1.md`。generic exact / memo / dependency-cache / incremental AND–OR 属于 computation reference：它们取得 exact 任务质量是预期结果，不能因为“确定性算法能解”再次否定 benchmark；当前 16-cell computation reference 中 generic exact 平均约 54.6 ms、最大约 280.7 ms，no-paid-query 平均约 503.8 ms、最大约 4.0 s。这些数值只作为后续方法公平计算基线。
 

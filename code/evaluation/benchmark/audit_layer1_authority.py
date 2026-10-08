@@ -56,7 +56,7 @@ def main()->int:
     assert len(t2)==3, len(t2)
 
     state=json.loads(STATE.read_text(encoding='utf-8'))
-    assert state['status']=='V06_VALIDITY_FAIL_V07_PROCESS_SUPPORT_REBUILD'
+    assert state['status']=='V07_SUPPORT_CORRECTION_ONLY_DYNAMIC_MECHANISM_REOPENED'
     assert state['release_status']=='NOT_BENCHMARK_ADMIT'
     assert state['main_family']=='T1_MONITORING_INFORMATION_CONTINUITY'
     assert state['boundary_family']=='T2_WARNING_DELIVERY_RESPONSE_HANDOFF'
@@ -124,20 +124,21 @@ def main()->int:
     assert state['quality_gates']['agentic_reducibility']=='PASS_41_OF_41_HARD_SIGNATURES'
     assert state['quality_gates']['communication_attribution']=='PASS_41_OF_41_HARD_SIGNATURES'
     assert state['quality_gates']['human_source_audit']=='MACHINE_PREAUDIT_23_OF_23_PASS_HUMAN_REVIEW_PENDING'
-    assert state['next_stage']=='V07_PROCESS_SUPPORT_CONTRACT_FREEZE_AND_GENERATION'
+    assert state['next_stage']=='V07_DYNAMIC_MECHANISM_WITNESS_AND_STAGED_ORACLE_ADMISSION'
     readiness=state['research_readiness']
-    assert readiness['status']=='V06_GENERATION_REPRODUCIBLE_BUT_VALIDITY_FAILED_V07_REBUILD_OPEN'
-    assert readiness['layer3_status']=='PAUSED_UNTIL_LAYER1_DYNAMIC_PROCESS_COVERAGE_CLOSES'
+    assert readiness['status']=='V07_SUPPORT_CORRECTION_AUDITED_MECHANISM_AND_ORACLE_ADMISSION_OPEN'
+    assert readiness['layer3_status']=='PAUSED_UNTIL_LAYER1_DYNAMIC_MECHANISM_AND_STRUCTURAL_HOLDOUT_CLOSE'
     blocker_ids={row['id'] for row in readiness['blockers']}
     assert blocker_ids=={
+        'DYNAMIC_PROCESS_MECHANISM_OPEN',
+        'STAGED_EXACT_ADMISSION_OPEN',
         'HARD_MECHANISM_COVERAGE_REOPENED',
-        'V07_PROCESS_SUPPORT_REBUILD_PENDING',
         'PRISTINE_STRUCTURAL_GENERALIZATION_OPEN',
         'Q11_HUMAN_SOURCE_REVIEW_PENDING',
     }
-    assert readiness['generation_axes_status']=='FROZEN_AND_CONSUMED_BY_V06_OFFICIAL_R4'
+    assert readiness['generation_axes_status']=='FROZEN_FOR_V07_SUPPORT_CORRECTION_ONLY'
     assert readiness['environment_generation_contract_ref']=='research/benchmark/ENVIRONMENT-GENERATION-CONTRACT.v0.1.md'
-    assert readiness['generation_axes_ref']=='research/benchmark/GENERATION-AXES.v0.1.json'
+    assert readiness['generation_axes_ref']=='research/benchmark/GENERATION-AXES.v0.2.json'
     assert readiness['v06_generation_ref']=='results/benchmark/layer1-v0.6-preoracle-generation-r4.json'
     assert readiness['v06_generation_official_run']=='layer1-v0.6-preoracle-r4'
     assert readiness['v06_validity_disposition']=='GLOBAL_BLIND_SATELLITE_SHORTCUT'
@@ -145,6 +146,12 @@ def main()->int:
     assert readiness['v06_oracle_pilot_axis_cells']==486
     assert readiness['v06_oracle_pilot_blind_open_loop_solved']==486
     assert readiness['v06_cases_with_full_fallback_budget']==1262790
+    assert readiness['v07_generation_local_run']=='layer1-v0.7-preoracle-r1'
+    assert readiness['v07_generation_disposition']=='AUDITED_PREORACLE_LINEAGE_NOT_HARDNESS_ADMITTED'
+    assert readiness['v07_generation_counts']['dynamic_cases']==2023704
+    assert readiness['v07_generation_counts']['preoracle_structure_ids']==863460
+    assert readiness['v07_shortcut_preflight_disposition']=='PASS_NO_V06_STYLE_TIGHT_SATELLITE_SHORTCUT'
+    assert readiness['v07_candidate_tight_public_satellite_only_shortcut_count']==0
 
     authority=AUTH.read_text(encoding='utf-8')
     assert '58,752 个 recipe 不是 benchmark cases' in authority
@@ -157,12 +164,14 @@ def main()->int:
     assert '41 个 signatures / 174 个 pre-admission recipes' in authority
     assert 'public-test identity v0.2 当前冻结 3,804 个 test cases' in authority
     assert 'frozen-split LLM baseline                              [DONE v0.2; DeepSeek 0/7]' in authority
-    assert 'MECHANISM_DISCOVERY_READY / HARD_MECHANISM_COVERAGE_REOPENED / NOT_BENCHMARK_ADMIT' in authority
+    assert 'SOURCE/ORACLE INFRASTRUCTURE READY / DYNAMIC MECHANISM AND ADMISSION OPEN / NOT_BENCHMARK_ADMIT' in authority
     assert 'Q11 human/source review 仍然是 release blocker，但**不再是唯一 blocker**' in authority
     assert 'GENERATION-AXES.v0.1.json' in authority
     assert '1,262,790 dynamic cases / 499,608 pre-oracle structure IDs' in authority
     assert 'GENERATION_REPRODUCIBILITY_PASS / BENCHMARK_VALIDITY_FAIL / RETAIN_AS_NEGATIVE_LINEAGE' in authority
     assert '486 / 486 `BLIND_OPEN_LOOP_SOLVED`' in authority
+    assert 'v0.7 scoped verdict' in authority
+    assert '任一层 SEARCH_LIMIT → UNRESOLVED_COMPUTATION' in authority
     assert WORLD_DOC.exists()
     assert WORLD_SCHEMA.exists()
     assert CAUSAL_DOC.exists()
@@ -174,7 +183,7 @@ def main()->int:
         text=path.read_text(encoding='utf-8')
         assert 'LAYER1-AUTHORITY.md' in text, f'{path} no longer points to Layer-1 authority'
 
-    print('PASS Layer-1 authority: v0.6 generation is reproducible but globally shortcut-invalid; v0.7 process-support rebuild, hard-mechanism coverage, pristine generalization and Q11 remain open; Layer-3 is paused')
+    print('PASS Layer-1 authority: v0.6 is negative lineage; v0.7 only corrects process support; dynamic mechanisms, staged exact admission, structural generalization and Q11 remain open; Layer-3 is paused')
     return 0
 
 
