@@ -325,12 +325,16 @@ receipt-race、overlapping receipt chain、joint query–satellite Pareto、reso
 
 > **SOURCE/TASK/EVALUATOR INFRASTRUCTURE ACTIVE / RELEASE-TRACK ASSEMBLY OPEN / FUTURE-CHOICE STRESS SEPARATE / NOT_BENCHMARK_ADMIT**
 
-Gateway action/data-location ownership 已由 `T1-GATEWAY-DATA-LIFECYCLE-CONTRACT.v0.1.md` 与 corrected gateway-backhaul adapter 闭合；它不再是当前 blocker。Q11 human/source review 仍然是 release blocker，但**不再是唯一 release blocker**。当前 benchmark-release blockers 固定为：
+Gateway action/data-location ownership 已由 `T1-GATEWAY-DATA-LIFECYCLE-CONTRACT.v0.1.md` 与 corrected gateway-backhaul adapter 闭合；它不再是当前 blocker。2026-10-09 的 assistant-led internal source/task/evaluator audit 已完成 23/23 stratified samples × 5 review dimensions；它明确不是 independent expert validation。当前 benchmark-release blockers 固定为：
 
-1. `TRACK_SPECIFIC_RELEASE_ARTIFACT_OPEN`：现有 11 个 canonical surfaces 已分配到 Operational-Conformance / Interactive-Decision / Future-Choice-Stress / blocker，但正式 track-specific case/split manifest 尚未冻结；
-2. `EXECUTION_EVALUATOR_RELEASE_AUDIT_OPEN`：历史 exact/V9 继续做 regression，新的 conformance / interactive release 还要完成针对当前 full-sim contract 的 execution-evaluator mutation/replay audit；
-3. `FRESH_BENCHMARK_GENERALIZATION_SPLIT_OPEN`：旧 v0.2 test 已暴露，新的 benchmark-wide generalization claim 需要按 source/site/regime/trace 冻结 fresh split；
-4. `Q11_HUMAN_SOURCE_REVIEW_PENDING`：machine preaudit 不能替代真实 reviewer。
+1. `TRACK_SPECIFIC_RELEASE_ARTIFACT_OPEN`：paper-facing semantic inventory、fresh execution split 与 full-sim evaluator audit 已生成；还需冻结总 pre-release manifest 与 baseline/policy protocol；
+2. `BASELINE_PROTOCOL_AND_TEST_EVALUATION_OPEN`：新的 150-coordinate test execution cohort 已冻结但 outcome 保持锁定；必须先冻结 paper baseline/policy protocol，再允许执行 test 与生成最终 result/release manifest。
+
+已关闭：
+
+- full-sim execution evaluator mutation/replay audit：7/7 当前 release-candidate T1 surfaces 覆盖；
+- fresh benchmark execution split：train/dev/test = 200/200/150，test exact identities 在 freeze 前无 tracked result hit；
+- Q11 internal source/task/evaluator audit：23/23 × 5 PASS；external independent expert review 未执行并作为 limitation 保留。
 
 方法线单独保留：
 
@@ -373,11 +377,14 @@ DB44/T 2457-2024 source correction               [DONE]
 → gateway action/data-location ownership audit          [DONE; CORRECTNESS BLOCKER FOUND]
 → freeze report/data-location + gateway legal actions   [DONE; 53af145]
 → define three paper-facing release tracks              [DONE; 7b7a2d6]
-→ assemble immutable track-specific case/split manifest [CURRENT]
-→ execution-evaluator mutation/replay audit             [PENDING]
-→ freeze fresh benchmark generalization split           [PENDING]
-→ real Q11 reviewer signoff                             [PENDING]
-→ frozen BENCHMARK_ADMIT release                        [AFTER RELEASE BLOCKERS]
+→ assemble semantic track inventory                     [DONE; 7 release candidates / 4 blocked]
+→ execution-evaluator mutation/replay audit             [DONE; 7/7 candidate surfaces]
+→ freeze fresh benchmark execution split                [DONE; 200/200/150; test locked]
+→ internal source/task/evaluator audit                  [DONE; 23/23 × 5 PASS]
+→ freeze total pre-release candidate manifest           [CURRENT]
+→ freeze paper baseline/policy protocol                 [PENDING]
+→ execute locked test cohort + statistical report       [AFTER PROTOCOL FREEZE]
+→ frozen BENCHMARK_ADMIT release                        [AFTER RESULT/RELEASE BLOCKERS]
 
 Parallel method line (not a benchmark-release prerequisite):
 → discover Future-Choice Stress subset                  [OPEN]

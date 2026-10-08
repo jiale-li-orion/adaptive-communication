@@ -169,16 +169,19 @@ release 至少包含：
 
 失败：REPRODUCIBILITY_INCOMPLETE。
 
-## Q11 Human/source audit
+## Q11 Source / task / evaluator review
 
 要求：
 - source audit 与 task audit 分开；
 - stratified sample by Family × profile × hardness × split；
-- 人工核查 source extraction 是否反转 authority/priority/time semantics；
+- reviewer 必须直接核查 source extraction 是否反转 authority/priority/time semantics；
 - 抽查 oracle success set / evaluator；
-- 记录审计者、版本、发现的问题与修正。
+- 记录 reviewer identity、review mode、版本、发现的问题与修正；
+- machine preaudit 可以减少重复工作，但不能单独构成 Q11；
+- 若使用项目内部/assistant-led reviewer，必须明确披露 `INTERNAL`，不得写成 independent expert validation；
+- 独立外部领域专家 review 是推荐增强项，不再作为内部 release 的硬 blocker；未执行时必须进入 limitation / artifact card。
 
-失败：AUDIT_INCOMPLETE。
+失败：AUDIT_INCOMPLETE。当前通过入口为 `INTERNAL-SOURCE-AUDIT-2026-10-09.md` + 对应 machine-readable artifact；未来若增加独立外部 review，只追加审计层，不覆盖当前记录。
 
 ## Q12 Maintenance / benchmark lifecycle
 

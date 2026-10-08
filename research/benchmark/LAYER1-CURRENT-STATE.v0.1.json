@@ -156,7 +156,7 @@
     "stage": "PRE_WORLD_PRE_ORACLE"
   },
   "main_family": "T1_MONITORING_INFORMATION_CONTINUITY",
-  "next_stage": "ASSEMBLE_TRACK_SPECIFIC_RELEASE_AND_Q11_AUDIT",
+  "next_stage": "FREEZE_PAPER_PRE_RELEASE_MANIFEST_AND_BASELINE_PROTOCOL",
   "quality_gates": {
     "agentic_reducibility": "PASS_41_OF_41_HARD_SIGNATURES",
     "agentic_reducibility_ref": "results/benchmark/layer1-agentic-reducibility-v0.2-retry-legality.json",
@@ -166,8 +166,8 @@
       "BLOCKED": 1,
       "PASS": 12
     },
-    "human_source_audit": "MACHINE_PREAUDIT_23_OF_23_PASS_HUMAN_REVIEW_PENDING",
-    "human_source_audit_ref": "results/benchmark/layer1-human-source-audit-v0.2-retry-legality.json",
+    "human_source_audit": "INTERNAL_ASSISTANT_AUDIT_23_OF_23_X5_PASS_EXTERNAL_EXPERT_REVIEW_NOT_PERFORMED",
+    "human_source_audit_ref": "results/benchmark/layer1-internal-source-audit-2026-10-09.json",
     "human_source_preaudit_ref": "results/benchmark/layer1-human-source-machine-preaudit-v0.2-retry-legality.json",
     "interpretation_warning": "The 12 PASS / 1 BLOCKED snapshot is historical and does not encode the current three-track benchmark release framing, fresh-split requirement, or separate Future-Choice Stress method gate.",
     "llm_baseline": "PASS_DEEPSEEK_FLASH_0_OF_7_HARD_SIGNATURES",
@@ -185,19 +185,11 @@
     "blockers": [
       {
         "id": "TRACK_SPECIFIC_RELEASE_ARTIFACT_OPEN",
-        "reason": "The current task-surface registry has been assigned to Operational-Conformance, Interactive-Decision, Future-Choice-Stress or explicit blockers, but immutable track-specific case/split manifests have not yet been frozen."
+        "reason": "Paper-facing semantic inventory, fresh 200/200/150 execution split and 7/7-surface full-sim evaluator audit are frozen; a single digest-bound pre-release candidate manifest still needs to bind them before baseline protocol freeze."
       },
       {
-        "id": "EXECUTION_EVALUATOR_RELEASE_AUDIT_OPEN",
-        "reason": "Historical V9/exact evaluator audits remain useful regression evidence, but the release-facing Operational-Conformance and Interactive-Decision tracks still need a frozen execution-evaluator mutation/replay audit over their current full-simulator contracts."
-      },
-      {
-        "id": "FRESH_BENCHMARK_GENERALIZATION_SPLIT_OPEN",
-        "reason": "The historical v0.2 test cohort was exposed and cannot support a new paper-facing generalization claim. A fresh track-specific source/site/regime/trace split must be frozen independently of method outcomes."
-      },
-      {
-        "id": "Q11_HUMAN_SOURCE_REVIEW_PENDING",
-        "reason": "Machine preaudit cannot replace real reviewer source/task/oracle/evaluator signoff."
+        "id": "BASELINE_PROTOCOL_AND_TEST_EVALUATION_OPEN",
+        "reason": "The fresh 150-coordinate test cohort is identity-frozen but outcome-locked. Paper baseline/policy protocol must be frozen before test execution, statistical reporting and final release manifest."
       }
     ],
     "environment_generation_contract_ref": "research/benchmark/ENVIRONMENT-GENERATION-CONTRACT.v0.1.md",
@@ -214,7 +206,11 @@
       "the provisional bounded 36-cell gateway kernel yields 18 blind-open-loop controls, 8 full-current causal-infeasible diagnostics, 2 ordinary-baseline shortcuts and 8 unresolved cells; it is diagnostic rather than admission evidence",
       "the gateway bifurcation audit shows SINGLE_RECOVERY has a common final-UP stage while REINTERRUPTIBLE has no common UP stage for observed pilot stage counts, and removing only second-outage worlds makes all eight TIGHT causal-infeasible pilot cells blind-solvable",
       "the gateway action-ownership audit identified an end-to-end SEND_TERR/gateway-receipt conflation; T1-GATEWAY-DATA-LIFECYCLE-CONTRACT and the corrected gateway-backhaul adapter now separate gateway-ready data, primary/fallback forwarding and center ACK/timeout",
-      "paper-facing task surfaces are explicitly assigned to Operational-Conformance, Interactive-Decision, Future-Choice-Stress or blockers; benchmark release validity no longer depends on finding a Layer-2 hard survivor"
+      "paper-facing task surfaces are explicitly assigned to Operational-Conformance, Interactive-Decision, Future-Choice-Stress or blockers; benchmark release validity no longer depends on finding a Layer-2 hard survivor",
+      "paper semantic inventory covers 11 canonical surfaces: 7 release candidates across Operational-Conformance/Interactive-Decision and 4 explicit blockers",
+      "full-simulator execution-evaluator mutation/replay audit covers all 7 current release-candidate T1 surfaces and accepts alternate legal success execution times",
+      "fresh paper execution split is frozen as 200 train / 200 dev / 150 outcome-locked test identities; exact new test identities had no tracked result hit before freeze",
+      "assistant-led internal source/task/evaluator audit completed 23/23 stratified samples across five review dimensions; independent external expert review was not performed and remains a documented limitation"
     ],
     "generation_axes_ref": "research/benchmark/GENERATION-AXES.v0.2.json",
     "generation_axes_status": "FROZEN_FOR_V07_SUPPORT_CORRECTION_ONLY",
@@ -231,7 +227,7 @@
       }
     ],
     "release_tracks_ref": "research/benchmark/LAYER1-RELEASE-TRACKS.json",
-    "status": "BENCHMARK_RELEASE_TRACK_ASSEMBLY_OPEN_METHOD_STRESS_SEPARATE",
+    "status": "PAPER_PRE_RELEASE_MANIFEST_AND_BASELINE_PROTOCOL_OPEN_METHOD_STRESS_SEPARATE",
     "v06_all_world_physical_bases_with_all_down_support": 46770,
     "v06_cases_with_full_fallback_budget": 1262790,
     "v06_generation_counts": {
@@ -553,7 +549,7 @@
     "source_contract_count": 27,
     "status": "MACHINE_REGENERATION_COMPLETE"
   },
-  "status": "BENCHMARK_RELEASE_TRACK_ASSEMBLY_OPEN_METHOD_STRESS_SEPARATE",
+  "status": "PAPER_PRE_RELEASE_MANIFEST_AND_BASELINE_PROTOCOL_OPEN_METHOD_STRESS_SEPARATE",
   "structure_aware_split": {
     "audit_ref": "results/benchmark/layer1-structure-aware-split-v0.2-retry-legality.json",
     "by_split": {
