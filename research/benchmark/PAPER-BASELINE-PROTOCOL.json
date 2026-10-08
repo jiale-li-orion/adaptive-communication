@@ -1,0 +1,56 @@
+{
+  "status": "FROZEN_BEFORE_TEST_EXECUTION",
+  "date": "2026-10-09",
+  "split_ref": "results/benchmark/layer1-paper-split.json",
+  "full_test": {
+    "coordinate_count": 150,
+    "universal": [
+      "comm.local_policy",
+      "agent.deterministic_comply"
+    ],
+    "by_template": {
+      "O1": ["comm.aoi"],
+      "O2": ["comm.aoi", "comm.mission_comply", "comm.mission_sustain"],
+      "O3": ["comm.backup_edf", "comm.backup_maxcov"],
+      "O4": ["comm.energy_aware", "comm.ea_aoi"],
+      "O6": [
+        "comm.aoi",
+        "comm.energy_aware",
+        "comm.ea_aoi",
+        "comm.mission_comply",
+        "comm.mission_sustain",
+        "comm.backup_edf",
+        "comm.backup_maxcov"
+      ]
+    },
+    "evaluator_only_oracles": {
+      "all": ["oracle.delivery"],
+      "O4_O6": ["oracle.dynamic_energy"]
+    }
+  },
+  "llm_subset": {
+    "coordinate_count": 30,
+    "task_templates": ["O1", "O2", "O3", "O4", "O6"],
+    "windows": ["w0", "w2", "w3"],
+    "seeds": [100, 105],
+    "context_modes": ["generic_react", "task_conditioned"],
+    "model": {
+      "provider": "deepseek_official",
+      "model": "deepseek-flash",
+      "temperature": 0,
+      "reasoning_effort": "low",
+      "max_tokens": 8192,
+      "json_object": true,
+      "planner_replan_mode": "decision_state",
+      "max_model_calls": 32
+    }
+  },
+  "statistics": {
+    "paired_bootstrap_resamples": 10000,
+    "paired_bootstrap_seed": 20261009,
+    "binary_interval": "Wilson 95%",
+    "outlier_deletion": false
+  },
+  "test_tuning_forbidden": true,
+  "method_scope": "Layer-1 benchmark evaluation only; does not define Layer-2 future-choice method protocol"
+}
