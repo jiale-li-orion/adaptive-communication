@@ -24,7 +24,7 @@
       ]
     },
     "evaluator_only_oracles": {
-      "all": ["oracle.delivery"],
+      "all": ["oracle.delivery.primary_only_decomposition"],
       "O4_O6": ["oracle.dynamic_energy"]
     }
   },
@@ -52,5 +52,17 @@
     "outlier_deletion": false
   },
   "test_tuning_forbidden": true,
+  "oracle_semantics": {
+    "oracle.delivery.primary_only_decomposition": {
+      "implementation_id": "oracle.delivery",
+      "coordinate_override": {"enable_backup": false},
+      "ranking_role": "diagnostic_only",
+      "warning": "primary-path-only evaluator oracle; never compare as a full-system upper bound against backup-enabled online policies"
+    },
+    "oracle.dynamic_energy": {
+      "ranking_role": "diagnostic_only",
+      "warning": "energy/sampling upper bound with delivery relaxed by design"
+    }
+  },
   "method_scope": "Layer-1 benchmark evaluation only; does not define Layer-2 future-choice method protocol"
 }

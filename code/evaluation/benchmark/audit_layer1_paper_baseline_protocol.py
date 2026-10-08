@@ -32,7 +32,11 @@ def main() -> int:
 
     # Two strong ordinary controls are implemented but were not historically
     # registered as standalone IDs; protocol pins their implementation directly.
-    direct_ids = {"comm.ea_aoi", "comm.mission_sustain"}
+    direct_ids = {
+        "comm.ea_aoi",
+        "comm.mission_sustain",
+        "oracle.delivery.primary_only_decomposition",
+    }
     registry_ids = referenced - direct_ids
     missing_registry = sorted(registry_ids - set(registry))
     missing_impl = validate_implementation_refs(ROOT)
@@ -58,7 +62,13 @@ def main() -> int:
         "direct_mission_sustain_implementation_exists": (ROOT / "code/substrate/joint/mission_policy.py").is_file(),
         "oracle_ids_are_not_online": all(
             not registry[x].online_legal
-            for x in ("oracle.delivery", "oracle.dynamic_energy")
+            for x in ("oracle.dynamic_energy",)
+        ),
+        "delivery_oracle_is_primary_only_diagnostic": (
+            p["oracle_semantics"]["oracle.delivery.primary_only_decomposition"]["coordinate_override"]
+            == {"enable_backup": False}
+            and p["oracle_semantics"]["oracle.delivery.primary_only_decomposition"]["ranking_role"]
+            == "diagnostic_only"
         ),
         "llm_subset_is_exactly_30_frozen_test_coordinates": len(llm_ids) == expected_llm_ids == 30,
         "llm_subset_does_not_use_historical_w1": all(":w1:" not in x for x in llm_ids),

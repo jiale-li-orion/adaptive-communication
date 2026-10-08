@@ -50,10 +50,12 @@
 
 不列入 online policy 排名，只用于区分物理不可行与在线策略损失：
 
-- `oracle.delivery`：所有 O1/O2/O3/O4/O6；
+- `oracle.delivery`：所有 O1/O2/O3/O4/O6 的**独立 primary-only decomposition coordinate**。现有 `delivery_oracle` 只建模 primary path，因此该 reference run 必须显式 `enable_backup=false`；它只报告 fixed-send / free-send-require-sample / link-opportunity ceiling 的分解，不得与启用 gateway backup 的 online policy 当作同场 task-quality upper bound排名；
 - `oracle.dynamic_energy`：O4 / O6。
 
 任何 oracle 结果必须单列，不能与 online Agent/communication policy 混表平均排名。
+
+该说明是 test outcome 打开前的 correctness clarification：`code/agentic_communication/run.py::_delivery_oracles` 已经明确拒绝在额外 gateway-backup / terminal-DtS / access-assist path 启用时把历史 primary-only delivery oracle 当 full-system upper bound。
 
 ## 5. LLM spectrum — preregistered 30/150 subset
 
