@@ -1,0 +1,127 @@
+{
+  "schema_version": "0.1",
+  "status": "FROZEN_PRE_ORACLE_GATEWAY_BACKHAUL_SCOPE",
+  "authority": {
+    "source_task_surfaces": [
+      "T1.S2_INTERMITTENT_BACKHAUL_FALLBACK",
+      "T1.S7_COMPOUND_CONTINUITY"
+    ],
+    "system_model": "research/substrate/SYSTEM-MODEL-v1.md",
+    "task_registry": "research/benchmark/TASK-SURFACE-REGISTRY.v0.1.json",
+    "source_profiles": [
+      "DZT0450_2023_disconnect_recovery",
+      "JIAOZUO_2024_geohazard_monitoring_deployment",
+      "DB44T2457_2024_warning_reporting"
+    ],
+    "freeze_rule": "This lifecycle is frozen before the corrected gateway oracle is implemented. Baseline or proposed-method outcomes are not valid reasons to change data location, action ownership or completion semantics."
+  },
+  "scope": {
+    "placement": "GATEWAY_LOCAL_PRIMARY",
+    "evaluation_subject": "gateway-to-required-platform monitoring backhaul continuity",
+    "protected_completion": "source-deadline monitoring obligation reaches the required center/platform",
+    "conditional_entry_boundary": "the report has reached the gateway queue",
+    "claim_boundary": "This gateway-backhaul slice does not claim to model or optimize node-to-gateway access. End-to-end access remains a separate extension."
+  },
+  "source_owned_invariants": [
+    "The original monitoring obligation release/deadline remains source-owned; entering the gateway-backhaul slice does not rewrite its deadline.",
+    "Monitoring completion is platform/center delivery, not gateway receipt.",
+    "Source-defined communication priority/fallback constraints remain binding.",
+    "Reconnect backlog priority remains unresolved where the source does not define it."
+  ],
+  "data_locations": [
+    {
+      "id": "UPSTREAM_OF_GATEWAY",
+      "meaning": "report exists at sensor/access side but is not yet available to the gateway-backhaul policy",
+      "in_primary_gateway_slice": false
+    },
+    {
+      "id": "GATEWAY_READY",
+      "meaning": "report is present in gateway queue and is eligible for gateway-local forwarding decisions",
+      "in_primary_gateway_slice": true
+    },
+    {
+      "id": "PRIMARY_IN_FLIGHT",
+      "meaning": "gateway has committed the report to the primary terrestrial backhaul and awaits lawful completion/failure feedback",
+      "in_primary_gateway_slice": true
+    },
+    {
+      "id": "FALLBACK_IN_FLIGHT",
+      "meaning": "gateway has committed the report to an authorized fallback path and awaits declared completion/failure feedback",
+      "in_primary_gateway_slice": true
+    },
+    {
+      "id": "CENTER_DELIVERED",
+      "meaning": "the report has reached the required center/platform within the task contract",
+      "in_primary_gateway_slice": true
+    }
+  ],
+  "entry_event": {
+    "id": "GATEWAY_RECEIPT",
+    "owner": "gateway",
+    "effect": "moves report from UPSTREAM_OF_GATEWAY to GATEWAY_READY",
+    "policy_action": false,
+    "visibility": "owner-local when the event occurs",
+    "network_acquisition_cost_for_gateway_policy": 0,
+    "note": "If a future end-to-end benchmark makes node uplink controllable, it must separately declare node/control ownership and transport. The gateway-backhaul slice does not infer that authority."
+  },
+  "gateway_legal_actions": [
+    {
+      "id": "FORWARD_PRIMARY",
+      "owner": "gateway_communication_subsystem",
+      "precondition": "report location == GATEWAY_READY and a declared primary opportunity/capacity unit is available",
+      "effect": "consume primary opportunity/capacity and move report to PRIMARY_IN_FLIGHT",
+      "natural_feedback": "local execution result plus later center ACK/timeout according to the declared backhaul feedback process"
+    },
+    {
+      "id": "FORWARD_FALLBACK",
+      "owner": "gateway_communication_subsystem",
+      "precondition": "report location == GATEWAY_READY, fallback is source-authorized, and declared fallback opportunity/budget is available",
+      "effect": "consume fallback opportunity/budget and move report to FALLBACK_IN_FLIGHT",
+      "natural_feedback": "declared fallback completion/failure feedback"
+    },
+    {
+      "id": "WAIT",
+      "owner": "gateway_policy",
+      "precondition": "always legal unless the task contract forbids waiting past a deadline",
+      "effect": "advance to the next declared event without fabricating an observation"
+    }
+  ],
+  "forbidden_gateway_shortcuts": [
+    "Treat node-to-gateway SEND_TERR as an instantaneous gateway-local action without a gateway-to-node control/access contract.",
+    "Generate a future gateway receipt as the consequence of FORWARD_PRIMARY; the report is already at the gateway before gateway forwarding begins.",
+    "Count owner-local gateway queue/receipt reads as paid remote acquisition.",
+    "Mark an obligation complete at gateway receipt; completion remains required center/platform delivery.",
+    "Let gateway policy read future primary service transitions or future satellite opportunities beyond the declared public geometry."
+  ],
+  "observation_contract": {
+    "owner_local": [
+      "gateway queue membership / report location",
+      "gateway forwarding send log",
+      "gateway-local resource/capacity ledger",
+      "local execution acceptance/failure when the implementation can lawfully know it"
+    ],
+    "arrived_async": [
+      "center delivery acknowledgement",
+      "declared timeout/negative completion feedback",
+      "source/profile-provided passive telemetry"
+    ],
+    "hidden": [
+      "future primary service transitions",
+      "future execution success",
+      "evaluator world identity"
+    ]
+  },
+  "legacy_mapping": {
+    "old_SEND_TERR": "NOT_DIRECTLY_ADMISSIBLE_AS_GATEWAY_ACTION",
+    "old_gateway_receipt_after_SEND_TERR": "REPLACED_BY_ENTRY_EVENT_BEFORE_GATEWAY_FORWARDING",
+    "old_SEND_SAT": "MAY_MAP_TO_FORWARD_FALLBACK_ONLY_IF_THE_FALLBACK_CAPABILITY_IS_GATEWAY_OWNED_AND_SOURCE_AUTHORIZED",
+    "old_final_ACK": "RETAIN_AS_CENTER_COMPLETION_FEEDBACK_AFTER_FORWARDING"
+  },
+  "implementation_gate": [
+    "Corrected gateway oracle must represent report location or an equivalent state invariant.",
+    "Corrected gateway oracle must expose only FORWARD_PRIMARY/FORWARD_FALLBACK/WAIT at this placement.",
+    "The v0.7 gateway_receipt_delay axis may not be silently reused as feedback after gateway forwarding; its role must be removed, projected out or moved to a separate access extension before exact admission.",
+    "Existing v0.7 source task, public geometry and process-support lineage may be reused only where their semantics remain compatible with this lifecycle.",
+    "A bounded corrected pilot must pass ownership/transition replay before any hardness claim is reconsidered."
+  ]
+}

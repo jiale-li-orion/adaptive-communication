@@ -327,6 +327,20 @@ def _satellite_completion_delay(process: Mapping[str, Any]) -> int:
     return int(resource.get("satellite_completion_delay_s", SATELLITE_COMPLETION_DELAY_S))
 
 
+def _primary_generates_gateway_receipt(process: Mapping[str, Any]) -> bool:
+    """Whether a terrestrial action has a later gateway-receipt stage.
+
+    Historical Layer-1 processes model an end-to-end report attempt whose
+    intermediate gateway receipt occurs after SEND_TERR.  A corrected
+    gateway-backhaul process starts with the report already in the gateway
+    queue, so its primary forwarding action must not manufacture another
+    gateway receipt.  Defaulting to True preserves every historical process.
+    """
+
+    resource = dict(process.get("resource_contract", {}))
+    return bool(resource.get("primary_generates_gateway_receipt", True))
+
+
 def _matching_terrestrial_window(
     world: Mapping[str, Any],
     state: LocalState,
@@ -708,7 +722,11 @@ def solve_observation_matched(
                     pd = PendingDelivery(
                         obligation_id=oid,
                         accepted=accepted,
-                        gateway_receipt_at_s=(at_s + _gateway_receipt_delay(process) if accepted else None),
+                        gateway_receipt_at_s=(
+                            at_s + _gateway_receipt_delay(process)
+                            if accepted and _primary_generates_gateway_receipt(process)
+                            else None
+                        ),
                         final_ack_at_s=(at_s + _final_ack_delay(process) if accepted else None),
                         negative_observation_at_s=(None if accepted else at_s + _negative_observation_delay(process)),
                     )

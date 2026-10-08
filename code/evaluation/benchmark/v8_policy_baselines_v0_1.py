@@ -32,6 +32,7 @@ from exact_reference_oracle_v0_1 import (
     _maxflow,
     _next_time,
     _normalize,
+    _primary_generates_gateway_receipt,
     _final_ack_delay,
     _gateway_receipt_delay,
     _negative_observation_delay,
@@ -124,7 +125,11 @@ def _step(bundle, process, states: Mapping[str, LocalState], at_s: int, action: 
             pd = PendingDelivery(
                 obligation_id=oid,
                 accepted=accepted,
-                gateway_receipt_at_s=at_s + _gateway_receipt_delay(process) if accepted else None,
+                gateway_receipt_at_s=(
+                    at_s + _gateway_receipt_delay(process)
+                    if accepted and _primary_generates_gateway_receipt(process)
+                    else None
+                ),
                 final_ack_at_s=at_s + _final_ack_delay(process) if accepted else None,
                 negative_observation_at_s=None if accepted else at_s + _negative_observation_delay(process),
             )
