@@ -17,9 +17,9 @@
 
 | Workstream | 当前问题 | 主要正式资产 | 当前状态 |
 |---|---|---|---|
-| [`S7-ORIGINAL-SCENARIO.md`](S7-ORIGINAL-SCENARIO.md) | 原始灾前山区任务是否天然产生 future-choice hardness | Layer 1 task surface + shared substrate | **BENCHMARK PRE-RELEASE / method-stress remains empty; frozen test execution next** |
-| [`ASC-TRANSFER.md`](ASC-TRANSFER.md) | future-choice feasibility layer 能否增强已有 ASC scheduler / VoI 方法 | Layer 2 + external ASC formulation | **POSITIVE: conditional obligations + shared-opportunity conflict + persistent-domain reuse** |
-| [`EMERGENCY-COMM-TRANSFER.md`](EMERGENCY-COMM-TRANSFER.md) | 同一方法能否迁移到已有应急通信控制/资源优化任务 | Layer 2 + external mission environments | **POSITIVE N=10: exact-correct L/U headroom over depth4; stronger scaling still open** |
+| [`S7-ORIGINAL-SCENARIO.md`](S7-ORIGINAL-SCENARIO.md) | 原始灾前山区需求如何形成 source-grounded executable benchmark | Layer 1 task surface + shared substrate | **BENCHMARK PRE-RELEASE / deterministic test done / frozen LLM subset running** |
+| [`ASC-TRANSFER.md`](ASC-TRANSFER.md) | future-choice feasibility 是否构成已有 ASC formulation 上独立且可维护的方法对象 | Layer 2 + external ASC formulation | **F1–F3 SUPPORTED：conditional obligations + shared-opportunity conflict + persistent/component-local reuse** |
+| [`EMERGENCY-COMM-TRANSFER.md`](EMERGENCY-COMM-TRANSFER.md) | 同一 future-choice 对象能否迁移到独立外部 sequential mission 并产生质量/搜索收益 | Layer 2 + external mission environments | **F4–F6 SUPPORTED：N=10 exact-correct headroom + cross-domain set-conflict transfer；N=15 仅 bounded probe** |
 
 统一纪律：
 
@@ -27,3 +27,5 @@
 2. workstream 文档可以更新，但正式语义必须回写到对应 Layer authority。
 3. 外部 transfer 不允许改写核心方法定义；transfer 的作用是测试 generality。
 4. 任何负结果都保留。某条线失败不反向修改 task distribution。
+
+当前正式 claim state 只认 [`../../results/CLAIMS.md`](../../results/CLAIMS.md)：Layer 1 使用 `B*`，当前 Future-Choice 方法/transfer 使用 `F1–F7`。本目录只负责导航与跨线 synthesis。

@@ -1,6 +1,6 @@
 # Agentic Communication paper workspace
 
-状态：**latest buildable Agentic manuscript snapshot / not current research control plane**。这里保存 2026-10-02/03 收敛出的 Evidence-Grounded Closed-Loop Agentic Communication 稿件；2026-10-04 benchmark-validity 复盘后，当前研究顺序由 `research/README.md` 重新接管，Layer 1 source-grounded benchmark 尚在重建。
+状态：**buildable historical Agentic manuscript snapshot / not current paper control plane**。这里保存 2026-10-02/03 收敛出的 Evidence-Grounded Closed-Loop Agentic Communication 稿件。当前 2026-10-09 paper control plane 已转到 `research/workstreams/PAPER-SYNTHESIS.md`：A benchmark + B direct ASC Future-Choice + C independent external mission validation；`results/CLAIMS.md` F1–F7 是下一版 Future-Choice claim ceiling。
 
 ## Authority
 
@@ -28,7 +28,7 @@
 
 ## Current claim ceiling
 
-当前正文 claim ceiling 为 `results/CLAIMS.md` A7–A11。A1–A6 继续承担 runtime/fairness/infrastructure 证据；A7–A11 已覆盖 v6 live-model main table、same-interface WirelessOpsAgent-style comparison、held-out task/source/model transfer，以及 DeepSeek/MiMo query-positive evidence-acquisition loop。
+**本快照正文**的 claim ceiling 仍为 `results/CLAIMS.md` A7–A11；它不会自动吸收后续 F* 结果。**下一版 manuscript** 的 current method/transfer ceiling 由 `results/CLAIMS.md` F1–F7 + Layer-1 B* 共同定义，综合结构见 `research/workstreams/PAPER-SYNTHESIS.md`。
 
 论文不得把 A7 解释成复杂多候选推理：123/123 Method requests 均只有一个 ready supported plan 且 visible EvidenceNeed 为空。A8 只支持同可靠性下的模型成本差异，不支持“比 WirelessOpsAgent 更可靠”。A10/A11 只支持一个 frozen gateway-backup acquisition family 的双模型闭环，不支持全局最优 evidence acquisition。
 

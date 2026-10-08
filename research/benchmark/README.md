@@ -37,7 +37,21 @@
 
 这里的合法性边界固定为：**synthetic 不是问题，method-conditioned generation 才是问题。** 正式 generator 的轴、范围与环境 transition 必须在 proposed method 评测前冻结；baseline 只负责测量 hardness / shortcut，不负责反向塑造 benchmark。
 
-## 2026-10-06 status correction
+## 2026-10-09 paper pre-release status
+
+当前 paper-facing Layer 1 已经不再停留在“重建 benchmark validity”阶段。现有状态：
+
+- semantic inventory：11 个 canonical surfaces，其中 7 个 current release candidates、4 个显式 blockers；
+- release tracks：`Operational-Conformance / Interactive-Decision / Future-Choice-Stress`；
+- full-sim execution evaluator mutation audit：覆盖 7/7 release-candidate T1 surfaces；
+- fresh paper split：`200 train / 200 dev / 150 test`；
+- internal source/task/evaluator audit：23/23 stratified samples × 5 review dimensions PASS，且明确不是 independent expert validation；
+- digest-bound paper pre-release manifest 与 baseline/policy protocol 已在 test outcome 打开前冻结；
+- **150-coordinate deterministic test 已执行并提交 aggregate / statistical / failure evidence；frozen 30-coordinate × 2 context-mode LLM subset 正式运行中。**
+
+当前 Layer 1 的职责是完成 benchmark release 与 failure analysis，不再为 Layer 2 反向制造 hard case。Future-Choice-Stress 可以保持为空；它只决定 future-choice method claim 是否能在 A 内成立，不阻塞前两条 benchmark track 的 release。当前状态 authority 仍以 [`LAYER1-AUTHORITY.md`](LAYER1-AUTHORITY.md)、[`LAYER1-CURRENT-STATE.v0.1.json`](LAYER1-CURRENT-STATE.v0.1.json) 和 `results/CLAIMS.md` B* 为准。
+
+## 2026-10-06 status correction (historical)
 
 此前 README 将当前 v0.2 描述成“research-frozen / Q11-only blocker”，并把最早目标写成 `PASS / strong`。该判断已经撤回。
 
@@ -54,7 +68,7 @@ MECHANISM_DISCOVERY_READY
 = NOT_BENCHMARK_ADMIT
 ```
 
-Layer 3 在这些 blocker 关闭前暂停。后续任何 `Strong` 都必须满足 [`ENVIRONMENT-GENERATION-CONTRACT.v0.1.md §6`](ENVIRONMENT-GENERATION-CONTRACT.v0.1.md) 的显式证据门，而不是由 README 文案授予。
+该 2026-10-06 段落保留为历史纠错记录；其 blocker 状态已被上面的 2026-10-09 paper pre-release control plane supersede。后续任何 `Strong` 仍必须满足 [`ENVIRONMENT-GENERATION-CONTRACT.v0.1.md §6`](ENVIRONMENT-GENERATION-CONTRACT.v0.1.md) 的显式证据门，而不是由 README 文案授予。
 
 ## Paper-facing benchmark landscape and statistics
 

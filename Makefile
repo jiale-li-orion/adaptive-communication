@@ -45,6 +45,7 @@ check:
 	$(PY) code/run_checks.py
 	$(PY) code/substrate/joint/test_joint.py
 	$(PY) scripts/make_layer1_paper_figures.py --check
+	$(PY) scripts/make_future_choice_artifacts.py --check
 
 # 论文产物。中文稿走 XeTeX，英文稿走 pdflatex，细节见 paper/build.sh。
 paper:
@@ -70,6 +71,7 @@ tables:
 	$(PY) scripts/make_agentic_robustness_manifest.py $(ARGS)
 	$(PY) scripts/make_agentic_attribution_protocol.py $(ARGS)
 	$(PY) scripts/make_agentic_paper_v1.py $(ARGS)
+	$(PY) scripts/make_future_choice_artifacts.py $(ARGS)
 
 # Agentic Communication 第一条正式实验流水线：结果 -> audit -> research/results/paper 生成物。
 agentic-o2:

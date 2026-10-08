@@ -7,10 +7,10 @@
 当前建设与实验入口：
 
 - [`../research/README.md`](../research/README.md)
-- [`../research/README.md`](../research/README.md)
+- [`../research/workstreams/PAPER-SYNTHESIS.md`](../research/workstreams/PAPER-SYNTHESIS.md)
+- [`../research/workstreams/README.md`](../research/workstreams/README.md)
 - [`../research/substrate/SYSTEM-MODEL-v1.md`](../research/substrate/SYSTEM-MODEL-v1.md)
 - [`../research/compiler/RUNTIME-DOMAIN-OWNERSHIP-v1.md`](../research/compiler/RUNTIME-DOMAIN-OWNERSHIP-v1.md)
-- [`../research/README.md`](../research/README.md)
 - [`../results/CLAIMS.md`](../results/CLAIMS.md)
 
 旧代码中 `paper/RESEARCH_PLAN.md §X` 的引用应回看归档正文，不代表重新开放历史候选。

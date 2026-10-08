@@ -46,7 +46,7 @@ A 的职责不是给方法“造一道会赢的题”，而是定义现实 task�
 
 因此 A 给论文一个非常关键的可信度：**future-choice 不是通过反向修改 emergency benchmark 才出现的。**
 
-当前 A 只剩：执行 frozen 150-coordinate test、做统计/失败分析、冻结 final release manifest。
+当前 A 的 150-coordinate deterministic test 已按 frozen protocol 完成并提交 aggregate / statistical / failure evidence；剩余的是 frozen 30-coordinate × 2 context-mode LLM subset、联合统计/失败 taxonomy 与 final release manifest。该 LLM 子表只补 model spectrum，不承担 Future-Choice 方法主张。
 
 ### B — Direct ASC method formulation
 
@@ -64,7 +64,7 @@ B 已经支持的最强 claim：
 
 > **Future obligations and resource conflicts must be represented conditionally on future observations; static worst-case unions can reject valid causal policies, while persistent conditional domains avoid repeated structural reconstruction.**
 
-尚未支持：generic Layer-2 algorithm 在完整 dynamic shared-resource problem 上的最终 wall-time superiority。下一门是 active branch 内同时发生 time/resource/pending-feedback event，比较 ordinary persistent exact / dependency-cache / branch-aware flow / future-choice component invalidation。
+尚未支持：generic Layer-2 algorithm 在完整 dynamic shared-resource problem 上的最终 wall-time superiority。active branch 的 time/resource/pending-feedback component-local invalidation gate 已关闭，并补了 ordinary persistent exact / dependency-cache strong ladder；当前更准确的边界是：**structured recomputation / exact-fallback work 已有明确下降，净 wall-time superiority 仍然 OPEN。**
 
 ### C — Independent external mission validation
 
@@ -194,8 +194,8 @@ C: independent environment shows the same failure mode causes real outcome loss,
 1. **Generic method core**：**orchestration gate 已关闭**。`FutureChoiceEngine` 已让 B/C 走同一 `carried → U=0 → L=1 → exact fallback` correctness protocol，且跨域审计/full UAV episode PASS。剩余工作是继续收敛 domain-specific certificate construction，而不是再造第三套 core。
 2. **B component-level invalidation**：**gate 已关闭**。active branch 的 send/pending/receipt/ACK/time/resource event 已与 fresh rebuild 对账，并补 ordinary persistent exact / dependency-cache strong ladder。下一步主要是把该 structural layer 接入最终 generic engine/论文实验接口，不再扩 synthetic axis。
 3. **C stronger scale/control**：N=10 gate 已关闭；N=15 只保留 bounded scaling probe，不一把梭 exact。公开 repo 未随代码提供 PPO checkpoint，因此 learned PPO paired shield 降为 optional；下一方法重点是把 set-level conflict certificate 泛化到 generic core，而不是重训 RL。
-4. **A final release**：执行 frozen 150-coordinate deterministic test + 30-coordinate LLM subset，做统计/失败 taxonomy，冻结 final manifest。
-5. **Paper claim table**：最终每句话绑定 tracked artifact；wall-time 没过就绝不写“faster”。
+4. **A final release**：deterministic 150-coordinate test 已完成；当前只剩 frozen 30-coordinate×2-mode LLM subset、联合统计/失败 taxonomy 与 final manifest。
+5. **Paper claim table**：`results/CLAIMS.md` 已新增 F1–F7 正式 claim family；下一步只允许从 tracked artifact / generated claim matrix 投影到 manuscript。wall-time 没过就绝不写“faster”。
 
 ## 7. Provisional title space
 

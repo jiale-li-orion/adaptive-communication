@@ -1,6 +1,6 @@
 # Layer 3 — Policy
 
-Layer 3 持有 **frozen Layer-2 decision surface 上的选择与搜索顺序**。当前由于 Layer 1 benchmark hard-mechanism coverage 重开，本层处于 **PAUSED** 状态。
+Layer 3 持有 **frozen Layer-2 decision surface 上的选择与搜索顺序**。当前处于 **PAUSED / OPTIONAL** 状态：A benchmark release 与 B/C Future-Choice correctness 已不依赖学习层；若重启，只允许对 `L=0,U=1` unresolved actions 做 ranking / search guidance，不能改变 legality、L/U、certificate、exact fallback 或 benchmark contract。
 
 输入由 Layer 2 提供：合法 candidate actions、lawful current context、`L/U` 状态、evidence/resource/obligation structure，以及 unresolved set：
 
@@ -12,7 +12,7 @@ Layer 3 输出 action ordering / search guidance。Protocol legality、authority
 
 ## Current disposition
 
-2026-10-06 起，Layer 3 不再是当前主工程。此前 v0.1 **learning-guided exact search** 保留为 negative/history：
+2026-10-09 当前 paper story 中，Layer 3 仍不是主工程。此前 v0.1 **learning-guided exact search** 保留为 negative/history：
 
 ```text
 Layer-1 instance
@@ -47,13 +47,13 @@ Layer-1 instance
 
 ## Restart gate
 
-Layer 3 只有在下面条件全部满足后才允许重新启动：
+Layer 3 只有在下面条件全部满足后才值得重新启动：
 
-1. Layer-1 environment / generation contract 冻结；
-2. hard mechanism 不再坍缩到单一 family；
-3. ordinary fixed/open-loop/passive/query/VoI/depth-k/receding baselines 完整红队；
-4. 新 structural-generalization cohort 在 method freeze 前 preregister；
-5. Layer-3 目标首先对应 task completion / delivery，而不是只优化 exact solver 的内部 search cost。
+1. 当前 deterministic Future-Choice `L/U + certificate + exact fallback` 仍留下足够大的 unresolved set；
+2. ordinary persistent exact / dependency-cache / receding controls 已冻结；
+3. learned ordering 的 wall-time / task-quality 收益能覆盖 inference cost；
+4. 新 structural-generalization cohort 在 policy freeze 前 preregister；
+5. learning 目标对应 task completion / delivery 或真实 solver latency，而不是只优化内部 proxy。
 
 ## Historical evaluation contract
 

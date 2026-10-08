@@ -8,6 +8,7 @@
 |---|---|
 | `benchmark/` | **Layer 1**：exact labels、validity/hardness、failure atlas、historical split/freeze、release audit；当前 benchmark coverage 已重开，旧 freeze 只作 regression/provenance |
 | `agentic/` | **Layer 2 / Layer 3**：compiler/runtime、future-choice/L-U、incremental frontier、policy/search evaluation，以及历史 A7–A11 Agentic evidence |
+| `transfer/` | **Future-Choice cross-domain evidence**：ASC conditional/shared-opportunity/component-local audits，external UAV continuation/receding/L-U/set-conflict transfer，以及 generic engine cross-domain audit |
 | `communication-substrate/` | shared substrate：C* claims、calibration、physics outputs |
 | `reference/` | frozen comparator / reproduction reference plane |
 | `history/` | withdrawn、superseded、historical registries |
@@ -30,6 +31,7 @@ README 与 manuscript 不单独维护实验数字。
 
 - current Layer-2 v2 artifacts：`layer2-v2-*`；
 - current Layer-1→Layer-2 bridge audits：`layer1-v02-*`；
+- current Future-Choice transfer artifacts：`results/transfer/{asc-pull-query-*,uav-attention-*,generic-future-choice-*}`；正式 claim 状态见 `CLAIMS.md` F1–F7；
 - Layer-3 artifacts：统一使用 `layer3-*` 前缀；
 - A7–A11 与 O1–O6-era experiments：作为 formal historical baseline、supporting evidence 或 development diagnosis 保留。
 

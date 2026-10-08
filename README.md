@@ -4,7 +4,7 @@ English | [中文](README.zh.md)
 
 Source-grounded decision benchmark, decision-semantic runtime, and learning-guided exact search for pre-disaster mountain monitoring under limited power and intermittent communication.
 
-> **Current control plane:** Layer 1 is now assembled as three paper-facing tracks: Operational-Conformance, Interactive-Decision, and Future-Choice-Stress. Gateway data-location/action ownership has been corrected and closed; the old 36-cell gateway pilot remains diagnostic lineage. Benchmark release validity is now separated from Layer-2 method hardness: the first two tracks may progress toward release even while the Future-Choice-Stress track is empty. Current benchmark blockers are track-specific release artifacts, execution-evaluator audit, a fresh generalization split, and real Q11 human/source review. Layer 3 remains paused for method-stress work only. Current ownership lives in [`research/`](research/README.md).
+> **Current control plane:** Layer 1 has reached paper pre-release: source/task/evaluator audit, fresh split, full-sim mutation audit, pre-release manifest and baseline protocol are frozen; the 150-coordinate deterministic test is complete and the frozen 30-coordinate × 2-mode LLM subset is running. Layer 2 has converged on observation-conditioned **Future-Choice** feasibility with replayable `L=1` certificates, sound `U=0` relaxations, dependency-local conflict invalidation and exact fallback; current supported method/transfer claims are `F1–F7` in [`results/CLAIMS.md`](results/CLAIMS.md). Layer 3 remains paused as an optional unresolved-action ranking layer. Current ownership lives in [`research/`](research/README.md), and the integrated paper story lives in [`research/workstreams/PAPER-SYNTHESIS.md`](research/workstreams/PAPER-SYNTHESIS.md).
 
 ## 1. Architecture at a glance
 
@@ -48,9 +48,9 @@ Layer 1 owns the problem. Layer 2 owns deterministic correctness and the legal d
 | Module | Owns | Current state | Entry |
 |---|---|---|---|
 | **Shared substrate** | communication physics, energy, cache, opportunity, fallback, execution lifecycle, mathematical model | stable shared base | [`research/substrate/`](research/substrate/README.md) |
-| **Layer 1 · Benchmark** | source-grounded obligations, task construction, observation/action/oracle contract, validity/hardness, split/release | **source/generation infrastructure ready; gateway policy placement retained; data-location/action ownership open; NOT_BENCHMARK_ADMIT** | [`research/benchmark/`](research/benchmark/README.md) |
-| **Layer 2 · Compiler** | Task/Evidence/Capability/Execution semantics, L/U future-choice frontier, evidence lifecycle, incremental update, exact fallback | **v2 deterministic core frozen on dev** | [`research/compiler/`](research/compiler/README.md) |
-| **Layer 3 · Policy** | ordering and selection among legal / unresolved actions | **paused**; previous learned-ranking line retained only as negative/history until Layer 1 closes | [`research/policy/`](research/policy/README.md) |
+| **Layer 1 · Benchmark** | source-grounded obligations, task construction, observation/action/oracle contract, validity/hardness, split/release | **paper pre-release; deterministic test complete; frozen LLM subset running** | [`research/benchmark/`](research/benchmark/README.md) |
+| **Layer 2 · Compiler** | Task/Evidence/Capability/Execution semantics, observation-conditioned L/U future-choice frontier, dependency-local conflict maintenance, exact fallback | **v2 frozen core + F1–F7 cross-domain Future-Choice evidence** | [`research/compiler/`](research/compiler/README.md) |
+| **Layer 3 · Policy** | ordering and selection among legal / unresolved actions | **paused / optional**; may only rank unresolved actions under frozen Layer-1/2 correctness | [`research/policy/`](research/policy/README.md) |
 | **Evaluation** | replay, attribution, ablation, baseline fairness, cross-layer audits | cross-cutting | [`research/evaluation/`](research/evaluation/README.md) |
 | **Literature** | related work, source registry, claim boundary | cross-cutting | [`research/literature/`](research/literature/README.md) |
 | **History** | superseded tracked research authority / roadmap | provenance | [`research/history/`](research/history/README.md) |

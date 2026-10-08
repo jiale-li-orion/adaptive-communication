@@ -3,12 +3,15 @@
 
 检查四件事，任何一件不成立就红：
 
-  1. 主张编号唯一，且形如 C<数字>（系统论文/通信底座）或 A<数字>（当前 Agentic Communication）；
+  1. 主张编号唯一，且属于 A/B/C/F 四个当前命名空间；
   2. 状态取自固定集合（supported / scoped-negative / formative / open /
      reproduced-externally / retracted）；
   3. 每行给出的脚本与参考结果在磁盘上存在——指向不存在的文件的主张等于没有证据；
   4. 撤回表的 superseded_by 指向当前主张表中真实存在的编号，来源提交形如 git 短哈希；
      同一编号不得同时出现在两张表里。
+
+README 不再复制完整 claim table。`results/CLAIMS.md` 是唯一状态 authority；
+README 只需显式声明/链接该 authority，并可以投影当前 claim family。
 
 参考结果文件的最后一次修改提交由本脚本用 git log 计算并打印，属于信息输出而非判定条件：
 缺 git（例如导出的 tar 包）时打印 unknown，不影响结论。
@@ -103,7 +106,7 @@ def main() -> int:
         # 单元格可能写成 `supported` 或 supported；检查不该对 markdown 装饰敏感。
         cid, status = row[ci_id].strip().strip("`"), row[ci_stat].strip().strip("`")
         ids.append(cid)
-        check(f"{cid} 编号格式", bool(re.fullmatch(r"[CA]\d+", cid)), cid)
+        check(f"{cid} 编号格式", bool(re.fullmatch(r"[ABCF]\d+", cid)), cid)
         check(f"{cid} 状态取自集合", status in STATUS, status)
         for p in paths_in(row[ci_scr]):
             check(f"{cid} 脚本存在", os.path.exists(os.path.join(ROOT, p)), p)
@@ -135,27 +138,21 @@ def main() -> int:
                                   if len(r) > ci_stat and r[ci_id] == i)]
     check("撤回主张不出现在当前主张表", not retracted_in_active, str(retracted_in_active))
 
-    # README 是入口页：它的状态列必须是本表的投影，不能各写一份
+    # README 是入口页，不再复制完整 claim table。它必须显式指向唯一
+    # claim-state authority，避免建立第二份状态表。
     for rel in ("README.md", "README.zh.md"):
         rp = os.path.join(ROOT, rel)
         if not os.path.exists(rp):
             continue
         rtext = open(rp, encoding="utf-8").read()
-        head = [l for l in rtext.split("\n") if l.startswith("| Claim |") or l.startswith("| 主张 |")]
-        check(f"{rel} 主张表含状态列", bool(head) and ("Status" in head[0] or "状态" in head[0]),
-              head[0][:60] if head else "无表头")
-        projection_rows = [l for l in rtext.split("\n") if re.match(r"^\| [CA]\d+ \|", l)]
-        projection_ids = []
-        for row in projection_rows:
-            cells = [c.strip().strip("`") for c in row.strip("|").split("|")]
-            cid, shown = cells[0], cells[-1]
-            projection_ids.append(cid)
-            check(f"{rel} {cid} 状态与主张表一致", status_now.get(cid) == shown,
-                  f"README={shown} CLAIMS={status_now.get(cid)}")
         check(
-            f"{rel} 完整投影全部当前主张",
-            set(projection_ids) == set(ids) and len(projection_ids) == len(ids),
-            f"README={sorted(projection_ids)} CLAIMS={sorted(ids)}",
+            f"{rel} 声明唯一 claim authority",
+            "results/CLAIMS.md" in rtext,
+            "results/CLAIMS.md" if "results/CLAIMS.md" in rtext else "missing",
+        )
+        check(
+            f"{rel} 不复制完整 claim table",
+            not any(re.match(r"^\| [ABCF]\d+ \|", l) for l in rtext.split("\n")),
         )
 
     print(f"\n  主张 {len(ids)} 条，撤回 {max(len(retract) - 1, 0)} 条")

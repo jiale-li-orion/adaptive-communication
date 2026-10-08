@@ -1,6 +1,6 @@
 # 论文工作稿
 
-`paper/agentic/` 保存 2026-10-02/03 收敛出的 **Evidence-Grounded Closed-Loop Agentic Communication** 稿件快照；它仍是最新可构建 Agentic 稿，但不再拥有当前研究路线。2026-10-04 的 benchmark-validity 复盘已经重新打开 Layer 1：当前项目控制面回到 `research/README.md`，先构造 source-grounded Emergency Communication Decision Benchmark，再决定下一版论文如何吸收现有 Decision-Semantic Compiler 证据。原 `en/`、`zh/` 两份系统论文工作稿继续作为兼容纠错稿保留；Agentic 转向前最后一版共同修改稿冻结在 [`_archive/system-paper-2026-09-20/`](_archive/system-paper-2026-09-20/README.md)，source commit 为 `dd4f31a`。
+`paper/agentic/` 保存 2026-10-02/03 的 **Evidence-Grounded Closed-Loop Agentic Communication** 可构建快照；它不再拥有当前研究路线。2026-10-09 当前 paper story 已经收敛到 [`../research/workstreams/PAPER-SYNTHESIS.md`](../research/workstreams/PAPER-SYNTHESIS.md)：**A = source-grounded emergency benchmark / reality authority，B = direct ASC Future-Choice formulation，C = independent external mission validation**。共同对象是 observation-conditioned future completion feasibility。原 `en/`、`zh/` 系统稿继续作为兼容纠错稿保留；所有当前 claim 只认 [`../results/CLAIMS.md`](../results/CLAIMS.md)，其中 B* 管 Layer 1 benchmark，F1–F7 管 current Future-Choice method / transfer。
 
 历史系统稿围绕**控制失联后持续执行的通信状态、现场证据与执行位置**组织。源端释放是主要正结果，配置回退与精确停止参照说明普通机制足够的范围，Agent 轨迹用于接口失效分析。配置租约和保留视界不再作为待兑现的新算法贡献。`agentic/` 稿在这套物理与实验底座上进一步组织 Evidence World、Operational Task、typed Capability、Agent Runtime 与 Communication $\times$ Agent evaluation；其中 A7–A11 继续作为 Layer 2 / runtime 机制证据保留，但不能替代新的 Layer 1 benchmark validity。
 
@@ -17,7 +17,7 @@
 
 本目录当前保存**原系统论文工作稿及其历史研究计划**。`RESEARCH_PLAN.md` 与 `AGENT_RESEARCH.md` 现在是 compatibility pointer，原正文已进入 `paper/_archive/`；它们继续服务旧代码/claim 追溯，不再拥有当前 Agentic Communication 的实验顺序。
 
-当前研究与实验工程从 [`../research/README.md`](../research/README.md) 开始；Layer 1 benchmark validity 是当前主瓶颈，Layer 2 的 runtime/compiler 证据和 A7–A11 结果作为已冻结资产复用。`agentic/` 正文仍只引用已经冻结并通过 audit 的 A7–A11 结果，scripted backend 不得冒充模型结果；但“paper freeze”只描述这份稿件快照，不再表示整个项目停止 benchmark / policy 研究。
+当前研究与实验工程从 [`../research/README.md`](../research/README.md) 开始。Layer 1 已进入 paper pre-release：150-coordinate deterministic test 已完成，frozen 30-coordinate × 2-mode LLM subset 正式运行中；Layer 2 / external transfer 已形成 F1–F7 claim chain。`agentic/` 旧正文仍只引用已经冻结并通过 audit 的 A7–A11，不自动吸收新结果；下一版 manuscript 必须从 claim ledger / generated artifact 重新组织，而不是手改旧表。
 
 ## 构建
 

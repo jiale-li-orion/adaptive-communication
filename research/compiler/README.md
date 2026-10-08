@@ -64,6 +64,24 @@ domain adapter 仍拥有真正的语义：legal state/action transition、optimi
 
 这关闭的是“B/C 是否实际遵守同一 L/U correctness protocol”这一集成门，不是“所有 domain certificate 已自动通用化”。domain-specific certificate construction 仍是当前主要方法实现边界。
 
+## Current Future-Choice claim surface (F1–F7)
+
+当前 paper-facing method claim 不再由历史 v0.2 dev 数字单独承担，而由 `results/CLAIMS.md` 的 `F1–F7` 统一约束：
+
+- `F1`：observation-conditioned future obligations；static worst-case union 会误拒合法 causal policy；
+- `F2`：conditional validity domain 可以跨多次 observation narrowing 持久复用；
+- `F3`：active branch 内的证书失效由 future-feasibility dependency 决定。当前 strong ladder 中，gateway receipt / final ACK 这类 history event 可以不触发任何 conflict-component recompute；
+- `F4–F5`：独立外部 deadline/battery mission 中存在真实 full-continuation failure，L/U + exact fallback 可作为 exact-correct safety layer；
+- `F6`：B 的 set-level obligation conflict 原则已迁移到 C 的 deadline-set MST sound U-bound，在同一 frozen N=10 cohort、相同 task quality 与 exact correctness authority 下显著减少 exact-correct search proxy；
+- `F7`：B/C 使用同一个 generic `carried certificate → U=0 → L=1 → exact fallback` correctness orchestration。
+
+这里仍保留两个明确 negative boundary：
+
+1. ordinary persistent exact 是很强的 systems control；历史 Layer-2 v2 的 Python wall-time 仍输给它，不能写“faster”；
+2. depth-4 receding 在部分外部 mission / policy 上已经接近或达到 task-quality saturation，Future-Choice 应定位为 selective hard-feasibility / safety layer，而不是所有场景都替代 MPC。
+
+最新跨线叙事见 [`../workstreams/PAPER-SYNTHESIS.md`](../workstreams/PAPER-SYNTHESIS.md)；正式 claim state 只认 [`../../results/CLAIMS.md`](../../results/CLAIMS.md)。
+
 外部 C 的 scaling 也给出新的强 ordinary control：N=5 depth4 receding 已经饱和 zero-tardiness，不能支撑方法 superiority；N=10 method-independent constructive cohort 上，L/U 为四条 policy 21/21 zero-tardiness / complete / 0 infeasible、924 reached frontiers 0 mismatch，而 depth4 分别只有 17/21、17/21、11/21、20/21 zero-tardiness。该结果提供跨域 correctness/headroom 证据，但不会覆盖本文件既有的 `ordinary persistent exact` wall-time negative boundary。
 
 ## Baseline ladder audit

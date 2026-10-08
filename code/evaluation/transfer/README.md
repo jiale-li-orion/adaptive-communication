@@ -12,6 +12,8 @@
 - `asc_pull_query_conditional_family.py`：conditional query-chain scaling / persistent-exact negative boundary。
 - `asc_pull_query_shared_opportunity_frontier.py`：branch-conditioned obligations × shared opportunities；复用 Layer-2 max-flow/min-cut conflict frontier。
 - `asc_pull_query_dynamic_frontier_reuse.py`：多次 semantic observation 下 persistent conditional-domain reuse 与 event-local resource invalidation。
+- `asc_pull_query_component_invalidation.py`：revealed branch 内 send/pending/receipt/ACK/time/resource 事件的 component-local invalidation 与 fresh structural rebuild 对账。
+- `asc_pull_query_component_strong_baselines.py`：同一 event sequence 下 fresh exact / ordinary persistent exact / dependency-cache exact / incremental conflict-frontier strong ladder。
 - `audit_drl_ec3_transfer_fit.py`：静态审计官方 DRL-EC³ emergency-communication environment 是否具备 future-choice transfer 所需结构。
 - `audit_uav_attention_future_choice.py`：公开 UAV hard-deadline environment 的 native continuation failure / official heuristic red-team。
 - `run_uav_attention_continuation_shield.py`：evaluator-only exact continuation shield upper bound。
@@ -21,3 +23,5 @@
 - `summarize_uav_attention_receding_headroom.py`：N=5 depth4 saturation boundary。
 - `select_uav_attention_constructive_cohort.py`：不使用 method/exact 的 N=10 constructive hard-feasible cohort selector。
 - `summarize_uav_attention_n10_headroom.py`：N=10 L/U vs depth4/exact compact headroom artifact。
+- `summarize_uav_attention_set_mst_attribution.py`：B 的 set-level conflict → C deadline-set MST sound U-bound 跨域归因；固定 N=10 cohort + N=15 bounded probe。
+- `materialize_future_choice_claim_matrix.py`：从 tracked A/B/C evidence 生成 paper-facing scoped claim matrix；不替代 `results/CLAIMS.md` 的 claim-state authority。
