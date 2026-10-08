@@ -36,6 +36,18 @@ import subprocess
 import sys
 from typing import Any
 
+# Keep numerical libraries from fanning out across the whole WSL VM.  The
+# Layer-1 LLM paper run is latency/API bound; parallel BLAS gives no scientific
+# benefit here and previously made long headless runs unnecessarily hostile to
+# the workstation.
+for _name in (
+    "OPENBLAS_NUM_THREADS",
+    "OMP_NUM_THREADS",
+    "MKL_NUM_THREADS",
+    "NUMEXPR_NUM_THREADS",
+):
+    os.environ.setdefault(_name, "1")
+
 
 ROOT = Path(__file__).resolve().parents[3]
 CODE = ROOT / "code"
@@ -351,7 +363,28 @@ def main() -> int:
     mode.add_argument("--smoke-dev", action="store_true")
     mode.add_argument("--execute-frozen-test", action="store_true")
     ap.add_argument("--out", type=Path)
+    ap.add_argument(
+        "--max-new-rows",
+        type=int,
+        default=None,
+        help=(
+            "Execution-only chunk limit. Run at most this many previously missing row_ids, "
+            "write checkpoints, then exit with code 2 until the full frozen cohort is complete. "
+            "Does not alter the paper protocol or selected coordinates."
+        ),
+    )
+    ap.add_argument(
+        "--inter-row-sleep-s",
+        type=float,
+        default=0.0,
+        help="Execution-only cooldown between newly completed rows; scientific outputs are unchanged.",
+    )
     args = ap.parse_args()
+
+    if args.max_new_rows is not None and args.max_new_rows <= 0:
+        raise SystemExit("--max-new-rows must be positive")
+    if args.inter_row_sleep_s < 0:
+        raise SystemExit("--inter-row-sleep-s must be non-negative")
 
     protocol = _load(PROTOCOL)
     split = _load(SPLIT)
@@ -378,6 +411,8 @@ def main() -> int:
     existing = _read_existing(rows_path)
     backend = _make_backend(model_cfg)
 
+    new_rows = 0
+    stop_after_chunk = False
     for coordinate in coordinates:
         for context_mode in context_modes:
             row_id = f"{coordinate['coordinate_id']}::{context_mode}"
@@ -392,6 +427,7 @@ def main() -> int:
             )
             _append(rows_path, row)
             existing[row_id] = row
+            new_rows += 1
             print(
                 json.dumps(
                     {
@@ -405,6 +441,14 @@ def main() -> int:
                 ),
                 flush=True,
             )
+            if args.inter_row_sleep_s:
+                import time
+                time.sleep(args.inter_row_sleep_s)
+            if args.max_new_rows is not None and new_rows >= args.max_new_rows:
+                stop_after_chunk = True
+                break
+        if stop_after_chunk:
+            break
 
     rows = [existing[k] for k in sorted(existing)]
     aggregate = _aggregate(rows, expected=expected)
