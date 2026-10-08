@@ -1,0 +1,124 @@
+{
+  "claim_boundary": [
+    "This audit isolates observation-only support narrowing: branch opportunity/resource graphs are intentionally unchanged so certificate reuse is provably safe.",
+    "Frontier-build count is a deterministic structural-work metric; wall-time is reported but not used as a theorem because each flow instance is tiny.",
+    "The next stronger gate must combine observation narrowing with resource/time events that invalidate only a subset of conflict components, rather than all branch certificates."
+  ],
+  "depth": 8,
+  "rows": [
+    {
+      "branches": 2,
+      "depth": 8,
+      "fresh": {
+        "frontier_builds": 4,
+        "wall_s": 0.000413633999414742
+      },
+      "levels": 1,
+      "persistent": {
+        "frontier_builds": 2,
+        "post_leaf_budget_commit_invalidated_certificates": 1,
+        "post_leaf_budget_commit_untouched_inactive_branches": 1,
+        "reuse_checks_over_full_observation_tree": 4,
+        "wall_s": 0.0002611229992908193
+      },
+      "reuse": {
+        "build_ratio_persistent_over_fresh": 0.5,
+        "saved_frontier_builds": 2,
+        "theoretical_ratio": 0.5
+      }
+    },
+    {
+      "branches": 4,
+      "depth": 8,
+      "fresh": {
+        "frontier_builds": 12,
+        "wall_s": 0.0010719839974626666
+      },
+      "levels": 2,
+      "persistent": {
+        "frontier_builds": 4,
+        "post_leaf_budget_commit_invalidated_certificates": 1,
+        "post_leaf_budget_commit_untouched_inactive_branches": 3,
+        "reuse_checks_over_full_observation_tree": 12,
+        "wall_s": 0.00035137200029566884
+      },
+      "reuse": {
+        "build_ratio_persistent_over_fresh": 0.3333333333333333,
+        "saved_frontier_builds": 8,
+        "theoretical_ratio": 0.3333333333333333
+      }
+    },
+    {
+      "branches": 8,
+      "depth": 8,
+      "fresh": {
+        "frontier_builds": 32,
+        "wall_s": 0.0026254049971612403
+      },
+      "levels": 3,
+      "persistent": {
+        "frontier_builds": 8,
+        "post_leaf_budget_commit_invalidated_certificates": 1,
+        "post_leaf_budget_commit_untouched_inactive_branches": 7,
+        "reuse_checks_over_full_observation_tree": 32,
+        "wall_s": 0.0006514559991046553
+      },
+      "reuse": {
+        "build_ratio_persistent_over_fresh": 0.25,
+        "saved_frontier_builds": 24,
+        "theoretical_ratio": 0.25
+      }
+    },
+    {
+      "branches": 16,
+      "depth": 8,
+      "fresh": {
+        "frontier_builds": 80,
+        "wall_s": 0.006850265999673866
+      },
+      "levels": 4,
+      "persistent": {
+        "frontier_builds": 16,
+        "post_leaf_budget_commit_invalidated_certificates": 1,
+        "post_leaf_budget_commit_untouched_inactive_branches": 15,
+        "reuse_checks_over_full_observation_tree": 80,
+        "wall_s": 0.0013553930020862026
+      },
+      "reuse": {
+        "build_ratio_persistent_over_fresh": 0.2,
+        "saved_frontier_builds": 64,
+        "theoretical_ratio": 0.2
+      }
+    },
+    {
+      "branches": 32,
+      "depth": 8,
+      "fresh": {
+        "frontier_builds": 192,
+        "wall_s": 0.01825566501247522
+      },
+      "levels": 5,
+      "persistent": {
+        "frontier_builds": 32,
+        "post_leaf_budget_commit_invalidated_certificates": 1,
+        "post_leaf_budget_commit_untouched_inactive_branches": 31,
+        "reuse_checks_over_full_observation_tree": 192,
+        "wall_s": 0.0026806420137290843
+      },
+      "reuse": {
+        "build_ratio_persistent_over_fresh": 0.16666666666666666,
+        "saved_frontier_builds": 160,
+        "theoretical_ratio": 0.16666666666666666
+      }
+    }
+  ],
+  "stage": "ASC_PULL_QUERY_DYNAMIC_CONDITIONAL_FRONTIER_REUSE",
+  "summary": {
+    "best_persistent_over_fresh_build_ratio": 0.16666666666666666,
+    "max_branches": 32,
+    "max_fresh_frontier_builds": 192,
+    "max_persistent_frontier_builds": 32,
+    "max_query_levels": 5,
+    "max_saved_frontier_builds": 160
+  }
+}

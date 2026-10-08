@@ -11,6 +11,7 @@
 - `asc_pull_query_conditional_frontier_probe.py`：最小 observation-conditioned future-obligation witness。
 - `asc_pull_query_conditional_family.py`：conditional query-chain scaling / persistent-exact negative boundary。
 - `asc_pull_query_shared_opportunity_frontier.py`：branch-conditioned obligations × shared opportunities；复用 Layer-2 max-flow/min-cut conflict frontier。
+- `asc_pull_query_dynamic_frontier_reuse.py`：多次 semantic observation 下 persistent conditional-domain reuse 与 event-local resource invalidation。
 - `audit_drl_ec3_transfer_fit.py`：静态审计官方 DRL-EC³ emergency-communication environment 是否具备 future-choice transfer 所需结构。
 - `audit_uav_attention_future_choice.py`：公开 UAV hard-deadline environment 的 native continuation failure / official heuristic red-team。
 - `run_uav_attention_continuation_shield.py`：evaluator-only exact continuation shield upper bound。

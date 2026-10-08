@@ -72,7 +72,7 @@ hard operational query goals 明确标为 transfer extension。结果：
 
 ## Next
 
-当前 query/AoI replay、conditional-obligation family 与 shared-opportunity family 已完成。下一步不再扩大静态 K/D，而是加入**多次 observation / delayed feedback / shared-resource commit**，比较：fresh exact、ordinary persistent exact、branch-aware flow/receding、dependency-cache exact、persistent conditional frontier。只有 event-local reuse / conditional component update 在这一强 ladder 下仍保留增量，才升级为最终 method contribution。
+当前 query/AoI replay、conditional-obligation family、shared-opportunity family 与 multi-observation persistent-domain reuse 均已完成。下一步不再扩大静态 K/D，而是让 active branch 内出现 **time/resource/pending-feedback event**，比较 fresh exact、ordinary persistent exact、branch-aware flow/receding、dependency-cache exact、persistent conditional frontier；目标是验证 component-level invalidation，而不是整个 branch certificate 级复用。只有这一强 ladder 下仍有增量，才升级为最终 method contribution。
 
 ### Conditional frontier probe
 
@@ -118,3 +118,25 @@ exact causal 结果：
 这一步比纯 query chain 更接近当前 method insight：future obligations 不仅 observation-conditioned，而且在每个 branch 内存在共享 future opportunities / Hall conflict。
 
 边界：memo-state count 与 flow-edge count 不是同一 CPU 操作，10.96× 只能作为 deterministic work proxy，不能写成 runtime speedup。ordinary branch-aware max-flow planner 也是强 baseline；真正的方法增量仍需来自 **多次 observation / delayed feedback 下 conditional component 的 persistent reuse 与 event-local invalidation**，而不是一次 query 后重新建 branch flow。
+
+### Dynamic observation-domain reuse
+
+`code/evaluation/transfer/asc_pull_query_dynamic_frontier_reuse.py` 已把上述下一门补上。设 `K=2^L` mutually-exclusive branches，连续 L 次 semantic query 每次揭示一个 branch bit；每个 branch 都持有固定的 D=8 shared-opportunity conflict graph。query observation 只缩小 active support，不修改该 branch 的 obligation/opportunity/resource graph。
+
+比较两种同样正确的 branch-aware planner：
+
+1. **fresh flow**：每个 observation node 都重新构造 active support 中全部 branch conflict frontiers；
+2. **persistent conditional domain**：root 对每个 branch 构一次 certificate，后续 observation 仅筛 active domain，未变化 certificate 直接复用。
+
+完整 non-anticipative observation tree 的结果：
+
+- L=1 / K=2：persistent build ratio = `1/2`；
+- L=2 / K=4：`1/3`；
+- ...
+- L=5 / K=32：fresh 共 **192** 次 branch-frontier builds，persistent **32** 次，build ratio **1/6**，省 **160** 次结构重建。
+
+最后再施加 resource event `backup budget 1→0`：只有 realized active branch 的 certificate 跨越 validity domain 并失效；其余 31 个 mutually-exclusive inactive branch 不需要被重建。这一检查把“query observation support narrowing”和“resource-domain invalidation”明确分开。
+
+这一结果已经落到当前 Layer-2 方法对象本身：**conditional validity domain 不是只帮助一次 query decision，它允许证书跨多次 observation 保持，并只在依赖/资源域真正变化时局部失效。**
+
+边界：当前 branch graph 在 observation-only 阶段故意保持不变，因此 `1/(L+1)` 是干净的 reuse upper case；下一更强 gate 是在 active branch 内同时发生 time/resource/pending-feedback event，只让部分 conflict components 失效，并与 ordinary dependency-cache / persistent exact 做同接口 comparison。
