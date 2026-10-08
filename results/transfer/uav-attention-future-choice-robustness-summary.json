@@ -1,0 +1,254 @@
+{
+  "checks": {
+    "exact_shield_no_zero_tardiness_harm_1000": true,
+    "lu_1000_frontier_exact_match": true,
+    "lu_1000_zero_tardiness_matches_exact_shield": true,
+    "lu_200_frontier_exact_match": true,
+    "lu_200_zero_tardiness_matches_exact_shield": true,
+    "lu_exact_fallback_uses_fewer_states_than_exact_mask_1000": true
+  },
+  "claim_boundary": [
+    "1000-seed raw rows are reproducible local artifacts and are not tracked to avoid repository bloat; this summary records their hashes and rerun commands.",
+    "Paired task-quality claims use only initial hard-feasible episodes: 18/200 and 107/1000.",
+    "Exact fallback state count and bounded-lower-search expansion count are separate work units; their sum is reported only as a search-work proxy, not wall-time equivalence."
+  ],
+  "correctness": {
+    "lu_1000_reached_frontier_checks": 2568,
+    "lu_200_reached_frontier_checks": 432
+  },
+  "exact_shield_1000": {
+    "battery_aware_nn": {
+      "completed_native": 101,
+      "completed_shielded": 107,
+      "hard_feasible_seed_count": 107,
+      "infeasible_native": 6,
+      "infeasible_shielded": 0,
+      "mean_energy_delta_shield_minus_native": 1.287148624937111,
+      "mean_tardiness_delta_shield_minus_native": -0.909092230305851,
+      "seeds_harmed_zero_tardiness": [],
+      "zero_tardiness_native": 62,
+      "zero_tardiness_shielded": 107
+    },
+    "greedy_deadline_battery": {
+      "completed_native": 107,
+      "completed_shielded": 107,
+      "hard_feasible_seed_count": 107,
+      "infeasible_native": 10,
+      "infeasible_shielded": 0,
+      "mean_energy_delta_shield_minus_native": -3.380235238610027,
+      "mean_tardiness_delta_shield_minus_native": -0.5403379145526023,
+      "seeds_harmed_zero_tardiness": [],
+      "zero_tardiness_native": 69,
+      "zero_tardiness_shielded": 107
+    },
+    "nearest_deadline": {
+      "completed_native": 98,
+      "completed_shielded": 107,
+      "hard_feasible_seed_count": 107,
+      "infeasible_native": 44,
+      "infeasible_shielded": 0,
+      "mean_energy_delta_shield_minus_native": -7.213286746328122,
+      "mean_tardiness_delta_shield_minus_native": -1.490597932527,
+      "seeds_harmed_zero_tardiness": [],
+      "zero_tardiness_native": 41,
+      "zero_tardiness_shielded": 107
+    },
+    "nearest_neighbour": {
+      "completed_native": 107,
+      "completed_shielded": 107,
+      "hard_feasible_seed_count": 107,
+      "infeasible_native": 3,
+      "infeasible_shielded": 0,
+      "mean_energy_delta_shield_minus_native": 0.5875410075499633,
+      "mean_tardiness_delta_shield_minus_native": -1.0267667102056621,
+      "seeds_harmed_zero_tardiness": [],
+      "zero_tardiness_native": 59,
+      "zero_tardiness_shielded": 107
+    }
+  },
+  "exact_shield_200": {
+    "battery_aware_nn": {
+      "completed_native": 15,
+      "completed_shielded": 18,
+      "hard_feasible_seed_count": 18,
+      "infeasible_native": 3,
+      "infeasible_shielded": 0,
+      "mean_energy_delta_shield_minus_native": 1.5796288781695895,
+      "mean_tardiness_delta_shield_minus_native": -0.9629429065184032,
+      "seeds_harmed_zero_tardiness": [],
+      "zero_tardiness_native": 10,
+      "zero_tardiness_shielded": 18
+    },
+    "greedy_deadline_battery": {
+      "completed_native": 18,
+      "completed_shielded": 18,
+      "hard_feasible_seed_count": 18,
+      "infeasible_native": 3,
+      "infeasible_shielded": 0,
+      "mean_energy_delta_shield_minus_native": -2.087449219491747,
+      "mean_tardiness_delta_shield_minus_native": -0.534118459954569,
+      "seeds_harmed_zero_tardiness": [],
+      "zero_tardiness_native": 11,
+      "zero_tardiness_shielded": 18
+    },
+    "nearest_deadline": {
+      "completed_native": 16,
+      "completed_shielded": 18,
+      "hard_feasible_seed_count": 18,
+      "infeasible_native": 6,
+      "infeasible_shielded": 0,
+      "mean_energy_delta_shield_minus_native": -4.165051195356581,
+      "mean_tardiness_delta_shield_minus_native": -1.437023261443258,
+      "seeds_harmed_zero_tardiness": [],
+      "zero_tardiness_native": 9,
+      "zero_tardiness_shielded": 18
+    },
+    "nearest_neighbour": {
+      "completed_native": 18,
+      "completed_shielded": 18,
+      "hard_feasible_seed_count": 18,
+      "infeasible_native": 0,
+      "infeasible_shielded": 0,
+      "mean_energy_delta_shield_minus_native": -0.920270562171936,
+      "mean_tardiness_delta_shield_minus_native": -1.1484236281471878,
+      "seeds_harmed_zero_tardiness": [],
+      "zero_tardiness_native": 9,
+      "zero_tardiness_shielded": 18
+    }
+  },
+  "lu_frontier_1000": {
+    "battery_aware_nn": {
+      "carried_certificate": 535,
+      "completed": 107,
+      "exact_fallback_calls": 257,
+      "exact_fallback_new_states": 2731,
+      "exact_fallback_state_ratio_over_exact_mask": 0.4245957711442786,
+      "exact_mask_new_states": 6432,
+      "hard_feasible_seed_count": 107,
+      "infeasible": 0,
+      "lower_certificate": 467,
+      "lower_search_expanded": 2175,
+      "total_search_proxy_ratio_over_exact_mask": 0.7627487562189055,
+      "upper_impossible": 1061,
+      "zero_tardiness": 107
+    },
+    "greedy_deadline_battery": {
+      "carried_certificate": 535,
+      "completed": 107,
+      "exact_fallback_calls": 280,
+      "exact_fallback_new_states": 2888,
+      "exact_fallback_state_ratio_over_exact_mask": 0.4383727990285367,
+      "exact_mask_new_states": 6588,
+      "hard_feasible_seed_count": 107,
+      "infeasible": 0,
+      "lower_certificate": 491,
+      "lower_search_expanded": 2279,
+      "total_search_proxy_ratio_over_exact_mask": 0.7843047965998786,
+      "upper_impossible": 1014,
+      "zero_tardiness": 107
+    },
+    "nearest_deadline": {
+      "carried_certificate": 535,
+      "completed": 107,
+      "exact_fallback_calls": 300,
+      "exact_fallback_new_states": 3037,
+      "exact_fallback_state_ratio_over_exact_mask": 0.4600121175401394,
+      "exact_mask_new_states": 6602,
+      "hard_feasible_seed_count": 107,
+      "infeasible": 0,
+      "lower_certificate": 454,
+      "lower_search_expanded": 2244,
+      "total_search_proxy_ratio_over_exact_mask": 0.7999091184489548,
+      "upper_impossible": 1024,
+      "zero_tardiness": 107
+    },
+    "nearest_neighbour": {
+      "carried_certificate": 535,
+      "completed": 107,
+      "exact_fallback_calls": 257,
+      "exact_fallback_new_states": 2731,
+      "exact_fallback_state_ratio_over_exact_mask": 0.4245957711442786,
+      "exact_mask_new_states": 6432,
+      "hard_feasible_seed_count": 107,
+      "infeasible": 0,
+      "lower_certificate": 467,
+      "lower_search_expanded": 2175,
+      "total_search_proxy_ratio_over_exact_mask": 0.7627487562189055,
+      "upper_impossible": 1061,
+      "zero_tardiness": 107
+    }
+  },
+  "lu_frontier_200": {
+    "battery_aware_nn": {
+      "carried_certificate": 90,
+      "completed": 18,
+      "exact_fallback_calls": 46,
+      "exact_fallback_new_states": 388,
+      "exact_fallback_state_ratio_over_exact_mask": 0.41586280814576637,
+      "exact_mask_new_states": 933,
+      "hard_feasible_seed_count": 18,
+      "infeasible": 0,
+      "lower_certificate": 73,
+      "lower_search_expanded": 310,
+      "total_search_proxy_ratio_over_exact_mask": 0.7481243301178992,
+      "upper_impossible": 182,
+      "zero_tardiness": 18
+    },
+    "greedy_deadline_battery": {
+      "carried_certificate": 90,
+      "completed": 18,
+      "exact_fallback_calls": 46,
+      "exact_fallback_new_states": 387,
+      "exact_fallback_state_ratio_over_exact_mask": 0.4069400630914827,
+      "exact_mask_new_states": 951,
+      "hard_feasible_seed_count": 18,
+      "infeasible": 0,
+      "lower_certificate": 79,
+      "lower_search_expanded": 326,
+      "total_search_proxy_ratio_over_exact_mask": 0.7497371188222923,
+      "upper_impossible": 174,
+      "zero_tardiness": 18
+    },
+    "nearest_deadline": {
+      "carried_certificate": 90,
+      "completed": 18,
+      "exact_fallback_calls": 46,
+      "exact_fallback_new_states": 388,
+      "exact_fallback_state_ratio_over_exact_mask": 0.4136460554371002,
+      "exact_mask_new_states": 938,
+      "hard_feasible_seed_count": 18,
+      "infeasible": 0,
+      "lower_certificate": 74,
+      "lower_search_expanded": 314,
+      "total_search_proxy_ratio_over_exact_mask": 0.7484008528784648,
+      "upper_impossible": 179,
+      "zero_tardiness": 18
+    },
+    "nearest_neighbour": {
+      "carried_certificate": 90,
+      "completed": 18,
+      "exact_fallback_calls": 46,
+      "exact_fallback_new_states": 388,
+      "exact_fallback_state_ratio_over_exact_mask": 0.41586280814576637,
+      "exact_mask_new_states": 933,
+      "hard_feasible_seed_count": 18,
+      "infeasible": 0,
+      "lower_certificate": 73,
+      "lower_search_expanded": 310,
+      "total_search_proxy_ratio_over_exact_mask": 0.7481243301178992,
+      "upper_impossible": 182,
+      "zero_tardiness": 18
+    }
+  },
+  "raw_run_hashes": {
+    "exact_1000_local": "c39274ffe3d40499022cb99f468a0e01072f97e6fcb5b3773d7d7efe7556eec2",
+    "exact_200": "28a34ee164f20ce9f66cf51274970a314c10b92ec6ce7133f4aa7a73817ac662",
+    "lu_1000_local": "533a8bb2c9fa3af9a231c064b2a869352ae10cfc0bb0148a1a537ec7c543ec4f",
+    "lu_200": "bac14213a946c98bbe10d0eb706bfbecf5eba6b4a070c1167bddd6b8b7db916a"
+  },
+  "rerun_commands": {
+    "exact_1000": "OPENBLAS_NUM_THREADS=1 OMP_NUM_THREADS=1 MKL_NUM_THREADS=1 python3 code/evaluation/transfer/run_uav_attention_continuation_shield.py --seeds 1000 --out <path>",
+    "lu_1000": "OPENBLAS_NUM_THREADS=1 OMP_NUM_THREADS=1 MKL_NUM_THREADS=1 python3 code/evaluation/transfer/run_uav_attention_future_choice_lu.py --seeds 1000 --lower-search-limit 24 --out <path>"
+  },
+  "stage": "UAV_ATTENTION_FUTURE_CHOICE_ROBUSTNESS_SUMMARY"
+}

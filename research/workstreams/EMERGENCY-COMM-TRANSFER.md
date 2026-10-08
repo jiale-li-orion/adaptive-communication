@@ -103,3 +103,48 @@ same official heuristic ranking
 - shield 当前使用 evaluator-side exact DFS，是效果上界/transfer oracle，不是高效 deployable Layer-2 implementation；
 - 原环境的 `completed` 允许 tardiness，zero-tardiness hard obligation 是 transfer interpretation；
 - learned PPO checkpoint 尚未做相同 paired shield 评测。
+
+### L/U + exact-fallback method prototype
+
+exact continuation shield 只回答 attainable upper bound，因此又实现 `code/evaluation/transfer/run_uav_attention_future_choice_lu.py`，把 C 映射到当前 Layer-2 correctness contract：
+
+```text
+post-action state
+  ├─ U=0: sound optimistic necessary condition fails
+  │       (individual earliest-arrival deadline + Euclidean MST mission-time lower bound)
+  ├─ L=1: bounded constructive search finds a replayable full route
+  ├─ L=1: previously carried route suffix remains valid
+  └─ unresolved: exact continuation fallback
+```
+
+每个 reached decision boundary 都额外用独立 exact cache 重建 action mask，防止 method fallback 偷吃 correctness-audit memo；因此可以逐 action 检查 L/U mask 是否与 exact continuation mask 一致。
+
+**200 seeds：**
+
+- 18 hard-feasible initial states；四条 official heuristic 均保持 **18/18 zero-tardiness / completed / 0 infeasible**；
+- **432** reached action frontiers，`0` mismatch；
+- pure exact mask 需要约 `933–951` new exact states / heuristic；
+- L/U method 只把 `387–388` new states 留给 exact fallback（约 **40.7–41.6%**）；
+- 加上 bounded constructive L-search 后，total search-work proxy 约为 pure exact 的 **74.8–75.0%**；
+- carried continuation certificate 命中 `90` 次，sound `U=0` 直接剪掉 `174–182` 次动作。
+
+**1000-seed robustness：**
+
+- 107 hard-feasible initial states；四条 heuristic 均为 **107/107 zero-tardiness / completed / 0 infeasible**；
+- **2,568** reached action frontiers，`0` mismatch；
+- exact fallback state ratio约 **42.5–46.0%** of pure exact mask；
+- 加 bounded constructive search 后 total search-work proxy约 **76.3–80.0%**；
+- carried certificate `535` hits / heuristic；sound U=0 约 `1,014–1,061` actions；
+- 与 exact shield 一样，没有出现 native zero-tardiness 被 future-choice mask 破坏的 seed。
+
+1000-seed raw episode rows保留在 `local_research/current/transfer/raw/`，避免 git 膨胀；tracked compact artifact `results/transfer/uav-attention-future-choice-robustness-summary.json` 保存关键统计、raw SHA 与重跑命令。
+
+这意味着 C 已经从“exact oracle 证明 continuation 有价值”推进到一个 correctness-preserving future-choice method prototype：大量动作由 cheap U/L certificate 处理，exact 只负责 unresolved fallback。
+
+当前不能越界：
+
+- N=5 exact 本来就便宜，不能用 wall-time 证明算法优势；
+- `lower_search_expanded + exact_fallback_new_states` 只是 search-work proxy；
+- 下一强门必须是 **depth-k / receding / route-recovery ordinary baseline**，以及 N=10+ 的 scaling；
+- learned PPO checkpoint 仍未做 paired continuation shield；
+- 当前 route certificate 是 C-domain adapter，不等于 generic Layer-2 core 已经跨 domain 自动适配。
