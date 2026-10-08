@@ -23,6 +23,8 @@ ROOT = os.path.dirname(HERE)
 
 CHECKS = {'benchmark': [('evaluation/benchmark/audit_layer1_authority.py',
                          'Layer-1 authority：taxonomy/scope/recipe/world-materialization snapshots/README entry points must not drift'),
+                        ('evaluation/benchmark/audit_layer1_v07_placement_visibility.py',
+                         'Layer-1 v0.7 placement/visibility：owner-local receipt 与 center query/control transport 在 exact admission 前必须显式分离'),
                         ('evaluation/benchmark/test_dynamic_world_materializer_v0_1.py',
                          'Layer-1 world materialization：source deadlines/public geometry/alias state/recovery blockers remain separated before causal evidence'),
                         ('evaluation/benchmark/test_causal_evidence_process_v0_1.py',
