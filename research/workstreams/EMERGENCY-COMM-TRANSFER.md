@@ -148,3 +148,26 @@ post-action state
 - 下一强门必须是 **depth-k / receding / route-recovery ordinary baseline**，以及 N=10+ 的 scaling；
 - learned PPO checkpoint 仍未做 paired continuation shield；
 - 当前 route certificate 是 C-domain adapter，不等于 generic Layer-2 core 已经跨 domain 自动适配。
+
+### Strong finite-horizon red-team: N=5 boundary
+
+为了排除“future-choice 只是多看几步”的解释，新增 `code/evaluation/transfer/run_uav_attention_receding_baselines.py`：对同一 official heuristic 加 optimistic depth-k action mask。它只要求存在 k-step legal/on-time partial continuation，并在 horizon 末端检查 sound optimistic necessary conditions；不证明 full completion，也不使用 exact fallback。
+
+1000-seed / N=5、107 个 hard-feasible initial states：
+
+| Policy | depth1 zero-tardy | depth2 | depth3 | depth4 | L/U future-choice |
+|---|---:|---:|---:|---:|---:|
+| NN | 84/107 | 89/107 | 99/107 | **107/107** | **107/107** |
+| Nearest Deadline | 61/107 | 74/107 | 92/107 | **107/107** | **107/107** |
+| Greedy DB | 74/107 | 85/107 | 97/107 | **107/107** | **107/107** |
+| Battery-Aware NN | 86/107 | 91/107 | 100/107 | **107/107** | **107/107** |
+
+depth4 已经关闭全部 zero-tardiness gap，因此 **N=5 不能支撑“future-choice 比 sufficiently-deep receding lookahead 更强”的 task-quality claim**。
+
+终态上仍有小差异：depth4 Battery-Aware NN 为 106/107 completed、1 infeasible；depth4 NN 仍有 1 infeasible；L/U future-choice 为四条 policy 全部 107/107 completed、0 infeasible。但这不足以掩盖主要负结论。
+
+计算侧也必须诚实：depth4 partial-search expansions 为约 `2.5k–2.6k / policy`，低于当前 L/U 的 `lower-search + exact-fallback` proxy（约 `4.9k–5.3k`）。因此 N=5 上当前 L/U **没有**算法效率优势。
+
+compact artifact：`results/transfer/uav-attention-receding-headroom-summary.json`。
+
+这条 red-team 把下一门槛钉死为论文原生 N=10+ setting：此时 depth4 才是真正局部 horizon。N=10 exact/L-U scaling 必须在严格内存护栏下做；如果 depth4 仍饱和且更便宜，C 只保留 external continuation-value evidence，不承担方法 superiority。

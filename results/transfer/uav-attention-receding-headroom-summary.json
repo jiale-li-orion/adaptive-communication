@@ -1,0 +1,123 @@
+{
+  "checks": {
+    "all_policies_use_107_hard_feasible_seeds": true,
+    "depth4_search_proxy_is_lower_than_lu_proxy_for_all": true,
+    "depth4_zero_tardiness_matches_lu_for_all": true,
+    "lu_retains_some_strict_terminal_quality_gain": true
+  },
+  "claim_boundary": [
+    "Partial-state expansions and L/U search-work proxy are comparable only as coarse search-work counts, not CPU-equivalent operations.",
+    "Depth4's zero-tardiness equality does not imply identical completion/infeasible outcomes: Battery-Aware NN and Nearest-Neighbour retain one residual terminal failure each that L/U removes.",
+    "N=10+ scaling is required before any method-efficiency claim."
+  ],
+  "raw_receding_sha256": "4500bfb850b9c9c874c8577d221636aa5778e3ac82299fe1a58e8790bae355de",
+  "rerun_command": "OPENBLAS_NUM_THREADS=1 OMP_NUM_THREADS=1 MKL_NUM_THREADS=1 python3 code/evaluation/transfer/run_uav_attention_receding_baselines.py --customers 5 --seeds 1000 --depths 1,2,3,4 --out <path>",
+  "rows": {
+    "battery_aware_nn": {
+      "depth4": {
+        "completed": 106,
+        "infeasible": 1,
+        "mean_tardiness": 0.0,
+        "partial_states_expanded": 2506,
+        "zero_tardiness": 107
+      },
+      "depth4_closes_zero_tardiness_gap": true,
+      "depth4_partial_search_proxy_over_lu_proxy": 0.5108030982470444,
+      "future_choice_has_strict_completion_or_infeasible_advantage": true,
+      "future_choice_lu": {
+        "completed": 107,
+        "exact_fallback_new_states": 2731,
+        "infeasible": 0,
+        "lower_search_expanded": 2175,
+        "total_search_proxy": 4906,
+        "zero_tardiness": 107
+      },
+      "hard_feasible_seed_count": 107
+    },
+    "greedy_deadline_battery": {
+      "depth4": {
+        "completed": 107,
+        "infeasible": 0,
+        "mean_tardiness": 0.0,
+        "partial_states_expanded": 2613,
+        "zero_tardiness": 107
+      },
+      "depth4_closes_zero_tardiness_gap": true,
+      "depth4_partial_search_proxy_over_lu_proxy": 0.5057093090768338,
+      "future_choice_has_strict_completion_or_infeasible_advantage": false,
+      "future_choice_lu": {
+        "completed": 107,
+        "exact_fallback_new_states": 2888,
+        "infeasible": 0,
+        "lower_search_expanded": 2279,
+        "total_search_proxy": 5167,
+        "zero_tardiness": 107
+      },
+      "hard_feasible_seed_count": 107
+    },
+    "nearest_deadline": {
+      "depth4": {
+        "completed": 107,
+        "infeasible": 0,
+        "mean_tardiness": 0.0,
+        "partial_states_expanded": 2582,
+        "zero_tardiness": 107
+      },
+      "depth4_closes_zero_tardiness_gap": true,
+      "depth4_partial_search_proxy_over_lu_proxy": 0.4889225525468661,
+      "future_choice_has_strict_completion_or_infeasible_advantage": false,
+      "future_choice_lu": {
+        "completed": 107,
+        "exact_fallback_new_states": 3037,
+        "infeasible": 0,
+        "lower_search_expanded": 2244,
+        "total_search_proxy": 5281,
+        "zero_tardiness": 107
+      },
+      "hard_feasible_seed_count": 107
+    },
+    "nearest_neighbour": {
+      "depth4": {
+        "completed": 107,
+        "infeasible": 1,
+        "mean_tardiness": 0.0,
+        "partial_states_expanded": 2506,
+        "zero_tardiness": 107
+      },
+      "depth4_closes_zero_tardiness_gap": true,
+      "depth4_partial_search_proxy_over_lu_proxy": 0.5108030982470444,
+      "future_choice_has_strict_completion_or_infeasible_advantage": true,
+      "future_choice_lu": {
+        "completed": 107,
+        "exact_fallback_new_states": 2731,
+        "infeasible": 0,
+        "lower_search_expanded": 2175,
+        "total_search_proxy": 4906,
+        "zero_tardiness": 107
+      },
+      "hard_feasible_seed_count": 107
+    }
+  },
+  "scientific_interpretation": {
+    "negative": "At N=5, depth4 reaches 107/107 zero-tardiness for every official heuristic and uses fewer partial-search expansions than the current L/U search-work proxy. Thus N=5 does not establish algorithmic superiority over deep receding lookahead.",
+    "next_gate": "Evaluate the paper's N=10+ settings, where depth4 is genuinely local relative to route length; keep exact/L-U resource guards bounded.",
+    "positive": "Short-horizon depth1-3 leave a measurable continuation gap; L/U exact-fallback closes it with exact frontier correctness."
+  },
+  "setting": {
+    "deadline_max": 12,
+    "deadline_min": 3,
+    "depths": [
+      1,
+      2,
+      3,
+      4
+    ],
+    "mission_time": 15,
+    "num_customers": 5,
+    "seed_range": [
+      0,
+      999
+    ]
+  },
+  "stage": "UAV_ATTENTION_RECEDING_HEADROOM_REDTEAM"
+}
