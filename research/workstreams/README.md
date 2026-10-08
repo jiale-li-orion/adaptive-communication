@@ -13,11 +13,13 @@
 
 当前同时推进三条线，任何一条先通过 hard gate 都可以独立形成论文贡献；三条都成立时再合并成完整 paper story。
 
+当前综合 paper story 与 claim ledger 见 [`PAPER-SYNTHESIS.md`](PAPER-SYNTHESIS.md)。
+
 | Workstream | 当前问题 | 主要正式资产 | 当前状态 |
 |---|---|---|---|
-| [`S7-ORIGINAL-SCENARIO.md`](S7-ORIGINAL-SCENARIO.md) | 原始灾前山区任务是否天然产生 future-choice hardness | Layer 1 task surface + shared substrate | **PRIMARY / task-level witness found; strong-baseline gate open** |
-| [`ASC-TRANSFER.md`](ASC-TRANSFER.md) | future-choice feasibility layer 能否增强已有 ASC scheduler / VoI 方法 | Layer 2 + external ASC formulation | **FORMULATION PROBE PASS / empirical transfer open** |
-| [`EMERGENCY-COMM-TRANSFER.md`](EMERGENCY-COMM-TRANSFER.md) | 同一方法能否迁移到已有应急通信控制/资源优化任务 | Layer 2 + external emergency-comm environment | **DRL-EC3 runnable / obligation wrapper required** |
+| [`S7-ORIGINAL-SCENARIO.md`](S7-ORIGINAL-SCENARIO.md) | 原始灾前山区任务是否天然产生 future-choice hardness | Layer 1 task surface + shared substrate | **BENCHMARK PRE-RELEASE / method-stress remains empty; frozen test execution next** |
+| [`ASC-TRANSFER.md`](ASC-TRANSFER.md) | future-choice feasibility layer 能否增强已有 ASC scheduler / VoI 方法 | Layer 2 + external ASC formulation | **POSITIVE: conditional obligations + shared-opportunity conflict + persistent-domain reuse** |
+| [`EMERGENCY-COMM-TRANSFER.md`](EMERGENCY-COMM-TRANSFER.md) | 同一方法能否迁移到已有应急通信控制/资源优化任务 | Layer 2 + external mission environments | **POSITIVE N=10: exact-correct L/U headroom over depth4; stronger scaling still open** |
 
 统一纪律：
 

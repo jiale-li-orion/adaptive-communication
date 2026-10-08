@@ -1,0 +1,207 @@
+# Paper Synthesis — Preserving Future Choices in Agentic Communication
+
+状态：**CURRENT PAPER STORY / claims not yet final**
+日期：2026-10-09
+
+这不是第四个 Layer。它只把 A/B/C 三条 workstream 组合成一篇论文的共同问题、证据链和剩余门槛；正式 benchmark / method ownership 仍分别属于 Layer 1 / Layer 2。
+
+## 1. One-sentence problem
+
+> **A communication or information action is not only valuable for what it reveals or delivers now; it can also preserve or destroy the set of future ways in which outstanding operational obligations can still be completed.**
+
+现有 semantic value / GoE / VoI、one-step action mask、short receding horizon 都可能只回答“当前动作有多好 / 当前能不能执行”，而没有显式表示：
+
+```text
+take action a under history h
+→ future observation z arrives
+→ which obligation/resource continuations remain feasible?
+```
+
+核心对象因此不是单个 scalar value，而是 **observation-conditioned future completion set / frontier**。
+
+## 2. Three workstreams, one paper role each
+
+### A — Reality and benchmark authority
+
+A 的职责不是给方法“造一道会赢的题”，而是定义现实 task、执行环境和 outcome evaluator，并对方法进行反作弊。
+
+当前已经完成：
+
+- 11 个 canonical operational surfaces；
+- 7 个 paper release-candidate T1 surfaces；
+- `Operational-Conformance / Interactive-Decision / Future-Choice-Stress` 三轨；
+- source → obligation → lifecycle → evaluator provenance；
+- full-sim evaluator mutation audit 覆盖 7/7 release surfaces；
+- fresh execution split `200 train / 200 dev / 150 test`；
+- 23/23 × 5 internal source/task/evaluator audit；
+- digest-bound pre-release manifest；
+- baseline/policy protocol 已在 test outcome 打开前冻结。
+
+最重要的科学结果不是“所有真实 task 都很 Agentic”，而是相反：
+
+- gateway natural-feedback candidate 可被 myopic/depth-k flow 吃掉；
+- persistent-energy commitment 可被 `ResourceGate` 吃掉；
+- shared-backup stress 可被 maxcov/packing 吸收；
+- T2 warning-chain task 很真实，但 source 并没有授权我们事后发明 contact quota 来制造 hardness。
+
+因此 A 给论文一个非常关键的可信度：**future-choice 不是通过反向修改 emergency benchmark 才出现的。**
+
+当前 A 只剩：执行 frozen 150-coordinate test、做统计/失败分析、冻结 final release manifest。
+
+### B — Direct ASC method formulation
+
+B 直接回答“future-choice 在已有 ASC formulation 中是否是一个独立对象”。
+
+当前证据链：
+
+1. **Value ≠ feasibility**：Pull-Based Query Scheduling 风格 AoI/query/GoE replay 中，current value policy 在相同当前 state 下会因 future hard-goal geometry 不同而从 safe 变 unsafe；future-choice shield 保持 constrained exact optimum。
+2. **Static union is wrong**：observation-conditioned future obligations 不能把所有可能 branch obligation 静态并集。最小 probe 中 `QUERY_H` 有 causal contingent policy，而 static union reserve 错误拒绝。
+3. **Shared-opportunity conflict**：`K∈{1,2,4,8,16,32}` branches × `D∈{2,4,8}` obligations；每个真实 branch 的 min backup 始终为 1，K>1 的 15/15 cells static-union false-negative；`K=32,D=8` union 被夸成 min-backup=249。
+4. **Structured computation**：branch 内复用 Layer-2 max-flow/min-cut conflict certificate。D=8 时 exact branch search 约 778 memo states / branch，而 deterministic flow graph只有 71 forward edges；这是 structural-work proxy，不是 wall-time claim。
+5. **Persistent conditional domain reuse**：L=5/K=32 多次 semantic observations 的完整 scenario tree 上，fresh branch-aware flow 需要 192 次 frontier builds，persistent conditional domains 只建 32 次，build ratio `1/6`；observation 只缩 support 时证书保持，backup budget 跨 validity boundary 时只失效 realized active branch。
+
+B 已经支持的最强 claim：
+
+> **Future obligations and resource conflicts must be represented conditionally on future observations; static worst-case unions can reject valid causal policies, while persistent conditional domains avoid repeated structural reconstruction.**
+
+尚未支持：generic Layer-2 algorithm 在完整 dynamic shared-resource problem 上的最终 wall-time superiority。下一门是 active branch 内同时发生 time/resource/pending-feedback event，比较 ordinary persistent exact / dependency-cache / branch-aware flow / future-choice component invalidation。
+
+### C — Independent external mission validation
+
+C 不承担 emergency-communication domain claim；它负责证明 future-choice 不是 A 自建环境特供。
+
+外部公开 `uav-attention-routing` 原生包含 customer deadlines、persistent battery、charger、depot return、finite horizon 和 action mask。
+
+证据链：
+
+1. native mask 只保证 one-step reachability；seed24 存在 zero-tardiness full route，但 native-mask-allowed action 会删除全部 full continuation，四条官方 heuristic 都会选入 destructive action set。
+2. exact continuation shield 在 N=5 / 1000 seeds 的 107 个 hard-feasible episodes 上，把四条 heuristic 全部修到 107/107 zero-tardiness / completed / 0 infeasible，无反向 zero-tardiness harm。
+3. L/U + replayable route certificate + exact fallback 在 N=5 / 1000 seeds 的 2,568 reached frontiers 上与 exact mask **0 mismatch**；exact fallback 只承担约 42–46% 的 pure-exact new states。
+4. **负边界**：N=5 depth4 receding 已经 107/107 zero-tardiness，且 search proxy 比当前 L/U 便宜；因此 N=5 只证明 continuation value / correctness，不证明算法 superiority。
+5. **N=10 scaling**：用完全 method-independent 的 constructive selector 扫 seeds0..199，得到 21 个“至少一条官方 heuristic 原生 zero-tardiness 完成”的 hard-feasible cohort。Greedy 本身已能解 20/21，因此 cohort 对 proposed method 是保守的。
+6. N=10 / 21 seeds：L/U future-choice 对四条 heuristic 均 **21/21 zero-tardiness、21/21 completed、0 infeasible**，924 reached frontiers / 0 mismatch；depth4 只有 NN 17/21、BatteryAware 17/21、NearestDeadline 11/21、Greedy 20/21。
+7. N=10 search：L/U exact-fallback new-state search约 pure exact mask 的 42–55%；加 bounded constructive search 后 total proxy约 66–78%。
+
+C 已经支持的最强 claim：
+
+> **A locally legal short-horizon action can destroy an otherwise feasible full mission continuation; an exact-correct L/U future-choice layer can selectively eliminate these failures beyond depth-4 receding lookahead on longer native tasks.**
+
+边界：route adapter 仍是 domain-specific；search-work count 不是 wall-time theorem；learned PPO checkpoint 尚未做 paired shield。
+
+## 3. Unified formal object
+
+令：
+
+- `h_t`：当前合法 history / evidence；
+- `W(h_t)`：与 history 相容的 worlds；
+- `a`：当前 action；
+- `z`：未来 observation / execution feedback；
+- `O(w,h)`：在 world/history 下有效的 hard operational obligations；
+- `R_t`：剩余共享资源 / opportunities；
+- `Π(h,a,z)`：从该 action 后可执行的 non-anticipative continuation policies。
+
+定义 action 的 future-choice set：
+
+```text
+F(h_t, a) = {
+  π ∈ Π : for every compatible world and every observation branch,
+          π completes all active obligations within resource/time constraints
+}
+```
+
+关键不是求一个新的 scalar score，而是维护三个 deterministic objects：
+
+```text
+L(h,a)=1   → 有可 replay 的 causal completion certificate
+U(h,a)=0   → optimistic relaxation 已证明不存在 completion
+otherwise  → unresolved，交给 exact fallback / learned ranking
+```
+
+certificate 带 validity domain：compatible support、resource interval、execution/evidence dependencies。Observation narrowing 只缩 support；resource/time/pending-feedback event 只 invalidates 依赖相交 component。
+
+这正好统一：
+
+- B 的 observation-conditioned future obligations / min-cut conflicts；
+- C 的 route continuation certificate / MST U-bound / exact fallback；
+- 历史 Layer-2 v2 的 `L/U + conditional Q×B frontier + event-local conflict invalidation`。
+
+## 4. Paper claim ladder
+
+### Claim A — Benchmark
+
+**Pending final test execution.**
+
+> A source-grounded executable benchmark for pre-disaster emergency communication, separating conformance, interactive decision, and future-choice stress instead of presuming every realistic task requires Agent reasoning.
+
+### Claim B — Representation
+
+**Currently supported.**
+
+> Scalar semantic value and static worst-case resource reservation are insufficient when future obligations depend on future observations; correct planning requires observation-conditioned future-choice domains.
+
+### Claim C — Method correctness
+
+**Supported on B/C adapters; generic core integration still open.**
+
+> Replayable L certificates + sound optimistic U bounds + exact fallback preserve exact action feasibility while allowing persistent certificate reuse and selective pruning.
+
+### Claim D — Method efficiency
+
+**Partially supported, not final.**
+
+- B dynamic-domain build count: up to 192→32 builds (`1/6`) under observation-only narrowing；
+- C N=10 exact-fallback state search: about 42–55% of pure exact mask；total search proxy 66–78%；
+- historical Layer-2 v2: strong expansion reduction but ordinary persistent exact still had better Python wall time。
+
+Final claim must be phrased as structured-search / recomputation reduction unless generic implementation clears a wall-time gate.
+
+### Claim E — Generality
+
+**Supported at formulation/domain level.**
+
+- direct ASC query scheduling (B)；
+- independent external hard-deadline mission environment (C)；
+- source-grounded emergency communication benchmark (A)。
+
+Do not claim C is itself an emergency-communication benchmark; it is cross-domain validation of the planning object.
+
+## 5. Why one paper can be stronger than three loose papers
+
+The synthesis is not “benchmark + random algorithm + random UAV experiment.” The causal chain is:
+
+```text
+A: reality audit says many realistic communication tasks are ordinary-solved
+   and prevents tailoring the task to the method
+
+B: direct ASC analysis isolates the missing representation:
+   observation-conditioned future obligations / resource conflicts
+
+C: independent environment shows the same failure mode causes real outcome loss,
+   and longer-horizon N=10 keeps a gap against strong depth-4 receding control
+```
+
+因此论文真正的论点是：
+
+> **Agentic communication should not be defined by adding LLMs or tools. It becomes non-trivial when current communication/information actions change the feasible set of future operational completions, especially under delayed observations and shared opportunities.**
+
+## 6. Remaining hard gates before paper freeze
+
+1. **Generic method core**：**orchestration gate 已关闭**。`FutureChoiceEngine` 已让 B/C 走同一 `carried → U=0 → L=1 → exact fallback` correctness protocol，且跨域审计/full UAV episode PASS。剩余工作是继续收敛 domain-specific certificate construction，而不是再造第三套 core。
+2. **B component-level invalidation**：active branch 内加入 time/resource/pending-feedback event，对比 ordinary dependency-cache / persistent exact / branch-aware flow。
+3. **C stronger scale/control**：扩 N=10 constructive cohort 或 N=15 bounded probes；可选 learned PPO paired shield；不再花时间美化 N=5。
+4. **A final release**：执行 frozen 150-coordinate deterministic test + 30-coordinate LLM subset，做统计/失败 taxonomy，冻结 final manifest。
+5. **Paper claim table**：最终每句话绑定 tracked artifact；wall-time 没过就绝不写“faster”。
+
+## 7. Provisional title space
+
+首选工作标题：
+
+> **Preserving Future Choices in Agentic Semantic Communication**
+
+副标题候选：
+
+> Source-Grounded Emergency Evaluation and Conditional Feasibility Planning
+
+如果最终 A 更重：
+
+> **From Operational Obligations to Future Choices: Benchmarking and Planning for Agentic Communication**

@@ -37,6 +37,35 @@ lossless-binding audit：41/41 hard signatures PASS；沿 exact policy tree 共�
 
 Layer-2 v2 deterministic mechanism core 现已正式 **FROZEN ON DEV**。freeze 前最终 regression 对 acquisition/intervention、depth-6 bounded off-policy correctness、planner-expansion frontier、L/U soundness、versioned evidence、event-local conflict incremental equivalence 与 four-arm strong control 全部重新核为 PASS。冻结合同包括：Task/Evidence/Capability/Execution → future-choice context 的 deterministic semantics；L/U 定义；conditional `Q×B` success/failure domain；evidence history/current-inference separation；action legality；exact fallback authority。除 correctness bug 外，后续不得为了 dev performance 修改这些对象。strong ordinary persistent exact 的 raw wall-time 优势仍为公开 negative/open performance boundary；旧 7-signature test 已在 `fdc0846` 暴露，独立 structural generalization claim 另行 preregister。Layer 3 现在只允许在该冻结接口上学习 unresolved-action ranking、search guidance 或 compact context，不得改变 correctness authority。
 
+## Cross-domain future-choice engine
+
+2026-10-09 新增 `code/evaluation/agentic/future_choice_engine.py`，但它**不修改**上述 frozen v2 kernel，也不重新定义 Layer-1 transition。该对象只抽出跨 domain 一致的 correctness orchestration：
+
+```text
+carried replayable certificate still valid
+→ else sound optimistic U=0
+→ else constructive replayable L=1
+→ else exact correctness fallback
+→ selected certificate transformed/carried across execution
+```
+
+domain adapter 仍拥有真正的语义：legal state/action transition、optimistic relaxation、certificate witness、validity domain 与 exact oracle。当前两个 adapter 分别是：
+
+- ASC：observation-conditioned branch obligations + shared-opportunity max-flow/min-cut certificates；
+- external UAV mission：deadline/battery/mission-time route certificate + MST/earliest-arrival U-bound + exact route fallback。
+
+机器审计 `results/transfer/generic-future-choice-engine-cross-domain.json` 要求：
+
+- ASC `QUERY_H` 得到 L=1 branch certificate；
+- query observation 只缩 support 时 carried certificate 可复用；
+- backup budget 跨 validity domain 时 carried certificate 失效；
+- UAV N=10 seed21 root action frontier 与独立 exact 逐 action 相同；
+- 同一个 generic engine 跑完整 NearestDeadline episode，每个 reached frontier 与独立 exact mask 一致，最终 zero-tardiness / complete / 0 infeasible，并真实命中 carried certificate。
+
+这关闭的是“B/C 是否实际遵守同一 L/U correctness protocol”这一集成门，不是“所有 domain certificate 已自动通用化”。domain-specific certificate construction 仍是当前主要方法实现边界。
+
+外部 C 的 scaling 也给出新的强 ordinary control：N=5 depth4 receding 已经饱和 zero-tardiness，不能支撑方法 superiority；N=10 method-independent constructive cohort 上，L/U 为四条 policy 21/21 zero-tardiness / complete / 0 infeasible、924 reached frontiers 0 mismatch，而 depth4 分别只有 17/21、17/21、11/21、20/21 zero-tardiness。该结果提供跨域 correctness/headroom 证据，但不会覆盖本文件既有的 `ordinary persistent exact` wall-time negative boundary。
+
 ## Baseline ladder audit
 
 Baseline 不再按当前实现临时挑选，统一回到 `cache06.md` 的两版要求：Layer-1 admission 阶段的强 deterministic ladder 用来证明 hard surface 不会被廉价规则饱和；Layer-2 v2 阶段的 final ladder 用来区分 future-choice/conditional-frontier 方法收益与普通规划、普通缓存、普通增量工程优化。

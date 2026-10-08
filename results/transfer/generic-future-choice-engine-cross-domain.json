@@ -1,0 +1,67 @@
+{
+  "asc_metrics": {
+    "carried_hits": 1,
+    "classifications": 4,
+    "commits": 1,
+    "exact_failure": 1,
+    "exact_fallback_calls": 1,
+    "exact_success": 0,
+    "lower_hits": 1,
+    "upper_impossible": 1
+  },
+  "checks": {
+    "asc_budget_crossing_invalidates_carried_certificate": true,
+    "asc_observation_narrowing_reuses_carried_certificate": true,
+    "asc_query_h_lower_certified": true,
+    "asc_wait_exact_rejected": true,
+    "same_engine_class_used_for_both": true,
+    "uav_full_episode_frontiers_match_exact": true,
+    "uav_full_episode_uses_carried_certificate": true,
+    "uav_full_episode_zero_tardiness_complete": true,
+    "uav_root_frontier_matches_exact": true
+  },
+  "claim_boundary": [
+    "This audit proves orchestration/core reuse, not that the two domain certificates have identical semantics.",
+    "B and C still provide domain-specific optimistic bounds and replayable witnesses; the shared engine owns only the L/U/certificate/exact-fallback correctness protocol."
+  ],
+  "stage": "GENERIC_FUTURE_CHOICE_ENGINE_CROSS_DOMAIN_AUDIT",
+  "uav_full_episode": {
+    "engine_metrics": {
+      "carried_hits": 10,
+      "classifications": 119,
+      "commits": 11,
+      "exact_failure": 9,
+      "exact_fallback_calls": 9,
+      "exact_success": 0,
+      "lower_hits": 33,
+      "upper_impossible": 67
+    },
+    "final": {
+      "completed": true,
+      "infeasible": 0,
+      "returned_to_depot": true,
+      "tardiness": 0.0
+    },
+    "frontier_checks": 11,
+    "policy": "NearestDeadlineFirstHeuristic"
+  },
+  "uav_metrics": {
+    "carried_hits": 0,
+    "classifications": 12,
+    "commits": 1,
+    "exact_failure": 0,
+    "exact_fallback_calls": 0,
+    "exact_success": 0,
+    "lower_hits": 7,
+    "upper_impossible": 5
+  },
+  "uav_safe_actions": [
+    1,
+    4,
+    6,
+    8,
+    9,
+    10
+  ],
+  "uav_seed": 21
+}
