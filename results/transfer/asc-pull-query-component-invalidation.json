@@ -1,0 +1,2340 @@
+{
+  "cells": [
+    {
+      "checks": {
+        "all_frontiers_match_fresh": true,
+        "all_local_events_reuse_some_component_when_possible": true,
+        "final_ack_recomputes_less_than_full": true,
+        "global_budget_touches_all_backup_components": true,
+        "no_partition_fallback_before_global_control": true,
+        "pending_feedback_recomputes_less_than_full": true,
+        "receipt_recomputes_less_than_full": true
+      },
+      "components": 2,
+      "events": [
+        {
+          "at_s": 90,
+          "component_count": 2,
+          "event": "initial",
+          "frontier_match": true,
+          "invalidated_component_keys": [],
+          "optimistic_feasible": true,
+          "partition_fallbacks": 0,
+          "recomputed_component_keys": [
+            [
+              "revealed-branch",
+              [
+                "c0:g0",
+                "c0:g1",
+                "c0:g2"
+              ]
+            ],
+            [
+              "revealed-branch",
+              [
+                "c1:g0",
+                "c1:g1",
+                "c1:g2"
+              ]
+            ]
+          ],
+          "recomputed_components": 2,
+          "reused_component_keys": [],
+          "reused_components": 0,
+          "worst_case_backup_lower_bound": 2
+        },
+        {
+          "at_s": 100,
+          "component_count": 2,
+          "event": "send_pending_c0",
+          "frontier_match": true,
+          "invalidated_component_keys": [
+            [
+              "revealed-branch",
+              [
+                "c0:g0",
+                "c0:g1",
+                "c0:g2"
+              ]
+            ]
+          ],
+          "optimistic_feasible": true,
+          "partition_fallbacks": 0,
+          "recomputed_component_keys": [
+            [
+              "revealed-branch",
+              [
+                "c0:g1",
+                "c0:g2"
+              ]
+            ]
+          ],
+          "recomputed_components": 1,
+          "reused_component_keys": [
+            [
+              "revealed-branch",
+              [
+                "c1:g0",
+                "c1:g1",
+                "c1:g2"
+              ]
+            ]
+          ],
+          "reused_components": 1,
+          "worst_case_backup_lower_bound": 2
+        },
+        {
+          "at_s": 110,
+          "component_count": 2,
+          "event": "gateway_receipt_c0",
+          "frontier_match": true,
+          "invalidated_component_keys": [],
+          "optimistic_feasible": true,
+          "partition_fallbacks": 0,
+          "recomputed_component_keys": [],
+          "recomputed_components": 0,
+          "reused_component_keys": [
+            [
+              "revealed-branch",
+              [
+                "c0:g1",
+                "c0:g2"
+              ]
+            ],
+            [
+              "revealed-branch",
+              [
+                "c1:g0",
+                "c1:g1",
+                "c1:g2"
+              ]
+            ]
+          ],
+          "reused_components": 2,
+          "worst_case_backup_lower_bound": 2
+        },
+        {
+          "at_s": 130,
+          "component_count": 2,
+          "event": "final_ack_c0",
+          "frontier_match": true,
+          "invalidated_component_keys": [],
+          "optimistic_feasible": true,
+          "partition_fallbacks": 0,
+          "recomputed_component_keys": [],
+          "recomputed_components": 0,
+          "reused_component_keys": [
+            [
+              "revealed-branch",
+              [
+                "c0:g1",
+                "c0:g2"
+              ]
+            ],
+            [
+              "revealed-branch",
+              [
+                "c1:g0",
+                "c1:g1",
+                "c1:g2"
+              ]
+            ]
+          ],
+          "reused_components": 2,
+          "worst_case_backup_lower_bound": 2
+        },
+        {
+          "at_s": 160,
+          "component_count": 3,
+          "event": "time_cross_c0",
+          "frontier_match": true,
+          "invalidated_component_keys": [
+            [
+              "revealed-branch",
+              [
+                "c0:g1",
+                "c0:g2"
+              ]
+            ]
+          ],
+          "optimistic_feasible": false,
+          "partition_fallbacks": 0,
+          "recomputed_component_keys": [
+            [
+              "revealed-branch",
+              [
+                "c0:g1"
+              ]
+            ],
+            [
+              "revealed-branch",
+              [
+                "c0:g2"
+              ]
+            ]
+          ],
+          "recomputed_components": 2,
+          "reused_component_keys": [
+            [
+              "revealed-branch",
+              [
+                "c1:g0",
+                "c1:g1",
+                "c1:g2"
+              ]
+            ]
+          ],
+          "reused_components": 1,
+          "worst_case_backup_lower_bound": 3
+        },
+        {
+          "at_s": 160,
+          "component_count": 3,
+          "event": "global_backup_budget",
+          "frontier_match": true,
+          "invalidated_component_keys": [
+            [
+              "revealed-branch",
+              [
+                "c0:g1"
+              ]
+            ],
+            [
+              "revealed-branch",
+              [
+                "c0:g2"
+              ]
+            ],
+            [
+              "revealed-branch",
+              [
+                "c1:g0",
+                "c1:g1",
+                "c1:g2"
+              ]
+            ]
+          ],
+          "optimistic_feasible": false,
+          "partition_fallbacks": 0,
+          "recomputed_component_keys": [
+            [
+              "revealed-branch",
+              [
+                "c0:g1"
+              ]
+            ],
+            [
+              "revealed-branch",
+              [
+                "c0:g2"
+              ]
+            ],
+            [
+              "revealed-branch",
+              [
+                "c1:g0",
+                "c1:g1",
+                "c1:g2"
+              ]
+            ]
+          ],
+          "recomputed_components": 3,
+          "reused_component_keys": [],
+          "reused_components": 0,
+          "worst_case_backup_lower_bound": 3
+        }
+      ],
+      "initial_component_count": 2,
+      "obligations_per_component": 3
+    },
+    {
+      "checks": {
+        "all_frontiers_match_fresh": true,
+        "all_local_events_reuse_some_component_when_possible": true,
+        "final_ack_recomputes_less_than_full": true,
+        "global_budget_touches_all_backup_components": true,
+        "no_partition_fallback_before_global_control": true,
+        "pending_feedback_recomputes_less_than_full": true,
+        "receipt_recomputes_less_than_full": true
+      },
+      "components": 4,
+      "events": [
+        {
+          "at_s": 90,
+          "component_count": 4,
+          "event": "initial",
+          "frontier_match": true,
+          "invalidated_component_keys": [],
+          "optimistic_feasible": true,
+          "partition_fallbacks": 0,
+          "recomputed_component_keys": [
+            [
+              "revealed-branch",
+              [
+                "c0:g0",
+                "c0:g1",
+                "c0:g2"
+              ]
+            ],
+            [
+              "revealed-branch",
+              [
+                "c1:g0",
+                "c1:g1",
+                "c1:g2"
+              ]
+            ],
+            [
+              "revealed-branch",
+              [
+                "c2:g0",
+                "c2:g1",
+                "c2:g2"
+              ]
+            ],
+            [
+              "revealed-branch",
+              [
+                "c3:g0",
+                "c3:g1",
+                "c3:g2"
+              ]
+            ]
+          ],
+          "recomputed_components": 4,
+          "reused_component_keys": [],
+          "reused_components": 0,
+          "worst_case_backup_lower_bound": 4
+        },
+        {
+          "at_s": 100,
+          "component_count": 4,
+          "event": "send_pending_c0",
+          "frontier_match": true,
+          "invalidated_component_keys": [
+            [
+              "revealed-branch",
+              [
+                "c0:g0",
+                "c0:g1",
+                "c0:g2"
+              ]
+            ]
+          ],
+          "optimistic_feasible": true,
+          "partition_fallbacks": 0,
+          "recomputed_component_keys": [
+            [
+              "revealed-branch",
+              [
+                "c0:g1",
+                "c0:g2"
+              ]
+            ]
+          ],
+          "recomputed_components": 1,
+          "reused_component_keys": [
+            [
+              "revealed-branch",
+              [
+                "c1:g0",
+                "c1:g1",
+                "c1:g2"
+              ]
+            ],
+            [
+              "revealed-branch",
+              [
+                "c2:g0",
+                "c2:g1",
+                "c2:g2"
+              ]
+            ],
+            [
+              "revealed-branch",
+              [
+                "c3:g0",
+                "c3:g1",
+                "c3:g2"
+              ]
+            ]
+          ],
+          "reused_components": 3,
+          "worst_case_backup_lower_bound": 4
+        },
+        {
+          "at_s": 110,
+          "component_count": 4,
+          "event": "gateway_receipt_c0",
+          "frontier_match": true,
+          "invalidated_component_keys": [],
+          "optimistic_feasible": true,
+          "partition_fallbacks": 0,
+          "recomputed_component_keys": [],
+          "recomputed_components": 0,
+          "reused_component_keys": [
+            [
+              "revealed-branch",
+              [
+                "c0:g1",
+                "c0:g2"
+              ]
+            ],
+            [
+              "revealed-branch",
+              [
+                "c1:g0",
+                "c1:g1",
+                "c1:g2"
+              ]
+            ],
+            [
+              "revealed-branch",
+              [
+                "c2:g0",
+                "c2:g1",
+                "c2:g2"
+              ]
+            ],
+            [
+              "revealed-branch",
+              [
+                "c3:g0",
+                "c3:g1",
+                "c3:g2"
+              ]
+            ]
+          ],
+          "reused_components": 4,
+          "worst_case_backup_lower_bound": 4
+        },
+        {
+          "at_s": 130,
+          "component_count": 4,
+          "event": "final_ack_c0",
+          "frontier_match": true,
+          "invalidated_component_keys": [],
+          "optimistic_feasible": true,
+          "partition_fallbacks": 0,
+          "recomputed_component_keys": [],
+          "recomputed_components": 0,
+          "reused_component_keys": [
+            [
+              "revealed-branch",
+              [
+                "c0:g1",
+                "c0:g2"
+              ]
+            ],
+            [
+              "revealed-branch",
+              [
+                "c1:g0",
+                "c1:g1",
+                "c1:g2"
+              ]
+            ],
+            [
+              "revealed-branch",
+              [
+                "c2:g0",
+                "c2:g1",
+                "c2:g2"
+              ]
+            ],
+            [
+              "revealed-branch",
+              [
+                "c3:g0",
+                "c3:g1",
+                "c3:g2"
+              ]
+            ]
+          ],
+          "reused_components": 4,
+          "worst_case_backup_lower_bound": 4
+        },
+        {
+          "at_s": 160,
+          "component_count": 5,
+          "event": "time_cross_c0",
+          "frontier_match": true,
+          "invalidated_component_keys": [
+            [
+              "revealed-branch",
+              [
+                "c0:g1",
+                "c0:g2"
+              ]
+            ]
+          ],
+          "optimistic_feasible": false,
+          "partition_fallbacks": 0,
+          "recomputed_component_keys": [
+            [
+              "revealed-branch",
+              [
+                "c0:g1"
+              ]
+            ],
+            [
+              "revealed-branch",
+              [
+                "c0:g2"
+              ]
+            ]
+          ],
+          "recomputed_components": 2,
+          "reused_component_keys": [
+            [
+              "revealed-branch",
+              [
+                "c1:g0",
+                "c1:g1",
+                "c1:g2"
+              ]
+            ],
+            [
+              "revealed-branch",
+              [
+                "c2:g0",
+                "c2:g1",
+                "c2:g2"
+              ]
+            ],
+            [
+              "revealed-branch",
+              [
+                "c3:g0",
+                "c3:g1",
+                "c3:g2"
+              ]
+            ]
+          ],
+          "reused_components": 3,
+          "worst_case_backup_lower_bound": 5
+        },
+        {
+          "at_s": 160,
+          "component_count": 5,
+          "event": "global_backup_budget",
+          "frontier_match": true,
+          "invalidated_component_keys": [
+            [
+              "revealed-branch",
+              [
+                "c0:g1"
+              ]
+            ],
+            [
+              "revealed-branch",
+              [
+                "c0:g2"
+              ]
+            ],
+            [
+              "revealed-branch",
+              [
+                "c1:g0",
+                "c1:g1",
+                "c1:g2"
+              ]
+            ],
+            [
+              "revealed-branch",
+              [
+                "c2:g0",
+                "c2:g1",
+                "c2:g2"
+              ]
+            ],
+            [
+              "revealed-branch",
+              [
+                "c3:g0",
+                "c3:g1",
+                "c3:g2"
+              ]
+            ]
+          ],
+          "optimistic_feasible": false,
+          "partition_fallbacks": 0,
+          "recomputed_component_keys": [
+            [
+              "revealed-branch",
+              [
+                "c0:g1"
+              ]
+            ],
+            [
+              "revealed-branch",
+              [
+                "c0:g2"
+              ]
+            ],
+            [
+              "revealed-branch",
+              [
+                "c1:g0",
+                "c1:g1",
+                "c1:g2"
+              ]
+            ],
+            [
+              "revealed-branch",
+              [
+                "c2:g0",
+                "c2:g1",
+                "c2:g2"
+              ]
+            ],
+            [
+              "revealed-branch",
+              [
+                "c3:g0",
+                "c3:g1",
+                "c3:g2"
+              ]
+            ]
+          ],
+          "recomputed_components": 5,
+          "reused_component_keys": [],
+          "reused_components": 0,
+          "worst_case_backup_lower_bound": 5
+        }
+      ],
+      "initial_component_count": 4,
+      "obligations_per_component": 3
+    },
+    {
+      "checks": {
+        "all_frontiers_match_fresh": true,
+        "all_local_events_reuse_some_component_when_possible": true,
+        "final_ack_recomputes_less_than_full": true,
+        "global_budget_touches_all_backup_components": true,
+        "no_partition_fallback_before_global_control": true,
+        "pending_feedback_recomputes_less_than_full": true,
+        "receipt_recomputes_less_than_full": true
+      },
+      "components": 8,
+      "events": [
+        {
+          "at_s": 90,
+          "component_count": 8,
+          "event": "initial",
+          "frontier_match": true,
+          "invalidated_component_keys": [],
+          "optimistic_feasible": true,
+          "partition_fallbacks": 0,
+          "recomputed_component_keys": [
+            [
+              "revealed-branch",
+              [
+                "c0:g0",
+                "c0:g1",
+                "c0:g2"
+              ]
+            ],
+            [
+              "revealed-branch",
+              [
+                "c1:g0",
+                "c1:g1",
+                "c1:g2"
+              ]
+            ],
+            [
+              "revealed-branch",
+              [
+                "c2:g0",
+                "c2:g1",
+                "c2:g2"
+              ]
+            ],
+            [
+              "revealed-branch",
+              [
+                "c3:g0",
+                "c3:g1",
+                "c3:g2"
+              ]
+            ],
+            [
+              "revealed-branch",
+              [
+                "c4:g0",
+                "c4:g1",
+                "c4:g2"
+              ]
+            ],
+            [
+              "revealed-branch",
+              [
+                "c5:g0",
+                "c5:g1",
+                "c5:g2"
+              ]
+            ],
+            [
+              "revealed-branch",
+              [
+                "c6:g0",
+                "c6:g1",
+                "c6:g2"
+              ]
+            ],
+            [
+              "revealed-branch",
+              [
+                "c7:g0",
+                "c7:g1",
+                "c7:g2"
+              ]
+            ]
+          ],
+          "recomputed_components": 8,
+          "reused_component_keys": [],
+          "reused_components": 0,
+          "worst_case_backup_lower_bound": 8
+        },
+        {
+          "at_s": 100,
+          "component_count": 8,
+          "event": "send_pending_c0",
+          "frontier_match": true,
+          "invalidated_component_keys": [
+            [
+              "revealed-branch",
+              [
+                "c0:g0",
+                "c0:g1",
+                "c0:g2"
+              ]
+            ]
+          ],
+          "optimistic_feasible": true,
+          "partition_fallbacks": 0,
+          "recomputed_component_keys": [
+            [
+              "revealed-branch",
+              [
+                "c0:g1",
+                "c0:g2"
+              ]
+            ]
+          ],
+          "recomputed_components": 1,
+          "reused_component_keys": [
+            [
+              "revealed-branch",
+              [
+                "c1:g0",
+                "c1:g1",
+                "c1:g2"
+              ]
+            ],
+            [
+              "revealed-branch",
+              [
+                "c2:g0",
+                "c2:g1",
+                "c2:g2"
+              ]
+            ],
+            [
+              "revealed-branch",
+              [
+                "c3:g0",
+                "c3:g1",
+                "c3:g2"
+              ]
+            ],
+            [
+              "revealed-branch",
+              [
+                "c4:g0",
+                "c4:g1",
+                "c4:g2"
+              ]
+            ],
+            [
+              "revealed-branch",
+              [
+                "c5:g0",
+                "c5:g1",
+                "c5:g2"
+              ]
+            ],
+            [
+              "revealed-branch",
+              [
+                "c6:g0",
+                "c6:g1",
+                "c6:g2"
+              ]
+            ],
+            [
+              "revealed-branch",
+              [
+                "c7:g0",
+                "c7:g1",
+                "c7:g2"
+              ]
+            ]
+          ],
+          "reused_components": 7,
+          "worst_case_backup_lower_bound": 8
+        },
+        {
+          "at_s": 110,
+          "component_count": 8,
+          "event": "gateway_receipt_c0",
+          "frontier_match": true,
+          "invalidated_component_keys": [],
+          "optimistic_feasible": true,
+          "partition_fallbacks": 0,
+          "recomputed_component_keys": [],
+          "recomputed_components": 0,
+          "reused_component_keys": [
+            [
+              "revealed-branch",
+              [
+                "c0:g1",
+                "c0:g2"
+              ]
+            ],
+            [
+              "revealed-branch",
+              [
+                "c1:g0",
+                "c1:g1",
+                "c1:g2"
+              ]
+            ],
+            [
+              "revealed-branch",
+              [
+                "c2:g0",
+                "c2:g1",
+                "c2:g2"
+              ]
+            ],
+            [
+              "revealed-branch",
+              [
+                "c3:g0",
+                "c3:g1",
+                "c3:g2"
+              ]
+            ],
+            [
+              "revealed-branch",
+              [
+                "c4:g0",
+                "c4:g1",
+                "c4:g2"
+              ]
+            ],
+            [
+              "revealed-branch",
+              [
+                "c5:g0",
+                "c5:g1",
+                "c5:g2"
+              ]
+            ],
+            [
+              "revealed-branch",
+              [
+                "c6:g0",
+                "c6:g1",
+                "c6:g2"
+              ]
+            ],
+            [
+              "revealed-branch",
+              [
+                "c7:g0",
+                "c7:g1",
+                "c7:g2"
+              ]
+            ]
+          ],
+          "reused_components": 8,
+          "worst_case_backup_lower_bound": 8
+        },
+        {
+          "at_s": 130,
+          "component_count": 8,
+          "event": "final_ack_c0",
+          "frontier_match": true,
+          "invalidated_component_keys": [],
+          "optimistic_feasible": true,
+          "partition_fallbacks": 0,
+          "recomputed_component_keys": [],
+          "recomputed_components": 0,
+          "reused_component_keys": [
+            [
+              "revealed-branch",
+              [
+                "c0:g1",
+                "c0:g2"
+              ]
+            ],
+            [
+              "revealed-branch",
+              [
+                "c1:g0",
+                "c1:g1",
+                "c1:g2"
+              ]
+            ],
+            [
+              "revealed-branch",
+              [
+                "c2:g0",
+                "c2:g1",
+                "c2:g2"
+              ]
+            ],
+            [
+              "revealed-branch",
+              [
+                "c3:g0",
+                "c3:g1",
+                "c3:g2"
+              ]
+            ],
+            [
+              "revealed-branch",
+              [
+                "c4:g0",
+                "c4:g1",
+                "c4:g2"
+              ]
+            ],
+            [
+              "revealed-branch",
+              [
+                "c5:g0",
+                "c5:g1",
+                "c5:g2"
+              ]
+            ],
+            [
+              "revealed-branch",
+              [
+                "c6:g0",
+                "c6:g1",
+                "c6:g2"
+              ]
+            ],
+            [
+              "revealed-branch",
+              [
+                "c7:g0",
+                "c7:g1",
+                "c7:g2"
+              ]
+            ]
+          ],
+          "reused_components": 8,
+          "worst_case_backup_lower_bound": 8
+        },
+        {
+          "at_s": 160,
+          "component_count": 9,
+          "event": "time_cross_c0",
+          "frontier_match": true,
+          "invalidated_component_keys": [
+            [
+              "revealed-branch",
+              [
+                "c0:g1",
+                "c0:g2"
+              ]
+            ]
+          ],
+          "optimistic_feasible": false,
+          "partition_fallbacks": 0,
+          "recomputed_component_keys": [
+            [
+              "revealed-branch",
+              [
+                "c0:g1"
+              ]
+            ],
+            [
+              "revealed-branch",
+              [
+                "c0:g2"
+              ]
+            ]
+          ],
+          "recomputed_components": 2,
+          "reused_component_keys": [
+            [
+              "revealed-branch",
+              [
+                "c1:g0",
+                "c1:g1",
+                "c1:g2"
+              ]
+            ],
+            [
+              "revealed-branch",
+              [
+                "c2:g0",
+                "c2:g1",
+                "c2:g2"
+              ]
+            ],
+            [
+              "revealed-branch",
+              [
+                "c3:g0",
+                "c3:g1",
+                "c3:g2"
+              ]
+            ],
+            [
+              "revealed-branch",
+              [
+                "c4:g0",
+                "c4:g1",
+                "c4:g2"
+              ]
+            ],
+            [
+              "revealed-branch",
+              [
+                "c5:g0",
+                "c5:g1",
+                "c5:g2"
+              ]
+            ],
+            [
+              "revealed-branch",
+              [
+                "c6:g0",
+                "c6:g1",
+                "c6:g2"
+              ]
+            ],
+            [
+              "revealed-branch",
+              [
+                "c7:g0",
+                "c7:g1",
+                "c7:g2"
+              ]
+            ]
+          ],
+          "reused_components": 7,
+          "worst_case_backup_lower_bound": 9
+        },
+        {
+          "at_s": 160,
+          "component_count": 9,
+          "event": "global_backup_budget",
+          "frontier_match": true,
+          "invalidated_component_keys": [
+            [
+              "revealed-branch",
+              [
+                "c0:g1"
+              ]
+            ],
+            [
+              "revealed-branch",
+              [
+                "c0:g2"
+              ]
+            ],
+            [
+              "revealed-branch",
+              [
+                "c1:g0",
+                "c1:g1",
+                "c1:g2"
+              ]
+            ],
+            [
+              "revealed-branch",
+              [
+                "c2:g0",
+                "c2:g1",
+                "c2:g2"
+              ]
+            ],
+            [
+              "revealed-branch",
+              [
+                "c3:g0",
+                "c3:g1",
+                "c3:g2"
+              ]
+            ],
+            [
+              "revealed-branch",
+              [
+                "c4:g0",
+                "c4:g1",
+                "c4:g2"
+              ]
+            ],
+            [
+              "revealed-branch",
+              [
+                "c5:g0",
+                "c5:g1",
+                "c5:g2"
+              ]
+            ],
+            [
+              "revealed-branch",
+              [
+                "c6:g0",
+                "c6:g1",
+                "c6:g2"
+              ]
+            ],
+            [
+              "revealed-branch",
+              [
+                "c7:g0",
+                "c7:g1",
+                "c7:g2"
+              ]
+            ]
+          ],
+          "optimistic_feasible": false,
+          "partition_fallbacks": 0,
+          "recomputed_component_keys": [
+            [
+              "revealed-branch",
+              [
+                "c0:g1"
+              ]
+            ],
+            [
+              "revealed-branch",
+              [
+                "c0:g2"
+              ]
+            ],
+            [
+              "revealed-branch",
+              [
+                "c1:g0",
+                "c1:g1",
+                "c1:g2"
+              ]
+            ],
+            [
+              "revealed-branch",
+              [
+                "c2:g0",
+                "c2:g1",
+                "c2:g2"
+              ]
+            ],
+            [
+              "revealed-branch",
+              [
+                "c3:g0",
+                "c3:g1",
+                "c3:g2"
+              ]
+            ],
+            [
+              "revealed-branch",
+              [
+                "c4:g0",
+                "c4:g1",
+                "c4:g2"
+              ]
+            ],
+            [
+              "revealed-branch",
+              [
+                "c5:g0",
+                "c5:g1",
+                "c5:g2"
+              ]
+            ],
+            [
+              "revealed-branch",
+              [
+                "c6:g0",
+                "c6:g1",
+                "c6:g2"
+              ]
+            ],
+            [
+              "revealed-branch",
+              [
+                "c7:g0",
+                "c7:g1",
+                "c7:g2"
+              ]
+            ]
+          ],
+          "recomputed_components": 9,
+          "reused_component_keys": [],
+          "reused_components": 0,
+          "worst_case_backup_lower_bound": 9
+        }
+      ],
+      "initial_component_count": 8,
+      "obligations_per_component": 3
+    },
+    {
+      "checks": {
+        "all_frontiers_match_fresh": true,
+        "all_local_events_reuse_some_component_when_possible": true,
+        "final_ack_recomputes_less_than_full": true,
+        "global_budget_touches_all_backup_components": true,
+        "no_partition_fallback_before_global_control": true,
+        "pending_feedback_recomputes_less_than_full": true,
+        "receipt_recomputes_less_than_full": true
+      },
+      "components": 16,
+      "events": [
+        {
+          "at_s": 90,
+          "component_count": 16,
+          "event": "initial",
+          "frontier_match": true,
+          "invalidated_component_keys": [],
+          "optimistic_feasible": true,
+          "partition_fallbacks": 0,
+          "recomputed_component_keys": [
+            [
+              "revealed-branch",
+              [
+                "c0:g0",
+                "c0:g1",
+                "c0:g2"
+              ]
+            ],
+            [
+              "revealed-branch",
+              [
+                "c10:g0",
+                "c10:g1",
+                "c10:g2"
+              ]
+            ],
+            [
+              "revealed-branch",
+              [
+                "c11:g0",
+                "c11:g1",
+                "c11:g2"
+              ]
+            ],
+            [
+              "revealed-branch",
+              [
+                "c12:g0",
+                "c12:g1",
+                "c12:g2"
+              ]
+            ],
+            [
+              "revealed-branch",
+              [
+                "c13:g0",
+                "c13:g1",
+                "c13:g2"
+              ]
+            ],
+            [
+              "revealed-branch",
+              [
+                "c14:g0",
+                "c14:g1",
+                "c14:g2"
+              ]
+            ],
+            [
+              "revealed-branch",
+              [
+                "c15:g0",
+                "c15:g1",
+                "c15:g2"
+              ]
+            ],
+            [
+              "revealed-branch",
+              [
+                "c1:g0",
+                "c1:g1",
+                "c1:g2"
+              ]
+            ],
+            [
+              "revealed-branch",
+              [
+                "c2:g0",
+                "c2:g1",
+                "c2:g2"
+              ]
+            ],
+            [
+              "revealed-branch",
+              [
+                "c3:g0",
+                "c3:g1",
+                "c3:g2"
+              ]
+            ],
+            [
+              "revealed-branch",
+              [
+                "c4:g0",
+                "c4:g1",
+                "c4:g2"
+              ]
+            ],
+            [
+              "revealed-branch",
+              [
+                "c5:g0",
+                "c5:g1",
+                "c5:g2"
+              ]
+            ],
+            [
+              "revealed-branch",
+              [
+                "c6:g0",
+                "c6:g1",
+                "c6:g2"
+              ]
+            ],
+            [
+              "revealed-branch",
+              [
+                "c7:g0",
+                "c7:g1",
+                "c7:g2"
+              ]
+            ],
+            [
+              "revealed-branch",
+              [
+                "c8:g0",
+                "c8:g1",
+                "c8:g2"
+              ]
+            ],
+            [
+              "revealed-branch",
+              [
+                "c9:g0",
+                "c9:g1",
+                "c9:g2"
+              ]
+            ]
+          ],
+          "recomputed_components": 16,
+          "reused_component_keys": [],
+          "reused_components": 0,
+          "worst_case_backup_lower_bound": 16
+        },
+        {
+          "at_s": 100,
+          "component_count": 16,
+          "event": "send_pending_c0",
+          "frontier_match": true,
+          "invalidated_component_keys": [
+            [
+              "revealed-branch",
+              [
+                "c0:g0",
+                "c0:g1",
+                "c0:g2"
+              ]
+            ]
+          ],
+          "optimistic_feasible": true,
+          "partition_fallbacks": 0,
+          "recomputed_component_keys": [
+            [
+              "revealed-branch",
+              [
+                "c0:g1",
+                "c0:g2"
+              ]
+            ]
+          ],
+          "recomputed_components": 1,
+          "reused_component_keys": [
+            [
+              "revealed-branch",
+              [
+                "c10:g0",
+                "c10:g1",
+                "c10:g2"
+              ]
+            ],
+            [
+              "revealed-branch",
+              [
+                "c11:g0",
+                "c11:g1",
+                "c11:g2"
+              ]
+            ],
+            [
+              "revealed-branch",
+              [
+                "c12:g0",
+                "c12:g1",
+                "c12:g2"
+              ]
+            ],
+            [
+              "revealed-branch",
+              [
+                "c13:g0",
+                "c13:g1",
+                "c13:g2"
+              ]
+            ],
+            [
+              "revealed-branch",
+              [
+                "c14:g0",
+                "c14:g1",
+                "c14:g2"
+              ]
+            ],
+            [
+              "revealed-branch",
+              [
+                "c15:g0",
+                "c15:g1",
+                "c15:g2"
+              ]
+            ],
+            [
+              "revealed-branch",
+              [
+                "c1:g0",
+                "c1:g1",
+                "c1:g2"
+              ]
+            ],
+            [
+              "revealed-branch",
+              [
+                "c2:g0",
+                "c2:g1",
+                "c2:g2"
+              ]
+            ],
+            [
+              "revealed-branch",
+              [
+                "c3:g0",
+                "c3:g1",
+                "c3:g2"
+              ]
+            ],
+            [
+              "revealed-branch",
+              [
+                "c4:g0",
+                "c4:g1",
+                "c4:g2"
+              ]
+            ],
+            [
+              "revealed-branch",
+              [
+                "c5:g0",
+                "c5:g1",
+                "c5:g2"
+              ]
+            ],
+            [
+              "revealed-branch",
+              [
+                "c6:g0",
+                "c6:g1",
+                "c6:g2"
+              ]
+            ],
+            [
+              "revealed-branch",
+              [
+                "c7:g0",
+                "c7:g1",
+                "c7:g2"
+              ]
+            ],
+            [
+              "revealed-branch",
+              [
+                "c8:g0",
+                "c8:g1",
+                "c8:g2"
+              ]
+            ],
+            [
+              "revealed-branch",
+              [
+                "c9:g0",
+                "c9:g1",
+                "c9:g2"
+              ]
+            ]
+          ],
+          "reused_components": 15,
+          "worst_case_backup_lower_bound": 16
+        },
+        {
+          "at_s": 110,
+          "component_count": 16,
+          "event": "gateway_receipt_c0",
+          "frontier_match": true,
+          "invalidated_component_keys": [],
+          "optimistic_feasible": true,
+          "partition_fallbacks": 0,
+          "recomputed_component_keys": [],
+          "recomputed_components": 0,
+          "reused_component_keys": [
+            [
+              "revealed-branch",
+              [
+                "c0:g1",
+                "c0:g2"
+              ]
+            ],
+            [
+              "revealed-branch",
+              [
+                "c10:g0",
+                "c10:g1",
+                "c10:g2"
+              ]
+            ],
+            [
+              "revealed-branch",
+              [
+                "c11:g0",
+                "c11:g1",
+                "c11:g2"
+              ]
+            ],
+            [
+              "revealed-branch",
+              [
+                "c12:g0",
+                "c12:g1",
+                "c12:g2"
+              ]
+            ],
+            [
+              "revealed-branch",
+              [
+                "c13:g0",
+                "c13:g1",
+                "c13:g2"
+              ]
+            ],
+            [
+              "revealed-branch",
+              [
+                "c14:g0",
+                "c14:g1",
+                "c14:g2"
+              ]
+            ],
+            [
+              "revealed-branch",
+              [
+                "c15:g0",
+                "c15:g1",
+                "c15:g2"
+              ]
+            ],
+            [
+              "revealed-branch",
+              [
+                "c1:g0",
+                "c1:g1",
+                "c1:g2"
+              ]
+            ],
+            [
+              "revealed-branch",
+              [
+                "c2:g0",
+                "c2:g1",
+                "c2:g2"
+              ]
+            ],
+            [
+              "revealed-branch",
+              [
+                "c3:g0",
+                "c3:g1",
+                "c3:g2"
+              ]
+            ],
+            [
+              "revealed-branch",
+              [
+                "c4:g0",
+                "c4:g1",
+                "c4:g2"
+              ]
+            ],
+            [
+              "revealed-branch",
+              [
+                "c5:g0",
+                "c5:g1",
+                "c5:g2"
+              ]
+            ],
+            [
+              "revealed-branch",
+              [
+                "c6:g0",
+                "c6:g1",
+                "c6:g2"
+              ]
+            ],
+            [
+              "revealed-branch",
+              [
+                "c7:g0",
+                "c7:g1",
+                "c7:g2"
+              ]
+            ],
+            [
+              "revealed-branch",
+              [
+                "c8:g0",
+                "c8:g1",
+                "c8:g2"
+              ]
+            ],
+            [
+              "revealed-branch",
+              [
+                "c9:g0",
+                "c9:g1",
+                "c9:g2"
+              ]
+            ]
+          ],
+          "reused_components": 16,
+          "worst_case_backup_lower_bound": 16
+        },
+        {
+          "at_s": 130,
+          "component_count": 16,
+          "event": "final_ack_c0",
+          "frontier_match": true,
+          "invalidated_component_keys": [],
+          "optimistic_feasible": true,
+          "partition_fallbacks": 0,
+          "recomputed_component_keys": [],
+          "recomputed_components": 0,
+          "reused_component_keys": [
+            [
+              "revealed-branch",
+              [
+                "c0:g1",
+                "c0:g2"
+              ]
+            ],
+            [
+              "revealed-branch",
+              [
+                "c10:g0",
+                "c10:g1",
+                "c10:g2"
+              ]
+            ],
+            [
+              "revealed-branch",
+              [
+                "c11:g0",
+                "c11:g1",
+                "c11:g2"
+              ]
+            ],
+            [
+              "revealed-branch",
+              [
+                "c12:g0",
+                "c12:g1",
+                "c12:g2"
+              ]
+            ],
+            [
+              "revealed-branch",
+              [
+                "c13:g0",
+                "c13:g1",
+                "c13:g2"
+              ]
+            ],
+            [
+              "revealed-branch",
+              [
+                "c14:g0",
+                "c14:g1",
+                "c14:g2"
+              ]
+            ],
+            [
+              "revealed-branch",
+              [
+                "c15:g0",
+                "c15:g1",
+                "c15:g2"
+              ]
+            ],
+            [
+              "revealed-branch",
+              [
+                "c1:g0",
+                "c1:g1",
+                "c1:g2"
+              ]
+            ],
+            [
+              "revealed-branch",
+              [
+                "c2:g0",
+                "c2:g1",
+                "c2:g2"
+              ]
+            ],
+            [
+              "revealed-branch",
+              [
+                "c3:g0",
+                "c3:g1",
+                "c3:g2"
+              ]
+            ],
+            [
+              "revealed-branch",
+              [
+                "c4:g0",
+                "c4:g1",
+                "c4:g2"
+              ]
+            ],
+            [
+              "revealed-branch",
+              [
+                "c5:g0",
+                "c5:g1",
+                "c5:g2"
+              ]
+            ],
+            [
+              "revealed-branch",
+              [
+                "c6:g0",
+                "c6:g1",
+                "c6:g2"
+              ]
+            ],
+            [
+              "revealed-branch",
+              [
+                "c7:g0",
+                "c7:g1",
+                "c7:g2"
+              ]
+            ],
+            [
+              "revealed-branch",
+              [
+                "c8:g0",
+                "c8:g1",
+                "c8:g2"
+              ]
+            ],
+            [
+              "revealed-branch",
+              [
+                "c9:g0",
+                "c9:g1",
+                "c9:g2"
+              ]
+            ]
+          ],
+          "reused_components": 16,
+          "worst_case_backup_lower_bound": 16
+        },
+        {
+          "at_s": 160,
+          "component_count": 17,
+          "event": "time_cross_c0",
+          "frontier_match": true,
+          "invalidated_component_keys": [
+            [
+              "revealed-branch",
+              [
+                "c0:g1",
+                "c0:g2"
+              ]
+            ]
+          ],
+          "optimistic_feasible": false,
+          "partition_fallbacks": 0,
+          "recomputed_component_keys": [
+            [
+              "revealed-branch",
+              [
+                "c0:g1"
+              ]
+            ],
+            [
+              "revealed-branch",
+              [
+                "c0:g2"
+              ]
+            ]
+          ],
+          "recomputed_components": 2,
+          "reused_component_keys": [
+            [
+              "revealed-branch",
+              [
+                "c10:g0",
+                "c10:g1",
+                "c10:g2"
+              ]
+            ],
+            [
+              "revealed-branch",
+              [
+                "c11:g0",
+                "c11:g1",
+                "c11:g2"
+              ]
+            ],
+            [
+              "revealed-branch",
+              [
+                "c12:g0",
+                "c12:g1",
+                "c12:g2"
+              ]
+            ],
+            [
+              "revealed-branch",
+              [
+                "c13:g0",
+                "c13:g1",
+                "c13:g2"
+              ]
+            ],
+            [
+              "revealed-branch",
+              [
+                "c14:g0",
+                "c14:g1",
+                "c14:g2"
+              ]
+            ],
+            [
+              "revealed-branch",
+              [
+                "c15:g0",
+                "c15:g1",
+                "c15:g2"
+              ]
+            ],
+            [
+              "revealed-branch",
+              [
+                "c1:g0",
+                "c1:g1",
+                "c1:g2"
+              ]
+            ],
+            [
+              "revealed-branch",
+              [
+                "c2:g0",
+                "c2:g1",
+                "c2:g2"
+              ]
+            ],
+            [
+              "revealed-branch",
+              [
+                "c3:g0",
+                "c3:g1",
+                "c3:g2"
+              ]
+            ],
+            [
+              "revealed-branch",
+              [
+                "c4:g0",
+                "c4:g1",
+                "c4:g2"
+              ]
+            ],
+            [
+              "revealed-branch",
+              [
+                "c5:g0",
+                "c5:g1",
+                "c5:g2"
+              ]
+            ],
+            [
+              "revealed-branch",
+              [
+                "c6:g0",
+                "c6:g1",
+                "c6:g2"
+              ]
+            ],
+            [
+              "revealed-branch",
+              [
+                "c7:g0",
+                "c7:g1",
+                "c7:g2"
+              ]
+            ],
+            [
+              "revealed-branch",
+              [
+                "c8:g0",
+                "c8:g1",
+                "c8:g2"
+              ]
+            ],
+            [
+              "revealed-branch",
+              [
+                "c9:g0",
+                "c9:g1",
+                "c9:g2"
+              ]
+            ]
+          ],
+          "reused_components": 15,
+          "worst_case_backup_lower_bound": 17
+        },
+        {
+          "at_s": 160,
+          "component_count": 17,
+          "event": "global_backup_budget",
+          "frontier_match": true,
+          "invalidated_component_keys": [
+            [
+              "revealed-branch",
+              [
+                "c0:g1"
+              ]
+            ],
+            [
+              "revealed-branch",
+              [
+                "c0:g2"
+              ]
+            ],
+            [
+              "revealed-branch",
+              [
+                "c10:g0",
+                "c10:g1",
+                "c10:g2"
+              ]
+            ],
+            [
+              "revealed-branch",
+              [
+                "c11:g0",
+                "c11:g1",
+                "c11:g2"
+              ]
+            ],
+            [
+              "revealed-branch",
+              [
+                "c12:g0",
+                "c12:g1",
+                "c12:g2"
+              ]
+            ],
+            [
+              "revealed-branch",
+              [
+                "c13:g0",
+                "c13:g1",
+                "c13:g2"
+              ]
+            ],
+            [
+              "revealed-branch",
+              [
+                "c14:g0",
+                "c14:g1",
+                "c14:g2"
+              ]
+            ],
+            [
+              "revealed-branch",
+              [
+                "c15:g0",
+                "c15:g1",
+                "c15:g2"
+              ]
+            ],
+            [
+              "revealed-branch",
+              [
+                "c1:g0",
+                "c1:g1",
+                "c1:g2"
+              ]
+            ],
+            [
+              "revealed-branch",
+              [
+                "c2:g0",
+                "c2:g1",
+                "c2:g2"
+              ]
+            ],
+            [
+              "revealed-branch",
+              [
+                "c3:g0",
+                "c3:g1",
+                "c3:g2"
+              ]
+            ],
+            [
+              "revealed-branch",
+              [
+                "c4:g0",
+                "c4:g1",
+                "c4:g2"
+              ]
+            ],
+            [
+              "revealed-branch",
+              [
+                "c5:g0",
+                "c5:g1",
+                "c5:g2"
+              ]
+            ],
+            [
+              "revealed-branch",
+              [
+                "c6:g0",
+                "c6:g1",
+                "c6:g2"
+              ]
+            ],
+            [
+              "revealed-branch",
+              [
+                "c7:g0",
+                "c7:g1",
+                "c7:g2"
+              ]
+            ],
+            [
+              "revealed-branch",
+              [
+                "c8:g0",
+                "c8:g1",
+                "c8:g2"
+              ]
+            ],
+            [
+              "revealed-branch",
+              [
+                "c9:g0",
+                "c9:g1",
+                "c9:g2"
+              ]
+            ]
+          ],
+          "optimistic_feasible": false,
+          "partition_fallbacks": 0,
+          "recomputed_component_keys": [
+            [
+              "revealed-branch",
+              [
+                "c0:g1"
+              ]
+            ],
+            [
+              "revealed-branch",
+              [
+                "c0:g2"
+              ]
+            ],
+            [
+              "revealed-branch",
+              [
+                "c10:g0",
+                "c10:g1",
+                "c10:g2"
+              ]
+            ],
+            [
+              "revealed-branch",
+              [
+                "c11:g0",
+                "c11:g1",
+                "c11:g2"
+              ]
+            ],
+            [
+              "revealed-branch",
+              [
+                "c12:g0",
+                "c12:g1",
+                "c12:g2"
+              ]
+            ],
+            [
+              "revealed-branch",
+              [
+                "c13:g0",
+                "c13:g1",
+                "c13:g2"
+              ]
+            ],
+            [
+              "revealed-branch",
+              [
+                "c14:g0",
+                "c14:g1",
+                "c14:g2"
+              ]
+            ],
+            [
+              "revealed-branch",
+              [
+                "c15:g0",
+                "c15:g1",
+                "c15:g2"
+              ]
+            ],
+            [
+              "revealed-branch",
+              [
+                "c1:g0",
+                "c1:g1",
+                "c1:g2"
+              ]
+            ],
+            [
+              "revealed-branch",
+              [
+                "c2:g0",
+                "c2:g1",
+                "c2:g2"
+              ]
+            ],
+            [
+              "revealed-branch",
+              [
+                "c3:g0",
+                "c3:g1",
+                "c3:g2"
+              ]
+            ],
+            [
+              "revealed-branch",
+              [
+                "c4:g0",
+                "c4:g1",
+                "c4:g2"
+              ]
+            ],
+            [
+              "revealed-branch",
+              [
+                "c5:g0",
+                "c5:g1",
+                "c5:g2"
+              ]
+            ],
+            [
+              "revealed-branch",
+              [
+                "c6:g0",
+                "c6:g1",
+                "c6:g2"
+              ]
+            ],
+            [
+              "revealed-branch",
+              [
+                "c7:g0",
+                "c7:g1",
+                "c7:g2"
+              ]
+            ],
+            [
+              "revealed-branch",
+              [
+                "c8:g0",
+                "c8:g1",
+                "c8:g2"
+              ]
+            ],
+            [
+              "revealed-branch",
+              [
+                "c9:g0",
+                "c9:g1",
+                "c9:g2"
+              ]
+            ]
+          ],
+          "recomputed_components": 17,
+          "reused_component_keys": [],
+          "reused_components": 0,
+          "worst_case_backup_lower_bound": 17
+        }
+      ],
+      "initial_component_count": 16,
+      "obligations_per_component": 3
+    }
+  ],
+  "checks": {
+    "all_cells_exact_match": true,
+    "all_cells_local_final_ack_recompute_sublinear": true,
+    "all_cells_local_pending_recompute_sublinear": true,
+    "all_cells_local_receipt_recompute_sublinear": true,
+    "all_cells_no_local_partition_fallback": true
+  },
+  "claim_boundary": [
+    "This audit begins after semantic query H has already revealed one active future-obligation branch; observation-domain reuse is tested separately.",
+    "The branch contains synthetic controlled-stress independent conflict components; it is a method-structure test, not a source-paper empirical distribution.",
+    "Incremental and fresh frontiers are compared by canonical structural equality after every event.",
+    "Component recomputation count is a deterministic structural-work metric, not a wall-time theorem.",
+    "The global backup-budget event is intentionally an all-component invalidation control and is not claimed local."
+  ],
+  "stage": "ASC_PULL_QUERY_COMPONENT_LOCAL_INVALIDATION",
+  "summary": {
+    "all_cells_exact_match": true,
+    "component_axis": [
+      2,
+      4,
+      8,
+      16
+    ],
+    "local_event_recompute_counts": {
+      "16": [
+        {
+          "event": "send_pending_c0",
+          "recomputed": 1,
+          "reused": 15
+        },
+        {
+          "event": "gateway_receipt_c0",
+          "recomputed": 0,
+          "reused": 16
+        },
+        {
+          "event": "final_ack_c0",
+          "recomputed": 0,
+          "reused": 16
+        },
+        {
+          "event": "time_cross_c0",
+          "recomputed": 2,
+          "reused": 15
+        }
+      ],
+      "2": [
+        {
+          "event": "send_pending_c0",
+          "recomputed": 1,
+          "reused": 1
+        },
+        {
+          "event": "gateway_receipt_c0",
+          "recomputed": 0,
+          "reused": 2
+        },
+        {
+          "event": "final_ack_c0",
+          "recomputed": 0,
+          "reused": 2
+        },
+        {
+          "event": "time_cross_c0",
+          "recomputed": 2,
+          "reused": 1
+        }
+      ],
+      "4": [
+        {
+          "event": "send_pending_c0",
+          "recomputed": 1,
+          "reused": 3
+        },
+        {
+          "event": "gateway_receipt_c0",
+          "recomputed": 0,
+          "reused": 4
+        },
+        {
+          "event": "final_ack_c0",
+          "recomputed": 0,
+          "reused": 4
+        },
+        {
+          "event": "time_cross_c0",
+          "recomputed": 2,
+          "reused": 3
+        }
+      ],
+      "8": [
+        {
+          "event": "send_pending_c0",
+          "recomputed": 1,
+          "reused": 7
+        },
+        {
+          "event": "gateway_receipt_c0",
+          "recomputed": 0,
+          "reused": 8
+        },
+        {
+          "event": "final_ack_c0",
+          "recomputed": 0,
+          "reused": 8
+        },
+        {
+          "event": "time_cross_c0",
+          "recomputed": 2,
+          "reused": 7
+        }
+      ]
+    },
+    "max_components": 16,
+    "obligations_per_component": 3
+  }
+}

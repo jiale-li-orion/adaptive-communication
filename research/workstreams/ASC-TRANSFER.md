@@ -140,3 +140,46 @@ exact causal 结果：
 这一结果已经落到当前 Layer-2 方法对象本身：**conditional validity domain 不是只帮助一次 query decision，它允许证书跨多次 observation 保持，并只在依赖/资源域真正变化时局部失效。**
 
 边界：当前 branch graph 在 observation-only 阶段故意保持不变，因此 `1/(L+1)` 是干净的 reuse upper case；下一更强 gate 是在 active branch 内同时发生 time/resource/pending-feedback event，只让部分 conflict components 失效，并与 ordinary dependency-cache / persistent exact 做同接口 comparison。
+
+### Active-branch component-local invalidation
+
+上述最后一门已经补上。`asc_pull_query_component_invalidation.py` 在 `QUERY_H` 已经揭示 active branch 后，构造 `C∈{2,4,8,16}` 个彼此独立的 obligation–opportunity conflict components，每个 component 3 个 obligations、独立 terrestrial opportunity block、1 个 backup deficit。事件序列只作用于 component 0：ordinary send→pending final ACK、gateway receipt、final ACK、窗口过期；最后用 global backup-budget change 作为全局失效对照。
+
+`IncrementalConflictFrontier` 每一步都与 fresh full structural rebuild 完全一致。`C=16`：
+
+- send/pending event：重算 **1** component，复用 **15**；
+- gateway receipt：重算 **0**，复用 **16**；
+- final ACK：重算 **0**，复用 **16**；
+- component-0 opportunity boundary：重算 **2** 个新子 component，复用 **15**；
+- global backup-budget crossing：按设计触发全局 backup-dependent invalidation。
+
+这里有一个关键语义点：accepted send 已经带有 deadline-safe final ACK 时，该 obligation 对 future completion 已经被结构上视作 secured；因此后续 receipt / ACK 是新 history event，但不会改变其他 future-choice dependency，也不需要重建 conflict certificate。
+
+### Strong exact/cache ladder on the same event sequence
+
+`asc_pull_query_component_strong_baselines.py` 进一步在同一 revealed branch / 同一 causal event sequence 上比较：fresh ordered exact、ordinary persistent exact、dependency-cache exact、incremental conflict frontier。
+
+所有 exact arms 在每个 boundary 的完整 action-feasibility frontier 完全一致；incremental conflict frontier 每步也与 fresh structural rebuild 完全一致。
+
+`C=16` 总账：
+
+- fresh ordered exact：**866 expansions**；
+- ordinary persistent exact：**246**；
+- dependency-cache exact：**246**；
+- dependency separator replay：**0 hits**；
+- incremental conflict frontier：**36 component recomputes / 62 reuses**（不同 work unit，不与 exact expansion 作 CPU 等价比）。
+
+逐事件：
+
+| Event | fresh exact | persistent exact | dependency exact | conflict recompute / reuse |
+|---|---:|---:|---:|---:|
+| initial | 203 | 203 | 203 | 16 / 0 |
+| send→pending | 212 | 11 | 11 | **1 / 15** |
+| gateway receipt | 212 | 7 | 7 | **0 / 16** |
+| final ACK | 217 | 14 | 14 | **0 / 16** |
+| component-0 time boundary | 11 | **0** | **0** | 2 / 15 |
+| global backup budget | 11 | 11 | 11 | 17 / 0 |
+
+这给出比“persistent memo 也能省 search”更精确的归因：ordinary persistent exact 确实很强，是必须保留的 reviewer baseline；但 dependency-cache 在该 ASC event sequence 上没有额外 separator reuse，而 conflict frontier 可根据 future-feasibility dependency 判断某些 observable events 根本不需要结构重算。
+
+当前仍不写 wall-time superiority；exact expansions 与 component recomputes 是不同 work units。B 现在支持的是 **observation-conditioned obligation domains + shared-opportunity conflict certificates + dependency-local invalidation** 这一完整 representation / incremental-maintenance 链。最终 generic efficiency claim 仍要绑定 cross-domain engine 与更大实际 workload，而不是把 synthetic component count 当 runtime speedup。

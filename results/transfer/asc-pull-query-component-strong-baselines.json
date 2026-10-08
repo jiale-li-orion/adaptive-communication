@@ -1,0 +1,1322 @@
+{
+  "cells": [
+    {
+      "checks": {
+        "all_conflict_frontiers_match_fresh": true,
+        "all_exact_frontiers_match": true,
+        "dependency_exact_not_more_expansions_than_fresh": true,
+        "local_receipt_requires_zero_conflict_recompute": true,
+        "persistent_exact_not_more_expansions_than_fresh": true
+      },
+      "components": 2,
+      "events": [
+        {
+          "action_frontier": {
+            "WAIT:-": true
+          },
+          "at_s": 90,
+          "dependency_cache_exact": {
+            "actions": {
+              "WAIT:-": true
+            },
+            "expanded": 21,
+            "memo_hits": 0,
+            "recursive_calls": 22,
+            "separator_replay_success": 0,
+            "wall_s": 0.0006707439988531405
+          },
+          "event": "initial",
+          "exact_frontier_match": true,
+          "fresh_exact": {
+            "actions": {
+              "WAIT:-": true
+            },
+            "expanded": 21,
+            "memo_hits": 0,
+            "recursive_calls": 22,
+            "separator_replay_success": 0,
+            "wall_s": 0.0005284759990900056
+          },
+          "incremental_conflict": {
+            "component_count": 2,
+            "partition_fallbacks": 0,
+            "recomputed_components": 2,
+            "reused_components": 0,
+            "structural_match_fresh": true
+          },
+          "ordinary_persistent_exact": {
+            "actions": {
+              "WAIT:-": true
+            },
+            "expanded": 21,
+            "memo_hits": 0,
+            "recursive_calls": 22,
+            "separator_replay_success": 0,
+            "wall_s": 0.0005375199998525204
+          }
+        },
+        {
+          "action_frontier": {
+            "SEND_TERR:c0:g1": true,
+            "SEND_TERR:c0:g2": true,
+            "WAIT:-": true
+          },
+          "at_s": 100,
+          "dependency_cache_exact": {
+            "actions": {
+              "SEND_TERR:c0:g1": true,
+              "SEND_TERR:c0:g2": true,
+              "WAIT:-": true
+            },
+            "expanded": 11,
+            "memo_hits": 3,
+            "recursive_calls": 14,
+            "separator_replay_success": 0,
+            "wall_s": 0.0004032680008094758
+          },
+          "event": "send_pending_c0",
+          "exact_frontier_match": true,
+          "fresh_exact": {
+            "actions": {
+              "SEND_TERR:c0:g1": true,
+              "SEND_TERR:c0:g2": true,
+              "WAIT:-": true
+            },
+            "expanded": 30,
+            "memo_hits": 2,
+            "recursive_calls": 33,
+            "separator_replay_success": 0,
+            "wall_s": 0.0007157649997679982
+          },
+          "incremental_conflict": {
+            "component_count": 2,
+            "partition_fallbacks": 0,
+            "recomputed_components": 1,
+            "reused_components": 1,
+            "structural_match_fresh": true
+          },
+          "ordinary_persistent_exact": {
+            "actions": {
+              "SEND_TERR:c0:g1": true,
+              "SEND_TERR:c0:g2": true,
+              "WAIT:-": true
+            },
+            "expanded": 11,
+            "memo_hits": 3,
+            "recursive_calls": 14,
+            "separator_replay_success": 0,
+            "wall_s": 0.0003271200002927799
+          }
+        },
+        {
+          "action_frontier": {
+            "SEND_TERR:c0:g1": true,
+            "SEND_TERR:c0:g2": true,
+            "WAIT:-": true
+          },
+          "at_s": 110,
+          "dependency_cache_exact": {
+            "actions": {
+              "SEND_TERR:c0:g1": true,
+              "SEND_TERR:c0:g2": true,
+              "WAIT:-": true
+            },
+            "expanded": 7,
+            "memo_hits": 3,
+            "recursive_calls": 10,
+            "separator_replay_success": 0,
+            "wall_s": 0.000289024999801768
+          },
+          "event": "gateway_receipt_c0",
+          "exact_frontier_match": true,
+          "fresh_exact": {
+            "actions": {
+              "SEND_TERR:c0:g1": true,
+              "SEND_TERR:c0:g2": true,
+              "WAIT:-": true
+            },
+            "expanded": 30,
+            "memo_hits": 2,
+            "recursive_calls": 33,
+            "separator_replay_success": 0,
+            "wall_s": 0.0006873990005260566
+          },
+          "incremental_conflict": {
+            "component_count": 2,
+            "partition_fallbacks": 0,
+            "recomputed_components": 0,
+            "reused_components": 2,
+            "structural_match_fresh": true
+          },
+          "ordinary_persistent_exact": {
+            "actions": {
+              "SEND_TERR:c0:g1": true,
+              "SEND_TERR:c0:g2": true,
+              "WAIT:-": true
+            },
+            "expanded": 7,
+            "memo_hits": 3,
+            "recursive_calls": 10,
+            "separator_replay_success": 0,
+            "wall_s": 0.0001909279999381397
+          }
+        },
+        {
+          "action_frontier": {
+            "SEND_TERR:c0:g1": true,
+            "SEND_TERR:c0:g2": true,
+            "WAIT:-": false
+          },
+          "at_s": 130,
+          "dependency_cache_exact": {
+            "actions": {
+              "SEND_TERR:c0:g1": true,
+              "SEND_TERR:c0:g2": true,
+              "WAIT:-": false
+            },
+            "expanded": 14,
+            "memo_hits": 2,
+            "recursive_calls": 19,
+            "separator_replay_success": 0,
+            "wall_s": 0.0005544429986912291
+          },
+          "event": "final_ack_c0",
+          "exact_frontier_match": true,
+          "fresh_exact": {
+            "actions": {
+              "SEND_TERR:c0:g1": true,
+              "SEND_TERR:c0:g2": true,
+              "WAIT:-": false
+            },
+            "expanded": 35,
+            "memo_hits": 1,
+            "recursive_calls": 40,
+            "separator_replay_success": 0,
+            "wall_s": 0.0008642599987069843
+          },
+          "incremental_conflict": {
+            "component_count": 2,
+            "partition_fallbacks": 0,
+            "recomputed_components": 0,
+            "reused_components": 2,
+            "structural_match_fresh": true
+          },
+          "ordinary_persistent_exact": {
+            "actions": {
+              "SEND_TERR:c0:g1": true,
+              "SEND_TERR:c0:g2": true,
+              "WAIT:-": false
+            },
+            "expanded": 14,
+            "memo_hits": 2,
+            "recursive_calls": 19,
+            "separator_replay_success": 0,
+            "wall_s": 0.0003612379987316672
+          }
+        },
+        {
+          "action_frontier": {
+            "WAIT:-": false
+          },
+          "at_s": 160,
+          "dependency_cache_exact": {
+            "actions": {
+              "WAIT:-": false
+            },
+            "expanded": 0,
+            "memo_hits": 1,
+            "recursive_calls": 1,
+            "separator_replay_success": 0,
+            "wall_s": 3.363999894645531e-05
+          },
+          "event": "time_cross_c0",
+          "exact_frontier_match": true,
+          "fresh_exact": {
+            "actions": {
+              "WAIT:-": false
+            },
+            "expanded": 11,
+            "memo_hits": 0,
+            "recursive_calls": 14,
+            "separator_replay_success": 0,
+            "wall_s": 0.00045582500024465844
+          },
+          "incremental_conflict": {
+            "component_count": 3,
+            "partition_fallbacks": 0,
+            "recomputed_components": 2,
+            "reused_components": 1,
+            "structural_match_fresh": true
+          },
+          "ordinary_persistent_exact": {
+            "actions": {
+              "WAIT:-": false
+            },
+            "expanded": 0,
+            "memo_hits": 1,
+            "recursive_calls": 1,
+            "separator_replay_success": 0,
+            "wall_s": 2.4797998776193708e-05
+          }
+        },
+        {
+          "action_frontier": {
+            "WAIT:-": false
+          },
+          "at_s": 160,
+          "dependency_cache_exact": {
+            "actions": {
+              "WAIT:-": false
+            },
+            "expanded": 11,
+            "memo_hits": 0,
+            "recursive_calls": 14,
+            "separator_replay_success": 0,
+            "wall_s": 0.0003001950008183485
+          },
+          "event": "global_backup_budget",
+          "exact_frontier_match": true,
+          "fresh_exact": {
+            "actions": {
+              "WAIT:-": false
+            },
+            "expanded": 11,
+            "memo_hits": 0,
+            "recursive_calls": 14,
+            "separator_replay_success": 0,
+            "wall_s": 0.00028205599846842233
+          },
+          "incremental_conflict": {
+            "component_count": 3,
+            "partition_fallbacks": 0,
+            "recomputed_components": 3,
+            "reused_components": 0,
+            "structural_match_fresh": true
+          },
+          "ordinary_persistent_exact": {
+            "actions": {
+              "WAIT:-": false
+            },
+            "expanded": 11,
+            "memo_hits": 0,
+            "recursive_calls": 14,
+            "separator_replay_success": 0,
+            "wall_s": 0.00020403999951668084
+          }
+        }
+      ],
+      "obligations_per_component": 3,
+      "totals": {
+        "dependency_cache_exact_expanded": 64,
+        "dependency_separator_replay_success": 0,
+        "fresh_exact_expanded": 138,
+        "incremental_conflict_component_recomputes": 8,
+        "incremental_conflict_component_reuses": 6,
+        "ordinary_persistent_exact_expanded": 64
+      }
+    },
+    {
+      "checks": {
+        "all_conflict_frontiers_match_fresh": true,
+        "all_exact_frontiers_match": true,
+        "dependency_exact_not_more_expansions_than_fresh": true,
+        "local_receipt_requires_zero_conflict_recompute": true,
+        "persistent_exact_not_more_expansions_than_fresh": true
+      },
+      "components": 4,
+      "events": [
+        {
+          "action_frontier": {
+            "WAIT:-": true
+          },
+          "at_s": 90,
+          "dependency_cache_exact": {
+            "actions": {
+              "WAIT:-": true
+            },
+            "expanded": 47,
+            "memo_hits": 0,
+            "recursive_calls": 48,
+            "separator_replay_success": 0,
+            "wall_s": 0.002105702000335441
+          },
+          "event": "initial",
+          "exact_frontier_match": true,
+          "fresh_exact": {
+            "actions": {
+              "WAIT:-": true
+            },
+            "expanded": 47,
+            "memo_hits": 0,
+            "recursive_calls": 48,
+            "separator_replay_success": 0,
+            "wall_s": 0.001277175999348401
+          },
+          "incremental_conflict": {
+            "component_count": 4,
+            "partition_fallbacks": 0,
+            "recomputed_components": 4,
+            "reused_components": 0,
+            "structural_match_fresh": true
+          },
+          "ordinary_persistent_exact": {
+            "actions": {
+              "WAIT:-": true
+            },
+            "expanded": 47,
+            "memo_hits": 0,
+            "recursive_calls": 48,
+            "separator_replay_success": 0,
+            "wall_s": 0.0010782970002765069
+          }
+        },
+        {
+          "action_frontier": {
+            "SEND_TERR:c0:g1": true,
+            "SEND_TERR:c0:g2": true,
+            "WAIT:-": true
+          },
+          "at_s": 100,
+          "dependency_cache_exact": {
+            "actions": {
+              "SEND_TERR:c0:g1": true,
+              "SEND_TERR:c0:g2": true,
+              "WAIT:-": true
+            },
+            "expanded": 11,
+            "memo_hits": 3,
+            "recursive_calls": 14,
+            "separator_replay_success": 0,
+            "wall_s": 0.0004342580014053965
+          },
+          "event": "send_pending_c0",
+          "exact_frontier_match": true,
+          "fresh_exact": {
+            "actions": {
+              "SEND_TERR:c0:g1": true,
+              "SEND_TERR:c0:g2": true,
+              "WAIT:-": true
+            },
+            "expanded": 56,
+            "memo_hits": 2,
+            "recursive_calls": 59,
+            "separator_replay_success": 0,
+            "wall_s": 0.0014084479989833198
+          },
+          "incremental_conflict": {
+            "component_count": 4,
+            "partition_fallbacks": 0,
+            "recomputed_components": 1,
+            "reused_components": 3,
+            "structural_match_fresh": true
+          },
+          "ordinary_persistent_exact": {
+            "actions": {
+              "SEND_TERR:c0:g1": true,
+              "SEND_TERR:c0:g2": true,
+              "WAIT:-": true
+            },
+            "expanded": 11,
+            "memo_hits": 3,
+            "recursive_calls": 14,
+            "separator_replay_success": 0,
+            "wall_s": 0.00030313999923237134
+          }
+        },
+        {
+          "action_frontier": {
+            "SEND_TERR:c0:g1": true,
+            "SEND_TERR:c0:g2": true,
+            "WAIT:-": true
+          },
+          "at_s": 110,
+          "dependency_cache_exact": {
+            "actions": {
+              "SEND_TERR:c0:g1": true,
+              "SEND_TERR:c0:g2": true,
+              "WAIT:-": true
+            },
+            "expanded": 7,
+            "memo_hits": 3,
+            "recursive_calls": 10,
+            "separator_replay_success": 0,
+            "wall_s": 0.00030521500048052985
+          },
+          "event": "gateway_receipt_c0",
+          "exact_frontier_match": true,
+          "fresh_exact": {
+            "actions": {
+              "SEND_TERR:c0:g1": true,
+              "SEND_TERR:c0:g2": true,
+              "WAIT:-": true
+            },
+            "expanded": 56,
+            "memo_hits": 2,
+            "recursive_calls": 59,
+            "separator_replay_success": 0,
+            "wall_s": 0.001434819001588039
+          },
+          "incremental_conflict": {
+            "component_count": 4,
+            "partition_fallbacks": 0,
+            "recomputed_components": 0,
+            "reused_components": 4,
+            "structural_match_fresh": true
+          },
+          "ordinary_persistent_exact": {
+            "actions": {
+              "SEND_TERR:c0:g1": true,
+              "SEND_TERR:c0:g2": true,
+              "WAIT:-": true
+            },
+            "expanded": 7,
+            "memo_hits": 3,
+            "recursive_calls": 10,
+            "separator_replay_success": 0,
+            "wall_s": 0.0002346560013393173
+          }
+        },
+        {
+          "action_frontier": {
+            "SEND_TERR:c0:g1": true,
+            "SEND_TERR:c0:g2": true,
+            "WAIT:-": false
+          },
+          "at_s": 130,
+          "dependency_cache_exact": {
+            "actions": {
+              "SEND_TERR:c0:g1": true,
+              "SEND_TERR:c0:g2": true,
+              "WAIT:-": false
+            },
+            "expanded": 14,
+            "memo_hits": 2,
+            "recursive_calls": 19,
+            "separator_replay_success": 0,
+            "wall_s": 0.0008861410005920334
+          },
+          "event": "final_ack_c0",
+          "exact_frontier_match": true,
+          "fresh_exact": {
+            "actions": {
+              "SEND_TERR:c0:g1": true,
+              "SEND_TERR:c0:g2": true,
+              "WAIT:-": false
+            },
+            "expanded": 61,
+            "memo_hits": 1,
+            "recursive_calls": 66,
+            "separator_replay_success": 0,
+            "wall_s": 0.0028443690007406985
+          },
+          "incremental_conflict": {
+            "component_count": 4,
+            "partition_fallbacks": 0,
+            "recomputed_components": 0,
+            "reused_components": 4,
+            "structural_match_fresh": true
+          },
+          "ordinary_persistent_exact": {
+            "actions": {
+              "SEND_TERR:c0:g1": true,
+              "SEND_TERR:c0:g2": true,
+              "WAIT:-": false
+            },
+            "expanded": 14,
+            "memo_hits": 2,
+            "recursive_calls": 19,
+            "separator_replay_success": 0,
+            "wall_s": 0.0007167799994931556
+          }
+        },
+        {
+          "action_frontier": {
+            "WAIT:-": false
+          },
+          "at_s": 160,
+          "dependency_cache_exact": {
+            "actions": {
+              "WAIT:-": false
+            },
+            "expanded": 0,
+            "memo_hits": 1,
+            "recursive_calls": 1,
+            "separator_replay_success": 0,
+            "wall_s": 5.7496999943396077e-05
+          },
+          "event": "time_cross_c0",
+          "exact_frontier_match": true,
+          "fresh_exact": {
+            "actions": {
+              "WAIT:-": false
+            },
+            "expanded": 11,
+            "memo_hits": 0,
+            "recursive_calls": 14,
+            "separator_replay_success": 0,
+            "wall_s": 0.0005517909994523507
+          },
+          "incremental_conflict": {
+            "component_count": 5,
+            "partition_fallbacks": 0,
+            "recomputed_components": 2,
+            "reused_components": 3,
+            "structural_match_fresh": true
+          },
+          "ordinary_persistent_exact": {
+            "actions": {
+              "WAIT:-": false
+            },
+            "expanded": 0,
+            "memo_hits": 1,
+            "recursive_calls": 1,
+            "separator_replay_success": 0,
+            "wall_s": 4.07090010412503e-05
+          }
+        },
+        {
+          "action_frontier": {
+            "WAIT:-": false
+          },
+          "at_s": 160,
+          "dependency_cache_exact": {
+            "actions": {
+              "WAIT:-": false
+            },
+            "expanded": 11,
+            "memo_hits": 0,
+            "recursive_calls": 14,
+            "separator_replay_success": 0,
+            "wall_s": 0.000619917998847086
+          },
+          "event": "global_backup_budget",
+          "exact_frontier_match": true,
+          "fresh_exact": {
+            "actions": {
+              "WAIT:-": false
+            },
+            "expanded": 11,
+            "memo_hits": 0,
+            "recursive_calls": 14,
+            "separator_replay_success": 0,
+            "wall_s": 0.000522607999300817
+          },
+          "incremental_conflict": {
+            "component_count": 5,
+            "partition_fallbacks": 0,
+            "recomputed_components": 5,
+            "reused_components": 0,
+            "structural_match_fresh": true
+          },
+          "ordinary_persistent_exact": {
+            "actions": {
+              "WAIT:-": false
+            },
+            "expanded": 11,
+            "memo_hits": 0,
+            "recursive_calls": 14,
+            "separator_replay_success": 0,
+            "wall_s": 0.0005217590005486272
+          }
+        }
+      ],
+      "obligations_per_component": 3,
+      "totals": {
+        "dependency_cache_exact_expanded": 90,
+        "dependency_separator_replay_success": 0,
+        "fresh_exact_expanded": 242,
+        "incremental_conflict_component_recomputes": 12,
+        "incremental_conflict_component_reuses": 14,
+        "ordinary_persistent_exact_expanded": 90
+      }
+    },
+    {
+      "checks": {
+        "all_conflict_frontiers_match_fresh": true,
+        "all_exact_frontiers_match": true,
+        "dependency_exact_not_more_expansions_than_fresh": true,
+        "local_receipt_requires_zero_conflict_recompute": true,
+        "persistent_exact_not_more_expansions_than_fresh": true
+      },
+      "components": 8,
+      "events": [
+        {
+          "action_frontier": {
+            "WAIT:-": true
+          },
+          "at_s": 90,
+          "dependency_cache_exact": {
+            "actions": {
+              "WAIT:-": true
+            },
+            "expanded": 99,
+            "memo_hits": 0,
+            "recursive_calls": 100,
+            "separator_replay_success": 0,
+            "wall_s": 0.004450772001291625
+          },
+          "event": "initial",
+          "exact_frontier_match": true,
+          "fresh_exact": {
+            "actions": {
+              "WAIT:-": true
+            },
+            "expanded": 99,
+            "memo_hits": 0,
+            "recursive_calls": 100,
+            "separator_replay_success": 0,
+            "wall_s": 0.003316917998745339
+          },
+          "incremental_conflict": {
+            "component_count": 8,
+            "partition_fallbacks": 0,
+            "recomputed_components": 8,
+            "reused_components": 0,
+            "structural_match_fresh": true
+          },
+          "ordinary_persistent_exact": {
+            "actions": {
+              "WAIT:-": true
+            },
+            "expanded": 99,
+            "memo_hits": 0,
+            "recursive_calls": 100,
+            "separator_replay_success": 0,
+            "wall_s": 0.0033326480006508064
+          }
+        },
+        {
+          "action_frontier": {
+            "SEND_TERR:c0:g1": true,
+            "SEND_TERR:c0:g2": true,
+            "WAIT:-": true
+          },
+          "at_s": 100,
+          "dependency_cache_exact": {
+            "actions": {
+              "SEND_TERR:c0:g1": true,
+              "SEND_TERR:c0:g2": true,
+              "WAIT:-": true
+            },
+            "expanded": 11,
+            "memo_hits": 3,
+            "recursive_calls": 14,
+            "separator_replay_success": 0,
+            "wall_s": 0.0005381670016504359
+          },
+          "event": "send_pending_c0",
+          "exact_frontier_match": true,
+          "fresh_exact": {
+            "actions": {
+              "SEND_TERR:c0:g1": true,
+              "SEND_TERR:c0:g2": true,
+              "WAIT:-": true
+            },
+            "expanded": 108,
+            "memo_hits": 2,
+            "recursive_calls": 111,
+            "separator_replay_success": 0,
+            "wall_s": 0.004249018000336946
+          },
+          "incremental_conflict": {
+            "component_count": 8,
+            "partition_fallbacks": 0,
+            "recomputed_components": 1,
+            "reused_components": 7,
+            "structural_match_fresh": true
+          },
+          "ordinary_persistent_exact": {
+            "actions": {
+              "SEND_TERR:c0:g1": true,
+              "SEND_TERR:c0:g2": true,
+              "WAIT:-": true
+            },
+            "expanded": 11,
+            "memo_hits": 3,
+            "recursive_calls": 14,
+            "separator_replay_success": 0,
+            "wall_s": 0.00046619299973826855
+          }
+        },
+        {
+          "action_frontier": {
+            "SEND_TERR:c0:g1": true,
+            "SEND_TERR:c0:g2": true,
+            "WAIT:-": true
+          },
+          "at_s": 110,
+          "dependency_cache_exact": {
+            "actions": {
+              "SEND_TERR:c0:g1": true,
+              "SEND_TERR:c0:g2": true,
+              "WAIT:-": true
+            },
+            "expanded": 7,
+            "memo_hits": 3,
+            "recursive_calls": 10,
+            "separator_replay_success": 0,
+            "wall_s": 0.0005047209997428581
+          },
+          "event": "gateway_receipt_c0",
+          "exact_frontier_match": true,
+          "fresh_exact": {
+            "actions": {
+              "SEND_TERR:c0:g1": true,
+              "SEND_TERR:c0:g2": true,
+              "WAIT:-": true
+            },
+            "expanded": 108,
+            "memo_hits": 2,
+            "recursive_calls": 111,
+            "separator_replay_success": 0,
+            "wall_s": 0.003606666999985464
+          },
+          "incremental_conflict": {
+            "component_count": 8,
+            "partition_fallbacks": 0,
+            "recomputed_components": 0,
+            "reused_components": 8,
+            "structural_match_fresh": true
+          },
+          "ordinary_persistent_exact": {
+            "actions": {
+              "SEND_TERR:c0:g1": true,
+              "SEND_TERR:c0:g2": true,
+              "WAIT:-": true
+            },
+            "expanded": 7,
+            "memo_hits": 3,
+            "recursive_calls": 10,
+            "separator_replay_success": 0,
+            "wall_s": 0.00030444299954979215
+          }
+        },
+        {
+          "action_frontier": {
+            "SEND_TERR:c0:g1": true,
+            "SEND_TERR:c0:g2": true,
+            "WAIT:-": false
+          },
+          "at_s": 130,
+          "dependency_cache_exact": {
+            "actions": {
+              "SEND_TERR:c0:g1": true,
+              "SEND_TERR:c0:g2": true,
+              "WAIT:-": false
+            },
+            "expanded": 14,
+            "memo_hits": 2,
+            "recursive_calls": 19,
+            "separator_replay_success": 0,
+            "wall_s": 0.000658331000522594
+          },
+          "event": "final_ack_c0",
+          "exact_frontier_match": true,
+          "fresh_exact": {
+            "actions": {
+              "SEND_TERR:c0:g1": true,
+              "SEND_TERR:c0:g2": true,
+              "WAIT:-": false
+            },
+            "expanded": 113,
+            "memo_hits": 1,
+            "recursive_calls": 118,
+            "separator_replay_success": 0,
+            "wall_s": 0.003959175999625586
+          },
+          "incremental_conflict": {
+            "component_count": 8,
+            "partition_fallbacks": 0,
+            "recomputed_components": 0,
+            "reused_components": 8,
+            "structural_match_fresh": true
+          },
+          "ordinary_persistent_exact": {
+            "actions": {
+              "SEND_TERR:c0:g1": true,
+              "SEND_TERR:c0:g2": true,
+              "WAIT:-": false
+            },
+            "expanded": 14,
+            "memo_hits": 2,
+            "recursive_calls": 19,
+            "separator_replay_success": 0,
+            "wall_s": 0.0006104840012994828
+          }
+        },
+        {
+          "action_frontier": {
+            "WAIT:-": false
+          },
+          "at_s": 160,
+          "dependency_cache_exact": {
+            "actions": {
+              "WAIT:-": false
+            },
+            "expanded": 0,
+            "memo_hits": 1,
+            "recursive_calls": 1,
+            "separator_replay_success": 0,
+            "wall_s": 4.260700006852858e-05
+          },
+          "event": "time_cross_c0",
+          "exact_frontier_match": true,
+          "fresh_exact": {
+            "actions": {
+              "WAIT:-": false
+            },
+            "expanded": 11,
+            "memo_hits": 0,
+            "recursive_calls": 14,
+            "separator_replay_success": 0,
+            "wall_s": 0.0003919549999409355
+          },
+          "incremental_conflict": {
+            "component_count": 9,
+            "partition_fallbacks": 0,
+            "recomputed_components": 2,
+            "reused_components": 7,
+            "structural_match_fresh": true
+          },
+          "ordinary_persistent_exact": {
+            "actions": {
+              "WAIT:-": false
+            },
+            "expanded": 0,
+            "memo_hits": 1,
+            "recursive_calls": 1,
+            "separator_replay_success": 0,
+            "wall_s": 3.0458000765065663e-05
+          }
+        },
+        {
+          "action_frontier": {
+            "WAIT:-": false
+          },
+          "at_s": 160,
+          "dependency_cache_exact": {
+            "actions": {
+              "WAIT:-": false
+            },
+            "expanded": 11,
+            "memo_hits": 0,
+            "recursive_calls": 14,
+            "separator_replay_success": 0,
+            "wall_s": 0.00048134999997273553
+          },
+          "event": "global_backup_budget",
+          "exact_frontier_match": true,
+          "fresh_exact": {
+            "actions": {
+              "WAIT:-": false
+            },
+            "expanded": 11,
+            "memo_hits": 0,
+            "recursive_calls": 14,
+            "separator_replay_success": 0,
+            "wall_s": 0.0004336199999670498
+          },
+          "incremental_conflict": {
+            "component_count": 9,
+            "partition_fallbacks": 0,
+            "recomputed_components": 9,
+            "reused_components": 0,
+            "structural_match_fresh": true
+          },
+          "ordinary_persistent_exact": {
+            "actions": {
+              "WAIT:-": false
+            },
+            "expanded": 11,
+            "memo_hits": 0,
+            "recursive_calls": 14,
+            "separator_replay_success": 0,
+            "wall_s": 0.0003667410001071403
+          }
+        }
+      ],
+      "obligations_per_component": 3,
+      "totals": {
+        "dependency_cache_exact_expanded": 142,
+        "dependency_separator_replay_success": 0,
+        "fresh_exact_expanded": 450,
+        "incremental_conflict_component_recomputes": 20,
+        "incremental_conflict_component_reuses": 30,
+        "ordinary_persistent_exact_expanded": 142
+      }
+    },
+    {
+      "checks": {
+        "all_conflict_frontiers_match_fresh": true,
+        "all_exact_frontiers_match": true,
+        "dependency_exact_not_more_expansions_than_fresh": true,
+        "local_receipt_requires_zero_conflict_recompute": true,
+        "persistent_exact_not_more_expansions_than_fresh": true
+      },
+      "components": 16,
+      "events": [
+        {
+          "action_frontier": {
+            "WAIT:-": true
+          },
+          "at_s": 90,
+          "dependency_cache_exact": {
+            "actions": {
+              "WAIT:-": true
+            },
+            "expanded": 203,
+            "memo_hits": 0,
+            "recursive_calls": 204,
+            "separator_replay_success": 0,
+            "wall_s": 0.023515838000093936
+          },
+          "event": "initial",
+          "exact_frontier_match": true,
+          "fresh_exact": {
+            "actions": {
+              "WAIT:-": true
+            },
+            "expanded": 203,
+            "memo_hits": 0,
+            "recursive_calls": 204,
+            "separator_replay_success": 0,
+            "wall_s": 0.010922773000856978
+          },
+          "incremental_conflict": {
+            "component_count": 16,
+            "partition_fallbacks": 0,
+            "recomputed_components": 16,
+            "reused_components": 0,
+            "structural_match_fresh": true
+          },
+          "ordinary_persistent_exact": {
+            "actions": {
+              "WAIT:-": true
+            },
+            "expanded": 203,
+            "memo_hits": 0,
+            "recursive_calls": 204,
+            "separator_replay_success": 0,
+            "wall_s": 0.01053256799968949
+          }
+        },
+        {
+          "action_frontier": {
+            "SEND_TERR:c0:g1": true,
+            "SEND_TERR:c0:g2": true,
+            "WAIT:-": true
+          },
+          "at_s": 100,
+          "dependency_cache_exact": {
+            "actions": {
+              "SEND_TERR:c0:g1": true,
+              "SEND_TERR:c0:g2": true,
+              "WAIT:-": true
+            },
+            "expanded": 11,
+            "memo_hits": 3,
+            "recursive_calls": 14,
+            "separator_replay_success": 0,
+            "wall_s": 0.0010804180001287023
+          },
+          "event": "send_pending_c0",
+          "exact_frontier_match": true,
+          "fresh_exact": {
+            "actions": {
+              "SEND_TERR:c0:g1": true,
+              "SEND_TERR:c0:g2": true,
+              "WAIT:-": true
+            },
+            "expanded": 212,
+            "memo_hits": 2,
+            "recursive_calls": 215,
+            "separator_replay_success": 0,
+            "wall_s": 0.01770769900031155
+          },
+          "incremental_conflict": {
+            "component_count": 16,
+            "partition_fallbacks": 0,
+            "recomputed_components": 1,
+            "reused_components": 15,
+            "structural_match_fresh": true
+          },
+          "ordinary_persistent_exact": {
+            "actions": {
+              "SEND_TERR:c0:g1": true,
+              "SEND_TERR:c0:g2": true,
+              "WAIT:-": true
+            },
+            "expanded": 11,
+            "memo_hits": 3,
+            "recursive_calls": 14,
+            "separator_replay_success": 0,
+            "wall_s": 0.0011566569992282894
+          }
+        },
+        {
+          "action_frontier": {
+            "SEND_TERR:c0:g1": true,
+            "SEND_TERR:c0:g2": true,
+            "WAIT:-": true
+          },
+          "at_s": 110,
+          "dependency_cache_exact": {
+            "actions": {
+              "SEND_TERR:c0:g1": true,
+              "SEND_TERR:c0:g2": true,
+              "WAIT:-": true
+            },
+            "expanded": 7,
+            "memo_hits": 3,
+            "recursive_calls": 10,
+            "separator_replay_success": 0,
+            "wall_s": 0.0005829710007674294
+          },
+          "event": "gateway_receipt_c0",
+          "exact_frontier_match": true,
+          "fresh_exact": {
+            "actions": {
+              "SEND_TERR:c0:g1": true,
+              "SEND_TERR:c0:g2": true,
+              "WAIT:-": true
+            },
+            "expanded": 212,
+            "memo_hits": 2,
+            "recursive_calls": 215,
+            "separator_replay_success": 0,
+            "wall_s": 0.011101939000582206
+          },
+          "incremental_conflict": {
+            "component_count": 16,
+            "partition_fallbacks": 0,
+            "recomputed_components": 0,
+            "reused_components": 16,
+            "structural_match_fresh": true
+          },
+          "ordinary_persistent_exact": {
+            "actions": {
+              "SEND_TERR:c0:g1": true,
+              "SEND_TERR:c0:g2": true,
+              "WAIT:-": true
+            },
+            "expanded": 7,
+            "memo_hits": 3,
+            "recursive_calls": 10,
+            "separator_replay_success": 0,
+            "wall_s": 0.00047324400111392606
+          }
+        },
+        {
+          "action_frontier": {
+            "SEND_TERR:c0:g1": true,
+            "SEND_TERR:c0:g2": true,
+            "WAIT:-": false
+          },
+          "at_s": 130,
+          "dependency_cache_exact": {
+            "actions": {
+              "SEND_TERR:c0:g1": true,
+              "SEND_TERR:c0:g2": true,
+              "WAIT:-": false
+            },
+            "expanded": 14,
+            "memo_hits": 2,
+            "recursive_calls": 19,
+            "separator_replay_success": 0,
+            "wall_s": 0.0008760499986237846
+          },
+          "event": "final_ack_c0",
+          "exact_frontier_match": true,
+          "fresh_exact": {
+            "actions": {
+              "SEND_TERR:c0:g1": true,
+              "SEND_TERR:c0:g2": true,
+              "WAIT:-": false
+            },
+            "expanded": 217,
+            "memo_hits": 1,
+            "recursive_calls": 222,
+            "separator_replay_success": 0,
+            "wall_s": 0.012620163999599754
+          },
+          "incremental_conflict": {
+            "component_count": 16,
+            "partition_fallbacks": 0,
+            "recomputed_components": 0,
+            "reused_components": 16,
+            "structural_match_fresh": true
+          },
+          "ordinary_persistent_exact": {
+            "actions": {
+              "SEND_TERR:c0:g1": true,
+              "SEND_TERR:c0:g2": true,
+              "WAIT:-": false
+            },
+            "expanded": 14,
+            "memo_hits": 2,
+            "recursive_calls": 19,
+            "separator_replay_success": 0,
+            "wall_s": 0.0007920469997770851
+          }
+        },
+        {
+          "action_frontier": {
+            "WAIT:-": false
+          },
+          "at_s": 160,
+          "dependency_cache_exact": {
+            "actions": {
+              "WAIT:-": false
+            },
+            "expanded": 0,
+            "memo_hits": 1,
+            "recursive_calls": 1,
+            "separator_replay_success": 0,
+            "wall_s": 6.56120009807637e-05
+          },
+          "event": "time_cross_c0",
+          "exact_frontier_match": true,
+          "fresh_exact": {
+            "actions": {
+              "WAIT:-": false
+            },
+            "expanded": 11,
+            "memo_hits": 0,
+            "recursive_calls": 14,
+            "separator_replay_success": 0,
+            "wall_s": 0.0007064019991958048
+          },
+          "incremental_conflict": {
+            "component_count": 17,
+            "partition_fallbacks": 0,
+            "recomputed_components": 2,
+            "reused_components": 15,
+            "structural_match_fresh": true
+          },
+          "ordinary_persistent_exact": {
+            "actions": {
+              "WAIT:-": false
+            },
+            "expanded": 0,
+            "memo_hits": 1,
+            "recursive_calls": 1,
+            "separator_replay_success": 0,
+            "wall_s": 4.4579999666893855e-05
+          }
+        },
+        {
+          "action_frontier": {
+            "WAIT:-": false
+          },
+          "at_s": 160,
+          "dependency_cache_exact": {
+            "actions": {
+              "WAIT:-": false
+            },
+            "expanded": 11,
+            "memo_hits": 0,
+            "recursive_calls": 14,
+            "separator_replay_success": 0,
+            "wall_s": 0.0006327560004137922
+          },
+          "event": "global_backup_budget",
+          "exact_frontier_match": true,
+          "fresh_exact": {
+            "actions": {
+              "WAIT:-": false
+            },
+            "expanded": 11,
+            "memo_hits": 0,
+            "recursive_calls": 14,
+            "separator_replay_success": 0,
+            "wall_s": 0.0006955099997867364
+          },
+          "incremental_conflict": {
+            "component_count": 17,
+            "partition_fallbacks": 0,
+            "recomputed_components": 17,
+            "reused_components": 0,
+            "structural_match_fresh": true
+          },
+          "ordinary_persistent_exact": {
+            "actions": {
+              "WAIT:-": false
+            },
+            "expanded": 11,
+            "memo_hits": 0,
+            "recursive_calls": 14,
+            "separator_replay_success": 0,
+            "wall_s": 0.0005569090008066269
+          }
+        }
+      ],
+      "obligations_per_component": 3,
+      "totals": {
+        "dependency_cache_exact_expanded": 246,
+        "dependency_separator_replay_success": 0,
+        "fresh_exact_expanded": 866,
+        "incremental_conflict_component_recomputes": 36,
+        "incremental_conflict_component_reuses": 62,
+        "ordinary_persistent_exact_expanded": 246
+      }
+    }
+  ],
+  "checks": {
+    "all_cells_conflict_structural_match": true,
+    "all_cells_exact_frontier_match": true,
+    "dependency_exact_never_worse_than_fresh": true,
+    "persistent_exact_never_worse_than_fresh": true,
+    "receipt_event_zero_component_recompute_all_cells": true
+  },
+  "claim_boundary": [
+    "Fresh/persistent/dependency exact arms compare complete action-feasibility frontiers; the conflict frontier is a structural L/U layer and is checked against fresh structural rebuild instead.",
+    "Expansion counts and conflict-component recomputes are different work units and must not be ratioed as CPU-equivalent operations.",
+    "The synthetic revealed branch is controlled stress for method attribution, not the source Pull-Based empirical distribution.",
+    "Wall-time superiority is not claimed from this audit."
+  ],
+  "stage": "ASC_PULL_QUERY_COMPONENT_STRONG_BASELINE_LADDER",
+  "summary": {
+    "component_axis": [
+      2,
+      4,
+      8,
+      16
+    ],
+    "dependency_cache_exact_expanded": {
+      "16": 246,
+      "2": 64,
+      "4": 90,
+      "8": 142
+    },
+    "dependency_separator_replay_success": {
+      "16": 0,
+      "2": 0,
+      "4": 0,
+      "8": 0
+    },
+    "fresh_exact_expanded": {
+      "16": 866,
+      "2": 138,
+      "4": 242,
+      "8": 450
+    },
+    "incremental_component_recomputes": {
+      "16": 36,
+      "2": 8,
+      "4": 12,
+      "8": 20
+    },
+    "incremental_component_reuses": {
+      "16": 62,
+      "2": 6,
+      "4": 14,
+      "8": 30
+    },
+    "ordinary_persistent_exact_expanded": {
+      "16": 246,
+      "2": 64,
+      "4": 90,
+      "8": 142
+    }
+  }
+}
