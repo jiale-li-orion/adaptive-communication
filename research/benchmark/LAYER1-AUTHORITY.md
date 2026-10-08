@@ -323,16 +323,15 @@ receipt-race、overlapping receipt chain、joint query–satellite Pareto、reso
 
 因此 Layer 1 当前状态改为：
 
-> **SOURCE/GENERATION INFRASTRUCTURE READY / PLACEMENT-VISIBILITY CONTRACT OPEN / NOT_BENCHMARK_ADMIT**
+> **SOURCE/GENERATION INFRASTRUCTURE READY / GATEWAY PLACEMENT FROZEN / DYNAMIC HARDNESS OPEN / NOT_BENCHMARK_ADMIT**
 
 Q11 human/source review 仍然是 release blocker，但**不再是唯一 blocker**。当前 research-readiness blockers 固定为：
 
-1. `PLACEMENT_VISIBILITY_CONTRACT_OPEN`：v0.7 case/process 尚未冻结 policy placement、owner-local visibility、center telemetry 与 control-command transport；现有 adapter 同时使用 center-side remote-query cost 和 gateway-local receipt visibility，不能用于 exact admission；
-2. `DYNAMIC_PROCESS_MECHANISM_OPEN`：尚未完成 `cache06.md` 冻结的 non-separable cross-stage choice、dynamic sufficiency、query/passive/send-as-probe competition 与 intervention attribution；
-3. `STAGED_EXACT_ADMISSION_BLOCKED`：placement/visibility/control-path contract 闭合前，v0.7 exact/no-query/paid-evidence classification 全部关闭；之后仍按 blind→full-current→no-paid-query→legal-acquisition 分层，`SEARCH_LIMIT` 保持 unresolved；
-4. `HARD_MECHANISM_COVERAGE_REOPENED`：v0.2 的 41 个 survivors 只支持一个 scoped H2×H3×H4 family；
-5. `PRISTINE_STRUCTURAL_GENERALIZATION_OPEN`：旧 test 已暴露，最终方法 claim 需要在方法冻结前重新 preregister structural cohort / protocol；
-6. `Q11_HUMAN_SOURCE_REVIEW_PENDING`：machine preaudit 不能替代真实 reviewer。
+1. `DYNAMIC_PROCESS_MECHANISM_OPEN`：gateway-local 36-cell bounded pilot 尚未出现通过 ordinary baseline 的 resolved survivor；当前需要解释 `SINGLE_RECOVERY → blind easy` 与 `REINTERRUPTIBLE → causal-infeasible / unresolved` 的二分，并验证是否存在真正 non-separable cross-stage choice；
+2. `GATEWAY_STAGED_EXACT_ADMISSION_INCOMPLETE`：36 个 placement-relevant TIGHT axis cells 中仍有 8 个在 50k memo contract 下保持 `UNRESOLVED_COMPUTATION`；pilot 只是一格一代表，不是全 universe admission；
+3. `HARD_MECHANISM_COVERAGE_REOPENED`：v0.2 的 41 个 survivors 只支持一个 scoped H2×H3×H4 family；
+4. `PRISTINE_STRUCTURAL_GENERALIZATION_OPEN`：旧 test 已暴露，最终方法 claim 需要在方法冻结前重新 preregister structural cohort / protocol；
+5. `Q11_HUMAN_SOURCE_REVIEW_PENDING`：machine preaudit 不能替代真实 reviewer。
 
 当前执行顺序固定为：
 
@@ -362,10 +361,12 @@ DB44/T 2457-2024 source correction               [DONE]
 → freeze corrected v0.7 process-support contract        [DONE]
 → v0.7 method-independent generator                     [DONE PRE-ORACLE; local r1 audited]
 → v0.7 specific v0.6-style shortcut preflight           [DONE; candidate TIGHT shortcut count = 0]
-→ placement / visibility / control-path contract        [CURRENT BLOCKER]
-→ gateway-local dynamic mechanism witnesses             [PENDING]
+→ placement / visibility / control-path contract        [DONE: GATEWAY PRIMARY; CENTER SIMULATOR_GAP]
+→ gateway-local bounded 36-cell mechanism pilot         [DONE: 18 blind / 8 causal-infeasible / 2 ordinary-shortcut / 8 unresolved]
+→ explain easy / causal-infeasible bifurcation          [CURRENT]
+→ gateway-local dynamic mechanism witnesses             [OPEN; no baseline survivor yet]
 → center-placement transport extension                  [OPTIONAL; REQUIRES CONTRACT]
-→ staged exact / validity admission per placement       [BLOCKED]
+→ staged exact / validity admission per placement       [GATEWAY INCOMPLETE; CENTER BLOCKED]
 → strong-baseline red-team                              [PENDING]
 → preregister pristine structural-generalization cohort  [PENDING]
 → real Q11 reviewer signoff                              [PENDING]
@@ -432,15 +433,15 @@ cheap construction preflight 的结论严格限定为：candidate `TIGHT` cells 
 - dynamic evidence freshness / repeated query 已产生有效差额；
 - ordinary baseline 留有任务质量余量。
 
-placement/visibility 审计进一步确认现有 v0.7 oracle adapter 不成立：`receipt_summary` 被按 center-side remote query 计入 terrestrial opportunity/capacity，同时 policy history 又自动收到 gateway receipt；case/base/process schema 没有声明 policy placement，且 center send/control command 没有 transport/timing contract。机器结果见 `results/benchmark/layer1-v0.7-placement-visibility-review.json`，解释见 `V07-PLACEMENT-VISIBILITY-REVIEW.v0.1.md`。
+placement/visibility 审计进一步确认旧 v0.7 oracle adapter 不成立：`receipt_summary` 被按 center-side remote query 计入 terrestrial opportunity/capacity，同时 policy history 又自动收到 gateway receipt；case/base/process schema 没有声明 policy placement，且 center send/control command 没有 transport/timing contract。机器结果见 `results/benchmark/layer1-v0.7-placement-visibility-review.json`，解释见 `V07-PLACEMENT-VISIBILITY-REVIEW.v0.1.md`。
 
-这与 `cache06.md` 的冻结边界一致：gateway queue、send log 与 receipt 在 gateway 本地可读；center 只能使用已经到达的 telemetry 或合法 query；如果 query 依赖通信路径，send/control command 也不能瞬时抵达。因此当前处置为：
+这与 `cache06.md` 的冻结边界一致。随后 [`PLACEMENT-VISIBILITY-CONTRACT.v0.1.json`](PLACEMENT-VISIBILITY-CONTRACT.v0.1.json) / [`V07-PLACEMENT-CONTRACT.v0.1.md`](V07-PLACEMENT-CONTRACT.v0.1.md) 已正式冻结 gateway-local 主位置：gateway queue、send log 与 receipt 在 gateway 本地可读；center 只能使用已经到达的 telemetry 或合法 query；如果 query 依赖通信路径，send/control command 也不能瞬时抵达。因此当前处置为：
 
 - gateway-local placement 是主位置；owner-local `receipt_summary` 不能计作远程 paid acquisition；
 - center placement 是独立位置对照；在 telemetry/query/control transport 闭合前不运行 exact；
-- v0.7 生成 universe 保留，但不产生 paid-evidence、no-query 或 exact-admission 统计。
+- v0.7 生成 universe 保留；gateway-local 可运行自然反馈 staged exact，center exact 继续关闭；gateway 主位置不产生 paid-remote-receipt EvidenceNeed claim。
 
-此前 partial pilot 结果与 active pilot code 均已删除。它们不得出现在 README、claim ledger 或论文统计中。
+旧 mixed-placement partial pilot 结果与 active pilot code 均已删除。新的 gateway-local indexed pilot 只消费 frozen v0.7 universe，并将 remote-query timing 在 placement-specific identity 中折叠。
 
 placement contract 闭合后的 exact admission 固定为**分层求解**，避免给所有 case 同时运行四个昂贵 reference：
 
@@ -465,6 +466,10 @@ observation-matched exact with legal acquisition
 ```
 
 在扩大 exact sweep 前，必须先冻结 placement/visibility/control-path contract，再从同一个 frozen v0.7 universe 验证四个 mechanism witness：non-separable cross-stage choice、later-observation dynamic sufficiency、dedicated query / passive / send-as-probe competition、以及对应 intervention attribution。若 gateway-local 主位置只能产生自然反馈决策而不能产生 paid remote EvidenceNeed，必须如实缩小 claim；不能通过把 owner-local receipt 重新收费来制造 gap。
+
+当前 gateway-local bounded pilot 已覆盖 **36 个 placement-relevant TIGHT axis cells**（composition × candidate process × terrestrial capacity × feedback profile；remote-query timing 在 gateway placement 下无效并先行 dedupe）。50k memo contract 下原始结果为：18 `BLIND_OPEN_LOOP_SOLVED`、8 `FULL_CURRENT_CAUSAL_INFEASIBLE`、2 `GATEWAY_NATURAL_FEEDBACK_REQUIRED_CANDIDATE`、8 `UNRESOLVED_COMPUTATION`。两个 natural-feedback candidate 均被 same-information `myopic_flow_voi` 与 depth-2/3 flow baseline 解掉，因此最终 pilot disposition 为 **18 blind control / 8 causal-infeasible diagnostic / 2 ordinary-baseline shortcut / 8 unresolved / 0 resolved baseline survivor**。机器结果见 `results/benchmark/layer1-v0.7-gateway-pilot-v0.1.json`。该结果是 scoped pilot，不是全 universe hard-case count，也不能把 8 个 unresolved 当成 hardness。
+
+这轮结果把当前问题进一步收紧：v0.7 在合法 gateway placement 下暂时呈现 **SINGLE_RECOVERY 过易、部分 REINTERRUPTIBLE 过强或计算未决** 的二分。下一步优先解释该二分的结构来源，并检查是否缺少真实可观测过程/机会耦合，而不是提高 memo 上限寻找“难例”或新增 v0.8 参数。
 
 V8 的 baseline 分类与否决边界见 `V8-BASELINE-CONTRACT.v0.1.md`。generic exact / memo / dependency-cache / incremental AND–OR 属于 computation reference：它们取得 exact 任务质量是预期结果，不能因为“确定性算法能解”再次否定 benchmark；当前 16-cell computation reference 中 generic exact 平均约 54.6 ms、最大约 280.7 ms，no-paid-query 平均约 503.8 ms、最大约 4.0 s。这些数值只作为后续方法公平计算基线。
 

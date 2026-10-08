@@ -1,0 +1,1196 @@
+{
+  "axis_cell_count": 36,
+  "baseline_survivor_ordinals": [],
+  "by_composition": {
+    "2x2::HALF_PERIOD_OFFSET": {
+      "BLIND_OPEN_LOOP_SOLVED": 6,
+      "FULL_CURRENT_CAUSAL_INFEASIBLE": 2,
+      "ORDINARY_BASELINE_SHORTCUT_SOLVED": 1,
+      "UNRESOLVED_COMPUTATION": 3
+    },
+    "3x2::ALIGNED": {
+      "BLIND_OPEN_LOOP_SOLVED": 6,
+      "FULL_CURRENT_CAUSAL_INFEASIBLE": 2,
+      "ORDINARY_BASELINE_SHORTCUT_SOLVED": 1,
+      "UNRESOLVED_COMPUTATION": 3
+    },
+    "3x2::HALF_PERIOD_OFFSET": {
+      "BLIND_OPEN_LOOP_SOLVED": 6,
+      "FULL_CURRENT_CAUSAL_INFEASIBLE": 4,
+      "UNRESOLVED_COMPUTATION": 2
+    }
+  },
+  "by_feedback_profile": {
+    "EARLY_RECEIPT_LATE_ACK": {
+      "BLIND_OPEN_LOOP_SOLVED": 6,
+      "FULL_CURRENT_CAUSAL_INFEASIBLE": 4,
+      "UNRESOLVED_COMPUTATION": 2
+    },
+    "EARLY_RECEIPT_MID_ACK": {
+      "BLIND_OPEN_LOOP_SOLVED": 6,
+      "FULL_CURRENT_CAUSAL_INFEASIBLE": 3,
+      "UNRESOLVED_COMPUTATION": 3
+    },
+    "IMMEDIATE_CONTROL": {
+      "BLIND_OPEN_LOOP_SOLVED": 6,
+      "FULL_CURRENT_CAUSAL_INFEASIBLE": 1,
+      "ORDINARY_BASELINE_SHORTCUT_SOLVED": 2,
+      "UNRESOLVED_COMPUTATION": 3
+    }
+  },
+  "by_service_process": {
+    "REINTERRUPTIBLE": {
+      "FULL_CURRENT_CAUSAL_INFEASIBLE": 8,
+      "ORDINARY_BASELINE_SHORTCUT_SOLVED": 2,
+      "UNRESOLVED_COMPUTATION": 8
+    },
+    "SINGLE_RECOVERY": {
+      "BLIND_OPEN_LOOP_SOLVED": 18
+    }
+  },
+  "claim_boundary": [
+    "This is a 36-axis-cell placement-specific pilot, not a benchmark distribution estimate or hard-case count.",
+    "Each cell is selected before solving; solver/baseline outcomes do not alter the frozen v0.7 generator or selection index.",
+    "UNRESOLVED_COMPUTATION is not counted as hard, infeasible, or method failure.",
+    "A natural-feedback candidate solved by any same-information ordinary baseline is downgraded to shortcut/control.",
+    "Gateway-local owner state is not charged as remote acquisition; no paid-evidence or center-placement claim is made."
+  ],
+  "final_pilot_disposition_counts": {
+    "BLIND_OPEN_LOOP_SOLVED": 18,
+    "FULL_CURRENT_CAUSAL_INFEASIBLE": 8,
+    "ORDINARY_BASELINE_SHORTCUT_SOLVED": 2,
+    "UNRESOLVED_COMPUTATION": 8
+  },
+  "generation_manifest_sha256": "b33b6f257dbb3b91f44bd62a8af7764688983e4887fc69a26a94dc9b758ac19a",
+  "generation_run": "layer1-v0.7-preoracle-r1",
+  "max_memo_nodes_per_reference": 50000,
+  "ordinary_shortcut_ordinals": [
+    3,
+    15
+  ],
+  "placement": "GATEWAY_LOCAL_PRIMARY",
+  "raw_disposition_counts": {
+    "BLIND_OPEN_LOOP_SOLVED": 18,
+    "FULL_CURRENT_CAUSAL_INFEASIBLE": 8,
+    "GATEWAY_NATURAL_FEEDBACK_REQUIRED_CANDIDATE": 2,
+    "UNRESOLVED_COMPUTATION": 8
+  },
+  "rows": [
+    {
+      "axis_cell": {
+        "fallback_mode": "TIGHT",
+        "feedback_profile": "EARLY_RECEIPT_LATE_ACK",
+        "obligations_per_stream": 2,
+        "phase_mode": "HALF_PERIOD_OFFSET",
+        "placement": "GATEWAY_LOCAL_PRIMARY",
+        "service_process": "REINTERRUPTIBLE",
+        "terr_capacity": 1
+      },
+      "base_id": "T1V07B-b206363b3a531bb7",
+      "case_id": "T1V07C-0013764f12142e67",
+      "final_pilot_disposition": "FULL_CURRENT_CAUSAL_INFEASIBLE",
+      "ordinal": 1,
+      "ordinary_baseline": null,
+      "raw_disposition": "FULL_CURRENT_CAUSAL_INFEASIBLE",
+      "references": {
+        "blind_open_loop": {
+          "attempt_lattice_size": 25,
+          "memo_nodes": 204,
+          "solvable": false,
+          "status": "EXACT"
+        },
+        "full_current": {
+          "attempt_lattice_size": 25,
+          "memo_nodes": 98,
+          "solvable": false,
+          "status": "EXACT"
+        }
+      }
+    },
+    {
+      "axis_cell": {
+        "fallback_mode": "TIGHT",
+        "feedback_profile": "EARLY_RECEIPT_MID_ACK",
+        "obligations_per_stream": 2,
+        "phase_mode": "HALF_PERIOD_OFFSET",
+        "placement": "GATEWAY_LOCAL_PRIMARY",
+        "service_process": "REINTERRUPTIBLE",
+        "terr_capacity": 1
+      },
+      "base_id": "T1V07B-a04b6e7ce0edb0eb",
+      "case_id": "T1V07C-0004797dec243604",
+      "final_pilot_disposition": "UNRESOLVED_COMPUTATION",
+      "ordinal": 2,
+      "ordinary_baseline": null,
+      "raw_disposition": "UNRESOLVED_COMPUTATION",
+      "references": {
+        "blind_open_loop": {
+          "attempt_lattice_size": 69,
+          "memo_nodes": 38028,
+          "solvable": false,
+          "status": "EXACT"
+        },
+        "full_current": {
+          "attempt_lattice_size": 69,
+          "memo_nodes": 820,
+          "solvable": true,
+          "status": "EXACT"
+        },
+        "natural_feedback": {
+          "attempt_lattice_size": 69,
+          "memo_nodes": 50005,
+          "solvable": null,
+          "status": "SEARCH_LIMIT"
+        }
+      }
+    },
+    {
+      "axis_cell": {
+        "fallback_mode": "TIGHT",
+        "feedback_profile": "IMMEDIATE_CONTROL",
+        "obligations_per_stream": 2,
+        "phase_mode": "HALF_PERIOD_OFFSET",
+        "placement": "GATEWAY_LOCAL_PRIMARY",
+        "service_process": "REINTERRUPTIBLE",
+        "terr_capacity": 1
+      },
+      "base_id": "T1V07B-bf638b2f86815a39",
+      "case_id": "T1V07C-00050e40b14865f7",
+      "final_pilot_disposition": "ORDINARY_BASELINE_SHORTCUT_SOLVED",
+      "ordinal": 3,
+      "ordinary_baseline": {
+        "any_ordinary_success": true,
+        "axis_cell": {
+          "fallback_mode": "TIGHT",
+          "feedback_profile": "IMMEDIATE_CONTROL",
+          "obligations_per_stream": 2,
+          "phase_mode": "HALF_PERIOD_OFFSET",
+          "placement": "GATEWAY_LOCAL_PRIMARY",
+          "service_process": "REINTERRUPTIBLE",
+          "terr_capacity": 1
+        },
+        "base_id": "T1V07B-bf638b2f86815a39",
+        "baselines": {
+          "depth_2_flow_terminal": {
+            "decisions": 137,
+            "solvable": true
+          },
+          "depth_3_flow_terminal": {
+            "decisions": 137,
+            "solvable": true
+          },
+          "latest_feasible_send": {
+            "decisions": 16,
+            "solvable": false
+          },
+          "least_slack_send_probe": {
+            "decisions": 66,
+            "solvable": false
+          },
+          "myopic_flow_voi": {
+            "decisions": 137,
+            "solvable": true
+          },
+          "shallow_rule": {
+            "decisions": 66,
+            "solvable": false
+          }
+        },
+        "case_id": "T1V07C-00050e40b14865f7",
+        "claim_boundary": [
+          "All baselines use the same gateway-local causal process and natural feedback as the evaluated policy.",
+          "No baseline receives paid query capability or hidden future service state.",
+          "A candidate solved by any ordinary baseline is a shortcut/control cell, not a hard admission."
+        ],
+        "feedback_timing": {
+          "final_ack_delay_s": 0,
+          "gateway_receipt_delay_s": 0
+        },
+        "ordinal": 3,
+        "placement": "GATEWAY_LOCAL_PRIMARY",
+        "query_capabilities": [],
+        "schema_version": "0.1",
+        "stage": "V07_GATEWAY_LOCAL_CANDIDATE_BASELINES"
+      },
+      "raw_disposition": "GATEWAY_NATURAL_FEEDBACK_REQUIRED_CANDIDATE",
+      "references": {
+        "blind_open_loop": {
+          "attempt_lattice_size": 35,
+          "memo_nodes": 3294,
+          "solvable": false,
+          "status": "EXACT"
+        },
+        "full_current": {
+          "attempt_lattice_size": 35,
+          "memo_nodes": 350,
+          "solvable": true,
+          "status": "EXACT"
+        },
+        "natural_feedback": {
+          "attempt_lattice_size": 35,
+          "memo_nodes": 821,
+          "solvable": true,
+          "status": "EXACT"
+        }
+      }
+    },
+    {
+      "axis_cell": {
+        "fallback_mode": "TIGHT",
+        "feedback_profile": "EARLY_RECEIPT_LATE_ACK",
+        "obligations_per_stream": 2,
+        "phase_mode": "HALF_PERIOD_OFFSET",
+        "placement": "GATEWAY_LOCAL_PRIMARY",
+        "service_process": "REINTERRUPTIBLE",
+        "terr_capacity": 2
+      },
+      "base_id": "T1V07B-c1866714577272e1",
+      "case_id": "T1V07C-00004f8805f50d23",
+      "final_pilot_disposition": "UNRESOLVED_COMPUTATION",
+      "ordinal": 4,
+      "ordinary_baseline": null,
+      "raw_disposition": "UNRESOLVED_COMPUTATION",
+      "references": {
+        "blind_open_loop": {
+          "attempt_lattice_size": 123,
+          "memo_nodes": 50004,
+          "solvable": null,
+          "status": "SEARCH_LIMIT"
+        }
+      }
+    },
+    {
+      "axis_cell": {
+        "fallback_mode": "TIGHT",
+        "feedback_profile": "EARLY_RECEIPT_MID_ACK",
+        "obligations_per_stream": 2,
+        "phase_mode": "HALF_PERIOD_OFFSET",
+        "placement": "GATEWAY_LOCAL_PRIMARY",
+        "service_process": "REINTERRUPTIBLE",
+        "terr_capacity": 2
+      },
+      "base_id": "T1V07B-7799b46bcd30c24b",
+      "case_id": "T1V07C-0025ef49cf9b72ee",
+      "final_pilot_disposition": "FULL_CURRENT_CAUSAL_INFEASIBLE",
+      "ordinal": 5,
+      "ordinary_baseline": null,
+      "raw_disposition": "FULL_CURRENT_CAUSAL_INFEASIBLE",
+      "references": {
+        "blind_open_loop": {
+          "attempt_lattice_size": 36,
+          "memo_nodes": 694,
+          "solvable": false,
+          "status": "EXACT"
+        },
+        "full_current": {
+          "attempt_lattice_size": 36,
+          "memo_nodes": 494,
+          "solvable": false,
+          "status": "EXACT"
+        }
+      }
+    },
+    {
+      "axis_cell": {
+        "fallback_mode": "TIGHT",
+        "feedback_profile": "IMMEDIATE_CONTROL",
+        "obligations_per_stream": 2,
+        "phase_mode": "HALF_PERIOD_OFFSET",
+        "placement": "GATEWAY_LOCAL_PRIMARY",
+        "service_process": "REINTERRUPTIBLE",
+        "terr_capacity": 2
+      },
+      "base_id": "T1V07B-964e5bf949a8a295",
+      "case_id": "T1V07C-0002474eb7a934b0",
+      "final_pilot_disposition": "UNRESOLVED_COMPUTATION",
+      "ordinal": 6,
+      "ordinary_baseline": null,
+      "raw_disposition": "UNRESOLVED_COMPUTATION",
+      "references": {
+        "blind_open_loop": {
+          "attempt_lattice_size": 107,
+          "memo_nodes": 44472,
+          "solvable": false,
+          "status": "EXACT"
+        },
+        "full_current": {
+          "attempt_lattice_size": 107,
+          "memo_nodes": 42634,
+          "solvable": true,
+          "status": "EXACT"
+        },
+        "natural_feedback": {
+          "attempt_lattice_size": 107,
+          "memo_nodes": 50017,
+          "solvable": null,
+          "status": "SEARCH_LIMIT"
+        }
+      }
+    },
+    {
+      "axis_cell": {
+        "fallback_mode": "TIGHT",
+        "feedback_profile": "EARLY_RECEIPT_LATE_ACK",
+        "obligations_per_stream": 2,
+        "phase_mode": "HALF_PERIOD_OFFSET",
+        "placement": "GATEWAY_LOCAL_PRIMARY",
+        "service_process": "SINGLE_RECOVERY",
+        "terr_capacity": 1
+      },
+      "base_id": "T1V07B-2b8abdcbb4aa98e5",
+      "case_id": "T1V07C-00008926ce1747a0",
+      "final_pilot_disposition": "BLIND_OPEN_LOOP_SOLVED",
+      "ordinal": 7,
+      "ordinary_baseline": null,
+      "raw_disposition": "BLIND_OPEN_LOOP_SOLVED",
+      "references": {
+        "blind_open_loop": {
+          "attempt_lattice_size": 31,
+          "memo_nodes": 147,
+          "solvable": true,
+          "status": "EXACT"
+        }
+      }
+    },
+    {
+      "axis_cell": {
+        "fallback_mode": "TIGHT",
+        "feedback_profile": "EARLY_RECEIPT_MID_ACK",
+        "obligations_per_stream": 2,
+        "phase_mode": "HALF_PERIOD_OFFSET",
+        "placement": "GATEWAY_LOCAL_PRIMARY",
+        "service_process": "SINGLE_RECOVERY",
+        "terr_capacity": 1
+      },
+      "base_id": "T1V07B-e4c7a28d03127bfc",
+      "case_id": "T1V07C-000cc556ec9f249f",
+      "final_pilot_disposition": "BLIND_OPEN_LOOP_SOLVED",
+      "ordinal": 8,
+      "ordinary_baseline": null,
+      "raw_disposition": "BLIND_OPEN_LOOP_SOLVED",
+      "references": {
+        "blind_open_loop": {
+          "attempt_lattice_size": 72,
+          "memo_nodes": 97,
+          "solvable": true,
+          "status": "EXACT"
+        }
+      }
+    },
+    {
+      "axis_cell": {
+        "fallback_mode": "TIGHT",
+        "feedback_profile": "IMMEDIATE_CONTROL",
+        "obligations_per_stream": 2,
+        "phase_mode": "HALF_PERIOD_OFFSET",
+        "placement": "GATEWAY_LOCAL_PRIMARY",
+        "service_process": "SINGLE_RECOVERY",
+        "terr_capacity": 1
+      },
+      "base_id": "T1V07B-d3faeec9318acb02",
+      "case_id": "T1V07C-00086ab404cdaaae",
+      "final_pilot_disposition": "BLIND_OPEN_LOOP_SOLVED",
+      "ordinal": 9,
+      "ordinary_baseline": null,
+      "raw_disposition": "BLIND_OPEN_LOOP_SOLVED",
+      "references": {
+        "blind_open_loop": {
+          "attempt_lattice_size": 41,
+          "memo_nodes": 109,
+          "solvable": true,
+          "status": "EXACT"
+        }
+      }
+    },
+    {
+      "axis_cell": {
+        "fallback_mode": "TIGHT",
+        "feedback_profile": "EARLY_RECEIPT_LATE_ACK",
+        "obligations_per_stream": 2,
+        "phase_mode": "HALF_PERIOD_OFFSET",
+        "placement": "GATEWAY_LOCAL_PRIMARY",
+        "service_process": "SINGLE_RECOVERY",
+        "terr_capacity": 2
+      },
+      "base_id": "T1V07B-4aaa7d5b98be2264",
+      "case_id": "T1V07C-000535abb51c2453",
+      "final_pilot_disposition": "BLIND_OPEN_LOOP_SOLVED",
+      "ordinal": 10,
+      "ordinary_baseline": null,
+      "raw_disposition": "BLIND_OPEN_LOOP_SOLVED",
+      "references": {
+        "blind_open_loop": {
+          "attempt_lattice_size": 129,
+          "memo_nodes": 141,
+          "solvable": true,
+          "status": "EXACT"
+        }
+      }
+    },
+    {
+      "axis_cell": {
+        "fallback_mode": "TIGHT",
+        "feedback_profile": "EARLY_RECEIPT_MID_ACK",
+        "obligations_per_stream": 2,
+        "phase_mode": "HALF_PERIOD_OFFSET",
+        "placement": "GATEWAY_LOCAL_PRIMARY",
+        "service_process": "SINGLE_RECOVERY",
+        "terr_capacity": 2
+      },
+      "base_id": "T1V07B-cca16b7bc9e7f82d",
+      "case_id": "T1V07C-0001f57d8ff56f9d",
+      "final_pilot_disposition": "BLIND_OPEN_LOOP_SOLVED",
+      "ordinal": 11,
+      "ordinary_baseline": null,
+      "raw_disposition": "BLIND_OPEN_LOOP_SOLVED",
+      "references": {
+        "blind_open_loop": {
+          "attempt_lattice_size": 69,
+          "memo_nodes": 93,
+          "solvable": true,
+          "status": "EXACT"
+        }
+      }
+    },
+    {
+      "axis_cell": {
+        "fallback_mode": "TIGHT",
+        "feedback_profile": "IMMEDIATE_CONTROL",
+        "obligations_per_stream": 2,
+        "phase_mode": "HALF_PERIOD_OFFSET",
+        "placement": "GATEWAY_LOCAL_PRIMARY",
+        "service_process": "SINGLE_RECOVERY",
+        "terr_capacity": 2
+      },
+      "base_id": "T1V07B-35ade9312e3f3552",
+      "case_id": "T1V07C-0006849072fb1784",
+      "final_pilot_disposition": "BLIND_OPEN_LOOP_SOLVED",
+      "ordinal": 12,
+      "ordinary_baseline": null,
+      "raw_disposition": "BLIND_OPEN_LOOP_SOLVED",
+      "references": {
+        "blind_open_loop": {
+          "attempt_lattice_size": 41,
+          "memo_nodes": 64,
+          "solvable": true,
+          "status": "EXACT"
+        }
+      }
+    },
+    {
+      "axis_cell": {
+        "fallback_mode": "TIGHT",
+        "feedback_profile": "EARLY_RECEIPT_LATE_ACK",
+        "obligations_per_stream": 3,
+        "phase_mode": "ALIGNED",
+        "placement": "GATEWAY_LOCAL_PRIMARY",
+        "service_process": "REINTERRUPTIBLE",
+        "terr_capacity": 1
+      },
+      "base_id": "T1V07B-739177a0945abc59",
+      "case_id": "T1V07C-000313afb3d84ce3",
+      "final_pilot_disposition": "FULL_CURRENT_CAUSAL_INFEASIBLE",
+      "ordinal": 13,
+      "ordinary_baseline": null,
+      "raw_disposition": "FULL_CURRENT_CAUSAL_INFEASIBLE",
+      "references": {
+        "blind_open_loop": {
+          "attempt_lattice_size": 43,
+          "memo_nodes": 9938,
+          "solvable": false,
+          "status": "EXACT"
+        },
+        "full_current": {
+          "attempt_lattice_size": 43,
+          "memo_nodes": 7128,
+          "solvable": false,
+          "status": "EXACT"
+        }
+      }
+    },
+    {
+      "axis_cell": {
+        "fallback_mode": "TIGHT",
+        "feedback_profile": "EARLY_RECEIPT_MID_ACK",
+        "obligations_per_stream": 3,
+        "phase_mode": "ALIGNED",
+        "placement": "GATEWAY_LOCAL_PRIMARY",
+        "service_process": "REINTERRUPTIBLE",
+        "terr_capacity": 1
+      },
+      "base_id": "T1V07B-6ec6fb23692598fd",
+      "case_id": "T1V07C-0000093d31e64ba2",
+      "final_pilot_disposition": "UNRESOLVED_COMPUTATION",
+      "ordinal": 14,
+      "ordinary_baseline": null,
+      "raw_disposition": "UNRESOLVED_COMPUTATION",
+      "references": {
+        "blind_open_loop": {
+          "attempt_lattice_size": 146,
+          "memo_nodes": 50002,
+          "solvable": null,
+          "status": "SEARCH_LIMIT"
+        }
+      }
+    },
+    {
+      "axis_cell": {
+        "fallback_mode": "TIGHT",
+        "feedback_profile": "IMMEDIATE_CONTROL",
+        "obligations_per_stream": 3,
+        "phase_mode": "ALIGNED",
+        "placement": "GATEWAY_LOCAL_PRIMARY",
+        "service_process": "REINTERRUPTIBLE",
+        "terr_capacity": 1
+      },
+      "base_id": "T1V07B-d0a361520e7854d8",
+      "case_id": "T1V07C-00010b297caab654",
+      "final_pilot_disposition": "ORDINARY_BASELINE_SHORTCUT_SOLVED",
+      "ordinal": 15,
+      "ordinary_baseline": {
+        "any_ordinary_success": true,
+        "axis_cell": {
+          "fallback_mode": "TIGHT",
+          "feedback_profile": "IMMEDIATE_CONTROL",
+          "obligations_per_stream": 3,
+          "phase_mode": "ALIGNED",
+          "placement": "GATEWAY_LOCAL_PRIMARY",
+          "service_process": "REINTERRUPTIBLE",
+          "terr_capacity": 1
+        },
+        "base_id": "T1V07B-d0a361520e7854d8",
+        "baselines": {
+          "depth_2_flow_terminal": {
+            "decisions": 104,
+            "solvable": true
+          },
+          "depth_3_flow_terminal": {
+            "decisions": 102,
+            "solvable": true
+          },
+          "latest_feasible_send": {
+            "decisions": 14,
+            "solvable": false
+          },
+          "least_slack_send_probe": {
+            "decisions": 52,
+            "solvable": false
+          },
+          "myopic_flow_voi": {
+            "decisions": 104,
+            "solvable": true
+          },
+          "shallow_rule": {
+            "decisions": 52,
+            "solvable": false
+          }
+        },
+        "case_id": "T1V07C-00010b297caab654",
+        "claim_boundary": [
+          "All baselines use the same gateway-local causal process and natural feedback as the evaluated policy.",
+          "No baseline receives paid query capability or hidden future service state.",
+          "A candidate solved by any ordinary baseline is a shortcut/control cell, not a hard admission."
+        ],
+        "feedback_timing": {
+          "final_ack_delay_s": 0,
+          "gateway_receipt_delay_s": 0
+        },
+        "ordinal": 15,
+        "placement": "GATEWAY_LOCAL_PRIMARY",
+        "query_capabilities": [],
+        "schema_version": "0.1",
+        "stage": "V07_GATEWAY_LOCAL_CANDIDATE_BASELINES"
+      },
+      "raw_disposition": "GATEWAY_NATURAL_FEEDBACK_REQUIRED_CANDIDATE",
+      "references": {
+        "blind_open_loop": {
+          "attempt_lattice_size": 44,
+          "memo_nodes": 5524,
+          "solvable": false,
+          "status": "EXACT"
+        },
+        "full_current": {
+          "attempt_lattice_size": 44,
+          "memo_nodes": 781,
+          "solvable": true,
+          "status": "EXACT"
+        },
+        "natural_feedback": {
+          "attempt_lattice_size": 44,
+          "memo_nodes": 1499,
+          "solvable": true,
+          "status": "EXACT"
+        }
+      }
+    },
+    {
+      "axis_cell": {
+        "fallback_mode": "TIGHT",
+        "feedback_profile": "EARLY_RECEIPT_LATE_ACK",
+        "obligations_per_stream": 3,
+        "phase_mode": "ALIGNED",
+        "placement": "GATEWAY_LOCAL_PRIMARY",
+        "service_process": "REINTERRUPTIBLE",
+        "terr_capacity": 2
+      },
+      "base_id": "T1V07B-fe24d7c18bb195fe",
+      "case_id": "T1V07C-00035262c764a3a3",
+      "final_pilot_disposition": "FULL_CURRENT_CAUSAL_INFEASIBLE",
+      "ordinal": 16,
+      "ordinary_baseline": null,
+      "raw_disposition": "FULL_CURRENT_CAUSAL_INFEASIBLE",
+      "references": {
+        "blind_open_loop": {
+          "attempt_lattice_size": 55,
+          "memo_nodes": 22630,
+          "solvable": false,
+          "status": "EXACT"
+        },
+        "full_current": {
+          "attempt_lattice_size": 55,
+          "memo_nodes": 20607,
+          "solvable": false,
+          "status": "EXACT"
+        }
+      }
+    },
+    {
+      "axis_cell": {
+        "fallback_mode": "TIGHT",
+        "feedback_profile": "EARLY_RECEIPT_MID_ACK",
+        "obligations_per_stream": 3,
+        "phase_mode": "ALIGNED",
+        "placement": "GATEWAY_LOCAL_PRIMARY",
+        "service_process": "REINTERRUPTIBLE",
+        "terr_capacity": 2
+      },
+      "base_id": "T1V07B-e176a3ebd39fcbf4",
+      "case_id": "T1V07C-0001236e25ba0b13",
+      "final_pilot_disposition": "UNRESOLVED_COMPUTATION",
+      "ordinal": 17,
+      "ordinary_baseline": null,
+      "raw_disposition": "UNRESOLVED_COMPUTATION",
+      "references": {
+        "blind_open_loop": {
+          "attempt_lattice_size": 136,
+          "memo_nodes": 50004,
+          "solvable": null,
+          "status": "SEARCH_LIMIT"
+        }
+      }
+    },
+    {
+      "axis_cell": {
+        "fallback_mode": "TIGHT",
+        "feedback_profile": "IMMEDIATE_CONTROL",
+        "obligations_per_stream": 3,
+        "phase_mode": "ALIGNED",
+        "placement": "GATEWAY_LOCAL_PRIMARY",
+        "service_process": "REINTERRUPTIBLE",
+        "terr_capacity": 2
+      },
+      "base_id": "T1V07B-7e8b52f0ab6b3c72",
+      "case_id": "T1V07C-000ddd2baa48afb6",
+      "final_pilot_disposition": "UNRESOLVED_COMPUTATION",
+      "ordinal": 18,
+      "ordinary_baseline": null,
+      "raw_disposition": "UNRESOLVED_COMPUTATION",
+      "references": {
+        "blind_open_loop": {
+          "attempt_lattice_size": 59,
+          "memo_nodes": 50012,
+          "solvable": null,
+          "status": "SEARCH_LIMIT"
+        }
+      }
+    },
+    {
+      "axis_cell": {
+        "fallback_mode": "TIGHT",
+        "feedback_profile": "EARLY_RECEIPT_LATE_ACK",
+        "obligations_per_stream": 3,
+        "phase_mode": "ALIGNED",
+        "placement": "GATEWAY_LOCAL_PRIMARY",
+        "service_process": "SINGLE_RECOVERY",
+        "terr_capacity": 1
+      },
+      "base_id": "T1V07B-23e14b1c4e15d719",
+      "case_id": "T1V07C-00049f47392a6fbe",
+      "final_pilot_disposition": "BLIND_OPEN_LOOP_SOLVED",
+      "ordinal": 19,
+      "ordinary_baseline": null,
+      "raw_disposition": "BLIND_OPEN_LOOP_SOLVED",
+      "references": {
+        "blind_open_loop": {
+          "attempt_lattice_size": 51,
+          "memo_nodes": 411,
+          "solvable": true,
+          "status": "EXACT"
+        }
+      }
+    },
+    {
+      "axis_cell": {
+        "fallback_mode": "TIGHT",
+        "feedback_profile": "EARLY_RECEIPT_MID_ACK",
+        "obligations_per_stream": 3,
+        "phase_mode": "ALIGNED",
+        "placement": "GATEWAY_LOCAL_PRIMARY",
+        "service_process": "SINGLE_RECOVERY",
+        "terr_capacity": 1
+      },
+      "base_id": "T1V07B-a98718e1d518ebdb",
+      "case_id": "T1V07C-000bc9b0aa4666df",
+      "final_pilot_disposition": "BLIND_OPEN_LOOP_SOLVED",
+      "ordinal": 20,
+      "ordinary_baseline": null,
+      "raw_disposition": "BLIND_OPEN_LOOP_SOLVED",
+      "references": {
+        "blind_open_loop": {
+          "attempt_lattice_size": 62,
+          "memo_nodes": 65,
+          "solvable": true,
+          "status": "EXACT"
+        }
+      }
+    },
+    {
+      "axis_cell": {
+        "fallback_mode": "TIGHT",
+        "feedback_profile": "IMMEDIATE_CONTROL",
+        "obligations_per_stream": 3,
+        "phase_mode": "ALIGNED",
+        "placement": "GATEWAY_LOCAL_PRIMARY",
+        "service_process": "SINGLE_RECOVERY",
+        "terr_capacity": 1
+      },
+      "base_id": "T1V07B-3c958962b8eda02d",
+      "case_id": "T1V07C-000e1b7b6ed5b6f8",
+      "final_pilot_disposition": "BLIND_OPEN_LOOP_SOLVED",
+      "ordinal": 21,
+      "ordinary_baseline": null,
+      "raw_disposition": "BLIND_OPEN_LOOP_SOLVED",
+      "references": {
+        "blind_open_loop": {
+          "attempt_lattice_size": 26,
+          "memo_nodes": 56,
+          "solvable": true,
+          "status": "EXACT"
+        }
+      }
+    },
+    {
+      "axis_cell": {
+        "fallback_mode": "TIGHT",
+        "feedback_profile": "EARLY_RECEIPT_LATE_ACK",
+        "obligations_per_stream": 3,
+        "phase_mode": "ALIGNED",
+        "placement": "GATEWAY_LOCAL_PRIMARY",
+        "service_process": "SINGLE_RECOVERY",
+        "terr_capacity": 2
+      },
+      "base_id": "T1V07B-3cb9c37f9a192083",
+      "case_id": "T1V07C-0008a29fceecd0ed",
+      "final_pilot_disposition": "BLIND_OPEN_LOOP_SOLVED",
+      "ordinal": 22,
+      "ordinary_baseline": null,
+      "raw_disposition": "BLIND_OPEN_LOOP_SOLVED",
+      "references": {
+        "blind_open_loop": {
+          "attempt_lattice_size": 67,
+          "memo_nodes": 747,
+          "solvable": true,
+          "status": "EXACT"
+        }
+      }
+    },
+    {
+      "axis_cell": {
+        "fallback_mode": "TIGHT",
+        "feedback_profile": "EARLY_RECEIPT_MID_ACK",
+        "obligations_per_stream": 3,
+        "phase_mode": "ALIGNED",
+        "placement": "GATEWAY_LOCAL_PRIMARY",
+        "service_process": "SINGLE_RECOVERY",
+        "terr_capacity": 2
+      },
+      "base_id": "T1V07B-6e803c24f6b634cc",
+      "case_id": "T1V07C-0006a4dca93c057c",
+      "final_pilot_disposition": "BLIND_OPEN_LOOP_SOLVED",
+      "ordinal": 23,
+      "ordinary_baseline": null,
+      "raw_disposition": "BLIND_OPEN_LOOP_SOLVED",
+      "references": {
+        "blind_open_loop": {
+          "attempt_lattice_size": 51,
+          "memo_nodes": 255,
+          "solvable": true,
+          "status": "EXACT"
+        }
+      }
+    },
+    {
+      "axis_cell": {
+        "fallback_mode": "TIGHT",
+        "feedback_profile": "IMMEDIATE_CONTROL",
+        "obligations_per_stream": 3,
+        "phase_mode": "ALIGNED",
+        "placement": "GATEWAY_LOCAL_PRIMARY",
+        "service_process": "SINGLE_RECOVERY",
+        "terr_capacity": 2
+      },
+      "base_id": "T1V07B-2d3b1ea185a5be74",
+      "case_id": "T1V07C-0018cb5f40ee9587",
+      "final_pilot_disposition": "BLIND_OPEN_LOOP_SOLVED",
+      "ordinal": 24,
+      "ordinary_baseline": null,
+      "raw_disposition": "BLIND_OPEN_LOOP_SOLVED",
+      "references": {
+        "blind_open_loop": {
+          "attempt_lattice_size": 59,
+          "memo_nodes": 56,
+          "solvable": true,
+          "status": "EXACT"
+        }
+      }
+    },
+    {
+      "axis_cell": {
+        "fallback_mode": "TIGHT",
+        "feedback_profile": "EARLY_RECEIPT_LATE_ACK",
+        "obligations_per_stream": 3,
+        "phase_mode": "HALF_PERIOD_OFFSET",
+        "placement": "GATEWAY_LOCAL_PRIMARY",
+        "service_process": "REINTERRUPTIBLE",
+        "terr_capacity": 1
+      },
+      "base_id": "T1V07B-2b77fbd4cc650b81",
+      "case_id": "T1V07C-00057e555dcba2c4",
+      "final_pilot_disposition": "FULL_CURRENT_CAUSAL_INFEASIBLE",
+      "ordinal": 25,
+      "ordinary_baseline": null,
+      "raw_disposition": "FULL_CURRENT_CAUSAL_INFEASIBLE",
+      "references": {
+        "blind_open_loop": {
+          "attempt_lattice_size": 41,
+          "memo_nodes": 2902,
+          "solvable": false,
+          "status": "EXACT"
+        },
+        "full_current": {
+          "attempt_lattice_size": 41,
+          "memo_nodes": 1399,
+          "solvable": false,
+          "status": "EXACT"
+        }
+      }
+    },
+    {
+      "axis_cell": {
+        "fallback_mode": "TIGHT",
+        "feedback_profile": "EARLY_RECEIPT_MID_ACK",
+        "obligations_per_stream": 3,
+        "phase_mode": "HALF_PERIOD_OFFSET",
+        "placement": "GATEWAY_LOCAL_PRIMARY",
+        "service_process": "REINTERRUPTIBLE",
+        "terr_capacity": 1
+      },
+      "base_id": "T1V07B-b9c88b504390532f",
+      "case_id": "T1V07C-0017c4035550b302",
+      "final_pilot_disposition": "FULL_CURRENT_CAUSAL_INFEASIBLE",
+      "ordinal": 26,
+      "ordinary_baseline": null,
+      "raw_disposition": "FULL_CURRENT_CAUSAL_INFEASIBLE",
+      "references": {
+        "blind_open_loop": {
+          "attempt_lattice_size": 51,
+          "memo_nodes": 2931,
+          "solvable": false,
+          "status": "EXACT"
+        },
+        "full_current": {
+          "attempt_lattice_size": 51,
+          "memo_nodes": 3199,
+          "solvable": false,
+          "status": "EXACT"
+        }
+      }
+    },
+    {
+      "axis_cell": {
+        "fallback_mode": "TIGHT",
+        "feedback_profile": "IMMEDIATE_CONTROL",
+        "obligations_per_stream": 3,
+        "phase_mode": "HALF_PERIOD_OFFSET",
+        "placement": "GATEWAY_LOCAL_PRIMARY",
+        "service_process": "REINTERRUPTIBLE",
+        "terr_capacity": 1
+      },
+      "base_id": "T1V07B-c45de9b3c8be024c",
+      "case_id": "T1V07C-00161cb9a7e110e9",
+      "final_pilot_disposition": "UNRESOLVED_COMPUTATION",
+      "ordinal": 27,
+      "ordinary_baseline": null,
+      "raw_disposition": "UNRESOLVED_COMPUTATION",
+      "references": {
+        "blind_open_loop": {
+          "attempt_lattice_size": 101,
+          "memo_nodes": 50005,
+          "solvable": null,
+          "status": "SEARCH_LIMIT"
+        }
+      }
+    },
+    {
+      "axis_cell": {
+        "fallback_mode": "TIGHT",
+        "feedback_profile": "EARLY_RECEIPT_LATE_ACK",
+        "obligations_per_stream": 3,
+        "phase_mode": "HALF_PERIOD_OFFSET",
+        "placement": "GATEWAY_LOCAL_PRIMARY",
+        "service_process": "REINTERRUPTIBLE",
+        "terr_capacity": 2
+      },
+      "base_id": "T1V07B-c0c0adeffafc8fd1",
+      "case_id": "T1V07C-001a9113478f81ef",
+      "final_pilot_disposition": "UNRESOLVED_COMPUTATION",
+      "ordinal": 28,
+      "ordinary_baseline": null,
+      "raw_disposition": "UNRESOLVED_COMPUTATION",
+      "references": {
+        "blind_open_loop": {
+          "attempt_lattice_size": 79,
+          "memo_nodes": 50022,
+          "solvable": null,
+          "status": "SEARCH_LIMIT"
+        }
+      }
+    },
+    {
+      "axis_cell": {
+        "fallback_mode": "TIGHT",
+        "feedback_profile": "EARLY_RECEIPT_MID_ACK",
+        "obligations_per_stream": 3,
+        "phase_mode": "HALF_PERIOD_OFFSET",
+        "placement": "GATEWAY_LOCAL_PRIMARY",
+        "service_process": "REINTERRUPTIBLE",
+        "terr_capacity": 2
+      },
+      "base_id": "T1V07B-1301d8494e992e27",
+      "case_id": "T1V07C-000a81764ceacf94",
+      "final_pilot_disposition": "FULL_CURRENT_CAUSAL_INFEASIBLE",
+      "ordinal": 29,
+      "ordinary_baseline": null,
+      "raw_disposition": "FULL_CURRENT_CAUSAL_INFEASIBLE",
+      "references": {
+        "blind_open_loop": {
+          "attempt_lattice_size": 53,
+          "memo_nodes": 14491,
+          "solvable": false,
+          "status": "EXACT"
+        },
+        "full_current": {
+          "attempt_lattice_size": 53,
+          "memo_nodes": 9185,
+          "solvable": false,
+          "status": "EXACT"
+        }
+      }
+    },
+    {
+      "axis_cell": {
+        "fallback_mode": "TIGHT",
+        "feedback_profile": "IMMEDIATE_CONTROL",
+        "obligations_per_stream": 3,
+        "phase_mode": "HALF_PERIOD_OFFSET",
+        "placement": "GATEWAY_LOCAL_PRIMARY",
+        "service_process": "REINTERRUPTIBLE",
+        "terr_capacity": 2
+      },
+      "base_id": "T1V07B-dcbc4a6ddf840f1f",
+      "case_id": "T1V07C-00012e126378b01c",
+      "final_pilot_disposition": "FULL_CURRENT_CAUSAL_INFEASIBLE",
+      "ordinal": 30,
+      "ordinary_baseline": null,
+      "raw_disposition": "FULL_CURRENT_CAUSAL_INFEASIBLE",
+      "references": {
+        "blind_open_loop": {
+          "attempt_lattice_size": 56,
+          "memo_nodes": 10082,
+          "solvable": false,
+          "status": "EXACT"
+        },
+        "full_current": {
+          "attempt_lattice_size": 56,
+          "memo_nodes": 8853,
+          "solvable": false,
+          "status": "EXACT"
+        }
+      }
+    },
+    {
+      "axis_cell": {
+        "fallback_mode": "TIGHT",
+        "feedback_profile": "EARLY_RECEIPT_LATE_ACK",
+        "obligations_per_stream": 3,
+        "phase_mode": "HALF_PERIOD_OFFSET",
+        "placement": "GATEWAY_LOCAL_PRIMARY",
+        "service_process": "SINGLE_RECOVERY",
+        "terr_capacity": 1
+      },
+      "base_id": "T1V07B-0e7c66eb23a98e52",
+      "case_id": "T1V07C-0018a6b4cda21915",
+      "final_pilot_disposition": "BLIND_OPEN_LOOP_SOLVED",
+      "ordinal": 31,
+      "ordinary_baseline": null,
+      "raw_disposition": "BLIND_OPEN_LOOP_SOLVED",
+      "references": {
+        "blind_open_loop": {
+          "attempt_lattice_size": 107,
+          "memo_nodes": 145,
+          "solvable": true,
+          "status": "EXACT"
+        }
+      }
+    },
+    {
+      "axis_cell": {
+        "fallback_mode": "TIGHT",
+        "feedback_profile": "EARLY_RECEIPT_MID_ACK",
+        "obligations_per_stream": 3,
+        "phase_mode": "HALF_PERIOD_OFFSET",
+        "placement": "GATEWAY_LOCAL_PRIMARY",
+        "service_process": "SINGLE_RECOVERY",
+        "terr_capacity": 1
+      },
+      "base_id": "T1V07B-f64d70e82a1dcbc0",
+      "case_id": "T1V07C-0007d63fbfa69594",
+      "final_pilot_disposition": "BLIND_OPEN_LOOP_SOLVED",
+      "ordinal": 32,
+      "ordinary_baseline": null,
+      "raw_disposition": "BLIND_OPEN_LOOP_SOLVED",
+      "references": {
+        "blind_open_loop": {
+          "attempt_lattice_size": 173,
+          "memo_nodes": 212,
+          "solvable": true,
+          "status": "EXACT"
+        }
+      }
+    },
+    {
+      "axis_cell": {
+        "fallback_mode": "TIGHT",
+        "feedback_profile": "IMMEDIATE_CONTROL",
+        "obligations_per_stream": 3,
+        "phase_mode": "HALF_PERIOD_OFFSET",
+        "placement": "GATEWAY_LOCAL_PRIMARY",
+        "service_process": "SINGLE_RECOVERY",
+        "terr_capacity": 1
+      },
+      "base_id": "T1V07B-17f721a50970aa1b",
+      "case_id": "T1V07C-00078f3d4aff7f61",
+      "final_pilot_disposition": "BLIND_OPEN_LOOP_SOLVED",
+      "ordinal": 33,
+      "ordinary_baseline": null,
+      "raw_disposition": "BLIND_OPEN_LOOP_SOLVED",
+      "references": {
+        "blind_open_loop": {
+          "attempt_lattice_size": 76,
+          "memo_nodes": 213,
+          "solvable": true,
+          "status": "EXACT"
+        }
+      }
+    },
+    {
+      "axis_cell": {
+        "fallback_mode": "TIGHT",
+        "feedback_profile": "EARLY_RECEIPT_LATE_ACK",
+        "obligations_per_stream": 3,
+        "phase_mode": "HALF_PERIOD_OFFSET",
+        "placement": "GATEWAY_LOCAL_PRIMARY",
+        "service_process": "SINGLE_RECOVERY",
+        "terr_capacity": 2
+      },
+      "base_id": "T1V07B-1ce1940acaf2ee6f",
+      "case_id": "T1V07C-000faac661ae8823",
+      "final_pilot_disposition": "BLIND_OPEN_LOOP_SOLVED",
+      "ordinal": 34,
+      "ordinary_baseline": null,
+      "raw_disposition": "BLIND_OPEN_LOOP_SOLVED",
+      "references": {
+        "blind_open_loop": {
+          "attempt_lattice_size": 72,
+          "memo_nodes": 181,
+          "solvable": true,
+          "status": "EXACT"
+        }
+      }
+    },
+    {
+      "axis_cell": {
+        "fallback_mode": "TIGHT",
+        "feedback_profile": "EARLY_RECEIPT_MID_ACK",
+        "obligations_per_stream": 3,
+        "phase_mode": "HALF_PERIOD_OFFSET",
+        "placement": "GATEWAY_LOCAL_PRIMARY",
+        "service_process": "SINGLE_RECOVERY",
+        "terr_capacity": 2
+      },
+      "base_id": "T1V07B-3198d88b454cf10a",
+      "case_id": "T1V07C-0016c5102d6226f4",
+      "final_pilot_disposition": "BLIND_OPEN_LOOP_SOLVED",
+      "ordinal": 35,
+      "ordinary_baseline": null,
+      "raw_disposition": "BLIND_OPEN_LOOP_SOLVED",
+      "references": {
+        "blind_open_loop": {
+          "attempt_lattice_size": 54,
+          "memo_nodes": 225,
+          "solvable": true,
+          "status": "EXACT"
+        }
+      }
+    },
+    {
+      "axis_cell": {
+        "fallback_mode": "TIGHT",
+        "feedback_profile": "IMMEDIATE_CONTROL",
+        "obligations_per_stream": 3,
+        "phase_mode": "HALF_PERIOD_OFFSET",
+        "placement": "GATEWAY_LOCAL_PRIMARY",
+        "service_process": "SINGLE_RECOVERY",
+        "terr_capacity": 2
+      },
+      "base_id": "T1V07B-ed86d25787853a4d",
+      "case_id": "T1V07C-00005d86e401762c",
+      "final_pilot_disposition": "BLIND_OPEN_LOOP_SOLVED",
+      "ordinal": 36,
+      "ordinary_baseline": null,
+      "raw_disposition": "BLIND_OPEN_LOOP_SOLVED",
+      "references": {
+        "blind_open_loop": {
+          "attempt_lattice_size": 78,
+          "memo_nodes": 93,
+          "solvable": true,
+          "status": "EXACT"
+        }
+      }
+    }
+  ],
+  "schema_version": "0.1",
+  "selection_depends_on_method_or_baseline": false,
+  "selection_rule": "one lexicographically-smallest case_id per composition×candidate-process×capacity×feedback×TIGHT cell after placement-specific remote-query-delay dedupe",
+  "stage": "V07_GATEWAY_LOCAL_BOUNDED_MECHANISM_PILOT",
+  "unresolved_ordinals": [
+    2,
+    4,
+    6,
+    14,
+    17,
+    18,
+    27,
+    28
+  ]
+}

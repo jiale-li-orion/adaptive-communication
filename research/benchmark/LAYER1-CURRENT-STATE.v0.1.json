@@ -156,7 +156,7 @@
     "stage": "PRE_WORLD_PRE_ORACLE"
   },
   "main_family": "T1_MONITORING_INFORMATION_CONTINUITY",
-  "next_stage": "FREEZE_PLACEMENT_VISIBILITY_AND_CONTROL_PATH_CONTRACT",
+  "next_stage": "AUDIT_V07_GATEWAY_EASY_CAUSAL_INFEASIBLE_BIFURCATION",
   "quality_gates": {
     "agentic_reducibility": "PASS_41_OF_41_HARD_SIGNATURES",
     "agentic_reducibility_ref": "results/benchmark/layer1-agentic-reducibility-v0.2-retry-legality.json",
@@ -184,16 +184,12 @@
     "authority_ref": "research/benchmark/HARD-SURVIVOR-FAILURE-ATLAS.v0.1.md",
     "blockers": [
       {
-        "id": "PLACEMENT_VISIBILITY_CONTRACT_OPEN",
-        "reason": "v0.7 cases do not declare policy placement. The discarded adapter charged center-side receipt-summary queries while exposing gateway receipts passively and omitted center send/control-command transport, so exact/no-query/paid-evidence classification is invalid."
-      },
-      {
         "id": "DYNAMIC_PROCESS_MECHANISM_OPEN",
-        "reason": "After placement is explicit, v0.7 still must establish cache06 mechanism gates: non-separable cross-stage choice, dynamic sufficiency after later observations, dedicated-query/passive/send-as-probe competition where transport is legal, and causal intervention attribution."
+        "reason": "Gateway-local placement is frozen, but the 36-cell bounded pilot has no resolved ordinary-baseline survivor. Current evidence bifurcates into blind-easy SINGLE_RECOVERY cells and REINTERRUPTIBLE cells that are causal-infeasible, ordinary-shortcut-solved, or unresolved. The next task is to explain this structure before claiming a dynamic mechanism."
       },
       {
-        "id": "STAGED_EXACT_ADMISSION_BLOCKED",
-        "reason": "No v0.7 exact classification is admitted. Placement/visibility/control-path semantics must close first; subsequent blind/full-current/no-paid-query/legal-acquisition stages keep every SEARCH_LIMIT unresolved."
+        "id": "GATEWAY_STAGED_EXACT_ADMISSION_INCOMPLETE",
+        "reason": "The gateway-local 36-cell pilot has 8 UNRESOLVED_COMPUTATION cells at the frozen 50k memo contract and is only one preselected representative per placement-relevant axis cell, not full-universe admission."
       },
       {
         "id": "HARD_MECHANISM_COVERAGE_REOPENED",
@@ -217,13 +213,15 @@
       "v0.6 full universe is invalid as a decision-hardness benchmark because ALL_DOWN plus worst-world backup provisioning yields a blind public satellite-only policy",
       "v0.7 changes only process-support semantics plus the predeclared minimum-stage rule; source, geometry, resource, evidence, timing and fallback axes remain invariant",
       "v0.7 candidate TIGHT preflight removes the specific v0.6-style public satellite-only common-safe shortcut; BALANCED/SLACK shortcut cells remain controls for downstream filtering",
-      "v0.7 placement audit proves the discarded oracle adapter mixed center remote-query cost with gateway-local receipt visibility and omitted center control transport; generation remains pre-oracle only"
+      "v0.7 placement audit proves the discarded oracle adapter mixed center remote-query cost with gateway-local receipt visibility and omitted center control transport",
+      "gateway-local autonomy is now the frozen primary v0.7 placement; center remote control remains a transport SIMULATOR_GAP",
+      "the bounded 36-cell gateway pilot yields 18 blind-open-loop controls, 8 full-current causal-infeasible diagnostics, 2 ordinary-baseline shortcuts and 8 unresolved cells; no resolved baseline survivor is admitted"
     ],
     "generation_axes_ref": "research/benchmark/GENERATION-AXES.v0.2.json",
     "generation_axes_status": "FROZEN_FOR_V07_SUPPORT_CORRECTION_ONLY",
     "hard_survivor_failure_atlas_ref": "results/benchmark/layer1-hard-survivor-failure-atlas-v0.1.json",
-    "layer3_status": "PAUSED_UNTIL_LAYER1_PLACEMENT_DYNAMIC_MECHANISM_AND_STRUCTURAL_HOLDOUT_CLOSE",
-    "status": "V07_GENERATION_AUDITED_PLACEMENT_VISIBILITY_BLOCKED",
+    "layer3_status": "PAUSED_UNTIL_LAYER1_DYNAMIC_MECHANISM_AND_STRUCTURAL_HOLDOUT_CLOSE",
+    "status": "V07_GATEWAY_PLACEMENT_FROZEN_DYNAMIC_HARDNESS_OPEN",
     "v06_all_world_physical_bases_with_all_down_support": 46770,
     "v06_cases_with_full_fallback_budget": 1262790,
     "v06_generation_counts": {
@@ -245,9 +243,9 @@
     "v06_oracle_pilot_ref": "results/benchmark/layer1-v0.6-oracle-pilot-r4.json",
     "v06_shortcut_audit_ref": "results/benchmark/layer1-v0.6-shortcut-collapse-r4.json",
     "v06_validity_disposition": "GLOBAL_BLIND_SATELLITE_SHORTCUT",
-    "v07_active_oracle_pilot_code": "REMOVED_FROM_ACTIVE_TREE",
+    "v07_active_oracle_pilot_code": "GATEWAY_LOCAL_INDEXED_BOUNDED_PILOT_ACTIVE",
     "v07_candidate_tight_public_satellite_only_shortcut_count": 0,
-    "v07_exact_admission_status": "BLOCKED_NO_VALID_PLACEMENT_CONTRACT",
+    "v07_exact_admission_status": "GATEWAY_BOUNDED_PILOT_COMPLETE_FORMAL_ADMISSION_INCOMPLETE_CENTER_BLOCKED",
     "v07_generation_counts": {
       "all_world_physical_bases": 74952,
       "base_scenarios": 103408,
@@ -261,7 +259,17 @@
     },
     "v07_generation_disposition": "AUDITED_PREORACLE_LINEAGE_NOT_HARDNESS_ADMITTED",
     "v07_generation_local_run": "layer1-v0.7-preoracle-r1",
-    "v07_placement_visibility_disposition": "BLOCK_ORACLE_ADMISSION_PLACEMENT_VISIBILITY_UNRESOLVED",
+    "v07_gateway_pilot_axis_cells": 36,
+    "v07_gateway_pilot_baseline_survivor_count": 0,
+    "v07_gateway_pilot_disposition_counts": {
+      "BLIND_OPEN_LOOP_SOLVED": 18,
+      "FULL_CURRENT_CAUSAL_INFEASIBLE": 8,
+      "ORDINARY_BASELINE_SHORTCUT_SOLVED": 2,
+      "UNRESOLVED_COMPUTATION": 8
+    },
+    "v07_gateway_pilot_ref": "results/benchmark/layer1-v0.7-gateway-pilot-v0.1.json",
+    "v07_placement_contract_ref": "research/benchmark/PLACEMENT-VISIBILITY-CONTRACT.v0.1.json",
+    "v07_placement_visibility_disposition": "GATEWAY_PRIMARY_FROZEN_CENTER_SIMULATOR_GAP",
     "v07_placement_visibility_ref": "results/benchmark/layer1-v0.7-placement-visibility-review.json",
     "v07_placement_visibility_review_ref": "research/benchmark/V07-PLACEMENT-VISIBILITY-REVIEW.v0.1.md",
     "v07_shortcut_preflight_disposition": "PASS_NO_V06_STYLE_TIGHT_SATELLITE_SHORTCUT",
@@ -531,7 +539,7 @@
     "source_contract_count": 27,
     "status": "MACHINE_REGENERATION_COMPLETE"
   },
-  "status": "V07_PLACEMENT_VISIBILITY_BLOCKS_ORACLE_ADMISSION",
+  "status": "V07_GATEWAY_PLACEMENT_FROZEN_DYNAMIC_HARDNESS_OPEN",
   "structure_aware_split": {
     "audit_ref": "results/benchmark/layer1-structure-aware-split-v0.2-retry-legality.json",
     "by_split": {
@@ -598,8 +606,8 @@
     "SEARCH_LIMIT is unresolved computation status and may never be counted as information-infeasible, hard, or method failure.",
     "Layer 3 remains paused. Layer-2/3 outcomes may not modify source-owned fields, public geometry, generator axes or case selection.",
     "T2 remains SIMULATOR_GAP until actor-chain environment support exists.",
-    "v0.7 policy placement is not encoded in the frozen case schema. Gateway-local and center-remote visibility/cost semantics must be evaluated separately.",
-    "No v0.7 exact/no-query/paid-evidence statistic is admissible until center telemetry/query/control transport or gateway-local execution semantics are frozen.",
+    "Gateway-local and center-remote visibility/cost semantics are evaluated separately. Gateway-local autonomy is the frozen primary v0.7 placement; center remote control remains a transport SIMULATOR_GAP.",
+    "The 36-cell gateway bounded pilot has no resolved ordinary-baseline survivor and 8 UNRESOLVED_COMPUTATION cells; it is not a benchmark distribution estimate or hard-case count.",
     "Owner-local gateway receipt may not be charged as remote evidence, and center control actions may not arrive instantaneously when center queries require a communication path."
   ],
   "world_materialization": {

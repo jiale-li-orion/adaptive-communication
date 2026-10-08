@@ -32,7 +32,11 @@ from exact_reference_oracle_v0_1 import (
     _maxflow,
     _next_time,
     _normalize,
+    _final_ack_delay,
+    _gateway_receipt_delay,
+    _negative_observation_delay,
     _process_map,
+    _satellite_completion_delay,
     _success,
     _with_sat_used,
     _with_used,
@@ -120,9 +124,9 @@ def _step(bundle, process, states: Mapping[str, LocalState], at_s: int, action: 
             pd = PendingDelivery(
                 obligation_id=oid,
                 accepted=accepted,
-                gateway_receipt_at_s=at_s + GATEWAY_RECEIPT_DELAY_S if accepted else None,
-                final_ack_at_s=at_s + FINAL_ACK_DELAY_S if accepted else None,
-                negative_observation_at_s=None if accepted else at_s + ACK_TIMEOUT_S,
+                gateway_receipt_at_s=at_s + _gateway_receipt_delay(process) if accepted else None,
+                final_ack_at_s=at_s + _final_ack_delay(process) if accepted else None,
+                negative_observation_at_s=None if accepted else at_s + _negative_observation_delay(process),
             )
             child[wid] = LocalState(
                 delivered=st.delivered, terrestrial_used=used,
@@ -140,7 +144,7 @@ def _step(bundle, process, states: Mapping[str, LocalState], at_s: int, action: 
                 return None
             pd = PendingDelivery(
                 obligation_id=oid, accepted=True, gateway_receipt_at_s=None,
-                final_ack_at_s=at_s + SATELLITE_COMPLETION_DELAY_S,
+                final_ack_at_s=at_s + _satellite_completion_delay(process),
                 negative_observation_at_s=None,
             )
             child[wid] = LocalState(
@@ -177,7 +181,7 @@ def _public_deadline_score(bundle, at_s: int, states: Mapping[str, LocalState]) 
     return min(vals)
 
 
-def _residual_flow_score(bundle, at_s: int, states: Mapping[str, LocalState]) -> float:
+def _residual_flow_score(bundle, process, at_s: int, states: Mapping[str, LocalState]) -> float:
     """Generic robust terminal relaxation using per-world residual max-flow.
 
     This is intentionally a strong ordinary planning heuristic: it may inspect
@@ -214,13 +218,13 @@ def _residual_flow_score(bundle, at_s: int, states: Mapping[str, LocalState]) ->
                 cap=max(0,int(w["capacity_units"])-terr_used.get(str(w["window_id"]),0))
                 if cap<=0: continue
                 t=max(at_s,int(o["release_s"]),int(w["start_s"]))
-                if t<int(w["end_s"]) and t+FINAL_ACK_DELAY_S<=int(o["deadline_s"]):
+                if t<int(w["end_s"]) and t+_final_ack_delay(process)<=int(o["deadline_s"]):
                     add(on,f"T::{w['window_id']}",1)
             for w in sat_windows:
                 cap=max(0,int(w["capacity_units"])-sat_used.get(str(w["window_id"]),0))
                 if cap<=0: continue
                 t=max(at_s,int(o["release_s"]),int(w["start_s"]))
-                if t<int(w["end_s"]) and t+SATELLITE_COMPLETION_DELAY_S<=int(o["deadline_s"]):
+                if t<int(w["end_s"]) and t+_satellite_completion_delay(process)<=int(o["deadline_s"]):
                     add(on,f"S::{w['window_id']}",1)
         for w in wm[wid]["terrestrial_windows"]:
             add(f"T::{w['window_id']}",sink,max(0,int(w["capacity_units"])-terr_used.get(str(w["window_id"]),0)))
@@ -243,7 +247,7 @@ def _lookahead(bundle, process, at_s: int, states: Mapping[str, LocalState], dep
     if all(_success(bundle, st) for st in states.values()):
         return 1e12
     if depth <= 0:
-        return _residual_flow_score(bundle, at_s, states) if leaf=="flow" else _public_deadline_score(bundle, at_s, states)
+        return _residual_flow_score(bundle, process, at_s, states) if leaf=="flow" else _public_deadline_score(bundle, at_s, states)
     key = (at_s, depth, leaf, _canon(states))
     if key in memo:
         return memo[key]
@@ -305,8 +309,14 @@ def _choose_shallow(bundle, process, at_s: int, states: Mapping[str, LocalState]
     return ("WAIT", None)
 
 
-def _execute_policy(bundle, chooser: Callable, *, max_steps: int = 128) -> dict[str, Any]:
-    process = attach_causal_evidence(bundle)
+def _execute_policy(
+    bundle,
+    chooser: Callable,
+    *,
+    max_steps: int = 128,
+    process: Mapping[str, Any] | None = None,
+) -> dict[str, Any]:
+    process = attach_causal_evidence(bundle) if process is None else process
     start = min(_attempt_lattice(bundle))
     initial = {
         str(w["world_id"]): LocalState(

@@ -4,7 +4,7 @@ English | [中文](README.zh.md)
 
 Source-grounded decision benchmark, decision-semantic runtime, and learning-guided exact search for pre-disaster mountain monitoring under limited power and intermittent communication.
 
-> **Current control plane:** Layer 1 retains three scoped assets: the v0.2 failure atlas, the reproducible-but-invalid v0.6 negative construction lineage, and the v0.7 process-support correction. None is a released benchmark. v0.7 exact admission is currently blocked by an unresolved gateway/center placement, visibility and control-path contract; Layer 2 remains reference/correctness infrastructure and Layer 3 is paused. Current ownership lives in [`research/`](research/README.md).
+> **Current control plane:** Layer 1 retains three scoped assets: the v0.2 failure atlas, the reproducible-but-invalid v0.6 negative construction lineage, and the v0.7 process-support correction. None is a released benchmark. Gateway-local autonomy is now the frozen primary v0.7 placement; center remote control remains a transport `SIMULATOR_GAP`. A bounded 36-cell gateway pilot found no resolved ordinary-baseline survivor, while 8 cells remain computationally unresolved. Layer 2 remains reference/correctness infrastructure and Layer 3 is paused. Current ownership lives in [`research/`](research/README.md).
 
 ## 1. Architecture at a glance
 
@@ -48,7 +48,7 @@ Layer 1 owns the problem. Layer 2 owns deterministic correctness and the legal d
 | Module | Owns | Current state | Entry |
 |---|---|---|---|
 | **Shared substrate** | communication physics, energy, cache, opportunity, fallback, execution lifecycle, mathematical model | stable shared base | [`research/substrate/`](research/substrate/README.md) |
-| **Layer 1 · Benchmark** | source-grounded obligations, task construction, observation/action/oracle contract, validity/hardness, split/release | **source/generation infrastructure ready; placement/visibility contract open; NOT_BENCHMARK_ADMIT** | [`research/benchmark/`](research/benchmark/README.md) |
+| **Layer 1 · Benchmark** | source-grounded obligations, task construction, observation/action/oracle contract, validity/hardness, split/release | **source/generation infrastructure ready; gateway placement frozen; dynamic hardness open; NOT_BENCHMARK_ADMIT** | [`research/benchmark/`](research/benchmark/README.md) |
 | **Layer 2 · Compiler** | Task/Evidence/Capability/Execution semantics, L/U future-choice frontier, evidence lifecycle, incremental update, exact fallback | **v2 deterministic core frozen on dev** | [`research/compiler/`](research/compiler/README.md) |
 | **Layer 3 · Policy** | ordering and selection among legal / unresolved actions | **paused**; previous learned-ranking line retained only as negative/history until Layer 1 closes | [`research/policy/`](research/policy/README.md) |
 | **Evaluation** | replay, attribution, ablation, baseline fairness, cross-layer audits | cross-cutting | [`research/evaluation/`](research/evaluation/README.md) |
@@ -82,6 +82,8 @@ The current research object is a five-part decision contract:
 5. **External Oracle for Action / Completion Validity** — an executable authority for action feasibility and task completion.
 
 The semantic object in this repository is **action-useful information about whether communication obligations remain achievable**. Its value depends on the task, remaining resources, execution history and future choices.
+
+Evidence acquisition is placement-aware rather than mandatory. Owner-local facts remain local state and are not re-priced as communication merely to manufacture an information gap; heterogeneous remote acquisition becomes an evaluated mechanism only when a lawful owner/transport contract actually exists.
 
 ## 3. Shared communication substrate and system-model lineage
 

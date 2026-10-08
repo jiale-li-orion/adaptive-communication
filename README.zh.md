@@ -4,7 +4,7 @@
 
 面向山区灾前长期监测的 source-grounded 决策基准、决策语义运行时与 learning-guided exact search。场景长期存在供电受限、回传间歇中断、缓存压力和恢复过程；任务义务由外部来源定义，系统负责通信执行。
 
-> **当前控制面：** Layer 1 当前保留 v0.2 scoped failure atlas、v0.6 可复现判废 lineage 与 v0.7 process-support correction，三者都不是 released benchmark。v0.7 exact admission 目前被 gateway/center placement、visibility 与 control-path contract 阻塞；Layer 2 继续承担 deterministic/reference infrastructure，Layer 3 暂停。当前 ownership 统一由 [`research/`](research/README.md) 持有。
+> **当前控制面：** Layer 1 当前保留 v0.2 scoped failure atlas、v0.6 可复现判废 lineage 与 v0.7 process-support correction，三者都不是 released benchmark。gateway-local autonomy 已冻结为 v0.7 主 placement；center remote control 继续保持 transport `SIMULATOR_GAP`。当前 36-cell gateway bounded pilot 中，已解析格没有 ordinary-baseline survivor，另有 8 格保持 computation unresolved。Layer 2 继续承担 deterministic/reference infrastructure，Layer 3 暂停。当前 ownership 统一由 [`research/`](research/README.md) 持有。
 
 ## 1. 架构总览
 
@@ -48,7 +48,7 @@ Layer 1 定义问题；Layer 2 持有 deterministic correctness 与合法 decisi
 | 模块 | 持有对象 | 当前状态 | 入口 |
 |---|---|---|---|
 | **Shared substrate** | 通信物理、能量、缓存、机会、fallback、执行生命周期、数学系统模型 | 稳定共享底座 | [`research/substrate/`](research/substrate/README.md) |
-| **Layer 1 · Benchmark** | source-grounded obligations、task construction、observation/action/oracle contract、validity/hardness、split/release | **source/generation infrastructure ready；placement/visibility contract open；NOT_BENCHMARK_ADMIT** | [`research/benchmark/`](research/benchmark/README.md) |
+| **Layer 1 · Benchmark** | source-grounded obligations、task construction、observation/action/oracle contract、validity/hardness、split/release | **source/generation infrastructure ready；gateway placement frozen；dynamic hardness open；NOT_BENCHMARK_ADMIT** | [`research/benchmark/`](research/benchmark/README.md) |
 | **Layer 2 · Compiler** | Task/Evidence/Capability/Execution 语义、L/U future-choice frontier、evidence lifecycle、incremental update、exact fallback | **v2 deterministic core frozen on dev** | [`research/compiler/`](research/compiler/README.md) |
 | **Layer 3 · Policy** | 合法 / unresolved action 的排序与选择 | **paused**；learned-ranking v0.1 只保留为 negative/history | [`research/policy/`](research/policy/README.md) |
 | **Evaluation** | replay、attribution、ablation、baseline fairness、跨层 audit | 横切 | [`research/evaluation/`](research/evaluation/README.md) |
@@ -82,6 +82,8 @@ ASC / Agentic Communication Networks 提供决策层的外部学术坐标。仓�
 5. **External Oracle for Action / Completion Validity**：由独立可执行规则判定动作可行性和任务完成。
 
 本项目里的 semantic object 是：**关于通信任务能否继续兑现、并会改变后续行动选择的信息。** 它的价值由任务、剩余资源、执行历史和未来选择共同决定。
+
+Evidence acquisition 按 placement 解释，不把它强制成每个 case 的必要动作。Owner-local 事实保持本地状态，不为了制造信息差额重新按通信收费；只有真实存在合法 owner / transport contract 时，异构 remote acquisition 才进入评测。
 
 ## 3. Shared Communication Substrate 与系统模型谱系
 
