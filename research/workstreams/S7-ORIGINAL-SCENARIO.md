@@ -120,3 +120,18 @@ warning authority announces denser monitoring requirement
 也就是说 T2 可以继续作为真实 benchmark extension，但**不能因为有 15/15/30 或 30/50 分钟 deadline 就声称 future-choice hardness**。若把电话/WeChat/SMS 视作零时长且彼此独立，workflow 会退化成普通 deadline-aware retry / handoff。只有在 recipient/channel reachability trace 或事先冻结的 `CONTROLLED_STRESS` capacity model 独立于方法结果闭合以后，才允许重新打开 T2 future-choice 机制。
 
 明确禁止：事后发明电话配额、联系时长或并发限制来制造方法空间。
+
+## Shared-backup preflight: scoped negative
+
+为避免继续把单资源 energy witness 往复杂化，进一步把 energy 放宽到已有 `0.05 Wh` regime，让 `ResourceGate` 基本失去作用，只检查 warning-driven early preparation 是否会通过共享 gateway backup / backhaul opportunity 伤害后续 obligations。只使用仓库历史反复出现的 backup 档位：
+
+`120/200`、`120/78`、`300/78`、`600/78`、`1200/78`（rate_s / bytes），并同时比较 EDF 与 maxcov。
+
+结果是限定负结果：
+
+- 所有档位下 early preparation 的 post-warning delivery delta 都是 **0**；
+- capacity=0.05 下没有节点死亡；
+- maxcov 在多数紧档位下仍基本保住全部 warning-stage early-preparation gain；
+- 因此当前 source-backed T1/S7 中，`energy-safe individually but jointly destroy shared future backhaul continuation` 的结构没有自然出现。
+
+这条线不再继续调 backup rate/bytes。T1/S7 当前保留为真实 benchmark/mechanism 资产，但**尚未留下 ResourceGate / packing / finite-horizon ordinary planner 无法概括的 Layer-2 method headroom**。

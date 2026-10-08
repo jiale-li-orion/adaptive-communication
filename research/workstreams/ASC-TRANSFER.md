@@ -73,3 +73,24 @@ hard operational query goals 明确标为 transfer extension。结果：
 ## Next
 
 当前 query/AoI replay 已完成。下一步固定三组对照：unconstrained/value-only、ordinary scheduling-aware constrained DP、future-choice incremental frontier；只在加入 shared communication opportunity、dynamic task revision 或 delayed feedback 后仍出现 ordinary certificate 无法局部概括的结构时，才保留为 method contribution。
+
+### Conditional frontier probe
+
+第三阶段开始测试真正区别于静态 resource reservation 的对象：**未来 obligation 取决于尚未到达的语义 observation**。
+
+`code/evaluation/transfer/asc_pull_query_conditional_frontier_probe.py` 构造两个初始不可区分 world，共享 query budget=2：
+
+- `QUERY_H` 在 t=0 消耗 1 次 query，并揭示后续需要 `B` 还是 `C`；
+- H=0 分支在 t=1 只需 `QUERY_B`；
+- H=1 分支在 t=1 只需 `QUERY_C`。
+
+exact causal 结果：
+
+- `QUERY_H`: `L=1,U=1`，存在 observation-conditioned non-anticipative completion policy；
+- `WAIT / QUERY_B / QUERY_C`: `L=0,U=1`，物理上并非必死，但当前 history 下无法同时覆盖两个 aliased worlds；
+- 静态 worst-case union reserve 会把未来 `{B,C}` 同时计入，认为 `QUERY_H` 后预算 1 < 2，因此错误拒绝一个真实可行的 action；
+- conditional frontier 按 observation 分支保留 `H=0→B`、`H=1→C`，避免这个 false negative。
+
+这条结果第一次真正击中当前 Layer-2 的 representation insight：**future choices 必须按未来 observation 条件化，而不能把所有可能 obligation 静态并集化。**
+
+边界仍然严格：exact belief-space AND-OR solver 同样能表示该结构，因此当前证明的是 representation necessity / static-reserve failure，不是 wall-time 或算法 novelty。下一步必须在更大的 shared-resource / delayed-feedback formulation 上比较 incremental conditional frontier 与 strong exact/receding solver。
