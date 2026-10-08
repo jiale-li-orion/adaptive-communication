@@ -26,9 +26,12 @@ shared communication substrate + scorer
 | `policy/` | **Layer 3**：合法 / unresolved action 的排序、search guidance、LLM / learned policy | **paused**；等待 Layer-1 benchmark coverage / holdout 闭合 | [`policy/README.md`](policy/README.md) |
 | `evaluation/` | replay、attribution、ablation、baseline fairness、跨层 audit contract | 横切三层 | [`evaluation/README.md`](evaluation/README.md) |
 | `literature/` | related work、source registry、claim boundary | 横切三层 | [`literature/README.md`](literature/README.md) |
+| `workstreams/` | 当前跨层研究探索索引；只记录问题、证据、否决条件与下一步，不持有正式语义 | 横切三层 | [`workstreams/README.md`](workstreams/README.md) |
 | `history/` | 被当前设计取代的 tracked research authority / roadmap | provenance only | [`history/README.md`](history/README.md) |
 
 ## Current research line
+
+当前同时推进的研究路线先看 [`workstreams/README.md`](workstreams/README.md)。它只负责导航；正式 task / method / policy 语义仍分别回写到 benchmark / compiler / policy。
 
 Layer 1 当前保留三类 scoped 资产：v0.2 failure atlas、v0.6 可复现判废 lineage、v0.7 process-support correction。它们都不等于已完成 benchmark。gateway policy placement 与 owner-local receipt visibility 继续保留，但 `V07-GATEWAY-ACTION-OWNERSHIP-REVIEW.v0.1.md` 发现旧端到端 `SEND_TERR → gateway receipt → center ACK` 被错误复用成 gateway-local action；因此必须先冻结 report/data-location lifecycle 与 gateway 合法 action owner，再重启 exact。center placement 继续保持独立 `SIMULATOR_GAP`。此前 36-cell gateway pilot 与 bifurcation intervention 只作为 provisional-kernel diagnostic，不承担 admission。Layer 2 v1/v2 继续作为 deterministic/reference 资产保留；Layer 3 暂停。
 
