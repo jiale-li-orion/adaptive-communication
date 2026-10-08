@@ -115,6 +115,29 @@ def _dirty() -> list[str]:
     return [line for line in raw.splitlines() if line.strip()]
 
 
+def _dirty_outside_output(out: Path) -> list[str]:
+    """Return dirty entries other than this run's own output directory.
+
+    A resumable paper run necessarily makes ``results/...`` dirty after the
+    first checkpoint.  Treating its own append-only output as source drift makes
+    safe chunking impossible.  Source/protocol integrity is still protected by
+    the frozen source-manifest and input digests; *all other* worktree changes
+    remain fatal.
+    """
+
+    out_rel = out.resolve().relative_to(ROOT.resolve()).as_posix().rstrip("/")
+    blocked = []
+    for line in _dirty():
+        # porcelain v1: XY<space>path. For renames, conservatively reject the
+        # entry unless every visible path is inside the output directory.
+        payload = line[3:].strip() if len(line) >= 4 else line.strip()
+        paths = [part.strip() for part in payload.split(" -> ")]
+        if paths and all(p == out_rel or p.startswith(out_rel + "/") for p in paths):
+            continue
+        blocked.append(line)
+    return blocked
+
+
 def _load(path: Path):
     return json.loads(path.read_text(encoding="utf-8"))
 
@@ -395,12 +418,15 @@ def main() -> int:
     context_modes = list(llm["context_modes"])
 
     if args.execute_frozen_test:
-        dirty = _dirty()
+        out = (args.out or ROOT / "results/benchmark/layer1-paper-llm-test").resolve()
+        dirty = _dirty_outside_output(out)
         if dirty:
-            raise SystemExit("refusing frozen LLM test on dirty worktree: " + " | ".join(dirty[:10]))
+            raise SystemExit(
+                "refusing frozen LLM test on source/protocol worktree drift: "
+                + " | ".join(dirty[:10])
+            )
         coordinates = _selected_test(protocol, split)
         expected = 30 * len(context_modes)
-        out = (args.out or ROOT / "results/benchmark/layer1-paper-llm-test").resolve()
     else:
         coordinates = _dev_smoke(split)
         expected = len(coordinates) * len(context_modes)
