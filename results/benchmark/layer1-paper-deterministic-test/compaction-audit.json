@@ -1,0 +1,20 @@
+{
+  "canonical_kind_counts": {
+    "evaluator_only_oracle": 210,
+    "online_baseline": 750
+  },
+  "canonical_rows": 960,
+  "canonical_sha256": "74ee87723a13dc53ddbc597a8724f6863d6abbc7ebd7dbb254c5fcbd8974588b",
+  "claim_boundary": [
+    "The append-only raw execution log is preserved unchanged.",
+    "Compaction removes only byte-semantically identical duplicate row IDs; any disagreement would abort instead of selecting a preferred result.",
+    "All paper statistics must use rows.canonical.jsonl."
+  ],
+  "duplicate_extra_rows": 340,
+  "duplicate_row_ids": 340,
+  "max_multiplicity": 2,
+  "raw_rows": 1300,
+  "raw_sha256": "5504040fabd5fa82269d7499bfb55a38f504a97661e7335b3e8dbba3a14069a1",
+  "semantic_mismatch_duplicate_ids": 0,
+  "stage": "LAYER1_PAPER_DETERMINISTIC_ROW_COMPACTION"
+}

@@ -1,0 +1,1838 @@
+{
+  "best_by_task": {
+    "O1": {
+      "best_baselines": [
+        "comm.aoi"
+      ],
+      "best_mean_tdr": 0.9994047619047619
+    },
+    "O2": {
+      "best_baselines": [
+        "agent.deterministic_comply",
+        "comm.mission_comply",
+        "comm.mission_sustain"
+      ],
+      "best_mean_tdr": 0.326007326007326
+    },
+    "O3": {
+      "best_baselines": [
+        "agent.deterministic_comply",
+        "comm.backup_edf",
+        "comm.backup_maxcov",
+        "comm.local_policy"
+      ],
+      "best_mean_tdr": 0.9791666666666666
+    },
+    "O4": {
+      "best_baselines": [
+        "comm.ea_aoi"
+      ],
+      "best_mean_tdr": 0.9938492063492064
+    },
+    "O6": {
+      "best_baselines": [
+        "comm.ea_aoi"
+      ],
+      "best_mean_tdr": 0.2785714285714286
+    }
+  },
+  "checks": {
+    "all_online_groups_n30": true,
+    "all_primary_delivery_oracle_orders_valid": true,
+    "canonical_rows_960": true,
+    "online_rows_750": true,
+    "oracle_rows_210": true
+  },
+  "claim_boundary": [
+    "Best-by-task uses mean TDR only as a descriptive summary; energy/survival trade-offs remain separately reported.",
+    "Paired confidence intervals compare only identical frozen coordinates against comm.local_policy.",
+    "Primary-only delivery oracle diagnostics are not full-system upper bounds and are never included in online rankings."
+  ],
+  "groups": {
+    "O1/agent.deterministic_comply": {
+      "failure_taxonomy": {
+        "DELIVERY_DEADLINE_MISS": 27
+      },
+      "metrics": {
+        "aoi_mean_s": {
+          "mean": 2734.9597924822565,
+          "median": 2824.253396029258,
+          "std": 209.20837547904645
+        },
+        "backup_packets": {
+          "mean": 9.5,
+          "median": 10.0,
+          "std": 3.224368422519041
+        },
+        "collection_rate": {
+          "mean": 1.0,
+          "median": 1.0,
+          "std": 0.0
+        },
+        "commands_sent": {
+          "mean": 23.4,
+          "median": 28.0,
+          "std": 9.456251353214572
+        },
+        "node_survival_rate": {
+          "mean": 1.0,
+          "median": 1.0,
+          "std": 0.0
+        },
+        "timely_delivery_rate": {
+          "mean": 0.9791666666666666,
+          "median": 0.9761904761904762,
+          "std": 0.012183718557518097
+        },
+        "total_consumed_wh": {
+          "mean": 0.10127638722559999,
+          "median": 0.10130663782399998,
+          "std": 9.55831094697377e-05
+        }
+      },
+      "n": 30,
+      "paired_vs_local": {
+        "collection_rate": {
+          "hi": 0.0,
+          "lo": 0.0,
+          "mean": 0.0
+        },
+        "node_survival_rate": {
+          "hi": 0.0,
+          "lo": 0.0,
+          "mean": 0.0
+        },
+        "timely_delivery_rate": {
+          "hi": 0.0,
+          "lo": 0.0,
+          "mean": 0.0
+        },
+        "total_consumed_wh": {
+          "hi": 0.00024325133653332935,
+          "lo": 0.00018207580159999617,
+          "mean": 0.00021471887359999635
+        }
+      },
+      "routine_full_success": {
+        "hi": 0.25621082579184085,
+        "lo": 0.03459988874733419,
+        "n": 30,
+        "rate": 0.1,
+        "success": 3
+      }
+    },
+    "O1/comm.aoi": {
+      "failure_taxonomy": {
+        "DELIVERY_DEADLINE_MISS": 3
+      },
+      "metrics": {
+        "aoi_mean_s": {
+          "mean": 2008.0533691067378,
+          "median": 2026.806179775281,
+          "std": 61.54429206502774
+        },
+        "backup_packets": {
+          "mean": 18.3,
+          "median": 19.0,
+          "std": 3.724568940576003
+        },
+        "collection_rate": {
+          "mean": 1.0,
+          "median": 1.0,
+          "std": 0.0
+        },
+        "commands_sent": {
+          "mean": 52.0,
+          "median": 52.0,
+          "std": 3.832708594768691
+        },
+        "node_survival_rate": {
+          "mean": 1.0,
+          "median": 1.0,
+          "std": 0.0
+        },
+        "timely_delivery_rate": {
+          "mean": 0.9994047619047619,
+          "median": 1.0,
+          "std": 0.0018162415275557355
+        },
+        "total_consumed_wh": {
+          "mean": 0.10299276175359998,
+          "median": 0.10301531903999997,
+          "std": 0.00028364351546338463
+        }
+      },
+      "n": 30,
+      "paired_vs_local": {
+        "collection_rate": {
+          "hi": 0.0,
+          "lo": 0.0,
+          "mean": 0.0
+        },
+        "node_survival_rate": {
+          "hi": 0.0,
+          "lo": 0.0,
+          "mean": 0.0
+        },
+        "timely_delivery_rate": {
+          "hi": 0.024603174603174592,
+          "lo": 0.015873015873015872,
+          "mean": 0.020238095238095232
+        },
+        "total_consumed_wh": {
+          "hi": 0.0020257538540799872,
+          "lo": 0.0018336384762666553,
+          "mean": 0.0019310934015999883
+        }
+      },
+      "routine_full_success": {
+        "hi": 0.9654001112526658,
+        "lo": 0.7437891742081593,
+        "n": 30,
+        "rate": 0.9,
+        "success": 27
+      }
+    },
+    "O1/comm.local_policy": {
+      "failure_taxonomy": {
+        "DELIVERY_DEADLINE_MISS": 27
+      },
+      "metrics": {
+        "aoi_mean_s": {
+          "mean": 2734.9597924822565,
+          "median": 2824.253396029258,
+          "std": 209.20837547904645
+        },
+        "backup_packets": {
+          "mean": 9.5,
+          "median": 10.0,
+          "std": 3.224368422519041
+        },
+        "collection_rate": {
+          "mean": 1.0,
+          "median": 1.0,
+          "std": 0.0
+        },
+        "commands_sent": {
+          "mean": 0.0,
+          "median": 0.0,
+          "std": 0.0
+        },
+        "node_survival_rate": {
+          "mean": 1.0,
+          "median": 1.0,
+          "std": 0.0
+        },
+        "timely_delivery_rate": {
+          "mean": 0.9791666666666666,
+          "median": 0.9761904761904762,
+          "std": 0.012183718557518097
+        },
+        "total_consumed_wh": {
+          "mean": 0.10106166835199999,
+          "median": 0.101064011264,
+          "std": 2.3067312511668058e-05
+        }
+      },
+      "n": 30,
+      "routine_full_success": {
+        "hi": 0.25621082579184085,
+        "lo": 0.03459988874733419,
+        "n": 30,
+        "rate": 0.1,
+        "success": 3
+      }
+    },
+    "O2/agent.deterministic_comply": {
+      "failure_taxonomy": {
+        "COLLECTION_MISS": 30,
+        "DELIVERY_DEADLINE_MISS": 30,
+        "TASK_REVISION_NOT_APPLIED": 30
+      },
+      "metrics": {
+        "aoi_mean_s": {
+          "mean": 2444.3952992895765,
+          "median": 2515.76669433095,
+          "std": 302.701203493894
+        },
+        "backup_packets": {
+          "mean": 31.8,
+          "median": 32.5,
+          "std": 13.772536390247428
+        },
+        "collection_rate": {
+          "mean": 0.5217032967032967,
+          "median": 0.5297619047619048,
+          "std": 0.08298826672062391
+        },
+        "commands_sent": {
+          "mean": 51.4,
+          "median": 56.0,
+          "std": 9.456251353214572
+        },
+        "node_survival_rate": {
+          "mean": 1.0,
+          "median": 1.0,
+          "std": 0.0
+        },
+        "timely_delivery_rate": {
+          "mean": 0.326007326007326,
+          "median": 0.3360805860805861,
+          "std": 0.07913552627113958
+        },
+        "total_consumed_wh": {
+          "mean": 0.3613168366592004,
+          "median": 0.36876995104000043,
+          "std": 0.04905248911107856
+        }
+      },
+      "n": 30,
+      "paired_vs_local": {
+        "collection_rate": {
+          "hi": 0.3868131868131869,
+          "lo": 0.3297313797313797,
+          "mean": 0.3596153846153846
+        },
+        "node_survival_rate": {
+          "hi": 0.0,
+          "lo": 0.0,
+          "mean": 0.0
+        },
+        "timely_delivery_rate": {
+          "hi": 0.2081814713064713,
+          "lo": 0.1547611416361416,
+          "mean": 0.18205128205128204
+        },
+        "total_consumed_wh": {
+          "hi": 0.27700330312394705,
+          "lo": 0.24207441185312037,
+          "mean": 0.26025516830720036
+        }
+      },
+      "routine_full_success": {
+        "hi": 0.11351339317396876,
+        "lo": 0.0,
+        "n": 30,
+        "rate": 0.0,
+        "success": 0
+      }
+    },
+    "O2/comm.aoi": {
+      "failure_taxonomy": {
+        "COLLECTION_MISS": 30,
+        "DELIVERY_DEADLINE_MISS": 30,
+        "TASK_REVISION_NOT_APPLIED": 30
+      },
+      "metrics": {
+        "aoi_mean_s": {
+          "mean": 2012.64759442903,
+          "median": 2021.2443820224719,
+          "std": 63.51363956150945
+        },
+        "backup_packets": {
+          "mean": 23.4,
+          "median": 25.0,
+          "std": 5.443122835918417
+        },
+        "collection_rate": {
+          "mean": 0.1620879120879121,
+          "median": 0.1620879120879121,
+          "std": 0.0
+        },
+        "commands_sent": {
+          "mean": 41.3,
+          "median": 41.5,
+          "std": 3.611762393376244
+        },
+        "node_survival_rate": {
+          "mean": 1.0,
+          "median": 1.0,
+          "std": 0.0
+        },
+        "timely_delivery_rate": {
+          "mean": 0.14706959706959707,
+          "median": 0.14697802197802198,
+          "std": 0.0028312288537352234
+        },
+        "total_consumed_wh": {
+          "mean": 0.10289163285759999,
+          "median": 0.10294877484799998,
+          "std": 0.00027809657163307353
+        }
+      },
+      "n": 30,
+      "paired_vs_local": {
+        "collection_rate": {
+          "hi": 0.0,
+          "lo": 0.0,
+          "mean": 0.0
+        },
+        "node_survival_rate": {
+          "hi": 0.0,
+          "lo": 0.0,
+          "mean": 0.0
+        },
+        "timely_delivery_rate": {
+          "hi": 0.0038156288156288133,
+          "lo": 0.002411477411477411,
+          "mean": 0.0031135531135531107
+        },
+        "total_consumed_wh": {
+          "hi": 0.0019231203364266578,
+          "lo": 0.0017359091598933237,
+          "mean": 0.0018299645055999902
+        }
+      },
+      "routine_full_success": {
+        "hi": 0.11351339317396876,
+        "lo": 0.0,
+        "n": 30,
+        "rate": 0.0,
+        "success": 0
+      }
+    },
+    "O2/comm.local_policy": {
+      "failure_taxonomy": {
+        "COLLECTION_MISS": 30,
+        "DELIVERY_DEADLINE_MISS": 30,
+        "TASK_REVISION_NOT_APPLIED": 30
+      },
+      "metrics": {
+        "aoi_mean_s": {
+          "mean": 2734.9597924822565,
+          "median": 2824.253396029258,
+          "std": 209.20837547904645
+        },
+        "backup_packets": {
+          "mean": 11.6,
+          "median": 12.5,
+          "std": 3.8110547006090694
+        },
+        "collection_rate": {
+          "mean": 0.1620879120879121,
+          "median": 0.1620879120879121,
+          "std": 0.0
+        },
+        "commands_sent": {
+          "mean": 0.0,
+          "median": 0.0,
+          "std": 0.0
+        },
+        "node_survival_rate": {
+          "mean": 1.0,
+          "median": 1.0,
+          "std": 0.0
+        },
+        "timely_delivery_rate": {
+          "mean": 0.14395604395604394,
+          "median": 0.14423076923076922,
+          "std": 0.0039030242159269076
+        },
+        "total_consumed_wh": {
+          "mean": 0.10106166835199999,
+          "median": 0.101064011264,
+          "std": 2.3067312511668058e-05
+        }
+      },
+      "n": 30,
+      "routine_full_success": {
+        "hi": 0.11351339317396876,
+        "lo": 0.0,
+        "n": 30,
+        "rate": 0.0,
+        "success": 0
+      }
+    },
+    "O2/comm.mission_comply": {
+      "failure_taxonomy": {
+        "COLLECTION_MISS": 30,
+        "DELIVERY_DEADLINE_MISS": 30,
+        "TASK_REVISION_NOT_APPLIED": 30
+      },
+      "metrics": {
+        "aoi_mean_s": {
+          "mean": 2444.3952992895765,
+          "median": 2515.76669433095,
+          "std": 302.701203493894
+        },
+        "backup_packets": {
+          "mean": 31.8,
+          "median": 32.5,
+          "std": 13.772536390247428
+        },
+        "collection_rate": {
+          "mean": 0.5217032967032967,
+          "median": 0.5297619047619048,
+          "std": 0.08298826672062391
+        },
+        "commands_sent": {
+          "mean": 51.4,
+          "median": 56.0,
+          "std": 9.456251353214572
+        },
+        "node_survival_rate": {
+          "mean": 1.0,
+          "median": 1.0,
+          "std": 0.0
+        },
+        "timely_delivery_rate": {
+          "mean": 0.326007326007326,
+          "median": 0.3360805860805861,
+          "std": 0.07913552627113958
+        },
+        "total_consumed_wh": {
+          "mean": 0.3613168366592004,
+          "median": 0.36876995104000043,
+          "std": 0.04905248911107856
+        }
+      },
+      "n": 30,
+      "paired_vs_local": {
+        "collection_rate": {
+          "hi": 0.3868131868131869,
+          "lo": 0.3297313797313797,
+          "mean": 0.3596153846153846
+        },
+        "node_survival_rate": {
+          "hi": 0.0,
+          "lo": 0.0,
+          "mean": 0.0
+        },
+        "timely_delivery_rate": {
+          "hi": 0.2081814713064713,
+          "lo": 0.1547611416361416,
+          "mean": 0.18205128205128204
+        },
+        "total_consumed_wh": {
+          "hi": 0.27700330312394705,
+          "lo": 0.24207441185312037,
+          "mean": 0.26025516830720036
+        }
+      },
+      "routine_full_success": {
+        "hi": 0.11351339317396876,
+        "lo": 0.0,
+        "n": 30,
+        "rate": 0.0,
+        "success": 0
+      }
+    },
+    "O2/comm.mission_sustain": {
+      "failure_taxonomy": {
+        "COLLECTION_MISS": 30,
+        "DELIVERY_DEADLINE_MISS": 30,
+        "TASK_REVISION_NOT_APPLIED": 30
+      },
+      "metrics": {
+        "aoi_mean_s": {
+          "mean": 2444.3952992895765,
+          "median": 2515.76669433095,
+          "std": 302.701203493894
+        },
+        "backup_packets": {
+          "mean": 31.8,
+          "median": 32.5,
+          "std": 13.772536390247428
+        },
+        "collection_rate": {
+          "mean": 0.5217032967032967,
+          "median": 0.5297619047619048,
+          "std": 0.08298826672062391
+        },
+        "commands_sent": {
+          "mean": 51.4,
+          "median": 56.0,
+          "std": 9.456251353214572
+        },
+        "node_survival_rate": {
+          "mean": 1.0,
+          "median": 1.0,
+          "std": 0.0
+        },
+        "timely_delivery_rate": {
+          "mean": 0.326007326007326,
+          "median": 0.3360805860805861,
+          "std": 0.07913552627113958
+        },
+        "total_consumed_wh": {
+          "mean": 0.3613168366592004,
+          "median": 0.36876995104000043,
+          "std": 0.04905248911107856
+        }
+      },
+      "n": 30,
+      "paired_vs_local": {
+        "collection_rate": {
+          "hi": 0.3868131868131869,
+          "lo": 0.3297313797313797,
+          "mean": 0.3596153846153846
+        },
+        "node_survival_rate": {
+          "hi": 0.0,
+          "lo": 0.0,
+          "mean": 0.0
+        },
+        "timely_delivery_rate": {
+          "hi": 0.2081814713064713,
+          "lo": 0.1547611416361416,
+          "mean": 0.18205128205128204
+        },
+        "total_consumed_wh": {
+          "hi": 0.27700330312394705,
+          "lo": 0.24207441185312037,
+          "mean": 0.26025516830720036
+        }
+      },
+      "routine_full_success": {
+        "hi": 0.11351339317396876,
+        "lo": 0.0,
+        "n": 30,
+        "rate": 0.0,
+        "success": 0
+      }
+    },
+    "O3/agent.deterministic_comply": {
+      "failure_taxonomy": {
+        "DELIVERY_DEADLINE_MISS": 27
+      },
+      "metrics": {
+        "aoi_mean_s": {
+          "mean": 2735.492035106504,
+          "median": 2825.0248497910134,
+          "std": 208.99369383973752
+        },
+        "backup_packets": {
+          "mean": 15.6,
+          "median": 16.0,
+          "std": 3.3176643217366246
+        },
+        "collection_rate": {
+          "mean": 1.0,
+          "median": 1.0,
+          "std": 0.0
+        },
+        "commands_sent": {
+          "mean": 23.4,
+          "median": 28.0,
+          "std": 9.456251353214572
+        },
+        "node_survival_rate": {
+          "mean": 1.0,
+          "median": 1.0,
+          "std": 0.0
+        },
+        "timely_delivery_rate": {
+          "mean": 0.9791666666666666,
+          "median": 0.9761904761904762,
+          "std": 0.012183718557518097
+        },
+        "total_consumed_wh": {
+          "mean": 0.10127638722559999,
+          "median": 0.10130663782399998,
+          "std": 9.55831094697377e-05
+        }
+      },
+      "n": 30,
+      "paired_vs_local": {
+        "collection_rate": {
+          "hi": 0.0,
+          "lo": 0.0,
+          "mean": 0.0
+        },
+        "node_survival_rate": {
+          "hi": 0.0,
+          "lo": 0.0,
+          "mean": 0.0
+        },
+        "timely_delivery_rate": {
+          "hi": 0.0,
+          "lo": 0.0,
+          "mean": 0.0
+        },
+        "total_consumed_wh": {
+          "hi": 0.00024325133653332935,
+          "lo": 0.00018207580159999617,
+          "mean": 0.00021471887359999635
+        }
+      },
+      "routine_full_success": {
+        "hi": 0.25621082579184085,
+        "lo": 0.03459988874733419,
+        "n": 30,
+        "rate": 0.1,
+        "success": 3
+      }
+    },
+    "O3/comm.backup_edf": {
+      "failure_taxonomy": {
+        "DELIVERY_DEADLINE_MISS": 27
+      },
+      "metrics": {
+        "aoi_mean_s": {
+          "mean": 2735.492035106504,
+          "median": 2825.0248497910134,
+          "std": 208.99369383973752
+        },
+        "backup_packets": {
+          "mean": 15.6,
+          "median": 16.0,
+          "std": 3.3176643217366246
+        },
+        "collection_rate": {
+          "mean": 1.0,
+          "median": 1.0,
+          "std": 0.0
+        },
+        "commands_sent": {
+          "mean": 0.0,
+          "median": 0.0,
+          "std": 0.0
+        },
+        "node_survival_rate": {
+          "mean": 1.0,
+          "median": 1.0,
+          "std": 0.0
+        },
+        "timely_delivery_rate": {
+          "mean": 0.9791666666666666,
+          "median": 0.9761904761904762,
+          "std": 0.012183718557518097
+        },
+        "total_consumed_wh": {
+          "mean": 0.10106166835199999,
+          "median": 0.101064011264,
+          "std": 2.3067312511668058e-05
+        }
+      },
+      "n": 30,
+      "paired_vs_local": {
+        "collection_rate": {
+          "hi": 0.0,
+          "lo": 0.0,
+          "mean": 0.0
+        },
+        "node_survival_rate": {
+          "hi": 0.0,
+          "lo": 0.0,
+          "mean": 0.0
+        },
+        "timely_delivery_rate": {
+          "hi": 0.0,
+          "lo": 0.0,
+          "mean": 0.0
+        },
+        "total_consumed_wh": {
+          "hi": 0.0,
+          "lo": 0.0,
+          "mean": 0.0
+        }
+      },
+      "routine_full_success": {
+        "hi": 0.25621082579184085,
+        "lo": 0.03459988874733419,
+        "n": 30,
+        "rate": 0.1,
+        "success": 3
+      }
+    },
+    "O3/comm.backup_maxcov": {
+      "failure_taxonomy": {
+        "DELIVERY_DEADLINE_MISS": 27
+      },
+      "metrics": {
+        "aoi_mean_s": {
+          "mean": 2735.492035106504,
+          "median": 2825.0248497910134,
+          "std": 208.99369383973752
+        },
+        "backup_packets": {
+          "mean": 19.1,
+          "median": 19.5,
+          "std": 4.5814468426921415
+        },
+        "collection_rate": {
+          "mean": 1.0,
+          "median": 1.0,
+          "std": 0.0
+        },
+        "commands_sent": {
+          "mean": 0.0,
+          "median": 0.0,
+          "std": 0.0
+        },
+        "node_survival_rate": {
+          "mean": 1.0,
+          "median": 1.0,
+          "std": 0.0
+        },
+        "timely_delivery_rate": {
+          "mean": 0.9791666666666666,
+          "median": 0.9761904761904762,
+          "std": 0.012183718557518097
+        },
+        "total_consumed_wh": {
+          "mean": 0.10106166835199999,
+          "median": 0.101064011264,
+          "std": 2.3067312511668058e-05
+        }
+      },
+      "n": 30,
+      "paired_vs_local": {
+        "collection_rate": {
+          "hi": 0.0,
+          "lo": 0.0,
+          "mean": 0.0
+        },
+        "node_survival_rate": {
+          "hi": 0.0,
+          "lo": 0.0,
+          "mean": 0.0
+        },
+        "timely_delivery_rate": {
+          "hi": 0.0,
+          "lo": 0.0,
+          "mean": 0.0
+        },
+        "total_consumed_wh": {
+          "hi": 0.0,
+          "lo": 0.0,
+          "mean": 0.0
+        }
+      },
+      "routine_full_success": {
+        "hi": 0.25621082579184085,
+        "lo": 0.03459988874733419,
+        "n": 30,
+        "rate": 0.1,
+        "success": 3
+      }
+    },
+    "O3/comm.local_policy": {
+      "failure_taxonomy": {
+        "DELIVERY_DEADLINE_MISS": 27
+      },
+      "metrics": {
+        "aoi_mean_s": {
+          "mean": 2735.492035106504,
+          "median": 2825.0248497910134,
+          "std": 208.99369383973752
+        },
+        "backup_packets": {
+          "mean": 15.6,
+          "median": 16.0,
+          "std": 3.3176643217366246
+        },
+        "collection_rate": {
+          "mean": 1.0,
+          "median": 1.0,
+          "std": 0.0
+        },
+        "commands_sent": {
+          "mean": 0.0,
+          "median": 0.0,
+          "std": 0.0
+        },
+        "node_survival_rate": {
+          "mean": 1.0,
+          "median": 1.0,
+          "std": 0.0
+        },
+        "timely_delivery_rate": {
+          "mean": 0.9791666666666666,
+          "median": 0.9761904761904762,
+          "std": 0.012183718557518097
+        },
+        "total_consumed_wh": {
+          "mean": 0.10106166835199999,
+          "median": 0.101064011264,
+          "std": 2.3067312511668058e-05
+        }
+      },
+      "n": 30,
+      "routine_full_success": {
+        "hi": 0.25621082579184085,
+        "lo": 0.03459988874733419,
+        "n": 30,
+        "rate": 0.1,
+        "success": 3
+      }
+    },
+    "O4/agent.deterministic_comply": {
+      "failure_taxonomy": {
+        "DELIVERY_DEADLINE_MISS": 27
+      },
+      "metrics": {
+        "aoi_mean_s": {
+          "mean": 2734.9597924822565,
+          "median": 2824.253396029258,
+          "std": 209.20837547904645
+        },
+        "backup_packets": {
+          "mean": 11.6,
+          "median": 12.5,
+          "std": 3.8110547006090694
+        },
+        "collection_rate": {
+          "mean": 1.0,
+          "median": 1.0,
+          "std": 0.0
+        },
+        "commands_sent": {
+          "mean": 23.4,
+          "median": 28.0,
+          "std": 9.456251353214572
+        },
+        "node_survival_rate": {
+          "mean": 1.0,
+          "median": 1.0,
+          "std": 0.0
+        },
+        "timely_delivery_rate": {
+          "mean": 0.9791666666666666,
+          "median": 0.9761904761904762,
+          "std": 0.012183718557518097
+        },
+        "total_consumed_wh": {
+          "mean": 0.10127638722559999,
+          "median": 0.10130663782399998,
+          "std": 9.55831094697377e-05
+        }
+      },
+      "n": 30,
+      "paired_vs_local": {
+        "collection_rate": {
+          "hi": 0.0,
+          "lo": 0.0,
+          "mean": 0.0
+        },
+        "node_survival_rate": {
+          "hi": 0.0,
+          "lo": 0.0,
+          "mean": 0.0
+        },
+        "timely_delivery_rate": {
+          "hi": 0.0,
+          "lo": 0.0,
+          "mean": 0.0
+        },
+        "total_consumed_wh": {
+          "hi": 0.00024325133653332935,
+          "lo": 0.00018207580159999617,
+          "mean": 0.00021471887359999635
+        }
+      },
+      "routine_full_success": {
+        "hi": 0.25621082579184085,
+        "lo": 0.03459988874733419,
+        "n": 30,
+        "rate": 0.1,
+        "success": 3
+      }
+    },
+    "O4/comm.ea_aoi": {
+      "failure_taxonomy": {
+        "COLLECTION_MISS": 1,
+        "DELIVERY_DEADLINE_MISS": 12,
+        "ENERGY_EXHAUSTION": 3
+      },
+      "metrics": {
+        "aoi_mean_s": {
+          "mean": 1793.6771790625996,
+          "median": 1791.8957049306625,
+          "std": 178.20763366194635
+        },
+        "backup_packets": {
+          "mean": 44.46666666666667,
+          "median": 46.0,
+          "std": 14.335231095964676
+        },
+        "collection_rate": {
+          "mean": 0.9998015873015873,
+          "median": 1.0,
+          "std": 0.00108675110616104
+        },
+        "commands_sent": {
+          "mean": 66.93333333333334,
+          "median": 64.0,
+          "std": 9.551794680016704
+        },
+        "node_survival_rate": {
+          "mean": 0.988095238095238,
+          "median": 1.0,
+          "std": 0.03790490217894518
+        },
+        "timely_delivery_rate": {
+          "mean": 0.9938492063492064,
+          "median": 1.0,
+          "std": 0.009697126441068215
+        },
+        "total_consumed_wh": {
+          "mean": 0.34883933123413374,
+          "median": 0.3467992152320004,
+          "std": 0.017831940957244878
+        }
+      },
+      "n": 30,
+      "paired_vs_local": {
+        "collection_rate": {
+          "hi": 0.0,
+          "lo": -0.0005952380952380931,
+          "mean": -0.0001984126984126977
+        },
+        "node_survival_rate": {
+          "hi": 0.0,
+          "lo": -0.026190476190476198,
+          "mean": -0.011904761904761908
+        },
+        "timely_delivery_rate": {
+          "hi": 0.018650793650793644,
+          "lo": 0.010912698412698403,
+          "mean": 0.014682539682539675
+        },
+        "total_consumed_wh": {
+          "hi": 0.2541937799494405,
+          "lo": 0.2416110729611738,
+          "mean": 0.2477776628821338
+        }
+      },
+      "routine_full_success": {
+        "hi": 0.7262251442353347,
+        "lo": 0.3919730700081361,
+        "n": 30,
+        "rate": 0.5666666666666667,
+        "success": 17
+      }
+    },
+    "O4/comm.energy_aware": {
+      "failure_taxonomy": {
+        "COLLECTION_MISS": 30,
+        "DELIVERY_DEADLINE_MISS": 21,
+        "ENERGY_EXHAUSTION": 30
+      },
+      "metrics": {
+        "aoi_mean_s": {
+          "mean": 3923.9118071767602,
+          "median": 3682.2862576144935,
+          "std": 869.4671940217526
+        },
+        "backup_packets": {
+          "mean": 33.53333333333333,
+          "median": 33.0,
+          "std": 5.829374683051545
+        },
+        "collection_rate": {
+          "mean": 0.8547619047619047,
+          "median": 0.8779761904761905,
+          "std": 0.08630916992170244
+        },
+        "commands_sent": {
+          "mean": 69.8,
+          "median": 71.0,
+          "std": 8.293745046512566
+        },
+        "node_survival_rate": {
+          "mean": 0.5642857142857143,
+          "median": 0.5714285714285714,
+          "std": 0.21823132688452185
+        },
+        "timely_delivery_rate": {
+          "mean": 0.8375,
+          "median": 0.8660714285714286,
+          "std": 0.07937080918013927
+        },
+        "total_consumed_wh": {
+          "mean": 0.3476932364586672,
+          "median": 0.3638371390720005,
+          "std": 0.049874224943058584
+        }
+      },
+      "n": 30,
+      "paired_vs_local": {
+        "collection_rate": {
+          "hi": -0.11607142857142859,
+          "lo": -0.17579365079365078,
+          "mean": -0.14523809523809525
+        },
+        "node_survival_rate": {
+          "hi": -0.3595238095238095,
+          "lo": -0.5142857142857143,
+          "mean": -0.4357142857142857
+        },
+        "timely_delivery_rate": {
+          "hi": -0.1136904761904762,
+          "lo": -0.17123015873015873,
+          "mean": -0.14166666666666666
+        },
+        "total_consumed_wh": {
+          "hi": 0.2633912237988272,
+          "lo": 0.22757804247477378,
+          "mean": 0.24663156810666717
+        }
+      },
+      "routine_full_success": {
+        "hi": 0.11351339317396876,
+        "lo": 0.0,
+        "n": 30,
+        "rate": 0.0,
+        "success": 0
+      }
+    },
+    "O4/comm.local_policy": {
+      "failure_taxonomy": {
+        "DELIVERY_DEADLINE_MISS": 27
+      },
+      "metrics": {
+        "aoi_mean_s": {
+          "mean": 2734.9597924822565,
+          "median": 2824.253396029258,
+          "std": 209.20837547904645
+        },
+        "backup_packets": {
+          "mean": 11.6,
+          "median": 12.5,
+          "std": 3.8110547006090694
+        },
+        "collection_rate": {
+          "mean": 1.0,
+          "median": 1.0,
+          "std": 0.0
+        },
+        "commands_sent": {
+          "mean": 0.0,
+          "median": 0.0,
+          "std": 0.0
+        },
+        "node_survival_rate": {
+          "mean": 1.0,
+          "median": 1.0,
+          "std": 0.0
+        },
+        "timely_delivery_rate": {
+          "mean": 0.9791666666666666,
+          "median": 0.9761904761904762,
+          "std": 0.012183718557518097
+        },
+        "total_consumed_wh": {
+          "mean": 0.10106166835199999,
+          "median": 0.101064011264,
+          "std": 2.3067312511668058e-05
+        }
+      },
+      "n": 30,
+      "routine_full_success": {
+        "hi": 0.25621082579184085,
+        "lo": 0.03459988874733419,
+        "n": 30,
+        "rate": 0.1,
+        "success": 3
+      }
+    },
+    "O6/agent.deterministic_comply": {
+      "failure_taxonomy": {
+        "COLLECTION_MISS": 30,
+        "DELIVERY_DEADLINE_MISS": 30,
+        "TASK_REVISION_NOT_APPLIED": 30
+      },
+      "metrics": {
+        "aoi_mean_s": {
+          "mean": 3556.650240999167,
+          "median": 3576.8877223399472,
+          "std": 326.6263593950879
+        },
+        "backup_packets": {
+          "mean": 29.8,
+          "median": 27.5,
+          "std": 14.208787955783343
+        },
+        "collection_rate": {
+          "mean": 0.3329424307036247,
+          "median": 0.3528784648187633,
+          "std": 0.06976346007759607
+        },
+        "commands_sent": {
+          "mean": 61.4,
+          "median": 61.0,
+          "std": 15.914859679579008
+        },
+        "node_survival_rate": {
+          "mean": 1.0,
+          "median": 1.0,
+          "std": 0.0
+        },
+        "timely_delivery_rate": {
+          "mean": 0.1931769722814499,
+          "median": 0.203091684434968,
+          "std": 0.02975395780434126
+        },
+        "total_consumed_wh": {
+          "mean": 0.2587803384960002,
+          "median": 0.2561431046400002,
+          "std": 0.07528935515249914
+        }
+      },
+      "n": 30,
+      "paired_vs_local": {
+        "collection_rate": {
+          "hi": 0.16730632551528074,
+          "lo": 0.11922530206112295,
+          "mean": 0.14424307036247336
+        },
+        "node_survival_rate": {
+          "hi": 0.0,
+          "lo": 0.0,
+          "mean": 0.0
+        },
+        "timely_delivery_rate": {
+          "hi": 0.05451314854299929,
+          "lo": 0.034612651030561485,
+          "mean": 0.04477611940298508
+        },
+        "total_consumed_wh": {
+          "hi": 0.1849116901412269,
+          "lo": 0.13196820454240016,
+          "mean": 0.1585078400640002
+        }
+      },
+      "routine_full_success": {
+        "hi": 0.11351339317396876,
+        "lo": 0.0,
+        "n": 30,
+        "rate": 0.0,
+        "success": 0
+      }
+    },
+    "O6/comm.aoi": {
+      "failure_taxonomy": {
+        "COLLECTION_MISS": 30,
+        "DELIVERY_DEADLINE_MISS": 30,
+        "TASK_REVISION_NOT_APPLIED": 30
+      },
+      "metrics": {
+        "aoi_mean_s": {
+          "mean": 2803.7559052560778,
+          "median": 2831.1430969908306,
+          "std": 87.47594178559395
+        },
+        "backup_packets": {
+          "mean": 20.1,
+          "median": 21.0,
+          "std": 5.815259356151739
+        },
+        "collection_rate": {
+          "mean": 0.1886993603411514,
+          "median": 0.1886993603411514,
+          "std": 0.0
+        },
+        "commands_sent": {
+          "mean": 41.2,
+          "median": 40.5,
+          "std": 3.960146287789083
+        },
+        "node_survival_rate": {
+          "mean": 1.0,
+          "median": 1.0,
+          "std": 0.0
+        },
+        "timely_delivery_rate": {
+          "mean": 0.1525586353944563,
+          "median": 0.15245202558635396,
+          "std": 0.0028872334967361044
+        },
+        "total_consumed_wh": {
+          "mean": 0.1018195992576,
+          "median": 0.10184346739199998,
+          "std": 0.0003176158421210785
+        }
+      },
+      "n": 30,
+      "paired_vs_local": {
+        "collection_rate": {
+          "hi": 0.0,
+          "lo": 0.0,
+          "mean": 0.0
+        },
+        "node_survival_rate": {
+          "hi": 0.0,
+          "lo": 0.0,
+          "mean": 0.0
+        },
+        "timely_delivery_rate": {
+          "hi": 0.005010660980810251,
+          "lo": 0.003304904051172718,
+          "mean": 0.004157782515991484
+        },
+        "total_consumed_wh": {
+          "hi": 0.001652614454186665,
+          "lo": 0.0014436655493333319,
+          "mean": 0.001547100825599998
+        }
+      },
+      "routine_full_success": {
+        "hi": 0.11351339317396876,
+        "lo": 0.0,
+        "n": 30,
+        "rate": 0.0,
+        "success": 0
+      }
+    },
+    "O6/comm.backup_edf": {
+      "failure_taxonomy": {
+        "COLLECTION_MISS": 30,
+        "DELIVERY_DEADLINE_MISS": 30,
+        "TASK_REVISION_NOT_APPLIED": 30
+      },
+      "metrics": {
+        "aoi_mean_s": {
+          "mean": 3717.065002818443,
+          "median": 3722.363866949207,
+          "std": 386.84303460444437
+        },
+        "backup_packets": {
+          "mean": 11.7,
+          "median": 12.5,
+          "std": 3.914165256497535
+        },
+        "collection_rate": {
+          "mean": 0.1886993603411514,
+          "median": 0.1886993603411514,
+          "std": 0.0
+        },
+        "commands_sent": {
+          "mean": 0.0,
+          "median": 0.0,
+          "std": 0.0
+        },
+        "node_survival_rate": {
+          "mean": 1.0,
+          "median": 1.0,
+          "std": 0.0
+        },
+        "timely_delivery_rate": {
+          "mean": 0.14840085287846483,
+          "median": 0.14872068230277186,
+          "std": 0.004465516660158853
+        },
+        "total_consumed_wh": {
+          "mean": 0.10027249843199999,
+          "median": 0.100275922688,
+          "std": 3.575633603899815e-05
+        }
+      },
+      "n": 30,
+      "paired_vs_local": {
+        "collection_rate": {
+          "hi": 0.0,
+          "lo": 0.0,
+          "mean": 0.0
+        },
+        "node_survival_rate": {
+          "hi": 0.0,
+          "lo": 0.0,
+          "mean": 0.0
+        },
+        "timely_delivery_rate": {
+          "hi": 0.0,
+          "lo": 0.0,
+          "mean": 0.0
+        },
+        "total_consumed_wh": {
+          "hi": 0.0,
+          "lo": 0.0,
+          "mean": 0.0
+        }
+      },
+      "routine_full_success": {
+        "hi": 0.11351339317396876,
+        "lo": 0.0,
+        "n": 30,
+        "rate": 0.0,
+        "success": 0
+      }
+    },
+    "O6/comm.backup_maxcov": {
+      "failure_taxonomy": {
+        "COLLECTION_MISS": 30,
+        "DELIVERY_DEADLINE_MISS": 30,
+        "TASK_REVISION_NOT_APPLIED": 30
+      },
+      "metrics": {
+        "aoi_mean_s": {
+          "mean": 3716.5904265472564,
+          "median": 3722.363866949207,
+          "std": 387.2006719584548
+        },
+        "backup_packets": {
+          "mean": 13.8,
+          "median": 14.5,
+          "std": 5.241742274183796
+        },
+        "collection_rate": {
+          "mean": 0.1886993603411514,
+          "median": 0.1886993603411514,
+          "std": 0.0
+        },
+        "commands_sent": {
+          "mean": 0.0,
+          "median": 0.0,
+          "std": 0.0
+        },
+        "node_survival_rate": {
+          "mean": 1.0,
+          "median": 1.0,
+          "std": 0.0
+        },
+        "timely_delivery_rate": {
+          "mean": 0.14840085287846483,
+          "median": 0.14872068230277186,
+          "std": 0.004465516660158853
+        },
+        "total_consumed_wh": {
+          "mean": 0.10027249843199999,
+          "median": 0.100275922688,
+          "std": 3.575633603899815e-05
+        }
+      },
+      "n": 30,
+      "paired_vs_local": {
+        "collection_rate": {
+          "hi": 0.0,
+          "lo": 0.0,
+          "mean": 0.0
+        },
+        "node_survival_rate": {
+          "hi": 0.0,
+          "lo": 0.0,
+          "mean": 0.0
+        },
+        "timely_delivery_rate": {
+          "hi": 0.0,
+          "lo": 0.0,
+          "mean": 0.0
+        },
+        "total_consumed_wh": {
+          "hi": 0.0,
+          "lo": 0.0,
+          "mean": 0.0
+        }
+      },
+      "routine_full_success": {
+        "hi": 0.11351339317396876,
+        "lo": 0.0,
+        "n": 30,
+        "rate": 0.0,
+        "success": 0
+      }
+    },
+    "O6/comm.ea_aoi": {
+      "failure_taxonomy": {
+        "COLLECTION_MISS": 30,
+        "DELIVERY_DEADLINE_MISS": 30,
+        "TASK_REVISION_NOT_APPLIED": 30
+      },
+      "metrics": {
+        "aoi_mean_s": {
+          "mean": 2430.778642351627,
+          "median": 2503.2467067028283,
+          "std": 372.6944481278459
+        },
+        "backup_packets": {
+          "mean": 38.9,
+          "median": 40.0,
+          "std": 15.06846444365368
+        },
+        "collection_rate": {
+          "mean": 0.5277185501066098,
+          "median": 0.535181236673774,
+          "std": 0.01593623280775396
+        },
+        "commands_sent": {
+          "mean": 45.0,
+          "median": 45.0,
+          "std": 6.253275004016861
+        },
+        "node_survival_rate": {
+          "mean": 1.0,
+          "median": 1.0,
+          "std": 0.0
+        },
+        "timely_delivery_rate": {
+          "mean": 0.2785714285714286,
+          "median": 0.27825159914712155,
+          "std": 0.018750016166652044
+        },
+        "total_consumed_wh": {
+          "mean": 0.4335670735360006,
+          "median": 0.4381402794880006,
+          "std": 0.019155923071723067
+        }
+      },
+      "n": 30,
+      "paired_vs_local": {
+        "collection_rate": {
+          "hi": 0.34399431414356785,
+          "lo": 0.3331556503198294,
+          "mean": 0.3390191897654585
+        },
+        "node_survival_rate": {
+          "hi": 0.0,
+          "lo": 0.0,
+          "mean": 0.0
+        },
+        "timely_delivery_rate": {
+          "hi": 0.13585643212508886,
+          "lo": 0.12398720682302772,
+          "mean": 0.13017057569296375
+        },
+        "total_consumed_wh": {
+          "hi": 0.33997819703456067,
+          "lo": 0.326442130700374,
+          "mean": 0.3332945751040006
+        }
+      },
+      "routine_full_success": {
+        "hi": 0.11351339317396876,
+        "lo": 0.0,
+        "n": 30,
+        "rate": 0.0,
+        "success": 0
+      }
+    },
+    "O6/comm.energy_aware": {
+      "failure_taxonomy": {
+        "COLLECTION_MISS": 30,
+        "DELIVERY_DEADLINE_MISS": 30,
+        "ENERGY_EXHAUSTION": 12,
+        "TASK_REVISION_NOT_APPLIED": 30
+      },
+      "metrics": {
+        "aoi_mean_s": {
+          "mean": 3292.4629417650917,
+          "median": 3384.290045582948,
+          "std": 547.6243676587688
+        },
+        "backup_packets": {
+          "mean": 30.3,
+          "median": 32.0,
+          "std": 7.697514153149121
+        },
+        "collection_rate": {
+          "mean": 0.6388770433546553,
+          "median": 0.6284648187633262,
+          "std": 0.15121209703728308
+        },
+        "commands_sent": {
+          "mean": 68.53333333333333,
+          "median": 69.0,
+          "std": 7.842120285656976
+        },
+        "node_survival_rate": {
+          "mean": 0.9428571428571428,
+          "median": 1.0,
+          "std": 0.09638066680902936
+        },
+        "timely_delivery_rate": {
+          "mean": 0.26528073916133615,
+          "median": 0.2537313432835821,
+          "std": 0.05535296685529421
+        },
+        "total_consumed_wh": {
+          "mean": 0.5012220493354665,
+          "median": 0.49694226911999995,
+          "std": 0.09686493632043988
+        }
+      },
+      "n": 30,
+      "paired_vs_local": {
+        "collection_rate": {
+          "hi": 0.5011727078891258,
+          "lo": 0.3969074271499644,
+          "mean": 0.45017768301350386
+        },
+        "node_survival_rate": {
+          "hi": -0.026190476190476195,
+          "lo": -0.09523809523809522,
+          "mean": -0.05714285714285715
+        },
+        "timely_delivery_rate": {
+          "hi": 0.13603411513859276,
+          "lo": 0.0990405117270789,
+          "mean": 0.11687988628287135
+        },
+        "total_consumed_wh": {
+          "hi": 0.43492541952938657,
+          "lo": 0.36604061667231996,
+          "mean": 0.4009495509034666
+        }
+      },
+      "routine_full_success": {
+        "hi": 0.11351339317396876,
+        "lo": 0.0,
+        "n": 30,
+        "rate": 0.0,
+        "success": 0
+      }
+    },
+    "O6/comm.local_policy": {
+      "failure_taxonomy": {
+        "COLLECTION_MISS": 30,
+        "DELIVERY_DEADLINE_MISS": 30,
+        "TASK_REVISION_NOT_APPLIED": 30
+      },
+      "metrics": {
+        "aoi_mean_s": {
+          "mean": 3717.065002818443,
+          "median": 3722.363866949207,
+          "std": 386.84303460444437
+        },
+        "backup_packets": {
+          "mean": 11.7,
+          "median": 12.5,
+          "std": 3.914165256497535
+        },
+        "collection_rate": {
+          "mean": 0.1886993603411514,
+          "median": 0.1886993603411514,
+          "std": 0.0
+        },
+        "commands_sent": {
+          "mean": 0.0,
+          "median": 0.0,
+          "std": 0.0
+        },
+        "node_survival_rate": {
+          "mean": 1.0,
+          "median": 1.0,
+          "std": 0.0
+        },
+        "timely_delivery_rate": {
+          "mean": 0.14840085287846483,
+          "median": 0.14872068230277186,
+          "std": 0.004465516660158853
+        },
+        "total_consumed_wh": {
+          "mean": 0.10027249843199999,
+          "median": 0.100275922688,
+          "std": 3.575633603899815e-05
+        }
+      },
+      "n": 30,
+      "routine_full_success": {
+        "hi": 0.11351339317396876,
+        "lo": 0.0,
+        "n": 30,
+        "rate": 0.0,
+        "success": 0
+      }
+    },
+    "O6/comm.mission_comply": {
+      "failure_taxonomy": {
+        "COLLECTION_MISS": 30,
+        "DELIVERY_DEADLINE_MISS": 30,
+        "TASK_REVISION_NOT_APPLIED": 30
+      },
+      "metrics": {
+        "aoi_mean_s": {
+          "mean": 3556.650240999167,
+          "median": 3576.8877223399472,
+          "std": 326.6263593950879
+        },
+        "backup_packets": {
+          "mean": 29.8,
+          "median": 27.5,
+          "std": 14.208787955783343
+        },
+        "collection_rate": {
+          "mean": 0.3329424307036247,
+          "median": 0.3528784648187633,
+          "std": 0.06976346007759607
+        },
+        "commands_sent": {
+          "mean": 61.4,
+          "median": 61.0,
+          "std": 15.914859679579008
+        },
+        "node_survival_rate": {
+          "mean": 1.0,
+          "median": 1.0,
+          "std": 0.0
+        },
+        "timely_delivery_rate": {
+          "mean": 0.1931769722814499,
+          "median": 0.203091684434968,
+          "std": 0.02975395780434126
+        },
+        "total_consumed_wh": {
+          "mean": 0.2587803384960002,
+          "median": 0.2561431046400002,
+          "std": 0.07528935515249914
+        }
+      },
+      "n": 30,
+      "paired_vs_local": {
+        "collection_rate": {
+          "hi": 0.16730632551528074,
+          "lo": 0.11922530206112295,
+          "mean": 0.14424307036247336
+        },
+        "node_survival_rate": {
+          "hi": 0.0,
+          "lo": 0.0,
+          "mean": 0.0
+        },
+        "timely_delivery_rate": {
+          "hi": 0.05451314854299929,
+          "lo": 0.034612651030561485,
+          "mean": 0.04477611940298508
+        },
+        "total_consumed_wh": {
+          "hi": 0.1849116901412269,
+          "lo": 0.13196820454240016,
+          "mean": 0.1585078400640002
+        }
+      },
+      "routine_full_success": {
+        "hi": 0.11351339317396876,
+        "lo": 0.0,
+        "n": 30,
+        "rate": 0.0,
+        "success": 0
+      }
+    },
+    "O6/comm.mission_sustain": {
+      "failure_taxonomy": {
+        "COLLECTION_MISS": 30,
+        "DELIVERY_DEADLINE_MISS": 30,
+        "TASK_REVISION_NOT_APPLIED": 30
+      },
+      "metrics": {
+        "aoi_mean_s": {
+          "mean": 3556.650240999167,
+          "median": 3576.8877223399472,
+          "std": 326.6263593950879
+        },
+        "backup_packets": {
+          "mean": 29.8,
+          "median": 27.5,
+          "std": 14.208787955783343
+        },
+        "collection_rate": {
+          "mean": 0.3329424307036247,
+          "median": 0.3528784648187633,
+          "std": 0.06976346007759607
+        },
+        "commands_sent": {
+          "mean": 61.4,
+          "median": 61.0,
+          "std": 15.914859679579008
+        },
+        "node_survival_rate": {
+          "mean": 1.0,
+          "median": 1.0,
+          "std": 0.0
+        },
+        "timely_delivery_rate": {
+          "mean": 0.1931769722814499,
+          "median": 0.203091684434968,
+          "std": 0.02975395780434126
+        },
+        "total_consumed_wh": {
+          "mean": 0.2587803384960002,
+          "median": 0.2561431046400002,
+          "std": 0.07528935515249914
+        }
+      },
+      "n": 30,
+      "paired_vs_local": {
+        "collection_rate": {
+          "hi": 0.16730632551528074,
+          "lo": 0.11922530206112295,
+          "mean": 0.14424307036247336
+        },
+        "node_survival_rate": {
+          "hi": 0.0,
+          "lo": 0.0,
+          "mean": 0.0
+        },
+        "timely_delivery_rate": {
+          "hi": 0.05451314854299929,
+          "lo": 0.034612651030561485,
+          "mean": 0.04477611940298508
+        },
+        "total_consumed_wh": {
+          "hi": 0.1849116901412269,
+          "lo": 0.13196820454240016,
+          "mean": 0.1585078400640002
+        }
+      },
+      "routine_full_success": {
+        "hi": 0.11351339317396876,
+        "lo": 0.0,
+        "n": 30,
+        "rate": 0.0,
+        "success": 0
+      }
+    }
+  },
+  "oracles": {
+    "O1/oracle.delivery.primary_only_decomposition": {
+      "all_upper_bound_order_valid": true,
+      "mean_actual_primary_only": 144.0,
+      "mean_fixed_send_oracle": 148.0,
+      "mean_free_send_require_sample": 156.8,
+      "mean_link_opportunity_ceiling": 156.8,
+      "n": 30
+    },
+    "O2/oracle.delivery.primary_only_decomposition": {
+      "all_upper_bound_order_valid": true,
+      "mean_actual_primary_only": 184.5,
+      "mean_fixed_send_oracle": 184.5,
+      "mean_free_send_require_sample": 334.9,
+      "mean_link_opportunity_ceiling": 491.3,
+      "n": 30
+    },
+    "O3/oracle.delivery.primary_only_decomposition": {
+      "all_upper_bound_order_valid": true,
+      "mean_actual_primary_only": 85.2,
+      "mean_fixed_send_oracle": 89.2,
+      "mean_free_send_require_sample": 96.6,
+      "mean_link_opportunity_ceiling": 96.6,
+      "n": 30
+    },
+    "O4/oracle.delivery.primary_only_decomposition": {
+      "all_upper_bound_order_valid": true,
+      "mean_actual_primary_only": 107.4,
+      "mean_fixed_send_oracle": 111.4,
+      "mean_free_send_require_sample": 120.4,
+      "mean_link_opportunity_ceiling": 120.4,
+      "n": 30
+    },
+    "O4/oracle.dynamic_energy": {
+      "max": 168.0,
+      "mean_total_oracle": 168.0,
+      "min": 168.0,
+      "n": 30
+    },
+    "O6/oracle.delivery.primary_only_decomposition": {
+      "all_upper_bound_order_valid": true,
+      "mean_actual_primary_only": 112.6,
+      "mean_fixed_send_oracle": 116.7,
+      "mean_free_send_require_sample": 208.8,
+      "mean_link_opportunity_ceiling": 337.4,
+      "n": 30
+    },
+    "O6/oracle.dynamic_energy": {
+      "max": 938.0,
+      "mean_total_oracle": 938.0,
+      "min": 938.0,
+      "n": 30
+    }
+  },
+  "rows_ref": "results/benchmark/layer1-paper-deterministic-test/rows.canonical.jsonl",
+  "stage": "LAYER1_PAPER_DETERMINISTIC_STATISTICAL_ANALYSIS",
+  "statistics_contract": {
+    "binary_interval": "Wilson 95%",
+    "outlier_deletion": false,
+    "paired_bootstrap_resamples": 10000,
+    "paired_bootstrap_seed": 20261009
+  }
+}
