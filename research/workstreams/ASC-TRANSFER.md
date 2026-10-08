@@ -45,6 +45,21 @@ multi-agent / heterogeneous-team ASC 只做 related-work 或 secondary transfer�
 
 这个结果只证明 **interface compatibility + scalar semantic value 与 future hard feasibility 非等价**。下一步必须进入更接近原论文 dynamics 的 finite-horizon/CMDP replay；当前不写 empirical improvement claim。
 
+### Paper-structured finite-horizon replay
+
+第二阶段已经把 toy score interface 升级成 `code/evaluation/transfer/asc_pull_query_cmdp_replay.py`：保留 Pull-Based formulation 的核心结构——per-attribute AoI、每槽最多 query 一个 attribute 或 wait、成功 query reset AoI / 未刷新 AoI 增长、有限 query-cost budget，以及 freshness/usefulness 单调组合的 GoE。为避免伪造论文数值，当前使用 deterministic-success 子情形、finite horizon 和 `sum usefulness/AoI` 这一合法 GoE subclass；不复现 CPT 参数或论文曲线。
+
+hard operational query goals 明确标为 transfer extension。结果：
+
+- value-only GoE DP：`WAIT → A → WAIT → A → WAIT`；
+- relaxed future goal 中该 policy 仍 hard-feasible；
+- current AoI/usefulness/query budget 完全不变，只把 future goals 改成 `B@t1`、`C@t2` 后，value-only policy 违反 hard goals；
+- generic hard-goal exact DP：`WAIT → B → C → WAIT → WAIT`；
+- future-choice shield + 同一 GoE objective 得到**完全相同 constrained policy 与 value**；
+- generic exact 访问 `30` states、评估 `29` actions；shielded exact 访问 `6` states、评估 `14` actions，提前剪掉 `9` 个已破坏 future choice 的动作。
+
+这个结果证明 transfer correctness 与 search headroom，但仍不等于 Layer-2 novelty：当前 hard-goal extension 是 unit-demand deadline scheduling，ordinary scheduling-aware constrained DP 也能使用同一个 matching certificate。因此 B 线下一步必须进入**共享资源 / dynamic goal revision / delayed observation**的 formulation，才能测试完整 conditional frontier 是否有不可被普通 unit-job certificate 吸收的增量。
+
 ## Hard gate
 
 至少满足一项：
@@ -57,4 +72,4 @@ multi-agent / heterogeneous-team ASC 只做 related-work 或 secondary transfer�
 
 ## Next
 
-把当前 formulation probe 升级成原 query/AoI dynamics 上的 wrapper replay，并加入 unconstrained/value-only、ordinary constrained-DP、future-choice incremental feasibility 三组对照。只有在相同 hard-goal质量下得到额外计算/解释或 learned-policy safety 收益，才保留为 method contribution。
+当前 query/AoI replay 已完成。下一步固定三组对照：unconstrained/value-only、ordinary scheduling-aware constrained DP、future-choice incremental frontier；只在加入 shared communication opportunity、dynamic task revision 或 delayed feedback 后仍出现 ordinary certificate 无法局部概括的结构时，才保留为 method contribution。
