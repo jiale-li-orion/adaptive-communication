@@ -1,0 +1,566 @@
+{
+  "checks": {
+    "all_current_release_candidate_t1_surfaces_covered": true,
+    "all_episode_mutation_checks_pass": true,
+    "multiple_legal_success_execution_times_accepted": true,
+    "policy_text_or_model_output_not_evaluator_input": true
+  },
+  "claim_boundary": [
+    "This audit validates the full-simulator obligation scorer across every currently release-candidate T1 surface using the canonical O1/O2/O3/O4/O6 templates; it is not an exhaustive enumeration of every possible mutation class.",
+    "The evaluator operates on executed sample/transit state and obligation contracts, not planner text or model self-reported success.",
+    "Historical abstract-world V9 remains separate regression evidence; this artifact covers the paper-facing full simulator."
+  ],
+  "episodes": [
+    {
+      "baseline_target": {
+        "censored": false,
+        "collected": true,
+        "deadline": 7200,
+        "delivered": true,
+        "delivered_at": 0,
+        "first_heard_at": 0,
+        "first_received_at": 0,
+        "heard": true,
+        "heard_on_time": true,
+        "kind": "routine",
+        "latency_s": 0,
+        "n_heard": 8,
+        "n_matching": 8,
+        "n_received": 8,
+        "node_id": "gw0",
+        "oid": "gw0:routine:00000",
+        "received_on_time": true,
+        "release_at": 0
+      },
+      "checks": {
+        "alternate_on_time_arrival_remains_success": true,
+        "alternate_success_uses_distinct_execution_time": true,
+        "baseline_replay_matches_original_routine": true,
+        "irrelevant_record_does_not_change_routine_outcome": true,
+        "late_center_arrival_preserves_collection_but_breaks_delivery": true,
+        "removed_matching_records_break_target_collection": true
+      },
+      "episode": "O1",
+      "mutations": {
+        "alternate_legal_arrival": {
+          "new_received_at": 60,
+          "old_received_at": 0,
+          "target": {
+            "censored": false,
+            "collected": true,
+            "deadline": 7200,
+            "delivered": true,
+            "delivered_at": 60,
+            "first_heard_at": 0,
+            "first_received_at": 60,
+            "heard": true,
+            "heard_on_time": true,
+            "kind": "routine",
+            "latency_s": 60,
+            "n_heard": 8,
+            "n_matching": 8,
+            "n_received": 8,
+            "node_id": "gw0",
+            "oid": "gw0:routine:00000",
+            "received_on_time": true,
+            "release_at": 0
+          }
+        },
+        "irrelevant_record": {
+          "fake_sample_id": "__release_audit_irrelevant__:O1",
+          "routine_equal": true
+        },
+        "late_center_arrival": {
+          "censored": false,
+          "collected": true,
+          "deadline": 7200,
+          "delivered": false,
+          "delivered_at": null,
+          "first_heard_at": 0,
+          "first_received_at": 7260,
+          "heard": true,
+          "heard_on_time": true,
+          "kind": "routine",
+          "latency_s": null,
+          "n_heard": 8,
+          "n_matching": 8,
+          "n_received": 8,
+          "node_id": "gw0",
+          "oid": "gw0:routine:00000",
+          "received_on_time": false,
+          "release_at": 0
+        },
+        "remove_matching_records": {
+          "censored": false,
+          "collected": false,
+          "deadline": 7200,
+          "delivered": false,
+          "delivered_at": null,
+          "first_heard_at": null,
+          "first_received_at": null,
+          "heard": false,
+          "heard_on_time": false,
+          "kind": "routine",
+          "latency_s": null,
+          "n_heard": 0,
+          "n_matching": 0,
+          "n_received": 0,
+          "node_id": "gw0",
+          "oid": "gw0:routine:00000",
+          "received_on_time": false,
+          "release_at": 0
+        }
+      },
+      "paper_surfaces_covered": [
+        "T1.S0_STEADY_MONITORING"
+      ],
+      "target_deadline_s": 7200,
+      "target_obligation_id": "gw0:routine:00000",
+      "task_id": "o1-monitoring-continuity-v1"
+    },
+    {
+      "baseline_target": {
+        "censored": false,
+        "collected": true,
+        "deadline": 7200,
+        "delivered": true,
+        "delivered_at": 0,
+        "first_heard_at": 0,
+        "first_received_at": 0,
+        "heard": true,
+        "heard_on_time": true,
+        "kind": "routine",
+        "latency_s": 0,
+        "n_heard": 8,
+        "n_matching": 8,
+        "n_received": 8,
+        "node_id": "gw0",
+        "oid": "gw0:routine:t0000000",
+        "received_on_time": true,
+        "release_at": 0
+      },
+      "checks": {
+        "alternate_on_time_arrival_remains_success": true,
+        "alternate_success_uses_distinct_execution_time": true,
+        "baseline_replay_matches_original_routine": true,
+        "irrelevant_record_does_not_change_routine_outcome": true,
+        "late_center_arrival_preserves_collection_but_breaks_delivery": true,
+        "removed_matching_records_break_target_collection": true
+      },
+      "episode": "O2",
+      "mutations": {
+        "alternate_legal_arrival": {
+          "new_received_at": 60,
+          "old_received_at": 0,
+          "target": {
+            "censored": false,
+            "collected": true,
+            "deadline": 7200,
+            "delivered": true,
+            "delivered_at": 60,
+            "first_heard_at": 0,
+            "first_received_at": 60,
+            "heard": true,
+            "heard_on_time": true,
+            "kind": "routine",
+            "latency_s": 60,
+            "n_heard": 8,
+            "n_matching": 8,
+            "n_received": 8,
+            "node_id": "gw0",
+            "oid": "gw0:routine:t0000000",
+            "received_on_time": true,
+            "release_at": 0
+          }
+        },
+        "irrelevant_record": {
+          "fake_sample_id": "__release_audit_irrelevant__:O2",
+          "routine_equal": true
+        },
+        "late_center_arrival": {
+          "censored": false,
+          "collected": true,
+          "deadline": 7200,
+          "delivered": false,
+          "delivered_at": null,
+          "first_heard_at": 0,
+          "first_received_at": 7260,
+          "heard": true,
+          "heard_on_time": true,
+          "kind": "routine",
+          "latency_s": null,
+          "n_heard": 8,
+          "n_matching": 8,
+          "n_received": 8,
+          "node_id": "gw0",
+          "oid": "gw0:routine:t0000000",
+          "received_on_time": false,
+          "release_at": 0
+        },
+        "remove_matching_records": {
+          "censored": false,
+          "collected": false,
+          "deadline": 7200,
+          "delivered": false,
+          "delivered_at": null,
+          "first_heard_at": null,
+          "first_received_at": null,
+          "heard": false,
+          "heard_on_time": false,
+          "kind": "routine",
+          "latency_s": null,
+          "n_heard": 0,
+          "n_matching": 0,
+          "n_received": 0,
+          "node_id": "gw0",
+          "oid": "gw0:routine:t0000000",
+          "received_on_time": false,
+          "release_at": 0
+        }
+      },
+      "paper_surfaces_covered": [
+        "T1.S1_WARNING_CADENCE_TRANSITION"
+      ],
+      "target_deadline_s": 7200,
+      "target_obligation_id": "gw0:routine:t0000000",
+      "task_id": "o2-risk-escalation-v1"
+    },
+    {
+      "baseline_target": {
+        "censored": false,
+        "collected": true,
+        "deadline": 7200,
+        "delivered": true,
+        "delivered_at": 0,
+        "first_heard_at": 0,
+        "first_received_at": 0,
+        "heard": true,
+        "heard_on_time": true,
+        "kind": "routine",
+        "latency_s": 0,
+        "n_heard": 8,
+        "n_matching": 8,
+        "n_received": 8,
+        "node_id": "gw0",
+        "oid": "gw0:routine:00000",
+        "received_on_time": true,
+        "release_at": 0
+      },
+      "checks": {
+        "alternate_on_time_arrival_remains_success": true,
+        "alternate_success_uses_distinct_execution_time": true,
+        "baseline_replay_matches_original_routine": true,
+        "irrelevant_record_does_not_change_routine_outcome": true,
+        "late_center_arrival_preserves_collection_but_breaks_delivery": true,
+        "removed_matching_records_break_target_collection": true
+      },
+      "episode": "O3",
+      "mutations": {
+        "alternate_legal_arrival": {
+          "new_received_at": 60,
+          "old_received_at": 0,
+          "target": {
+            "censored": false,
+            "collected": true,
+            "deadline": 7200,
+            "delivered": true,
+            "delivered_at": 60,
+            "first_heard_at": 0,
+            "first_received_at": 60,
+            "heard": true,
+            "heard_on_time": true,
+            "kind": "routine",
+            "latency_s": 60,
+            "n_heard": 8,
+            "n_matching": 8,
+            "n_received": 8,
+            "node_id": "gw0",
+            "oid": "gw0:routine:00000",
+            "received_on_time": true,
+            "release_at": 0
+          }
+        },
+        "irrelevant_record": {
+          "fake_sample_id": "__release_audit_irrelevant__:O3",
+          "routine_equal": true
+        },
+        "late_center_arrival": {
+          "censored": false,
+          "collected": true,
+          "deadline": 7200,
+          "delivered": false,
+          "delivered_at": null,
+          "first_heard_at": 0,
+          "first_received_at": 7260,
+          "heard": true,
+          "heard_on_time": true,
+          "kind": "routine",
+          "latency_s": null,
+          "n_heard": 8,
+          "n_matching": 8,
+          "n_received": 8,
+          "node_id": "gw0",
+          "oid": "gw0:routine:00000",
+          "received_on_time": false,
+          "release_at": 0
+        },
+        "remove_matching_records": {
+          "censored": false,
+          "collected": false,
+          "deadline": 7200,
+          "delivered": false,
+          "delivered_at": null,
+          "first_heard_at": null,
+          "first_received_at": null,
+          "heard": false,
+          "heard_on_time": false,
+          "kind": "routine",
+          "latency_s": null,
+          "n_heard": 0,
+          "n_matching": 0,
+          "n_received": 0,
+          "node_id": "gw0",
+          "oid": "gw0:routine:00000",
+          "received_on_time": false,
+          "release_at": 0
+        }
+      },
+      "paper_surfaces_covered": [
+        "T1.S2_INTERMITTENT_BACKHAUL_FALLBACK",
+        "T1.S4_OUTAGE_CACHE_RETENTION",
+        "T1.S6_HETEROGENEOUS_PATH_PRIORITY"
+      ],
+      "target_deadline_s": 7200,
+      "target_obligation_id": "gw0:routine:00000",
+      "task_id": "o3-backhaul-outage-sustainment-v1"
+    },
+    {
+      "baseline_target": {
+        "censored": false,
+        "collected": true,
+        "deadline": 7200,
+        "delivered": true,
+        "delivered_at": 0,
+        "first_heard_at": 0,
+        "first_received_at": 0,
+        "heard": true,
+        "heard_on_time": true,
+        "kind": "routine",
+        "latency_s": 0,
+        "n_heard": 8,
+        "n_matching": 8,
+        "n_received": 8,
+        "node_id": "gw0",
+        "oid": "gw0:routine:00000",
+        "received_on_time": true,
+        "release_at": 0
+      },
+      "checks": {
+        "alternate_on_time_arrival_remains_success": true,
+        "alternate_success_uses_distinct_execution_time": true,
+        "baseline_replay_matches_original_routine": true,
+        "irrelevant_record_does_not_change_routine_outcome": true,
+        "late_center_arrival_preserves_collection_but_breaks_delivery": true,
+        "removed_matching_records_break_target_collection": true
+      },
+      "episode": "O4",
+      "mutations": {
+        "alternate_legal_arrival": {
+          "new_received_at": 60,
+          "old_received_at": 0,
+          "target": {
+            "censored": false,
+            "collected": true,
+            "deadline": 7200,
+            "delivered": true,
+            "delivered_at": 60,
+            "first_heard_at": 0,
+            "first_received_at": 60,
+            "heard": true,
+            "heard_on_time": true,
+            "kind": "routine",
+            "latency_s": 60,
+            "n_heard": 8,
+            "n_matching": 8,
+            "n_received": 8,
+            "node_id": "gw0",
+            "oid": "gw0:routine:00000",
+            "received_on_time": true,
+            "release_at": 0
+          }
+        },
+        "irrelevant_record": {
+          "fake_sample_id": "__release_audit_irrelevant__:O4",
+          "routine_equal": true
+        },
+        "late_center_arrival": {
+          "censored": false,
+          "collected": true,
+          "deadline": 7200,
+          "delivered": false,
+          "delivered_at": null,
+          "first_heard_at": 0,
+          "first_received_at": 7260,
+          "heard": true,
+          "heard_on_time": true,
+          "kind": "routine",
+          "latency_s": null,
+          "n_heard": 8,
+          "n_matching": 8,
+          "n_received": 8,
+          "node_id": "gw0",
+          "oid": "gw0:routine:00000",
+          "received_on_time": false,
+          "release_at": 0
+        },
+        "remove_matching_records": {
+          "censored": false,
+          "collected": false,
+          "deadline": 7200,
+          "delivered": false,
+          "delivered_at": null,
+          "first_heard_at": null,
+          "first_received_at": null,
+          "heard": false,
+          "heard_on_time": false,
+          "kind": "routine",
+          "latency_s": null,
+          "n_heard": 0,
+          "n_matching": 0,
+          "n_received": 0,
+          "node_id": "gw0",
+          "oid": "gw0:routine:00000",
+          "received_on_time": false,
+          "release_at": 0
+        }
+      },
+      "paper_surfaces_covered": [
+        "T1.S3_ENERGY_CONSTRAINED_CONTINUITY"
+      ],
+      "target_deadline_s": 7200,
+      "target_obligation_id": "gw0:routine:00000",
+      "task_id": "o4-energy-constrained-monitoring-v1"
+    },
+    {
+      "baseline_target": {
+        "censored": false,
+        "collected": true,
+        "deadline": 7200,
+        "delivered": true,
+        "delivered_at": 0,
+        "first_heard_at": 0,
+        "first_received_at": 0,
+        "heard": true,
+        "heard_on_time": true,
+        "kind": "routine",
+        "latency_s": 0,
+        "n_heard": 8,
+        "n_matching": 8,
+        "n_received": 8,
+        "node_id": "gw0",
+        "oid": "gw0:routine:t0000000",
+        "received_on_time": true,
+        "release_at": 0
+      },
+      "checks": {
+        "alternate_on_time_arrival_remains_success": true,
+        "alternate_success_uses_distinct_execution_time": true,
+        "baseline_replay_matches_original_routine": true,
+        "irrelevant_record_does_not_change_routine_outcome": true,
+        "late_center_arrival_preserves_collection_but_breaks_delivery": true,
+        "removed_matching_records_break_target_collection": true
+      },
+      "episode": "O6",
+      "mutations": {
+        "alternate_legal_arrival": {
+          "new_received_at": 60,
+          "old_received_at": 0,
+          "target": {
+            "censored": false,
+            "collected": true,
+            "deadline": 7200,
+            "delivered": true,
+            "delivered_at": 60,
+            "first_heard_at": 0,
+            "first_received_at": 60,
+            "heard": true,
+            "heard_on_time": true,
+            "kind": "routine",
+            "latency_s": 60,
+            "n_heard": 8,
+            "n_matching": 8,
+            "n_received": 8,
+            "node_id": "gw0",
+            "oid": "gw0:routine:t0000000",
+            "received_on_time": true,
+            "release_at": 0
+          }
+        },
+        "irrelevant_record": {
+          "fake_sample_id": "__release_audit_irrelevant__:O6",
+          "routine_equal": true
+        },
+        "late_center_arrival": {
+          "censored": false,
+          "collected": true,
+          "deadline": 7200,
+          "delivered": false,
+          "delivered_at": null,
+          "first_heard_at": 0,
+          "first_received_at": 7260,
+          "heard": true,
+          "heard_on_time": true,
+          "kind": "routine",
+          "latency_s": null,
+          "n_heard": 8,
+          "n_matching": 8,
+          "n_received": 8,
+          "node_id": "gw0",
+          "oid": "gw0:routine:t0000000",
+          "received_on_time": false,
+          "release_at": 0
+        },
+        "remove_matching_records": {
+          "censored": false,
+          "collected": false,
+          "deadline": 7200,
+          "delivered": false,
+          "delivered_at": null,
+          "first_heard_at": null,
+          "first_received_at": null,
+          "heard": false,
+          "heard_on_time": false,
+          "kind": "routine",
+          "latency_s": null,
+          "n_heard": 0,
+          "n_matching": 0,
+          "n_received": 0,
+          "node_id": "gw0",
+          "oid": "gw0:routine:t0000000",
+          "received_on_time": false,
+          "release_at": 0
+        }
+      },
+      "paper_surfaces_covered": [
+        "T1.S7_COMPOUND_CONTINUITY"
+      ],
+      "target_deadline_s": 7200,
+      "target_obligation_id": "gw0:routine:t0000000",
+      "task_id": "o6-compound-long-horizon-v1"
+    }
+  ],
+  "paper_surfaces_covered": [
+    "T1.S0_STEADY_MONITORING",
+    "T1.S1_WARNING_CADENCE_TRANSITION",
+    "T1.S2_INTERMITTENT_BACKHAUL_FALLBACK",
+    "T1.S3_ENERGY_CONSTRAINED_CONTINUITY",
+    "T1.S4_OUTAGE_CACHE_RETENTION",
+    "T1.S6_HETEROGENEOUS_PATH_PRIORITY",
+    "T1.S7_COMPOUND_CONTINUITY"
+  ],
+  "stage": "LAYER1_FULLSIM_EXECUTION_EVALUATOR_RELEASE_AUDIT",
+  "tracks_covered": [
+    "OPERATIONAL_CONFORMANCE",
+    "INTERACTIVE_DECISION"
+  ]
+}
