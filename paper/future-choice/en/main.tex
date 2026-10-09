@@ -202,6 +202,16 @@ For binary task outcomes we report raw paired counts and Wilson 95\% intervals. 
 \subsection{RQ1: Reality first---many emergency tasks are ordinary-solved}
 The benchmark study finds that several plausible ``agentic'' mechanisms are absorbed by ordinary controls: persistent-energy commitment can be handled by horizon-aware resource admission; shared backup stress can be absorbed by packing/max-coverage rules; and source-valid warning handoff tasks do not justify inventing an unobserved cross-stage contact quota. These negative results support the benchmark's role as a method falsifier rather than a method generator.
 
+\begin{table*}[t]
+\centering
+\caption{Deterministic Layer-1 landscape on frozen test coordinates. The table reports the best ordinary baseline by mean TDR only; ties are retained rather than broken post hoc. High TDR does not imply full operational success, and failure classes remain separately visible.}
+\label{tab:layer1landscape}
+\footnotesize
+\input{../../generated/table_layer1_deterministic_landscape.tex}
+\end{table*}
+
+Table~\ref{tab:layer1landscape} shows why we avoid labeling the entire benchmark ``Agentic-hard.'' O1 is nearly saturated by an ordinary AoI policy, while O3 attains high mean TDR under several simple rules yet still reaches full routine success on only three of 30 coordinates. O2 and O6 remain far from saturation because task revision, collection, and delivery failures occur together. O4 exposes a different trade-off: EA-AoI achieves high TDR but still incurs occasional collection and energy-exhaustion failures. The benchmark therefore spans conformance, saturated interactive cases, and genuinely unresolved workflows instead of filtering for a single preferred algorithmic mechanism.
+
 \subsection{RQ2--RQ3: Conditional structure is necessary and maintainable}
 Static union reservation produces false negatives whenever future obligations belong to mutually exclusive observation branches. The shared-opportunity stress family preserves a local per-branch backup requirement while the static union grows with the number of branches. Persistent conditional domains avoid rebuilding inactive branch frontiers, and active-branch events invalidate only dependency-intersecting components.
 
