@@ -1,6 +1,7 @@
 # External ASC Benchmark Admission — Future-Choice Transfer
 
 状态：**EXPLORATORY CANDIDATE SCREEN / NOT BENCHMARK ADMIT / NOT PAPER EVIDENCE**。
+**2026-10-09 纠偏：此文件的 α³/UAVBench/6G-Bench 主导筛选不满足用户强调的“ASC 同类论文已经采用的任务/评测”要求。已被 [ASC-PEER-BENCHMARK-CANDIDATES-2026-10-09.md](ASC-PEER-BENCHMARK-CANDIDATES-2026-10-09.md) 的 peer-paper-first 检索结果取代。保留本文件仅作初期负候选/准入合同审计。**
 日期：2026-10-09。任务来自论文泛化性审查：C 已在作者公开的 `uav-attention-routing` 环境里运行，但仍是我们自行解释零迟到 hard obligations、执行 paired 仿真的一组结果。需要额外寻找 ASC / agentic wireless 社区已经发布的 **benchmark task**，以独立任务定义与原生评价降低“方法在作者自己仿真里有效”的外部效度质疑。原会话口头回忆指向一个 UAV benchmark task；其确切 identity 尚未由先前 frozen artifact 证明，因此本文件不得冒充当时已经选定的 benchmark。
 
 ## 1. 与现有 A/B/C 的关系
