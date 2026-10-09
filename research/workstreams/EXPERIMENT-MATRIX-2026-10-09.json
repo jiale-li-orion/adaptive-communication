@@ -26,13 +26,13 @@
     {"id":"C1","rq":"RQ4","status":"DONE_APPENDIX","role":"N5 robustness","scale":"1000 seeds; 107 hard-feasible"},
     {"id":"C2","rq":"RQ4","status":"DONE_MAIN","role":"N10 exact-correct main cohort","scale":"21 constructive seeds x 4 policies; 924 exact frontier checks"},
     {"id":"C3","rq":"RQ4_RQ5","status":"DONE_MAIN","role":"set-level U attribution","scale":"same frozen 21-seed cohort"},
-    {"id":"C4","rq":"RQ4","status":"FROZEN_TO_RUN","role":"external-paper-matched panel","scale":"50 layout seeds from evaluate_policy RNG seed 999","exact_audit":"sampled/not full"},
-    {"id":"C5","rq":"RQ4","status":"FROZEN_TO_RUN","role":"constructive hard-feasible scale panel","scale":"100 of 126 constructive seeds from scan 0..999","exact_audit":"reuse C2 + fixed subset only"},
+    {"id":"C4","rq":"RQ4","status":"DONE_CONTEXT_SCALE","role":"external-paper-matched panel","scale":"50 layout seeds from evaluate_policy RNG seed 999; 6 constructive-witness lower-bound cases","exact_audit":"C2 authority; FutureChoice descriptive on 6 constructive cases"},
+    {"id":"C5","rq":"RQ4","status":"DONE_MAIN_SCALE","role":"constructive hard-feasible scale panel","scale":"100 of 126 constructive seeds from scan 0..999; first 21 exactly equal C2 exact-audited cohort","exact_audit":"21/100 full exact-audited via C2; remaining 79 scale-only"},
     {"id":"C6","rq":"RQ4","status":"DONE_APPENDIX","role":"N15 bounded scaling","scale":"seed1 only"},
     {"id":"C7","rq":"RQ4","status":"OPTIONAL","role":"learned PPO comparison","condition":"only if external checkpoint becomes available"},
     {"id":"BC1","rq":"RQ5","status":"DONE","role":"B set-conflict to C set-MST attribution"},
     {"id":"BC2","rq":"RQ5","status":"DONE","role":"shared generic FutureChoiceEngine orchestration"}
   ],
-  "priority_order": ["A3","A5","C4","C5","B6","THEOREMS_AND_WRITING","B7","C7"],
-  "scale_stop_rule": "After C4 and C5 close, stop expanding seeds/N unless a reviewer-style audit identifies a new scientific gap."
+  "priority_order": ["A3","A5","B6","THEOREMS_AND_WRITING","B7","C7"],
+  "scale_stop_rule": "TRIGGERED: C4 and C5 are closed; stop expanding seeds/N unless a reviewer-style audit identifies a new scientific gap."
 }

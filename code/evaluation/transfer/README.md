@@ -27,4 +27,7 @@
 - `summarize_uav_attention_correctness_compute_frontier.py`：复用 legacy Pareto 纪律，把 depth4 / basic-U / set-MST / pure exact 组织成 correctness–compute 非支配前沿；只使用内部 search-state proxy，不冒充 wall time。
 - `uav_future_choice_adapter.py`：C 的正式 generic-engine domain adapter；只持有 route transition / set-MST optimistic bound / replayable route certificate / exact domain fallback semantics。
 - `audit_uav_generic_engine_n10_parity.py`：冻结 N=10 21-seed cohort 上的 actual core-path parity；要求 generic engine 完整复现 924 个 exact frontier 和 F5/F6 task-quality evidence。
+- `freeze_uav_attention_scale_extension_cohorts.py`：冻结 C4 external-paper-matched 50 与 C5 constructive hard-feasible 100；selection 全部 method-independent。
+- `run_uav_attention_scale_extension.py` / `scripts/run_uav_attention_scale_chunk.sh`：resource-safe C4/C5 scale execution；不重复 every-frontier pure-exact audit。
+- `analyze_uav_attention_scale_extension.py`：Wilson / paired bootstrap / exact McNemar / search-work scale statistics。
 - `materialize_future_choice_claim_matrix.py`：从 tracked A/B/C evidence 生成 paper-facing scoped claim matrix；不替代 `results/CLAIMS.md` 的 claim-state authority。

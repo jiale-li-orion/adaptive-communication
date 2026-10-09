@@ -177,7 +177,7 @@ Correctness authority仍是 fresh exact/fresh structural rebuild。该项优先�
 - relative to basic-U total proxy ≈60% reduction；
 - exact-correct Pareto：set-MST dominates basic-U and pure exact search points。
 
-## C4 · External-paper-matched 50-episode panel — FROZEN / TO RUN
+## C4 · External-paper-matched 50-episode panel — DONE / CONTEXT SCALE
 
 **Scale authority来自外部 repo**：其 `evaluate_policy(... episodes=50, seed=999)` 用 `np.random.default_rng(999)` 生成 50 个 fresh layout seeds。我们冻结**完全相同的 seed序列**，不自行用 `999..1048` 近似。
 
@@ -200,7 +200,17 @@ Correctness authority仍是 fresh exact/fresh structural rebuild。该项优先�
 
 completion / returned / zero-tardiness / tardiness / infeasible / energy + hard-feasible prevalence。
 
-## C5 · Constructive hard-feasible 100 paired panel — FROZEN / TO RUN
+### Frozen result
+
+- exact external `evaluate_policy(... episodes=50, seed=999)` layout-seed sequence：50/50完成；
+- official-heuristic constructive hard-feasible **lower bound = 6/50**；该数字只表示“至少这些 layout 有 ordinary constructive witness”，不是 exact feasibility prevalence；
+- all-50 native/depth4：
+  - NN / BatteryAware：native 3/50 zero-tardy，depth4 10/50；两者 completion 50/50；
+  - Greedy：native 6/50 zero-tardy、24/50 complete；depth4 7/50、26/50；
+  - NearestDeadline：native 2/50 zero-tardy、14/50 complete、42 infeasible；depth4 7/50、16/50、37 infeasible；
+- FutureChoice 只在 6 个 constructive-witness layout 上运行，四条 policy均 6/6 zero-tardy / complete / 0 infeasible；**n=6只作 descriptive，不作大样本 significance claim**。
+
+## C5 · Constructive hard-feasible 100 paired panel — DONE / MAIN SCALE
 
 0..999 method-independent scan：126/1000 seeds被至少一条官方 heuristic native zero-tardy完成；四 heuristic命中计数：NN58 / NDF16 / Greedy98 / BatteryAware58。
 
@@ -226,6 +236,42 @@ completion / returned / zero-tardiness / tardiness / infeasible / energy + hard-
 ### Statistics
 
 paired per-seed outcome；zero-tardy / completion / infeasible raw counts + Wilson 95% CI；tardiness / energy paired bootstrap；search-work汇总；policy-stratified results。
+
+### Frozen result
+
+前21个 seed **完全等于 C2 frozen exact-audited cohort**；因此 C5 的设计是：
+
+```text
+21/100  correctness + exact parity + outcome
+79/100  scale / statistical stability only
+```
+
+FutureChoice 四条 policy：**100/100 zero-tardy、100/100 complete、0 infeasible**；Wilson 95% lower bound均为 **0.963**。
+
+Depth4 zero-tardy：
+
+```text
+NN              87/100
+BatteryAware    87/100
+Greedy          87/100
+NearestDeadline 47/100
+```
+
+Completion / infeasible：
+
+```text
+NN/BatteryAware   100 complete / 0 infeasible
+Greedy             98 complete / 3 infeasible
+NearestDeadline    69 complete / 41 infeasible
+FutureChoice      100 complete / 0 infeasible (all four)
+```
+
+FutureChoice vs depth4 paired zero-tardy：
+
+- NN / BatteryAware / Greedy：`+13pp`，bootstrap 95% CI `[+7,+20]pp`，13/0 favorable/adverse discordance，exact McNemar `p=2.44e-4`；
+- NearestDeadline：`+53pp`，95% CI `[+43,+63]pp`，53/0 discordance，exact McNemar约 `2.22e-16`。
+
+Scale run **不新增 every-frontier pure-exact audit**；correctness authority继续是嵌套前21个 C2 seeds 的 924/924 exact parity。
 
 ## C6 · N=15 bounded scaling — DONE / APPENDIX ONLY
 
@@ -274,12 +320,10 @@ B set-level obligation conflict → C deadline-threshold MST sound U；C3 是直
 
 ```text
 P0  A3 finish → A5 final benchmark release
-P0  C4 paper-matched 50
-P0  C5 constructive-100
 P1  B6 structural holdout
 P1  write theorem/soundness statements + manuscript RQ sections
 P2  B7 wall-time gate
 P2  learned PPO only if checkpoint becomes available
 ```
 
-Stop rule：C4+C5完成后，除非 reviewer-style audit发现新缺口，**停止继续扩大 seed/N**；规模证据已经覆盖 external-paper protocol + 100 hard-feasible paired cases + 1000-seed N=5 robustness。
+**Scale stop rule 已触发。** 除非 reviewer-style audit发现新科学缺口，停止继续扩大 seed/N；当前规模证据已经覆盖 external-paper 50-episode protocol + 100 hard-feasible paired cases（其中21 exact-audited）+ 1000-seed N=5 robustness + N=15 bounded probe。

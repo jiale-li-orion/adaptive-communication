@@ -82,6 +82,7 @@ C 不承担 emergency-communication domain claim；它负责证明 future-choice
 6. N=10 / 21 seeds：L/U future-choice 对四条 heuristic 均 **21/21 zero-tardiness、21/21 completed、0 infeasible**，924 reached frontiers / 0 mismatch；depth4 只有 NN 17/21、BatteryAware 17/21、NearestDeadline 11/21、Greedy 20/21。
 7. N=10 search：L/U exact-fallback new-state search约 pure exact mask 的 42–55%；加 bounded constructive search 后 total proxy约 66–78%。
 8. **B→C set-level conflict transfer**：把 B 的 obligation-set conflict 思想实例化为 C 的 deadline-threshold MST optimistic U。N=10 同一 frozen 21-seed cohort、924/924 exact frontier match、任务质量完全不变时，exact fallback ratio进一步压到 **11–18%**，total search proxy压到 **25.8–30.9%** of pure exact；相对旧 basic-U total proxy下降约 **60%**。N=15 seed1 bounded scaling 上，basic-U fallback已退化到 pure exact的约92–96%，set-MST降到约 **5.8–8.1%**，同时 66/66 frontier exact match。
+9. **N=10 statistical scale extension**：0..999 method-independent scan得到126个 official-heuristic constructive hard-feasible seeds，冻结前100作为 confirmatory scale cohort；前21恰好就是924-frontier exact-audited主 cohort。FutureChoice四条 policy均100/100 zero-tardiness / complete / 0 infeasible；depth4为87/87/47/87 zero-tardiness（NN/BatteryAware/NearestDeadline/Greedy顺序），paired gain在三条 policy为+13pp、NearestDeadline为+53pp，且0个反向 harm。另按 external paper自身 `evaluate_policy(... episodes=50, seed=999)` 完整复刻50-layout panel，用于distribution/scale context；其中只有6/50有ordinary constructive zero-tardiness witness，因此该panel不承担FutureChoice大样本显著性主张。
 
 C 已经支持的最强 claim：
 
@@ -194,7 +195,7 @@ C: independent environment shows the same failure mode causes real outcome loss,
 
 1. **Generic method core**：**orchestration + actual C core-path parity gates 均已关闭**。`FutureChoiceEngine` 已让 B/C 走同一 `carried → U=0 → L=1 → exact fallback` correctness protocol；formal `UAVFutureChoiceAdapter + FutureChoiceEngine` 又在冻结 N=10 21-seed × 4-policy cohort上复现 924/924 exact frontier 与全部主质量结果。剩余边界是 domain-specific certificate construction，而不是 core orchestration。
 2. **B component-level invalidation**：**gate 已关闭**。active branch 的 send/pending/receipt/ACK/time/resource event 已与 fresh rebuild 对账，并补 ordinary persistent exact / dependency-cache strong ladder。下一步主要是把该 structural layer 接入最终 generic engine/论文实验接口，不再扩 synthetic axis。
-3. **C stronger scale/control**：N=10 gate 已关闭；N=15 只保留 bounded scaling probe，不一把梭 exact。公开 repo 未随代码提供 PPO checkpoint，因此 learned PPO paired shield 降为 optional；下一方法重点是把 set-level conflict certificate 泛化到 generic core，而不是重训 RL。
+3. **C stronger scale/control**：**gate 已关闭。** 已完成 external-paper-matched 50 + constructive hard-feasible 100；前21与 exact-audited C2 cohort嵌套。scale stop rule已触发，不再继续扩大 seed/N。N=15只保留 bounded probe；learned PPO因无公开checkpoint继续 optional。
 4. **A final release**：deterministic 150-coordinate test 已完成；当前只剩 frozen 30-coordinate×2-mode LLM subset、联合统计/失败 taxonomy 与 final manifest。
 5. **Paper claim table**：`results/CLAIMS.md` 已新增 F1–F7 正式 claim family；下一步只允许从 tracked artifact / generated claim matrix 投影到 manuscript。wall-time 没过就绝不写“faster”。
 

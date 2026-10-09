@@ -73,6 +73,292 @@
     {
       "boundary": "Depth-4 is cheaper and nearly saturates some policies; future-choice is a selective exact-correct safety layer, not a universal replacement for MPC.",
       "claim": "Continuation-aware L/U shielding eliminates residual short-horizon failures on the frozen N=10 constructive cohort while preserving exact action feasibility.",
+      "constructive100": {
+        "battery_aware_nn": {
+          "depth4": {
+            "completion": {
+              "hi": 1.0,
+              "lo": 0.9630065017930143,
+              "n": 100,
+              "rate": 1.0,
+              "success": 100
+            },
+            "infeasible_free": {
+              "hi": 1.0,
+              "lo": 0.9630065017930143,
+              "n": 100,
+              "rate": 1.0,
+              "success": 100
+            },
+            "zero_tardiness": {
+              "hi": 0.9224283257275948,
+              "lo": 0.7901964855992357,
+              "n": 100,
+              "rate": 0.87,
+              "success": 87
+            }
+          },
+          "future_choice": {
+            "completion": {
+              "hi": 1.0,
+              "lo": 0.9630065017930143,
+              "n": 100,
+              "rate": 1.0,
+              "success": 100
+            },
+            "infeasible_free": {
+              "hi": 1.0,
+              "lo": 0.9630065017930143,
+              "n": 100,
+              "rate": 1.0,
+              "success": 100
+            },
+            "zero_tardiness": {
+              "hi": 1.0,
+              "lo": 0.9630065017930143,
+              "n": 100,
+              "rate": 1.0,
+              "success": 100
+            }
+          },
+          "native": {
+            "completion": {
+              "hi": 1.0,
+              "lo": 0.9630065017930143,
+              "n": 100,
+              "rate": 1.0,
+              "success": 100
+            },
+            "infeasible_free": {
+              "hi": 1.0,
+              "lo": 0.9630065017930143,
+              "n": 100,
+              "rate": 1.0,
+              "success": 100
+            },
+            "zero_tardiness": {
+              "hi": 0.5865198806597283,
+              "lo": 0.3942199893044113,
+              "n": 100,
+              "rate": 0.49,
+              "success": 49
+            }
+          }
+        },
+        "greedy_deadline_battery": {
+          "depth4": {
+            "completion": {
+              "hi": 0.9944980324498376,
+              "lo": 0.929988209271456,
+              "n": 100,
+              "rate": 0.98,
+              "success": 98
+            },
+            "infeasible_free": {
+              "hi": 0.9897454759759611,
+              "lo": 0.9154806357094724,
+              "n": 100,
+              "rate": 0.97,
+              "success": 97
+            },
+            "zero_tardiness": {
+              "hi": 0.9224283257275948,
+              "lo": 0.7901964855992357,
+              "n": 100,
+              "rate": 0.87,
+              "success": 87
+            }
+          },
+          "future_choice": {
+            "completion": {
+              "hi": 1.0,
+              "lo": 0.9630065017930143,
+              "n": 100,
+              "rate": 1.0,
+              "success": 100
+            },
+            "infeasible_free": {
+              "hi": 1.0,
+              "lo": 0.9630065017930143,
+              "n": 100,
+              "rate": 1.0,
+              "success": 100
+            },
+            "zero_tardiness": {
+              "hi": 1.0,
+              "lo": 0.9630065017930143,
+              "n": 100,
+              "rate": 1.0,
+              "success": 100
+            }
+          },
+          "native": {
+            "completion": {
+              "hi": 0.9784563208456319,
+              "lo": 0.8882495307680808,
+              "n": 100,
+              "rate": 0.95,
+              "success": 95
+            },
+            "infeasible_free": {
+              "hi": 0.9722138760368118,
+              "lo": 0.8752318455410406,
+              "n": 100,
+              "rate": 0.94,
+              "success": 94
+            },
+            "zero_tardiness": {
+              "hi": 0.858343459380847,
+              "lo": 0.7002003116591013,
+              "n": 100,
+              "rate": 0.79,
+              "success": 79
+            }
+          }
+        },
+        "nearest_deadline": {
+          "depth4": {
+            "completion": {
+              "hi": 0.7722030278762395,
+              "lo": 0.5937394428051057,
+              "n": 100,
+              "rate": 0.69,
+              "success": 69
+            },
+            "infeasible_free": {
+              "hi": 0.6813268697886348,
+              "lo": 0.4920143005341078,
+              "n": 100,
+              "rate": 0.59,
+              "success": 59
+            },
+            "zero_tardiness": {
+              "hi": 0.5671114302990063,
+              "lo": 0.3751081795934127,
+              "n": 100,
+              "rate": 0.47,
+              "success": 47
+            }
+          },
+          "future_choice": {
+            "completion": {
+              "hi": 1.0,
+              "lo": 0.9630065017930143,
+              "n": 100,
+              "rate": 1.0,
+              "success": 100
+            },
+            "infeasible_free": {
+              "hi": 1.0,
+              "lo": 0.9630065017930143,
+              "n": 100,
+              "rate": 1.0,
+              "success": 100
+            },
+            "zero_tardiness": {
+              "hi": 1.0,
+              "lo": 0.9630065017930143,
+              "n": 100,
+              "rate": 1.0,
+              "success": 100
+            }
+          },
+          "native": {
+            "completion": {
+              "hi": 0.6057800106955886,
+              "lo": 0.4134801193402717,
+              "n": 100,
+              "rate": 0.51,
+              "success": 51
+            },
+            "infeasible_free": {
+              "hi": 0.40626055719489407,
+              "lo": 0.22779697212376038,
+              "n": 100,
+              "rate": 0.31,
+              "success": 31
+            },
+            "zero_tardiness": {
+              "hi": 0.19812099426711421,
+              "lo": 0.06999406437019488,
+              "n": 100,
+              "rate": 0.12,
+              "success": 12
+            }
+          }
+        },
+        "nearest_neighbour": {
+          "depth4": {
+            "completion": {
+              "hi": 1.0,
+              "lo": 0.9630065017930143,
+              "n": 100,
+              "rate": 1.0,
+              "success": 100
+            },
+            "infeasible_free": {
+              "hi": 1.0,
+              "lo": 0.9630065017930143,
+              "n": 100,
+              "rate": 1.0,
+              "success": 100
+            },
+            "zero_tardiness": {
+              "hi": 0.9224283257275948,
+              "lo": 0.7901964855992357,
+              "n": 100,
+              "rate": 0.87,
+              "success": 87
+            }
+          },
+          "future_choice": {
+            "completion": {
+              "hi": 1.0,
+              "lo": 0.9630065017930143,
+              "n": 100,
+              "rate": 1.0,
+              "success": 100
+            },
+            "infeasible_free": {
+              "hi": 1.0,
+              "lo": 0.9630065017930143,
+              "n": 100,
+              "rate": 1.0,
+              "success": 100
+            },
+            "zero_tardiness": {
+              "hi": 1.0,
+              "lo": 0.9630065017930143,
+              "n": 100,
+              "rate": 1.0,
+              "success": 100
+            }
+          },
+          "native": {
+            "completion": {
+              "hi": 1.0,
+              "lo": 0.9630065017930143,
+              "n": 100,
+              "rate": 1.0,
+              "success": 100
+            },
+            "infeasible_free": {
+              "hi": 1.0,
+              "lo": 0.9630065017930143,
+              "n": 100,
+              "rate": 1.0,
+              "success": 100
+            },
+            "zero_tardiness": {
+              "hi": 0.5865198806597283,
+              "lo": 0.3942199893044113,
+              "n": 100,
+              "rate": 0.49,
+              "success": 49
+            }
+          }
+        }
+      },
       "evidence": {
         "battery_aware_nn": {
           "depth4_completed": 21,
@@ -114,6 +400,13 @@
         "all_policies_pure_exact_dominated": true,
         "all_policies_set_mst_exact_frontier": true,
         "set_mst_exact_reference_match": true
+      },
+      "scale_checks": {
+        "constructive100_complete_1200_rows": true,
+        "legacy_21_exact_audited_cohort_is_constructive100_prefix": true,
+        "paper50_complete_600_rows": true,
+        "paper50_constructive_lower_bound_count_6": true,
+        "paper50_exact_external_protocol_size": true
       },
       "status": "SUPPORTED_EXTERNAL_DOMAIN"
     },
@@ -273,6 +566,10 @@
     "C_robust": {
       "path": "results/transfer/uav-attention-future-choice-robustness-summary.json",
       "sha256": "aa59a4fcee1df6c04decf2090b8ef7de1a65c4309caf9c5b8058b4a4bfcd0bc9"
+    },
+    "C_scale": {
+      "path": "results/transfer/uav-attention-n10-scale-statistics.json",
+      "sha256": "ffd6adda9bbf347a8d039ec8dd45eeba5e1e298a404695696318e45058fbc310"
     },
     "C_set_mst": {
       "path": "results/transfer/uav-attention-set-mst-attribution.json",

@@ -25,6 +25,7 @@ FILES = {
     "B_components": ROOT / "results/transfer/asc-pull-query-component-strong-baselines.json",
     "BC_engine": ROOT / "results/transfer/generic-future-choice-engine-cross-domain.json",
     "C_generic_parity": ROOT / "results/transfer/uav-attention-generic-engine-n10-parity.json",
+    "C_scale": ROOT / "results/transfer/uav-attention-n10-scale-statistics.json",
     "C_n10": ROOT / "results/transfer/uav-attention-n10-future-choice-summary.json",
     "C_set_mst": ROOT / "results/transfer/uav-attention-set-mst-attribution.json",
     "C_pareto": ROOT / "results/transfer/uav-attention-correctness-compute-frontier.json",
@@ -50,6 +51,7 @@ def main() -> int:
     b_comp = load("B_components")
     bc = load("BC_engine")
     cgeneric = load("C_generic_parity")
+    cscale = load("C_scale")
     c10 = load("C_n10")
     cset = load("C_set_mst")
     cpareto = load("C_pareto")
@@ -133,6 +135,18 @@ def main() -> int:
                 for policy, row in n10_rows.items()
             },
             "pareto_checks": cpareto["checks"],
+            "scale_checks": cscale["checks"],
+            "constructive100": {
+                policy: {
+                    method: {
+                        "zero_tardiness": stats["zero_tardiness"],
+                        "completion": stats["completion"],
+                        "infeasible_free": stats["infeasible_free"],
+                    }
+                    for method, stats in row["methods"].items()
+                }
+                for policy, row in cscale["constructive100"].items()
+            },
             "boundary": "Depth-4 is cheaper and nearly saturates some policies; future-choice is a selective exact-correct safety layer, not a universal replacement for MPC."
         },
         {

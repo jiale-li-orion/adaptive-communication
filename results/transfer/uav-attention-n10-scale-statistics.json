@@ -1,0 +1,1105 @@
+{
+  "checks": {
+    "constructive100_complete_1200_rows": true,
+    "legacy_21_exact_audited_cohort_is_constructive100_prefix": true,
+    "paper50_complete_600_rows": true,
+    "paper50_constructive_lower_bound_count_6": true,
+    "paper50_exact_external_protocol_size": true
+  },
+  "claim_boundary": [
+    "Constructive100 is a conservative hard-feasible cohort because every seed has an ordinary official-heuristic zero-tardiness witness before FutureChoice evaluation.",
+    "The first 21 constructive100 seeds are exactly the frozen C2 cohort with 924/924 independent exact-frontier audits; the remaining 79 extend statistical scale without repeating pure-exact auditing.",
+    "Paper50 exactly matches the external repository's 50-episode layout-seed protocol. Its six constructive seeds are only a lower bound on hard-feasible layouts; unlabelled layouts are not declared infeasible.",
+    "FutureChoice on paper50 is reported only on the six constructive-witness layouts."
+  ],
+  "constructive100": {
+    "battery_aware_nn": {
+      "future_vs_depth4": {
+        "completion_rate_diff": {
+          "hi": 0.0,
+          "lo": 0.0,
+          "mean": 0.0
+        },
+        "energy_delta_future_minus_baseline": {
+          "hi": 2.334455414056778,
+          "lo": -0.4619174675941467,
+          "mean": 0.883764672279358
+        },
+        "future_zero_better": 13,
+        "future_zero_equal": 87,
+        "future_zero_worse": 0,
+        "infeasible_episode_reduction": {
+          "hi": 0.0,
+          "lo": 0.0,
+          "mean": 0.0
+        },
+        "n": 100,
+        "tardiness_reduction": {
+          "hi": 1.0648012577081947,
+          "lo": 0.2859533588164061,
+          "mean": 0.6231101411994507
+        },
+        "zero_tardiness_mcnemar": {
+          "discordant": 13,
+          "future_better": 13,
+          "future_worse": 0,
+          "p_two_sided": 0.000244140625
+        },
+        "zero_tardiness_rate_diff": {
+          "hi": 0.2,
+          "lo": 0.07,
+          "mean": 0.13
+        }
+      },
+      "future_vs_native": {
+        "completion_rate_diff": {
+          "hi": 0.0,
+          "lo": 0.0,
+          "mean": 0.0
+        },
+        "energy_delta_future_minus_baseline": {
+          "hi": 12.72984403789043,
+          "lo": 6.42149503827095,
+          "mean": 9.471009204387665
+        },
+        "future_zero_better": 51,
+        "future_zero_equal": 49,
+        "future_zero_worse": 0,
+        "infeasible_episode_reduction": {
+          "hi": 0.0,
+          "lo": 0.0,
+          "mean": 0.0
+        },
+        "n": 100,
+        "tardiness_reduction": {
+          "hi": 3.722100482222186,
+          "lo": 2.0531584000507013,
+          "mean": 2.850882623313201
+        },
+        "zero_tardiness_mcnemar": {
+          "discordant": 51,
+          "future_better": 51,
+          "future_worse": 0,
+          "p_two_sided": 8.881784197001252e-16
+        },
+        "zero_tardiness_rate_diff": {
+          "hi": 0.61,
+          "lo": 0.41,
+          "mean": 0.51
+        }
+      },
+      "methods": {
+        "depth4": {
+          "completion": {
+            "hi": 1.0,
+            "lo": 0.9630065017930143,
+            "n": 100,
+            "rate": 1.0,
+            "success": 100
+          },
+          "infeasible_free": {
+            "hi": 1.0,
+            "lo": 0.9630065017930143,
+            "n": 100,
+            "rate": 1.0,
+            "success": 100
+          },
+          "mean_energy": 154.7916651403904,
+          "mean_tardiness": 0.6231101411994507,
+          "zero_tardiness": {
+            "hi": 0.9224283257275948,
+            "lo": 0.7901964855992357,
+            "n": 100,
+            "rate": 0.87,
+            "success": 87
+          }
+        },
+        "future_choice": {
+          "completion": {
+            "hi": 1.0,
+            "lo": 0.9630065017930143,
+            "n": 100,
+            "rate": 1.0,
+            "success": 100
+          },
+          "infeasible_free": {
+            "hi": 1.0,
+            "lo": 0.9630065017930143,
+            "n": 100,
+            "rate": 1.0,
+            "success": 100
+          },
+          "mean_energy": 155.67542981266976,
+          "mean_tardiness": 0.0,
+          "zero_tardiness": {
+            "hi": 1.0,
+            "lo": 0.9630065017930143,
+            "n": 100,
+            "rate": 1.0,
+            "success": 100
+          }
+        },
+        "native": {
+          "completion": {
+            "hi": 1.0,
+            "lo": 0.9630065017930143,
+            "n": 100,
+            "rate": 1.0,
+            "success": 100
+          },
+          "infeasible_free": {
+            "hi": 1.0,
+            "lo": 0.9630065017930143,
+            "n": 100,
+            "rate": 1.0,
+            "success": 100
+          },
+          "mean_energy": 146.20442060828208,
+          "mean_tardiness": 2.850882623313201,
+          "zero_tardiness": {
+            "hi": 0.5865198806597283,
+            "lo": 0.3942199893044113,
+            "n": 100,
+            "rate": 0.49,
+            "success": 49
+          }
+        }
+      },
+      "search": {
+        "boundary": "depth4 partial expansions and FutureChoice lower/exact state counts are different operation units; do not translate their ratio into wall time",
+        "depth4_partial_states_expanded": 11195,
+        "future_choice_carried_hits": 1000,
+        "future_choice_exact_calls": 671,
+        "future_choice_exact_new_states": 49734,
+        "future_choice_lower_search_expanded": 28659,
+        "future_choice_total_search_proxy": 78393,
+        "future_choice_upper_impossible": 8287
+      }
+    },
+    "greedy_deadline_battery": {
+      "future_vs_depth4": {
+        "completion_rate_diff": {
+          "hi": 0.05,
+          "lo": 0.0,
+          "mean": 0.02
+        },
+        "energy_delta_future_minus_baseline": {
+          "hi": -1.8725805132389077,
+          "lo": -6.898077416419984,
+          "mean": -4.177767181396485
+        },
+        "future_zero_better": 13,
+        "future_zero_equal": 87,
+        "future_zero_worse": 0,
+        "infeasible_episode_reduction": {
+          "hi": 0.07,
+          "lo": 0.0,
+          "mean": 0.03
+        },
+        "n": 100,
+        "tardiness_reduction": {
+          "hi": 1.0968818502748203,
+          "lo": 0.2999550361687697,
+          "mean": 0.6645409819964425
+        },
+        "zero_tardiness_mcnemar": {
+          "discordant": 13,
+          "future_better": 13,
+          "future_worse": 0,
+          "p_two_sided": 0.000244140625
+        },
+        "zero_tardiness_rate_diff": {
+          "hi": 0.2,
+          "lo": 0.07,
+          "mean": 0.13
+        }
+      },
+      "future_vs_native": {
+        "completion_rate_diff": {
+          "hi": 0.1,
+          "lo": 0.01,
+          "mean": 0.05
+        },
+        "energy_delta_future_minus_baseline": {
+          "hi": -2.5551643769741066,
+          "lo": -7.656406160503625,
+          "mean": -4.9865171444416045
+        },
+        "future_zero_better": 21,
+        "future_zero_equal": 79,
+        "future_zero_worse": 0,
+        "infeasible_episode_reduction": {
+          "hi": 0.11,
+          "lo": 0.02,
+          "mean": 0.06
+        },
+        "n": 100,
+        "tardiness_reduction": {
+          "hi": 1.1403879792735878,
+          "lo": 0.41536152792789455,
+          "mean": 0.7524955074465638
+        },
+        "zero_tardiness_mcnemar": {
+          "discordant": 21,
+          "future_better": 21,
+          "future_worse": 0,
+          "p_two_sided": 9.5367431640625e-07
+        },
+        "zero_tardiness_rate_diff": {
+          "hi": 0.29,
+          "lo": 0.13,
+          "mean": 0.21
+        }
+      },
+      "methods": {
+        "depth4": {
+          "completion": {
+            "hi": 0.9944980324498376,
+            "lo": 0.929988209271456,
+            "n": 100,
+            "rate": 0.98,
+            "success": 98
+          },
+          "infeasible_free": {
+            "hi": 0.9897454759759611,
+            "lo": 0.9154806357094724,
+            "n": 100,
+            "rate": 0.97,
+            "success": 97
+          },
+          "mean_energy": 178.08586847901344,
+          "mean_tardiness": 0.6645409819964425,
+          "zero_tardiness": {
+            "hi": 0.9224283257275948,
+            "lo": 0.7901964855992357,
+            "n": 100,
+            "rate": 0.87,
+            "success": 87
+          }
+        },
+        "future_choice": {
+          "completion": {
+            "hi": 1.0,
+            "lo": 0.9630065017930143,
+            "n": 100,
+            "rate": 1.0,
+            "success": 100
+          },
+          "infeasible_free": {
+            "hi": 1.0,
+            "lo": 0.9630065017930143,
+            "n": 100,
+            "rate": 1.0,
+            "success": 100
+          },
+          "mean_energy": 173.90810129761695,
+          "mean_tardiness": 0.0,
+          "zero_tardiness": {
+            "hi": 1.0,
+            "lo": 0.9630065017930143,
+            "n": 100,
+            "rate": 1.0,
+            "success": 100
+          }
+        },
+        "native": {
+          "completion": {
+            "hi": 0.9784563208456319,
+            "lo": 0.8882495307680808,
+            "n": 100,
+            "rate": 0.95,
+            "success": 95
+          },
+          "infeasible_free": {
+            "hi": 0.9722138760368118,
+            "lo": 0.8752318455410406,
+            "n": 100,
+            "rate": 0.94,
+            "success": 94
+          },
+          "mean_energy": 178.89461844205857,
+          "mean_tardiness": 0.7524955074465638,
+          "zero_tardiness": {
+            "hi": 0.858343459380847,
+            "lo": 0.7002003116591013,
+            "n": 100,
+            "rate": 0.79,
+            "success": 79
+          }
+        }
+      },
+      "search": {
+        "boundary": "depth4 partial expansions and FutureChoice lower/exact state counts are different operation units; do not translate their ratio into wall time",
+        "depth4_partial_states_expanded": 13578,
+        "future_choice_carried_hits": 1000,
+        "future_choice_exact_calls": 925,
+        "future_choice_exact_new_states": 63226,
+        "future_choice_lower_search_expanded": 33667,
+        "future_choice_total_search_proxy": 96893,
+        "future_choice_upper_impossible": 7842
+      }
+    },
+    "nearest_deadline": {
+      "future_vs_depth4": {
+        "completion_rate_diff": {
+          "hi": 0.4,
+          "lo": 0.22,
+          "mean": 0.31
+        },
+        "energy_delta_future_minus_baseline": {
+          "hi": -12.169311594933273,
+          "lo": -19.032659282535313,
+          "mean": -15.55297879576683
+        },
+        "future_zero_better": 53,
+        "future_zero_equal": 47,
+        "future_zero_worse": 0,
+        "infeasible_episode_reduction": {
+          "hi": 0.51,
+          "lo": 0.31,
+          "mean": 0.41
+        },
+        "n": 100,
+        "tardiness_reduction": {
+          "hi": 5.72300526786176,
+          "lo": 3.282622658891457,
+          "mean": 4.458057299063282
+        },
+        "zero_tardiness_mcnemar": {
+          "discordant": 53,
+          "future_better": 53,
+          "future_worse": 0,
+          "p_two_sided": 2.220446049250313e-16
+        },
+        "zero_tardiness_rate_diff": {
+          "hi": 0.63,
+          "lo": 0.43,
+          "mean": 0.53
+        }
+      },
+      "future_vs_native": {
+        "completion_rate_diff": {
+          "hi": 0.59,
+          "lo": 0.39,
+          "mean": 0.49
+        },
+        "energy_delta_future_minus_baseline": {
+          "hi": -22.733118495196106,
+          "lo": -28.729453556805847,
+          "mean": -25.694866752624513
+        },
+        "future_zero_better": 88,
+        "future_zero_equal": 12,
+        "future_zero_worse": 0,
+        "infeasible_episode_reduction": {
+          "hi": 0.78,
+          "lo": 0.6,
+          "mean": 0.69
+        },
+        "n": 100,
+        "tardiness_reduction": {
+          "hi": 8.900803582769587,
+          "lo": 6.384394624693669,
+          "mean": 7.6185072328918935
+        },
+        "zero_tardiness_mcnemar": {
+          "discordant": 88,
+          "future_better": 88,
+          "future_worse": 0,
+          "p_two_sided": 6.462348535570529e-27
+        },
+        "zero_tardiness_rate_diff": {
+          "hi": 0.94,
+          "lo": 0.81,
+          "mean": 0.88
+        }
+      },
+      "methods": {
+        "depth4": {
+          "completion": {
+            "hi": 0.7722030278762395,
+            "lo": 0.5937394428051057,
+            "n": 100,
+            "rate": 0.69,
+            "success": 69
+          },
+          "infeasible_free": {
+            "hi": 0.6813268697886348,
+            "lo": 0.4920143005341078,
+            "n": 100,
+            "rate": 0.59,
+            "success": 59
+          },
+          "mean_energy": 203.3468813943863,
+          "mean_tardiness": 4.458057299063282,
+          "zero_tardiness": {
+            "hi": 0.5671114302990063,
+            "lo": 0.3751081795934127,
+            "n": 100,
+            "rate": 0.47,
+            "success": 47
+          }
+        },
+        "future_choice": {
+          "completion": {
+            "hi": 1.0,
+            "lo": 0.9630065017930143,
+            "n": 100,
+            "rate": 1.0,
+            "success": 100
+          },
+          "infeasible_free": {
+            "hi": 1.0,
+            "lo": 0.9630065017930143,
+            "n": 100,
+            "rate": 1.0,
+            "success": 100
+          },
+          "mean_energy": 187.79390259861947,
+          "mean_tardiness": 0.0,
+          "zero_tardiness": {
+            "hi": 1.0,
+            "lo": 0.9630065017930143,
+            "n": 100,
+            "rate": 1.0,
+            "success": 100
+          }
+        },
+        "native": {
+          "completion": {
+            "hi": 0.6057800106955886,
+            "lo": 0.4134801193402717,
+            "n": 100,
+            "rate": 0.51,
+            "success": 51
+          },
+          "infeasible_free": {
+            "hi": 0.40626055719489407,
+            "lo": 0.22779697212376038,
+            "n": 100,
+            "rate": 0.31,
+            "success": 31
+          },
+          "mean_energy": 213.48876935124397,
+          "mean_tardiness": 7.6185072328918935,
+          "zero_tardiness": {
+            "hi": 0.19812099426711421,
+            "lo": 0.06999406437019488,
+            "n": 100,
+            "rate": 0.12,
+            "success": 12
+          }
+        }
+      },
+      "search": {
+        "boundary": "depth4 partial expansions and FutureChoice lower/exact state counts are different operation units; do not translate their ratio into wall time",
+        "depth4_partial_states_expanded": 11726,
+        "future_choice_carried_hits": 1000,
+        "future_choice_exact_calls": 1010,
+        "future_choice_exact_new_states": 66444,
+        "future_choice_lower_search_expanded": 32207,
+        "future_choice_total_search_proxy": 98651,
+        "future_choice_upper_impossible": 8198
+      }
+    },
+    "nearest_neighbour": {
+      "future_vs_depth4": {
+        "completion_rate_diff": {
+          "hi": 0.0,
+          "lo": 0.0,
+          "mean": 0.0
+        },
+        "energy_delta_future_minus_baseline": {
+          "hi": 2.314156448364258,
+          "lo": -0.4390945430994034,
+          "mean": 0.883764672279358
+        },
+        "future_zero_better": 13,
+        "future_zero_equal": 87,
+        "future_zero_worse": 0,
+        "infeasible_episode_reduction": {
+          "hi": 0.0,
+          "lo": 0.0,
+          "mean": 0.0
+        },
+        "n": 100,
+        "tardiness_reduction": {
+          "hi": 1.0726167026983635,
+          "lo": 0.2716947109806811,
+          "mean": 0.6231101411994507
+        },
+        "zero_tardiness_mcnemar": {
+          "discordant": 13,
+          "future_better": 13,
+          "future_worse": 0,
+          "p_two_sided": 0.000244140625
+        },
+        "zero_tardiness_rate_diff": {
+          "hi": 0.2,
+          "lo": 0.07,
+          "mean": 0.13
+        }
+      },
+      "future_vs_native": {
+        "completion_rate_diff": {
+          "hi": 0.0,
+          "lo": 0.0,
+          "mean": 0.0
+        },
+        "energy_delta_future_minus_baseline": {
+          "hi": 12.691199970781803,
+          "lo": 6.391729824781418,
+          "mean": 9.471009204387665
+        },
+        "future_zero_better": 51,
+        "future_zero_equal": 49,
+        "future_zero_worse": 0,
+        "infeasible_episode_reduction": {
+          "hi": 0.0,
+          "lo": 0.0,
+          "mean": 0.0
+        },
+        "n": 100,
+        "tardiness_reduction": {
+          "hi": 3.7452277815341564,
+          "lo": 2.0625235553339176,
+          "mean": 2.850882623313201
+        },
+        "zero_tardiness_mcnemar": {
+          "discordant": 51,
+          "future_better": 51,
+          "future_worse": 0,
+          "p_two_sided": 8.881784197001252e-16
+        },
+        "zero_tardiness_rate_diff": {
+          "hi": 0.61,
+          "lo": 0.41,
+          "mean": 0.51
+        }
+      },
+      "methods": {
+        "depth4": {
+          "completion": {
+            "hi": 1.0,
+            "lo": 0.9630065017930143,
+            "n": 100,
+            "rate": 1.0,
+            "success": 100
+          },
+          "infeasible_free": {
+            "hi": 1.0,
+            "lo": 0.9630065017930143,
+            "n": 100,
+            "rate": 1.0,
+            "success": 100
+          },
+          "mean_energy": 154.7916651403904,
+          "mean_tardiness": 0.6231101411994507,
+          "zero_tardiness": {
+            "hi": 0.9224283257275948,
+            "lo": 0.7901964855992357,
+            "n": 100,
+            "rate": 0.87,
+            "success": 87
+          }
+        },
+        "future_choice": {
+          "completion": {
+            "hi": 1.0,
+            "lo": 0.9630065017930143,
+            "n": 100,
+            "rate": 1.0,
+            "success": 100
+          },
+          "infeasible_free": {
+            "hi": 1.0,
+            "lo": 0.9630065017930143,
+            "n": 100,
+            "rate": 1.0,
+            "success": 100
+          },
+          "mean_energy": 155.67542981266976,
+          "mean_tardiness": 0.0,
+          "zero_tardiness": {
+            "hi": 1.0,
+            "lo": 0.9630065017930143,
+            "n": 100,
+            "rate": 1.0,
+            "success": 100
+          }
+        },
+        "native": {
+          "completion": {
+            "hi": 1.0,
+            "lo": 0.9630065017930143,
+            "n": 100,
+            "rate": 1.0,
+            "success": 100
+          },
+          "infeasible_free": {
+            "hi": 1.0,
+            "lo": 0.9630065017930143,
+            "n": 100,
+            "rate": 1.0,
+            "success": 100
+          },
+          "mean_energy": 146.20442060828208,
+          "mean_tardiness": 2.850882623313201,
+          "zero_tardiness": {
+            "hi": 0.5865198806597283,
+            "lo": 0.3942199893044113,
+            "n": 100,
+            "rate": 0.49,
+            "success": 49
+          }
+        }
+      },
+      "search": {
+        "boundary": "depth4 partial expansions and FutureChoice lower/exact state counts are different operation units; do not translate their ratio into wall time",
+        "depth4_partial_states_expanded": 11195,
+        "future_choice_carried_hits": 1000,
+        "future_choice_exact_calls": 671,
+        "future_choice_exact_new_states": 49734,
+        "future_choice_lower_search_expanded": 28659,
+        "future_choice_total_search_proxy": 78393,
+        "future_choice_upper_impossible": 8287
+      }
+    }
+  },
+  "paper50": {
+    "by_policy": {
+      "battery_aware_nn": {
+        "constructive_subset_future_vs_depth4_descriptive": {
+          "completion_rate_diff": {
+            "hi": 0.0,
+            "lo": 0.0,
+            "mean": 0.0
+          },
+          "energy_delta_future_minus_baseline": {
+            "hi": 0.0,
+            "lo": -9.641289353370667,
+            "mean": -3.213763117790222
+          },
+          "future_zero_better": 1,
+          "future_zero_equal": 5,
+          "future_zero_worse": 0,
+          "infeasible_episode_reduction": {
+            "hi": 0.0,
+            "lo": 0.0,
+            "mean": 0.0
+          },
+          "n": 6,
+          "tardiness_reduction": {
+            "hi": 0.6483827925682952,
+            "lo": 0.0,
+            "mean": 0.21612759752276509
+          },
+          "zero_tardiness_mcnemar": {
+            "discordant": 1,
+            "future_better": 1,
+            "future_worse": 0,
+            "p_two_sided": 1.0
+          },
+          "zero_tardiness_rate_diff": {
+            "hi": 0.5,
+            "lo": 0.0,
+            "mean": 0.16666666666666666
+          }
+        },
+        "methods": {
+          "depth4": {
+            "completion": {
+              "hi": 1.0,
+              "lo": 0.9286524008666414,
+              "n": 50,
+              "rate": 1.0,
+              "success": 50
+            },
+            "infeasible_free": {
+              "hi": 1.0,
+              "lo": 0.9286524008666414,
+              "n": 50,
+              "rate": 1.0,
+              "success": 50
+            },
+            "mean_tardiness": 10.611642090209722,
+            "zero_tardiness": {
+              "hi": 0.3303710593222542,
+              "lo": 0.1124375001577611,
+              "n": 50,
+              "rate": 0.2,
+              "success": 10
+            }
+          },
+          "future_choice_constructive_subset": {
+            "completion": {
+              "hi": 1.0,
+              "lo": 0.6096657120978346,
+              "n": 6,
+              "rate": 1.0,
+              "success": 6
+            },
+            "n": 6,
+            "zero_tardiness": {
+              "hi": 1.0,
+              "lo": 0.6096657120978346,
+              "n": 6,
+              "rate": 1.0,
+              "success": 6
+            }
+          },
+          "native": {
+            "completion": {
+              "hi": 1.0,
+              "lo": 0.9286524008666414,
+              "n": 50,
+              "rate": 1.0,
+              "success": 50
+            },
+            "infeasible_free": {
+              "hi": 1.0,
+              "lo": 0.9286524008666414,
+              "n": 50,
+              "rate": 1.0,
+              "success": 50
+            },
+            "mean_tardiness": 11.685905110985614,
+            "zero_tardiness": {
+              "hi": 0.16217091688838173,
+              "lo": 0.02061497034897397,
+              "n": 50,
+              "rate": 0.06,
+              "success": 3
+            }
+          }
+        },
+        "note": "n=6 constructive subset: descriptive only; no broad significance claim"
+      },
+      "greedy_deadline_battery": {
+        "constructive_subset_future_vs_depth4_descriptive": {
+          "completion_rate_diff": {
+            "hi": 0.0,
+            "lo": 0.0,
+            "mean": 0.0
+          },
+          "energy_delta_future_minus_baseline": {
+            "hi": 0.0,
+            "lo": 0.0,
+            "mean": 0.0
+          },
+          "future_zero_better": 0,
+          "future_zero_equal": 6,
+          "future_zero_worse": 0,
+          "infeasible_episode_reduction": {
+            "hi": 0.0,
+            "lo": 0.0,
+            "mean": 0.0
+          },
+          "n": 6,
+          "tardiness_reduction": {
+            "hi": 0.0,
+            "lo": 0.0,
+            "mean": 0.0
+          },
+          "zero_tardiness_mcnemar": {
+            "discordant": 0,
+            "future_better": 0,
+            "future_worse": 0,
+            "p_two_sided": 1.0
+          },
+          "zero_tardiness_rate_diff": {
+            "hi": 0.0,
+            "lo": 0.0,
+            "mean": 0.0
+          }
+        },
+        "methods": {
+          "depth4": {
+            "completion": {
+              "hi": 0.6520286471342196,
+              "lo": 0.38511744890044614,
+              "n": 50,
+              "rate": 0.52,
+              "success": 26
+            },
+            "infeasible_free": {
+              "hi": 0.5576655823142176,
+              "lo": 0.2937500335471198,
+              "n": 50,
+              "rate": 0.42,
+              "success": 21
+            },
+            "mean_tardiness": 16.278789531903293,
+            "zero_tardiness": {
+              "hi": 0.2618619371058554,
+              "lo": 0.06950833427016294,
+              "n": 50,
+              "rate": 0.14,
+              "success": 7
+            }
+          },
+          "future_choice_constructive_subset": {
+            "completion": {
+              "hi": 1.0,
+              "lo": 0.6096657120978346,
+              "n": 6,
+              "rate": 1.0,
+              "success": 6
+            },
+            "n": 6,
+            "zero_tardiness": {
+              "hi": 1.0,
+              "lo": 0.6096657120978346,
+              "n": 6,
+              "rate": 1.0,
+              "success": 6
+            }
+          },
+          "native": {
+            "completion": {
+              "hi": 0.6148825510995539,
+              "lo": 0.34797135286578046,
+              "n": 50,
+              "rate": 0.48,
+              "success": 24
+            },
+            "infeasible_free": {
+              "hi": 0.5576655823142176,
+              "lo": 0.2937500335471198,
+              "n": 50,
+              "rate": 0.42,
+              "success": 21
+            },
+            "mean_tardiness": 16.28703417677336,
+            "zero_tardiness": {
+              "hi": 0.23804817383202992,
+              "lo": 0.05617600150932274,
+              "n": 50,
+              "rate": 0.12,
+              "success": 6
+            }
+          }
+        },
+        "note": "n=6 constructive subset: descriptive only; no broad significance claim"
+      },
+      "nearest_deadline": {
+        "constructive_subset_future_vs_depth4_descriptive": {
+          "completion_rate_diff": {
+            "hi": 0.5,
+            "lo": 0.0,
+            "mean": 0.16666666666666666
+          },
+          "energy_delta_future_minus_baseline": {
+            "hi": 0.0,
+            "lo": -15.981698274612427,
+            "mean": -5.3272327582041425
+          },
+          "future_zero_better": 1,
+          "future_zero_equal": 5,
+          "future_zero_worse": 0,
+          "infeasible_episode_reduction": {
+            "hi": 0.5,
+            "lo": 0.0,
+            "mean": 0.16666666666666666
+          },
+          "n": 6,
+          "tardiness_reduction": {
+            "hi": 3.413070957325118,
+            "lo": 0.0,
+            "mean": 1.1376903191083727
+          },
+          "zero_tardiness_mcnemar": {
+            "discordant": 1,
+            "future_better": 1,
+            "future_worse": 0,
+            "p_two_sided": 1.0
+          },
+          "zero_tardiness_rate_diff": {
+            "hi": 0.5,
+            "lo": 0.0,
+            "mean": 0.16666666666666666
+          }
+        },
+        "methods": {
+          "depth4": {
+            "completion": {
+              "hi": 0.45810297308144077,
+              "lo": 0.20758216260656848,
+              "n": 50,
+              "rate": 0.32,
+              "success": 16
+            },
+            "infeasible_free": {
+              "hi": 0.39553157264848837,
+              "lo": 0.15871527493552393,
+              "n": 50,
+              "rate": 0.26,
+              "success": 13
+            },
+            "mean_tardiness": 21.820687600510297,
+            "zero_tardiness": {
+              "hi": 0.2618619371058554,
+              "lo": 0.06950833427016294,
+              "n": 50,
+              "rate": 0.14,
+              "success": 7
+            }
+          },
+          "future_choice_constructive_subset": {
+            "completion": {
+              "hi": 1.0,
+              "lo": 0.6096657120978346,
+              "n": 6,
+              "rate": 1.0,
+              "success": 6
+            },
+            "n": 6,
+            "zero_tardiness": {
+              "hi": 1.0,
+              "lo": 0.6096657120978346,
+              "n": 6,
+              "rate": 1.0,
+              "success": 6
+            }
+          },
+          "native": {
+            "completion": {
+              "hi": 0.4166512369595657,
+              "lo": 0.17474170665911232,
+              "n": 50,
+              "rate": 0.28,
+              "success": 14
+            },
+            "infeasible_free": {
+              "hi": 0.2851421606303499,
+              "lo": 0.08337420678033404,
+              "n": 50,
+              "rate": 0.16,
+              "success": 8
+            },
+            "mean_tardiness": 25.152152915232335,
+            "zero_tardiness": {
+              "hi": 0.1346009068750702,
+              "lo": 0.011038884327619805,
+              "n": 50,
+              "rate": 0.04,
+              "success": 2
+            }
+          }
+        },
+        "note": "n=6 constructive subset: descriptive only; no broad significance claim"
+      },
+      "nearest_neighbour": {
+        "constructive_subset_future_vs_depth4_descriptive": {
+          "completion_rate_diff": {
+            "hi": 0.0,
+            "lo": 0.0,
+            "mean": 0.0
+          },
+          "energy_delta_future_minus_baseline": {
+            "hi": 0.0,
+            "lo": -9.641289353370667,
+            "mean": -3.213763117790222
+          },
+          "future_zero_better": 1,
+          "future_zero_equal": 5,
+          "future_zero_worse": 0,
+          "infeasible_episode_reduction": {
+            "hi": 0.0,
+            "lo": 0.0,
+            "mean": 0.0
+          },
+          "n": 6,
+          "tardiness_reduction": {
+            "hi": 0.6483827925682952,
+            "lo": 0.0,
+            "mean": 0.21612759752276509
+          },
+          "zero_tardiness_mcnemar": {
+            "discordant": 1,
+            "future_better": 1,
+            "future_worse": 0,
+            "p_two_sided": 1.0
+          },
+          "zero_tardiness_rate_diff": {
+            "hi": 0.5,
+            "lo": 0.0,
+            "mean": 0.16666666666666666
+          }
+        },
+        "methods": {
+          "depth4": {
+            "completion": {
+              "hi": 1.0,
+              "lo": 0.9286524008666414,
+              "n": 50,
+              "rate": 1.0,
+              "success": 50
+            },
+            "infeasible_free": {
+              "hi": 1.0,
+              "lo": 0.9286524008666414,
+              "n": 50,
+              "rate": 1.0,
+              "success": 50
+            },
+            "mean_tardiness": 10.611642090209722,
+            "zero_tardiness": {
+              "hi": 0.3303710593222542,
+              "lo": 0.1124375001577611,
+              "n": 50,
+              "rate": 0.2,
+              "success": 10
+            }
+          },
+          "future_choice_constructive_subset": {
+            "completion": {
+              "hi": 1.0,
+              "lo": 0.6096657120978346,
+              "n": 6,
+              "rate": 1.0,
+              "success": 6
+            },
+            "n": 6,
+            "zero_tardiness": {
+              "hi": 1.0,
+              "lo": 0.6096657120978346,
+              "n": 6,
+              "rate": 1.0,
+              "success": 6
+            }
+          },
+          "native": {
+            "completion": {
+              "hi": 1.0,
+              "lo": 0.9286524008666414,
+              "n": 50,
+              "rate": 1.0,
+              "success": 50
+            },
+            "infeasible_free": {
+              "hi": 1.0,
+              "lo": 0.9286524008666414,
+              "n": 50,
+              "rate": 1.0,
+              "success": 50
+            },
+            "mean_tardiness": 11.685905110985614,
+            "zero_tardiness": {
+              "hi": 0.16217091688838173,
+              "lo": 0.02061497034897397,
+              "n": 50,
+              "rate": 0.06,
+              "success": 3
+            }
+          }
+        },
+        "note": "n=6 constructive subset: descriptive only; no broad significance claim"
+      }
+    },
+    "constructive_hard_feasible_lower_bound_count": 6,
+    "constructive_hard_feasible_lower_bound_rate": 0.12,
+    "layout_count": 50
+  },
+  "stage": "UAV_ATTENTION_N10_SCALE_STATISTICS"
+}
