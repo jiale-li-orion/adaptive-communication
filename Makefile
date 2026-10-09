@@ -9,7 +9,7 @@ PY   := python3
 # 与 code/run_checks.py 内部设置的 PYTHONPATH 一致，保证从根目录与从子目录运行等价。
 export PYTHONPATH := $(ROOT)/libs/pylibs:$(ROOT)/code:$(ROOT)/code/substrate/joint:$(ROOT)/code/substrate/instance:$(ROOT)/code/substrate/physics:$(ROOT)/code/substrate/runtime:$(ROOT)/code/substrate/reference:$(ROOT)/code/substrate/monitoring:$(ROOT)/code/evaluation/agentic:$(ROOT)/code/legacy-communication/runtime:$(ROOT)/code/legacy-communication/experiments:$(ROOT)/code/legacy-communication/analysis:$(ROOT)/code/legacy-communication/v3joint
 
-.PHONY: all check paper agentic-paper tables agentic-o2 agentic-diagnosis agentic-baselines agentic-communication-baselines agentic-source-smoke agentic-robustness agentic-transfer agentic-action-context agentic-context-transition agentic-control-opportunity agentic-context-transition-r1 agentic-model-inputs agentic-model-matrix agentic-r1-model agentic-r3-model agentic-preapi deps data clean help
+.PHONY: all check paper agentic-paper future-choice-paper tables agentic-o2 agentic-diagnosis agentic-baselines agentic-communication-baselines agentic-source-smoke agentic-robustness agentic-transfer agentic-action-context agentic-context-transition agentic-control-opportunity agentic-context-transition-r1 agentic-model-inputs agentic-model-matrix agentic-r1-model agentic-r3-model agentic-preapi deps data clean help
 
 AGENTIC_SEEDS ?= 0,1,2,3,4
 
@@ -19,6 +19,7 @@ help:
 	@echo "make check   检查层全量自检 + 联合层锚点（含 vendored 依赖干净 shell 检查）"
 	@echo "make paper   构建两份论文稿 PDF"
 	@echo "make agentic-paper  构建当前 Agentic Communication 英文工作稿并检查排版/引用"
+	@echo "make future-choice-paper  构建当前 Future-Choice / ASC 工作稿并检查排版/引用"
 	@echo "make tables  由结果文件生成论文表格、Agentic 结果摘要与受控文档区块"
 	@echo "make agentic-o2  跑 O2 global/localized（默认 seeds $(AGENTIC_SEEDS)）并自动刷新文档/论文生成物"
 	@echo "make agentic-diagnosis  跑 O2 diagnosis-first 5-seed paired baseline 并刷新生成物"
@@ -54,6 +55,11 @@ paper:
 
 agentic-paper:
 	cd paper/agentic && ./build.sh
+
+future-choice-paper:
+	$(PY) scripts/make_future_choice_artifacts.py --check
+	$(PY) scripts/make_future_choice_figures.py --check
+	cd paper/future-choice && ./build.sh
 
 # 需获取依赖。检查依赖它们，克隆后先跑这两条；缺失时检查会打印同样的命令。
 deps:
