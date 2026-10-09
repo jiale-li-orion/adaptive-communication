@@ -1,12 +1,28 @@
 # Future-Choice paper workspace
 
-状态：**current manuscript workspace / writing scaffold / no independent claim authority**。
+状态：**current compiled manuscript workspace / no independent claim authority**。
 
 工作标题：
 
 > **Preserving Future Choices in Agentic Semantic Communication**
 
 本目录是 2026-10-09 之后当前论文的写作入口。它不接管研究语义，也不手工维护实验数字。
+
+当前可构建正文：
+
+```text
+paper/future-choice/en/main.tex
+paper/future-choice/en/appendix.tex
+paper/future-choice/en/main.pdf
+```
+
+统一构建：
+
+```bash
+make future-choice-paper
+```
+
+该入口会先检查 generated facts/tables/figures 是否与 tracked results 一致，再运行 `pdflatex + bibtex`，并对 overfull、missing glyph、undefined citation/reference 设失败门。
 
 ## Authority
 
@@ -39,6 +55,10 @@
 paper/generated/future_choice_facts.tex
 paper/generated/table_future_choice_asc.tex
 paper/generated/table_future_choice_uav.tex
+paper/generated/table_future_choice_uav_scale.tex
+paper/generated/table_future_choice_experiment_design.tex
+paper/generated/table_future_choice_b6_holdout.tex
+paper/generated/table_layer1_deterministic_landscape.tex
 paper/generated/future_choice_facts.meta.json
 ```
 
@@ -62,4 +82,4 @@ python3 scripts/make_future_choice_artifacts.py --check
 - 把 assistant-led internal audit 写成 independent expert validation；
 - A 的 frozen LLM subset 在 final analysis 完成前写最终模型结论。
 
-正文骨架可以现在写；A 最后 LLM 子表与 final Layer-1 release manifest 完成后，再冻结 abstract / result headline。
+正文、方法、RQ1--RQ5、图表与附录已经形成可编译 working draft。当前唯一 benchmark final-release blocker 是 A3 frozen LLM model-spectrum subset；A3 完成后再执行 LLM statistical analysis / Layer-1 final release，并据真实结果决定是否把 model-spectrum小表放入主文或仅留 appendix。Future-Choice F1--F7 主张不依赖该模型子集。
