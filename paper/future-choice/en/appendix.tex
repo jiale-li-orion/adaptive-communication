@@ -3,8 +3,26 @@
 \section{Proof Details}
 \label{app:proofs}
 
+\subsection{Information structure and robust continuation}
+Let $w\in\Worlds(h_t)$ fix a compatible latent initial state and subsequent exogenous/task-revision trajectory. The simulator transition $F$ and owner-scoped observation process $H$ then induce $\gamma_w=\operatorname{Run}(h_t,a,\pi,w)$; any randomness not explicitly represented in $w$ must be included in its exogenous continuation. At each decision epoch, $\pi$ sees its own actions, current time, and evidence that has actually arrived. Pending queries, deliveries, and acknowledgments may alter future transitions without supplying their outcomes in advance. A failed attempted transmission is allowed to yield a different observation in different worlds; it is not grounds for conditioning the decision \emph{before} that observation arrives.
+
+For a finite scenario tree, the robust feasibility recursion is an OR over legal current actions and an AND over observations reachable after their transitions:
+\begin{equation}
+V(h)=\bigvee_{a\in\mathcal A(h)}
+\bigwedge_{y\in\mathcal Y(h,a)}V(h^{a,y}),
+\end{equation}
+with terminal values determined by the operational completion/deadline predicate. Crucially, $h^{a,y}$ is an observation history with its remaining compatible world support, not a revealed world identity. Different worlds producing the same $y$ stay in one child node. An empty continuation caused by a task revision or deadline expiry cannot silently delete an obligation from the evaluator. The finite scenario tree is the paper's declared exact-reference support; the recursion does not assert field-scale universal robustness.
+
+The quantifier distinction can be stated without introducing a new semantic utility. A robust causal policy satisfying every compatible world implies that each world admits a completion when future states are known in advance:
+\begin{equation}
+\bigl(\exists\pi^{\rm na}\,\forall w\;\operatorname{Done}(\pi,w)\bigr)
+\Longrightarrow
+\bigl(\forall w\,\exists\pi_w\;\operatorname{Done}(\pi_w,w)\bigr).
+\end{equation}
+The reverse implication fails when indistinguishable worlds require different actions before evidence arrives. Thus a perfect-information or per-world physical oracle may refute feasibility but cannot certify a common causal completion.
+
 \subsection{Replayable lower certificates}
-Consider a current legal history $h_t$ and action $a$. A lower certificate stores a continuation witness $\pi_c$ together with a declared validity domain $D(c)$. By construction, replay validation checks that (i) every action in $\pi_c$ is legal under the observation history on which it is taken, (ii) the policy branches only after an observation distinguishes histories, and (iii) every hard obligation active on each covered compatible branch is completed before its operational deadline. Therefore $\pi_c\in\Choices(h_t,a)$ whenever $D(c)$ holds, proving $L_t(a)=1\Rightarrow V^*(h_t,a)=1$.
+Consider a current legal history $h_t$ and action $a$. A lower certificate stores a continuation witness $\pi_c$ together with a declared validity domain $D(c)$. By construction, replay validation checks that (i) every action in $\pi_c$ is legal under the observation history on which it is taken, (ii) the policy branches only after an observation distinguishes histories, and (iii) every hard obligation induced on each covered compatible branch is completed before its operational deadline. The certificate may set $L_t(a)=1$ only if its declared world-support domain covers \emph{all} of $\Worlds(h_t)$ and its execution/resource/time assumptions still hold. Under those conditions $\pi_c\in\Choices(h_t,a)$, proving $L_t(a)=1\Rightarrow V^*(h_t,a)=1$.
 
 The important restriction is non-anticipativity. A world-indexed open-loop trace is not a valid lower certificate unless the traces agree on every prefix with the same legal observations. This is why a perfect-information physical solution is an upper-bound aid, not a constructive lower certificate.
 
@@ -17,10 +35,20 @@ P(h_t,a)\text{ infeasible},
 \end{equation}
 which establishes the soundness of $U_t(a)=0$. The converse does not hold: an optimistic relaxation may be feasible even when no causal real policy exists.
 
-\subsection{Dependency-local preservation}
-Let $c$ be a component certificate with dependency set $\mathcal D_c$, compatible-world support $\Worlds_c$, resource interval, and validity boundary $t_c^{\rm valid}$. Suppose a new event changes the global history from $h$ to $h'$. If (i) the event preserves $\Worlds_c$ or only narrows it, (ii) no state read by the certificate witness changes, (iii) the current time remains inside the validity interval, and (iv) no new legal future-opportunity edge joins the reused component to a previously separate component, then every obligation--opportunity relation used by the certificate is unchanged. The previous witness or Hall-conflict structure therefore remains valid.
+\subsection{Hall deficits as necessary resource bounds}
+In one compatible world, expand each remaining terrestrial window into unit-capacity opportunity slots. Let $\Ob_w$ be its residual obligations, $N_w(S)$ the slot neighborhood of subset $S\subseteq\Ob_w$, and $\nu_w$ the maximum bipartite matching cardinality. Standard matching--min-cut duality gives
+\begin{equation}
+\Delta_w=|\Ob_w|-\nu_w
+=\max_{S\subseteq\Ob_w}\bigl(|S|-|N_w(S)|\bigr).
+\end{equation}
+Each terrestrial slot can complete at most one obligation. Therefore any physical completion requires at least $\Delta_w$ additional non-terrestrial deliveries in that world, even in the optimistic model that grants perfect world knowledge and ignores the cost of obtaining it. If the remaining backup budget $B$ permits at most $B$ such deliveries and $\Delta_w>B$ for some $w\in\Worlds(h_t)$, the robust continuation is impossible. A full matching or $\Delta_w\le B$ does not prove $L=1$: matching relaxes sensing/acknowledgment dynamics and may prescribe incompatible actions in worlds with the same observation history. The implemented flow/min-cut is used as this optimistic structural certificate, not as a replacement for the exact AND/OR oracle.
 
-Condition (iv) is the partition-safety boundary. The current transition model is monotone in future opportunity edges: time and resource use remove edges, while execution does not create an unseen terrestrial opportunity between previously unrelated components. The implementation nevertheless checks for overlap between rebuilt and reused slot sets; if the assumption is violated, it conservatively repartitions the whole world rather than reuse a potentially unsound certificate.
+\subsection{Dependency-local preservation}
+Let $c$ be a component certificate with dependency set $\mathcal D_c$, compatible-world support $\Worlds_c$, resource interval, and validity boundary $t_c^{\rm valid}$. Suppose an event changes global legal history from $h$ to $h'$. Two distinct monotonicity rules apply. A positive replayable completion witness is preserved by support narrowing $\Worlds(h')\subseteq\Worlds(h)$ if the witness still covers the new support and the event changes neither action legality nor any task/resource/transition dependency it relies on. A negative impossibility conclusion certified by a specific counterexample world $w_c$ remains conclusive only if $w_c\in\Worlds(h')$ and its bound assumptions are intact. Removing $w_c$ may make the remaining support feasible: monotonicity of a positive witness cannot be applied to a negative verdict.
+
+For either certificate polarity, reuse also requires that the current time stay inside the validity interval, that its resource budget remain in the certified range, and that no changed dependency invalidate the structural witness. A component-level matching/conflict cache may survive even when the global support-level feasibility verdict does not. These conditions delimit a sound reuse decision, rather than asserting that every observed event can be ignored.
+
+The partition-safety boundary requires that no newly legal opportunity edge join a reused component to another component. The current transition model is monotone in future opportunity edges: time and resource use remove edges, while execution does not create an unseen terrestrial opportunity between previously unrelated components. The implementation nevertheless checks overlap between rebuilt and reused slot sets; otherwise it repartitions or rebuilds rather than claim a sound global certificate.
 
 \subsection{Deadline-set MST upper bound}
 For the external routing adapter, fix a deadline threshold $d$ and let $S_d$ contain all unserved customers whose deadlines are at most $d$. Any route that serves every node in $S_d$ before $d$ induces a connected walk spanning the current UAV position and all points in $S_d$. The length of any such connected walk is at least the Euclidean minimum spanning tree length over those points. Therefore

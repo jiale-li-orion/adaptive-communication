@@ -47,13 +47,13 @@ z_t=H(x_{\le t},a_{<t},\xi_{\le t},\ell),
 \mathcal E_t=\{e_j:t_j^{obs}\le t\}.
 \]
 
-定义合法 history：
+定义合法 history（`p_t` 为已知 pending query / send / ACK 记录，而非未来响应）：
 
 \[
-h_t=(\tau,\mathcal E_{\le t},a_{<t},z_{\le t},t),
+h_t=(\tau_{\le t}^{pub},\mathcal E_{\le t},a_{<t},z_{\le t},p_t,t),
 \]
 
-仅包含 runtime legally observed information，不含 simulator hidden truth。
+仅包含 runtime legally observed information，不含 simulator hidden truth、未发布 task revision 或已发未达 query 的结果。query 是真实环境 action，可能消耗机会并延迟返回；合法 SEND attempt 在某些 compatible worlds 内允许失败。
 
 ---
 
@@ -65,21 +65,27 @@ h_t=(\tau,\mathcal E_{\le t},a_{<t},z_{\le t},t),
 \mathcal W(h_t)
 \]
 
-为与合法 history `h_t` 相容的 latent/exogenous worlds。
+为与合法 history `h_t` 相容的 latent/exogenous worlds，包括后续环境变化和授权 task revisions，但不得提前暴露给 policy。robust guarantee 只针对冻结的有限 support。
 
-在 world `w` 与后续 history `h` 下，Operational Task产生仍未完成的 hard obligation set：
+在 world `w` 诱导的完整执行轨迹 `\gamma_w` 下，Operational Task 产生的 hard obligation set（包括未来发布/释放的义务）：
 
 \[
-\mathcal O(w,h).
+\mathcal O(\gamma_w).
 \]
 
-注意：未来 observation / task revision可能让 obligation branch在未来才确定，因此不能在 `t` 时把所有可能未来 obligation静态并集成一个 unconditional set。
+定义 `Done(o,\gamma_w)=1` 当且仅当合格 sample 在义务时窗内生成并在 deadline 前到达中心。send attempt / gateway receipt / command queued 不构成最终义务完成。未来 observation / task revision 可以让 obligation branch 在未来才确定，因此不能在 `t` 时把所有可能未来 obligation 静态并集成一个 unconditional set。
 
 ---
 
 ## 3. Non-anticipative continuation policy
 
-当前 action `a` 执行后，未来 observation sequence记为 `z_{t+1:t'}`。
+令 `\mathcal A(h_t)` 为合法可尝试动作，`\Pi^{na}(h_t;a)` 为首先执行 `a\in\mathcal A(h_t)`、之后只依赖合法 history 的 continuation policies。完整 trajectory 写作：
+
+\[
+\gamma_w=\operatorname{Run}(h_t,a,\pi,w).
+\]
+
+query / send / wait 经过同一个 physical transition，延迟 ACK、query response、passive report 与 timeout 只能在实际 arrival 后影响 policy。
 
 continuation policy `\pi` 必须 non-anticipative：
 
@@ -88,7 +94,7 @@ continuation policy `\pi` 必须 non-anticipative：
 \quad\text{whenever }h,h'\text{ expose the same legal observation history}.
 \]
 
-即 policy 不能在 observation真正到来前按 hidden world分支。
+即 policy 不能在 observation 真正到来前按 hidden world 分支；离线对每个 world 单独选 `\pi_w` 只能作为 optimistic upper reference。
 
 ---
 
@@ -112,6 +118,8 @@ Boolean exact feasibility：
 \[
 V^*(h_t,a)=\mathbf 1[\mathcal F(h_t,a)\neq\varnothing].
 \]
+
+这是 policy-valued robust feasibility：一个 causal policy 覆盖全部 compatible worlds，但收到不同合法 observation 后允许分支。它不同于逐 world 完美信息策略，也不同于概率阈值风险约束；后者不属于当前 oracle/L-U/结果口径。
 
 Future-Choice不是新的 semantic value metric。给定任意现有 semantic/task utility `Q_{sem}(h,a)`，最直接组合是：
 

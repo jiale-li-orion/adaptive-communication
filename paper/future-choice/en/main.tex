@@ -79,18 +79,20 @@ where $\xi_t$ contains exogenous harvest, temperature, wireless variation, outag
 \begin{equation}
 z_t=H(x_{\le t},a_{<t},\xi_{\le t},\ell),
 \end{equation}
-and are materialized into an Evidence World $\Evi_t$ that preserves source, owner, generation/observation time, freshness, revision, and status. We use $h_t$ to denote the legal history available to the decision process; hidden simulator truth is excluded.
+and are materialized into an Evidence World $\Evi_t$ that preserves source, owner, generation/observation time, freshness, revision, and status. The legal history $h_t$ includes the task revisions actually published to the runtime, received evidence with arrival times, past actions, and pending query/delivery/acknowledgment events. A query is an environment action: issuing it may consume an opportunity, whereas its possibly delayed response enters $h_t$ only when observed. Waiting and attempted transmissions likewise advance physical state. Hidden simulator truth, future task revisions, and not-yet-arrived responses are excluded from $h_t$. A legally attempted send may fail in some compatible worlds; legality does not presuppose physical success.
 
 This maps directly onto goal-oriented ASC: sensing nodes are semantic sources, evidence/query capabilities are semantic acquisition actions, communication/device capabilities are transmission or actuation actions, and the downstream obligation evaluator is the task-effectiveness authority. The key difference from a purely scalar task utility is that some semantics are \emph{hard}: missing their release/window/deadline makes the episode operationally incomplete even if other messages have high semantic value.
 
 \subsection{Why value and feasibility are different}
-Let $Q_{\rm sem}(h_t,a)$ be any existing semantic/task-value score. Our objective is not to replace it. We ask whether $a$ is compatible with hard task completion. Let $\Worlds(h_t)$ denote worlds consistent with the legal history, and let $\Ob(w,h)$ be the outstanding hard obligations in world $w$ after history $h$. A continuation policy $\pi$ is \emph{non-anticipative}: two histories exposing the same legal observations must induce the same action until an observation distinguishes them.
+Let $Q_{\rm sem}(h_t,a)$ be an existing semantic/task-value score. We ask separately whether $a$ is compatible with hard task completion. Let $\Worlds(h_t)$ be the set of latent states and complete exogenous futures consistent with the legal history. A world $w$ includes future link/energy events and externally authorized task revisions; their values are not given to the runtime. Let $\mathcal A(h)$ be the legal attempted-action menu, and $\Pi^{\rm na}(h_t;a)$ the policies taking $a\in\mathcal A(h_t)$ first and subsequently selecting actions solely from their own legal histories. Such policies are \emph{non-anticipative}: histories indistinguishable in actions, time, and received observations must select the same next action.
 
-We define
+Write $\gamma_w=\operatorname{Run}(h_t,a,\pi,w)$ for the complete execution/evidence trace induced by the frozen transition and observation semantics. Let $\Ob(\gamma_w)$ contain the hard obligations actually induced by the authorized task trajectory in that world, including obligations released after $t$. The predicate $\operatorname{Done}(o,\gamma_w)$ requires a qualified in-window sample delivered to the center by $d_o$; an attempted send, a gateway receipt, or an unconfirmed command alone does not satisfy it. We define the \emph{policy-valued} future-choice set
 \begin{equation}
 \begin{aligned}
-\Choices(h_t,a)=\{\pi:\ &\forall w\in\Worlds(h_t),\ \forall z\ \text{reachable},\\
-&\pi\ \text{legally completes }\Ob(w,h)\},
+\Choices(h_t,a)=\{\pi\in\Pi^{\rm na}(h_t;a):\ &
+\forall w\in\Worlds(h_t),\\
+&\forall o\in\Ob(\gamma_w),\;
+\operatorname{Done}(o,\gamma_w)\},
 \end{aligned}
 \end{equation}
 and the exact feasibility indicator
@@ -99,9 +101,10 @@ V^*(h_t,a)=\mathbf 1[\Choices(h_t,a)\neq\varnothing].
 \end{equation}
 A value-driven ASC policy can therefore be wrapped as
 \begin{equation}
-\max_a Q_{\rm sem}(h_t,a) \quad \text{s.t.}\quad V^*(h_t,a)=1.
+\max_{a\in\mathcal A(h_t)} Q_{\rm sem}(h_t,a)
+\quad \text{s.t.}\quad V^*(h_t,a)=1.
 \end{equation}
-This formulation makes \futurechoice a feasibility/safety complement to semantic value rather than another value metric.
+The quantifier order is essential: one causal policy must work across compatible worlds, while actions after an observation may differ. Taking the union of mutually exclusive future obligations or giving the planner world-specific future knowledge changes the problem. If no legal action has $V^*=1$, the layer reports an empty robust-feasible menu; it cannot manufacture a completion guarantee. The guarantee is relative to the declared finite scenario support and operational evaluator, not an unbounded real-world safety guarantee. This makes \futurechoice a hard-feasibility complement to semantic value rather than another value metric.
 
 \section{Future-Choice Feasibility}
 \label{sec:method}
@@ -113,15 +116,20 @@ L_t(a)\le V^*(h_t,a)\le U_t(a),\qquad L_t,U_t\in\{0,1\}.
 A replayable causal completion witness sets $L_t(a)=1$. An infeasible \emph{optimistic} relaxation sets $U_t(a)=0$. Actions with $(L,U)=(0,1)$ remain unresolved and fall back to exact search. The runtime order is deliberately conservative: carried certificate reuse, sound $U=0$ pruning, constructive $L=1$ certification, then exact fallback (Fig.~\ref{fig:mechanism}).
 
 \paragraph{Lemma 1 (lower-bound soundness).}
-If a certificate provides a legal, non-anticipative continuation that completes every active hard obligation on every compatible observation branch in its validity domain, then $L_t(a)=1$ implies $V^*(h_t,a)=1$.
+If a certificate provides a legal, non-anticipative continuation that completes all obligations on every compatible branch \emph{and its validity domain covers the current support}, then $L_t(a)=1$ implies $V^*(h_t,a)=1$.
 \emph{Proof sketch.} The replayable certificate is itself an element of $\Choices(h_t,a)$.
 
 \paragraph{Lemma 2 (upper-bound soundness).}
-Let $\widetilde P(h_t,a)$ be a relaxation that only removes constraints or adds resources. If $\widetilde P(h_t,a)$ is infeasible, then $U_t(a)=0$ implies $V^*(h_t,a)=0$.
+Let $\widetilde P(h_t,a)$ be a relaxation whose feasible continuations include every real causal completion, for example by removing constraints, adding resources, or revealing the world. If $\widetilde P(h_t,a)$ is infeasible, then $U_t(a)=0$ implies $V^*(h_t,a)=0$.
 \emph{Proof sketch.} Any real completion would also be feasible in the optimistic relaxation, giving a contradiction.
 
 \subsection{Set-level opportunity conflicts}
-Within a compatible branch, we construct a bipartite graph $G=(\Ob,\Res,E)$ between hard obligations and future service opportunities. An edge indicates that a service opportunity can legally complete an obligation. Capacity-aware max-flow gives an optimistic matching; residual min-cuts expose Hall-deficient obligation subsets. The key object is therefore not whether each obligation has \emph{some} candidate opportunity, but whether a set of obligations jointly competes for the same scarce future opportunities.
+Within a compatible world/observation branch, we construct a bipartite graph $G_w=(\Ob_w,\Res_w,E_w)$ between residual hard obligations and \emph{unit-capacity} future terrestrial service slots. An edge denotes optimistic deadline/path eligibility, not guaranteed execution. If $N_w(S)$ is the slot neighborhood of obligation subset $S$, Hall's condition $|S|\le |N_w(S)|$ is necessary for assigning every obligation in $S$ to a distinct terrestrial slot. Maximum flow computes the matching cardinality $\nu_w$ and a residual min-cut exposes a deficient set, with
+\begin{equation}
+\Delta_w=|\Ob_w|-\nu_w
+=\max_{S\subseteq\Ob_w}(|S|-|N_w(S)|).
+\end{equation}
+At least $\Delta_w$ residual obligations need non-terrestrial service under this relaxation. In particular, if $\Delta_w$ exceeds the remaining shared backup budget in any compatible world, $U_t(a)=0$ is sound. Passing this test is \emph{not} an $L=1$ certificate: a single-world matching can ignore observation timing, acquisition cost, delayed acknowledgments, and joint causal action choices.
 
 This representation is observation-conditioned. Future obligations that belong to mutually exclusive observation branches are not statically unioned before the observation arrives. This distinction is what prevents the false-negative reservation pattern in Fig.~\ref{fig:mechanism}.
 
@@ -130,10 +138,10 @@ Each certificate stores a validity domain
 \begin{equation}
 D(c)=(\Worlds_c,[b_{\min},b_{\max}],\mathcal D_c,t_c^{\rm valid},\text{witness}),
 \end{equation}
-where $\mathcal D_c$ contains the obligations, communication opportunities, and pending execution/evidence events on which the certificate depends. Observation narrowing can shrink $\Worlds_c$ without invalidating the witness. Conversely, a resource or time event invalidates only certificates whose dependency domain changes.
+where $\mathcal D_c$ contains the obligations, communication opportunities, evidence versions, and pending execution events on which the certificate depends; the time bound is checked before reuse. The polarity of a certificate matters. A replayable $L=1$ policy remains valid when observations merely narrow its previously covered world support, provided its action legality, obligations, resource interval, and future transition dependencies remain unchanged. A $U=0$ impossibility witness tied to world $w$ remains decisive only while $w\in\Worlds(h_t)$ and its structural assumptions hold. Ruling out that world can remove the impossibility; an upper certificate cannot generally be carried across support narrowing by the lower-certificate rule.
 
 \paragraph{Lemma 3 (dependency-disjoint preservation).}
-If an event leaves a certificate's support/resource/time validity domain unchanged, modifies no dependency in $\mathcal D_c$, and introduces no new legal opportunity edge connecting the reused component to another component, the certificate remains valid. If the last condition cannot be guaranteed, the runtime conservatively repartitions or fully rebuilds rather than reusing the certificate.
+If an event preserves the certificate's polarity-specific support condition, resource/time interval, and all semantic dependencies in $\mathcal D_c$, and introduces no new legal opportunity edge connecting a reused component to another component, its witness remains valid. If these conditions cannot be established, the runtime conservatively repartitions or rebuilds rather than reusing a global feasibility verdict. An unchanged world-local conflict component may still be cached even when a support-level $U=0$ verdict must be reconsidered.
 
 This lemma captures a systems distinction that ordinary history caches miss: \emph{history changed} does not necessarily imply \emph{future-feasibility structure changed}.
 
