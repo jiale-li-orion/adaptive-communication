@@ -19,6 +19,7 @@ FILES = {
     "A_inventory": ROOT / "results/benchmark/layer1-paper-track-inventory.json",
     "A_deterministic": ROOT / "results/benchmark/layer1-paper-deterministic-test/statistical-analysis.json",
     "A_release": ROOT / "results/benchmark/layer1-paper-release-candidate.json",
+    "B_cmdp": ROOT / "results/transfer/asc-pull-query-cmdp-replay.json",
     "B_conditional": ROOT / "results/transfer/asc-pull-query-conditional-family.json",
     "B_shared": ROOT / "results/transfer/asc-pull-query-shared-opportunity-frontier.json",
     "B_dynamic": ROOT / "results/transfer/asc-pull-query-dynamic-frontier-reuse.json",
@@ -47,6 +48,7 @@ def main() -> int:
     a_inv = load("A_inventory")
     a_det = load("A_deterministic")
     a_rel = load("A_release")
+    b_cmdp = load("B_cmdp")
     b_cond = load("B_conditional")
     b_shared = load("B_shared")
     b_dyn = load("B_dynamic")
@@ -84,6 +86,10 @@ def main() -> int:
             "status": "SUPPORTED",
             "claim": "Static worst-case union of mutually exclusive future obligations can reject a valid causal query policy; future obligations must be observation-conditioned.",
             "evidence": {
+                "pull_query_cmdp_checks": b_cmdp["checks"],
+                "pull_query_tight_generic_exact_states": b_cmdp["rows"]["tight"]["generic_constrained_exact"]["stats"]["states"],
+                "pull_query_tight_future_choice_states": b_cmdp["rows"]["tight"]["future_choice_shielded_exact"]["stats"]["states"],
+                "pull_query_tight_future_choice_pruned_actions": b_cmdp["rows"]["tight"]["future_choice_shielded_exact"]["stats"]["actions_pruned_by_future_choice"],
                 "conditional_family_cells": b_cond["summary"]["cell_count"],
                 "conditional_multibranch_cells": b_cond["summary"]["nontrivial_multibranch_cells"],
                 "static_union_false_negative_cells": b_cond["summary"]["static_union_false_negative_cells"],
@@ -91,7 +97,7 @@ def main() -> int:
                 "shared_opportunity_false_negative_cells": b_shared["summary"]["static_union_false_negative_cells"],
                 "max_union_min_backup": b_shared["summary"]["max_union_min_backup"],
             },
-            "boundary": "This proves representation necessity against static union/reservation, not superiority over a strong exact belief-space solver."
+            "boundary": "The Pull-Based-style CMDP replay is an interface/correctness bridge, not a numerical reproduction and not standalone novelty; the representation-necessity claim comes from the conditional/shared-opportunity families. This does not claim superiority over a strong exact belief-space solver."
         },
         {
             "id": "B2_persistent_conditional_domains_reduce_rebuilds",

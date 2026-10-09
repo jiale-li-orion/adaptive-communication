@@ -1,0 +1,182 @@
+{
+  "checks": {
+    "generic_constrained_exact_solves_tight": true,
+    "shield_preserves_exact_tight_optimum": true,
+    "shield_prunes_doomed_tight_actions": true,
+    "shield_reduces_tight_state_expansions": true,
+    "value_only_breaks_tight_future_goals": true,
+    "value_only_safe_when_future_relaxed": true
+  },
+  "claim_boundary": [
+    "Hard operational goals are an explicit transfer extension and are not attributed to the source paper.",
+    "This replay preserves the paper's query/AoI/value scheduling structure but does not reproduce its CPT parameterization or published numerical curves.",
+    "The unit-demand feasibility certificate is also available to an ordinary scheduling-aware constrained DP; this probe establishes correctness/interface compatibility and search headroom, not standalone Layer-2 novelty.",
+    "Any paper claim requires a stronger dynamic/shared-resource domain where the full conditional frontier is not reducible to this unit-job certificate."
+  ],
+  "model": {
+    "attributes": [
+      "A",
+      "B",
+      "C"
+    ],
+    "goe": "sum_m usefulness_m / AoI_m",
+    "horizon": 5,
+    "initial_aoi": [
+      1,
+      1,
+      1
+    ],
+    "query_budget": 2,
+    "usefulness": [
+      6.0,
+      2.0,
+      1.0
+    ]
+  },
+  "reference": {
+    "arxiv": "2503.06725",
+    "numerical_reproduction_claim": false,
+    "preserved_structure": [
+      "per-attribute AoI state",
+      "query-one-attribute-or-wait action",
+      "query refresh / unqueried age growth",
+      "finite query-cost constraint",
+      "monotone freshness/usefulness GoE objective"
+    ],
+    "simplifications": [
+      "deterministic successful query subcase",
+      "finite horizon instead of infinite discounted horizon",
+      "inverse-AoI weighted usefulness GoE subclass instead of reproducing CPT numerical parameters"
+    ],
+    "title": "Pull-Based Query Scheduling for Goal-Oriented Semantic Communication",
+    "transfer_extension": "release/deadline hard operational query goals"
+  },
+  "rows": {
+    "relaxed": {
+      "future_choice_shielded_exact": {
+        "policy": [
+          "WAIT",
+          "A",
+          "WAIT",
+          "A",
+          "WAIT"
+        ],
+        "solvable": true,
+        "stats": {
+          "action_evaluations": 92,
+          "actions_pruned_by_future_choice": 24,
+          "feasibility_checks": 92,
+          "states": 66
+        },
+        "value": 25.35
+      },
+      "generic_constrained_exact": {
+        "policy": [
+          "WAIT",
+          "A",
+          "WAIT",
+          "A",
+          "WAIT"
+        ],
+        "solvable": true,
+        "stats": {
+          "action_evaluations": 98,
+          "actions_pruned_by_future_choice": 0,
+          "feasibility_checks": 0,
+          "states": 94
+        },
+        "value": 25.35
+      },
+      "goals": [
+        {
+          "attribute": "A",
+          "deadline": 2,
+          "release": 1
+        }
+      ],
+      "same_constrained_optimum": true,
+      "value_only_hard_feasible": true,
+      "value_only_policy": [
+        "WAIT",
+        "A",
+        "WAIT",
+        "A",
+        "WAIT"
+      ]
+    },
+    "tight": {
+      "future_choice_shielded_exact": {
+        "policy": [
+          "WAIT",
+          "B",
+          "C",
+          "WAIT",
+          "WAIT"
+        ],
+        "solvable": true,
+        "stats": {
+          "action_evaluations": 14,
+          "actions_pruned_by_future_choice": 9,
+          "feasibility_checks": 14,
+          "states": 6
+        },
+        "value": 16.53333333333333
+      },
+      "generic_constrained_exact": {
+        "policy": [
+          "WAIT",
+          "B",
+          "C",
+          "WAIT",
+          "WAIT"
+        ],
+        "solvable": true,
+        "stats": {
+          "action_evaluations": 29,
+          "actions_pruned_by_future_choice": 0,
+          "feasibility_checks": 0,
+          "states": 30
+        },
+        "value": 16.53333333333333
+      },
+      "goals": [
+        {
+          "attribute": "B",
+          "deadline": 1,
+          "release": 1
+        },
+        {
+          "attribute": "C",
+          "deadline": 2,
+          "release": 2
+        }
+      ],
+      "same_constrained_optimum": true,
+      "value_only_hard_feasible": false,
+      "value_only_policy": [
+        "WAIT",
+        "A",
+        "WAIT",
+        "A",
+        "WAIT"
+      ]
+    }
+  },
+  "stage": "ASC_PULL_QUERY_PAPER_STRUCTURED_REPLAY",
+  "value_only": {
+    "policy": [
+      "WAIT",
+      "A",
+      "WAIT",
+      "A",
+      "WAIT"
+    ],
+    "stats": {
+      "action_evaluations": 218,
+      "actions_pruned_by_future_choice": 0,
+      "feasibility_checks": 0,
+      "states": 201
+    },
+    "value": 25.35
+  }
+}

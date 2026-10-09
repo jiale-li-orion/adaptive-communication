@@ -7,7 +7,7 @@
 当前：
 
 - `asc_pull_query_future_choice_probe.py`：在 Pull-Based Query Scheduling 的 `state → query action → semantic effectiveness / query cost` 接口上测试 future-choice feasibility shield；只做 formulation-level probe，不宣称复现原论文数值。
-- `asc_pull_query_cmdp_replay.py`：Pull-Based AoI/query/value 结构上的 finite-horizon constrained replay。
+- `asc_pull_query_cmdp_replay.py`：Pull-Based AoI/query/value/finite-budget/GoE 结构上的 finite-horizon constrained replay；比较 value-only、generic constrained exact 与 FutureChoice shield。只证明接口兼容与 value≠hard-feasibility，不宣称复现 CPT 数值或 standalone novelty。
 - `asc_pull_query_conditional_frontier_probe.py`：最小 observation-conditioned future-obligation witness。
 - `asc_pull_query_conditional_family.py`：conditional query-chain scaling / persistent-exact negative boundary。
 - `asc_pull_query_shared_opportunity_frontier.py`：branch-conditioned obligations × shared opportunities；复用 Layer-2 max-flow/min-cut conflict frontier。

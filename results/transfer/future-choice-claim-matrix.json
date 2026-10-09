@@ -20,12 +20,23 @@
       "status": "SUPPORTED_DETERMINISTIC_LLM_SUBSET_OPEN"
     },
     {
-      "boundary": "This proves representation necessity against static union/reservation, not superiority over a strong exact belief-space solver.",
+      "boundary": "The Pull-Based-style CMDP replay is an interface/correctness bridge, not a numerical reproduction and not standalone novelty; the representation-necessity claim comes from the conditional/shared-opportunity families. This does not claim superiority over a strong exact belief-space solver.",
       "claim": "Static worst-case union of mutually exclusive future obligations can reject a valid causal query policy; future obligations must be observation-conditioned.",
       "evidence": {
         "conditional_family_cells": 20,
         "conditional_multibranch_cells": 16,
         "max_union_min_backup": 249,
+        "pull_query_cmdp_checks": {
+          "generic_constrained_exact_solves_tight": true,
+          "shield_preserves_exact_tight_optimum": true,
+          "shield_prunes_doomed_tight_actions": true,
+          "shield_reduces_tight_state_expansions": true,
+          "value_only_breaks_tight_future_goals": true,
+          "value_only_safe_when_future_relaxed": true
+        },
+        "pull_query_tight_future_choice_pruned_actions": 9,
+        "pull_query_tight_future_choice_states": 6,
+        "pull_query_tight_generic_exact_states": 30,
         "shared_opportunity_false_negative_cells": 15,
         "shared_opportunity_nontrivial_cells": 15,
         "static_union_false_negative_cells": 16
@@ -560,6 +571,10 @@
     "BC_engine": {
       "path": "results/transfer/generic-future-choice-engine-cross-domain.json",
       "sha256": "5b0eef62fa28588f65b174d35ec1e525987d0f4bd880352662ad1b6f3b37048b"
+    },
+    "B_cmdp": {
+      "path": "results/transfer/asc-pull-query-cmdp-replay.json",
+      "sha256": "edba2eafe596c5781dabec1a9c92508cb2087182330bb21a55745a65f5bf363c"
     },
     "B_components": {
       "path": "results/transfer/asc-pull-query-component-strong-baselines.json",

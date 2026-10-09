@@ -33,6 +33,7 @@ from __future__ import annotations
 
 from dataclasses import dataclass
 from functools import lru_cache
+import argparse
 import json
 from math import inf
 from pathlib import Path
@@ -332,9 +333,16 @@ def run() -> dict:
 
 
 def main() -> int:
+    ap = argparse.ArgumentParser()
+    ap.add_argument(
+        "--out",
+        type=Path,
+        default=ROOT / "results/transfer/asc-pull-query-cmdp-replay.json",
+    )
+    args = ap.parse_args()
     payload = run()
     assert all(payload["checks"].values()), payload["checks"]
-    out = ROOT / "local_research/current/transfer/asc-pull-query-paper-structured-replay.json"
+    out = args.out
     out.parent.mkdir(parents=True, exist_ok=True)
     out.write_text(
         json.dumps(payload, ensure_ascii=False, indent=2, sort_keys=True) + "\n",
