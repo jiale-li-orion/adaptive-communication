@@ -1,0 +1,38 @@
+{
+  "status": "CURRENT_EXPERIMENT_DESIGN_AUTHORITY",
+  "date": "2026-10-09",
+  "global_rules": {
+    "benchmark_distribution_may_depend_on_method_results": false,
+    "oom_timeout_search_limit_disposition": "UNRESOLVED_COMPUTATION",
+    "default_cpu_count": 2,
+    "default_nice": 10,
+    "numerical_library_threads": 1,
+    "default_memory_target_mib": 512,
+    "large_scale_every_frontier_pure_exact_audit": false
+  },
+  "experiments": [
+    {"id":"A1","rq":"RQ1","status":"DONE","role":"benchmark validity","scale":"11 surfaces; 23x5 internal review; 7/7 evaluator mutation","paper":"main+appendix"},
+    {"id":"A2","rq":"RQ1","status":"DONE","role":"deterministic benchmark test","scale":"150 frozen coordinates; 750 online rows; 210 oracle diagnostics","paper":"main"},
+    {"id":"A3","rq":"RQ1","status":"RUNNING","role":"LLM model-spectrum diagnostic","scale":"30 coordinates x 2 modes = 60 rows","resource":"2CPU nice10 single-thread 2-row chunks","paper":"small-table-or-appendix"},
+    {"id":"A4","rq":"RQ1","status":"DONE","role":"lifecycle failure case studies","scale":"3 rule-selected frozen cases","paper":"main-case+appendix"},
+    {"id":"A5","rq":"RQ1","status":"BLOCKED_BY_A3","role":"final benchmark release","target":"BENCHMARK_ADMIT"},
+    {"id":"B1","rq":"RQ2","status":"DONE","role":"conditional-obligation representation","scale":"20 exact-audited cells"},
+    {"id":"B2","rq":"RQ2","status":"DONE","role":"shared-opportunity set conflict","scale":"18 cells; 15 nontrivial"},
+    {"id":"B3","rq":"RQ3","status":"DONE","role":"observation-domain reuse","scale":"up to 32 branches x 5 narrowing levels"},
+    {"id":"B4","rq":"RQ3","status":"DONE","role":"component-local invalidation strong ladder","scale":"C=2,4,8,16"},
+    {"id":"B5","rq":"RQ3","status":"DONE","role":"generic orchestration/core path","scale":"cross-domain + N10 21-seed full parity"},
+    {"id":"B6","rq":"RQ3","status":"OPEN_HIGH_VALUE","role":"structural holdout","selection":"freeze unseen graph motifs before execution"},
+    {"id":"B7","rq":"RQ3","status":"OPTIONAL_OPEN","role":"net wall-time gate","claim_if_fail":"structured work only"},
+    {"id":"C1","rq":"RQ4","status":"DONE_APPENDIX","role":"N5 robustness","scale":"1000 seeds; 107 hard-feasible"},
+    {"id":"C2","rq":"RQ4","status":"DONE_MAIN","role":"N10 exact-correct main cohort","scale":"21 constructive seeds x 4 policies; 924 exact frontier checks"},
+    {"id":"C3","rq":"RQ4_RQ5","status":"DONE_MAIN","role":"set-level U attribution","scale":"same frozen 21-seed cohort"},
+    {"id":"C4","rq":"RQ4","status":"FROZEN_TO_RUN","role":"external-paper-matched panel","scale":"50 layout seeds from evaluate_policy RNG seed 999","exact_audit":"sampled/not full"},
+    {"id":"C5","rq":"RQ4","status":"FROZEN_TO_RUN","role":"constructive hard-feasible scale panel","scale":"100 of 126 constructive seeds from scan 0..999","exact_audit":"reuse C2 + fixed subset only"},
+    {"id":"C6","rq":"RQ4","status":"DONE_APPENDIX","role":"N15 bounded scaling","scale":"seed1 only"},
+    {"id":"C7","rq":"RQ4","status":"OPTIONAL","role":"learned PPO comparison","condition":"only if external checkpoint becomes available"},
+    {"id":"BC1","rq":"RQ5","status":"DONE","role":"B set-conflict to C set-MST attribution"},
+    {"id":"BC2","rq":"RQ5","status":"DONE","role":"shared generic FutureChoiceEngine orchestration"}
+  ],
+  "priority_order": ["A3","A5","C4","C5","B6","THEOREMS_AND_WRITING","B7","C7"],
+  "scale_stop_rule": "After C4 and C5 close, stop expanding seeds/N unless a reviewer-style audit identifies a new scientific gap."
+}

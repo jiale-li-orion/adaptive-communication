@@ -200,15 +200,26 @@
       "boundary": "Domain-specific certificate construction is still separate; shared orchestration alone is not proof of one universal physical model.",
       "claim": "ASC and UAV adapters share the same carried-certificate → sound U=0 → constructive L=1 → exact-fallback orchestration protocol.",
       "evidence": {
-        "asc_budget_crossing_invalidates_carried_certificate": true,
-        "asc_observation_narrowing_reuses_carried_certificate": true,
-        "asc_query_h_lower_certified": true,
-        "asc_wait_exact_rejected": true,
-        "same_engine_class_used_for_both": true,
-        "uav_full_episode_frontiers_match_exact": true,
-        "uav_full_episode_uses_carried_certificate": true,
-        "uav_full_episode_zero_tardiness_complete": true,
-        "uav_root_frontier_matches_exact": true
+        "cross_domain_smoke": {
+          "asc_budget_crossing_invalidates_carried_certificate": true,
+          "asc_observation_narrowing_reuses_carried_certificate": true,
+          "asc_query_h_lower_certified": true,
+          "asc_wait_exact_rejected": true,
+          "same_engine_class_used_for_both": true,
+          "uav_full_episode_frontiers_match_exact": true,
+          "uav_full_episode_uses_carried_certificate": true,
+          "uav_full_episode_zero_tardiness_complete": true,
+          "uav_root_frontier_matches_exact": true
+        },
+        "uav_n10_frontier_checks": 924,
+        "uav_n10_full_cohort_parity": {
+          "all_episodes_zero_tardiness_complete": true,
+          "all_frontiers_match_independent_exact": true,
+          "full_21_seed_cohort": true,
+          "full_924_frontier_checks": true,
+          "generic_engine_used_carried_certificates": true,
+          "matches_frozen_set_mst_quality": true
+        }
       },
       "id": "BC2_shared_orchestration_core",
       "status": "SUPPORTED"
@@ -246,6 +257,10 @@
     "B_shared": {
       "path": "results/transfer/asc-pull-query-shared-opportunity-frontier.json",
       "sha256": "124d90fdcd4100f1395841937db0a8b72aa68c0dded4b94a5c8f1b4d3a6ae439"
+    },
+    "C_generic_parity": {
+      "path": "results/transfer/uav-attention-generic-engine-n10-parity.json",
+      "sha256": "538d937486a147c8bd5a8493ab1a9cef41807fbf3c8bf9d6c2903648f653ee1d"
     },
     "C_n10": {
       "path": "results/transfer/uav-attention-n10-future-choice-summary.json",

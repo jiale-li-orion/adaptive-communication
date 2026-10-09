@@ -236,9 +236,9 @@ results/transfer/uav-attention-correctness-compute-frontier.json
 
 复用 obligation arrival / episode lifecycle assets，为 A 提供 2–3 个完整 failure case study：collection miss、delivery miss、energy exhaustion、task revision/commitment failure。
 
-### 6.4 把 current method core 的入口变成 one-path — NEXT
+### 6.4 把 current method core 的入口变成 one-path — DONE FOR C / B ORCHESTRATION AUDITED
 
-目标：
+当前路径：
 
 ```text
 FutureChoiceEngine
@@ -247,4 +247,11 @@ FutureChoiceEngine
   + exact authority
 ```
 
-旧 v0.5 / conflict planner 只留 test/provenance。新 paper code path 不应再从旧模块绕行。
+已完成：
+
+- `uav_future_choice_adapter.py` 从原 cross-domain audit 内联实现抽成 formal C adapter；
+- 原 `audit_generic_future_choice_engine.py` 重跑结果零 diff；
+- `audit_uav_generic_engine_n10_parity.py` 在冻结 21-seed × 4-policy N=10 cohort上实际使用 generic engine，924/924 frontier exact match、四条 policy 21/21 zero-tardiness / complete / 0 infeasible，并复现 frozen set-MST search账；
+- 以后 C 新实验默认只允许 `FutureChoiceEngine + UAVFutureChoiceAdapter`，旧 domain-local orchestration runner冻结为 historical result generator/provenance。
+
+B 的 generic orchestration已通过 cross-domain audit；其 set-level conflict/persistent certificate construction仍直接来自 Layer2 v2 current core，不需要复制 adapter算法。旧 v0.5 / conflict planner继续只留 test/provenance。

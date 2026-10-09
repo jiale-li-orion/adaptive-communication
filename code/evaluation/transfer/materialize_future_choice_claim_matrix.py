@@ -24,6 +24,7 @@ FILES = {
     "B_dynamic": ROOT / "results/transfer/asc-pull-query-dynamic-frontier-reuse.json",
     "B_components": ROOT / "results/transfer/asc-pull-query-component-strong-baselines.json",
     "BC_engine": ROOT / "results/transfer/generic-future-choice-engine-cross-domain.json",
+    "C_generic_parity": ROOT / "results/transfer/uav-attention-generic-engine-n10-parity.json",
     "C_n10": ROOT / "results/transfer/uav-attention-n10-future-choice-summary.json",
     "C_set_mst": ROOT / "results/transfer/uav-attention-set-mst-attribution.json",
     "C_pareto": ROOT / "results/transfer/uav-attention-correctness-compute-frontier.json",
@@ -48,6 +49,7 @@ def main() -> int:
     b_dyn = load("B_dynamic")
     b_comp = load("B_components")
     bc = load("BC_engine")
+    cgeneric = load("C_generic_parity")
     c10 = load("C_n10")
     cset = load("C_set_mst")
     cpareto = load("C_pareto")
@@ -149,7 +151,11 @@ def main() -> int:
             "id": "BC2_shared_orchestration_core",
             "status": "SUPPORTED",
             "claim": "ASC and UAV adapters share the same carried-certificate → sound U=0 → constructive L=1 → exact-fallback orchestration protocol.",
-            "evidence": bc.get("checks", bc),
+            "evidence": {
+                "cross_domain_smoke": bc.get("checks", bc),
+                "uav_n10_full_cohort_parity": cgeneric["checks"],
+                "uav_n10_frontier_checks": cgeneric["frontier_checks"],
+            },
             "boundary": "Domain-specific certificate construction is still separate; shared orchestration alone is not proof of one universal physical model."
         },
     ]

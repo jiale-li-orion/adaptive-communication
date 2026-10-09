@@ -192,7 +192,7 @@ C: independent environment shows the same failure mode causes real outcome loss,
 
 ## 6. Remaining hard gates before paper freeze
 
-1. **Generic method core**：**orchestration gate 已关闭**。`FutureChoiceEngine` 已让 B/C 走同一 `carried → U=0 → L=1 → exact fallback` correctness protocol，且跨域审计/full UAV episode PASS。剩余工作是继续收敛 domain-specific certificate construction，而不是再造第三套 core。
+1. **Generic method core**：**orchestration + actual C core-path parity gates 均已关闭**。`FutureChoiceEngine` 已让 B/C 走同一 `carried → U=0 → L=1 → exact fallback` correctness protocol；formal `UAVFutureChoiceAdapter + FutureChoiceEngine` 又在冻结 N=10 21-seed × 4-policy cohort上复现 924/924 exact frontier 与全部主质量结果。剩余边界是 domain-specific certificate construction，而不是 core orchestration。
 2. **B component-level invalidation**：**gate 已关闭**。active branch 的 send/pending/receipt/ACK/time/resource event 已与 fresh rebuild 对账，并补 ordinary persistent exact / dependency-cache strong ladder。下一步主要是把该 structural layer 接入最终 generic engine/论文实验接口，不再扩 synthetic axis。
 3. **C stronger scale/control**：N=10 gate 已关闭；N=15 只保留 bounded scaling probe，不一把梭 exact。公开 repo 未随代码提供 PPO checkpoint，因此 learned PPO paired shield 降为 optional；下一方法重点是把 set-level conflict certificate 泛化到 generic core，而不是重训 RL。
 4. **A final release**：deterministic 150-coordinate test 已完成；当前只剩 frozen 30-coordinate×2-mode LLM subset、联合统计/失败 taxonomy 与 final manifest。

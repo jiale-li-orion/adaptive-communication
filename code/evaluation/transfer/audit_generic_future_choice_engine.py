@@ -22,6 +22,7 @@ from future_choice_engine import FutureChoiceCertificate,FutureChoiceEngine  # n
 from asc_pull_query_shared_opportunity_frontier import branch_bundle  # noqa: E402
 from conditional_feasibility_frontier import ConditionalFeasibilityFrontier  # noqa: E402
 from run_uav_attention_future_choice_lu import FutureChoiceRouteFrontier,N_SETTINGS,_install_gymnasium_shim  # noqa: E402
+from uav_future_choice_adapter import UAVFutureChoiceAdapter  # noqa: E402
 
 
 def cid(prefix:str,witness)->str:
@@ -69,44 +70,6 @@ class ASCAdapter:
         return certificate if action=="QUERY_H" else None
 
 
-class UAVAdapter:
-    def __init__(self,front:FutureChoiceRouteFrontier): self.front=front
-    def action_key(self,action:int): return int(action)
-    def _context_state(self,context): return self.front.state(context)
-    def _child(self,context,action:int): return self.front.post(self._context_state(context),int(action))
-    def optimistic_possible(self,context,action:int)->bool:
-        child=self._child(context,action); return child is not None and self.front.upper_possible(child)
-    def carried_certificate_valid(self,context,action:int,certificate:FutureChoiceCertificate)->bool:
-        route=tuple(certificate.witness["route"])
-        if not route or int(route[0])!=int(action): return False
-        # Replay the full certificate from the current legal state.
-        state=self._context_state(context)
-        for a in route:
-            state=self.front.post(state,int(a))
-            if state is None: return False
-        return state.visited==self.front.all_mask and state.current==0
-    def _cert(self,action:int,route_tail:tuple[int,...],source:str):
-        route=(int(action),*map(int,route_tail)); witness={"route":route,"source":source}
-        return FutureChoiceCertificate(cid("uav",witness),witness,frozenset({"route_state","battery","elapsed_time","deadlines"}))
-    def lower_certificate(self,context,action:int):
-        child=self._child(context,action)
-        if child is None: return None
-        route=self.front.bounded_lower_certificate(child)
-        return None if route is None else self._cert(action,route,"bounded-lower")
-    def exact_certificate(self,context,action:int):
-        child=self._child(context,action)
-        if child is None: return None
-        route,_new=self.front.exact_with_delta(child)
-        return None if route is None else self._cert(action,route,"exact")
-    def carry_after_commit(self,context,action:int,certificate:FutureChoiceCertificate):
-        route=tuple(certificate.witness["route"])
-        if not route or int(route[0])!=int(action): return None
-        suffix=route[1:]
-        if not suffix: return None
-        witness={"route":suffix,"source":"carried-suffix"}
-        return FutureChoiceCertificate(cid("uav-carry",witness),witness,certificate.dependencies)
-
-
 def _install_and_import_uav():
     os.environ.setdefault("OPENBLAS_NUM_THREADS","1"); os.environ.setdefault("OMP_NUM_THREADS","1"); os.environ.setdefault("MKL_NUM_THREADS","1")
     _install_gymnasium_shim(); ext=ROOT/"local_research/external/uav-attention-routing"; sys.path.insert(0,str(ext))
@@ -133,7 +96,7 @@ def main()->int:
     from src.heuristic import NearestDeadlineFirstHeuristic  # type: ignore
     cfg=SingleUAVConfig(num_customers=10,num_chargers=1,mission_time=mt,deadline_min=dmin,deadline_max=dmax,reward_mode="completion_ratio")
     env=SingleUAVEnv(cfg); _obs,_info=env.reset(seed=21)
-    front=FutureChoiceRouteFrontier(env,lower_search_limit=96); uav=FutureChoiceEngine(UAVAdapter(front))
+    front=FutureChoiceRouteFrontier(env,lower_search_limit=96); uav=FutureChoiceEngine(UAVFutureChoiceAdapter(front))
     native=env.get_action_mask(); exact={}; generic={}
     state=front.state(env)
     for action,ok in enumerate(native):
@@ -150,7 +113,7 @@ def main()->int:
     env2=SingleUAVEnv(cfg); obs2,info2=env2.reset(seed=21); policy=NearestDeadlineFirstHeuristic()
     method_front=FutureChoiceRouteFrontier(env2,lower_search_limit=96)
     exact_front=FutureChoiceRouteFrontier(env2,lower_search_limit=0)
-    generic_engine=FutureChoiceEngine(UAVAdapter(method_front))
+    generic_engine=FutureChoiceEngine(UAVFutureChoiceAdapter(method_front))
     episode_frontier_checks=0
     while True:
         native=env2.get_action_mask(); classifications={}

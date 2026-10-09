@@ -1,0 +1,3054 @@
+{
+  "by_policy": {
+    "battery_aware_nn": {
+      "adapter_exact_new_states": 3827,
+      "completed": 21,
+      "engine_metrics": {
+        "carried_hits": 210,
+        "classifications": 2541,
+        "commits": 231,
+        "exact_failure": 95,
+        "exact_fallback_calls": 95,
+        "exact_success": 0,
+        "lower_hits": 498,
+        "upper_impossible": 1738
+      },
+      "episodes": 21,
+      "frontier_checks": 231,
+      "infeasible": 0,
+      "zero_tardiness": 21
+    },
+    "greedy_deadline_battery": {
+      "adapter_exact_new_states": 7349,
+      "completed": 21,
+      "engine_metrics": {
+        "carried_hits": 210,
+        "classifications": 2540,
+        "commits": 231,
+        "exact_failure": 128,
+        "exact_fallback_calls": 128,
+        "exact_success": 0,
+        "lower_hits": 562,
+        "upper_impossible": 1640
+      },
+      "episodes": 21,
+      "frontier_checks": 231,
+      "infeasible": 0,
+      "zero_tardiness": 21
+    },
+    "nearest_deadline": {
+      "adapter_exact_new_states": 8330,
+      "completed": 21,
+      "engine_metrics": {
+        "carried_hits": 210,
+        "classifications": 2536,
+        "commits": 231,
+        "exact_failure": 170,
+        "exact_fallback_calls": 170,
+        "exact_success": 0,
+        "lower_hits": 436,
+        "upper_impossible": 1720
+      },
+      "episodes": 21,
+      "frontier_checks": 231,
+      "infeasible": 0,
+      "zero_tardiness": 21
+    },
+    "nearest_neighbour": {
+      "adapter_exact_new_states": 3827,
+      "completed": 21,
+      "engine_metrics": {
+        "carried_hits": 210,
+        "classifications": 2541,
+        "commits": 231,
+        "exact_failure": 95,
+        "exact_fallback_calls": 95,
+        "exact_success": 0,
+        "lower_hits": 498,
+        "upper_impossible": 1738
+      },
+      "episodes": 21,
+      "frontier_checks": 231,
+      "infeasible": 0,
+      "zero_tardiness": 21
+    }
+  },
+  "checks": {
+    "all_episodes_zero_tardiness_complete": true,
+    "all_frontiers_match_independent_exact": true,
+    "full_21_seed_cohort": true,
+    "full_924_frontier_checks": true,
+    "generic_engine_used_carried_certificates": true,
+    "matches_frozen_set_mst_quality": true
+  },
+  "claim_boundary": [
+    "This audit closes code-path parity: historical F5/F6 result artifacts remain unchanged and retain their original source lineage.",
+    "The generic engine owns orchestration only; routing transitions, set-MST U bounds and replayable routes remain domain-specific adapter semantics.",
+    "Search-work metrics are not wall-time claims."
+  ],
+  "cohort": [
+    21,
+    23,
+    39,
+    40,
+    74,
+    78,
+    79,
+    84,
+    86,
+    91,
+    95,
+    96,
+    110,
+    113,
+    122,
+    124,
+    145,
+    167,
+    171,
+    177,
+    186
+  ],
+  "frontier_checks": 924,
+  "frontier_mismatches": 0,
+  "full_frozen_cohort": true,
+  "method": {
+    "adapter": "UAVFutureChoiceAdapter",
+    "engine": "FutureChoiceEngine",
+    "exact_authority_upper_mode": "basic",
+    "lower_search_limit": 96,
+    "upper_mode": "deadline_set_mst"
+  },
+  "rows": [
+    {
+      "adapter_metrics": {
+        "carried_validations": 110,
+        "exact_calls": 0,
+        "exact_new_states": 0,
+        "lower_calls": 37
+      },
+      "classification_sources": {
+        "L1-carried": 10,
+        "L1-constructive": 37,
+        "U0": 74
+      },
+      "completed": 1,
+      "energy": 124.61850190162659,
+      "engine_metrics": {
+        "carried_hits": 10,
+        "classifications": 121,
+        "commits": 11,
+        "exact_failure": 0,
+        "exact_fallback_calls": 0,
+        "exact_success": 0,
+        "lower_hits": 37,
+        "upper_impossible": 74
+      },
+      "frontier_checks": 11,
+      "infeasible": 0,
+      "interventions": 0,
+      "native_return": 475.4999999769,
+      "policy": "nearest_neighbour",
+      "returned_to_depot": 1,
+      "seed": 21,
+      "tardiness": 0.0,
+      "zero_tardiness": 1
+    },
+    {
+      "adapter_metrics": {
+        "carried_validations": 108,
+        "exact_calls": 6,
+        "exact_new_states": 96,
+        "lower_calls": 39
+      },
+      "classification_sources": {
+        "L1-carried": 10,
+        "L1-constructive": 33,
+        "U0": 70,
+        "exact-infeasible": 6
+      },
+      "completed": 1,
+      "energy": 201.85881519317627,
+      "engine_metrics": {
+        "carried_hits": 10,
+        "classifications": 119,
+        "commits": 11,
+        "exact_failure": 6,
+        "exact_fallback_calls": 6,
+        "exact_success": 0,
+        "lower_hits": 33,
+        "upper_impossible": 70
+      },
+      "frontier_checks": 11,
+      "infeasible": 0,
+      "interventions": 1,
+      "native_return": 475.4999999769,
+      "policy": "nearest_deadline",
+      "returned_to_depot": 1,
+      "seed": 21,
+      "tardiness": 0.0,
+      "zero_tardiness": 1
+    },
+    {
+      "adapter_metrics": {
+        "carried_validations": 110,
+        "exact_calls": 0,
+        "exact_new_states": 0,
+        "lower_calls": 48
+      },
+      "classification_sources": {
+        "L1-carried": 10,
+        "L1-constructive": 48,
+        "U0": 63
+      },
+      "completed": 1,
+      "energy": 158.05395007133484,
+      "engine_metrics": {
+        "carried_hits": 10,
+        "classifications": 121,
+        "commits": 11,
+        "exact_failure": 0,
+        "exact_fallback_calls": 0,
+        "exact_success": 0,
+        "lower_hits": 48,
+        "upper_impossible": 63
+      },
+      "frontier_checks": 11,
+      "infeasible": 0,
+      "interventions": 0,
+      "native_return": 475.4999999769,
+      "policy": "greedy_deadline_battery",
+      "returned_to_depot": 1,
+      "seed": 21,
+      "tardiness": 0.0,
+      "zero_tardiness": 1
+    },
+    {
+      "adapter_metrics": {
+        "carried_validations": 110,
+        "exact_calls": 0,
+        "exact_new_states": 0,
+        "lower_calls": 37
+      },
+      "classification_sources": {
+        "L1-carried": 10,
+        "L1-constructive": 37,
+        "U0": 74
+      },
+      "completed": 1,
+      "energy": 124.61850190162659,
+      "engine_metrics": {
+        "carried_hits": 10,
+        "classifications": 121,
+        "commits": 11,
+        "exact_failure": 0,
+        "exact_fallback_calls": 0,
+        "exact_success": 0,
+        "lower_hits": 37,
+        "upper_impossible": 74
+      },
+      "frontier_checks": 11,
+      "infeasible": 0,
+      "interventions": 0,
+      "native_return": 475.4999999769,
+      "policy": "battery_aware_nn",
+      "returned_to_depot": 1,
+      "seed": 21,
+      "tardiness": 0.0,
+      "zero_tardiness": 1
+    },
+    {
+      "adapter_metrics": {
+        "carried_validations": 110,
+        "exact_calls": 2,
+        "exact_new_states": 10,
+        "lower_calls": 15
+      },
+      "classification_sources": {
+        "L1-carried": 10,
+        "L1-constructive": 13,
+        "U0": 96,
+        "exact-infeasible": 2
+      },
+      "completed": 1,
+      "energy": 184.2590250968933,
+      "engine_metrics": {
+        "carried_hits": 10,
+        "classifications": 121,
+        "commits": 11,
+        "exact_failure": 2,
+        "exact_fallback_calls": 2,
+        "exact_success": 0,
+        "lower_hits": 13,
+        "upper_impossible": 96
+      },
+      "frontier_checks": 11,
+      "infeasible": 0,
+      "interventions": 2,
+      "native_return": 475.4999999769,
+      "policy": "nearest_neighbour",
+      "returned_to_depot": 1,
+      "seed": 23,
+      "tardiness": 0.0,
+      "zero_tardiness": 1
+    },
+    {
+      "adapter_metrics": {
+        "carried_validations": 110,
+        "exact_calls": 10,
+        "exact_new_states": 252,
+        "lower_calls": 24
+      },
+      "classification_sources": {
+        "L1-carried": 10,
+        "L1-constructive": 14,
+        "U0": 87,
+        "exact-infeasible": 10
+      },
+      "completed": 1,
+      "energy": 192.80455493927002,
+      "engine_metrics": {
+        "carried_hits": 10,
+        "classifications": 121,
+        "commits": 11,
+        "exact_failure": 10,
+        "exact_fallback_calls": 10,
+        "exact_success": 0,
+        "lower_hits": 14,
+        "upper_impossible": 87
+      },
+      "frontier_checks": 11,
+      "infeasible": 0,
+      "interventions": 4,
+      "native_return": 475.4999999769,
+      "policy": "nearest_deadline",
+      "returned_to_depot": 1,
+      "seed": 23,
+      "tardiness": 0.0,
+      "zero_tardiness": 1
+    },
+    {
+      "adapter_metrics": {
+        "carried_validations": 110,
+        "exact_calls": 3,
+        "exact_new_states": 92,
+        "lower_calls": 32
+      },
+      "classification_sources": {
+        "L1-carried": 10,
+        "L1-constructive": 29,
+        "U0": 79,
+        "exact-infeasible": 3
+      },
+      "completed": 1,
+      "energy": 171.77307033538818,
+      "engine_metrics": {
+        "carried_hits": 10,
+        "classifications": 121,
+        "commits": 11,
+        "exact_failure": 3,
+        "exact_fallback_calls": 3,
+        "exact_success": 0,
+        "lower_hits": 29,
+        "upper_impossible": 79
+      },
+      "frontier_checks": 11,
+      "infeasible": 0,
+      "interventions": 0,
+      "native_return": 475.4999999769,
+      "policy": "greedy_deadline_battery",
+      "returned_to_depot": 1,
+      "seed": 23,
+      "tardiness": 0.0,
+      "zero_tardiness": 1
+    },
+    {
+      "adapter_metrics": {
+        "carried_validations": 110,
+        "exact_calls": 2,
+        "exact_new_states": 10,
+        "lower_calls": 15
+      },
+      "classification_sources": {
+        "L1-carried": 10,
+        "L1-constructive": 13,
+        "U0": 96,
+        "exact-infeasible": 2
+      },
+      "completed": 1,
+      "energy": 184.2590250968933,
+      "engine_metrics": {
+        "carried_hits": 10,
+        "classifications": 121,
+        "commits": 11,
+        "exact_failure": 2,
+        "exact_fallback_calls": 2,
+        "exact_success": 0,
+        "lower_hits": 13,
+        "upper_impossible": 96
+      },
+      "frontier_checks": 11,
+      "infeasible": 0,
+      "interventions": 2,
+      "native_return": 475.4999999769,
+      "policy": "battery_aware_nn",
+      "returned_to_depot": 1,
+      "seed": 23,
+      "tardiness": 0.0,
+      "zero_tardiness": 1
+    },
+    {
+      "adapter_metrics": {
+        "carried_validations": 110,
+        "exact_calls": 0,
+        "exact_new_states": 0,
+        "lower_calls": 47
+      },
+      "classification_sources": {
+        "L1-carried": 10,
+        "L1-constructive": 47,
+        "U0": 64
+      },
+      "completed": 1,
+      "energy": 127.2512241601944,
+      "engine_metrics": {
+        "carried_hits": 10,
+        "classifications": 121,
+        "commits": 11,
+        "exact_failure": 0,
+        "exact_fallback_calls": 0,
+        "exact_success": 0,
+        "lower_hits": 47,
+        "upper_impossible": 64
+      },
+      "frontier_checks": 11,
+      "infeasible": 0,
+      "interventions": 0,
+      "native_return": 475.4999999769,
+      "policy": "nearest_neighbour",
+      "returned_to_depot": 1,
+      "seed": 39,
+      "tardiness": 0.0,
+      "zero_tardiness": 1
+    },
+    {
+      "adapter_metrics": {
+        "carried_validations": 110,
+        "exact_calls": 6,
+        "exact_new_states": 100,
+        "lower_calls": 47
+      },
+      "classification_sources": {
+        "L1-carried": 10,
+        "L1-constructive": 41,
+        "U0": 64,
+        "exact-infeasible": 6
+      },
+      "completed": 1,
+      "energy": 187.03754210472107,
+      "engine_metrics": {
+        "carried_hits": 10,
+        "classifications": 121,
+        "commits": 11,
+        "exact_failure": 6,
+        "exact_fallback_calls": 6,
+        "exact_success": 0,
+        "lower_hits": 41,
+        "upper_impossible": 64
+      },
+      "frontier_checks": 11,
+      "infeasible": 0,
+      "interventions": 1,
+      "native_return": 475.4999999769,
+      "policy": "nearest_deadline",
+      "returned_to_depot": 1,
+      "seed": 39,
+      "tardiness": 0.0,
+      "zero_tardiness": 1
+    },
+    {
+      "adapter_metrics": {
+        "carried_validations": 110,
+        "exact_calls": 1,
+        "exact_new_states": 12,
+        "lower_calls": 52
+      },
+      "classification_sources": {
+        "L1-carried": 10,
+        "L1-constructive": 51,
+        "U0": 59,
+        "exact-infeasible": 1
+      },
+      "completed": 1,
+      "energy": 161.44271433353424,
+      "engine_metrics": {
+        "carried_hits": 10,
+        "classifications": 121,
+        "commits": 11,
+        "exact_failure": 1,
+        "exact_fallback_calls": 1,
+        "exact_success": 0,
+        "lower_hits": 51,
+        "upper_impossible": 59
+      },
+      "frontier_checks": 11,
+      "infeasible": 0,
+      "interventions": 0,
+      "native_return": 475.4999999769,
+      "policy": "greedy_deadline_battery",
+      "returned_to_depot": 1,
+      "seed": 39,
+      "tardiness": 0.0,
+      "zero_tardiness": 1
+    },
+    {
+      "adapter_metrics": {
+        "carried_validations": 110,
+        "exact_calls": 0,
+        "exact_new_states": 0,
+        "lower_calls": 47
+      },
+      "classification_sources": {
+        "L1-carried": 10,
+        "L1-constructive": 47,
+        "U0": 64
+      },
+      "completed": 1,
+      "energy": 127.2512241601944,
+      "engine_metrics": {
+        "carried_hits": 10,
+        "classifications": 121,
+        "commits": 11,
+        "exact_failure": 0,
+        "exact_fallback_calls": 0,
+        "exact_success": 0,
+        "lower_hits": 47,
+        "upper_impossible": 64
+      },
+      "frontier_checks": 11,
+      "infeasible": 0,
+      "interventions": 0,
+      "native_return": 475.4999999769,
+      "policy": "battery_aware_nn",
+      "returned_to_depot": 1,
+      "seed": 39,
+      "tardiness": 0.0,
+      "zero_tardiness": 1
+    },
+    {
+      "adapter_metrics": {
+        "carried_validations": 110,
+        "exact_calls": 8,
+        "exact_new_states": 233,
+        "lower_calls": 24
+      },
+      "classification_sources": {
+        "L1-carried": 10,
+        "L1-constructive": 16,
+        "U0": 87,
+        "exact-infeasible": 8
+      },
+      "completed": 1,
+      "energy": 160.44332218170166,
+      "engine_metrics": {
+        "carried_hits": 10,
+        "classifications": 121,
+        "commits": 11,
+        "exact_failure": 8,
+        "exact_fallback_calls": 8,
+        "exact_success": 0,
+        "lower_hits": 16,
+        "upper_impossible": 87
+      },
+      "frontier_checks": 11,
+      "infeasible": 0,
+      "interventions": 4,
+      "native_return": 475.4999999769,
+      "policy": "nearest_neighbour",
+      "returned_to_depot": 1,
+      "seed": 40,
+      "tardiness": 0.0,
+      "zero_tardiness": 1
+    },
+    {
+      "adapter_metrics": {
+        "carried_validations": 110,
+        "exact_calls": 5,
+        "exact_new_states": 184,
+        "lower_calls": 26
+      },
+      "classification_sources": {
+        "L1-carried": 10,
+        "L1-constructive": 21,
+        "U0": 85,
+        "exact-infeasible": 5
+      },
+      "completed": 1,
+      "energy": 181.18723726272583,
+      "engine_metrics": {
+        "carried_hits": 10,
+        "classifications": 121,
+        "commits": 11,
+        "exact_failure": 5,
+        "exact_fallback_calls": 5,
+        "exact_success": 0,
+        "lower_hits": 21,
+        "upper_impossible": 85
+      },
+      "frontier_checks": 11,
+      "infeasible": 0,
+      "interventions": 0,
+      "native_return": 475.4999999769,
+      "policy": "nearest_deadline",
+      "returned_to_depot": 1,
+      "seed": 40,
+      "tardiness": 0.0,
+      "zero_tardiness": 1
+    },
+    {
+      "adapter_metrics": {
+        "carried_validations": 110,
+        "exact_calls": 5,
+        "exact_new_states": 184,
+        "lower_calls": 26
+      },
+      "classification_sources": {
+        "L1-carried": 10,
+        "L1-constructive": 21,
+        "U0": 85,
+        "exact-infeasible": 5
+      },
+      "completed": 1,
+      "energy": 181.18723726272583,
+      "engine_metrics": {
+        "carried_hits": 10,
+        "classifications": 121,
+        "commits": 11,
+        "exact_failure": 5,
+        "exact_fallback_calls": 5,
+        "exact_success": 0,
+        "lower_hits": 21,
+        "upper_impossible": 85
+      },
+      "frontier_checks": 11,
+      "infeasible": 0,
+      "interventions": 0,
+      "native_return": 475.4999999769,
+      "policy": "greedy_deadline_battery",
+      "returned_to_depot": 1,
+      "seed": 40,
+      "tardiness": 0.0,
+      "zero_tardiness": 1
+    },
+    {
+      "adapter_metrics": {
+        "carried_validations": 110,
+        "exact_calls": 8,
+        "exact_new_states": 233,
+        "lower_calls": 24
+      },
+      "classification_sources": {
+        "L1-carried": 10,
+        "L1-constructive": 16,
+        "U0": 87,
+        "exact-infeasible": 8
+      },
+      "completed": 1,
+      "energy": 160.44332218170166,
+      "engine_metrics": {
+        "carried_hits": 10,
+        "classifications": 121,
+        "commits": 11,
+        "exact_failure": 8,
+        "exact_fallback_calls": 8,
+        "exact_success": 0,
+        "lower_hits": 16,
+        "upper_impossible": 87
+      },
+      "frontier_checks": 11,
+      "infeasible": 0,
+      "interventions": 4,
+      "native_return": 475.4999999769,
+      "policy": "battery_aware_nn",
+      "returned_to_depot": 1,
+      "seed": 40,
+      "tardiness": 0.0,
+      "zero_tardiness": 1
+    },
+    {
+      "adapter_metrics": {
+        "carried_validations": 110,
+        "exact_calls": 4,
+        "exact_new_states": 25,
+        "lower_calls": 29
+      },
+      "classification_sources": {
+        "L1-carried": 10,
+        "L1-constructive": 25,
+        "U0": 82,
+        "exact-infeasible": 4
+      },
+      "completed": 1,
+      "energy": 162.0444142818451,
+      "engine_metrics": {
+        "carried_hits": 10,
+        "classifications": 121,
+        "commits": 11,
+        "exact_failure": 4,
+        "exact_fallback_calls": 4,
+        "exact_success": 0,
+        "lower_hits": 25,
+        "upper_impossible": 82
+      },
+      "frontier_checks": 11,
+      "infeasible": 0,
+      "interventions": 1,
+      "native_return": 475.4999999769,
+      "policy": "nearest_neighbour",
+      "returned_to_depot": 1,
+      "seed": 74,
+      "tardiness": 0.0,
+      "zero_tardiness": 1
+    },
+    {
+      "adapter_metrics": {
+        "carried_validations": 110,
+        "exact_calls": 8,
+        "exact_new_states": 268,
+        "lower_calls": 25
+      },
+      "classification_sources": {
+        "L1-carried": 10,
+        "L1-constructive": 17,
+        "U0": 86,
+        "exact-infeasible": 8
+      },
+      "completed": 1,
+      "energy": 201.23795437812805,
+      "engine_metrics": {
+        "carried_hits": 10,
+        "classifications": 121,
+        "commits": 11,
+        "exact_failure": 8,
+        "exact_fallback_calls": 8,
+        "exact_success": 0,
+        "lower_hits": 17,
+        "upper_impossible": 86
+      },
+      "frontier_checks": 11,
+      "infeasible": 0,
+      "interventions": 4,
+      "native_return": 475.4999999769,
+      "policy": "nearest_deadline",
+      "returned_to_depot": 1,
+      "seed": 74,
+      "tardiness": 0.0,
+      "zero_tardiness": 1
+    },
+    {
+      "adapter_metrics": {
+        "carried_validations": 110,
+        "exact_calls": 2,
+        "exact_new_states": 16,
+        "lower_calls": 24
+      },
+      "classification_sources": {
+        "L1-carried": 10,
+        "L1-constructive": 22,
+        "U0": 87,
+        "exact-infeasible": 2
+      },
+      "completed": 1,
+      "energy": 203.1689269542694,
+      "engine_metrics": {
+        "carried_hits": 10,
+        "classifications": 121,
+        "commits": 11,
+        "exact_failure": 2,
+        "exact_fallback_calls": 2,
+        "exact_success": 0,
+        "lower_hits": 22,
+        "upper_impossible": 87
+      },
+      "frontier_checks": 11,
+      "infeasible": 0,
+      "interventions": 0,
+      "native_return": 475.4999999769,
+      "policy": "greedy_deadline_battery",
+      "returned_to_depot": 1,
+      "seed": 74,
+      "tardiness": 0.0,
+      "zero_tardiness": 1
+    },
+    {
+      "adapter_metrics": {
+        "carried_validations": 110,
+        "exact_calls": 4,
+        "exact_new_states": 25,
+        "lower_calls": 29
+      },
+      "classification_sources": {
+        "L1-carried": 10,
+        "L1-constructive": 25,
+        "U0": 82,
+        "exact-infeasible": 4
+      },
+      "completed": 1,
+      "energy": 162.0444142818451,
+      "engine_metrics": {
+        "carried_hits": 10,
+        "classifications": 121,
+        "commits": 11,
+        "exact_failure": 4,
+        "exact_fallback_calls": 4,
+        "exact_success": 0,
+        "lower_hits": 25,
+        "upper_impossible": 82
+      },
+      "frontier_checks": 11,
+      "infeasible": 0,
+      "interventions": 1,
+      "native_return": 475.4999999769,
+      "policy": "battery_aware_nn",
+      "returned_to_depot": 1,
+      "seed": 74,
+      "tardiness": 0.0,
+      "zero_tardiness": 1
+    },
+    {
+      "adapter_metrics": {
+        "carried_validations": 110,
+        "exact_calls": 4,
+        "exact_new_states": 145,
+        "lower_calls": 28
+      },
+      "classification_sources": {
+        "L1-carried": 10,
+        "L1-constructive": 24,
+        "U0": 83,
+        "exact-infeasible": 4
+      },
+      "completed": 1,
+      "energy": 121.86879408359528,
+      "engine_metrics": {
+        "carried_hits": 10,
+        "classifications": 121,
+        "commits": 11,
+        "exact_failure": 4,
+        "exact_fallback_calls": 4,
+        "exact_success": 0,
+        "lower_hits": 24,
+        "upper_impossible": 83
+      },
+      "frontier_checks": 11,
+      "infeasible": 0,
+      "interventions": 1,
+      "native_return": 475.4999999769,
+      "policy": "nearest_neighbour",
+      "returned_to_depot": 1,
+      "seed": 78,
+      "tardiness": 0.0,
+      "zero_tardiness": 1
+    },
+    {
+      "adapter_metrics": {
+        "carried_validations": 110,
+        "exact_calls": 5,
+        "exact_new_states": 46,
+        "lower_calls": 23
+      },
+      "classification_sources": {
+        "L1-carried": 10,
+        "L1-constructive": 18,
+        "U0": 88,
+        "exact-infeasible": 5
+      },
+      "completed": 1,
+      "energy": 171.54498887062073,
+      "engine_metrics": {
+        "carried_hits": 10,
+        "classifications": 121,
+        "commits": 11,
+        "exact_failure": 5,
+        "exact_fallback_calls": 5,
+        "exact_success": 0,
+        "lower_hits": 18,
+        "upper_impossible": 88
+      },
+      "frontier_checks": 11,
+      "infeasible": 0,
+      "interventions": 4,
+      "native_return": 475.4999999769,
+      "policy": "nearest_deadline",
+      "returned_to_depot": 1,
+      "seed": 78,
+      "tardiness": 0.0,
+      "zero_tardiness": 1
+    },
+    {
+      "adapter_metrics": {
+        "carried_validations": 110,
+        "exact_calls": 5,
+        "exact_new_states": 46,
+        "lower_calls": 25
+      },
+      "classification_sources": {
+        "L1-carried": 10,
+        "L1-constructive": 20,
+        "U0": 86,
+        "exact-infeasible": 5
+      },
+      "completed": 1,
+      "energy": 155.04399645328522,
+      "engine_metrics": {
+        "carried_hits": 10,
+        "classifications": 121,
+        "commits": 11,
+        "exact_failure": 5,
+        "exact_fallback_calls": 5,
+        "exact_success": 0,
+        "lower_hits": 20,
+        "upper_impossible": 86
+      },
+      "frontier_checks": 11,
+      "infeasible": 0,
+      "interventions": 0,
+      "native_return": 475.4999999769,
+      "policy": "greedy_deadline_battery",
+      "returned_to_depot": 1,
+      "seed": 78,
+      "tardiness": 0.0,
+      "zero_tardiness": 1
+    },
+    {
+      "adapter_metrics": {
+        "carried_validations": 110,
+        "exact_calls": 4,
+        "exact_new_states": 145,
+        "lower_calls": 28
+      },
+      "classification_sources": {
+        "L1-carried": 10,
+        "L1-constructive": 24,
+        "U0": 83,
+        "exact-infeasible": 4
+      },
+      "completed": 1,
+      "energy": 121.86879408359528,
+      "engine_metrics": {
+        "carried_hits": 10,
+        "classifications": 121,
+        "commits": 11,
+        "exact_failure": 4,
+        "exact_fallback_calls": 4,
+        "exact_success": 0,
+        "lower_hits": 24,
+        "upper_impossible": 83
+      },
+      "frontier_checks": 11,
+      "infeasible": 0,
+      "interventions": 1,
+      "native_return": 475.4999999769,
+      "policy": "battery_aware_nn",
+      "returned_to_depot": 1,
+      "seed": 78,
+      "tardiness": 0.0,
+      "zero_tardiness": 1
+    },
+    {
+      "adapter_metrics": {
+        "carried_validations": 110,
+        "exact_calls": 2,
+        "exact_new_states": 24,
+        "lower_calls": 6
+      },
+      "classification_sources": {
+        "L1-carried": 10,
+        "L1-constructive": 4,
+        "U0": 105,
+        "exact-infeasible": 2
+      },
+      "completed": 1,
+      "energy": 196.86016273498535,
+      "engine_metrics": {
+        "carried_hits": 10,
+        "classifications": 121,
+        "commits": 11,
+        "exact_failure": 2,
+        "exact_fallback_calls": 2,
+        "exact_success": 0,
+        "lower_hits": 4,
+        "upper_impossible": 105
+      },
+      "frontier_checks": 11,
+      "infeasible": 0,
+      "interventions": 3,
+      "native_return": 475.4999999769,
+      "policy": "nearest_neighbour",
+      "returned_to_depot": 1,
+      "seed": 79,
+      "tardiness": 0.0,
+      "zero_tardiness": 1
+    },
+    {
+      "adapter_metrics": {
+        "carried_validations": 110,
+        "exact_calls": 9,
+        "exact_new_states": 207,
+        "lower_calls": 16
+      },
+      "classification_sources": {
+        "L1-carried": 10,
+        "L1-constructive": 7,
+        "U0": 95,
+        "exact-infeasible": 9
+      },
+      "completed": 1,
+      "energy": 185.33196592330933,
+      "engine_metrics": {
+        "carried_hits": 10,
+        "classifications": 121,
+        "commits": 11,
+        "exact_failure": 9,
+        "exact_fallback_calls": 9,
+        "exact_success": 0,
+        "lower_hits": 7,
+        "upper_impossible": 95
+      },
+      "frontier_checks": 11,
+      "infeasible": 0,
+      "interventions": 2,
+      "native_return": 475.4999999769,
+      "policy": "nearest_deadline",
+      "returned_to_depot": 1,
+      "seed": 79,
+      "tardiness": 0.0,
+      "zero_tardiness": 1
+    },
+    {
+      "adapter_metrics": {
+        "carried_validations": 110,
+        "exact_calls": 9,
+        "exact_new_states": 207,
+        "lower_calls": 16
+      },
+      "classification_sources": {
+        "L1-carried": 10,
+        "L1-constructive": 7,
+        "U0": 95,
+        "exact-infeasible": 9
+      },
+      "completed": 1,
+      "energy": 185.33196592330933,
+      "engine_metrics": {
+        "carried_hits": 10,
+        "classifications": 121,
+        "commits": 11,
+        "exact_failure": 9,
+        "exact_fallback_calls": 9,
+        "exact_success": 0,
+        "lower_hits": 7,
+        "upper_impossible": 95
+      },
+      "frontier_checks": 11,
+      "infeasible": 0,
+      "interventions": 0,
+      "native_return": 475.4999999769,
+      "policy": "greedy_deadline_battery",
+      "returned_to_depot": 1,
+      "seed": 79,
+      "tardiness": 0.0,
+      "zero_tardiness": 1
+    },
+    {
+      "adapter_metrics": {
+        "carried_validations": 110,
+        "exact_calls": 2,
+        "exact_new_states": 24,
+        "lower_calls": 6
+      },
+      "classification_sources": {
+        "L1-carried": 10,
+        "L1-constructive": 4,
+        "U0": 105,
+        "exact-infeasible": 2
+      },
+      "completed": 1,
+      "energy": 196.86016273498535,
+      "engine_metrics": {
+        "carried_hits": 10,
+        "classifications": 121,
+        "commits": 11,
+        "exact_failure": 2,
+        "exact_fallback_calls": 2,
+        "exact_success": 0,
+        "lower_hits": 4,
+        "upper_impossible": 105
+      },
+      "frontier_checks": 11,
+      "infeasible": 0,
+      "interventions": 3,
+      "native_return": 475.4999999769,
+      "policy": "battery_aware_nn",
+      "returned_to_depot": 1,
+      "seed": 79,
+      "tardiness": 0.0,
+      "zero_tardiness": 1
+    },
+    {
+      "adapter_metrics": {
+        "carried_validations": 110,
+        "exact_calls": 5,
+        "exact_new_states": 222,
+        "lower_calls": 43
+      },
+      "classification_sources": {
+        "L1-carried": 10,
+        "L1-constructive": 38,
+        "U0": 68,
+        "exact-infeasible": 5
+      },
+      "completed": 1,
+      "energy": 136.49803960323334,
+      "engine_metrics": {
+        "carried_hits": 10,
+        "classifications": 121,
+        "commits": 11,
+        "exact_failure": 5,
+        "exact_fallback_calls": 5,
+        "exact_success": 0,
+        "lower_hits": 38,
+        "upper_impossible": 68
+      },
+      "frontier_checks": 11,
+      "infeasible": 0,
+      "interventions": 0,
+      "native_return": 475.4999999769,
+      "policy": "nearest_neighbour",
+      "returned_to_depot": 1,
+      "seed": 84,
+      "tardiness": 0.0,
+      "zero_tardiness": 1
+    },
+    {
+      "adapter_metrics": {
+        "carried_validations": 110,
+        "exact_calls": 6,
+        "exact_new_states": 198,
+        "lower_calls": 27
+      },
+      "classification_sources": {
+        "L1-carried": 10,
+        "L1-constructive": 21,
+        "U0": 84,
+        "exact-infeasible": 6
+      },
+      "completed": 1,
+      "energy": 167.72677493095398,
+      "engine_metrics": {
+        "carried_hits": 10,
+        "classifications": 121,
+        "commits": 11,
+        "exact_failure": 6,
+        "exact_fallback_calls": 6,
+        "exact_success": 0,
+        "lower_hits": 21,
+        "upper_impossible": 84
+      },
+      "frontier_checks": 11,
+      "infeasible": 0,
+      "interventions": 4,
+      "native_return": 475.4999999769,
+      "policy": "nearest_deadline",
+      "returned_to_depot": 1,
+      "seed": 84,
+      "tardiness": 0.0,
+      "zero_tardiness": 1
+    },
+    {
+      "adapter_metrics": {
+        "carried_validations": 110,
+        "exact_calls": 6,
+        "exact_new_states": 229,
+        "lower_calls": 41
+      },
+      "classification_sources": {
+        "L1-carried": 10,
+        "L1-constructive": 35,
+        "U0": 70,
+        "exact-infeasible": 6
+      },
+      "completed": 1,
+      "energy": 149.57419764995575,
+      "engine_metrics": {
+        "carried_hits": 10,
+        "classifications": 121,
+        "commits": 11,
+        "exact_failure": 6,
+        "exact_fallback_calls": 6,
+        "exact_success": 0,
+        "lower_hits": 35,
+        "upper_impossible": 70
+      },
+      "frontier_checks": 11,
+      "infeasible": 0,
+      "interventions": 0,
+      "native_return": 475.4999999769,
+      "policy": "greedy_deadline_battery",
+      "returned_to_depot": 1,
+      "seed": 84,
+      "tardiness": 0.0,
+      "zero_tardiness": 1
+    },
+    {
+      "adapter_metrics": {
+        "carried_validations": 110,
+        "exact_calls": 5,
+        "exact_new_states": 222,
+        "lower_calls": 43
+      },
+      "classification_sources": {
+        "L1-carried": 10,
+        "L1-constructive": 38,
+        "U0": 68,
+        "exact-infeasible": 5
+      },
+      "completed": 1,
+      "energy": 136.49803960323334,
+      "engine_metrics": {
+        "carried_hits": 10,
+        "classifications": 121,
+        "commits": 11,
+        "exact_failure": 5,
+        "exact_fallback_calls": 5,
+        "exact_success": 0,
+        "lower_hits": 38,
+        "upper_impossible": 68
+      },
+      "frontier_checks": 11,
+      "infeasible": 0,
+      "interventions": 0,
+      "native_return": 475.4999999769,
+      "policy": "battery_aware_nn",
+      "returned_to_depot": 1,
+      "seed": 84,
+      "tardiness": 0.0,
+      "zero_tardiness": 1
+    },
+    {
+      "adapter_metrics": {
+        "carried_validations": 110,
+        "exact_calls": 8,
+        "exact_new_states": 212,
+        "lower_calls": 28
+      },
+      "classification_sources": {
+        "L1-carried": 10,
+        "L1-constructive": 20,
+        "U0": 83,
+        "exact-infeasible": 8
+      },
+      "completed": 1,
+      "energy": 149.6216766834259,
+      "engine_metrics": {
+        "carried_hits": 10,
+        "classifications": 121,
+        "commits": 11,
+        "exact_failure": 8,
+        "exact_fallback_calls": 8,
+        "exact_success": 0,
+        "lower_hits": 20,
+        "upper_impossible": 83
+      },
+      "frontier_checks": 11,
+      "infeasible": 0,
+      "interventions": 0,
+      "native_return": 475.4999999769,
+      "policy": "nearest_neighbour",
+      "returned_to_depot": 1,
+      "seed": 86,
+      "tardiness": 0.0,
+      "zero_tardiness": 1
+    },
+    {
+      "adapter_metrics": {
+        "carried_validations": 110,
+        "exact_calls": 17,
+        "exact_new_states": 1161,
+        "lower_calls": 32
+      },
+      "classification_sources": {
+        "L1-carried": 10,
+        "L1-constructive": 15,
+        "U0": 79,
+        "exact-infeasible": 17
+      },
+      "completed": 1,
+      "energy": 184.2260856628418,
+      "engine_metrics": {
+        "carried_hits": 10,
+        "classifications": 121,
+        "commits": 11,
+        "exact_failure": 17,
+        "exact_fallback_calls": 17,
+        "exact_success": 0,
+        "lower_hits": 15,
+        "upper_impossible": 79
+      },
+      "frontier_checks": 11,
+      "infeasible": 0,
+      "interventions": 4,
+      "native_return": 475.4999999769,
+      "policy": "nearest_deadline",
+      "returned_to_depot": 1,
+      "seed": 86,
+      "tardiness": 0.0,
+      "zero_tardiness": 1
+    },
+    {
+      "adapter_metrics": {
+        "carried_validations": 110,
+        "exact_calls": 17,
+        "exact_new_states": 1188,
+        "lower_calls": 35
+      },
+      "classification_sources": {
+        "L1-carried": 10,
+        "L1-constructive": 18,
+        "U0": 76,
+        "exact-infeasible": 17
+      },
+      "completed": 1,
+      "energy": 177.15369057655334,
+      "engine_metrics": {
+        "carried_hits": 10,
+        "classifications": 121,
+        "commits": 11,
+        "exact_failure": 17,
+        "exact_fallback_calls": 17,
+        "exact_success": 0,
+        "lower_hits": 18,
+        "upper_impossible": 76
+      },
+      "frontier_checks": 11,
+      "infeasible": 0,
+      "interventions": 1,
+      "native_return": 475.4999999769,
+      "policy": "greedy_deadline_battery",
+      "returned_to_depot": 1,
+      "seed": 86,
+      "tardiness": 0.0,
+      "zero_tardiness": 1
+    },
+    {
+      "adapter_metrics": {
+        "carried_validations": 110,
+        "exact_calls": 8,
+        "exact_new_states": 212,
+        "lower_calls": 28
+      },
+      "classification_sources": {
+        "L1-carried": 10,
+        "L1-constructive": 20,
+        "U0": 83,
+        "exact-infeasible": 8
+      },
+      "completed": 1,
+      "energy": 149.6216766834259,
+      "engine_metrics": {
+        "carried_hits": 10,
+        "classifications": 121,
+        "commits": 11,
+        "exact_failure": 8,
+        "exact_fallback_calls": 8,
+        "exact_success": 0,
+        "lower_hits": 20,
+        "upper_impossible": 83
+      },
+      "frontier_checks": 11,
+      "infeasible": 0,
+      "interventions": 0,
+      "native_return": 475.4999999769,
+      "policy": "battery_aware_nn",
+      "returned_to_depot": 1,
+      "seed": 86,
+      "tardiness": 0.0,
+      "zero_tardiness": 1
+    },
+    {
+      "adapter_metrics": {
+        "carried_validations": 110,
+        "exact_calls": 0,
+        "exact_new_states": 0,
+        "lower_calls": 17
+      },
+      "classification_sources": {
+        "L1-carried": 10,
+        "L1-constructive": 17,
+        "U0": 94
+      },
+      "completed": 1,
+      "energy": 148.5647457242012,
+      "engine_metrics": {
+        "carried_hits": 10,
+        "classifications": 121,
+        "commits": 11,
+        "exact_failure": 0,
+        "exact_fallback_calls": 0,
+        "exact_success": 0,
+        "lower_hits": 17,
+        "upper_impossible": 94
+      },
+      "frontier_checks": 11,
+      "infeasible": 0,
+      "interventions": 3,
+      "native_return": 475.4999999769,
+      "policy": "nearest_neighbour",
+      "returned_to_depot": 1,
+      "seed": 91,
+      "tardiness": 0.0,
+      "zero_tardiness": 1
+    },
+    {
+      "adapter_metrics": {
+        "carried_validations": 110,
+        "exact_calls": 2,
+        "exact_new_states": 28,
+        "lower_calls": 22
+      },
+      "classification_sources": {
+        "L1-carried": 10,
+        "L1-constructive": 20,
+        "U0": 89,
+        "exact-infeasible": 2
+      },
+      "completed": 1,
+      "energy": 176.10674238204956,
+      "engine_metrics": {
+        "carried_hits": 10,
+        "classifications": 121,
+        "commits": 11,
+        "exact_failure": 2,
+        "exact_fallback_calls": 2,
+        "exact_success": 0,
+        "lower_hits": 20,
+        "upper_impossible": 89
+      },
+      "frontier_checks": 11,
+      "infeasible": 0,
+      "interventions": 2,
+      "native_return": 475.4999999769,
+      "policy": "nearest_deadline",
+      "returned_to_depot": 1,
+      "seed": 91,
+      "tardiness": 0.0,
+      "zero_tardiness": 1
+    },
+    {
+      "adapter_metrics": {
+        "carried_validations": 110,
+        "exact_calls": 2,
+        "exact_new_states": 28,
+        "lower_calls": 33
+      },
+      "classification_sources": {
+        "L1-carried": 10,
+        "L1-constructive": 31,
+        "U0": 78,
+        "exact-infeasible": 2
+      },
+      "completed": 1,
+      "energy": 132.59187251329422,
+      "engine_metrics": {
+        "carried_hits": 10,
+        "classifications": 121,
+        "commits": 11,
+        "exact_failure": 2,
+        "exact_fallback_calls": 2,
+        "exact_success": 0,
+        "lower_hits": 31,
+        "upper_impossible": 78
+      },
+      "frontier_checks": 11,
+      "infeasible": 0,
+      "interventions": 0,
+      "native_return": 475.4999999769,
+      "policy": "greedy_deadline_battery",
+      "returned_to_depot": 1,
+      "seed": 91,
+      "tardiness": 0.0,
+      "zero_tardiness": 1
+    },
+    {
+      "adapter_metrics": {
+        "carried_validations": 110,
+        "exact_calls": 0,
+        "exact_new_states": 0,
+        "lower_calls": 17
+      },
+      "classification_sources": {
+        "L1-carried": 10,
+        "L1-constructive": 17,
+        "U0": 94
+      },
+      "completed": 1,
+      "energy": 148.5647457242012,
+      "engine_metrics": {
+        "carried_hits": 10,
+        "classifications": 121,
+        "commits": 11,
+        "exact_failure": 0,
+        "exact_fallback_calls": 0,
+        "exact_success": 0,
+        "lower_hits": 17,
+        "upper_impossible": 94
+      },
+      "frontier_checks": 11,
+      "infeasible": 0,
+      "interventions": 3,
+      "native_return": 475.4999999769,
+      "policy": "battery_aware_nn",
+      "returned_to_depot": 1,
+      "seed": 91,
+      "tardiness": 0.0,
+      "zero_tardiness": 1
+    },
+    {
+      "adapter_metrics": {
+        "carried_validations": 110,
+        "exact_calls": 6,
+        "exact_new_states": 129,
+        "lower_calls": 30
+      },
+      "classification_sources": {
+        "L1-carried": 10,
+        "L1-constructive": 24,
+        "U0": 81,
+        "exact-infeasible": 6
+      },
+      "completed": 1,
+      "energy": 175.23306822776794,
+      "engine_metrics": {
+        "carried_hits": 10,
+        "classifications": 121,
+        "commits": 11,
+        "exact_failure": 6,
+        "exact_fallback_calls": 6,
+        "exact_success": 0,
+        "lower_hits": 24,
+        "upper_impossible": 81
+      },
+      "frontier_checks": 11,
+      "infeasible": 0,
+      "interventions": 2,
+      "native_return": 475.4999999769,
+      "policy": "nearest_neighbour",
+      "returned_to_depot": 1,
+      "seed": 95,
+      "tardiness": 0.0,
+      "zero_tardiness": 1
+    },
+    {
+      "adapter_metrics": {
+        "carried_validations": 108,
+        "exact_calls": 7,
+        "exact_new_states": 93,
+        "lower_calls": 20
+      },
+      "classification_sources": {
+        "L1-carried": 10,
+        "L1-constructive": 13,
+        "U0": 89,
+        "exact-infeasible": 7
+      },
+      "completed": 1,
+      "energy": 207.98799228668213,
+      "engine_metrics": {
+        "carried_hits": 10,
+        "classifications": 119,
+        "commits": 11,
+        "exact_failure": 7,
+        "exact_fallback_calls": 7,
+        "exact_success": 0,
+        "lower_hits": 13,
+        "upper_impossible": 89
+      },
+      "frontier_checks": 11,
+      "infeasible": 0,
+      "interventions": 2,
+      "native_return": 475.4999999769,
+      "policy": "nearest_deadline",
+      "returned_to_depot": 1,
+      "seed": 95,
+      "tardiness": 0.0,
+      "zero_tardiness": 1
+    },
+    {
+      "adapter_metrics": {
+        "carried_validations": 110,
+        "exact_calls": 3,
+        "exact_new_states": 40,
+        "lower_calls": 24
+      },
+      "classification_sources": {
+        "L1-carried": 10,
+        "L1-constructive": 21,
+        "U0": 87,
+        "exact-infeasible": 3
+      },
+      "completed": 1,
+      "energy": 203.5490062236786,
+      "engine_metrics": {
+        "carried_hits": 10,
+        "classifications": 121,
+        "commits": 11,
+        "exact_failure": 3,
+        "exact_fallback_calls": 3,
+        "exact_success": 0,
+        "lower_hits": 21,
+        "upper_impossible": 87
+      },
+      "frontier_checks": 11,
+      "infeasible": 0,
+      "interventions": 0,
+      "native_return": 475.4999999769,
+      "policy": "greedy_deadline_battery",
+      "returned_to_depot": 1,
+      "seed": 95,
+      "tardiness": 0.0,
+      "zero_tardiness": 1
+    },
+    {
+      "adapter_metrics": {
+        "carried_validations": 110,
+        "exact_calls": 6,
+        "exact_new_states": 129,
+        "lower_calls": 30
+      },
+      "classification_sources": {
+        "L1-carried": 10,
+        "L1-constructive": 24,
+        "U0": 81,
+        "exact-infeasible": 6
+      },
+      "completed": 1,
+      "energy": 175.23306822776794,
+      "engine_metrics": {
+        "carried_hits": 10,
+        "classifications": 121,
+        "commits": 11,
+        "exact_failure": 6,
+        "exact_fallback_calls": 6,
+        "exact_success": 0,
+        "lower_hits": 24,
+        "upper_impossible": 81
+      },
+      "frontier_checks": 11,
+      "infeasible": 0,
+      "interventions": 2,
+      "native_return": 475.4999999769,
+      "policy": "battery_aware_nn",
+      "returned_to_depot": 1,
+      "seed": 95,
+      "tardiness": 0.0,
+      "zero_tardiness": 1
+    },
+    {
+      "adapter_metrics": {
+        "carried_validations": 110,
+        "exact_calls": 3,
+        "exact_new_states": 60,
+        "lower_calls": 27
+      },
+      "classification_sources": {
+        "L1-carried": 10,
+        "L1-constructive": 24,
+        "U0": 84,
+        "exact-infeasible": 3
+      },
+      "completed": 1,
+      "energy": 170.62291049957275,
+      "engine_metrics": {
+        "carried_hits": 10,
+        "classifications": 121,
+        "commits": 11,
+        "exact_failure": 3,
+        "exact_fallback_calls": 3,
+        "exact_success": 0,
+        "lower_hits": 24,
+        "upper_impossible": 84
+      },
+      "frontier_checks": 11,
+      "infeasible": 0,
+      "interventions": 1,
+      "native_return": 475.4999999769,
+      "policy": "nearest_neighbour",
+      "returned_to_depot": 1,
+      "seed": 96,
+      "tardiness": 0.0,
+      "zero_tardiness": 1
+    },
+    {
+      "adapter_metrics": {
+        "carried_validations": 110,
+        "exact_calls": 3,
+        "exact_new_states": 48,
+        "lower_calls": 31
+      },
+      "classification_sources": {
+        "L1-carried": 10,
+        "L1-constructive": 28,
+        "U0": 80,
+        "exact-infeasible": 3
+      },
+      "completed": 1,
+      "energy": 202.50306153297424,
+      "engine_metrics": {
+        "carried_hits": 10,
+        "classifications": 121,
+        "commits": 11,
+        "exact_failure": 3,
+        "exact_fallback_calls": 3,
+        "exact_success": 0,
+        "lower_hits": 28,
+        "upper_impossible": 80
+      },
+      "frontier_checks": 11,
+      "infeasible": 0,
+      "interventions": 1,
+      "native_return": 475.4999999769,
+      "policy": "nearest_deadline",
+      "returned_to_depot": 1,
+      "seed": 96,
+      "tardiness": 0.0,
+      "zero_tardiness": 1
+    },
+    {
+      "adapter_metrics": {
+        "carried_validations": 110,
+        "exact_calls": 5,
+        "exact_new_states": 79,
+        "lower_calls": 31
+      },
+      "classification_sources": {
+        "L1-carried": 10,
+        "L1-constructive": 26,
+        "U0": 80,
+        "exact-infeasible": 5
+      },
+      "completed": 1,
+      "energy": 194.3991732597351,
+      "engine_metrics": {
+        "carried_hits": 10,
+        "classifications": 121,
+        "commits": 11,
+        "exact_failure": 5,
+        "exact_fallback_calls": 5,
+        "exact_success": 0,
+        "lower_hits": 26,
+        "upper_impossible": 80
+      },
+      "frontier_checks": 11,
+      "infeasible": 0,
+      "interventions": 0,
+      "native_return": 475.4999999769,
+      "policy": "greedy_deadline_battery",
+      "returned_to_depot": 1,
+      "seed": 96,
+      "tardiness": 0.0,
+      "zero_tardiness": 1
+    },
+    {
+      "adapter_metrics": {
+        "carried_validations": 110,
+        "exact_calls": 3,
+        "exact_new_states": 60,
+        "lower_calls": 27
+      },
+      "classification_sources": {
+        "L1-carried": 10,
+        "L1-constructive": 24,
+        "U0": 84,
+        "exact-infeasible": 3
+      },
+      "completed": 1,
+      "energy": 170.62291049957275,
+      "engine_metrics": {
+        "carried_hits": 10,
+        "classifications": 121,
+        "commits": 11,
+        "exact_failure": 3,
+        "exact_fallback_calls": 3,
+        "exact_success": 0,
+        "lower_hits": 24,
+        "upper_impossible": 84
+      },
+      "frontier_checks": 11,
+      "infeasible": 0,
+      "interventions": 1,
+      "native_return": 475.4999999769,
+      "policy": "battery_aware_nn",
+      "returned_to_depot": 1,
+      "seed": 96,
+      "tardiness": 0.0,
+      "zero_tardiness": 1
+    },
+    {
+      "adapter_metrics": {
+        "carried_validations": 110,
+        "exact_calls": 0,
+        "exact_new_states": 0,
+        "lower_calls": 35
+      },
+      "classification_sources": {
+        "L1-carried": 10,
+        "L1-constructive": 35,
+        "U0": 76
+      },
+      "completed": 1,
+      "energy": 130.15228962898254,
+      "engine_metrics": {
+        "carried_hits": 10,
+        "classifications": 121,
+        "commits": 11,
+        "exact_failure": 0,
+        "exact_fallback_calls": 0,
+        "exact_success": 0,
+        "lower_hits": 35,
+        "upper_impossible": 76
+      },
+      "frontier_checks": 11,
+      "infeasible": 0,
+      "interventions": 0,
+      "native_return": 475.4999999769,
+      "policy": "nearest_neighbour",
+      "returned_to_depot": 1,
+      "seed": 110,
+      "tardiness": 0.0,
+      "zero_tardiness": 1
+    },
+    {
+      "adapter_metrics": {
+        "carried_validations": 110,
+        "exact_calls": 10,
+        "exact_new_states": 352,
+        "lower_calls": 37
+      },
+      "classification_sources": {
+        "L1-carried": 10,
+        "L1-constructive": 27,
+        "U0": 74,
+        "exact-infeasible": 10
+      },
+      "completed": 1,
+      "energy": 190.9665789604187,
+      "engine_metrics": {
+        "carried_hits": 10,
+        "classifications": 121,
+        "commits": 11,
+        "exact_failure": 10,
+        "exact_fallback_calls": 10,
+        "exact_success": 0,
+        "lower_hits": 27,
+        "upper_impossible": 74
+      },
+      "frontier_checks": 11,
+      "infeasible": 0,
+      "interventions": 2,
+      "native_return": 475.4999999769,
+      "policy": "nearest_deadline",
+      "returned_to_depot": 1,
+      "seed": 110,
+      "tardiness": 0.0,
+      "zero_tardiness": 1
+    },
+    {
+      "adapter_metrics": {
+        "carried_validations": 110,
+        "exact_calls": 1,
+        "exact_new_states": 98,
+        "lower_calls": 47
+      },
+      "classification_sources": {
+        "L1-carried": 10,
+        "L1-constructive": 46,
+        "U0": 64,
+        "exact-infeasible": 1
+      },
+      "completed": 1,
+      "energy": 139.49413585662842,
+      "engine_metrics": {
+        "carried_hits": 10,
+        "classifications": 121,
+        "commits": 11,
+        "exact_failure": 1,
+        "exact_fallback_calls": 1,
+        "exact_success": 0,
+        "lower_hits": 46,
+        "upper_impossible": 64
+      },
+      "frontier_checks": 11,
+      "infeasible": 0,
+      "interventions": 0,
+      "native_return": 475.4999999769,
+      "policy": "greedy_deadline_battery",
+      "returned_to_depot": 1,
+      "seed": 110,
+      "tardiness": 0.0,
+      "zero_tardiness": 1
+    },
+    {
+      "adapter_metrics": {
+        "carried_validations": 110,
+        "exact_calls": 0,
+        "exact_new_states": 0,
+        "lower_calls": 35
+      },
+      "classification_sources": {
+        "L1-carried": 10,
+        "L1-constructive": 35,
+        "U0": 76
+      },
+      "completed": 1,
+      "energy": 130.15228962898254,
+      "engine_metrics": {
+        "carried_hits": 10,
+        "classifications": 121,
+        "commits": 11,
+        "exact_failure": 0,
+        "exact_fallback_calls": 0,
+        "exact_success": 0,
+        "lower_hits": 35,
+        "upper_impossible": 76
+      },
+      "frontier_checks": 11,
+      "infeasible": 0,
+      "interventions": 0,
+      "native_return": 475.4999999769,
+      "policy": "battery_aware_nn",
+      "returned_to_depot": 1,
+      "seed": 110,
+      "tardiness": 0.0,
+      "zero_tardiness": 1
+    },
+    {
+      "adapter_metrics": {
+        "carried_validations": 110,
+        "exact_calls": 3,
+        "exact_new_states": 34,
+        "lower_calls": 18
+      },
+      "classification_sources": {
+        "L1-carried": 10,
+        "L1-constructive": 15,
+        "U0": 93,
+        "exact-infeasible": 3
+      },
+      "completed": 1,
+      "energy": 144.18093347549438,
+      "engine_metrics": {
+        "carried_hits": 10,
+        "classifications": 121,
+        "commits": 11,
+        "exact_failure": 3,
+        "exact_fallback_calls": 3,
+        "exact_success": 0,
+        "lower_hits": 15,
+        "upper_impossible": 93
+      },
+      "frontier_checks": 11,
+      "infeasible": 0,
+      "interventions": 1,
+      "native_return": 475.4999999769,
+      "policy": "nearest_neighbour",
+      "returned_to_depot": 1,
+      "seed": 113,
+      "tardiness": 0.0,
+      "zero_tardiness": 1
+    },
+    {
+      "adapter_metrics": {
+        "carried_validations": 110,
+        "exact_calls": 6,
+        "exact_new_states": 119,
+        "lower_calls": 23
+      },
+      "classification_sources": {
+        "L1-carried": 10,
+        "L1-constructive": 17,
+        "U0": 88,
+        "exact-infeasible": 6
+      },
+      "completed": 1,
+      "energy": 176.90274453163147,
+      "engine_metrics": {
+        "carried_hits": 10,
+        "classifications": 121,
+        "commits": 11,
+        "exact_failure": 6,
+        "exact_fallback_calls": 6,
+        "exact_success": 0,
+        "lower_hits": 17,
+        "upper_impossible": 88
+      },
+      "frontier_checks": 11,
+      "infeasible": 0,
+      "interventions": 1,
+      "native_return": 475.4999999769,
+      "policy": "nearest_deadline",
+      "returned_to_depot": 1,
+      "seed": 113,
+      "tardiness": 0.0,
+      "zero_tardiness": 1
+    },
+    {
+      "adapter_metrics": {
+        "carried_validations": 110,
+        "exact_calls": 6,
+        "exact_new_states": 119,
+        "lower_calls": 28
+      },
+      "classification_sources": {
+        "L1-carried": 10,
+        "L1-constructive": 22,
+        "U0": 83,
+        "exact-infeasible": 6
+      },
+      "completed": 1,
+      "energy": 167.9090313911438,
+      "engine_metrics": {
+        "carried_hits": 10,
+        "classifications": 121,
+        "commits": 11,
+        "exact_failure": 6,
+        "exact_fallback_calls": 6,
+        "exact_success": 0,
+        "lower_hits": 22,
+        "upper_impossible": 83
+      },
+      "frontier_checks": 11,
+      "infeasible": 0,
+      "interventions": 0,
+      "native_return": 475.4999999769,
+      "policy": "greedy_deadline_battery",
+      "returned_to_depot": 1,
+      "seed": 113,
+      "tardiness": 0.0,
+      "zero_tardiness": 1
+    },
+    {
+      "adapter_metrics": {
+        "carried_validations": 110,
+        "exact_calls": 3,
+        "exact_new_states": 34,
+        "lower_calls": 18
+      },
+      "classification_sources": {
+        "L1-carried": 10,
+        "L1-constructive": 15,
+        "U0": 93,
+        "exact-infeasible": 3
+      },
+      "completed": 1,
+      "energy": 144.18093347549438,
+      "engine_metrics": {
+        "carried_hits": 10,
+        "classifications": 121,
+        "commits": 11,
+        "exact_failure": 3,
+        "exact_fallback_calls": 3,
+        "exact_success": 0,
+        "lower_hits": 15,
+        "upper_impossible": 93
+      },
+      "frontier_checks": 11,
+      "infeasible": 0,
+      "interventions": 1,
+      "native_return": 475.4999999769,
+      "policy": "battery_aware_nn",
+      "returned_to_depot": 1,
+      "seed": 113,
+      "tardiness": 0.0,
+      "zero_tardiness": 1
+    },
+    {
+      "adapter_metrics": {
+        "carried_validations": 110,
+        "exact_calls": 16,
+        "exact_new_states": 1336,
+        "lower_calls": 35
+      },
+      "classification_sources": {
+        "L1-carried": 10,
+        "L1-constructive": 19,
+        "U0": 76,
+        "exact-infeasible": 16
+      },
+      "completed": 1,
+      "energy": 157.74613642692566,
+      "engine_metrics": {
+        "carried_hits": 10,
+        "classifications": 121,
+        "commits": 11,
+        "exact_failure": 16,
+        "exact_fallback_calls": 16,
+        "exact_success": 0,
+        "lower_hits": 19,
+        "upper_impossible": 76
+      },
+      "frontier_checks": 11,
+      "infeasible": 0,
+      "interventions": 3,
+      "native_return": 475.4999999769,
+      "policy": "nearest_neighbour",
+      "returned_to_depot": 1,
+      "seed": 122,
+      "tardiness": 0.0,
+      "zero_tardiness": 1
+    },
+    {
+      "adapter_metrics": {
+        "carried_validations": 110,
+        "exact_calls": 17,
+        "exact_new_states": 1356,
+        "lower_calls": 30
+      },
+      "classification_sources": {
+        "L1-carried": 10,
+        "L1-constructive": 13,
+        "U0": 81,
+        "exact-infeasible": 17
+      },
+      "completed": 1,
+      "energy": 194.02339506149292,
+      "engine_metrics": {
+        "carried_hits": 10,
+        "classifications": 121,
+        "commits": 11,
+        "exact_failure": 17,
+        "exact_fallback_calls": 17,
+        "exact_success": 0,
+        "lower_hits": 13,
+        "upper_impossible": 81
+      },
+      "frontier_checks": 11,
+      "infeasible": 0,
+      "interventions": 4,
+      "native_return": 475.4999999769,
+      "policy": "nearest_deadline",
+      "returned_to_depot": 1,
+      "seed": 122,
+      "tardiness": 0.0,
+      "zero_tardiness": 1
+    },
+    {
+      "adapter_metrics": {
+        "carried_validations": 110,
+        "exact_calls": 13,
+        "exact_new_states": 1298,
+        "lower_calls": 26
+      },
+      "classification_sources": {
+        "L1-carried": 10,
+        "L1-constructive": 13,
+        "U0": 85,
+        "exact-infeasible": 13
+      },
+      "completed": 1,
+      "energy": 173.92839121818542,
+      "engine_metrics": {
+        "carried_hits": 10,
+        "classifications": 121,
+        "commits": 11,
+        "exact_failure": 13,
+        "exact_fallback_calls": 13,
+        "exact_success": 0,
+        "lower_hits": 13,
+        "upper_impossible": 85
+      },
+      "frontier_checks": 11,
+      "infeasible": 0,
+      "interventions": 0,
+      "native_return": 475.4999999769,
+      "policy": "greedy_deadline_battery",
+      "returned_to_depot": 1,
+      "seed": 122,
+      "tardiness": 0.0,
+      "zero_tardiness": 1
+    },
+    {
+      "adapter_metrics": {
+        "carried_validations": 110,
+        "exact_calls": 16,
+        "exact_new_states": 1336,
+        "lower_calls": 35
+      },
+      "classification_sources": {
+        "L1-carried": 10,
+        "L1-constructive": 19,
+        "U0": 76,
+        "exact-infeasible": 16
+      },
+      "completed": 1,
+      "energy": 157.74613642692566,
+      "engine_metrics": {
+        "carried_hits": 10,
+        "classifications": 121,
+        "commits": 11,
+        "exact_failure": 16,
+        "exact_fallback_calls": 16,
+        "exact_success": 0,
+        "lower_hits": 19,
+        "upper_impossible": 76
+      },
+      "frontier_checks": 11,
+      "infeasible": 0,
+      "interventions": 3,
+      "native_return": 475.4999999769,
+      "policy": "battery_aware_nn",
+      "returned_to_depot": 1,
+      "seed": 122,
+      "tardiness": 0.0,
+      "zero_tardiness": 1
+    },
+    {
+      "adapter_metrics": {
+        "carried_validations": 110,
+        "exact_calls": 0,
+        "exact_new_states": 0,
+        "lower_calls": 27
+      },
+      "classification_sources": {
+        "L1-carried": 10,
+        "L1-constructive": 27,
+        "U0": 84
+      },
+      "completed": 1,
+      "energy": 169.59761571884155,
+      "engine_metrics": {
+        "carried_hits": 10,
+        "classifications": 121,
+        "commits": 11,
+        "exact_failure": 0,
+        "exact_fallback_calls": 0,
+        "exact_success": 0,
+        "lower_hits": 27,
+        "upper_impossible": 84
+      },
+      "frontier_checks": 11,
+      "infeasible": 0,
+      "interventions": 0,
+      "native_return": 475.4999999769,
+      "policy": "nearest_neighbour",
+      "returned_to_depot": 1,
+      "seed": 124,
+      "tardiness": 0.0,
+      "zero_tardiness": 1
+    },
+    {
+      "adapter_metrics": {
+        "carried_validations": 110,
+        "exact_calls": 10,
+        "exact_new_states": 581,
+        "lower_calls": 40
+      },
+      "classification_sources": {
+        "L1-carried": 10,
+        "L1-constructive": 30,
+        "U0": 71,
+        "exact-infeasible": 10
+      },
+      "completed": 1,
+      "energy": 195.31674551963806,
+      "engine_metrics": {
+        "carried_hits": 10,
+        "classifications": 121,
+        "commits": 11,
+        "exact_failure": 10,
+        "exact_fallback_calls": 10,
+        "exact_success": 0,
+        "lower_hits": 30,
+        "upper_impossible": 71
+      },
+      "frontier_checks": 11,
+      "infeasible": 0,
+      "interventions": 2,
+      "native_return": 475.4999999769,
+      "policy": "nearest_deadline",
+      "returned_to_depot": 1,
+      "seed": 124,
+      "tardiness": 0.0,
+      "zero_tardiness": 1
+    },
+    {
+      "adapter_metrics": {
+        "carried_validations": 110,
+        "exact_calls": 7,
+        "exact_new_states": 574,
+        "lower_calls": 41
+      },
+      "classification_sources": {
+        "L1-carried": 10,
+        "L1-constructive": 34,
+        "U0": 70,
+        "exact-infeasible": 7
+      },
+      "completed": 1,
+      "energy": 174.57110381126404,
+      "engine_metrics": {
+        "carried_hits": 10,
+        "classifications": 121,
+        "commits": 11,
+        "exact_failure": 7,
+        "exact_fallback_calls": 7,
+        "exact_success": 0,
+        "lower_hits": 34,
+        "upper_impossible": 70
+      },
+      "frontier_checks": 11,
+      "infeasible": 0,
+      "interventions": 0,
+      "native_return": 475.4999999769,
+      "policy": "greedy_deadline_battery",
+      "returned_to_depot": 1,
+      "seed": 124,
+      "tardiness": 0.0,
+      "zero_tardiness": 1
+    },
+    {
+      "adapter_metrics": {
+        "carried_validations": 110,
+        "exact_calls": 0,
+        "exact_new_states": 0,
+        "lower_calls": 27
+      },
+      "classification_sources": {
+        "L1-carried": 10,
+        "L1-constructive": 27,
+        "U0": 84
+      },
+      "completed": 1,
+      "energy": 169.59761571884155,
+      "engine_metrics": {
+        "carried_hits": 10,
+        "classifications": 121,
+        "commits": 11,
+        "exact_failure": 0,
+        "exact_fallback_calls": 0,
+        "exact_success": 0,
+        "lower_hits": 27,
+        "upper_impossible": 84
+      },
+      "frontier_checks": 11,
+      "infeasible": 0,
+      "interventions": 0,
+      "native_return": 475.4999999769,
+      "policy": "battery_aware_nn",
+      "returned_to_depot": 1,
+      "seed": 124,
+      "tardiness": 0.0,
+      "zero_tardiness": 1
+    },
+    {
+      "adapter_metrics": {
+        "carried_validations": 110,
+        "exact_calls": 8,
+        "exact_new_states": 404,
+        "lower_calls": 26
+      },
+      "classification_sources": {
+        "L1-carried": 10,
+        "L1-constructive": 18,
+        "U0": 85,
+        "exact-infeasible": 8
+      },
+      "completed": 1,
+      "energy": 128.45925378799438,
+      "engine_metrics": {
+        "carried_hits": 10,
+        "classifications": 121,
+        "commits": 11,
+        "exact_failure": 8,
+        "exact_fallback_calls": 8,
+        "exact_success": 0,
+        "lower_hits": 18,
+        "upper_impossible": 85
+      },
+      "frontier_checks": 11,
+      "infeasible": 0,
+      "interventions": 0,
+      "native_return": 475.4999999769,
+      "policy": "nearest_neighbour",
+      "returned_to_depot": 1,
+      "seed": 145,
+      "tardiness": 0.0,
+      "zero_tardiness": 1
+    },
+    {
+      "adapter_metrics": {
+        "carried_validations": 110,
+        "exact_calls": 10,
+        "exact_new_states": 243,
+        "lower_calls": 24
+      },
+      "classification_sources": {
+        "L1-carried": 10,
+        "L1-constructive": 14,
+        "U0": 87,
+        "exact-infeasible": 10
+      },
+      "completed": 1,
+      "energy": 190.83772945404053,
+      "engine_metrics": {
+        "carried_hits": 10,
+        "classifications": 121,
+        "commits": 11,
+        "exact_failure": 10,
+        "exact_fallback_calls": 10,
+        "exact_success": 0,
+        "lower_hits": 14,
+        "upper_impossible": 87
+      },
+      "frontier_checks": 11,
+      "infeasible": 0,
+      "interventions": 2,
+      "native_return": 475.4999999769,
+      "policy": "nearest_deadline",
+      "returned_to_depot": 1,
+      "seed": 145,
+      "tardiness": 0.0,
+      "zero_tardiness": 1
+    },
+    {
+      "adapter_metrics": {
+        "carried_validations": 110,
+        "exact_calls": 10,
+        "exact_new_states": 243,
+        "lower_calls": 24
+      },
+      "classification_sources": {
+        "L1-carried": 10,
+        "L1-constructive": 14,
+        "U0": 87,
+        "exact-infeasible": 10
+      },
+      "completed": 1,
+      "energy": 180.11182689666748,
+      "engine_metrics": {
+        "carried_hits": 10,
+        "classifications": 121,
+        "commits": 11,
+        "exact_failure": 10,
+        "exact_fallback_calls": 10,
+        "exact_success": 0,
+        "lower_hits": 14,
+        "upper_impossible": 87
+      },
+      "frontier_checks": 11,
+      "infeasible": 0,
+      "interventions": 0,
+      "native_return": 475.4999999769,
+      "policy": "greedy_deadline_battery",
+      "returned_to_depot": 1,
+      "seed": 145,
+      "tardiness": 0.0,
+      "zero_tardiness": 1
+    },
+    {
+      "adapter_metrics": {
+        "carried_validations": 110,
+        "exact_calls": 8,
+        "exact_new_states": 404,
+        "lower_calls": 26
+      },
+      "classification_sources": {
+        "L1-carried": 10,
+        "L1-constructive": 18,
+        "U0": 85,
+        "exact-infeasible": 8
+      },
+      "completed": 1,
+      "energy": 128.45925378799438,
+      "engine_metrics": {
+        "carried_hits": 10,
+        "classifications": 121,
+        "commits": 11,
+        "exact_failure": 8,
+        "exact_fallback_calls": 8,
+        "exact_success": 0,
+        "lower_hits": 18,
+        "upper_impossible": 85
+      },
+      "frontier_checks": 11,
+      "infeasible": 0,
+      "interventions": 0,
+      "native_return": 475.4999999769,
+      "policy": "battery_aware_nn",
+      "returned_to_depot": 1,
+      "seed": 145,
+      "tardiness": 0.0,
+      "zero_tardiness": 1
+    },
+    {
+      "adapter_metrics": {
+        "carried_validations": 110,
+        "exact_calls": 4,
+        "exact_new_states": 259,
+        "lower_calls": 40
+      },
+      "classification_sources": {
+        "L1-carried": 10,
+        "L1-constructive": 36,
+        "U0": 71,
+        "exact-infeasible": 4
+      },
+      "completed": 1,
+      "energy": 126.41674160957336,
+      "engine_metrics": {
+        "carried_hits": 10,
+        "classifications": 121,
+        "commits": 11,
+        "exact_failure": 4,
+        "exact_fallback_calls": 4,
+        "exact_success": 0,
+        "lower_hits": 36,
+        "upper_impossible": 71
+      },
+      "frontier_checks": 11,
+      "infeasible": 0,
+      "interventions": 0,
+      "native_return": 475.4999999769,
+      "policy": "nearest_neighbour",
+      "returned_to_depot": 1,
+      "seed": 167,
+      "tardiness": 0.0,
+      "zero_tardiness": 1
+    },
+    {
+      "adapter_metrics": {
+        "carried_validations": 110,
+        "exact_calls": 5,
+        "exact_new_states": 223,
+        "lower_calls": 32
+      },
+      "classification_sources": {
+        "L1-carried": 10,
+        "L1-constructive": 27,
+        "U0": 79,
+        "exact-infeasible": 5
+      },
+      "completed": 1,
+      "energy": 179.64822673797607,
+      "engine_metrics": {
+        "carried_hits": 10,
+        "classifications": 121,
+        "commits": 11,
+        "exact_failure": 5,
+        "exact_fallback_calls": 5,
+        "exact_success": 0,
+        "lower_hits": 27,
+        "upper_impossible": 79
+      },
+      "frontier_checks": 11,
+      "infeasible": 0,
+      "interventions": 1,
+      "native_return": 475.4999999769,
+      "policy": "nearest_deadline",
+      "returned_to_depot": 1,
+      "seed": 167,
+      "tardiness": 0.0,
+      "zero_tardiness": 1
+    },
+    {
+      "adapter_metrics": {
+        "carried_validations": 110,
+        "exact_calls": 8,
+        "exact_new_states": 354,
+        "lower_calls": 45
+      },
+      "classification_sources": {
+        "L1-carried": 10,
+        "L1-constructive": 37,
+        "U0": 66,
+        "exact-infeasible": 8
+      },
+      "completed": 1,
+      "energy": 138.82462000846863,
+      "engine_metrics": {
+        "carried_hits": 10,
+        "classifications": 121,
+        "commits": 11,
+        "exact_failure": 8,
+        "exact_fallback_calls": 8,
+        "exact_success": 0,
+        "lower_hits": 37,
+        "upper_impossible": 66
+      },
+      "frontier_checks": 11,
+      "infeasible": 0,
+      "interventions": 0,
+      "native_return": 475.4999999769,
+      "policy": "greedy_deadline_battery",
+      "returned_to_depot": 1,
+      "seed": 167,
+      "tardiness": 0.0,
+      "zero_tardiness": 1
+    },
+    {
+      "adapter_metrics": {
+        "carried_validations": 110,
+        "exact_calls": 4,
+        "exact_new_states": 259,
+        "lower_calls": 40
+      },
+      "classification_sources": {
+        "L1-carried": 10,
+        "L1-constructive": 36,
+        "U0": 71,
+        "exact-infeasible": 4
+      },
+      "completed": 1,
+      "energy": 126.41674160957336,
+      "engine_metrics": {
+        "carried_hits": 10,
+        "classifications": 121,
+        "commits": 11,
+        "exact_failure": 4,
+        "exact_fallback_calls": 4,
+        "exact_success": 0,
+        "lower_hits": 36,
+        "upper_impossible": 71
+      },
+      "frontier_checks": 11,
+      "infeasible": 0,
+      "interventions": 0,
+      "native_return": 475.4999999769,
+      "policy": "battery_aware_nn",
+      "returned_to_depot": 1,
+      "seed": 167,
+      "tardiness": 0.0,
+      "zero_tardiness": 1
+    },
+    {
+      "adapter_metrics": {
+        "carried_validations": 110,
+        "exact_calls": 3,
+        "exact_new_states": 168,
+        "lower_calls": 28
+      },
+      "classification_sources": {
+        "L1-carried": 10,
+        "L1-constructive": 25,
+        "U0": 83,
+        "exact-infeasible": 3
+      },
+      "completed": 1,
+      "energy": 158.6492464542389,
+      "engine_metrics": {
+        "carried_hits": 10,
+        "classifications": 121,
+        "commits": 11,
+        "exact_failure": 3,
+        "exact_fallback_calls": 3,
+        "exact_success": 0,
+        "lower_hits": 25,
+        "upper_impossible": 83
+      },
+      "frontier_checks": 11,
+      "infeasible": 0,
+      "interventions": 0,
+      "native_return": 475.4999999769,
+      "policy": "nearest_neighbour",
+      "returned_to_depot": 1,
+      "seed": 171,
+      "tardiness": 0.0,
+      "zero_tardiness": 1
+    },
+    {
+      "adapter_metrics": {
+        "carried_validations": 109,
+        "exact_calls": 11,
+        "exact_new_states": 500,
+        "lower_calls": 27
+      },
+      "classification_sources": {
+        "L1-carried": 10,
+        "L1-constructive": 16,
+        "U0": 83,
+        "exact-infeasible": 11
+      },
+      "completed": 1,
+      "energy": 206.36364769935608,
+      "engine_metrics": {
+        "carried_hits": 10,
+        "classifications": 120,
+        "commits": 11,
+        "exact_failure": 11,
+        "exact_fallback_calls": 11,
+        "exact_success": 0,
+        "lower_hits": 16,
+        "upper_impossible": 83
+      },
+      "frontier_checks": 11,
+      "infeasible": 0,
+      "interventions": 2,
+      "native_return": 475.4999999769,
+      "policy": "nearest_deadline",
+      "returned_to_depot": 1,
+      "seed": 171,
+      "tardiness": 0.0,
+      "zero_tardiness": 1
+    },
+    {
+      "adapter_metrics": {
+        "carried_validations": 109,
+        "exact_calls": 8,
+        "exact_new_states": 267,
+        "lower_calls": 31
+      },
+      "classification_sources": {
+        "L1-carried": 10,
+        "L1-constructive": 23,
+        "U0": 79,
+        "exact-infeasible": 8
+      },
+      "completed": 1,
+      "energy": 205.7067277431488,
+      "engine_metrics": {
+        "carried_hits": 10,
+        "classifications": 120,
+        "commits": 11,
+        "exact_failure": 8,
+        "exact_fallback_calls": 8,
+        "exact_success": 0,
+        "lower_hits": 23,
+        "upper_impossible": 79
+      },
+      "frontier_checks": 11,
+      "infeasible": 0,
+      "interventions": 0,
+      "native_return": 475.4999999769,
+      "policy": "greedy_deadline_battery",
+      "returned_to_depot": 1,
+      "seed": 171,
+      "tardiness": 0.0,
+      "zero_tardiness": 1
+    },
+    {
+      "adapter_metrics": {
+        "carried_validations": 110,
+        "exact_calls": 3,
+        "exact_new_states": 168,
+        "lower_calls": 28
+      },
+      "classification_sources": {
+        "L1-carried": 10,
+        "L1-constructive": 25,
+        "U0": 83,
+        "exact-infeasible": 3
+      },
+      "completed": 1,
+      "energy": 158.6492464542389,
+      "engine_metrics": {
+        "carried_hits": 10,
+        "classifications": 121,
+        "commits": 11,
+        "exact_failure": 3,
+        "exact_fallback_calls": 3,
+        "exact_success": 0,
+        "lower_hits": 25,
+        "upper_impossible": 83
+      },
+      "frontier_checks": 11,
+      "infeasible": 0,
+      "interventions": 0,
+      "native_return": 475.4999999769,
+      "policy": "battery_aware_nn",
+      "returned_to_depot": 1,
+      "seed": 171,
+      "tardiness": 0.0,
+      "zero_tardiness": 1
+    },
+    {
+      "adapter_metrics": {
+        "carried_validations": 110,
+        "exact_calls": 4,
+        "exact_new_states": 42,
+        "lower_calls": 22
+      },
+      "classification_sources": {
+        "L1-carried": 10,
+        "L1-constructive": 18,
+        "U0": 89,
+        "exact-infeasible": 4
+      },
+      "completed": 1,
+      "energy": 134.2400152683258,
+      "engine_metrics": {
+        "carried_hits": 10,
+        "classifications": 121,
+        "commits": 11,
+        "exact_failure": 4,
+        "exact_fallback_calls": 4,
+        "exact_success": 0,
+        "lower_hits": 18,
+        "upper_impossible": 89
+      },
+      "frontier_checks": 11,
+      "infeasible": 0,
+      "interventions": 0,
+      "native_return": 475.4999999769,
+      "policy": "nearest_neighbour",
+      "returned_to_depot": 1,
+      "seed": 177,
+      "tardiness": 0.0,
+      "zero_tardiness": 1
+    },
+    {
+      "adapter_metrics": {
+        "carried_validations": 110,
+        "exact_calls": 3,
+        "exact_new_states": 39,
+        "lower_calls": 21
+      },
+      "classification_sources": {
+        "L1-carried": 10,
+        "L1-constructive": 18,
+        "U0": 90,
+        "exact-infeasible": 3
+      },
+      "completed": 1,
+      "energy": 188.98295331001282,
+      "engine_metrics": {
+        "carried_hits": 10,
+        "classifications": 121,
+        "commits": 11,
+        "exact_failure": 3,
+        "exact_fallback_calls": 3,
+        "exact_success": 0,
+        "lower_hits": 18,
+        "upper_impossible": 90
+      },
+      "frontier_checks": 11,
+      "infeasible": 0,
+      "interventions": 1,
+      "native_return": 475.4999999769,
+      "policy": "nearest_deadline",
+      "returned_to_depot": 1,
+      "seed": 177,
+      "tardiness": 0.0,
+      "zero_tardiness": 1
+    },
+    {
+      "adapter_metrics": {
+        "carried_validations": 110,
+        "exact_calls": 3,
+        "exact_new_states": 39,
+        "lower_calls": 22
+      },
+      "classification_sources": {
+        "L1-carried": 10,
+        "L1-constructive": 19,
+        "U0": 89,
+        "exact-infeasible": 3
+      },
+      "completed": 1,
+      "energy": 177.20478081703186,
+      "engine_metrics": {
+        "carried_hits": 10,
+        "classifications": 121,
+        "commits": 11,
+        "exact_failure": 3,
+        "exact_fallback_calls": 3,
+        "exact_success": 0,
+        "lower_hits": 19,
+        "upper_impossible": 89
+      },
+      "frontier_checks": 11,
+      "infeasible": 0,
+      "interventions": 0,
+      "native_return": 475.4999999769,
+      "policy": "greedy_deadline_battery",
+      "returned_to_depot": 1,
+      "seed": 177,
+      "tardiness": 0.0,
+      "zero_tardiness": 1
+    },
+    {
+      "adapter_metrics": {
+        "carried_validations": 110,
+        "exact_calls": 4,
+        "exact_new_states": 42,
+        "lower_calls": 22
+      },
+      "classification_sources": {
+        "L1-carried": 10,
+        "L1-constructive": 18,
+        "U0": 89,
+        "exact-infeasible": 4
+      },
+      "completed": 1,
+      "energy": 134.2400152683258,
+      "engine_metrics": {
+        "carried_hits": 10,
+        "classifications": 121,
+        "commits": 11,
+        "exact_failure": 4,
+        "exact_fallback_calls": 4,
+        "exact_success": 0,
+        "lower_hits": 18,
+        "upper_impossible": 89
+      },
+      "frontier_checks": 11,
+      "infeasible": 0,
+      "interventions": 0,
+      "native_return": 475.4999999769,
+      "policy": "battery_aware_nn",
+      "returned_to_depot": 1,
+      "seed": 177,
+      "tardiness": 0.0,
+      "zero_tardiness": 1
+    },
+    {
+      "adapter_metrics": {
+        "carried_validations": 110,
+        "exact_calls": 15,
+        "exact_new_states": 524,
+        "lower_calls": 31
+      },
+      "classification_sources": {
+        "L1-carried": 10,
+        "L1-constructive": 16,
+        "U0": 80,
+        "exact-infeasible": 15
+      },
+      "completed": 1,
+      "energy": 143.95896166563034,
+      "engine_metrics": {
+        "carried_hits": 10,
+        "classifications": 121,
+        "commits": 11,
+        "exact_failure": 15,
+        "exact_fallback_calls": 15,
+        "exact_success": 0,
+        "lower_hits": 16,
+        "upper_impossible": 80
+      },
+      "frontier_checks": 11,
+      "infeasible": 0,
+      "interventions": 1,
+      "native_return": 475.4999999769,
+      "policy": "nearest_neighbour",
+      "returned_to_depot": 1,
+      "seed": 186,
+      "tardiness": 0.0,
+      "zero_tardiness": 1
+    },
+    {
+      "adapter_metrics": {
+        "carried_validations": 110,
+        "exact_calls": 14,
+        "exact_new_states": 2236,
+        "lower_calls": 40
+      },
+      "classification_sources": {
+        "L1-carried": 10,
+        "L1-constructive": 26,
+        "U0": 71,
+        "exact-infeasible": 14
+      },
+      "completed": 1,
+      "energy": 185.42166709899902,
+      "engine_metrics": {
+        "carried_hits": 10,
+        "classifications": 121,
+        "commits": 11,
+        "exact_failure": 14,
+        "exact_fallback_calls": 14,
+        "exact_success": 0,
+        "lower_hits": 26,
+        "upper_impossible": 71
+      },
+      "frontier_checks": 11,
+      "infeasible": 0,
+      "interventions": 2,
+      "native_return": 475.4999999769,
+      "policy": "nearest_deadline",
+      "returned_to_depot": 1,
+      "seed": 186,
+      "tardiness": 0.0,
+      "zero_tardiness": 1
+    },
+    {
+      "adapter_metrics": {
+        "carried_validations": 110,
+        "exact_calls": 14,
+        "exact_new_states": 2236,
+        "lower_calls": 39
+      },
+      "classification_sources": {
+        "L1-carried": 10,
+        "L1-constructive": 25,
+        "U0": 72,
+        "exact-infeasible": 14
+      },
+      "completed": 1,
+      "energy": 168.98932522535324,
+      "engine_metrics": {
+        "carried_hits": 10,
+        "classifications": 121,
+        "commits": 11,
+        "exact_failure": 14,
+        "exact_fallback_calls": 14,
+        "exact_success": 0,
+        "lower_hits": 25,
+        "upper_impossible": 72
+      },
+      "frontier_checks": 11,
+      "infeasible": 0,
+      "interventions": 0,
+      "native_return": 475.4999999769,
+      "policy": "greedy_deadline_battery",
+      "returned_to_depot": 1,
+      "seed": 186,
+      "tardiness": 0.0,
+      "zero_tardiness": 1
+    },
+    {
+      "adapter_metrics": {
+        "carried_validations": 110,
+        "exact_calls": 15,
+        "exact_new_states": 524,
+        "lower_calls": 31
+      },
+      "classification_sources": {
+        "L1-carried": 10,
+        "L1-constructive": 16,
+        "U0": 80,
+        "exact-infeasible": 15
+      },
+      "completed": 1,
+      "energy": 143.95896166563034,
+      "engine_metrics": {
+        "carried_hits": 10,
+        "classifications": 121,
+        "commits": 11,
+        "exact_failure": 15,
+        "exact_fallback_calls": 15,
+        "exact_success": 0,
+        "lower_hits": 16,
+        "upper_impossible": 80
+      },
+      "frontier_checks": 11,
+      "infeasible": 0,
+      "interventions": 1,
+      "native_return": 475.4999999769,
+      "policy": "battery_aware_nn",
+      "returned_to_depot": 1,
+      "seed": 186,
+      "tardiness": 0.0,
+      "zero_tardiness": 1
+    }
+  ],
+  "stage": "UAV_GENERIC_FUTURE_CHOICE_ENGINE_N10_PARITY"
+}

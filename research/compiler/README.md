@@ -73,7 +73,7 @@ domain adapter 仍拥有真正的语义：legal state/action transition、optimi
 - `F3`：active branch 内的证书失效由 future-feasibility dependency 决定。当前 strong ladder 中，gateway receipt / final ACK 这类 history event 可以不触发任何 conflict-component recompute；
 - `F4–F5`：独立外部 deadline/battery mission 中存在真实 full-continuation failure，L/U + exact fallback 可作为 exact-correct safety layer；
 - `F6`：B 的 set-level obligation conflict 原则已迁移到 C 的 deadline-set MST sound U-bound，在同一 frozen N=10 cohort、相同 task quality 与 exact correctness authority 下显著减少 exact-correct search proxy；
-- `F7`：B/C 使用同一个 generic `carried certificate → U=0 → L=1 → exact fallback` correctness orchestration。
+- `F7`：B/C 使用同一个 generic `carried certificate → U=0 → L=1 → exact fallback` correctness orchestration；C 的冻结 N=10 21-seed cohort 已由 formal `UAVFutureChoiceAdapter + FutureChoiceEngine` 实际驱动并复现 924/924 exact frontier 与 21/21 task-quality结果，不再只是单 seed cross-domain smoke。
 
 这里仍保留两个明确 negative boundary：
 

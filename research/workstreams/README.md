@@ -32,5 +32,6 @@
 
 当前跨线复盘：
 
+- [`EXPERIMENT-MATRIX-2026-10-09.md`](EXPERIMENT-MATRIX-2026-10-09.md) / [`EXPERIMENT-MATRIX-2026-10-09.json`](EXPERIMENT-MATRIX-2026-10-09.json)：**当前实验设计 authority**；固定 RQ、规模、cohort、baseline、correctness、统计、资源 contract 与 stop rule；
 - [`LITERATURE-GAP-AUDIT-2026-10-09.md`](LITERATURE-GAP-AUDIT-2026-10-09.md)：同期 benchmark / ASC / active-measurement / world-model 文献重新对齐后的 novelty、实验与写作边界；
 - [`ASSET-REUSE-AUDIT-2026-10-09.md`](ASSET-REUSE-AUDIT-2026-10-09.md)：current core、paper evidence、可复用 support、provenance-only 与 retire 资产分级。

@@ -15,12 +15,13 @@
 1. [`../../results/CLAIMS.md`](../../results/CLAIMS.md) — 唯一 claim-state authority；
 2. [`../../research/workstreams/PAPER-SYNTHESIS.md`](../../research/workstreams/PAPER-SYNTHESIS.md) — A/B/C 综合叙事；
 3. [`../../research/workstreams/LITERATURE-GAP-AUDIT-2026-10-09.md`](../../research/workstreams/LITERATURE-GAP-AUDIT-2026-10-09.md) — current novelty / experiment / writing boundary；
-4. [`../../research/workstreams/ASSET-REUSE-AUDIT-2026-10-09.md`](../../research/workstreams/ASSET-REUSE-AUDIT-2026-10-09.md) — current core 与旧资产复用地图；
-5. [`../../research/benchmark/LAYER1-AUTHORITY.md`](../../research/benchmark/LAYER1-AUTHORITY.md) — A / benchmark authority；
-6. [`../../research/compiler/README.md`](../../research/compiler/README.md) — B / method correctness boundary；
-7. [`../../results/transfer/future-choice-claim-matrix.json`](../../results/transfer/future-choice-claim-matrix.json) — machine-readable scoped paper projection；
-8. [`REFERENCE-PLAN.md`](REFERENCE-PLAN.md) — 旧论文引用复用 + 2025–2026 最近邻 citation clusters；
-9. generated paper facts/tables in [`../generated/`](../generated/)。
+4. [`../../research/workstreams/EXPERIMENT-MATRIX-2026-10-09.md`](../../research/workstreams/EXPERIMENT-MATRIX-2026-10-09.md) — current RQ / cohort / scale / baseline / statistics / resource execution plan；
+5. [`../../research/workstreams/ASSET-REUSE-AUDIT-2026-10-09.md`](../../research/workstreams/ASSET-REUSE-AUDIT-2026-10-09.md) — current core 与旧资产复用地图；
+6. [`../../research/benchmark/LAYER1-AUTHORITY.md`](../../research/benchmark/LAYER1-AUTHORITY.md) — A / benchmark authority；
+7. [`../../research/compiler/README.md`](../../research/compiler/README.md) — B / method correctness boundary；
+8. [`../../results/transfer/future-choice-claim-matrix.json`](../../results/transfer/future-choice-claim-matrix.json) — machine-readable scoped paper projection；
+9. [`REFERENCE-PLAN.md`](REFERENCE-PLAN.md) — 旧论文引用复用 + 2025–2026 最近邻 citation clusters；
+10. generated paper facts/tables in [`../generated/`](../generated/)。
 
 任何数字必须来自 generated artifact 或 tracked source result；禁止从聊天、README 或本目录手抄数字到正文。
 
