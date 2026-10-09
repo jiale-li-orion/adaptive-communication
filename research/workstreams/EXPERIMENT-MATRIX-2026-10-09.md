@@ -129,7 +129,7 @@ A3 完成后运行 `analyze_layer1_paper_llm_test.py` → `freeze_layer1_paper_f
 
 Historical domain-local orchestration remains provenance only.
 
-## B6 · Structural holdout — OPEN / HIGH VALUE
+## B6 · Structural holdout — FROZEN / TO RUN
 
 目的：回答 synthetic family 是否只对训练/设计过的 graph motif 有效。
 
@@ -141,6 +141,8 @@ Historical domain-local orchestration remains provenance only.
 4. unseen branch-depth / opportunity-topology compositions。
 
 Correctness authority仍是 fresh exact/fresh structural rebuild。该项优先于继续跑 K=64/128。
+
+结构已冻结于 `B6-STRUCTURAL-HOLDOUT-FREEZE-2026-10-09.{md,json}`：`ASYMMETRIC_DISJOINT / BRIDGED_PAIR / CHAIN_OVERLAP_SPLIT / MIXED_LOCAL_GLOBAL`。执行后不得删除或改写失败 motif。
 
 ## B7 · Net wall-time gate — OPTIONAL / CURRENTLY OPEN
 

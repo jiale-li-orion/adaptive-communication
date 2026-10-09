@@ -1,0 +1,60 @@
+{
+  "status": "FROZEN_BEFORE_EXECUTION",
+  "date": "2026-10-09",
+  "placement": "POST_QUERY_REVEALED_GATEWAY_BRANCH",
+  "resource_contract": {
+    "cpu_count": 2,
+    "nice": 10,
+    "numerical_library_threads": 1,
+    "memory_target_mib": 512,
+    "resource_termination_disposition": "UNRESOLVED_COMPUTATION"
+  },
+  "correctness_authority": {
+    "incremental": "canonical_snapshot(incremental) == canonical_snapshot(fresh_full_rebuild) after every event",
+    "exact": "fresh_ordered_exact == ordinary_persistent_exact == dependency_cache_exact complete action frontier",
+    "partition_fallback": "allowed and counted; never treated as a correctness failure if fresh-equivalent"
+  },
+  "motifs": [
+    {
+      "id": "H1_ASYMMETRIC_DISJOINT",
+      "group_sizes": [2, 3, 5, 4],
+      "topology": "DISCONNECTED_LOCAL_WINDOWS",
+      "local_capacity_rule": "group_size_minus_1",
+      "events": ["initial", "send_pending_g1", "gateway_receipt_g1", "final_ack_g1", "time_boundary_g0", "global_satellite_budget_decrement"]
+    },
+    {
+      "id": "H2_BRIDGED_PAIR",
+      "group_sizes": [3, 4, 3, 2],
+      "topology": "G0_G1_SHARED_BRIDGE_WINDOW_PLUS_G2_G3_DISCONNECTED",
+      "bridge_windows": ["bridge-01"],
+      "expected_initial_components": [["g0", "g1"], ["g2"], ["g3"]],
+      "events": ["initial", "pending_g0", "consume_local_g0", "consume_bridge_01", "global_satellite_budget_decrement"]
+    },
+    {
+      "id": "H3_CHAIN_OVERLAP_SPLIT",
+      "group_sizes": [2, 3, 2, 3],
+      "topology": "G0_G1_G2_CHAIN_PLUS_G3_DISCONNECTED",
+      "bridge_windows": ["bridge-01", "bridge-12"],
+      "expected_initial_components": [["g0", "g1", "g2"], ["g3"]],
+      "events": ["initial", "exhaust_bridge_01", "cross_bridge_12_boundary", "pending_remaining_chain", "global_satellite_budget_decrement"]
+    },
+    {
+      "id": "H4_MIXED_LOCAL_GLOBAL",
+      "group_sizes": [2, 4, 3, 5, 2],
+      "topology": "ASYMMETRIC_DISCONNECTED_WITH_SHARED_SAT_BUDGET_DEPENDENCY",
+      "local_capacity_rule": "group_size_minus_1",
+      "events": ["initial", "send_pending_g1", "consume_local_g3", "final_ack_g1", "global_satellite_budget_decrement", "time_boundary_g0"]
+    }
+  ],
+  "required_reports": [
+    "topology_signature",
+    "incremental_fresh_equivalence",
+    "exact_frontier_equivalence",
+    "component_recompute_reuse",
+    "partition_fallbacks",
+    "exact_expansions",
+    "optimistic_feasibility",
+    "backup_lower_bound"
+  ],
+  "post_execution_mutation_forbidden": true
+}
