@@ -1,0 +1,1183 @@
+{
+  "checks": {
+    "all_resolved_exact_comparisons_match": true,
+    "resource_termination_never_treated_as_infeasible": true
+  },
+  "claim_boundary": [
+    "B6 structural correctness is owned by the separate incremental-vs-fresh holdout artifact; exact strong controls here are bounded resource diagnostics.",
+    "Any timeout or memory termination is UNRESOLVED_COMPUTATION, never infeasibility.",
+    "Only events where all three exact baselines resolve are eligible for exact-frontier equivalence claims."
+  ],
+  "motifs": [
+    {
+      "events": [
+        {
+          "all_three_resolved": false,
+          "at_s": 90,
+          "event": "initial",
+          "event_index": 0,
+          "exact_frontiers_match_if_all_resolved": null,
+          "frontiers": {
+            "dependency": null,
+            "fresh": {
+              "actions": {
+                "WAIT:-": null
+              },
+              "expanded": 200000,
+              "memo_hits": 82351,
+              "recursive_calls": 332572,
+              "separator_replay_success": 0
+            },
+            "persistent": {
+              "actions": {
+                "WAIT:-": null
+              },
+              "expanded": 200000,
+              "memo_hits": 82351,
+              "recursive_calls": 332572,
+              "separator_replay_success": 0
+            }
+          },
+          "resolved_baselines": [
+            "fresh",
+            "persistent"
+          ]
+        },
+        {
+          "all_three_resolved": false,
+          "at_s": 100,
+          "event": "send_pending_g1",
+          "event_index": 1,
+          "exact_frontiers_match_if_all_resolved": null,
+          "frontiers": {
+            "dependency": null,
+            "fresh": null,
+            "persistent": null
+          },
+          "resolved_baselines": []
+        },
+        {
+          "all_three_resolved": false,
+          "at_s": 110,
+          "event": "gateway_receipt_g1",
+          "event_index": 2,
+          "exact_frontiers_match_if_all_resolved": null,
+          "frontiers": {
+            "dependency": null,
+            "fresh": null,
+            "persistent": null
+          },
+          "resolved_baselines": []
+        },
+        {
+          "all_three_resolved": false,
+          "at_s": 130,
+          "event": "final_ack_g1",
+          "event_index": 3,
+          "exact_frontiers_match_if_all_resolved": null,
+          "frontiers": {
+            "dependency": null,
+            "fresh": null,
+            "persistent": null
+          },
+          "resolved_baselines": []
+        },
+        {
+          "all_three_resolved": false,
+          "at_s": 132,
+          "event": "time_boundary_g0",
+          "event_index": 4,
+          "exact_frontiers_match_if_all_resolved": null,
+          "frontiers": {
+            "dependency": null,
+            "fresh": null,
+            "persistent": null
+          },
+          "resolved_baselines": []
+        },
+        {
+          "all_three_resolved": false,
+          "at_s": 133,
+          "event": "global_satellite_budget_decrement",
+          "event_index": 5,
+          "exact_frontiers_match_if_all_resolved": null,
+          "frontiers": {
+            "dependency": null,
+            "fresh": null,
+            "persistent": null
+          },
+          "resolved_baselines": []
+        }
+      ],
+      "matching_event_count_all_three": 0,
+      "motif": "H1_ASYMMETRIC_DISJOINT",
+      "resolved_event_count_all_three": 0,
+      "runs": {
+        "dependency": {
+          "baseline": "dependency",
+          "events_checkpointed": [],
+          "motif": "H1_ASYMMETRIC_DISJOINT",
+          "reason": "MEMORY_LIMIT",
+          "returncode": 1,
+          "status": "UNRESOLVED_COMPUTATION",
+          "stderr_tail": "ib._bootstrap_external>\", line 1187, in get_data\nMemoryError\n\nOriginal exception was:\nTraceback (most recent call last):\n  File \"/home/orion/Communications/应急通信/project1/adaptive-communication/code/evaluation/transfer/audit_future_choice_structural_holdout_exact_bounded.py\", line 331, in <module>\n    raise SystemExit(main())\n                     ^^^^^^\n  File \"/home/orion/Communications/应急通信/project1/adaptive-communication/code/evaluation/transfer/audit_future_choice_structural_holdout_exact_bounded.py\", line 295, in main\n    return _child(args.motif, args.baseline, args.checkpoint)\n           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/home/orion/Communications/应急通信/project1/adaptive-communication/code/evaluation/transfer/audit_future_choice_structural_holdout_exact_bounded.py\", line 65, in _child\n    row = _exact_row(current, at_s, state)\n          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/home/orion/Communications/应急通信/project1/adaptive-communication/code/evaluation/transfer/audit_future_choice_structural_holdout.py\", line 295, in _exact_row\n    result = planner.build_frontier(\n             ^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/home/orion/Communications/应急通信/project1/adaptive-communication/code/evaluation/agentic/layer2_v2_dependency_cache_baseline.py\", line 271, in build_frontier\n    result = self.solve(next_t, child, query_budget=query_budget - dq)\n             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/home/orion/Communications/应急通信/project1/adaptive-communication/code/evaluation/agentic/layer2_v2_dependency_cache_baseline.py\", line 227, in solve\n    policy = rec(at_s, dict(states), query_budget)\n             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/home/orion/Communications/应急通信/project1/adaptive-communication/code/evaluation/agentic/layer2_v2_dependency_cache_baseline.py\", line 211, in rec\n    sub = rec(next_t, child, qleft - dq)\n          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\nSystemError: error return without exception set\n"
+        },
+        "fresh": {
+          "baseline": "fresh",
+          "events_checkpointed": [
+            {
+              "at_s": 90,
+              "event": "initial",
+              "event_index": 0,
+              "frontier": {
+                "actions": {
+                  "WAIT:-": null
+                },
+                "expanded": 200000,
+                "memo_hits": 82351,
+                "recursive_calls": 332572,
+                "separator_replay_success": 0
+              },
+              "status": "RESOLVED"
+            }
+          ],
+          "motif": "H1_ASYMMETRIC_DISJOINT",
+          "reason": "TIMEOUT",
+          "returncode": null,
+          "status": "UNRESOLVED_COMPUTATION",
+          "stderr_tail": ""
+        },
+        "persistent": {
+          "baseline": "persistent",
+          "events_checkpointed": [
+            {
+              "at_s": 90,
+              "event": "initial",
+              "event_index": 0,
+              "frontier": {
+                "actions": {
+                  "WAIT:-": null
+                },
+                "expanded": 200000,
+                "memo_hits": 82351,
+                "recursive_calls": 332572,
+                "separator_replay_success": 0
+              },
+              "status": "RESOLVED"
+            }
+          ],
+          "motif": "H1_ASYMMETRIC_DISJOINT",
+          "reason": "MEMORY_LIMIT",
+          "returncode": 1,
+          "status": "UNRESOLVED_COMPUTATION",
+          "stderr_tail": "    ^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/usr/lib/python3.12/importlib/__init__.py\", line 90, in import_module\n    return _bootstrap._gcd_import(name[level:], package, level)\n           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"<frozen importlib._bootstrap>\", line 1387, in _gcd_import\n  File \"<frozen importlib._bootstrap>\", line 1360, in _find_and_load\n  File \"<frozen importlib._bootstrap>\", line 1331, in _find_and_load_unlocked\n  File \"<frozen importlib._bootstrap>\", line 935, in _load_unlocked\n  File \"<frozen importlib._bootstrap_external>\", line 991, in exec_module\n  File \"<frozen importlib._bootstrap_external>\", line 1087, in get_code\n  File \"<frozen importlib._bootstrap_external>\", line 1187, in get_data\nMemoryError\n\nOriginal exception was:\nTraceback (most recent call last):\n  File \"/home/orion/Communications/应急通信/project1/adaptive-communication/code/evaluation/transfer/audit_future_choice_structural_holdout_exact_bounded.py\", line 331, in <module>\n    raise SystemExit(main())\n                     ^^^^^^\n  File \"/home/orion/Communications/应急通信/project1/adaptive-communication/code/evaluation/transfer/audit_future_choice_structural_holdout_exact_bounded.py\", line 295, in main\n    return _child(args.motif, args.baseline, args.checkpoint)\n           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/home/orion/Communications/应急通信/project1/adaptive-communication/code/evaluation/transfer/audit_future_choice_structural_holdout_exact_bounded.py\", line 69, in _child\n    _append(\n  File \"/home/orion/Communications/应急通信/project1/adaptive-communication/code/evaluation/transfer/audit_future_choice_structural_holdout_exact_bounded.py\", line 44, in _append\n    with path.open(\"a\", encoding=\"utf-8\") as fh:\n         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/usr/lib/python3.12/pathlib.py\", line 1015, in open\n    return io.open(self, mode, buffering, encoding, errors, newline)\n           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\nMemoryError\n"
+        }
+      }
+    },
+    {
+      "events": [
+        {
+          "all_three_resolved": true,
+          "at_s": 90,
+          "event": "initial",
+          "event_index": 0,
+          "exact_frontiers_match_if_all_resolved": true,
+          "frontiers": {
+            "dependency": {
+              "actions": {
+                "WAIT:-": true
+              },
+              "expanded": 37,
+              "memo_hits": 0,
+              "recursive_calls": 38,
+              "separator_replay_success": 0
+            },
+            "fresh": {
+              "actions": {
+                "WAIT:-": true
+              },
+              "expanded": 37,
+              "memo_hits": 0,
+              "recursive_calls": 38,
+              "separator_replay_success": 0
+            },
+            "persistent": {
+              "actions": {
+                "WAIT:-": true
+              },
+              "expanded": 37,
+              "memo_hits": 0,
+              "recursive_calls": 38,
+              "separator_replay_success": 0
+            }
+          },
+          "resolved_baselines": [
+            "fresh",
+            "persistent",
+            "dependency"
+          ]
+        },
+        {
+          "all_three_resolved": true,
+          "at_s": 100,
+          "event": "pending_g0",
+          "event_index": 1,
+          "exact_frontiers_match_if_all_resolved": true,
+          "frontiers": {
+            "dependency": {
+              "actions": {
+                "SEND_TERR:g0:o1": true,
+                "SEND_TERR:g0:o2": true,
+                "WAIT:-": true
+              },
+              "expanded": 6571,
+              "memo_hits": 2006,
+              "recursive_calls": 8982,
+              "separator_replay_success": 0
+            },
+            "fresh": {
+              "actions": {
+                "SEND_TERR:g0:o1": true,
+                "SEND_TERR:g0:o2": true,
+                "WAIT:-": true
+              },
+              "expanded": 6606,
+              "memo_hits": 2005,
+              "recursive_calls": 9017,
+              "separator_replay_success": 0
+            },
+            "persistent": {
+              "actions": {
+                "SEND_TERR:g0:o1": true,
+                "SEND_TERR:g0:o2": true,
+                "WAIT:-": true
+              },
+              "expanded": 6571,
+              "memo_hits": 2006,
+              "recursive_calls": 8982,
+              "separator_replay_success": 0
+            }
+          },
+          "resolved_baselines": [
+            "fresh",
+            "persistent",
+            "dependency"
+          ]
+        },
+        {
+          "all_three_resolved": true,
+          "at_s": 105,
+          "event": "consume_local_g0",
+          "event_index": 2,
+          "exact_frontiers_match_if_all_resolved": true,
+          "frontiers": {
+            "dependency": {
+              "actions": {
+                "WAIT:-": true
+              },
+              "expanded": 0,
+              "memo_hits": 0,
+              "recursive_calls": 1,
+              "separator_replay_success": 1
+            },
+            "fresh": {
+              "actions": {
+                "WAIT:-": true
+              },
+              "expanded": 6559,
+              "memo_hits": 2004,
+              "recursive_calls": 8968,
+              "separator_replay_success": 0
+            },
+            "persistent": {
+              "actions": {
+                "WAIT:-": true
+              },
+              "expanded": 6559,
+              "memo_hits": 2004,
+              "recursive_calls": 8968,
+              "separator_replay_success": 0
+            }
+          },
+          "resolved_baselines": [
+            "fresh",
+            "persistent",
+            "dependency"
+          ]
+        },
+        {
+          "all_three_resolved": true,
+          "at_s": 120,
+          "event": "consume_bridge_01",
+          "event_index": 3,
+          "exact_frontiers_match_if_all_resolved": true,
+          "frontiers": {
+            "dependency": {
+              "actions": {
+                "WAIT:-": null
+              },
+              "expanded": 200000,
+              "memo_hits": 72910,
+              "recursive_calls": 281242,
+              "separator_replay_success": 0
+            },
+            "fresh": {
+              "actions": {
+                "WAIT:-": null
+              },
+              "expanded": 200000,
+              "memo_hits": 72910,
+              "recursive_calls": 281242,
+              "separator_replay_success": 0
+            },
+            "persistent": {
+              "actions": {
+                "WAIT:-": null
+              },
+              "expanded": 200000,
+              "memo_hits": 72910,
+              "recursive_calls": 281242,
+              "separator_replay_success": 0
+            }
+          },
+          "resolved_baselines": [
+            "fresh",
+            "persistent",
+            "dependency"
+          ]
+        },
+        {
+          "all_three_resolved": false,
+          "at_s": 121,
+          "event": "global_satellite_budget_decrement",
+          "event_index": 4,
+          "exact_frontiers_match_if_all_resolved": null,
+          "frontiers": {
+            "dependency": null,
+            "fresh": {
+              "actions": {
+                "WAIT:-": null
+              },
+              "expanded": 200000,
+              "memo_hits": 62390,
+              "recursive_calls": 273495,
+              "separator_replay_success": 0
+            },
+            "persistent": {
+              "actions": {
+                "WAIT:-": null
+              },
+              "expanded": 200000,
+              "memo_hits": 62390,
+              "recursive_calls": 273495,
+              "separator_replay_success": 0
+            }
+          },
+          "resolved_baselines": [
+            "fresh",
+            "persistent"
+          ]
+        }
+      ],
+      "matching_event_count_all_three": 4,
+      "motif": "H2_BRIDGED_PAIR",
+      "resolved_event_count_all_three": 4,
+      "runs": {
+        "dependency": {
+          "baseline": "dependency",
+          "events_checkpointed": [
+            {
+              "at_s": 90,
+              "event": "initial",
+              "event_index": 0,
+              "frontier": {
+                "actions": {
+                  "WAIT:-": true
+                },
+                "expanded": 37,
+                "memo_hits": 0,
+                "recursive_calls": 38,
+                "separator_replay_success": 0
+              },
+              "status": "RESOLVED"
+            },
+            {
+              "at_s": 100,
+              "event": "pending_g0",
+              "event_index": 1,
+              "frontier": {
+                "actions": {
+                  "SEND_TERR:g0:o1": true,
+                  "SEND_TERR:g0:o2": true,
+                  "WAIT:-": true
+                },
+                "expanded": 6571,
+                "memo_hits": 2006,
+                "recursive_calls": 8982,
+                "separator_replay_success": 0
+              },
+              "status": "RESOLVED"
+            },
+            {
+              "at_s": 105,
+              "event": "consume_local_g0",
+              "event_index": 2,
+              "frontier": {
+                "actions": {
+                  "WAIT:-": true
+                },
+                "expanded": 0,
+                "memo_hits": 0,
+                "recursive_calls": 1,
+                "separator_replay_success": 1
+              },
+              "status": "RESOLVED"
+            },
+            {
+              "at_s": 120,
+              "event": "consume_bridge_01",
+              "event_index": 3,
+              "frontier": {
+                "actions": {
+                  "WAIT:-": null
+                },
+                "expanded": 200000,
+                "memo_hits": 72910,
+                "recursive_calls": 281242,
+                "separator_replay_success": 0
+              },
+              "status": "RESOLVED"
+            }
+          ],
+          "motif": "H2_BRIDGED_PAIR",
+          "reason": "MEMORY_LIMIT",
+          "returncode": 1,
+          "status": "UNRESOLVED_COMPUTATION",
+          "stderr_tail": "    ^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/usr/lib/python3.12/importlib/__init__.py\", line 90, in import_module\n    return _bootstrap._gcd_import(name[level:], package, level)\n           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"<frozen importlib._bootstrap>\", line 1387, in _gcd_import\n  File \"<frozen importlib._bootstrap>\", line 1360, in _find_and_load\n  File \"<frozen importlib._bootstrap>\", line 1331, in _find_and_load_unlocked\n  File \"<frozen importlib._bootstrap>\", line 935, in _load_unlocked\n  File \"<frozen importlib._bootstrap_external>\", line 991, in exec_module\n  File \"<frozen importlib._bootstrap_external>\", line 1087, in get_code\n  File \"<frozen importlib._bootstrap_external>\", line 1187, in get_data\nMemoryError\n\nOriginal exception was:\nTraceback (most recent call last):\n  File \"/home/orion/Communications/应急通信/project1/adaptive-communication/code/evaluation/transfer/audit_future_choice_structural_holdout_exact_bounded.py\", line 331, in <module>\n    raise SystemExit(main())\n                     ^^^^^^\n  File \"/home/orion/Communications/应急通信/project1/adaptive-communication/code/evaluation/transfer/audit_future_choice_structural_holdout_exact_bounded.py\", line 295, in main\n    return _child(args.motif, args.baseline, args.checkpoint)\n           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/home/orion/Communications/应急通信/project1/adaptive-communication/code/evaluation/transfer/audit_future_choice_structural_holdout_exact_bounded.py\", line 69, in _child\n    _append(\n  File \"/home/orion/Communications/应急通信/project1/adaptive-communication/code/evaluation/transfer/audit_future_choice_structural_holdout_exact_bounded.py\", line 44, in _append\n    with path.open(\"a\", encoding=\"utf-8\") as fh:\n         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/usr/lib/python3.12/pathlib.py\", line 1015, in open\n    return io.open(self, mode, buffering, encoding, errors, newline)\n           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\nMemoryError\n"
+        },
+        "fresh": {
+          "baseline": "fresh",
+          "events_checkpointed": [
+            {
+              "at_s": 90,
+              "event": "initial",
+              "event_index": 0,
+              "frontier": {
+                "actions": {
+                  "WAIT:-": true
+                },
+                "expanded": 37,
+                "memo_hits": 0,
+                "recursive_calls": 38,
+                "separator_replay_success": 0
+              },
+              "status": "RESOLVED"
+            },
+            {
+              "at_s": 100,
+              "event": "pending_g0",
+              "event_index": 1,
+              "frontier": {
+                "actions": {
+                  "SEND_TERR:g0:o1": true,
+                  "SEND_TERR:g0:o2": true,
+                  "WAIT:-": true
+                },
+                "expanded": 6606,
+                "memo_hits": 2005,
+                "recursive_calls": 9017,
+                "separator_replay_success": 0
+              },
+              "status": "RESOLVED"
+            },
+            {
+              "at_s": 105,
+              "event": "consume_local_g0",
+              "event_index": 2,
+              "frontier": {
+                "actions": {
+                  "WAIT:-": true
+                },
+                "expanded": 6559,
+                "memo_hits": 2004,
+                "recursive_calls": 8968,
+                "separator_replay_success": 0
+              },
+              "status": "RESOLVED"
+            },
+            {
+              "at_s": 120,
+              "event": "consume_bridge_01",
+              "event_index": 3,
+              "frontier": {
+                "actions": {
+                  "WAIT:-": null
+                },
+                "expanded": 200000,
+                "memo_hits": 72910,
+                "recursive_calls": 281242,
+                "separator_replay_success": 0
+              },
+              "status": "RESOLVED"
+            },
+            {
+              "at_s": 121,
+              "event": "global_satellite_budget_decrement",
+              "event_index": 4,
+              "frontier": {
+                "actions": {
+                  "WAIT:-": null
+                },
+                "expanded": 200000,
+                "memo_hits": 62390,
+                "recursive_calls": 273495,
+                "separator_replay_success": 0
+              },
+              "status": "RESOLVED"
+            }
+          ],
+          "motif": "H2_BRIDGED_PAIR",
+          "reason": null,
+          "returncode": 0,
+          "status": "RESOLVED_SEQUENCE",
+          "stderr_tail": ""
+        },
+        "persistent": {
+          "baseline": "persistent",
+          "events_checkpointed": [
+            {
+              "at_s": 90,
+              "event": "initial",
+              "event_index": 0,
+              "frontier": {
+                "actions": {
+                  "WAIT:-": true
+                },
+                "expanded": 37,
+                "memo_hits": 0,
+                "recursive_calls": 38,
+                "separator_replay_success": 0
+              },
+              "status": "RESOLVED"
+            },
+            {
+              "at_s": 100,
+              "event": "pending_g0",
+              "event_index": 1,
+              "frontier": {
+                "actions": {
+                  "SEND_TERR:g0:o1": true,
+                  "SEND_TERR:g0:o2": true,
+                  "WAIT:-": true
+                },
+                "expanded": 6571,
+                "memo_hits": 2006,
+                "recursive_calls": 8982,
+                "separator_replay_success": 0
+              },
+              "status": "RESOLVED"
+            },
+            {
+              "at_s": 105,
+              "event": "consume_local_g0",
+              "event_index": 2,
+              "frontier": {
+                "actions": {
+                  "WAIT:-": true
+                },
+                "expanded": 6559,
+                "memo_hits": 2004,
+                "recursive_calls": 8968,
+                "separator_replay_success": 0
+              },
+              "status": "RESOLVED"
+            },
+            {
+              "at_s": 120,
+              "event": "consume_bridge_01",
+              "event_index": 3,
+              "frontier": {
+                "actions": {
+                  "WAIT:-": null
+                },
+                "expanded": 200000,
+                "memo_hits": 72910,
+                "recursive_calls": 281242,
+                "separator_replay_success": 0
+              },
+              "status": "RESOLVED"
+            },
+            {
+              "at_s": 121,
+              "event": "global_satellite_budget_decrement",
+              "event_index": 4,
+              "frontier": {
+                "actions": {
+                  "WAIT:-": null
+                },
+                "expanded": 200000,
+                "memo_hits": 62390,
+                "recursive_calls": 273495,
+                "separator_replay_success": 0
+              },
+              "status": "RESOLVED"
+            }
+          ],
+          "motif": "H2_BRIDGED_PAIR",
+          "reason": null,
+          "returncode": 0,
+          "status": "RESOLVED_SEQUENCE",
+          "stderr_tail": ""
+        }
+      }
+    },
+    {
+      "events": [
+        {
+          "all_three_resolved": true,
+          "at_s": 75,
+          "event": "initial",
+          "event_index": 0,
+          "exact_frontiers_match_if_all_resolved": true,
+          "frontiers": {
+            "dependency": {
+              "actions": {
+                "WAIT:-": true
+              },
+              "expanded": 34,
+              "memo_hits": 0,
+              "recursive_calls": 35,
+              "separator_replay_success": 0
+            },
+            "fresh": {
+              "actions": {
+                "WAIT:-": true
+              },
+              "expanded": 34,
+              "memo_hits": 0,
+              "recursive_calls": 35,
+              "separator_replay_success": 0
+            },
+            "persistent": {
+              "actions": {
+                "WAIT:-": true
+              },
+              "expanded": 34,
+              "memo_hits": 0,
+              "recursive_calls": 35,
+              "separator_replay_success": 0
+            }
+          },
+          "resolved_baselines": [
+            "fresh",
+            "persistent",
+            "dependency"
+          ]
+        },
+        {
+          "all_three_resolved": true,
+          "at_s": 100,
+          "event": "exhaust_bridge_01",
+          "event_index": 1,
+          "exact_frontiers_match_if_all_resolved": true,
+          "frontiers": {
+            "dependency": {
+              "actions": {
+                "WAIT:-": true
+              },
+              "expanded": 100736,
+              "memo_hits": 51296,
+              "recursive_calls": 160045,
+              "separator_replay_success": 0
+            },
+            "fresh": {
+              "actions": {
+                "WAIT:-": true
+              },
+              "expanded": 100736,
+              "memo_hits": 51296,
+              "recursive_calls": 160045,
+              "separator_replay_success": 0
+            },
+            "persistent": {
+              "actions": {
+                "WAIT:-": true
+              },
+              "expanded": 100736,
+              "memo_hits": 51296,
+              "recursive_calls": 160045,
+              "separator_replay_success": 0
+            }
+          },
+          "resolved_baselines": [
+            "fresh",
+            "persistent",
+            "dependency"
+          ]
+        },
+        {
+          "all_three_resolved": false,
+          "at_s": 130,
+          "event": "cross_bridge_12_boundary",
+          "event_index": 2,
+          "exact_frontiers_match_if_all_resolved": null,
+          "frontiers": {
+            "dependency": null,
+            "fresh": {
+              "actions": {
+                "WAIT:-": null
+              },
+              "expanded": 200000,
+              "memo_hits": 102681,
+              "recursive_calls": 318586,
+              "separator_replay_success": 0
+            },
+            "persistent": {
+              "actions": {
+                "WAIT:-": null
+              },
+              "expanded": 200000,
+              "memo_hits": 102681,
+              "recursive_calls": 318586,
+              "separator_replay_success": 0
+            }
+          },
+          "resolved_baselines": [
+            "fresh",
+            "persistent"
+          ]
+        },
+        {
+          "all_three_resolved": false,
+          "at_s": 140,
+          "event": "pending_remaining_chain",
+          "event_index": 3,
+          "exact_frontiers_match_if_all_resolved": null,
+          "frontiers": {
+            "dependency": null,
+            "fresh": {
+              "actions": {
+                "SEND_SAT:g0:o0": false,
+                "SEND_SAT:g0:o1": false,
+                "SEND_SAT:g1:o0": false,
+                "SEND_SAT:g1:o1": false,
+                "SEND_SAT:g1:o2": false,
+                "SEND_SAT:g2:o1": false,
+                "WAIT:-": false
+              },
+              "expanded": 154785,
+              "memo_hits": 81186,
+              "recursive_calls": 245533,
+              "separator_replay_success": 0
+            },
+            "persistent": null
+          },
+          "resolved_baselines": [
+            "fresh"
+          ]
+        },
+        {
+          "all_three_resolved": false,
+          "at_s": 141,
+          "event": "global_satellite_budget_decrement",
+          "event_index": 4,
+          "exact_frontiers_match_if_all_resolved": null,
+          "frontiers": {
+            "dependency": null,
+            "fresh": {
+              "actions": {
+                "WAIT:-": false
+              },
+              "expanded": 1,
+              "memo_hits": 0,
+              "recursive_calls": 2,
+              "separator_replay_success": 0
+            },
+            "persistent": null
+          },
+          "resolved_baselines": [
+            "fresh"
+          ]
+        }
+      ],
+      "matching_event_count_all_three": 2,
+      "motif": "H3_CHAIN_OVERLAP_SPLIT",
+      "resolved_event_count_all_three": 2,
+      "runs": {
+        "dependency": {
+          "baseline": "dependency",
+          "events_checkpointed": [
+            {
+              "at_s": 75,
+              "event": "initial",
+              "event_index": 0,
+              "frontier": {
+                "actions": {
+                  "WAIT:-": true
+                },
+                "expanded": 34,
+                "memo_hits": 0,
+                "recursive_calls": 35,
+                "separator_replay_success": 0
+              },
+              "status": "RESOLVED"
+            },
+            {
+              "at_s": 100,
+              "event": "exhaust_bridge_01",
+              "event_index": 1,
+              "frontier": {
+                "actions": {
+                  "WAIT:-": true
+                },
+                "expanded": 100736,
+                "memo_hits": 51296,
+                "recursive_calls": 160045,
+                "separator_replay_success": 0
+              },
+              "status": "RESOLVED"
+            }
+          ],
+          "motif": "H3_CHAIN_OVERLAP_SPLIT",
+          "reason": "MEMORY_LIMIT",
+          "returncode": 1,
+          "status": "UNRESOLVED_COMPUTATION",
+          "stderr_tail": "    ^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/usr/lib/python3.12/importlib/__init__.py\", line 90, in import_module\n    return _bootstrap._gcd_import(name[level:], package, level)\n           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"<frozen importlib._bootstrap>\", line 1387, in _gcd_import\n  File \"<frozen importlib._bootstrap>\", line 1360, in _find_and_load\n  File \"<frozen importlib._bootstrap>\", line 1331, in _find_and_load_unlocked\n  File \"<frozen importlib._bootstrap>\", line 935, in _load_unlocked\n  File \"<frozen importlib._bootstrap_external>\", line 991, in exec_module\n  File \"<frozen importlib._bootstrap_external>\", line 1087, in get_code\n  File \"<frozen importlib._bootstrap_external>\", line 1187, in get_data\nMemoryError\n\nOriginal exception was:\nTraceback (most recent call last):\n  File \"/home/orion/Communications/应急通信/project1/adaptive-communication/code/evaluation/transfer/audit_future_choice_structural_holdout_exact_bounded.py\", line 331, in <module>\n    raise SystemExit(main())\n                     ^^^^^^\n  File \"/home/orion/Communications/应急通信/project1/adaptive-communication/code/evaluation/transfer/audit_future_choice_structural_holdout_exact_bounded.py\", line 295, in main\n    return _child(args.motif, args.baseline, args.checkpoint)\n           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/home/orion/Communications/应急通信/project1/adaptive-communication/code/evaluation/transfer/audit_future_choice_structural_holdout_exact_bounded.py\", line 69, in _child\n    _append(\n  File \"/home/orion/Communications/应急通信/project1/adaptive-communication/code/evaluation/transfer/audit_future_choice_structural_holdout_exact_bounded.py\", line 44, in _append\n    with path.open(\"a\", encoding=\"utf-8\") as fh:\n         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/usr/lib/python3.12/pathlib.py\", line 1015, in open\n    return io.open(self, mode, buffering, encoding, errors, newline)\n           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\nMemoryError\n"
+        },
+        "fresh": {
+          "baseline": "fresh",
+          "events_checkpointed": [
+            {
+              "at_s": 75,
+              "event": "initial",
+              "event_index": 0,
+              "frontier": {
+                "actions": {
+                  "WAIT:-": true
+                },
+                "expanded": 34,
+                "memo_hits": 0,
+                "recursive_calls": 35,
+                "separator_replay_success": 0
+              },
+              "status": "RESOLVED"
+            },
+            {
+              "at_s": 100,
+              "event": "exhaust_bridge_01",
+              "event_index": 1,
+              "frontier": {
+                "actions": {
+                  "WAIT:-": true
+                },
+                "expanded": 100736,
+                "memo_hits": 51296,
+                "recursive_calls": 160045,
+                "separator_replay_success": 0
+              },
+              "status": "RESOLVED"
+            },
+            {
+              "at_s": 130,
+              "event": "cross_bridge_12_boundary",
+              "event_index": 2,
+              "frontier": {
+                "actions": {
+                  "WAIT:-": null
+                },
+                "expanded": 200000,
+                "memo_hits": 102681,
+                "recursive_calls": 318586,
+                "separator_replay_success": 0
+              },
+              "status": "RESOLVED"
+            },
+            {
+              "at_s": 140,
+              "event": "pending_remaining_chain",
+              "event_index": 3,
+              "frontier": {
+                "actions": {
+                  "SEND_SAT:g0:o0": false,
+                  "SEND_SAT:g0:o1": false,
+                  "SEND_SAT:g1:o0": false,
+                  "SEND_SAT:g1:o1": false,
+                  "SEND_SAT:g1:o2": false,
+                  "SEND_SAT:g2:o1": false,
+                  "WAIT:-": false
+                },
+                "expanded": 154785,
+                "memo_hits": 81186,
+                "recursive_calls": 245533,
+                "separator_replay_success": 0
+              },
+              "status": "RESOLVED"
+            },
+            {
+              "at_s": 141,
+              "event": "global_satellite_budget_decrement",
+              "event_index": 4,
+              "frontier": {
+                "actions": {
+                  "WAIT:-": false
+                },
+                "expanded": 1,
+                "memo_hits": 0,
+                "recursive_calls": 2,
+                "separator_replay_success": 0
+              },
+              "status": "RESOLVED"
+            }
+          ],
+          "motif": "H3_CHAIN_OVERLAP_SPLIT",
+          "reason": null,
+          "returncode": 0,
+          "status": "RESOLVED_SEQUENCE",
+          "stderr_tail": ""
+        },
+        "persistent": {
+          "baseline": "persistent",
+          "events_checkpointed": [
+            {
+              "at_s": 75,
+              "event": "initial",
+              "event_index": 0,
+              "frontier": {
+                "actions": {
+                  "WAIT:-": true
+                },
+                "expanded": 34,
+                "memo_hits": 0,
+                "recursive_calls": 35,
+                "separator_replay_success": 0
+              },
+              "status": "RESOLVED"
+            },
+            {
+              "at_s": 100,
+              "event": "exhaust_bridge_01",
+              "event_index": 1,
+              "frontier": {
+                "actions": {
+                  "WAIT:-": true
+                },
+                "expanded": 100736,
+                "memo_hits": 51296,
+                "recursive_calls": 160045,
+                "separator_replay_success": 0
+              },
+              "status": "RESOLVED"
+            },
+            {
+              "at_s": 130,
+              "event": "cross_bridge_12_boundary",
+              "event_index": 2,
+              "frontier": {
+                "actions": {
+                  "WAIT:-": null
+                },
+                "expanded": 200000,
+                "memo_hits": 102681,
+                "recursive_calls": 318586,
+                "separator_replay_success": 0
+              },
+              "status": "RESOLVED"
+            }
+          ],
+          "motif": "H3_CHAIN_OVERLAP_SPLIT",
+          "reason": "MEMORY_LIMIT",
+          "returncode": 1,
+          "status": "UNRESOLVED_COMPUTATION",
+          "stderr_tail": "= load_packaging_implementation()\n           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/usr/lib/python3/dist-packages/apport/packaging_impl/__init__.py\", line 27, in load_packaging_implementation\n    module = importlib.import_module(\n             ^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/usr/lib/python3.12/importlib/__init__.py\", line 90, in import_module\n    return _bootstrap._gcd_import(name[level:], package, level)\n           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"<frozen importlib._bootstrap>\", line 1387, in _gcd_import\n  File \"<frozen importlib._bootstrap>\", line 1360, in _find_and_load\n  File \"<frozen importlib._bootstrap>\", line 1331, in _find_and_load_unlocked\n  File \"<frozen importlib._bootstrap>\", line 935, in _load_unlocked\n  File \"<frozen importlib._bootstrap_external>\", line 991, in exec_module\n  File \"<frozen importlib._bootstrap_external>\", line 1087, in get_code\n  File \"<frozen importlib._bootstrap_external>\", line 1187, in get_data\nMemoryError\n\nOriginal exception was:\nMemoryError\n\nDuring handling of the above exception, another exception occurred:\n\nMemoryError\n\nDuring handling of the above exception, another exception occurred:\n\nMemoryError\n\nDuring handling of the above exception, another exception occurred:\n\nMemoryError\n\nDuring handling of the above exception, another exception occurred:\n\nMemoryError\n\nDuring handling of the above exception, another exception occurred:\n\nTraceback (most recent call last):\n  File \"/home/orion/Communications/应急通信/project1/adaptive-communication/code/evaluation/transfer/audit_future_choice_structural_holdout_exact_bounded.py\", line 331, in <module>\n    raise SystemExit(main())\n                     ^^^^^^\n  File \"/home/orion/Communications/应急通信/project1/adaptive-communication/code/evaluation/transfer/audit_future_choice_structural_holdout_exact_bounded.py\", line 295, in main\n    return _child(args.motif, args.baseline, args.checkpoint)\n           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\nMemoryError\n"
+        }
+      }
+    },
+    {
+      "events": [
+        {
+          "all_three_resolved": false,
+          "at_s": 90,
+          "event": "initial",
+          "event_index": 0,
+          "exact_frontiers_match_if_all_resolved": null,
+          "frontiers": {
+            "dependency": null,
+            "fresh": {
+              "actions": {
+                "WAIT:-": null
+              },
+              "expanded": 200000,
+              "memo_hits": 118103,
+              "recursive_calls": 319973,
+              "separator_replay_success": 0
+            },
+            "persistent": {
+              "actions": {
+                "WAIT:-": null
+              },
+              "expanded": 200000,
+              "memo_hits": 118103,
+              "recursive_calls": 319973,
+              "separator_replay_success": 0
+            }
+          },
+          "resolved_baselines": [
+            "fresh",
+            "persistent"
+          ]
+        },
+        {
+          "all_three_resolved": false,
+          "at_s": 100,
+          "event": "send_pending_g1",
+          "event_index": 1,
+          "exact_frontiers_match_if_all_resolved": null,
+          "frontiers": {
+            "dependency": null,
+            "fresh": null,
+            "persistent": null
+          },
+          "resolved_baselines": []
+        },
+        {
+          "all_three_resolved": false,
+          "at_s": 110,
+          "event": "consume_local_g3",
+          "event_index": 2,
+          "exact_frontiers_match_if_all_resolved": null,
+          "frontiers": {
+            "dependency": null,
+            "fresh": null,
+            "persistent": null
+          },
+          "resolved_baselines": []
+        },
+        {
+          "all_three_resolved": false,
+          "at_s": 130,
+          "event": "final_ack_g1",
+          "event_index": 3,
+          "exact_frontiers_match_if_all_resolved": null,
+          "frontiers": {
+            "dependency": null,
+            "fresh": null,
+            "persistent": null
+          },
+          "resolved_baselines": []
+        },
+        {
+          "all_three_resolved": false,
+          "at_s": 131,
+          "event": "global_satellite_budget_decrement",
+          "event_index": 4,
+          "exact_frontiers_match_if_all_resolved": null,
+          "frontiers": {
+            "dependency": null,
+            "fresh": null,
+            "persistent": null
+          },
+          "resolved_baselines": []
+        },
+        {
+          "all_three_resolved": false,
+          "at_s": 137,
+          "event": "time_boundary_g0",
+          "event_index": 5,
+          "exact_frontiers_match_if_all_resolved": null,
+          "frontiers": {
+            "dependency": null,
+            "fresh": null,
+            "persistent": null
+          },
+          "resolved_baselines": []
+        }
+      ],
+      "matching_event_count_all_three": 0,
+      "motif": "H4_MIXED_LOCAL_GLOBAL",
+      "resolved_event_count_all_three": 0,
+      "runs": {
+        "dependency": {
+          "baseline": "dependency",
+          "events_checkpointed": [],
+          "motif": "H4_MIXED_LOCAL_GLOBAL",
+          "reason": "MEMORY_LIMIT",
+          "returncode": 1,
+          "status": "UNRESOLVED_COMPUTATION",
+          "stderr_tail": "structural_holdout_exact_bounded.py\", line 295, in main\n    return _child(args.motif, args.baseline, args.checkpoint)\n           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/home/orion/Communications/应急通信/project1/adaptive-communication/code/evaluation/transfer/audit_future_choice_structural_holdout_exact_bounded.py\", line 65, in _child\n    row = _exact_row(current, at_s, state)\n          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/home/orion/Communications/应急通信/project1/adaptive-communication/code/evaluation/transfer/audit_future_choice_structural_holdout.py\", line 295, in _exact_row\n    result = planner.build_frontier(\n             ^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/home/orion/Communications/应急通信/project1/adaptive-communication/code/evaluation/agentic/layer2_v2_dependency_cache_baseline.py\", line 271, in build_frontier\n    result = self.solve(next_t, child, query_budget=query_budget - dq)\n             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/home/orion/Communications/应急通信/project1/adaptive-communication/code/evaluation/agentic/layer2_v2_dependency_cache_baseline.py\", line 227, in solve\n    policy = rec(at_s, dict(states), query_budget)\n             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/home/orion/Communications/应急通信/project1/adaptive-communication/code/evaluation/agentic/layer2_v2_dependency_cache_baseline.py\", line 211, in rec\n    sub = rec(next_t, child, qleft - dq)\n          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/home/orion/Communications/应急通信/project1/adaptive-communication/code/evaluation/agentic/layer2_v2_dependency_cache_baseline.py\", line 211, in rec\n    sub = rec(next_t, child, qleft - dq)\n          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/home/orion/Communications/应急通信/project1/adaptive-communication/code/evaluation/agentic/layer2_v2_dependency_cache_baseline.py\", line 211, in rec\n    sub = rec(next_t, child, qleft - dq)\n          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\nSystemError: error return without exception set\n"
+        },
+        "fresh": {
+          "baseline": "fresh",
+          "events_checkpointed": [
+            {
+              "at_s": 90,
+              "event": "initial",
+              "event_index": 0,
+              "frontier": {
+                "actions": {
+                  "WAIT:-": null
+                },
+                "expanded": 200000,
+                "memo_hits": 118103,
+                "recursive_calls": 319973,
+                "separator_replay_success": 0
+              },
+              "status": "RESOLVED"
+            }
+          ],
+          "motif": "H4_MIXED_LOCAL_GLOBAL",
+          "reason": "TIMEOUT",
+          "returncode": null,
+          "status": "UNRESOLVED_COMPUTATION",
+          "stderr_tail": ""
+        },
+        "persistent": {
+          "baseline": "persistent",
+          "events_checkpointed": [
+            {
+              "at_s": 90,
+              "event": "initial",
+              "event_index": 0,
+              "frontier": {
+                "actions": {
+                  "WAIT:-": null
+                },
+                "expanded": 200000,
+                "memo_hits": 118103,
+                "recursive_calls": 319973,
+                "separator_replay_success": 0
+              },
+              "status": "RESOLVED"
+            },
+            {
+              "event": "send_pending_g1",
+              "event_index": 1,
+              "reason": "MEMORY_LIMIT",
+              "status": "UNRESOLVED_COMPUTATION"
+            }
+          ],
+          "motif": "H4_MIXED_LOCAL_GLOBAL",
+          "reason": "MEMORY_LIMIT",
+          "returncode": 75,
+          "status": "UNRESOLVED_COMPUTATION",
+          "stderr_tail": ""
+        }
+      }
+    }
+  ],
+  "resource_contract": {
+    "baseline_processes": 12,
+    "memory_mib_per_process": 512,
+    "timeout_s_per_motif_baseline_sequence": 30
+  },
+  "stage": "FUTURE_CHOICE_B6_EXACT_STRONG_CONTROL_BOUNDED",
+  "summary": {
+    "events_all_three_matching": 6,
+    "events_all_three_resolved": 6,
+    "resolved_sequences": 3,
+    "unresolved_reasons": [
+      "MEMORY_LIMIT",
+      "TIMEOUT"
+    ],
+    "unresolved_sequences": 9
+  }
+}

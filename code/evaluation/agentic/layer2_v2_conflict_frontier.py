@@ -433,12 +433,78 @@ def _combined_matching_feasible(
     sat: Mapping[str, tuple[Slot, ...]],
     satellite_budget: int,
 ) -> bool:
-    """Perfect-information physical feasibility for one world.
+    """Perfect-information physical feasibility for one world via max-flow.
 
-    Used only as an optimistic structural U.  It ignores observation costs and
-    therefore may return True for a causally impossible policy, but False is a
-    sound impossibility certificate.
+    This is the production implementation.  It is exactly equivalent to the
+    historical DFS assignment semantics, but solves the bipartite matching with
+    a shared satellite-budget pool in polynomial time.
     """
+
+    candidates = {
+        oid: tuple(dict.fromkeys((*terr.get(oid, ()), *sat.get(oid, ()))))
+        for oid in obligation_ids
+    }
+    if any(not rows for rows in candidates.values()):
+        return False
+    source = ("SRC",)
+    sink = ("SNK",)
+    sat_pool = ("SAT_POOL",)
+    capacity: dict[Any, dict[Any, int]] = {}
+
+    def edge(left: Any, right: Any, cap: int) -> None:
+        capacity.setdefault(left, {})[right] = (
+            capacity.setdefault(left, {}).get(right, 0) + int(cap)
+        )
+        capacity.setdefault(right, {}).setdefault(left, 0)
+
+    all_slots: set[Slot] = set()
+    for oid in obligation_ids:
+        onode = ("O", oid)
+        edge(source, onode, 1)
+        for slot in candidates[oid]:
+            all_slots.add(slot)
+            edge(onode, ("SLOT", slot), 1)
+
+    for slot in sorted(all_slots):
+        snode = ("SLOT", slot)
+        if slot[0] == "S":
+            edge(snode, sat_pool, 1)
+        else:
+            edge(snode, sink, 1)
+    edge(sat_pool, sink, max(0, int(satellite_budget)))
+
+    residual = {node: dict(rows) for node, rows in capacity.items()}
+    flow = 0
+    while True:
+        parent: dict[Any, Any | None] = {source: None}
+        queue = deque([source])
+        while queue and sink not in parent:
+            node = queue.popleft()
+            for nxt, cap in residual.get(node, {}).items():
+                if cap > 0 and nxt not in parent:
+                    parent[nxt] = node
+                    queue.append(nxt)
+        if sink not in parent:
+            break
+        node = sink
+        while parent[node] is not None:
+            prev = parent[node]
+            residual[prev][node] -= 1
+            residual[node][prev] = residual[node].get(prev, 0) + 1
+            node = prev
+        flow += 1
+        if flow == len(obligation_ids):
+            return True
+    return False
+
+
+def _combined_matching_feasible_dfs_reference(
+    obligation_ids: tuple[str, ...],
+    terr: Mapping[str, tuple[Slot, ...]],
+    sat: Mapping[str, tuple[Slot, ...]],
+    satellite_budget: int,
+) -> bool:
+    """Historical exponential DFS reference retained for equivalence tests."""
 
     candidates = {
         oid: tuple(dict.fromkeys((*terr.get(oid, ()), *sat.get(oid, ()))))

@@ -129,7 +129,7 @@ A3 完成后运行 `analyze_layer1_paper_llm_test.py` → `freeze_layer1_paper_f
 
 Historical domain-local orchestration remains provenance only.
 
-## B6 · Structural holdout — FROZEN / TO RUN
+## B6 · Structural holdout — DONE / STRUCTURAL PASS + RESOURCE-BOUNDED EXACT PARTIAL
 
 目的：回答 synthetic family 是否只对训练/设计过的 graph motif 有效。
 
@@ -143,6 +143,27 @@ Historical domain-local orchestration remains provenance only.
 Correctness authority仍是 fresh exact/fresh structural rebuild。该项优先于继续跑 K=64/128。
 
 结构已冻结于 `B6-STRUCTURAL-HOLDOUT-FREEZE-2026-10-09.{md,json}`：`ASYMMETRIC_DISJOINT / BRIDGED_PAIR / CHAIN_OVERLAP_SPLIT / MIXED_LOCAL_GLOBAL`。执行后不得删除或改写失败 motif。
+
+### Frozen result
+
+- 四个 motif 的 initial topology 全部等于 freeze manifest；
+- **所有 structural event**：incremental snapshot = fresh full rebuild；
+- H1/H2/H3/H4 分别累计 `15/15`、`13/6`、`17/10`、`36/15` component recompute/reuse（不同 motif/event 的 component count会随合法 edge消失而 split，不能直接跨 motif做 efficiency ratio）；
+- bridge/chain机会耗尽后，原 connected component会按真实 future opportunities拆分；独立 component可以继续复用；
+- global satellite-budget event按预期 invalidates所有 backup-dependent components；
+- 四个 motif 均 `partition_fallback=0`，但这不构成“永远无需 fallback”的 claim；runtime仍保留 conservative repartition边界；
+- bounded exact strong-control采用 `4 motifs × 3 baselines` 隔离进程、512MiB/30s；只有 **3/12 baseline sequences完整解析**，另9个为 memory/timeout unresolved；
+- 在三种 exact baseline都成功解析的 **6 个 event** 上，fresh / persistent / dependency exact action frontier **6/6完全一致**；其余不参与 exact-frontier claim。
+
+### Implementation finding
+
+H4 首次运行还暴露了 production optimistic combined-matching 的指数 DFS 实现瓶颈。该判定本质上是 `obligation → concrete slot → terrestrial sink / shared satellite-budget pool` 的 integral max-flow。替换为等价 max-flow后：
+
+- 3 obligations × 4 slots × all candidate subsets × 4 satellite budgets 的 exhaustive equivalence test PASS；
+- 旧 F1–F3 tracked artifacts除 wall-time字段外语义零漂移；
+- H4 structural audit由 >30s卡死降到毫秒级，并保持 incremental=fresh。
+
+这是实现级复杂性修复，不升级为“整体planner wall-time superiority”。
 
 ## B7 · Net wall-time gate — OPTIONAL / CURRENTLY OPEN
 

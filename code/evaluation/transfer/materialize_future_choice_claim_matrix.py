@@ -23,6 +23,8 @@ FILES = {
     "B_shared": ROOT / "results/transfer/asc-pull-query-shared-opportunity-frontier.json",
     "B_dynamic": ROOT / "results/transfer/asc-pull-query-dynamic-frontier-reuse.json",
     "B_components": ROOT / "results/transfer/asc-pull-query-component-strong-baselines.json",
+    "B_holdout_structural": ROOT / "results/transfer/future-choice-structural-holdout-structural.json",
+    "B_holdout_exact": ROOT / "results/transfer/future-choice-structural-holdout-exact-bounded.json",
     "BC_engine": ROOT / "results/transfer/generic-future-choice-engine-cross-domain.json",
     "C_generic_parity": ROOT / "results/transfer/uav-attention-generic-engine-n10-parity.json",
     "C_scale": ROOT / "results/transfer/uav-attention-n10-scale-statistics.json",
@@ -49,6 +51,8 @@ def main() -> int:
     b_shared = load("B_shared")
     b_dyn = load("B_dynamic")
     b_comp = load("B_components")
+    b_holdout = load("B_holdout_structural")
+    b_holdout_exact = load("B_holdout_exact")
     bc = load("BC_engine")
     cgeneric = load("C_generic_parity")
     cscale = load("C_scale")
@@ -107,8 +111,12 @@ def main() -> int:
                 "C16_dependency_separator_replay": b_comp["summary"]["dependency_separator_replay_success"]["16"],
                 "C16_component_recomputes": b_comp["summary"]["incremental_component_recomputes"]["16"],
                 "C16_component_reuses": b_comp["summary"]["incremental_component_reuses"]["16"],
+                "structural_holdout_checks": b_holdout["checks"],
+                "structural_holdout_motifs": [row["motif"] for row in b_holdout["motifs"]],
+                "bounded_exact_summary": b_holdout_exact["summary"],
+                "bounded_exact_checks": b_holdout_exact["checks"],
             },
-            "boundary": "Exact expansions and component recomputes are different work units; do not ratio them as CPU-equivalent operations."
+            "boundary": "Exact expansions and component recomputes are different work units; do not ratio them as CPU-equivalent operations. B6 exact strong controls are resource-bounded: only fully resolved events support exact-frontier equivalence, while timeout/OOM cells remain UNRESOLVED_COMPUTATION."
         },
         {
             "id": "C1_local_legality_not_full_feasibility",

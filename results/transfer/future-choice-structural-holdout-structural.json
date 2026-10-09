@@ -1,0 +1,3624 @@
+{
+  "checks": {
+    "all_exact_frontiers_match": null,
+    "all_initial_topologies_match_freeze": true,
+    "all_structural_snapshots_match_fresh": true,
+    "freeze_status_correct": true
+  },
+  "claim_boundary": [
+    "The holdout changes graph topology rather than merely increasing branch/component count.",
+    "Partition fallback is a conservative correctness mechanism, not an efficiency failure by itself.",
+    "Exact expansions and component recomputation counts remain different work units.",
+    "Any resource-limited exact comparison must be reported unresolved rather than infeasible."
+  ],
+  "freeze_sha256": "b747d01828ca5c8f5049bfb09c8eab45e4917fa736bd44b092f7a008cbe09f24",
+  "motifs": [
+    {
+      "bundle_id": "b6-h1_asymmetric_disjoint",
+      "checks": {
+        "all_exact_frontiers_match": null,
+        "all_structural_snapshots_match_fresh": true,
+        "initial_topology_matches_freeze": true
+      },
+      "events": [
+        {
+          "at_s": 90,
+          "backup_lower_bound": 4,
+          "component_count": 4,
+          "dependency_exact": null,
+          "event": "initial",
+          "fresh_exact": null,
+          "incremental": {
+            "invalidated_keys": [],
+            "partition_fallbacks": 0,
+            "recomputed": 4,
+            "recomputed_keys": [
+              [
+                "revealed-branch",
+                [
+                  "g0:o0",
+                  "g0:o1"
+                ]
+              ],
+              [
+                "revealed-branch",
+                [
+                  "g1:o0",
+                  "g1:o1",
+                  "g1:o2"
+                ]
+              ],
+              [
+                "revealed-branch",
+                [
+                  "g2:o0",
+                  "g2:o1",
+                  "g2:o2",
+                  "g2:o3",
+                  "g2:o4"
+                ]
+              ],
+              [
+                "revealed-branch",
+                [
+                  "g3:o0",
+                  "g3:o1",
+                  "g3:o2",
+                  "g3:o3"
+                ]
+              ]
+            ],
+            "reused": 0,
+            "reused_keys": []
+          },
+          "optimistic_feasible": true,
+          "persistent_exact": null,
+          "structural_match_fresh": true,
+          "topology": [
+            [
+              "g0"
+            ],
+            [
+              "g1"
+            ],
+            [
+              "g2"
+            ],
+            [
+              "g3"
+            ]
+          ],
+          "topology_detail": [
+            {
+              "groups": [
+                "g0"
+              ],
+              "hall_deficit": 1,
+              "obligation_count": 2,
+              "terrestrial_window_ids": [
+                "local-g0"
+              ],
+              "valid_until_s": 132
+            },
+            {
+              "groups": [
+                "g1"
+              ],
+              "hall_deficit": 1,
+              "obligation_count": 3,
+              "terrestrial_window_ids": [
+                "local-g1"
+              ],
+              "valid_until_s": 110
+            },
+            {
+              "groups": [
+                "g2"
+              ],
+              "hall_deficit": 1,
+              "obligation_count": 5,
+              "terrestrial_window_ids": [
+                "local-g2"
+              ],
+              "valid_until_s": 141
+            },
+            {
+              "groups": [
+                "g3"
+              ],
+              "hall_deficit": 1,
+              "obligation_count": 4,
+              "terrestrial_window_ids": [
+                "local-g3"
+              ],
+              "valid_until_s": 161
+            }
+          ]
+        },
+        {
+          "at_s": 100,
+          "backup_lower_bound": 4,
+          "component_count": 4,
+          "dependency_exact": null,
+          "event": "send_pending_g1",
+          "fresh_exact": null,
+          "incremental": {
+            "invalidated_keys": [
+              [
+                "revealed-branch",
+                [
+                  "g1:o0",
+                  "g1:o1",
+                  "g1:o2"
+                ]
+              ]
+            ],
+            "partition_fallbacks": 0,
+            "recomputed": 1,
+            "recomputed_keys": [
+              [
+                "revealed-branch",
+                [
+                  "g1:o1",
+                  "g1:o2"
+                ]
+              ]
+            ],
+            "reused": 3,
+            "reused_keys": [
+              [
+                "revealed-branch",
+                [
+                  "g0:o0",
+                  "g0:o1"
+                ]
+              ],
+              [
+                "revealed-branch",
+                [
+                  "g2:o0",
+                  "g2:o1",
+                  "g2:o2",
+                  "g2:o3",
+                  "g2:o4"
+                ]
+              ],
+              [
+                "revealed-branch",
+                [
+                  "g3:o0",
+                  "g3:o1",
+                  "g3:o2",
+                  "g3:o3"
+                ]
+              ]
+            ]
+          },
+          "optimistic_feasible": true,
+          "persistent_exact": null,
+          "structural_match_fresh": true,
+          "topology": [
+            [
+              "g0"
+            ],
+            [
+              "g1"
+            ],
+            [
+              "g2"
+            ],
+            [
+              "g3"
+            ]
+          ],
+          "topology_detail": [
+            {
+              "groups": [
+                "g0"
+              ],
+              "hall_deficit": 1,
+              "obligation_count": 2,
+              "terrestrial_window_ids": [
+                "local-g0"
+              ],
+              "valid_until_s": 132
+            },
+            {
+              "groups": [
+                "g1"
+              ],
+              "hall_deficit": 1,
+              "obligation_count": 2,
+              "terrestrial_window_ids": [
+                "local-g1"
+              ],
+              "valid_until_s": 110
+            },
+            {
+              "groups": [
+                "g2"
+              ],
+              "hall_deficit": 1,
+              "obligation_count": 5,
+              "terrestrial_window_ids": [
+                "local-g2"
+              ],
+              "valid_until_s": 141
+            },
+            {
+              "groups": [
+                "g3"
+              ],
+              "hall_deficit": 1,
+              "obligation_count": 4,
+              "terrestrial_window_ids": [
+                "local-g3"
+              ],
+              "valid_until_s": 161
+            }
+          ]
+        },
+        {
+          "at_s": 110,
+          "backup_lower_bound": 5,
+          "component_count": 5,
+          "dependency_exact": null,
+          "event": "gateway_receipt_g1",
+          "fresh_exact": null,
+          "incremental": {
+            "invalidated_keys": [
+              [
+                "revealed-branch",
+                [
+                  "g1:o1",
+                  "g1:o2"
+                ]
+              ]
+            ],
+            "partition_fallbacks": 0,
+            "recomputed": 2,
+            "recomputed_keys": [
+              [
+                "revealed-branch",
+                [
+                  "g1:o1"
+                ]
+              ],
+              [
+                "revealed-branch",
+                [
+                  "g1:o2"
+                ]
+              ]
+            ],
+            "reused": 3,
+            "reused_keys": [
+              [
+                "revealed-branch",
+                [
+                  "g0:o0",
+                  "g0:o1"
+                ]
+              ],
+              [
+                "revealed-branch",
+                [
+                  "g2:o0",
+                  "g2:o1",
+                  "g2:o2",
+                  "g2:o3",
+                  "g2:o4"
+                ]
+              ],
+              [
+                "revealed-branch",
+                [
+                  "g3:o0",
+                  "g3:o1",
+                  "g3:o2",
+                  "g3:o3"
+                ]
+              ]
+            ]
+          },
+          "optimistic_feasible": true,
+          "persistent_exact": null,
+          "structural_match_fresh": true,
+          "topology": [
+            [
+              "g0"
+            ],
+            [
+              "g1"
+            ],
+            [
+              "g1"
+            ],
+            [
+              "g2"
+            ],
+            [
+              "g3"
+            ]
+          ],
+          "topology_detail": [
+            {
+              "groups": [
+                "g0"
+              ],
+              "hall_deficit": 1,
+              "obligation_count": 2,
+              "terrestrial_window_ids": [
+                "local-g0"
+              ],
+              "valid_until_s": 132
+            },
+            {
+              "groups": [
+                "g1"
+              ],
+              "hall_deficit": 1,
+              "obligation_count": 1,
+              "terrestrial_window_ids": [],
+              "valid_until_s": 141
+            },
+            {
+              "groups": [
+                "g1"
+              ],
+              "hall_deficit": 1,
+              "obligation_count": 1,
+              "terrestrial_window_ids": [],
+              "valid_until_s": 141
+            },
+            {
+              "groups": [
+                "g2"
+              ],
+              "hall_deficit": 1,
+              "obligation_count": 5,
+              "terrestrial_window_ids": [
+                "local-g2"
+              ],
+              "valid_until_s": 141
+            },
+            {
+              "groups": [
+                "g3"
+              ],
+              "hall_deficit": 1,
+              "obligation_count": 4,
+              "terrestrial_window_ids": [
+                "local-g3"
+              ],
+              "valid_until_s": 161
+            }
+          ]
+        },
+        {
+          "at_s": 130,
+          "backup_lower_bound": 5,
+          "component_count": 5,
+          "dependency_exact": null,
+          "event": "final_ack_g1",
+          "fresh_exact": null,
+          "incremental": {
+            "invalidated_keys": [],
+            "partition_fallbacks": 0,
+            "recomputed": 0,
+            "recomputed_keys": [],
+            "reused": 5,
+            "reused_keys": [
+              [
+                "revealed-branch",
+                [
+                  "g0:o0",
+                  "g0:o1"
+                ]
+              ],
+              [
+                "revealed-branch",
+                [
+                  "g1:o1"
+                ]
+              ],
+              [
+                "revealed-branch",
+                [
+                  "g1:o2"
+                ]
+              ],
+              [
+                "revealed-branch",
+                [
+                  "g2:o0",
+                  "g2:o1",
+                  "g2:o2",
+                  "g2:o3",
+                  "g2:o4"
+                ]
+              ],
+              [
+                "revealed-branch",
+                [
+                  "g3:o0",
+                  "g3:o1",
+                  "g3:o2",
+                  "g3:o3"
+                ]
+              ]
+            ]
+          },
+          "optimistic_feasible": true,
+          "persistent_exact": null,
+          "structural_match_fresh": true,
+          "topology": [
+            [
+              "g0"
+            ],
+            [
+              "g1"
+            ],
+            [
+              "g1"
+            ],
+            [
+              "g2"
+            ],
+            [
+              "g3"
+            ]
+          ],
+          "topology_detail": [
+            {
+              "groups": [
+                "g0"
+              ],
+              "hall_deficit": 1,
+              "obligation_count": 2,
+              "terrestrial_window_ids": [
+                "local-g0"
+              ],
+              "valid_until_s": 132
+            },
+            {
+              "groups": [
+                "g1"
+              ],
+              "hall_deficit": 1,
+              "obligation_count": 1,
+              "terrestrial_window_ids": [],
+              "valid_until_s": 141
+            },
+            {
+              "groups": [
+                "g1"
+              ],
+              "hall_deficit": 1,
+              "obligation_count": 1,
+              "terrestrial_window_ids": [],
+              "valid_until_s": 141
+            },
+            {
+              "groups": [
+                "g2"
+              ],
+              "hall_deficit": 1,
+              "obligation_count": 5,
+              "terrestrial_window_ids": [
+                "local-g2"
+              ],
+              "valid_until_s": 141
+            },
+            {
+              "groups": [
+                "g3"
+              ],
+              "hall_deficit": 1,
+              "obligation_count": 4,
+              "terrestrial_window_ids": [
+                "local-g3"
+              ],
+              "valid_until_s": 161
+            }
+          ]
+        },
+        {
+          "at_s": 132,
+          "backup_lower_bound": 6,
+          "component_count": 6,
+          "dependency_exact": null,
+          "event": "time_boundary_g0",
+          "fresh_exact": null,
+          "incremental": {
+            "invalidated_keys": [
+              [
+                "revealed-branch",
+                [
+                  "g0:o0",
+                  "g0:o1"
+                ]
+              ]
+            ],
+            "partition_fallbacks": 0,
+            "recomputed": 2,
+            "recomputed_keys": [
+              [
+                "revealed-branch",
+                [
+                  "g0:o0"
+                ]
+              ],
+              [
+                "revealed-branch",
+                [
+                  "g0:o1"
+                ]
+              ]
+            ],
+            "reused": 4,
+            "reused_keys": [
+              [
+                "revealed-branch",
+                [
+                  "g1:o1"
+                ]
+              ],
+              [
+                "revealed-branch",
+                [
+                  "g1:o2"
+                ]
+              ],
+              [
+                "revealed-branch",
+                [
+                  "g2:o0",
+                  "g2:o1",
+                  "g2:o2",
+                  "g2:o3",
+                  "g2:o4"
+                ]
+              ],
+              [
+                "revealed-branch",
+                [
+                  "g3:o0",
+                  "g3:o1",
+                  "g3:o2",
+                  "g3:o3"
+                ]
+              ]
+            ]
+          },
+          "optimistic_feasible": false,
+          "persistent_exact": null,
+          "structural_match_fresh": true,
+          "topology": [
+            [
+              "g0"
+            ],
+            [
+              "g0"
+            ],
+            [
+              "g1"
+            ],
+            [
+              "g1"
+            ],
+            [
+              "g2"
+            ],
+            [
+              "g3"
+            ]
+          ],
+          "topology_detail": [
+            {
+              "groups": [
+                "g0"
+              ],
+              "hall_deficit": 1,
+              "obligation_count": 1,
+              "terrestrial_window_ids": [],
+              "valid_until_s": 141
+            },
+            {
+              "groups": [
+                "g0"
+              ],
+              "hall_deficit": 1,
+              "obligation_count": 1,
+              "terrestrial_window_ids": [],
+              "valid_until_s": 141
+            },
+            {
+              "groups": [
+                "g1"
+              ],
+              "hall_deficit": 1,
+              "obligation_count": 1,
+              "terrestrial_window_ids": [],
+              "valid_until_s": 141
+            },
+            {
+              "groups": [
+                "g1"
+              ],
+              "hall_deficit": 1,
+              "obligation_count": 1,
+              "terrestrial_window_ids": [],
+              "valid_until_s": 141
+            },
+            {
+              "groups": [
+                "g2"
+              ],
+              "hall_deficit": 1,
+              "obligation_count": 5,
+              "terrestrial_window_ids": [
+                "local-g2"
+              ],
+              "valid_until_s": 141
+            },
+            {
+              "groups": [
+                "g3"
+              ],
+              "hall_deficit": 1,
+              "obligation_count": 4,
+              "terrestrial_window_ids": [
+                "local-g3"
+              ],
+              "valid_until_s": 161
+            }
+          ]
+        },
+        {
+          "at_s": 133,
+          "backup_lower_bound": 6,
+          "component_count": 6,
+          "dependency_exact": null,
+          "event": "global_satellite_budget_decrement",
+          "fresh_exact": null,
+          "incremental": {
+            "invalidated_keys": [
+              [
+                "revealed-branch",
+                [
+                  "g0:o0"
+                ]
+              ],
+              [
+                "revealed-branch",
+                [
+                  "g0:o1"
+                ]
+              ],
+              [
+                "revealed-branch",
+                [
+                  "g1:o1"
+                ]
+              ],
+              [
+                "revealed-branch",
+                [
+                  "g1:o2"
+                ]
+              ],
+              [
+                "revealed-branch",
+                [
+                  "g2:o0",
+                  "g2:o1",
+                  "g2:o2",
+                  "g2:o3",
+                  "g2:o4"
+                ]
+              ],
+              [
+                "revealed-branch",
+                [
+                  "g3:o0",
+                  "g3:o1",
+                  "g3:o2",
+                  "g3:o3"
+                ]
+              ]
+            ],
+            "partition_fallbacks": 0,
+            "recomputed": 6,
+            "recomputed_keys": [
+              [
+                "revealed-branch",
+                [
+                  "g0:o0"
+                ]
+              ],
+              [
+                "revealed-branch",
+                [
+                  "g0:o1"
+                ]
+              ],
+              [
+                "revealed-branch",
+                [
+                  "g1:o1"
+                ]
+              ],
+              [
+                "revealed-branch",
+                [
+                  "g1:o2"
+                ]
+              ],
+              [
+                "revealed-branch",
+                [
+                  "g2:o0",
+                  "g2:o1",
+                  "g2:o2",
+                  "g2:o3",
+                  "g2:o4"
+                ]
+              ],
+              [
+                "revealed-branch",
+                [
+                  "g3:o0",
+                  "g3:o1",
+                  "g3:o2",
+                  "g3:o3"
+                ]
+              ]
+            ],
+            "reused": 0,
+            "reused_keys": []
+          },
+          "optimistic_feasible": false,
+          "persistent_exact": null,
+          "structural_match_fresh": true,
+          "topology": [
+            [
+              "g0"
+            ],
+            [
+              "g0"
+            ],
+            [
+              "g1"
+            ],
+            [
+              "g1"
+            ],
+            [
+              "g2"
+            ],
+            [
+              "g3"
+            ]
+          ],
+          "topology_detail": [
+            {
+              "groups": [
+                "g0"
+              ],
+              "hall_deficit": 1,
+              "obligation_count": 1,
+              "terrestrial_window_ids": [],
+              "valid_until_s": 141
+            },
+            {
+              "groups": [
+                "g0"
+              ],
+              "hall_deficit": 1,
+              "obligation_count": 1,
+              "terrestrial_window_ids": [],
+              "valid_until_s": 141
+            },
+            {
+              "groups": [
+                "g1"
+              ],
+              "hall_deficit": 1,
+              "obligation_count": 1,
+              "terrestrial_window_ids": [],
+              "valid_until_s": 141
+            },
+            {
+              "groups": [
+                "g1"
+              ],
+              "hall_deficit": 1,
+              "obligation_count": 1,
+              "terrestrial_window_ids": [],
+              "valid_until_s": 141
+            },
+            {
+              "groups": [
+                "g2"
+              ],
+              "hall_deficit": 1,
+              "obligation_count": 5,
+              "terrestrial_window_ids": [
+                "local-g2"
+              ],
+              "valid_until_s": 141
+            },
+            {
+              "groups": [
+                "g3"
+              ],
+              "hall_deficit": 1,
+              "obligation_count": 4,
+              "terrestrial_window_ids": [
+                "local-g3"
+              ],
+              "valid_until_s": 161
+            }
+          ]
+        }
+      ],
+      "expected_initial_topology": [
+        [
+          "g0"
+        ],
+        [
+          "g1"
+        ],
+        [
+          "g2"
+        ],
+        [
+          "g3"
+        ]
+      ],
+      "motif": "H1_ASYMMETRIC_DISJOINT"
+    },
+    {
+      "bundle_id": "b6-h2_bridged_pair",
+      "checks": {
+        "all_exact_frontiers_match": null,
+        "all_structural_snapshots_match_fresh": true,
+        "initial_topology_matches_freeze": true
+      },
+      "events": [
+        {
+          "at_s": 90,
+          "backup_lower_bound": 3,
+          "component_count": 3,
+          "dependency_exact": null,
+          "event": "initial",
+          "fresh_exact": null,
+          "incremental": {
+            "invalidated_keys": [],
+            "partition_fallbacks": 0,
+            "recomputed": 3,
+            "recomputed_keys": [
+              [
+                "revealed-branch",
+                [
+                  "g0:o0",
+                  "g0:o1",
+                  "g0:o2",
+                  "g1:o0",
+                  "g1:o1",
+                  "g1:o2",
+                  "g1:o3"
+                ]
+              ],
+              [
+                "revealed-branch",
+                [
+                  "g2:o0",
+                  "g2:o1",
+                  "g2:o2"
+                ]
+              ],
+              [
+                "revealed-branch",
+                [
+                  "g3:o0",
+                  "g3:o1"
+                ]
+              ]
+            ],
+            "reused": 0,
+            "reused_keys": []
+          },
+          "optimistic_feasible": true,
+          "persistent_exact": null,
+          "structural_match_fresh": true,
+          "topology": [
+            [
+              "g0",
+              "g1"
+            ],
+            [
+              "g2"
+            ],
+            [
+              "g3"
+            ]
+          ],
+          "topology_detail": [
+            {
+              "groups": [
+                "g0",
+                "g1"
+              ],
+              "hall_deficit": 1,
+              "obligation_count": 7,
+              "terrestrial_window_ids": [
+                "bridge-01",
+                "local-g0",
+                "local-g1"
+              ],
+              "valid_until_s": 110
+            },
+            {
+              "groups": [
+                "g2"
+              ],
+              "hall_deficit": 1,
+              "obligation_count": 3,
+              "terrestrial_window_ids": [
+                "local-g2"
+              ],
+              "valid_until_s": 170
+            },
+            {
+              "groups": [
+                "g3"
+              ],
+              "hall_deficit": 1,
+              "obligation_count": 2,
+              "terrestrial_window_ids": [
+                "local-g3"
+              ],
+              "valid_until_s": 190
+            }
+          ]
+        },
+        {
+          "at_s": 100,
+          "backup_lower_bound": 3,
+          "component_count": 3,
+          "dependency_exact": null,
+          "event": "pending_g0",
+          "fresh_exact": null,
+          "incremental": {
+            "invalidated_keys": [
+              [
+                "revealed-branch",
+                [
+                  "g0:o0",
+                  "g0:o1",
+                  "g0:o2",
+                  "g1:o0",
+                  "g1:o1",
+                  "g1:o2",
+                  "g1:o3"
+                ]
+              ]
+            ],
+            "partition_fallbacks": 0,
+            "recomputed": 1,
+            "recomputed_keys": [
+              [
+                "revealed-branch",
+                [
+                  "g0:o1",
+                  "g0:o2",
+                  "g1:o0",
+                  "g1:o1",
+                  "g1:o2",
+                  "g1:o3"
+                ]
+              ]
+            ],
+            "reused": 2,
+            "reused_keys": [
+              [
+                "revealed-branch",
+                [
+                  "g2:o0",
+                  "g2:o1",
+                  "g2:o2"
+                ]
+              ],
+              [
+                "revealed-branch",
+                [
+                  "g3:o0",
+                  "g3:o1"
+                ]
+              ]
+            ]
+          },
+          "optimistic_feasible": true,
+          "persistent_exact": null,
+          "structural_match_fresh": true,
+          "topology": [
+            [
+              "g0",
+              "g1"
+            ],
+            [
+              "g2"
+            ],
+            [
+              "g3"
+            ]
+          ],
+          "topology_detail": [
+            {
+              "groups": [
+                "g0",
+                "g1"
+              ],
+              "hall_deficit": 1,
+              "obligation_count": 6,
+              "terrestrial_window_ids": [
+                "bridge-01",
+                "local-g0",
+                "local-g1"
+              ],
+              "valid_until_s": 110
+            },
+            {
+              "groups": [
+                "g2"
+              ],
+              "hall_deficit": 1,
+              "obligation_count": 3,
+              "terrestrial_window_ids": [
+                "local-g2"
+              ],
+              "valid_until_s": 170
+            },
+            {
+              "groups": [
+                "g3"
+              ],
+              "hall_deficit": 1,
+              "obligation_count": 2,
+              "terrestrial_window_ids": [
+                "local-g3"
+              ],
+              "valid_until_s": 190
+            }
+          ]
+        },
+        {
+          "at_s": 105,
+          "backup_lower_bound": 4,
+          "component_count": 3,
+          "dependency_exact": null,
+          "event": "consume_local_g0",
+          "fresh_exact": null,
+          "incremental": {
+            "invalidated_keys": [
+              [
+                "revealed-branch",
+                [
+                  "g0:o1",
+                  "g0:o2",
+                  "g1:o0",
+                  "g1:o1",
+                  "g1:o2",
+                  "g1:o3"
+                ]
+              ]
+            ],
+            "partition_fallbacks": 0,
+            "recomputed": 1,
+            "recomputed_keys": [
+              [
+                "revealed-branch",
+                [
+                  "g0:o1",
+                  "g0:o2",
+                  "g1:o0",
+                  "g1:o1",
+                  "g1:o2",
+                  "g1:o3"
+                ]
+              ]
+            ],
+            "reused": 2,
+            "reused_keys": [
+              [
+                "revealed-branch",
+                [
+                  "g2:o0",
+                  "g2:o1",
+                  "g2:o2"
+                ]
+              ],
+              [
+                "revealed-branch",
+                [
+                  "g3:o0",
+                  "g3:o1"
+                ]
+              ]
+            ]
+          },
+          "optimistic_feasible": true,
+          "persistent_exact": null,
+          "structural_match_fresh": true,
+          "topology": [
+            [
+              "g0",
+              "g1"
+            ],
+            [
+              "g2"
+            ],
+            [
+              "g3"
+            ]
+          ],
+          "topology_detail": [
+            {
+              "groups": [
+                "g0",
+                "g1"
+              ],
+              "hall_deficit": 2,
+              "obligation_count": 6,
+              "terrestrial_window_ids": [
+                "bridge-01",
+                "local-g1"
+              ],
+              "valid_until_s": 130
+            },
+            {
+              "groups": [
+                "g2"
+              ],
+              "hall_deficit": 1,
+              "obligation_count": 3,
+              "terrestrial_window_ids": [
+                "local-g2"
+              ],
+              "valid_until_s": 170
+            },
+            {
+              "groups": [
+                "g3"
+              ],
+              "hall_deficit": 1,
+              "obligation_count": 2,
+              "terrestrial_window_ids": [
+                "local-g3"
+              ],
+              "valid_until_s": 190
+            }
+          ]
+        },
+        {
+          "at_s": 120,
+          "backup_lower_bound": 5,
+          "component_count": 5,
+          "dependency_exact": null,
+          "event": "consume_bridge_01",
+          "fresh_exact": null,
+          "incremental": {
+            "invalidated_keys": [
+              [
+                "revealed-branch",
+                [
+                  "g0:o1",
+                  "g0:o2",
+                  "g1:o0",
+                  "g1:o1",
+                  "g1:o2",
+                  "g1:o3"
+                ]
+              ]
+            ],
+            "partition_fallbacks": 0,
+            "recomputed": 3,
+            "recomputed_keys": [
+              [
+                "revealed-branch",
+                [
+                  "g0:o1"
+                ]
+              ],
+              [
+                "revealed-branch",
+                [
+                  "g0:o2"
+                ]
+              ],
+              [
+                "revealed-branch",
+                [
+                  "g1:o0",
+                  "g1:o1",
+                  "g1:o2",
+                  "g1:o3"
+                ]
+              ]
+            ],
+            "reused": 2,
+            "reused_keys": [
+              [
+                "revealed-branch",
+                [
+                  "g2:o0",
+                  "g2:o1",
+                  "g2:o2"
+                ]
+              ],
+              [
+                "revealed-branch",
+                [
+                  "g3:o0",
+                  "g3:o1"
+                ]
+              ]
+            ]
+          },
+          "optimistic_feasible": false,
+          "persistent_exact": null,
+          "structural_match_fresh": true,
+          "topology": [
+            [
+              "g0"
+            ],
+            [
+              "g0"
+            ],
+            [
+              "g1"
+            ],
+            [
+              "g2"
+            ],
+            [
+              "g3"
+            ]
+          ],
+          "topology_detail": [
+            {
+              "groups": [
+                "g0"
+              ],
+              "hall_deficit": 1,
+              "obligation_count": 1,
+              "terrestrial_window_ids": [],
+              "valid_until_s": 151
+            },
+            {
+              "groups": [
+                "g0"
+              ],
+              "hall_deficit": 1,
+              "obligation_count": 1,
+              "terrestrial_window_ids": [],
+              "valid_until_s": 151
+            },
+            {
+              "groups": [
+                "g1"
+              ],
+              "hall_deficit": 1,
+              "obligation_count": 4,
+              "terrestrial_window_ids": [
+                "local-g1"
+              ],
+              "valid_until_s": 150
+            },
+            {
+              "groups": [
+                "g2"
+              ],
+              "hall_deficit": 1,
+              "obligation_count": 3,
+              "terrestrial_window_ids": [
+                "local-g2"
+              ],
+              "valid_until_s": 170
+            },
+            {
+              "groups": [
+                "g3"
+              ],
+              "hall_deficit": 1,
+              "obligation_count": 2,
+              "terrestrial_window_ids": [
+                "local-g3"
+              ],
+              "valid_until_s": 190
+            }
+          ]
+        },
+        {
+          "at_s": 121,
+          "backup_lower_bound": 5,
+          "component_count": 5,
+          "dependency_exact": null,
+          "event": "global_satellite_budget_decrement",
+          "fresh_exact": null,
+          "incremental": {
+            "invalidated_keys": [
+              [
+                "revealed-branch",
+                [
+                  "g0:o1"
+                ]
+              ],
+              [
+                "revealed-branch",
+                [
+                  "g0:o2"
+                ]
+              ],
+              [
+                "revealed-branch",
+                [
+                  "g1:o0",
+                  "g1:o1",
+                  "g1:o2",
+                  "g1:o3"
+                ]
+              ],
+              [
+                "revealed-branch",
+                [
+                  "g2:o0",
+                  "g2:o1",
+                  "g2:o2"
+                ]
+              ],
+              [
+                "revealed-branch",
+                [
+                  "g3:o0",
+                  "g3:o1"
+                ]
+              ]
+            ],
+            "partition_fallbacks": 0,
+            "recomputed": 5,
+            "recomputed_keys": [
+              [
+                "revealed-branch",
+                [
+                  "g0:o1"
+                ]
+              ],
+              [
+                "revealed-branch",
+                [
+                  "g0:o2"
+                ]
+              ],
+              [
+                "revealed-branch",
+                [
+                  "g1:o0",
+                  "g1:o1",
+                  "g1:o2",
+                  "g1:o3"
+                ]
+              ],
+              [
+                "revealed-branch",
+                [
+                  "g2:o0",
+                  "g2:o1",
+                  "g2:o2"
+                ]
+              ],
+              [
+                "revealed-branch",
+                [
+                  "g3:o0",
+                  "g3:o1"
+                ]
+              ]
+            ],
+            "reused": 0,
+            "reused_keys": []
+          },
+          "optimistic_feasible": false,
+          "persistent_exact": null,
+          "structural_match_fresh": true,
+          "topology": [
+            [
+              "g0"
+            ],
+            [
+              "g0"
+            ],
+            [
+              "g1"
+            ],
+            [
+              "g2"
+            ],
+            [
+              "g3"
+            ]
+          ],
+          "topology_detail": [
+            {
+              "groups": [
+                "g0"
+              ],
+              "hall_deficit": 1,
+              "obligation_count": 1,
+              "terrestrial_window_ids": [],
+              "valid_until_s": 151
+            },
+            {
+              "groups": [
+                "g0"
+              ],
+              "hall_deficit": 1,
+              "obligation_count": 1,
+              "terrestrial_window_ids": [],
+              "valid_until_s": 151
+            },
+            {
+              "groups": [
+                "g1"
+              ],
+              "hall_deficit": 1,
+              "obligation_count": 4,
+              "terrestrial_window_ids": [
+                "local-g1"
+              ],
+              "valid_until_s": 150
+            },
+            {
+              "groups": [
+                "g2"
+              ],
+              "hall_deficit": 1,
+              "obligation_count": 3,
+              "terrestrial_window_ids": [
+                "local-g2"
+              ],
+              "valid_until_s": 170
+            },
+            {
+              "groups": [
+                "g3"
+              ],
+              "hall_deficit": 1,
+              "obligation_count": 2,
+              "terrestrial_window_ids": [
+                "local-g3"
+              ],
+              "valid_until_s": 190
+            }
+          ]
+        }
+      ],
+      "expected_initial_topology": [
+        [
+          "g0",
+          "g1"
+        ],
+        [
+          "g2"
+        ],
+        [
+          "g3"
+        ]
+      ],
+      "motif": "H2_BRIDGED_PAIR"
+    },
+    {
+      "bundle_id": "b6-h3_chain_overlap_split",
+      "checks": {
+        "all_exact_frontiers_match": null,
+        "all_structural_snapshots_match_fresh": true,
+        "initial_topology_matches_freeze": true
+      },
+      "events": [
+        {
+          "at_s": 75,
+          "backup_lower_bound": 4,
+          "component_count": 2,
+          "dependency_exact": null,
+          "event": "initial",
+          "fresh_exact": null,
+          "incremental": {
+            "invalidated_keys": [],
+            "partition_fallbacks": 0,
+            "recomputed": 2,
+            "recomputed_keys": [
+              [
+                "revealed-branch",
+                [
+                  "g0:o0",
+                  "g0:o1",
+                  "g1:o0",
+                  "g1:o1",
+                  "g1:o2",
+                  "g2:o0",
+                  "g2:o1"
+                ]
+              ],
+              [
+                "revealed-branch",
+                [
+                  "g3:o0",
+                  "g3:o1",
+                  "g3:o2"
+                ]
+              ]
+            ],
+            "reused": 0,
+            "reused_keys": []
+          },
+          "optimistic_feasible": true,
+          "persistent_exact": null,
+          "structural_match_fresh": true,
+          "topology": [
+            [
+              "g0",
+              "g1",
+              "g2"
+            ],
+            [
+              "g3"
+            ]
+          ],
+          "topology_detail": [
+            {
+              "groups": [
+                "g0",
+                "g1",
+                "g2"
+              ],
+              "hall_deficit": 3,
+              "obligation_count": 7,
+              "terrestrial_window_ids": [
+                "bridge-01",
+                "bridge-12",
+                "local-g0",
+                "local-g2"
+              ],
+              "valid_until_s": 90
+            },
+            {
+              "groups": [
+                "g3"
+              ],
+              "hall_deficit": 1,
+              "obligation_count": 3,
+              "terrestrial_window_ids": [
+                "local-g3"
+              ],
+              "valid_until_s": 161
+            }
+          ]
+        },
+        {
+          "at_s": 100,
+          "backup_lower_bound": 6,
+          "component_count": 4,
+          "dependency_exact": null,
+          "event": "exhaust_bridge_01",
+          "fresh_exact": null,
+          "incremental": {
+            "invalidated_keys": [
+              [
+                "revealed-branch",
+                [
+                  "g0:o0",
+                  "g0:o1",
+                  "g1:o0",
+                  "g1:o1",
+                  "g1:o2",
+                  "g2:o0",
+                  "g2:o1"
+                ]
+              ]
+            ],
+            "partition_fallbacks": 0,
+            "recomputed": 3,
+            "recomputed_keys": [
+              [
+                "revealed-branch",
+                [
+                  "g0:o0"
+                ]
+              ],
+              [
+                "revealed-branch",
+                [
+                  "g0:o1"
+                ]
+              ],
+              [
+                "revealed-branch",
+                [
+                  "g1:o0",
+                  "g1:o1",
+                  "g1:o2",
+                  "g2:o0",
+                  "g2:o1"
+                ]
+              ]
+            ],
+            "reused": 1,
+            "reused_keys": [
+              [
+                "revealed-branch",
+                [
+                  "g3:o0",
+                  "g3:o1",
+                  "g3:o2"
+                ]
+              ]
+            ]
+          },
+          "optimistic_feasible": true,
+          "persistent_exact": null,
+          "structural_match_fresh": true,
+          "topology": [
+            [
+              "g0"
+            ],
+            [
+              "g0"
+            ],
+            [
+              "g1",
+              "g2"
+            ],
+            [
+              "g3"
+            ]
+          ],
+          "topology_detail": [
+            {
+              "groups": [
+                "g0"
+              ],
+              "hall_deficit": 1,
+              "obligation_count": 1,
+              "terrestrial_window_ids": [],
+              "valid_until_s": 141
+            },
+            {
+              "groups": [
+                "g0"
+              ],
+              "hall_deficit": 1,
+              "obligation_count": 1,
+              "terrestrial_window_ids": [],
+              "valid_until_s": 141
+            },
+            {
+              "groups": [
+                "g1",
+                "g2"
+              ],
+              "hall_deficit": 3,
+              "obligation_count": 5,
+              "terrestrial_window_ids": [
+                "bridge-12",
+                "local-g2"
+              ],
+              "valid_until_s": 130
+            },
+            {
+              "groups": [
+                "g3"
+              ],
+              "hall_deficit": 1,
+              "obligation_count": 3,
+              "terrestrial_window_ids": [
+                "local-g3"
+              ],
+              "valid_until_s": 161
+            }
+          ]
+        },
+        {
+          "at_s": 130,
+          "backup_lower_bound": 7,
+          "component_count": 7,
+          "dependency_exact": null,
+          "event": "cross_bridge_12_boundary",
+          "fresh_exact": null,
+          "incremental": {
+            "invalidated_keys": [
+              [
+                "revealed-branch",
+                [
+                  "g1:o0",
+                  "g1:o1",
+                  "g1:o2",
+                  "g2:o0",
+                  "g2:o1"
+                ]
+              ]
+            ],
+            "partition_fallbacks": 0,
+            "recomputed": 4,
+            "recomputed_keys": [
+              [
+                "revealed-branch",
+                [
+                  "g1:o0"
+                ]
+              ],
+              [
+                "revealed-branch",
+                [
+                  "g1:o1"
+                ]
+              ],
+              [
+                "revealed-branch",
+                [
+                  "g1:o2"
+                ]
+              ],
+              [
+                "revealed-branch",
+                [
+                  "g2:o0",
+                  "g2:o1"
+                ]
+              ]
+            ],
+            "reused": 3,
+            "reused_keys": [
+              [
+                "revealed-branch",
+                [
+                  "g0:o0"
+                ]
+              ],
+              [
+                "revealed-branch",
+                [
+                  "g0:o1"
+                ]
+              ],
+              [
+                "revealed-branch",
+                [
+                  "g3:o0",
+                  "g3:o1",
+                  "g3:o2"
+                ]
+              ]
+            ]
+          },
+          "optimistic_feasible": false,
+          "persistent_exact": null,
+          "structural_match_fresh": true,
+          "topology": [
+            [
+              "g0"
+            ],
+            [
+              "g0"
+            ],
+            [
+              "g1"
+            ],
+            [
+              "g1"
+            ],
+            [
+              "g1"
+            ],
+            [
+              "g2"
+            ],
+            [
+              "g3"
+            ]
+          ],
+          "topology_detail": [
+            {
+              "groups": [
+                "g0"
+              ],
+              "hall_deficit": 1,
+              "obligation_count": 1,
+              "terrestrial_window_ids": [],
+              "valid_until_s": 141
+            },
+            {
+              "groups": [
+                "g0"
+              ],
+              "hall_deficit": 1,
+              "obligation_count": 1,
+              "terrestrial_window_ids": [],
+              "valid_until_s": 141
+            },
+            {
+              "groups": [
+                "g1"
+              ],
+              "hall_deficit": 1,
+              "obligation_count": 1,
+              "terrestrial_window_ids": [],
+              "valid_until_s": 141
+            },
+            {
+              "groups": [
+                "g1"
+              ],
+              "hall_deficit": 1,
+              "obligation_count": 1,
+              "terrestrial_window_ids": [],
+              "valid_until_s": 141
+            },
+            {
+              "groups": [
+                "g1"
+              ],
+              "hall_deficit": 1,
+              "obligation_count": 1,
+              "terrestrial_window_ids": [],
+              "valid_until_s": 141
+            },
+            {
+              "groups": [
+                "g2"
+              ],
+              "hall_deficit": 1,
+              "obligation_count": 2,
+              "terrestrial_window_ids": [
+                "local-g2"
+              ],
+              "valid_until_s": 141
+            },
+            {
+              "groups": [
+                "g3"
+              ],
+              "hall_deficit": 1,
+              "obligation_count": 3,
+              "terrestrial_window_ids": [
+                "local-g3"
+              ],
+              "valid_until_s": 161
+            }
+          ]
+        },
+        {
+          "at_s": 140,
+          "backup_lower_bound": 7,
+          "component_count": 7,
+          "dependency_exact": null,
+          "event": "pending_remaining_chain",
+          "fresh_exact": null,
+          "incremental": {
+            "invalidated_keys": [
+              [
+                "revealed-branch",
+                [
+                  "g2:o0",
+                  "g2:o1"
+                ]
+              ]
+            ],
+            "partition_fallbacks": 0,
+            "recomputed": 1,
+            "recomputed_keys": [
+              [
+                "revealed-branch",
+                [
+                  "g2:o1"
+                ]
+              ]
+            ],
+            "reused": 6,
+            "reused_keys": [
+              [
+                "revealed-branch",
+                [
+                  "g0:o0"
+                ]
+              ],
+              [
+                "revealed-branch",
+                [
+                  "g0:o1"
+                ]
+              ],
+              [
+                "revealed-branch",
+                [
+                  "g1:o0"
+                ]
+              ],
+              [
+                "revealed-branch",
+                [
+                  "g1:o1"
+                ]
+              ],
+              [
+                "revealed-branch",
+                [
+                  "g1:o2"
+                ]
+              ],
+              [
+                "revealed-branch",
+                [
+                  "g3:o0",
+                  "g3:o1",
+                  "g3:o2"
+                ]
+              ]
+            ]
+          },
+          "optimistic_feasible": false,
+          "persistent_exact": null,
+          "structural_match_fresh": true,
+          "topology": [
+            [
+              "g0"
+            ],
+            [
+              "g0"
+            ],
+            [
+              "g1"
+            ],
+            [
+              "g1"
+            ],
+            [
+              "g1"
+            ],
+            [
+              "g2"
+            ],
+            [
+              "g3"
+            ]
+          ],
+          "topology_detail": [
+            {
+              "groups": [
+                "g0"
+              ],
+              "hall_deficit": 1,
+              "obligation_count": 1,
+              "terrestrial_window_ids": [],
+              "valid_until_s": 141
+            },
+            {
+              "groups": [
+                "g0"
+              ],
+              "hall_deficit": 1,
+              "obligation_count": 1,
+              "terrestrial_window_ids": [],
+              "valid_until_s": 141
+            },
+            {
+              "groups": [
+                "g1"
+              ],
+              "hall_deficit": 1,
+              "obligation_count": 1,
+              "terrestrial_window_ids": [],
+              "valid_until_s": 141
+            },
+            {
+              "groups": [
+                "g1"
+              ],
+              "hall_deficit": 1,
+              "obligation_count": 1,
+              "terrestrial_window_ids": [],
+              "valid_until_s": 141
+            },
+            {
+              "groups": [
+                "g1"
+              ],
+              "hall_deficit": 1,
+              "obligation_count": 1,
+              "terrestrial_window_ids": [],
+              "valid_until_s": 141
+            },
+            {
+              "groups": [
+                "g2"
+              ],
+              "hall_deficit": 1,
+              "obligation_count": 1,
+              "terrestrial_window_ids": [],
+              "valid_until_s": 141
+            },
+            {
+              "groups": [
+                "g3"
+              ],
+              "hall_deficit": 1,
+              "obligation_count": 3,
+              "terrestrial_window_ids": [
+                "local-g3"
+              ],
+              "valid_until_s": 161
+            }
+          ]
+        },
+        {
+          "at_s": 141,
+          "backup_lower_bound": 7,
+          "component_count": 7,
+          "dependency_exact": null,
+          "event": "global_satellite_budget_decrement",
+          "fresh_exact": null,
+          "incremental": {
+            "invalidated_keys": [
+              [
+                "revealed-branch",
+                [
+                  "g0:o0"
+                ]
+              ],
+              [
+                "revealed-branch",
+                [
+                  "g0:o1"
+                ]
+              ],
+              [
+                "revealed-branch",
+                [
+                  "g1:o0"
+                ]
+              ],
+              [
+                "revealed-branch",
+                [
+                  "g1:o1"
+                ]
+              ],
+              [
+                "revealed-branch",
+                [
+                  "g1:o2"
+                ]
+              ],
+              [
+                "revealed-branch",
+                [
+                  "g2:o1"
+                ]
+              ],
+              [
+                "revealed-branch",
+                [
+                  "g3:o0",
+                  "g3:o1",
+                  "g3:o2"
+                ]
+              ]
+            ],
+            "partition_fallbacks": 0,
+            "recomputed": 7,
+            "recomputed_keys": [
+              [
+                "revealed-branch",
+                [
+                  "g0:o0"
+                ]
+              ],
+              [
+                "revealed-branch",
+                [
+                  "g0:o1"
+                ]
+              ],
+              [
+                "revealed-branch",
+                [
+                  "g1:o0"
+                ]
+              ],
+              [
+                "revealed-branch",
+                [
+                  "g1:o1"
+                ]
+              ],
+              [
+                "revealed-branch",
+                [
+                  "g1:o2"
+                ]
+              ],
+              [
+                "revealed-branch",
+                [
+                  "g2:o1"
+                ]
+              ],
+              [
+                "revealed-branch",
+                [
+                  "g3:o0",
+                  "g3:o1",
+                  "g3:o2"
+                ]
+              ]
+            ],
+            "reused": 0,
+            "reused_keys": []
+          },
+          "optimistic_feasible": false,
+          "persistent_exact": null,
+          "structural_match_fresh": true,
+          "topology": [
+            [
+              "g0"
+            ],
+            [
+              "g0"
+            ],
+            [
+              "g1"
+            ],
+            [
+              "g1"
+            ],
+            [
+              "g1"
+            ],
+            [
+              "g2"
+            ],
+            [
+              "g3"
+            ]
+          ],
+          "topology_detail": [
+            {
+              "groups": [
+                "g0"
+              ],
+              "hall_deficit": 1,
+              "obligation_count": 1,
+              "terrestrial_window_ids": [],
+              "valid_until_s": null
+            },
+            {
+              "groups": [
+                "g0"
+              ],
+              "hall_deficit": 1,
+              "obligation_count": 1,
+              "terrestrial_window_ids": [],
+              "valid_until_s": null
+            },
+            {
+              "groups": [
+                "g1"
+              ],
+              "hall_deficit": 1,
+              "obligation_count": 1,
+              "terrestrial_window_ids": [],
+              "valid_until_s": 161
+            },
+            {
+              "groups": [
+                "g1"
+              ],
+              "hall_deficit": 1,
+              "obligation_count": 1,
+              "terrestrial_window_ids": [],
+              "valid_until_s": 161
+            },
+            {
+              "groups": [
+                "g1"
+              ],
+              "hall_deficit": 1,
+              "obligation_count": 1,
+              "terrestrial_window_ids": [],
+              "valid_until_s": 161
+            },
+            {
+              "groups": [
+                "g2"
+              ],
+              "hall_deficit": 1,
+              "obligation_count": 1,
+              "terrestrial_window_ids": [],
+              "valid_until_s": 161
+            },
+            {
+              "groups": [
+                "g3"
+              ],
+              "hall_deficit": 1,
+              "obligation_count": 3,
+              "terrestrial_window_ids": [
+                "local-g3"
+              ],
+              "valid_until_s": 161
+            }
+          ]
+        }
+      ],
+      "expected_initial_topology": [
+        [
+          "g0",
+          "g1",
+          "g2"
+        ],
+        [
+          "g3"
+        ]
+      ],
+      "motif": "H3_CHAIN_OVERLAP_SPLIT"
+    },
+    {
+      "bundle_id": "b6-h4_mixed_local_global",
+      "checks": {
+        "all_exact_frontiers_match": null,
+        "all_structural_snapshots_match_fresh": true,
+        "initial_topology_matches_freeze": true
+      },
+      "events": [
+        {
+          "at_s": 90,
+          "backup_lower_bound": 5,
+          "component_count": 5,
+          "dependency_exact": null,
+          "event": "initial",
+          "fresh_exact": null,
+          "incremental": {
+            "invalidated_keys": [],
+            "partition_fallbacks": 0,
+            "recomputed": 5,
+            "recomputed_keys": [
+              [
+                "revealed-branch",
+                [
+                  "g0:o0",
+                  "g0:o1"
+                ]
+              ],
+              [
+                "revealed-branch",
+                [
+                  "g1:o0",
+                  "g1:o1",
+                  "g1:o2",
+                  "g1:o3"
+                ]
+              ],
+              [
+                "revealed-branch",
+                [
+                  "g2:o0",
+                  "g2:o1",
+                  "g2:o2"
+                ]
+              ],
+              [
+                "revealed-branch",
+                [
+                  "g3:o0",
+                  "g3:o1",
+                  "g3:o2",
+                  "g3:o3",
+                  "g3:o4"
+                ]
+              ],
+              [
+                "revealed-branch",
+                [
+                  "g4:o0",
+                  "g4:o1"
+                ]
+              ]
+            ],
+            "reused": 0,
+            "reused_keys": []
+          },
+          "optimistic_feasible": true,
+          "persistent_exact": null,
+          "structural_match_fresh": true,
+          "topology": [
+            [
+              "g0"
+            ],
+            [
+              "g1"
+            ],
+            [
+              "g2"
+            ],
+            [
+              "g3"
+            ],
+            [
+              "g4"
+            ]
+          ],
+          "topology_detail": [
+            {
+              "groups": [
+                "g0"
+              ],
+              "hall_deficit": 1,
+              "obligation_count": 2,
+              "terrestrial_window_ids": [
+                "local-g0"
+              ],
+              "valid_until_s": 135
+            },
+            {
+              "groups": [
+                "g1"
+              ],
+              "hall_deficit": 1,
+              "obligation_count": 4,
+              "terrestrial_window_ids": [
+                "local-g1"
+              ],
+              "valid_until_s": 105
+            },
+            {
+              "groups": [
+                "g2"
+              ],
+              "hall_deficit": 1,
+              "obligation_count": 3,
+              "terrestrial_window_ids": [
+                "local-g2"
+              ],
+              "valid_until_s": 150
+            },
+            {
+              "groups": [
+                "g3"
+              ],
+              "hall_deficit": 1,
+              "obligation_count": 5,
+              "terrestrial_window_ids": [
+                "local-g3"
+              ],
+              "valid_until_s": 115
+            },
+            {
+              "groups": [
+                "g4"
+              ],
+              "hall_deficit": 1,
+              "obligation_count": 2,
+              "terrestrial_window_ids": [
+                "local-g4"
+              ],
+              "valid_until_s": 165
+            }
+          ]
+        },
+        {
+          "at_s": 100,
+          "backup_lower_bound": 5,
+          "component_count": 5,
+          "dependency_exact": null,
+          "event": "send_pending_g1",
+          "fresh_exact": null,
+          "incremental": {
+            "invalidated_keys": [
+              [
+                "revealed-branch",
+                [
+                  "g1:o0",
+                  "g1:o1",
+                  "g1:o2",
+                  "g1:o3"
+                ]
+              ]
+            ],
+            "partition_fallbacks": 0,
+            "recomputed": 1,
+            "recomputed_keys": [
+              [
+                "revealed-branch",
+                [
+                  "g1:o1",
+                  "g1:o2",
+                  "g1:o3"
+                ]
+              ]
+            ],
+            "reused": 4,
+            "reused_keys": [
+              [
+                "revealed-branch",
+                [
+                  "g0:o0",
+                  "g0:o1"
+                ]
+              ],
+              [
+                "revealed-branch",
+                [
+                  "g2:o0",
+                  "g2:o1",
+                  "g2:o2"
+                ]
+              ],
+              [
+                "revealed-branch",
+                [
+                  "g3:o0",
+                  "g3:o1",
+                  "g3:o2",
+                  "g3:o3",
+                  "g3:o4"
+                ]
+              ],
+              [
+                "revealed-branch",
+                [
+                  "g4:o0",
+                  "g4:o1"
+                ]
+              ]
+            ]
+          },
+          "optimistic_feasible": true,
+          "persistent_exact": null,
+          "structural_match_fresh": true,
+          "topology": [
+            [
+              "g0"
+            ],
+            [
+              "g1"
+            ],
+            [
+              "g2"
+            ],
+            [
+              "g3"
+            ],
+            [
+              "g4"
+            ]
+          ],
+          "topology_detail": [
+            {
+              "groups": [
+                "g0"
+              ],
+              "hall_deficit": 1,
+              "obligation_count": 2,
+              "terrestrial_window_ids": [
+                "local-g0"
+              ],
+              "valid_until_s": 135
+            },
+            {
+              "groups": [
+                "g1"
+              ],
+              "hall_deficit": 1,
+              "obligation_count": 3,
+              "terrestrial_window_ids": [
+                "local-g1"
+              ],
+              "valid_until_s": 105
+            },
+            {
+              "groups": [
+                "g2"
+              ],
+              "hall_deficit": 1,
+              "obligation_count": 3,
+              "terrestrial_window_ids": [
+                "local-g2"
+              ],
+              "valid_until_s": 150
+            },
+            {
+              "groups": [
+                "g3"
+              ],
+              "hall_deficit": 1,
+              "obligation_count": 5,
+              "terrestrial_window_ids": [
+                "local-g3"
+              ],
+              "valid_until_s": 115
+            },
+            {
+              "groups": [
+                "g4"
+              ],
+              "hall_deficit": 1,
+              "obligation_count": 2,
+              "terrestrial_window_ids": [
+                "local-g4"
+              ],
+              "valid_until_s": 165
+            }
+          ]
+        },
+        {
+          "at_s": 110,
+          "backup_lower_bound": 8,
+          "component_count": 7,
+          "dependency_exact": null,
+          "event": "consume_local_g3",
+          "fresh_exact": null,
+          "incremental": {
+            "invalidated_keys": [
+              [
+                "revealed-branch",
+                [
+                  "g1:o1",
+                  "g1:o2",
+                  "g1:o3"
+                ]
+              ],
+              [
+                "revealed-branch",
+                [
+                  "g3:o0",
+                  "g3:o1",
+                  "g3:o2",
+                  "g3:o3",
+                  "g3:o4"
+                ]
+              ]
+            ],
+            "partition_fallbacks": 0,
+            "recomputed": 4,
+            "recomputed_keys": [
+              [
+                "revealed-branch",
+                [
+                  "g1:o1"
+                ]
+              ],
+              [
+                "revealed-branch",
+                [
+                  "g1:o2"
+                ]
+              ],
+              [
+                "revealed-branch",
+                [
+                  "g1:o3"
+                ]
+              ],
+              [
+                "revealed-branch",
+                [
+                  "g3:o0",
+                  "g3:o1",
+                  "g3:o2",
+                  "g3:o3",
+                  "g3:o4"
+                ]
+              ]
+            ],
+            "reused": 3,
+            "reused_keys": [
+              [
+                "revealed-branch",
+                [
+                  "g0:o0",
+                  "g0:o1"
+                ]
+              ],
+              [
+                "revealed-branch",
+                [
+                  "g2:o0",
+                  "g2:o1",
+                  "g2:o2"
+                ]
+              ],
+              [
+                "revealed-branch",
+                [
+                  "g4:o0",
+                  "g4:o1"
+                ]
+              ]
+            ]
+          },
+          "optimistic_feasible": false,
+          "persistent_exact": null,
+          "structural_match_fresh": true,
+          "topology": [
+            [
+              "g0"
+            ],
+            [
+              "g1"
+            ],
+            [
+              "g1"
+            ],
+            [
+              "g1"
+            ],
+            [
+              "g2"
+            ],
+            [
+              "g3"
+            ],
+            [
+              "g4"
+            ]
+          ],
+          "topology_detail": [
+            {
+              "groups": [
+                "g0"
+              ],
+              "hall_deficit": 1,
+              "obligation_count": 2,
+              "terrestrial_window_ids": [
+                "local-g0"
+              ],
+              "valid_until_s": 135
+            },
+            {
+              "groups": [
+                "g1"
+              ],
+              "hall_deficit": 1,
+              "obligation_count": 1,
+              "terrestrial_window_ids": [],
+              "valid_until_s": 135
+            },
+            {
+              "groups": [
+                "g1"
+              ],
+              "hall_deficit": 1,
+              "obligation_count": 1,
+              "terrestrial_window_ids": [],
+              "valid_until_s": 135
+            },
+            {
+              "groups": [
+                "g1"
+              ],
+              "hall_deficit": 1,
+              "obligation_count": 1,
+              "terrestrial_window_ids": [],
+              "valid_until_s": 135
+            },
+            {
+              "groups": [
+                "g2"
+              ],
+              "hall_deficit": 1,
+              "obligation_count": 3,
+              "terrestrial_window_ids": [
+                "local-g2"
+              ],
+              "valid_until_s": 150
+            },
+            {
+              "groups": [
+                "g3"
+              ],
+              "hall_deficit": 2,
+              "obligation_count": 5,
+              "terrestrial_window_ids": [
+                "local-g3"
+              ],
+              "valid_until_s": 115
+            },
+            {
+              "groups": [
+                "g4"
+              ],
+              "hall_deficit": 1,
+              "obligation_count": 2,
+              "terrestrial_window_ids": [
+                "local-g4"
+              ],
+              "valid_until_s": 165
+            }
+          ]
+        },
+        {
+          "at_s": 130,
+          "backup_lower_bound": 11,
+          "component_count": 11,
+          "dependency_exact": null,
+          "event": "final_ack_g1",
+          "fresh_exact": null,
+          "incremental": {
+            "invalidated_keys": [
+              [
+                "revealed-branch",
+                [
+                  "g3:o0",
+                  "g3:o1",
+                  "g3:o2",
+                  "g3:o3",
+                  "g3:o4"
+                ]
+              ]
+            ],
+            "partition_fallbacks": 0,
+            "recomputed": 5,
+            "recomputed_keys": [
+              [
+                "revealed-branch",
+                [
+                  "g3:o0"
+                ]
+              ],
+              [
+                "revealed-branch",
+                [
+                  "g3:o1"
+                ]
+              ],
+              [
+                "revealed-branch",
+                [
+                  "g3:o2"
+                ]
+              ],
+              [
+                "revealed-branch",
+                [
+                  "g3:o3"
+                ]
+              ],
+              [
+                "revealed-branch",
+                [
+                  "g3:o4"
+                ]
+              ]
+            ],
+            "reused": 6,
+            "reused_keys": [
+              [
+                "revealed-branch",
+                [
+                  "g0:o0",
+                  "g0:o1"
+                ]
+              ],
+              [
+                "revealed-branch",
+                [
+                  "g1:o1"
+                ]
+              ],
+              [
+                "revealed-branch",
+                [
+                  "g1:o2"
+                ]
+              ],
+              [
+                "revealed-branch",
+                [
+                  "g1:o3"
+                ]
+              ],
+              [
+                "revealed-branch",
+                [
+                  "g2:o0",
+                  "g2:o1",
+                  "g2:o2"
+                ]
+              ],
+              [
+                "revealed-branch",
+                [
+                  "g4:o0",
+                  "g4:o1"
+                ]
+              ]
+            ]
+          },
+          "optimistic_feasible": false,
+          "persistent_exact": null,
+          "structural_match_fresh": true,
+          "topology": [
+            [
+              "g0"
+            ],
+            [
+              "g1"
+            ],
+            [
+              "g1"
+            ],
+            [
+              "g1"
+            ],
+            [
+              "g2"
+            ],
+            [
+              "g3"
+            ],
+            [
+              "g3"
+            ],
+            [
+              "g3"
+            ],
+            [
+              "g3"
+            ],
+            [
+              "g3"
+            ],
+            [
+              "g4"
+            ]
+          ],
+          "topology_detail": [
+            {
+              "groups": [
+                "g0"
+              ],
+              "hall_deficit": 1,
+              "obligation_count": 2,
+              "terrestrial_window_ids": [
+                "local-g0"
+              ],
+              "valid_until_s": 135
+            },
+            {
+              "groups": [
+                "g1"
+              ],
+              "hall_deficit": 1,
+              "obligation_count": 1,
+              "terrestrial_window_ids": [],
+              "valid_until_s": 135
+            },
+            {
+              "groups": [
+                "g1"
+              ],
+              "hall_deficit": 1,
+              "obligation_count": 1,
+              "terrestrial_window_ids": [],
+              "valid_until_s": 135
+            },
+            {
+              "groups": [
+                "g1"
+              ],
+              "hall_deficit": 1,
+              "obligation_count": 1,
+              "terrestrial_window_ids": [],
+              "valid_until_s": 135
+            },
+            {
+              "groups": [
+                "g2"
+              ],
+              "hall_deficit": 1,
+              "obligation_count": 3,
+              "terrestrial_window_ids": [
+                "local-g2"
+              ],
+              "valid_until_s": 150
+            },
+            {
+              "groups": [
+                "g3"
+              ],
+              "hall_deficit": 1,
+              "obligation_count": 1,
+              "terrestrial_window_ids": [],
+              "valid_until_s": 135
+            },
+            {
+              "groups": [
+                "g3"
+              ],
+              "hall_deficit": 1,
+              "obligation_count": 1,
+              "terrestrial_window_ids": [],
+              "valid_until_s": 135
+            },
+            {
+              "groups": [
+                "g3"
+              ],
+              "hall_deficit": 1,
+              "obligation_count": 1,
+              "terrestrial_window_ids": [],
+              "valid_until_s": 135
+            },
+            {
+              "groups": [
+                "g3"
+              ],
+              "hall_deficit": 1,
+              "obligation_count": 1,
+              "terrestrial_window_ids": [],
+              "valid_until_s": 135
+            },
+            {
+              "groups": [
+                "g3"
+              ],
+              "hall_deficit": 1,
+              "obligation_count": 1,
+              "terrestrial_window_ids": [],
+              "valid_until_s": 135
+            },
+            {
+              "groups": [
+                "g4"
+              ],
+              "hall_deficit": 1,
+              "obligation_count": 2,
+              "terrestrial_window_ids": [
+                "local-g4"
+              ],
+              "valid_until_s": 165
+            }
+          ]
+        },
+        {
+          "at_s": 131,
+          "backup_lower_bound": 11,
+          "component_count": 11,
+          "dependency_exact": null,
+          "event": "global_satellite_budget_decrement",
+          "fresh_exact": null,
+          "incremental": {
+            "invalidated_keys": [
+              [
+                "revealed-branch",
+                [
+                  "g0:o0",
+                  "g0:o1"
+                ]
+              ],
+              [
+                "revealed-branch",
+                [
+                  "g1:o1"
+                ]
+              ],
+              [
+                "revealed-branch",
+                [
+                  "g1:o2"
+                ]
+              ],
+              [
+                "revealed-branch",
+                [
+                  "g1:o3"
+                ]
+              ],
+              [
+                "revealed-branch",
+                [
+                  "g2:o0",
+                  "g2:o1",
+                  "g2:o2"
+                ]
+              ],
+              [
+                "revealed-branch",
+                [
+                  "g3:o0"
+                ]
+              ],
+              [
+                "revealed-branch",
+                [
+                  "g3:o1"
+                ]
+              ],
+              [
+                "revealed-branch",
+                [
+                  "g3:o2"
+                ]
+              ],
+              [
+                "revealed-branch",
+                [
+                  "g3:o3"
+                ]
+              ],
+              [
+                "revealed-branch",
+                [
+                  "g3:o4"
+                ]
+              ],
+              [
+                "revealed-branch",
+                [
+                  "g4:o0",
+                  "g4:o1"
+                ]
+              ]
+            ],
+            "partition_fallbacks": 0,
+            "recomputed": 11,
+            "recomputed_keys": [
+              [
+                "revealed-branch",
+                [
+                  "g0:o0",
+                  "g0:o1"
+                ]
+              ],
+              [
+                "revealed-branch",
+                [
+                  "g1:o1"
+                ]
+              ],
+              [
+                "revealed-branch",
+                [
+                  "g1:o2"
+                ]
+              ],
+              [
+                "revealed-branch",
+                [
+                  "g1:o3"
+                ]
+              ],
+              [
+                "revealed-branch",
+                [
+                  "g2:o0",
+                  "g2:o1",
+                  "g2:o2"
+                ]
+              ],
+              [
+                "revealed-branch",
+                [
+                  "g3:o0"
+                ]
+              ],
+              [
+                "revealed-branch",
+                [
+                  "g3:o1"
+                ]
+              ],
+              [
+                "revealed-branch",
+                [
+                  "g3:o2"
+                ]
+              ],
+              [
+                "revealed-branch",
+                [
+                  "g3:o3"
+                ]
+              ],
+              [
+                "revealed-branch",
+                [
+                  "g3:o4"
+                ]
+              ],
+              [
+                "revealed-branch",
+                [
+                  "g4:o0",
+                  "g4:o1"
+                ]
+              ]
+            ],
+            "reused": 0,
+            "reused_keys": []
+          },
+          "optimistic_feasible": false,
+          "persistent_exact": null,
+          "structural_match_fresh": true,
+          "topology": [
+            [
+              "g0"
+            ],
+            [
+              "g1"
+            ],
+            [
+              "g1"
+            ],
+            [
+              "g1"
+            ],
+            [
+              "g2"
+            ],
+            [
+              "g3"
+            ],
+            [
+              "g3"
+            ],
+            [
+              "g3"
+            ],
+            [
+              "g3"
+            ],
+            [
+              "g3"
+            ],
+            [
+              "g4"
+            ]
+          ],
+          "topology_detail": [
+            {
+              "groups": [
+                "g0"
+              ],
+              "hall_deficit": 1,
+              "obligation_count": 2,
+              "terrestrial_window_ids": [
+                "local-g0"
+              ],
+              "valid_until_s": 135
+            },
+            {
+              "groups": [
+                "g1"
+              ],
+              "hall_deficit": 1,
+              "obligation_count": 1,
+              "terrestrial_window_ids": [],
+              "valid_until_s": 135
+            },
+            {
+              "groups": [
+                "g1"
+              ],
+              "hall_deficit": 1,
+              "obligation_count": 1,
+              "terrestrial_window_ids": [],
+              "valid_until_s": 135
+            },
+            {
+              "groups": [
+                "g1"
+              ],
+              "hall_deficit": 1,
+              "obligation_count": 1,
+              "terrestrial_window_ids": [],
+              "valid_until_s": 135
+            },
+            {
+              "groups": [
+                "g2"
+              ],
+              "hall_deficit": 1,
+              "obligation_count": 3,
+              "terrestrial_window_ids": [
+                "local-g2"
+              ],
+              "valid_until_s": 150
+            },
+            {
+              "groups": [
+                "g3"
+              ],
+              "hall_deficit": 1,
+              "obligation_count": 1,
+              "terrestrial_window_ids": [],
+              "valid_until_s": 135
+            },
+            {
+              "groups": [
+                "g3"
+              ],
+              "hall_deficit": 1,
+              "obligation_count": 1,
+              "terrestrial_window_ids": [],
+              "valid_until_s": 135
+            },
+            {
+              "groups": [
+                "g3"
+              ],
+              "hall_deficit": 1,
+              "obligation_count": 1,
+              "terrestrial_window_ids": [],
+              "valid_until_s": 135
+            },
+            {
+              "groups": [
+                "g3"
+              ],
+              "hall_deficit": 1,
+              "obligation_count": 1,
+              "terrestrial_window_ids": [],
+              "valid_until_s": 135
+            },
+            {
+              "groups": [
+                "g3"
+              ],
+              "hall_deficit": 1,
+              "obligation_count": 1,
+              "terrestrial_window_ids": [],
+              "valid_until_s": 135
+            },
+            {
+              "groups": [
+                "g4"
+              ],
+              "hall_deficit": 1,
+              "obligation_count": 2,
+              "terrestrial_window_ids": [
+                "local-g4"
+              ],
+              "valid_until_s": 165
+            }
+          ]
+        },
+        {
+          "at_s": 137,
+          "backup_lower_bound": 12,
+          "component_count": 12,
+          "dependency_exact": null,
+          "event": "time_boundary_g0",
+          "fresh_exact": null,
+          "incremental": {
+            "invalidated_keys": [
+              [
+                "revealed-branch",
+                [
+                  "g0:o0",
+                  "g0:o1"
+                ]
+              ],
+              [
+                "revealed-branch",
+                [
+                  "g1:o1"
+                ]
+              ],
+              [
+                "revealed-branch",
+                [
+                  "g1:o2"
+                ]
+              ],
+              [
+                "revealed-branch",
+                [
+                  "g1:o3"
+                ]
+              ],
+              [
+                "revealed-branch",
+                [
+                  "g3:o0"
+                ]
+              ],
+              [
+                "revealed-branch",
+                [
+                  "g3:o1"
+                ]
+              ],
+              [
+                "revealed-branch",
+                [
+                  "g3:o2"
+                ]
+              ],
+              [
+                "revealed-branch",
+                [
+                  "g3:o3"
+                ]
+              ],
+              [
+                "revealed-branch",
+                [
+                  "g3:o4"
+                ]
+              ]
+            ],
+            "partition_fallbacks": 0,
+            "recomputed": 10,
+            "recomputed_keys": [
+              [
+                "revealed-branch",
+                [
+                  "g0:o0"
+                ]
+              ],
+              [
+                "revealed-branch",
+                [
+                  "g0:o1"
+                ]
+              ],
+              [
+                "revealed-branch",
+                [
+                  "g1:o1"
+                ]
+              ],
+              [
+                "revealed-branch",
+                [
+                  "g1:o2"
+                ]
+              ],
+              [
+                "revealed-branch",
+                [
+                  "g1:o3"
+                ]
+              ],
+              [
+                "revealed-branch",
+                [
+                  "g3:o0"
+                ]
+              ],
+              [
+                "revealed-branch",
+                [
+                  "g3:o1"
+                ]
+              ],
+              [
+                "revealed-branch",
+                [
+                  "g3:o2"
+                ]
+              ],
+              [
+                "revealed-branch",
+                [
+                  "g3:o3"
+                ]
+              ],
+              [
+                "revealed-branch",
+                [
+                  "g3:o4"
+                ]
+              ]
+            ],
+            "reused": 2,
+            "reused_keys": [
+              [
+                "revealed-branch",
+                [
+                  "g2:o0",
+                  "g2:o1",
+                  "g2:o2"
+                ]
+              ],
+              [
+                "revealed-branch",
+                [
+                  "g4:o0",
+                  "g4:o1"
+                ]
+              ]
+            ]
+          },
+          "optimistic_feasible": false,
+          "persistent_exact": null,
+          "structural_match_fresh": true,
+          "topology": [
+            [
+              "g0"
+            ],
+            [
+              "g0"
+            ],
+            [
+              "g1"
+            ],
+            [
+              "g1"
+            ],
+            [
+              "g1"
+            ],
+            [
+              "g2"
+            ],
+            [
+              "g3"
+            ],
+            [
+              "g3"
+            ],
+            [
+              "g3"
+            ],
+            [
+              "g3"
+            ],
+            [
+              "g3"
+            ],
+            [
+              "g4"
+            ]
+          ],
+          "topology_detail": [
+            {
+              "groups": [
+                "g0"
+              ],
+              "hall_deficit": 1,
+              "obligation_count": 1,
+              "terrestrial_window_ids": [],
+              "valid_until_s": 156
+            },
+            {
+              "groups": [
+                "g0"
+              ],
+              "hall_deficit": 1,
+              "obligation_count": 1,
+              "terrestrial_window_ids": [],
+              "valid_until_s": 156
+            },
+            {
+              "groups": [
+                "g1"
+              ],
+              "hall_deficit": 1,
+              "obligation_count": 1,
+              "terrestrial_window_ids": [],
+              "valid_until_s": null
+            },
+            {
+              "groups": [
+                "g1"
+              ],
+              "hall_deficit": 1,
+              "obligation_count": 1,
+              "terrestrial_window_ids": [],
+              "valid_until_s": null
+            },
+            {
+              "groups": [
+                "g1"
+              ],
+              "hall_deficit": 1,
+              "obligation_count": 1,
+              "terrestrial_window_ids": [],
+              "valid_until_s": null
+            },
+            {
+              "groups": [
+                "g2"
+              ],
+              "hall_deficit": 1,
+              "obligation_count": 3,
+              "terrestrial_window_ids": [
+                "local-g2"
+              ],
+              "valid_until_s": 150
+            },
+            {
+              "groups": [
+                "g3"
+              ],
+              "hall_deficit": 1,
+              "obligation_count": 1,
+              "terrestrial_window_ids": [],
+              "valid_until_s": 156
+            },
+            {
+              "groups": [
+                "g3"
+              ],
+              "hall_deficit": 1,
+              "obligation_count": 1,
+              "terrestrial_window_ids": [],
+              "valid_until_s": 156
+            },
+            {
+              "groups": [
+                "g3"
+              ],
+              "hall_deficit": 1,
+              "obligation_count": 1,
+              "terrestrial_window_ids": [],
+              "valid_until_s": 156
+            },
+            {
+              "groups": [
+                "g3"
+              ],
+              "hall_deficit": 1,
+              "obligation_count": 1,
+              "terrestrial_window_ids": [],
+              "valid_until_s": 156
+            },
+            {
+              "groups": [
+                "g3"
+              ],
+              "hall_deficit": 1,
+              "obligation_count": 1,
+              "terrestrial_window_ids": [],
+              "valid_until_s": 156
+            },
+            {
+              "groups": [
+                "g4"
+              ],
+              "hall_deficit": 1,
+              "obligation_count": 2,
+              "terrestrial_window_ids": [
+                "local-g4"
+              ],
+              "valid_until_s": 165
+            }
+          ]
+        }
+      ],
+      "expected_initial_topology": [
+        [
+          "g0"
+        ],
+        [
+          "g1"
+        ],
+        [
+          "g2"
+        ],
+        [
+          "g3"
+        ],
+        [
+          "g4"
+        ]
+      ],
+      "motif": "H4_MIXED_LOCAL_GLOBAL"
+    }
+  ],
+  "stage": "FUTURE_CHOICE_B6_STRUCTURAL_HOLDOUT",
+  "structural_only": true
+}

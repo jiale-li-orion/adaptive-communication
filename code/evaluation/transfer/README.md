@@ -30,4 +30,6 @@
 - `freeze_uav_attention_scale_extension_cohorts.py`：冻结 C4 external-paper-matched 50 与 C5 constructive hard-feasible 100；selection 全部 method-independent。
 - `run_uav_attention_scale_extension.py` / `scripts/run_uav_attention_scale_chunk.sh`：resource-safe C4/C5 scale execution；不重复 every-frontier pure-exact audit。
 - `analyze_uav_attention_scale_extension.py`：Wilson / paired bootstrap / exact McNemar / search-work scale statistics。
+- `audit_future_choice_structural_holdout.py`：B6 unseen topology holdout；冻结 asymmetric / bridge / chain-split / mixed local-global motifs 后，逐 event 审 incremental snapshot 与 fresh rebuild canonical equality。
+- `audit_future_choice_structural_holdout_exact_bounded.py`：B6 exact strong-control 的 512MiB/30s 隔离诊断；resolved event 比较 fresh / persistent / dependency exact，resource termination 只记 `UNRESOLVED_COMPUTATION`。
 - `materialize_future_choice_claim_matrix.py`：从 tracked A/B/C evidence 生成 paper-facing scoped claim matrix；不替代 `results/CLAIMS.md` 的 claim-state authority。
