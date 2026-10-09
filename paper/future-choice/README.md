@@ -36,7 +36,7 @@ make future-choice-paper
 6. [`../../research/benchmark/LAYER1-AUTHORITY.md`](../../research/benchmark/LAYER1-AUTHORITY.md) — A / benchmark authority；
 7. [`../../research/compiler/README.md`](../../research/compiler/README.md) — B / method correctness boundary；
 8. [`../../results/transfer/future-choice-claim-matrix.json`](../../results/transfer/future-choice-claim-matrix.json) — machine-readable scoped paper projection；
-9. [`REFERENCE-PLAN.md`](REFERENCE-PLAN.md) — 旧论文引用复用 + 2025–2026 最近邻 citation clusters；
+9. [`REFERENCE-PLAN.md`](REFERENCE-PLAN.md) — 旧论文引用复用 + 2025–2026 最近邻 citation clusters；[`FORMAL-PRIOR-ART-BOUNDARY-2026-10-09.md`](FORMAL-PRIOR-ART-BOUNDARY-2026-10-09.md) 核对 formal shielding / winning-region novelty 边界；
 10. generated paper facts/tables in [`../generated/`](../generated/)。
 
 写作控制：[`ASC-POSITIONING.md`](ASC-POSITIONING.md) → [`STORYLINE.md`](STORYLINE.md) → [`METHOD-SCAFFOLD.md`](METHOD-SCAFFOLD.md)。三者分别固定社区定位、叙事顺序与形式化对象；不得从旧稿另起平行符号系统。

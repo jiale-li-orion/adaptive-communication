@@ -123,7 +123,7 @@ V^*(h_t,a)=\mathbf 1[\mathcal F(h_t,a)\neq\varnothing].
 Future-Choice不是新的 semantic value metric。给定任意现有 semantic/task utility `Q_{sem}(h,a)`，最直接组合是：
 
 \[
-\max_a Q_{sem}(h_t,a)
+\max_{a\in\mathcal A(h_t)} Q_{sem}(h_t,a)
 \quad\text{s.t.}\quad
 V^*(h_t,a)=1.
 \]
@@ -141,11 +141,11 @@ L_t(a)\le V^*(h_t,a)\le U_t(a),
 
 ### Replayable lower certificate
 
-`L_t(a)=1` 当且仅当当前持有一个**可重放 causal completion certificate**，能在所有其声明覆盖的 compatible observation branches上完成 hard obligations。
+`L_t(a)=1` 的充分条件是持有**可重放 causal completion certificate**，且该 witness 覆盖当前全部 compatible worlds、满足动作/任务/资源/时间约束；未找到 witness 仍属 unresolved。
 
 ### Sound optimistic upper test
 
-`U_t(a)=0` 当一个比真实问题更乐观的 relaxation仍 infeasible。
+`U_t(a)=0` 当一个包含全部真实 causal completion 的乐观 relaxation 仍 infeasible。可以向离线参照额外暴露 world，但每个 world 可行不能证明存在一个 common causal policy。
 
 ### Unresolved
 
@@ -167,7 +167,14 @@ L_t(a)=0,\;U_t(a)=1
 G=(\mathcal O,\mathcal R,E).
 \]
 
-capacity-aware max-flow给出 optimistic matching；residual min-cut / Hall deficit给出 set-level conflict certificate。关键不是判断“某个 obligation有没有一个 slot”，而是：
+capacity-aware max-flow / residual min-cut 给出单 compatible world 的乐观匹配与 Hall deficit。Terrestrial 容量展开为 unit-capacity slot，令 \(\nu_w\) 为最大 matching size：
+
+\[
+\Delta_w=|\mathcal O_w|-\nu_w
+=\max_{S\subseteq\mathcal O_w}(|S|-|N_w(S)|).
+\]
+
+当 \(\Delta_w>B\)（剩余共享 backup budget）时，该 world 无法完成，全局 robust U=0；但 \(\Delta_w\le B\) 只是 necessary test，绝不能据此置 L=1。真实 query/ACK 时序和 conditional policy 仍由 causal witness/exact fallback 决定。关键不是判断“某个 obligation有没有一个 slot”，而是：
 
 > **某个 obligation subset是否共同争夺同一组稀缺 future opportunities。**
 
@@ -196,7 +203,7 @@ t_c^{valid},
 - `t_valid`：下一次时间/机会边界；
 - witness：replayable policy / structural conflict certificate。
 
-Observation narrowing只缩 `W_c`；event `e` 只有在改变 `D_c` 或 validity boundary时才使 certificate失效。
+证书复用区分 polarity：正向 L=1 witness 在新 support 仍被其覆盖、action/task/resource/time 依赖不变时可跨 observation narrowing；反向 U=0 仅当支撑 infeasibility 的 world 仍 compatible、bound 假设未变时才能复用。观测排除该 world 后必须重判 global verdict；world-local component cache 可继续保留，新边连接组件或资源跨界触发 conservative rebuild。
 
 这给出本文重要systems distinction：
 
@@ -208,7 +215,7 @@ Observation narrowing只缩 `W_c`；event `e` 只有在改变 `D_c` 或 validity
 
 ### Lemma 1 — Replayable lower-bound soundness
 
-若 certificate `c` 在声明的 validity domain内给出一个 legal、non-anticipative、可重放 continuation policy，且该 policy在所有覆盖的 compatible branches完成全部 active hard obligations，则：
+若 certificate `c` 在声明的 validity domain内给出一个 legal、non-anticipative、可重放 continuation policy，且该 policy覆盖当前全部 compatible branches并完成其中每条实际产生的 hard obligation，则：
 
 \[
 L_t(a)=1\Rightarrow V^*(h_t,a)=1.
@@ -246,7 +253,7 @@ t+\frac{MST(\{x_t\}\cup S_d)}{v}>d,
 
 设 event `e` 发生后：
 
-1. certificate的support/resource/time validity domain仍成立；
+1. certificate 的 polarity-specific support/resource/time domain 有效：L=1 witness 覆盖当前 support，U=0 反例 world 仍 compatible；
 2. event修改的state/dependency set与 `D_c` 不相交；
 3. event不新增连接 reused component 与外部 component的合法 future opportunity edge。
 

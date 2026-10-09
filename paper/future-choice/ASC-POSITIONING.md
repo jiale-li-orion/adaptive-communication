@@ -60,9 +60,11 @@ downstream actuation / decision / task objective
 哪些 hard task semantics 仍有合法 completion continuation？
 ```
 
-因此本文不是把 emergency communication 换成 ASC 场景，而是从真实 emergency requirement 中抽象出 ASC 尚未显式建模的结构：
+因此本文从真实 emergency requirement 中抽象出 ASC 语义动作下的可执行完成约束：
 
 > **semantic action can change the feasible set of future task completions.**
+
+这句话仅承担 ASC community framing。其通用形式与 POMDP reachability winning-region / shielding 已有交集，参见 `FORMAL-PRIOR-ART-BOUNDARY-2026-10-09.md`。可检验的增量主张是 owner-scoped、异步付费证据与动态任务义务、机会容量冲突的专门形式化，以及在该结构上维护 sound L/U certificate 与 exact fallback；不得将 observation-based winning policy 或 action shielding 本身包装为首次提出。
 
 ---
 

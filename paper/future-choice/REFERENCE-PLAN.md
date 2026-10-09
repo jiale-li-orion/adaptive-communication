@@ -117,9 +117,29 @@ wang2026wmcdt
 zhao2026wirelesscontext
 saz2026logicalsemcom
 gao2026activemeasuring
+kaelbling1998pomdp
+bitmonnot2016contingentobserve
+cheng2026stnust
+lei2026amcats
+ahmad2025iotvoi
+junges2021reachability
+ajdarow2023rsgoshield
+carr2023partialshield
 ```
 
-这些条目分别由 arXiv / PMLR 当前公开记录核对；camera-ready 前若已有正式期刊/会议版本，再升级 venue metadata。
+后一组按 IJCAI / Elsevier / Springer / IEEE WF-IoT 正式论文页核查：
+
+- `kaelbling1998pomdp`：合法 history / partially observable policy 的标准背景；**本稿使用 robust finite-support AND/OR 可行性，不宣称等同于 Bayesian POMDP optimal control**。
+- `bitmonnot2016contingentobserve`、`cheng2026stnust`：contingent observation / sensing action / dynamic controllability 已有形式化。本文的差异须放在 observation resource cost + communication obligation feasibility，而非“首个可选择观测的 temporal planner”。
+- `lei2026amcats`：feasibility screening、critical resource soft reservation、time window、selective deferral 已有实例，不能独占 claim future-window preservation 本身。它没有为本文提供现成的 same-information exact continuation baseline；Related Work 应明确是 conceptual neighbor 而非声称 direct reproduction。
+- `ahmad2025iotvoi`：真实 flash-flood sensing 数据上的 VoI / battery SoE / receding-horizon MPC，直接压缩了“首次联合监测与能源决策”的 claim。
+- `junges2021reachability`（CAV 2021）：POMDP belief-support winning region、permissive action shield 与 incremental SAT；不再将 `∃ causal policy ∀ worlds` 或 shielding 当作本文独创。
+- `ajdarow2023rsgoshield`（AAAI 2023）：资源消耗/补充与局部不可观测目标的 shielding，削弱“首次考虑 action-resource future feasibility”的泛化 claim。
+- `carr2023partialshield`（AAAI 2023）：shield 与 partially observable RL controller 结合；本稿 Layer 3 若使用 learned guidance 也不能据此主张首次 shielding。
+
+形式化文献的直接约束详见 `FORMAL-PRIOR-ART-BOUNDARY-2026-10-09.md`。三个 shielding 引用属于 prior art；目前没有 head-to-head 对照其实作 solver，不能暗示原论文已经作为比较 baseline 运行。CAV almost-sure reachability 与本稿 frozen finite-support robust completion 的数学口径保留区别。
+
+其余条目分别由 arXiv / PMLR 当前公开记录核对；camera-ready 前若已有正式期刊/会议版本，再升级 venue metadata。
 
 ## 9. 仍需补的 bib gap
 
