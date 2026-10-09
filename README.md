@@ -2,9 +2,11 @@ English | [中文](README.zh.md)
 
 # Agentic Communication under Intermittent Connectivity
 
-Source-grounded decision benchmark, decision-semantic runtime, and learning-guided exact search for pre-disaster mountain monitoring under limited power and intermittent communication.
+Source-grounded decision benchmark, real-model communication-agent runtime, and verified Future-Choice feasibility mechanisms for pre-disaster mountain monitoring under limited power and intermittent communication.
 
 > **Current control plane (2026-10-09):** Layer 1 has reached paper pre-release: source/task/evaluator audit, fresh split, full-sim mutation audit, pre-release manifest and baseline protocol are frozen; the 150-coordinate deterministic test is complete. The frozen 30-coordinate × 2-mode LLM subset has **41/60 unique OK rows, resumable but host-blocked by WSL rtnetlink D-state** ([incident](research/workstreams/A3-HOST-INCIDENT-2026-10-09.md)); A5 final release remains blocked. Layer 2 has converged on observation-conditioned **Future-Choice** feasibility with replayable `L=1` certificates, sound `U=0` relaxations, dependency-local conflict invalidation and exact fallback; current supported method/transfer claims are `F1–F7` in [`results/CLAIMS.md`](results/CLAIMS.md). Layer 3 remains paused as an optional unresolved-action ranking layer. Current ownership lives in [`research/`](research/README.md), and the integrated paper story lives in [`research/workstreams/PAPER-SYNTHESIS.md`](research/workstreams/PAPER-SYNTHESIS.md).
+
+**Unified-method acceptance boundary:** The full-simulator DeepSeek Agent already executes evidence acquisition and communication actions with audited physical outcomes (A7–A11), while Future-Choice L/U and certificates have separate B/C correctness and transfer results (F1–F7). No current frozen experiment shows DeepSeek consuming Future-Choice certificates in that same physical execution loop. The integration is **OPEN**, not a completed learned ASC policy; see the [source-level interface audit and M0–M3 gates](research/workstreams/LLM-FUTURE-CHOICE-UNIFICATION-AUDIT-2026-10-09.md). The previously tested Layer-3 learned search ranking is a systems-negative historical result, not the headline algorithm.
 
 ## 1. Architecture at a glance
 

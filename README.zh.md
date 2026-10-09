@@ -2,9 +2,11 @@
 
 # 间歇连接下的智能体通信
 
-面向山区灾前长期监测的 source-grounded 决策基准、决策语义运行时与 learning-guided exact search。场景长期存在供电受限、回传间歇中断、缓存压力和恢复过程；任务义务由外部来源定义，系统负责通信执行。
+面向山区灾前长期监测的 source-grounded 决策基准、真实模型通信 Agent 运行时，以及可验证的 Future-Choice 可行性机制。场景长期存在供电受限、回传间歇中断、缓存压力和恢复过程；任务义务由外部来源定义，系统负责通信执行。
 
 > **当前控制面（2026-10-09）：** Layer 1 已进入 paper pre-release：source/task/evaluator 内审、fresh split、full-sim mutation audit、pre-release manifest 与 baseline protocol 均已冻结；150-coordinate deterministic test 已完成。冻结的 30-coordinate × 2-mode LLM 子集已有 **41/60 条唯一 OK 记录**，因 WSL rtnetlink D-state 暂停，checkpoint 完整，可恢复续跑（[事故与恢复记录](research/workstreams/A3-HOST-INCIDENT-2026-10-09.md)）；A5 final release 仍待 A3。Layer 2 已收敛到 observation-conditioned **Future-Choice** feasibility：可重放 `L=1` certificate、sound `U=0` relaxation、dependency-local conflict invalidation 与 exact fallback；当前支持的 method/transfer claim 只认 [`results/CLAIMS.md`](results/CLAIMS.md) F1–F7。Layer 3 继续作为可选 unresolved-action ranking 层暂停。当前综合论文故事见 [`research/workstreams/PAPER-SYNTHESIS.md`](research/workstreams/PAPER-SYNTHESIS.md)。
+
+**统一方法验收边界：** 全仿真 DeepSeek Agent 已真实完成取证和通信执行闭环，具备 A7–A11 的审计证据；Future-Choice L/U、证书与结构维护有独立的 B/C 正确性和迁移证据（F1–F7）。**尚无冻结实验证明 DeepSeek 在同一物理执行闭环中消费了 Future-Choice 证书。** 目前是两个有效子系统、一个待验收的连接口，不能写成已完成的 learning-enabled ASC policy。具体源码核查、模型输入输出、动作映射与 M0–M3 验收门见 [`research/workstreams/LLM-FUTURE-CHOICE-UNIFICATION-AUDIT-2026-10-09.md`](research/workstreams/LLM-FUTURE-CHOICE-UNIFICATION-AUDIT-2026-10-09.md)。历史 Layer-3 排序学习的 wall-time 负结果继续保留，不再当作当前主算法。
 
 ## 1. 架构总览
 

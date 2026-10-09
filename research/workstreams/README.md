@@ -11,9 +11,11 @@
 - Layer 3：[`../policy/`](../policy/README.md)
 - shared substrate：[`../substrate/`](../substrate/README.md)
 
-当前同时推进三条线，任何一条先通过 hard gate 都可以独立形成论文贡献；三条都成立时再合并成完整 paper story。
+现有三条 workstream 已形成统一的问题叙事与 A/B/C 实验证据，但这不自动代表 **DeepSeek Agent + Future-Choice 统一决策方法** 已完成。A7–A11 的模型/取证/物理执行与 F1–F7 的结构化 Future-Choice 计算分别有效；联合方法的来源、动作、证书和 task-outcome 归因要通过单独的 M0–M3 验收门。
 
 当前综合 paper story 与 claim ledger 见 [`PAPER-SYNTHESIS.md`](PAPER-SYNTHESIS.md)。
+
+2026-10-09 的**实现级止漂审计与下一阶段计划**：[`LLM-FUTURE-CHOICE-UNIFICATION-AUDIT-2026-10-09.md`](LLM-FUTURE-CHOICE-UNIFICATION-AUDIT-2026-10-09.md)。它只记录跨线的接口缺口和新实验准入，不修改已冻结的实验或 Layer authority。
 
 | Workstream | 当前问题 | 主要正式资产 | 当前状态 |
 |---|---|---|---|

@@ -82,4 +82,6 @@ python3 scripts/make_future_choice_artifacts.py --check
 - 把 assistant-led internal audit 写成 independent expert validation；
 - A 的 frozen LLM subset 在 final analysis 完成前写最终模型结论。
 
+补充科学 claim 边界：**DeepSeek 的真实 decision-semantic/evidence-use 成果（A7–A11）与 Future-Choice（F1–F7）目前是两个独立验证的子系统。** 当前没有同一 full-simulator DeepSeek policy 消费 Future-Choice L/U/certificate 并产生可归因 native outcome 增量的 frozen trial；不能把现有 C 的官方 heuristic+shield 结果标为 LLM agent 的方法效果。该统一闭环的接口和验收见 [`../../research/workstreams/LLM-FUTURE-CHOICE-UNIFICATION-AUDIT-2026-10-09.md`](../../research/workstreams/LLM-FUTURE-CHOICE-UNIFICATION-AUDIT-2026-10-09.md)。
+
 正文、方法、RQ1--RQ5、图表与附录已经形成可编译 working draft。当前唯一 benchmark final-release blocker 是 A3 frozen LLM model-spectrum subset；A3 完成后再执行 LLM statistical analysis / Layer-1 final release，并据真实结果决定是否把 model-spectrum小表放入主文或仅留 appendix。Future-Choice F1--F7 主张不依赖该模型子集。

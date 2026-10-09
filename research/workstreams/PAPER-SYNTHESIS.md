@@ -5,6 +5,8 @@
 
 这不是第四个 Layer。它只把 A/B/C 三条 workstream 组合成一篇论文的共同问题、证据链和剩余门槛；正式 benchmark / method ownership 仍分别属于 Layer 1 / Layer 2。
 
+**2026-10-09 实现级验收限定：** 下述 A/B/C 的共同叙事和 F1–F7 算法证据不构成「DeepSeek 已使用 Future-Choice」的执行证明。全仿真 DeepSeek 的 A7–A11 语义通信/取证闭环与 B/C Future-Choice L/U 证明链目前分别成立；联合方法需完成相同动作/观察合同的模型输入、候选决策、证书核验、原生执行及指标归因。源码审计和 M0–M3 准入见 [`LLM-FUTURE-CHOICE-UNIFICATION-AUDIT-2026-10-09.md`](LLM-FUTURE-CHOICE-UNIFICATION-AUDIT-2026-10-09.md)。此限制不追溯更改旧实验结论。
+
 ## 1. One-sentence problem
 
 > **A communication or information action is not only valuable for what it reveals or delivers now; it can also preserve or destroy the set of future ways in which outstanding operational obligations can still be completed.**
