@@ -1,0 +1,63 @@
+\appendices
+
+\section{Proof Details}
+\label{app:proofs}
+
+\subsection{Replayable lower certificates}
+Consider a current legal history $h_t$ and action $a$. A lower certificate stores a continuation witness $\pi_c$ together with a declared validity domain $D(c)$. By construction, replay validation checks that (i) every action in $\pi_c$ is legal under the observation history on which it is taken, (ii) the policy branches only after an observation distinguishes histories, and (iii) every hard obligation active on each covered compatible branch is completed before its operational deadline. Therefore $\pi_c\in\Choices(h_t,a)$ whenever $D(c)$ holds, proving $L_t(a)=1\Rightarrow V^*(h_t,a)=1$.
+
+The important restriction is non-anticipativity. A world-indexed open-loop trace is not a valid lower certificate unless the traces agree on every prefix with the same legal observations. This is why a perfect-information physical solution is an upper-bound aid, not a constructive lower certificate.
+
+\subsection{Optimistic upper tests}
+Let $P(h_t,a)$ denote the real continuation-feasibility problem and let $\widetilde P(h_t,a)$ be a relaxation obtained only by deleting constraints, shortening delays, increasing resources, or granting additional information. Every real feasible continuation is then feasible in $\widetilde P$. Hence
+\begin{equation}
+\widetilde P(h_t,a)\text{ infeasible}
+\quad\Longrightarrow\quad
+P(h_t,a)\text{ infeasible},
+\end{equation}
+which establishes the soundness of $U_t(a)=0$. The converse does not hold: an optimistic relaxation may be feasible even when no causal real policy exists.
+
+\subsection{Dependency-local preservation}
+Let $c$ be a component certificate with dependency set $\mathcal D_c$, compatible-world support $\Worlds_c$, resource interval, and validity boundary $t_c^{\rm valid}$. Suppose a new event changes the global history from $h$ to $h'$. If (i) the event preserves $\Worlds_c$ or only narrows it, (ii) no state read by the certificate witness changes, (iii) the current time remains inside the validity interval, and (iv) no new legal future-opportunity edge joins the reused component to a previously separate component, then every obligation--opportunity relation used by the certificate is unchanged. The previous witness or Hall-conflict structure therefore remains valid.
+
+Condition (iv) is the partition-safety boundary. The current transition model is monotone in future opportunity edges: time and resource use remove edges, while execution does not create an unseen terrestrial opportunity between previously unrelated components. The implementation nevertheless checks for overlap between rebuilt and reused slot sets; if the assumption is violated, it conservatively repartitions the whole world rather than reuse a potentially unsound certificate.
+
+\subsection{Deadline-set MST upper bound}
+For the external routing adapter, fix a deadline threshold $d$ and let $S_d$ contain all unserved customers whose deadlines are at most $d$. Any route that serves every node in $S_d$ before $d$ induces a connected walk spanning the current UAV position and all points in $S_d$. The length of any such connected walk is at least the Euclidean minimum spanning tree length over those points. Therefore
+\begin{equation}
+t + \frac{\operatorname{MST}(\{x_t\}\cup S_d)}{v} > d
+\end{equation}
+is sufficient to prove that no real route can meet all deadlines in $S_d$. The test ignores battery limits, charging detours, future return-to-depot requirements, and other constraints; all omissions make the relaxation more optimistic, so a negative result remains sound.
+
+\section{Structural Holdout and Resource-Bounded Exact Controls}
+\label{app:b6}
+
+The B6 holdout was frozen before execution and changes graph topology rather than only scaling the number of components. H1 uses asymmetric disconnected groups; H2 introduces a shared terrestrial bridge; H3 creates a chain whose connected component splits as bridge opportunities disappear; H4 interleaves local invalidation with a global shared satellite-budget dependency.
+
+\begin{table*}[t]
+\centering
+\caption{B6 structural holdout. ``Inc.=fresh'' means every event-level incremental snapshot is canonically equal to a full fresh rebuild. Exact comparisons include only events where all three resource-bounded exact controls resolve.}
+\label{tab:b6appendix}
+\footnotesize
+\input{../../generated/table_future_choice_b6_holdout.tex}
+\end{table*}
+
+All four motifs pass the structural equality gate. The exact strong-control audit is intentionally resource-bounded: each motif--baseline sequence runs in an isolated process with a 512~MiB address-space ceiling and 30~s wall timeout. Fresh, ordinary persistent, and dependency-cache exact all resolve on six common events and agree on the full action frontier on all six. Other sequences terminate because of memory or time limits and remain \texttt{UNRESOLVED\_COMPUTATION}; they do not contribute to feasibility or method-superiority claims.
+
+The holdout also revealed a systems implementation issue. The original optimistic physical upper test solved combined terrestrial/satellite assignment by recursive enumeration. The constraint is instead an integral flow network: obligations connect to concrete unit-capacity slots, terrestrial slots connect directly to the sink, and satellite slots connect through a shared pool whose capacity equals the remaining backup budget. We retain the historical DFS as a test reference and exhaustively compare it to the production max-flow implementation on all candidate-subset combinations of a three-obligation/four-slot test space and four satellite budgets. All cases agree; existing F1--F3 tracked outputs are unchanged except for timing fields.
+
+\section{External Cohort Construction and Statistics}
+\label{app:external}
+
+The external N=10 study separates correctness from statistical scale. We first scan seeds using only the four released ordinary heuristics. A seed enters the constructive pool if at least one heuristic already completes all customers, returns to the depot, incurs zero tardiness, and takes no infeasible action. FutureChoice and exact continuation are not used for selection. The first 21 constructive seeds form the exact-audited cohort; the first 100 form the scale-confirmatory cohort, so the correctness core is an exact prefix of the scale panel rather than a different sample.
+
+For every reached action frontier in the 21-instance core, we compare the FutureChoice mask against an independent exact-continuation mask; the 924 reached frontiers have zero mismatch. The 100-instance panel is used for paired outcome statistics rather than repeating every exact audit. For binary outcomes we report Wilson intervals. Paired rate differences, tardiness changes, and energy changes use a fixed-seed paired bootstrap; zero-tardiness discordance additionally uses the exact two-sided McNemar test.
+
+The external-paper-matched 50-episode panel serves a different purpose. Its layout seeds are generated by the released repository's own evaluation protocol, namely the sequence produced by \texttt{np.random.default\_rng(999)} for 50 episodes. Only six of those 50 layouts have an ordinary constructive zero-tardiness witness. We therefore run FutureChoice only on those six for hard-feasibility comparison and report the full 50-episode native/depth-$4$ results as distribution context. We do not interpret an unlabelled layout as hard-infeasible merely because an ordinary heuristic fails to produce a witness.
+
+\section{Benchmark Validity and Model-Spectrum Boundary}
+\label{app:benchmark}
+
+The emergency benchmark is frozen independently of the method. Source/task/evaluator construction, the 200/200/150 coordinate split, deterministic baselines, execution-evaluator mutation tests, and the model-spectrum subset are all tracked as separate artifacts. Operational-Conformance and Interactive-Decision cases remain in the release even when ordinary rules solve them. Future-Choice-Stress is allowed to be empty; an empty stress stratum weakens a method-necessity claim inside the emergency benchmark but does not invalidate the benchmark itself.
+
+The frozen LLM subset contains 30 test coordinates evaluated under two context modes. It is explicitly a model-spectrum diagnostic. Its role is to test whether the benchmark exposes model/runtime behavior that differs from the deterministic baseline landscape; it is not used as evidence that FutureChoice requires an LLM or that the proposed method improves language-model reasoning. Runtime failures, replay failures, and token/call/latency costs are preserved rather than silently dropped.
