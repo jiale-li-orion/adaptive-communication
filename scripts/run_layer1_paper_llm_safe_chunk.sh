@@ -8,8 +8,9 @@ set -euo pipefail
 #   - 2 logical CPUs by default;
 #   - low process priority;
 #   - single-thread numerical libraries;
-#   - 2 new paper rows per invocation;
-#   - 2 s cooldown after each row.
+#   - 6 new paper rows per invocation by default;
+#   - 1 s cooldown after each row;
+#   - runner-level exclusive output lock prevents overlapping chunks.
 #
 # Re-run the exact same command until the Python runner returns 0 / aggregate
 # complete=true.  Exit code 2 simply means the frozen cohort is not complete yet.
@@ -18,8 +19,8 @@ ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
 cd "$ROOT"
 
 CPU_SET="${LAYER1_LLM_CPU_SET:-0,1}"
-MAX_NEW_ROWS="${LAYER1_LLM_MAX_NEW_ROWS:-2}"
-SLEEP_S="${LAYER1_LLM_INTER_ROW_SLEEP_S:-2}"
+MAX_NEW_ROWS="${LAYER1_LLM_MAX_NEW_ROWS:-6}"
+SLEEP_S="${LAYER1_LLM_INTER_ROW_SLEEP_S:-1}"
 
 export OPENBLAS_NUM_THREADS=1
 export OMP_NUM_THREADS=1

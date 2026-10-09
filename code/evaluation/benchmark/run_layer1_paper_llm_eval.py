@@ -28,6 +28,7 @@ from __future__ import annotations
 import argparse
 from collections import defaultdict
 from datetime import UTC, datetime
+import fcntl
 from hashlib import sha256
 import json
 import os
@@ -136,6 +137,32 @@ def _dirty_outside_output(out: Path) -> list[str]:
             continue
         blocked.append(line)
     return blocked
+
+
+def _acquire_output_lock(out: Path):
+    """Acquire an exclusive non-blocking lock for one paper-output directory.
+
+    The lock lives inside the output directory, so resumable checkpoints remain
+    allowed by ``_dirty_outside_output``.  Keeping the returned file handle alive
+    for the duration of ``main`` keeps the lock held even when the runner is
+    invoked directly rather than through the resource-safe shell wrapper.
+    """
+
+    out.mkdir(parents=True, exist_ok=True)
+    path = out / ".runner.lock"
+    fh = path.open("a+")
+    try:
+        fcntl.flock(fh.fileno(), fcntl.LOCK_EX | fcntl.LOCK_NB)
+    except BlockingIOError:
+        fh.close()
+        raise SystemExit(
+            f"another Layer-1 paper LLM runner already owns {path}; refusing concurrent write"
+        )
+    fh.seek(0)
+    fh.truncate()
+    fh.write(f"pid={os.getpid()}\n")
+    fh.flush()
+    return fh
 
 
 def _load(path: Path):
@@ -419,6 +446,7 @@ def main() -> int:
 
     if args.execute_frozen_test:
         out = (args.out or ROOT / "results/benchmark/layer1-paper-llm-test").resolve()
+        _lock_fh = _acquire_output_lock(out)
         dirty = _dirty_outside_output(out)
         if dirty:
             raise SystemExit(
@@ -431,6 +459,7 @@ def main() -> int:
         coordinates = _dev_smoke(split)
         expected = len(coordinates) * len(context_modes)
         out = (args.out or ROOT / "local_research/current/benchmark/layer1-paper-llm-dev-smoke").resolve()
+        _lock_fh = _acquire_output_lock(out)
 
     _freeze_or_check_sources(out)
     rows_path = out / "rows.jsonl"
