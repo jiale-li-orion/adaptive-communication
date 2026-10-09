@@ -4,7 +4,7 @@
 
 面向山区灾前长期监测的 source-grounded 决策基准、决策语义运行时与 learning-guided exact search。场景长期存在供电受限、回传间歇中断、缓存压力和恢复过程；任务义务由外部来源定义，系统负责通信执行。
 
-> **当前控制面：** Layer 1 已进入 paper pre-release：source/task/evaluator 内审、fresh split、full-sim mutation audit、pre-release manifest 与 baseline protocol 均已冻结；150-coordinate deterministic test 已完成，冻结的 30-coordinate × 2-mode LLM 子集正在正式运行。Layer 2 已收敛到 observation-conditioned **Future-Choice** feasibility：可重放 `L=1` certificate、sound `U=0` relaxation、dependency-local conflict invalidation 与 exact fallback；当前支持的 method/transfer claim 只认 [`results/CLAIMS.md`](results/CLAIMS.md) F1–F7。Layer 3 继续作为可选 unresolved-action ranking 层暂停。当前综合论文故事见 [`research/workstreams/PAPER-SYNTHESIS.md`](research/workstreams/PAPER-SYNTHESIS.md)。
+> **当前控制面（2026-10-09）：** Layer 1 已进入 paper pre-release：source/task/evaluator 内审、fresh split、full-sim mutation audit、pre-release manifest 与 baseline protocol 均已冻结；150-coordinate deterministic test 已完成。冻结的 30-coordinate × 2-mode LLM 子集已有 **41/60 条唯一 OK 记录**，因 WSL rtnetlink D-state 暂停，checkpoint 完整，可恢复续跑（[事故与恢复记录](research/workstreams/A3-HOST-INCIDENT-2026-10-09.md)）；A5 final release 仍待 A3。Layer 2 已收敛到 observation-conditioned **Future-Choice** feasibility：可重放 `L=1` certificate、sound `U=0` relaxation、dependency-local conflict invalidation 与 exact fallback；当前支持的 method/transfer claim 只认 [`results/CLAIMS.md`](results/CLAIMS.md) F1–F7。Layer 3 继续作为可选 unresolved-action ranking 层暂停。当前综合论文故事见 [`research/workstreams/PAPER-SYNTHESIS.md`](research/workstreams/PAPER-SYNTHESIS.md)。
 
 ## 1. 架构总览
 
@@ -48,7 +48,7 @@ Layer 1 定义问题；Layer 2 持有 deterministic correctness 与合法 decisi
 | 模块 | 持有对象 | 当前状态 | 入口 |
 |---|---|---|---|
 | **Shared substrate** | 通信物理、能量、缓存、机会、fallback、执行生命周期、数学系统模型 | 稳定共享底座 | [`research/substrate/`](research/substrate/README.md) |
-| **Layer 1 · Benchmark** | source-grounded obligations、task construction、observation/action/oracle contract、validity/hardness、split/release | **paper pre-release；deterministic test 已完成；冻结 LLM 子集运行中** | [`research/benchmark/`](research/benchmark/README.md) |
+| **Layer 1 · Benchmark** | source-grounded obligations、task construction、observation/action/oracle contract、validity/hardness、split/release | **paper pre-release；deterministic test 已完成；LLM 41/60 OK，host-blocked，可续跑** | [`research/benchmark/`](research/benchmark/README.md) |
 | **Layer 2 · Compiler** | Task/Evidence/Capability/Execution 语义、observation-conditioned L/U future-choice frontier、dependency-local conflict maintenance、exact fallback | **v2 frozen core + F1–F7 cross-domain Future-Choice evidence** | [`research/compiler/`](research/compiler/README.md) |
 | **Layer 3 · Policy** | 合法 / unresolved action 的排序与选择 | **paused / optional**；只能在 frozen Layer-1/2 correctness surface 上排序 | [`research/policy/`](research/policy/README.md) |
 | **Evaluation** | replay、attribution、ablation、baseline fairness、跨层 audit | 横切 | [`research/evaluation/`](research/evaluation/README.md) |
