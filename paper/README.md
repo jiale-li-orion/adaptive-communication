@@ -8,6 +8,7 @@
 
 | 文件 | 定位 | 版式 | 产物 |
 |---|---|---|---|
+| [future-choice/](future-choice/README.md) | **当前论文 workspace**：A benchmark + B direct ASC Future-Choice + C external validation | claim/generated-artifact driven | manuscript construction in progress |
 | [agentic/en/main.tex](agentic/en/main.tex) | 当前 Agentic Communication 工作稿 | IEEEtran 双栏 | [英文 PDF](agentic/en/main.pdf) |
 | [en/main.tex](en/main.tex) | 系统论文英文兼容纠错稿 | IEEEtran 双栏 | [英文 PDF](en/main.pdf) |
 | [zh/main.tex](zh/main.tex) | 系统论文中文兼容纠错稿 | article 中文单栏 | [中文 PDF](zh/main.pdf) |

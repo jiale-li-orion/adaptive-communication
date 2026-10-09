@@ -29,3 +29,8 @@
 4. 任何负结果都保留。某条线失败不反向修改 task distribution。
 
 当前正式 claim state 只认 [`../../results/CLAIMS.md`](../../results/CLAIMS.md)：Layer 1 使用 `B*`，当前 Future-Choice 方法/transfer 使用 `F1–F7`。本目录只负责导航与跨线 synthesis。
+
+当前跨线复盘：
+
+- [`LITERATURE-GAP-AUDIT-2026-10-09.md`](LITERATURE-GAP-AUDIT-2026-10-09.md)：同期 benchmark / ASC / active-measurement / world-model 文献重新对齐后的 novelty、实验与写作边界；
+- [`ASSET-REUSE-AUDIT-2026-10-09.md`](ASSET-REUSE-AUDIT-2026-10-09.md)：current core、paper evidence、可复用 support、provenance-only 与 retire 资产分级。
