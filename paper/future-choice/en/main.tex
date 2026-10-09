@@ -1,6 +1,7 @@
 \documentclass[conference]{IEEEtran}
 \usepackage{amsmath,amssymb,mathtools}
 \usepackage{booktabs}
+\usepackage{tabularx}
 \usepackage{graphicx}
 \usepackage{microtype}
 \usepackage{tikz}
@@ -165,6 +166,14 @@ Figure~\ref{fig:failures} illustrates why final-state/lifecycle evaluation matte
 \section{Evaluation Methodology}
 \label{sec:evaluation}
 We organize evaluation around five research questions rather than around code modules.
+
+\begin{table*}[t]
+\centering
+\caption{Frozen experiment design. Scale experiments and correctness experiments are deliberately separated: large panels extend statistical stability, while exact-frontier audits remain on bounded preregistered cohorts.}
+\label{tab:design}
+\footnotesize
+\input{../../generated/table_future_choice_experiment_design.tex}
+\end{table*}
 
 \textbf{RQ1: Is the emergency benchmark valid, and are realistic tasks all hard?} We audit source-to-task provenance, execution-evaluator mutations, ordinary deterministic baselines, and lifecycle failures. Negative/saturated cases are retained.
 
