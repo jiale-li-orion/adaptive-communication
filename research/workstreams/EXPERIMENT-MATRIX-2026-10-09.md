@@ -59,7 +59,7 @@ Outputs：`layer1-paper-track-inventory.json`、`layer1-fullsim-evaluator-releas
 | Statistics | paired coordinate differences + frozen bootstrap/Wilson protocol |
 | Main/Appendix | Main benchmark table + failure appendix |
 
-## A3 · Frozen LLM model-spectrum subset — RUNNING
+## A3 · Frozen LLM model-spectrum subset — HOST-BLOCKED / RESUMABLE (41/60)
 
 | Field | Contract |
 |---|---|
@@ -67,9 +67,11 @@ Outputs：`layer1-paper-track-inventory.json`、`layer1-fullsim-evaluator-releas
 | Model | DeepSeek official `deepseek-flash`, temp0, low reasoning, frozen protocol |
 | Modes | `generic_react`, `task_conditioned` |
 | Role | **benchmark model-spectrum diagnostic only**；不承担 Future-Choice method claim |
-| Resource | `scripts/run_layer1_paper_llm_safe_chunk.sh`: 2 CPUs, nice+10, single-thread libs, 2 new rows/chunk |
+| Resource | `scripts/run_layer1_paper_llm_safe_chunk.sh`: 2 CPUs, nice+10, single-thread libs, default 6 new rows/chunk |
 | Statistics | paired TDR / calls / tokens / latency；runtime failures保留 |
 | Stop | exactly 60 unique frozen row IDs + replay/digest checks |
+
+2026-10-09 运行状态：`rows.jsonl` 已保存 **41 条唯一 row ID，41/41 OK**；此前的 `aggregate.json` 仍是 29-row checkpoint，待 runner 正常完成 chunk 后更新。续跑进程在首条新增 row 前陷入 WSL `rtnl_dumpit` D-state，`dmesg` 同时出现 `hv_netvsc eth1: sub channel open failed: -12`；这是宿主机网络控制面异常，不记为模型/实验失败，不启动重试进程。诊断与恢复说明见 [A3-HOST-INCIDENT-2026-10-09.md](A3-HOST-INCIDENT-2026-10-09.md)。A3 科学协议、frozen row IDs 与 B/C 主张均不变。
 
 ## A4 · Lifecycle failure case studies — DONE
 

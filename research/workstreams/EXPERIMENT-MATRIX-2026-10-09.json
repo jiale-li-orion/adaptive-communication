@@ -13,7 +13,7 @@
   "experiments": [
     {"id":"A1","rq":"RQ1","status":"DONE","role":"benchmark validity","scale":"11 surfaces; 23x5 internal review; 7/7 evaluator mutation","paper":"main+appendix"},
     {"id":"A2","rq":"RQ1","status":"DONE","role":"deterministic benchmark test","scale":"150 frozen coordinates; 750 online rows; 210 oracle diagnostics","paper":"main"},
-    {"id":"A3","rq":"RQ1","status":"RUNNING","role":"LLM model-spectrum diagnostic","scale":"30 coordinates x 2 modes = 60 rows","resource":"2CPU nice10 single-thread 2-row chunks","paper":"small-table-or-appendix"},
+    {"id":"A3","rq":"RQ1","status":"HOST_BLOCKED_RESUMABLE_41_OF_60","role":"LLM model-spectrum diagnostic","scale":"30 coordinates x 2 modes = 60 rows","resource":"2CPU nice10 single-thread 6-row default chunks","checkpoint":"41 unique frozen row IDs; 41 OK; aggregate from earlier 29-row chunk is stale","blocker":"WSL rtnl_dumpit D-state with hv_netvsc eth1 sub channel open failed -12; not a model failure","incident":"research/workstreams/A3-HOST-INCIDENT-2026-10-09.md","paper":"small-table-or-appendix"},
     {"id":"A4","rq":"RQ1","status":"DONE","role":"lifecycle failure case studies","scale":"3 rule-selected frozen cases","paper":"main-case+appendix"},
     {"id":"A5","rq":"RQ1","status":"BLOCKED_BY_A3","role":"final benchmark release","target":"BENCHMARK_ADMIT"},
     {"id":"B1","rq":"RQ2","status":"DONE","role":"conditional-obligation representation","scale":"20 exact-audited cells"},
