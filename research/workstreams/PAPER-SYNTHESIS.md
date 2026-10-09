@@ -155,6 +155,7 @@ Cross-domain attribution is now stronger than orchestration reuse alone: B's set
 - B dynamic-domain build count: up to 192→32 builds (`1/6`) under observation-only narrowing；
 - B active-branch component events: at C=16, pending send recomputes 1/16 components, gateway receipt/final ACK recompute 0/16, while ordinary persistent/dependency exact still perform 7–14 expansions on those changed histories；
 - C N=10 **set-MST** exact-fallback state search: about **11–18%** of pure exact mask；total search proxy **25.8–30.9%**；relative to the earlier basic-U implementation this cuts total search proxy by ~60%；
+- C correctness–compute Pareto：四条 policy 上，set-MST Future-Choice 在 exact-correct 方法族内都支配 old basic-U 与 pure-exact-mask point；把 depth4 加入后，depth4 与 set-MST Future-Choice 同时保持非支配，明确体现“cheap approximate vs exact-correct safety”的真实 trade-off；
 - C N=15 seed1 bounded probe: exact fallback约 **5.8–8.1%** of pure exact after set-MST, but this is not yet a distribution-level result；
 - historical Layer-2 v2: strong expansion reduction but ordinary persistent exact still had better Python wall time。
 

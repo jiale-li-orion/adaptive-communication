@@ -10,11 +10,15 @@ from collections import defaultdict
 from hashlib import sha256
 import json
 from pathlib import Path
-import random
 import statistics
+import sys
 
 
 ROOT = Path(__file__).resolve().parents[3]
+COMMON = ROOT / "code/evaluation/common"
+if str(COMMON) not in sys.path:
+    sys.path.insert(0, str(COMMON))
+from paper_stats import bootstrap_mean_ci_order  # noqa: E402
 RUN = ROOT / "results/benchmark/layer1-paper-llm-test"
 ROWS = RUN / "rows.jsonl"
 AGG = RUN / "aggregate.json"
@@ -47,22 +51,6 @@ def _median(xs):
 
 def _std(xs):
     return float(statistics.stdev(xs)) if len(xs) > 1 else 0.0 if xs else None
-
-
-def _bootstrap_mean_ci(values: list[float], *, seed: int, n: int):
-    if not values:
-        return None
-    rng = random.Random(seed)
-    samples = []
-    for _ in range(n):
-        draw = [values[rng.randrange(len(values))] for _ in values]
-        samples.append(statistics.fmean(draw))
-    samples.sort()
-    return {
-        "mean": float(statistics.fmean(values)),
-        "lo": float(samples[int(0.025 * (n - 1))]),
-        "hi": float(samples[int(0.975 * (n - 1))]),
-    }
 
 
 def _metric(row: dict, key: str):
@@ -177,10 +165,10 @@ def main() -> int:
     pair_stats = {
         "coordinate_count": len(paired),
         "both_ok_count": len(paired_ok),
-        "tdr_delta_task_minus_generic": _bootstrap_mean_ci(
+        "tdr_delta_task_minus_generic": bootstrap_mean_ci_order(
             tdr_deltas,
             seed=int(stats_cfg["paired_bootstrap_seed"]),
-            n=int(stats_cfg["paired_bootstrap_resamples"]),
+            resamples=int(stats_cfg["paired_bootstrap_resamples"]),
         ),
         "tdr_task_better": sum(x > 1e-12 for x in tdr_deltas),
         "tdr_equal": sum(abs(x) <= 1e-12 for x in tdr_deltas),

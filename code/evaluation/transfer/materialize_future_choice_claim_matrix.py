@@ -26,6 +26,7 @@ FILES = {
     "BC_engine": ROOT / "results/transfer/generic-future-choice-engine-cross-domain.json",
     "C_n10": ROOT / "results/transfer/uav-attention-n10-future-choice-summary.json",
     "C_set_mst": ROOT / "results/transfer/uav-attention-set-mst-attribution.json",
+    "C_pareto": ROOT / "results/transfer/uav-attention-correctness-compute-frontier.json",
     "C_robust": ROOT / "results/transfer/uav-attention-future-choice-robustness-summary.json",
 }
 
@@ -49,6 +50,7 @@ def main() -> int:
     bc = load("BC_engine")
     c10 = load("C_n10")
     cset = load("C_set_mst")
+    cpareto = load("C_pareto")
     crob = load("C_robust")
 
     n10_rows = c10["rows"]
@@ -128,6 +130,7 @@ def main() -> int:
                 }
                 for policy, row in n10_rows.items()
             },
+            "pareto_checks": cpareto["checks"],
             "boundary": "Depth-4 is cheaper and nearly saturates some policies; future-choice is a selective exact-correct safety layer, not a universal replacement for MPC."
         },
         {
@@ -139,6 +142,7 @@ def main() -> int:
                 for policy, row in cset["n10"]["rows"].items()
             },
             "checks": cset["checks"],
+            "pareto_checks": cpareto["checks"],
             "boundary": "The C-domain deadline-set MST is a domain-specific certificate; the cross-domain claim is about the shared set-level future-conflict abstraction, not identical physical constraints."
         },
         {

@@ -1,0 +1,224 @@
+{
+  "checks": {
+    "all_policies_basic_u_dominated": true,
+    "all_policies_depth4_and_set_mst_nondominated": true,
+    "all_policies_pure_exact_dominated": true,
+    "all_policies_set_mst_exact_frontier": true,
+    "set_mst_exact_reference_match": true
+  },
+  "claim_boundary": [
+    "The Pareto relation uses algorithm-internal search-state proxies, not measured CPU time.",
+    "Depth4 partial expansions and exact-search new states are different operation types; non-dominance is descriptive and must not be translated into a runtime-speed ratio.",
+    "All task-quality counts are from the same frozen 21-seed method-independent N=10 cohort."
+  ],
+  "cohort": [
+    21,
+    23,
+    39,
+    40,
+    74,
+    78,
+    79,
+    84,
+    86,
+    91,
+    95,
+    96,
+    110,
+    113,
+    122,
+    124,
+    145,
+    167,
+    171,
+    177,
+    186
+  ],
+  "interpretation": {
+    "exact_correct": "Set-MST Future-Choice dominates the older basic-U and pure-exact-mask points on the frozen exact-correct N=10 cohort under the declared search-state proxy.",
+    "quality_compute": "Depth4 and set-MST Future-Choice are both non-dominated: depth4 is cheaper but leaves residual hard-feasibility failures, while Future-Choice removes those failures at higher search cost."
+  },
+  "rows": {
+    "battery_aware_nn": {
+      "checks": {
+        "basic_u_dominated_by_set_mst": true,
+        "depth4_and_future_choice_both_nondominated": true,
+        "pure_exact_dominated_by_set_mst": true,
+        "set_mst_is_exact_correct_frontier": true
+      },
+      "depth4_vs_future_choice_frontier": [
+        "depth4",
+        "set_mst_future_choice"
+      ],
+      "exact_correct_frontier": [
+        "set_mst_future_choice"
+      ],
+      "methods": {
+        "basic_u_future_choice": {
+          "completed": 21,
+          "infeasible": 0,
+          "search_proxy": 22367,
+          "search_unit": "lower_plus_exact_new_states",
+          "zero_tardiness": 21
+        },
+        "depth4": {
+          "completed": 21,
+          "infeasible": 0,
+          "search_proxy": 2080,
+          "search_unit": "depth4_partial_states_expanded",
+          "zero_tardiness": 17
+        },
+        "pure_exact_mask": {
+          "completed": 21,
+          "infeasible": 0,
+          "search_proxy": 33867,
+          "search_unit": "exact_mask_new_states",
+          "zero_tardiness": 21
+        },
+        "set_mst_future_choice": {
+          "completed": 21,
+          "infeasible": 0,
+          "search_proxy": 8748,
+          "search_unit": "lower_plus_exact_new_states",
+          "zero_tardiness": 21
+        }
+      }
+    },
+    "greedy_deadline_battery": {
+      "checks": {
+        "basic_u_dominated_by_set_mst": true,
+        "depth4_and_future_choice_both_nondominated": true,
+        "pure_exact_dominated_by_set_mst": true,
+        "set_mst_is_exact_correct_frontier": true
+      },
+      "depth4_vs_future_choice_frontier": [
+        "depth4",
+        "set_mst_future_choice"
+      ],
+      "exact_correct_frontier": [
+        "set_mst_future_choice"
+      ],
+      "methods": {
+        "basic_u_future_choice": {
+          "completed": 21,
+          "infeasible": 0,
+          "search_proxy": 33835,
+          "search_unit": "lower_plus_exact_new_states",
+          "zero_tardiness": 21
+        },
+        "depth4": {
+          "completed": 21,
+          "infeasible": 0,
+          "search_proxy": 2723,
+          "search_unit": "depth4_partial_states_expanded",
+          "zero_tardiness": 20
+        },
+        "pure_exact_mask": {
+          "completed": 21,
+          "infeasible": 0,
+          "search_proxy": 44237,
+          "search_unit": "exact_mask_new_states",
+          "zero_tardiness": 21
+        },
+        "set_mst_future_choice": {
+          "completed": 21,
+          "infeasible": 0,
+          "search_proxy": 13443,
+          "search_unit": "lower_plus_exact_new_states",
+          "zero_tardiness": 21
+        }
+      }
+    },
+    "nearest_deadline": {
+      "checks": {
+        "basic_u_dominated_by_set_mst": true,
+        "depth4_and_future_choice_both_nondominated": true,
+        "pure_exact_dominated_by_set_mst": true,
+        "set_mst_is_exact_correct_frontier": true
+      },
+      "depth4_vs_future_choice_frontier": [
+        "depth4",
+        "set_mst_future_choice"
+      ],
+      "exact_correct_frontier": [
+        "set_mst_future_choice"
+      ],
+      "methods": {
+        "basic_u_future_choice": {
+          "completed": 21,
+          "infeasible": 0,
+          "search_proxy": 36002,
+          "search_unit": "lower_plus_exact_new_states",
+          "zero_tardiness": 21
+        },
+        "depth4": {
+          "completed": 14,
+          "infeasible": 8,
+          "search_proxy": 2349,
+          "search_unit": "depth4_partial_states_expanded",
+          "zero_tardiness": 11
+        },
+        "pure_exact_mask": {
+          "completed": 21,
+          "infeasible": 0,
+          "search_proxy": 46019,
+          "search_unit": "exact_mask_new_states",
+          "zero_tardiness": 21
+        },
+        "set_mst_future_choice": {
+          "completed": 21,
+          "infeasible": 0,
+          "search_proxy": 14204,
+          "search_unit": "lower_plus_exact_new_states",
+          "zero_tardiness": 21
+        }
+      }
+    },
+    "nearest_neighbour": {
+      "checks": {
+        "basic_u_dominated_by_set_mst": true,
+        "depth4_and_future_choice_both_nondominated": true,
+        "pure_exact_dominated_by_set_mst": true,
+        "set_mst_is_exact_correct_frontier": true
+      },
+      "depth4_vs_future_choice_frontier": [
+        "depth4",
+        "set_mst_future_choice"
+      ],
+      "exact_correct_frontier": [
+        "set_mst_future_choice"
+      ],
+      "methods": {
+        "basic_u_future_choice": {
+          "completed": 21,
+          "infeasible": 0,
+          "search_proxy": 22367,
+          "search_unit": "lower_plus_exact_new_states",
+          "zero_tardiness": 21
+        },
+        "depth4": {
+          "completed": 21,
+          "infeasible": 0,
+          "search_proxy": 2080,
+          "search_unit": "depth4_partial_states_expanded",
+          "zero_tardiness": 17
+        },
+        "pure_exact_mask": {
+          "completed": 21,
+          "infeasible": 0,
+          "search_proxy": 33867,
+          "search_unit": "exact_mask_new_states",
+          "zero_tardiness": 21
+        },
+        "set_mst_future_choice": {
+          "completed": 21,
+          "infeasible": 0,
+          "search_proxy": 8748,
+          "search_unit": "lower_plus_exact_new_states",
+          "zero_tardiness": 21
+        }
+      }
+    }
+  },
+  "stage": "UAV_ATTENTION_CORRECTNESS_COMPUTE_PARETO"
+}

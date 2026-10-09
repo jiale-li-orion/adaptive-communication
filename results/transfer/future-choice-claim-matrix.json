@@ -108,6 +108,13 @@
         }
       },
       "id": "C2_exact_correct_future_choice_improves_mission_quality",
+      "pareto_checks": {
+        "all_policies_basic_u_dominated": true,
+        "all_policies_depth4_and_set_mst_nondominated": true,
+        "all_policies_pure_exact_dominated": true,
+        "all_policies_set_mst_exact_frontier": true,
+        "set_mst_exact_reference_match": true
+      },
       "status": "SUPPORTED_EXTERNAL_DOMAIN"
     },
     {
@@ -180,6 +187,13 @@
         }
       },
       "id": "BC1_set_level_conflict_transfers_across_domains",
+      "pareto_checks": {
+        "all_policies_basic_u_dominated": true,
+        "all_policies_depth4_and_set_mst_nondominated": true,
+        "all_policies_pure_exact_dominated": true,
+        "all_policies_set_mst_exact_frontier": true,
+        "set_mst_exact_reference_match": true
+      },
       "status": "SUPPORTED_CROSS_DOMAIN_ATTRIBUTION"
     },
     {
@@ -236,6 +250,10 @@
     "C_n10": {
       "path": "results/transfer/uav-attention-n10-future-choice-summary.json",
       "sha256": "eb828375f2f5b9515a150792e40d0a1baec4a8ed72dc1f808222cab05721d9d1"
+    },
+    "C_pareto": {
+      "path": "results/transfer/uav-attention-correctness-compute-frontier.json",
+      "sha256": "fe85a389bbd967edbd22b5d13a47851b9bd42505750acc27a883b0d071424c55"
     },
     "C_robust": {
       "path": "results/transfer/uav-attention-future-choice-robustness-summary.json",

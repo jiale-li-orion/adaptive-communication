@@ -9,14 +9,16 @@ from __future__ import annotations
 
 from collections import Counter, defaultdict
 import json
-import math
 from pathlib import Path
-import random
 import statistics
+import sys
 from typing import Any
 
 
 ROOT=Path(__file__).resolve().parents[3]
+COMMON=ROOT/"code/evaluation/common"
+if str(COMMON) not in sys.path: sys.path.insert(0,str(COMMON))
+from paper_stats import bootstrap_mean_ci_linear, wilson_interval  # noqa: E402
 BASE=ROOT/"results/benchmark/layer1-paper-deterministic-test"
 ROWS=BASE/"rows.canonical.jsonl"
 PROTOCOL=ROOT/"research/benchmark/PAPER-BASELINE-PROTOCOL.json"
@@ -27,31 +29,6 @@ MD=BASE/"RESULTS-SUMMARY.md"
 def load_rows()->list[dict[str,Any]]:
     with ROWS.open(encoding="utf-8") as fh:
         return [json.loads(line) for line in fh if line.strip()]
-
-
-def quantile(values:list[float],p:float)->float:
-    xs=sorted(values)
-    if not xs: return float("nan")
-    pos=(len(xs)-1)*p; lo=int(math.floor(pos)); hi=int(math.ceil(pos))
-    if lo==hi: return xs[lo]
-    w=pos-lo; return xs[lo]*(1-w)+xs[hi]*w
-
-
-def bootstrap_mean_ci(deltas:list[float], *, seed:int, resamples:int)->dict[str,float]:
-    if not deltas: return {"mean":float("nan"),"lo":float("nan"),"hi":float("nan")}
-    rng=random.Random(seed)
-    n=len(deltas); means=[]
-    for _ in range(resamples):
-        means.append(sum(deltas[rng.randrange(n)] for _j in range(n))/n)
-    return {"mean":statistics.fmean(deltas),"lo":quantile(means,.025),"hi":quantile(means,.975)}
-
-
-def wilson(success:int,n:int,z:float=1.959963984540054)->dict[str,float|int]:
-    if n<=0: return {"success":success,"n":n,"rate":float("nan"),"lo":float("nan"),"hi":float("nan")}
-    phat=success/n; denom=1+z*z/n
-    center=(phat+z*z/(2*n))/denom
-    half=z*math.sqrt((phat*(1-phat)+z*z/(4*n))/n)/denom
-    return {"success":success,"n":n,"rate":phat,"lo":max(0.0,center-half),"hi":min(1.0,center+half)}
 
 
 def numeric(metrics:dict,key:str):
@@ -85,7 +62,7 @@ def main()->int:
                 key:{"mean":statistics.fmean(xs),"median":statistics.median(xs),"std":statistics.stdev(xs) if len(xs)>1 else 0.0}
                 for key,xs in vals.items() if xs
             },
-            "routine_full_success":wilson(full,len(items)),
+            "routine_full_success":wilson_interval(full,len(items)),
             "failure_taxonomy":dict(sorted(Counter(reason for r in items for reason in r.get("failure_reasons",[])).items())),
         }
         if baseline!="comm.local_policy":
@@ -99,7 +76,7 @@ def main()->int:
                 for a,b in paired:
                     av=numeric(a["communication_metrics"],key); bv=numeric(b["communication_metrics"],key)
                     if av is not None and bv is not None: deltas.append(av-bv)
-                group["paired_vs_local"][key]=bootstrap_mean_ci(deltas,seed=boot_seed+idx,resamples=resamples)
+                group["paired_vs_local"][key]=bootstrap_mean_ci_linear(deltas,seed=boot_seed+idx,resamples=resamples)
         groups[f"{task}/{baseline}"]=group
 
     best={}

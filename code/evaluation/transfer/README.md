@@ -24,4 +24,5 @@
 - `select_uav_attention_constructive_cohort.py`：不使用 method/exact 的 N=10 constructive hard-feasible cohort selector。
 - `summarize_uav_attention_n10_headroom.py`：N=10 L/U vs depth4/exact compact headroom artifact。
 - `summarize_uav_attention_set_mst_attribution.py`：B 的 set-level conflict → C deadline-set MST sound U-bound 跨域归因；固定 N=10 cohort + N=15 bounded probe。
+- `summarize_uav_attention_correctness_compute_frontier.py`：复用 legacy Pareto 纪律，把 depth4 / basic-U / set-MST / pure exact 组织成 correctness–compute 非支配前沿；只使用内部 search-state proxy，不冒充 wall time。
 - `materialize_future_choice_claim_matrix.py`：从 tracked A/B/C evidence 生成 paper-facing scoped claim matrix；不替代 `results/CLAIMS.md` 的 claim-state authority。
