@@ -58,11 +58,12 @@ B 直接回答“future-choice 在已有 ASC formulation 中是否是一个独�
 
 当前证据链：
 
-1. **Value ≠ feasibility**：Pull-Based Query Scheduling 风格 AoI/query/GoE replay 中，current value policy 在相同当前 state 下会因 future hard-goal geometry 不同而从 safe 变 unsafe；future-choice shield 保持 constrained exact optimum。
+1. **Value ≠ feasibility**：Pull-Based Query Scheduling 核心 AoI/query/value/budget/GoE 结构的 finite-horizon replay 中，value-only policy `WAIT→A→WAIT→A→WAIT` 在 relaxed future 合法，但保持相同当前 semantic state、只把未来 hard goals 换成 `B@t1,C@t2` 后立即失效；generic constrained exact 与 FutureChoice 都得到同一个 constrained optimum `WAIT→B→C→WAIT→WAIT` / value 16.5333，FutureChoice 将 tight case从 30 states / 29 action evaluations降到 6 / 14，并提前 prune 9 个 doomed actions。该 unit-demand证书只承担 ASC interface/correctness bridge，不单独构成 Layer-2 novelty。
 2. **Static union is wrong**：observation-conditioned future obligations 不能把所有可能 branch obligation 静态并集。最小 probe 中 `QUERY_H` 有 causal contingent policy，而 static union reserve 错误拒绝。
 3. **Shared-opportunity conflict**：`K∈{1,2,4,8,16,32}` branches × `D∈{2,4,8}` obligations；每个真实 branch 的 min backup 始终为 1，K>1 的 15/15 cells static-union false-negative；`K=32,D=8` union 被夸成 min-backup=249。
 4. **Structured computation**：branch 内复用 Layer-2 max-flow/min-cut conflict certificate。D=8 时 exact branch search 约 778 memo states / branch，而 deterministic flow graph只有 71 forward edges；这是 structural-work proxy，不是 wall-time claim。
 5. **Persistent conditional domain reuse**：L=5/K=32 多次 semantic observations 的完整 scenario tree 上，fresh branch-aware flow 需要 192 次 frontier builds，persistent conditional domains 只建 32 次，build ratio `1/6`；observation 只缩 support 时证书保持，backup budget 跨 validity boundary 时只失效 realized active branch。
+6. **Unseen structural holdout**：solver执行前冻结四种非开发 graph motif（asymmetric / bridged pair / chain overlap split / mixed local-global）。四类所有 event 的 incremental snapshot 均与 fresh rebuild canonical-equal；resource-bounded exact strong-control 在三种 exact baseline 同时解析的 6 个 event 上 6/6 frontier一致，其余按512MiB/30s合同记 unresolved。H4同时暴露 optimistic combined-matching 的指数 DFS bottleneck；经 exhaustive-equivalent max-flow替换后旧语义零漂移，structural audit恢复毫秒级。
 
 B 已经支持的最强 claim：
 
@@ -87,7 +88,6 @@ C 不承担 emergency-communication domain claim；它负责证明 future-choice
 7. N=10 search：L/U exact-fallback new-state search约 pure exact mask 的 42–55%；加 bounded constructive search 后 total proxy约 66–78%。
 8. **B→C set-level conflict transfer**：把 B 的 obligation-set conflict 思想实例化为 C 的 deadline-threshold MST optimistic U。N=10 同一 frozen 21-seed cohort、924/924 exact frontier match、任务质量完全不变时，exact fallback ratio进一步压到 **11–18%**，total search proxy压到 **25.8–30.9%** of pure exact；相对旧 basic-U total proxy下降约 **60%**。N=15 seed1 bounded scaling 上，basic-U fallback已退化到 pure exact的约92–96%，set-MST降到约 **5.8–8.1%**，同时 66/66 frontier exact match。
 9. **N=10 statistical scale extension**：0..999 method-independent scan得到126个 official-heuristic constructive hard-feasible seeds，冻结前100作为 confirmatory scale cohort；前21恰好就是924-frontier exact-audited主 cohort。FutureChoice四条 policy均100/100 zero-tardiness / complete / 0 infeasible；depth4为87/87/47/87 zero-tardiness（NN/BatteryAware/NearestDeadline/Greedy顺序），paired gain在三条 policy为+13pp、NearestDeadline为+53pp，且0个反向 harm。另按 external paper自身 `evaluate_policy(... episodes=50, seed=999)` 完整复刻50-layout panel，用于distribution/scale context；其中只有6/50有ordinary constructive zero-tardiness witness，因此该panel不承担FutureChoice大样本显著性主张。
-10. **Unseen structural holdout**：solver执行前冻结四种非开发 graph motif（asymmetric / bridged pair / chain overlap split / mixed local-global）。四类所有 event 的 incremental snapshot均与 fresh rebuild canonical-equal；resource-bounded exact strong-control在三种 exact baseline同时解析的6个 event上6/6 frontier一致，其余按512MiB/30s合同记 unresolved。H4同时暴露 optimistic combined-matching 的指数 DFS bottleneck；经 exhaustive-equivalent max-flow替换后旧语义零漂移，structural audit恢复毫秒级。
 
 C 已经支持的最强 claim：
 
