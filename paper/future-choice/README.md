@@ -23,6 +23,8 @@
 9. [`REFERENCE-PLAN.md`](REFERENCE-PLAN.md) — 旧论文引用复用 + 2025–2026 最近邻 citation clusters；
 10. generated paper facts/tables in [`../generated/`](../generated/)。
 
+写作控制：[`ASC-POSITIONING.md`](ASC-POSITIONING.md) → [`STORYLINE.md`](STORYLINE.md) → [`METHOD-SCAFFOLD.md`](METHOD-SCAFFOLD.md)。三者分别固定社区定位、叙事顺序与形式化对象；不得从旧稿另起平行符号系统。
+
 任何数字必须来自 generated artifact 或 tracked source result；禁止从聊天、README 或本目录手抄数字到正文。
 
 ## Paper roles

@@ -9,6 +9,10 @@
 
 > **A communication or information action is not only valuable for what it reveals or delivers now; it can also preserve or destroy the set of future ways in which outstanding operational obligations can still be completed.**
 
+场景锚点不变：本文始终从**灾前山区应急监测**出发——供电不足、access/backhaul间歇中断、任务会随风险阶段变化，同时系统必须持续完成 monitoring/reporting obligations。方法抽象才上升到 ASC：现有 semantic value / GoE / VoI / goal-oriented state解决“当前 action 有多有用”，Future-Choice补充“采取 action 后是否仍保留一个完成全部 hard task semantics 的 causal continuation”。
+
+因此论文不是“generic planner + emergency wrapper”。Emergency benchmark定义现实问题与 outcome authority；ASC formulation定义 missing abstraction；external C只验证 abstraction不是自建环境特供。
+
 现有 semantic value / GoE / VoI、one-step action mask、short receding horizon 都可能只回答“当前动作有多好 / 当前能不能执行”，而没有显式表示：
 
 ```text
