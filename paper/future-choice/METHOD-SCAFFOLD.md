@@ -106,10 +106,9 @@ continuation policy `\pi` 必须 non-anticipative：
 \mathcal F(h_t,a)
 =
 \left\{
-\pi:\;
+\pi\in\Pi^{\mathrm{na}}(h_t;a):\;
 \forall w\in\mathcal W(h_t),
-\forall z\text{ reachable under }(h_t,a,\pi,w),
-\;\pi\text{ legally completes all }o\in\mathcal O(w,h)
+\forall o\in\mathcal O(\gamma_w),\;\operatorname{Done}(o,\gamma_w)=1
 \right\}.
 \]
 
