@@ -1,0 +1,195 @@
+{
+  "cases": {
+    "delivery_only": {
+      "baseline_id": "comm.local_policy",
+      "coordinate_id": "paper:test:O1:2024:w0:seed-100",
+      "failed_obligation_classes": {
+        "COLLECTED_BUT_NEVER_HEARD_AT_GATEWAY": 3,
+        "LATE_TO_GATEWAY": 3
+      },
+      "first_failed_obligation": {
+        "censored": false,
+        "collected": true,
+        "deadline": 25200,
+        "delivered": false,
+        "delivered_at": null,
+        "first_heard_at": 28800,
+        "first_received_at": 28800,
+        "heard": true,
+        "heard_on_time": false,
+        "kind": "routine",
+        "latency_s": null,
+        "n_heard": 2,
+        "n_matching": 2,
+        "n_received": 2,
+        "node_id": "n15",
+        "oid": "n15:routine:00005",
+        "received_on_time": false,
+        "release_at": 18000
+      },
+      "interpretation": "Collection is complete; failures occur after sensing. The obligation-level ledger distinguishes samples that never reach the gateway from samples that reach it only after the deadline, rather than collapsing both into a generic delivery miss.",
+      "routine": {
+        "aoi_mean_s": 2863.0282485875705,
+        "aoi_p50_s": 2220,
+        "aoi_p90_s": 6420,
+        "aoi_p95_s": 8580,
+        "censored": 0,
+        "delivered": 162,
+        "latency_mean_s": 866.6666666666666,
+        "latency_p50_s": 0,
+        "latency_p90_s": 3600,
+        "latency_p95_s": 3600,
+        "missing_collection": 0,
+        "missing_delivery": 6,
+        "n": 168,
+        "no_observation_s": 18000
+      },
+      "row_id": "paper:test:O1:2024:w0:seed-100::comm.local_policy",
+      "selection_rule": "lexicographically first O1 comm.local_policy row with collection intact and delivery miss"
+    },
+    "energy_collection": {
+      "baseline_id": "comm.ea_aoi",
+      "coordinate_id": "paper:test:O4:2024:w0:seed-100",
+      "dead_node_lifecycle": {
+        "n13": {
+          "first_alive_false_s": 39000,
+          "first_missing_obligation": {
+            "censored": false,
+            "collected": false,
+            "deadline": 46800,
+            "delivered": false,
+            "delivered_at": null,
+            "first_heard_at": null,
+            "first_received_at": null,
+            "heard": false,
+            "heard_on_time": false,
+            "kind": "routine",
+            "latency_s": null,
+            "n_heard": 0,
+            "n_matching": 0,
+            "n_received": 0,
+            "node_id": "n13",
+            "oid": "n13:routine:00011",
+            "received_on_time": false,
+            "release_at": 39600
+          },
+          "last_sample_taken_at_s": 38400,
+          "missing_collection_obligations": 1,
+          "power": {
+            "consumed_wh": 0.029551485696000055,
+            "dead_at_s": null,
+            "deficit_s": 7740,
+            "harvested_wh": 0.0,
+            "soc_final_wh": 0.0004485143039999421,
+            "soc_initial_wh": 0.03
+          }
+        }
+      },
+      "interpretation": "The failed obligation has no matching sample: the loss is a sensing/survival failure, not a packet delivery failure. This is why collection and delivery must remain separate outcome dimensions.",
+      "routine": {
+        "aoi_mean_s": 1637.7514124293784,
+        "aoi_p50_s": 1140,
+        "aoi_p90_s": 3420,
+        "aoi_p95_s": 4620,
+        "censored": 0,
+        "delivered": 167,
+        "latency_mean_s": 553.6526946107784,
+        "latency_p50_s": 0,
+        "latency_p90_s": 1800,
+        "latency_p95_s": 3600,
+        "missing_collection": 1,
+        "missing_delivery": 0,
+        "n": 168,
+        "no_observation_s": 18000
+      },
+      "row_id": "paper:test:O4:2024:w0:seed-100::comm.ea_aoi",
+      "selection_rule": "lexicographically first O4 comm.ea_aoi ENERGY_EXHAUSTION row",
+      "survival": {
+        "alive": 13,
+        "dead": [
+          "n13"
+        ],
+        "mean_final_soc": 0.1059,
+        "n": 14
+      }
+    },
+    "task_revision": {
+      "baseline_id": "comm.mission_comply",
+      "config_revision_install_completion_rate": 0.2857142857142857,
+      "coordinate_id": "paper:test:O2:2024:w0:seed-100",
+      "failed_obligation_classes": {
+        "COLLECTED_BUT_NEVER_HEARD_AT_GATEWAY": 36,
+        "COLLECTION_MISS_NO_MATCHING_SAMPLE": 706,
+        "LATE_TO_GATEWAY": 132,
+        "ON_TIME_GATEWAY_BUT_LATE_CENTER": 5
+      },
+      "failed_obligations_released_after_revision_before_first_plan": 0,
+      "first_revision_event_s": {
+        "applied": 36000,
+        "plan": 21600,
+        "sent": 36000
+      },
+      "interpretation": "The operational requirement tightens during the declared communication outage. All nodes remain alive, yet only a subset receives both dense sampling/report settings; many new dense-cadence obligations then lack matching samples. This is an execution-of-task-revision failure, not energy death.",
+      "nodes_with_both_dense_settings_applied": [
+        "n00",
+        "n01",
+        "n03",
+        "n04",
+        "n06",
+        "n11"
+      ],
+      "required_dense_period_s": 300,
+      "revision_event_counts": {
+        "applied": 17,
+        "plan": 256,
+        "sent": 28
+      },
+      "revision_required_at_s": 21600,
+      "routine": {
+        "aoi_mean_s": 2743.5649717514125,
+        "aoi_p50_s": 2100,
+        "aoi_p90_s": 6360,
+        "aoi_p95_s": 8580,
+        "censored": 0,
+        "delivered": 213,
+        "latency_mean_s": 347.32394366197184,
+        "latency_p50_s": 0,
+        "latency_p90_s": 600,
+        "latency_p95_s": 3600,
+        "missing_collection": 706,
+        "missing_delivery": 173,
+        "n": 1092,
+        "no_observation_s": 18000
+      },
+      "row_id": "paper:test:O2:2024:w0:seed-100::comm.mission_comply",
+      "selection_rule": "lexicographically first O2 comm.mission_comply TASK_REVISION_NOT_APPLIED row",
+      "task_schedule": [
+        [
+          0,
+          3600,
+          "blue"
+        ],
+        [
+          21600,
+          300,
+          "yellow"
+        ]
+      ],
+      "template_outage": {
+        "outage_end_s": 28800,
+        "outage_start_s": 14400
+      }
+    }
+  },
+  "checks": {
+    "instrumented_replays_match_frozen_aggregate": true,
+    "three_distinct_failure_layers": true
+  },
+  "claim_boundary": [
+    "Cases are illustrative post-hoc diagnostics selected by fixed lexicographic rules from the frozen deterministic test; they are not a new benchmark split or quantitative effect estimate.",
+    "collect_rows/trace instrumentation does not alter the frozen simulator or policy and is accepted only after aggregate metrics match the canonical row.",
+    "The task-revision case reports observed trace timing; it does not infer hidden causal reasons beyond the declared outage/task schedule and recorded plan/sent/applied events."
+  ],
+  "selection_is_posthoc_but_rule_based": true,
+  "stage": "LAYER1_PAPER_FAILURE_CASE_STUDIES"
+}

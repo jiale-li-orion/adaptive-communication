@@ -6,7 +6,7 @@
 
 | Path | Owner / purpose |
 |---|---|
-| `benchmark/` | **Layer 1**：exact labels、validity/hardness、failure atlas、historical split/freeze、release audit；当前 benchmark coverage 已重开，旧 freeze 只作 regression/provenance |
+| `benchmark/` | **Layer 1**：source/task/evaluator audit、paper split/protocol、deterministic/LLM paper test、failure taxonomy、final release；旧 v0.2/v0.6/v0.7 继续只作 regression/provenance |
 | `agentic/` | **Layer 2 / Layer 3**：compiler/runtime、future-choice/L-U、incremental frontier、policy/search evaluation，以及历史 A7–A11 Agentic evidence |
 | `transfer/` | **Future-Choice cross-domain evidence**：ASC conditional/shared-opportunity/component-local audits，external UAV continuation/receding/L-U/set-conflict transfer，以及 generic engine cross-domain audit |
 | `communication-substrate/` | shared substrate：C* claims、calibration、physics outputs |
